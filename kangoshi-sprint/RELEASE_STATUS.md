@@ -7,13 +7,13 @@
 | 種別 | 件数 | 公開範囲 |
 |---|---:|---|
 | 既存第115〜113回ソースバンク | 720 | 既存ランタイム、厳格原典監査629 PASS／91 HOLD |
-| 今回の監査前の検証済みソース拡張 | 260 | 履歴を保持、配信不可 |
-| **今回の追加昇格** | **2** | 共通文・制御文字と二方式・公式正答の再検証 |
+| 今回の監査前の検証済みソース拡張 | 262 | 履歴を保持、配信不可 |
+| **今回の追加昇格** | **0** | 共通文・制御文字と二方式・公式正答の再検証 |
 | **正規ソースバンク** | **982 / 1,200** | ソース拡張262問を含む |
 | **未昇格** | **218問** | 原典の疑義と未合格ゲートは保持 |
 | アプリへの今回の追加配信 | 0問 | 解説・図版権利・アプリ／iOSゲート未完了 |
 
-- GitHub Actions Run：45273825020。先行再抽出22問のうち**0問**が引き続き保留。
+- GitHub Actions Run：45277368852。先行再抽出22問のうち**0問**が引き続き保留。
 - 正規ソース：\`product-content/verified-additions-20261124.json\`。保留：\`audit/dual-engine-hold-20261124.json\`。
 - 昇格台帳：\`audit/dual-engine-promotion-ledger-20261124.json\`。全新規問の\`publishable=false\`、\`releaseEligible=false\`を維持。
 - 制御文字について、両抽出方式が同一の壊れたPDF文字対応表を共有する危険があるため、未確認の原典文字は自動合格としない。
@@ -283,3 +283,31 @@
 - `K112-PM042` のOCRが開き括弧を `(`、閉じ括弧を `〉` と誤認したため、公式問題PDFの18ページを画像で再確認し、原典表記 `〈AED〉` に訂正。訂正前は `(AED〉`。問題本文・選択肢・正答は原典照合済みで、昇格件数の追加変更はない。
 - 元PDF：`https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp230524-05c_01.pdf`。差分と証拠は `product-content/ocr-repaired-candidates-20261124.json` および `audit/ocr-cmap-repair-ledger-20261124.json` に保存。
 - 正規ソースは **982/1,200問**、未昇格 **218問**。公開・アプリ統合ゲートは従来どおり保留。
+
+
+## 今回の独立共通文・制御文字監査（Run 45277368852）
+
+- 追加昇格 **0問**、合計 **982/1,200問**。残り **218問**。
+- 昇格ID：なし。
+- 保留の多い理由（重複あり）：COORDINATE_BOUNDARY_NOT_UNIQUELY_CONFIRMED 162, COORDINATE_REGION_UNVERIFIED 162, SUSPICIOUS_GLYPH_OR_CONTROL_IN_DRAFT 143, POPPLER_FIELD_MISMATCH_0 106, PYMUPDF_FIELD_MISMATCH_0 96, PAGE_FOOTER_CONTAMINATION 75, PYMUPDF_FIELD_MISMATCH_4 60, OFFICIAL_ANSWER_MISMATCH_OR_COMPLEX 38, OFFICIAL_ANSWER_NOT_SINGLE 38, INDEPENDENT_OFFICIAL_KEY_MISMATCH 38, POPPLER_FIELD_MISMATCH_4 38, SOURCE_GLYPH_MAPPING_UNTRUSTWORTHY 32。
+- 先行再抽出候補：22問のうち残存保留0問。権利・解説・アプリ配信ゲートの自動解除は行わない。
+
+## OCR区分別再監査（Run 45277368852）
+
+- 対象：218問。新規昇格：0問。
+- 区分：OFFICIAL_KEY_OR_SCORING_NOT_CLEAR 40, NO_EXACT_OCR_AND_ENGINE_FULL_FIELD_MATCH 94, MEDIA_RIGHTS_OR_DIAGRAM_GATE 13, SCENARIO_CONTEXT_REQUIRES_SEPARATE_OCR_PROOF 71。
+- 個別の正答・採点例外、OCR文字単位差分、状況設定共通文画像の証拠：`audit/ocr-category-deep-review-20261124.json`。
+- この区分別台帳のみで本文・選択肢の確定や公開フラグ解除はしない。
+
+## 画像OCRに基づくCMap欠落修復（Run 45277368852）
+
+- 96問を対象に修正判定。実際のデータ修正・ソース昇格：0問。修正未確定：94問。
+- 修正前後の本文・全選択肢：`product-content/ocr-repaired-candidates-20261124.json`。
+- 原典画像・PDFハッシュ、OCR二設定、公式正答の証拠：`audit/ocr-cmap-repair-ledger-20261124.json`。
+- OCR修正はソース限定。解説・アプリ表示・権利・Apple申請は保留。
+
+## OCR問題文・選択肢の座標別修復（Run 45277368852）
+
+- 対象46問、今回の新規昇格：0問、累計昇格：0問、残り：46問。
+- 原典各領域のOCR・選択肢座標・修正前後・公式正答の記録：`audit/ocr-coordinate-repair-ledger-20261124.json`、`product-content/ocr-coordinate-repaired-candidates-20261124.json`。
+- 合格は原典ソース限定。解説・公開・iOS・Apple審査は保留。

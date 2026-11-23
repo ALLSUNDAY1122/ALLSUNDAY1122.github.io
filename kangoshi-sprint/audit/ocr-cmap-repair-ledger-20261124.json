@@ -1,649 +1,21 @@
 {
   "schemaVersion": 1,
   "scope": 96,
-  "processedThisRun": 96,
-  "alreadyOcrVerified": 0,
+  "processedThisRun": 94,
+  "alreadyOcrVerified": 2,
   "cumulativeOcrVerified": 2,
-  "repairedCount": 2,
-  "promotedSourceOnlyCount": 2,
+  "repairedCount": 0,
+  "promotedSourceOnlyCount": 0,
   "remainingFrom96": 94,
   "reasonCounts": {
     "OCR_FIELD_SEGMENTATION_FAILED": 46,
     "OCR_CMAP_ONLY_FULL_FIELD_GATE_FAILED": 24,
     "PRINTED_CHOICES_NOT_FOUR": 1,
     "INDEPENDENT_OCR_RENDERINGS_FIELD_DISAGREE": 19,
-    "REPAIRED_SOURCE_ONLY": 2,
     "OFFICIAL_KEY_OR_SCORING_EXCEPTION": 4
   },
-  "editedIds": [
-    "K111-PM010",
-    "K112-PM042"
-  ],
+  "editedIds": [],
   "perQuestion": [
-    {
-      "id": "K111-AM004",
-      "status": "HOLD",
-      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
-      "sourceExam": 111,
-      "session": "AM",
-      "number": 4,
-      "sourcePdfSha256": "e853d7a86ef06ef41e8622f550dcf9bb3ffa48af076e412394070f237827bfb3",
-      "sourceImageSha256": "14c70899c0d4969e9f174f2047aac4377ed1df1a40701c7e55439138f2a2183f",
-      "sourcePage": 7,
-      "coordinateClip": [
-        0,
-        582,
-        609.95,
-        822.01
-      ],
-      "ocrPsm6Sha256": "0388eee311022db088d09dc142e818567ef9e51143e2772519b1bd60edf90f63",
-      "ocrPsm3Sha256": "1cea16f31caba9b3fc0577370bcab1b1da372b95157c04a05a687126c33a1865",
-      "ocrSegmentation": {
-        "psm6": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES",
-        "psm3": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
-      }
-    },
-    {
-      "id": "K111-AM016",
-      "status": "HOLD",
-      "reason": "OCR_CMAP_ONLY_FULL_FIELD_GATE_FAILED",
-      "sourceExam": 111,
-      "session": "AM",
-      "number": 16,
-      "sourcePdfSha256": "e853d7a86ef06ef41e8622f550dcf9bb3ffa48af076e412394070f237827bfb3",
-      "sourceImageSha256": "2aaa9be9e2baaac2a9025db2f053ffb04e4c7a73ee9c4d9bd7fed93e09faf67e",
-      "sourcePage": 12,
-      "coordinateClip": [
-        0,
-        76.02,
-        609.95,
-        247.68
-      ],
-      "ocrPsm6Sha256": "41a7d2835d635b3c74745bcd5caae4cb03693909148e13372e4c286b290dc16a",
-      "ocrPsm3Sha256": "41a7d2835d635b3c74745bcd5caae4cb03693909148e13372e4c286b290dc16a",
-      "fieldChecks": [
-        {
-          "index": 0,
-          "pass": true,
-          "reason": "CMAP_ONLY_ANCHORED_GAP",
-          "deltas": [
-            {
-              "at": 18,
-              "before": "",
-              "after": "〈",
-              "leftAnchor": "stion",
-              "rightAnchor": "開かれた質"
-            },
-            {
-              "at": 25,
-              "before": "",
-              "after": ")",
-              "leftAnchor": "かれた質問",
-              "rightAnchor": "はどれか。"
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        },
-        {
-          "index": 2,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        },
-        {
-          "index": 3,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        },
-        {
-          "index": 4,
-          "pass": false,
-          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
-          "deltas": []
-        }
-      ]
-    },
-    {
-      "id": "K111-AM024",
-      "status": "HOLD",
-      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
-      "sourceExam": 111,
-      "session": "AM",
-      "number": 24,
-      "sourcePdfSha256": "e853d7a86ef06ef41e8622f550dcf9bb3ffa48af076e412394070f237827bfb3",
-      "sourceImageSha256": "d0afb5c2148c35cee1faf8a7374c373f2f4eb30c15994f8842ac6f595c4a4984",
-      "sourcePage": 15,
-      "coordinateClip": [
-        0,
-        76.02,
-        609.95,
-        295.87
-      ],
-      "ocrPsm6Sha256": "1ca58812ff2be5e6fd1f666b954786b4c5a8b292e2eec4f304c97d81e46febba",
-      "ocrPsm3Sha256": "3d2b1297e7b5576f5d82dc9e9d85de25df157db17a5196e9062b0a46ddda76ba",
-      "ocrSegmentation": {
-        "psm6": null,
-        "psm3": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
-      }
-    },
-    {
-      "id": "K111-AM025",
-      "status": "HOLD",
-      "reason": "PRINTED_CHOICES_NOT_FOUR",
-      "sourceExam": 111,
-      "session": "AM",
-      "number": 25,
-      "sourcePdfSha256": "e853d7a86ef06ef41e8622f550dcf9bb3ffa48af076e412394070f237827bfb3",
-      "sourceImageSha256": "a274dbc6b810d227cf4c7c8791c9039ee0c0090c09142f75693d450e068d9890",
-      "sourcePage": 15,
-      "coordinateClip": [
-        0,
-        292.87,
-        609.95,
-        512.72
-      ],
-      "ocrPsm6Sha256": "91f16719cc1dee5afb80dbf36603d573a8384cc83aa07e89d8be6d6fcaf1dd12",
-      "ocrPsm3Sha256": "5626e65e1e2137d1aabddde02e03b395cf7bb191fced6e8446e6970de77ed0b2"
-    },
-    {
-      "id": "K111-AM030",
-      "status": "HOLD",
-      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
-      "sourceExam": 111,
-      "session": "AM",
-      "number": 30,
-      "sourcePdfSha256": "e853d7a86ef06ef41e8622f550dcf9bb3ffa48af076e412394070f237827bfb3",
-      "sourceImageSha256": "29c3e3ec72872706222e01e82dd962880be4def76df2dafa3206427ef563f0d5",
-      "sourcePage": 16,
-      "coordinateClip": [
-        0,
-        582,
-        609.95,
-        822.01
-      ],
-      "ocrPsm6Sha256": "e797711f324d5feeb946565ef44d770b6b4ed355de4acb8d845747528a51edc3",
-      "ocrPsm3Sha256": "b3ebe54f8863039b301459ad6a64609ecf6bca811c56c43dcf293b9b397d1a48",
-      "ocrSegmentation": {
-        "psm6": null,
-        "psm3": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
-      }
-    },
-    {
-      "id": "K111-AM033",
-      "status": "HOLD",
-      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
-      "sourceExam": 111,
-      "session": "AM",
-      "number": 33,
-      "sourcePdfSha256": "e853d7a86ef06ef41e8622f550dcf9bb3ffa48af076e412394070f237827bfb3",
-      "sourceImageSha256": "9544245fb4649141d60b69cd63f90a9b6d61444602da59550dac104f9a5412ea",
-      "sourcePage": 17,
-      "coordinateClip": [
-        0,
-        413.34,
-        609.95,
-        609.09
-      ],
-      "ocrPsm6Sha256": "dad3303aacab02574bbdf920ab365066f2c7102e0dace66d49975375481d4d35",
-      "ocrPsm3Sha256": "7ac109dd0549c0912f7066895ab46016827814c12acfa6af68df2fa82b1b18f7",
-      "ocrSegmentation": {
-        "psm6": null,
-        "psm3": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
-      }
-    },
-    {
-      "id": "K111-AM036",
-      "status": "HOLD",
-      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
-      "sourceExam": 111,
-      "session": "AM",
-      "number": 36,
-      "sourcePdfSha256": "e853d7a86ef06ef41e8622f550dcf9bb3ffa48af076e412394070f237827bfb3",
-      "sourceImageSha256": "b1c591470859008e21f3a3e26b48dd923b393c6b612bfdceda64481954ffe2a9",
-      "sourcePage": 18,
-      "coordinateClip": [
-        0,
-        244.68,
-        609.95,
-        416.34
-      ],
-      "ocrPsm6Sha256": "f68cf223eb8b361d089b8ea7baf13c8560af59fd0dec085da8b88d7ff8844a3a",
-      "ocrPsm3Sha256": "8020f77740aa66dcc2b2ed06e8165357dcc93e8861db3c8ff89600e3ec08da3d",
-      "ocrSegmentation": {
-        "psm6": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES",
-        "psm3": "OCR_CHOICES_NON_SEQUENTIAL"
-      }
-    },
-    {
-      "id": "K111-AM047",
-      "status": "HOLD",
-      "reason": "OCR_CMAP_ONLY_FULL_FIELD_GATE_FAILED",
-      "sourceExam": 111,
-      "session": "AM",
-      "number": 47,
-      "sourcePdfSha256": "e853d7a86ef06ef41e8622f550dcf9bb3ffa48af076e412394070f237827bfb3",
-      "sourceImageSha256": "90edbad3e985dc08d23915a3cbc0d67c9e6afccb2b7749c3bb1de7223764fef3",
-      "sourcePage": 21,
-      "coordinateClip": [
-        0,
-        413.34,
-        609.95,
-        585
-      ],
-      "ocrPsm6Sha256": "558b5d84f4b16a413f662bdf8930651da822c68d6f6e63125d3dc92260e51bb6",
-      "ocrPsm3Sha256": "558b5d84f4b16a413f662bdf8930651da822c68d6f6e63125d3dc92260e51bb6",
-      "fieldChecks": [
-        {
-          "index": 0,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        },
-        {
-          "index": 1,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        },
-        {
-          "index": 2,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        },
-        {
-          "index": 3,
-          "pass": false,
-          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
-          "deltas": []
-        },
-        {
-          "index": 4,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        }
-      ]
-    },
-    {
-      "id": "K111-AM053",
-      "status": "HOLD",
-      "reason": "OCR_CMAP_ONLY_FULL_FIELD_GATE_FAILED",
-      "sourceExam": 111,
-      "session": "AM",
-      "number": 53,
-      "sourcePdfSha256": "e853d7a86ef06ef41e8622f550dcf9bb3ffa48af076e412394070f237827bfb3",
-      "sourceImageSha256": "d1ca2337b4f494fa5f71b673e91642b3e58b503dda691e159ae6a8379a84d9e9",
-      "sourcePage": 23,
-      "coordinateClip": [
-        0,
-        76.02,
-        609.95,
-        247.68
-      ],
-      "ocrPsm6Sha256": "a920567bb76159ea613849523fcef928da372f339d35d3df67315c99afea626d",
-      "ocrPsm3Sha256": "a920567bb76159ea613849523fcef928da372f339d35d3df67315c99afea626d",
-      "fieldChecks": [
-        {
-          "index": 0,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        },
-        {
-          "index": 1,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        },
-        {
-          "index": 2,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        },
-        {
-          "index": 3,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        },
-        {
-          "index": 4,
-          "pass": false,
-          "reason": "INSUFFICIENT_BILATERAL_CONTEXT",
-          "deltas": [
-            {
-              "at": 12,
-              "before": "",
-              "after": "(",
-              "leftAnchor": "同生活介護",
-              "rightAnchor": "認知症高齢"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "K111-AM055",
-      "status": "HOLD",
-      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
-      "sourceExam": 111,
-      "session": "AM",
-      "number": 55,
-      "sourcePdfSha256": "e853d7a86ef06ef41e8622f550dcf9bb3ffa48af076e412394070f237827bfb3",
-      "sourceImageSha256": "4ff71985d5ea2a06cbb0c96ea391a7c59dc3a0ee5c0da257577402c794c8b08d",
-      "sourcePage": 23,
-      "coordinateClip": [
-        0,
-        437.43,
-        609.95,
-        822.01
-      ],
-      "ocrPsm6Sha256": "b6e77b8d79f528bc803c968ac692da3ff03ee6b806879a22a5a80dc7495618f3",
-      "ocrPsm3Sha256": "d805500965d88514fba341a910ec9499a4b0780438c6bcf1f8c41621a1c69628",
-      "ocrSegmentation": {
-        "psm6": null,
-        "psm3": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
-      }
-    },
-    {
-      "id": "K111-AM063",
-      "status": "HOLD",
-      "reason": "OCR_CMAP_ONLY_FULL_FIELD_GATE_FAILED",
-      "sourceExam": 111,
-      "session": "AM",
-      "number": 63,
-      "sourcePdfSha256": "e853d7a86ef06ef41e8622f550dcf9bb3ffa48af076e412394070f237827bfb3",
-      "sourceImageSha256": "f2d982665ce5ace108e1c85858047f24c12b282346a7c091f57edb04fc1a7a88",
-      "sourcePage": 26,
-      "coordinateClip": [
-        0,
-        244.68,
-        609.95,
-        416.34
-      ],
-      "ocrPsm6Sha256": "876c669fea7de6d4d4d83b6e9398c47eefe142223f6008f4dc94693fbd738676",
-      "ocrPsm3Sha256": "876c669fea7de6d4d4d83b6e9398c47eefe142223f6008f4dc94693fbd738676",
-      "fieldChecks": [
-        {
-          "index": 0,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        },
-        {
-          "index": 1,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        },
-        {
-          "index": 2,
-          "pass": false,
-          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
-          "deltas": []
-        },
-        {
-          "index": 3,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        },
-        {
-          "index": 4,
-          "pass": false,
-          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
-          "deltas": []
-        }
-      ]
-    },
-    {
-      "id": "K111-AM065",
-      "status": "HOLD",
-      "reason": "INDEPENDENT_OCR_RENDERINGS_FIELD_DISAGREE",
-      "sourceExam": 111,
-      "session": "AM",
-      "number": 65,
-      "sourcePdfSha256": "e853d7a86ef06ef41e8622f550dcf9bb3ffa48af076e412394070f237827bfb3",
-      "sourceImageSha256": "797d88005713cd29b4bfe9a6d9e1d442e774dd013a808a6fcbf14defe4999c73",
-      "sourcePage": 26,
-      "coordinateClip": [
-        0,
-        582,
-        609.95,
-        822.01
-      ],
-      "ocrPsm6Sha256": "3be673ae83fd17f8831119a48f07885ae537140b2cd3daec9826dda97abb6aec",
-      "ocrPsm3Sha256": "3395151600c34d1ae4e46d0d08307f0e405ed244ec0d267ffb0512f14116764b",
-      "ocrSegmentation": {
-        "psm6Count": 5,
-        "psm3Count": 5
-      }
-    },
-    {
-      "id": "K111-AM067",
-      "status": "HOLD",
-      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
-      "sourceExam": 111,
-      "session": "AM",
-      "number": 67,
-      "sourcePdfSha256": "e853d7a86ef06ef41e8622f550dcf9bb3ffa48af076e412394070f237827bfb3",
-      "sourceImageSha256": "7513643e2f84b0613f2f90a169990615e5acfde7fbfed3466142191652e960c5",
-      "sourcePage": 27,
-      "coordinateClip": [
-        0,
-        244.68,
-        609.95,
-        488.62
-      ],
-      "ocrPsm6Sha256": "92b9401786c4ce8fce695a0ff87ebf69498262e5fe75131bc91452aae6c523fc",
-      "ocrPsm3Sha256": "ca8b28716a116986eb7a7f0a3a33e6f234ecd38e7fe8e4d8be142035e934d501",
-      "ocrSegmentation": {
-        "psm6": null,
-        "psm3": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
-      }
-    },
-    {
-      "id": "K111-AM068",
-      "status": "HOLD",
-      "reason": "OCR_CMAP_ONLY_FULL_FIELD_GATE_FAILED",
-      "sourceExam": 111,
-      "session": "AM",
-      "number": 68,
-      "sourcePdfSha256": "e853d7a86ef06ef41e8622f550dcf9bb3ffa48af076e412394070f237827bfb3",
-      "sourceImageSha256": "66059b4e92bf3b1ff415fc6abbeeca74553c3b3a77cd15a5f5de365d3c1ef145",
-      "sourcePage": 27,
-      "coordinateClip": [
-        0,
-        485.62,
-        609.95,
-        822.01
-      ],
-      "ocrPsm6Sha256": "85f3d17b195af83d7dba4fe5ae05e4810a30d75b35816ccaf6e4dec7f4572fa7",
-      "ocrPsm3Sha256": "26561825be8ab3e79a5c27b51331c38b195bc82206913aa1ed9e238669bb34e4",
-      "fieldChecks": [
-        {
-          "index": 0,
-          "pass": false,
-          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
-          "deltas": []
-        },
-        {
-          "index": 1,
-          "pass": false,
-          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
-          "deltas": []
-        },
-        {
-          "index": 2,
-          "pass": false,
-          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
-          "deltas": []
-        },
-        {
-          "index": 3,
-          "pass": false,
-          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
-          "deltas": []
-        },
-        {
-          "index": 4,
-          "pass": false,
-          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
-          "deltas": []
-        }
-      ]
-    },
-    {
-      "id": "K111-AM069",
-      "status": "HOLD",
-      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
-      "sourceExam": 111,
-      "session": "AM",
-      "number": 69,
-      "sourcePdfSha256": "e853d7a86ef06ef41e8622f550dcf9bb3ffa48af076e412394070f237827bfb3",
-      "sourceImageSha256": "a22ea3e5449986d76460892546241d1dbca8ac380248fba8bed65233233ac867",
-      "sourcePage": 28,
-      "coordinateClip": [
-        0,
-        76.02,
-        609.95,
-        319.96
-      ],
-      "ocrPsm6Sha256": "264f41df69d0eccf86c18a44385ace7cbd46e273c3552cb0d3be4e56876e298e",
-      "ocrPsm3Sha256": "f306bc19f0de131d349614836b1717b8cea63741ce75f9acaae499b5216a0b55",
-      "ocrSegmentation": {
-        "psm6": null,
-        "psm3": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
-      }
-    },
-    {
-      "id": "K111-AM076",
-      "status": "HOLD",
-      "reason": "INDEPENDENT_OCR_RENDERINGS_FIELD_DISAGREE",
-      "sourceExam": 111,
-      "session": "AM",
-      "number": 76,
-      "sourcePdfSha256": "e853d7a86ef06ef41e8622f550dcf9bb3ffa48af076e412394070f237827bfb3",
-      "sourceImageSha256": "0aca90dc547b584d424a7ab90411ee183c6c6ae0c0019b61da08dd0f20fbe47e",
-      "sourcePage": 30,
-      "coordinateClip": [
-        0,
-        268.77,
-        609.95,
-        822.01
-      ],
-      "ocrPsm6Sha256": "50dc2445773991ab8383c3b8d26641b08c06dbfbd4d6698d4a6dfe3d0ca1e4c9",
-      "ocrPsm3Sha256": "b979c50869692e512bf4e8bb6b79409aaffad074943371da03f1e24ecf5c3b16",
-      "ocrSegmentation": {
-        "psm6Count": 5,
-        "psm3Count": 5
-      }
-    },
-    {
-      "id": "K111-AM082",
-      "status": "HOLD",
-      "reason": "INDEPENDENT_OCR_RENDERINGS_FIELD_DISAGREE",
-      "sourceExam": 111,
-      "session": "AM",
-      "number": 82,
-      "sourcePdfSha256": "e853d7a86ef06ef41e8622f550dcf9bb3ffa48af076e412394070f237827bfb3",
-      "sourceImageSha256": "eee3bd610f3db606fb9495d72d21d87a9e3643699a5956f4fb56b36c01f36ed8",
-      "sourcePage": 33,
-      "coordinateClip": [
-        0,
-        76.02,
-        609.95,
-        271.77
-      ],
-      "ocrPsm6Sha256": "23ec50c889836ce3ae24c02d34f376df366368c4f0b9a19bad9424a8d51d2dcb",
-      "ocrPsm3Sha256": "7da5e0648d34821b91f2eb810f7b466e05ef6db85e757ee5bf52e262cb9ce53b",
-      "ocrSegmentation": {
-        "psm6Count": 6,
-        "psm3Count": 6
-      }
-    },
-    {
-      "id": "K111-PM003",
-      "status": "HOLD",
-      "reason": "OCR_CMAP_ONLY_FULL_FIELD_GATE_FAILED",
-      "sourceExam": 111,
-      "session": "PM",
-      "number": 3,
-      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
-      "sourceImageSha256": "00478233c57ef1df2459e530f12788389353cdc41a9d54b065ec5b8c40300ed2",
-      "sourcePage": 7,
-      "coordinateClip": [
-        0,
-        437.43,
-        609.95,
-        609.09
-      ],
-      "ocrPsm6Sha256": "a0620b7d9e9bacd8b7f64c4b7b154c99446361f065d90f65a3138b84e45ce96b",
-      "ocrPsm3Sha256": "a0620b7d9e9bacd8b7f64c4b7b154c99446361f065d90f65a3138b84e45ce96b",
-      "fieldChecks": [
-        {
-          "index": 0,
-          "pass": false,
-          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
-          "deltas": []
-        },
-        {
-          "index": 1,
-          "pass": false,
-          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
-          "deltas": []
-        },
-        {
-          "index": 2,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        },
-        {
-          "index": 3,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        },
-        {
-          "index": 4,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        }
-      ]
-    },
-    {
-      "id": "K111-PM009",
-      "status": "HOLD",
-      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
-      "sourceExam": 111,
-      "session": "PM",
-      "number": 9,
-      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
-      "sourceImageSha256": "aee4cfd1e7ab4365670868836f2aeedebc80871e5bdb334bc41a20c29dfa6ad5",
-      "sourcePage": 9,
-      "coordinateClip": [
-        0,
-        76.02,
-        609.95,
-        271.77
-      ],
-      "ocrPsm6Sha256": "1db3e3d8407a4d7c526a69b6176c2fe092e78c339ce7ec5156dd5740ba574a1c",
-      "ocrPsm3Sha256": "1db3e3d8407a4d7c526a69b6176c2fe092e78c339ce7ec5156dd5740ba574a1c",
-      "ocrSegmentation": {
-        "psm6": "OCR_CHOICES_NON_SEQUENTIAL",
-        "psm3": "OCR_CHOICES_NON_SEQUENTIAL"
-      }
-    },
     {
       "id": "K111-PM010",
       "status": "REPAIRED_SOURCE_ONLY",
@@ -728,1917 +100,6 @@
           "2.5"
         ],
         "sourcePage": 9
-      }
-    },
-    {
-      "id": "K111-PM017",
-      "status": "HOLD",
-      "reason": "INDEPENDENT_OCR_RENDERINGS_FIELD_DISAGREE",
-      "sourceExam": 111,
-      "session": "PM",
-      "number": 17,
-      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
-      "sourceImageSha256": "c808d5d85881a938aebfcd592c7a78308a30f46479a48500b52dab0503ef69a7",
-      "sourcePage": 11,
-      "coordinateClip": [
-        0,
-        76.02,
-        609.95,
-        247.68
-      ],
-      "ocrPsm6Sha256": "0af86e05902078425f1de5b25b7a8698ccee703f475ced4dc8a98751411eeb6b",
-      "ocrPsm3Sha256": "71fe11b3af44a661ee855cc97c186e8b9799ec7f7217e7dc62927be68f822d89",
-      "ocrSegmentation": {
-        "psm6Count": 5,
-        "psm3Count": 5
-      }
-    },
-    {
-      "id": "K111-PM018",
-      "status": "HOLD",
-      "reason": "OCR_CMAP_ONLY_FULL_FIELD_GATE_FAILED",
-      "sourceExam": 111,
-      "session": "PM",
-      "number": 18,
-      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
-      "sourceImageSha256": "de2851eb9579c223a1d8dc8b072b60e37899f2f0a7701b1d67d3418d9cdc4550",
-      "sourcePage": 11,
-      "coordinateClip": [
-        0,
-        244.68,
-        609.95,
-        416.34
-      ],
-      "ocrPsm6Sha256": "9acb36edc3eafb9ea09b1546314e8ed3f0a2850ff8f32065f20e2cae86f3ad46",
-      "ocrPsm3Sha256": "9acb36edc3eafb9ea09b1546314e8ed3f0a2850ff8f32065f20e2cae86f3ad46",
-      "fieldChecks": [
-        {
-          "index": 0,
-          "pass": false,
-          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
-          "deltas": []
-        },
-        {
-          "index": 1,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        },
-        {
-          "index": 2,
-          "pass": false,
-          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
-          "deltas": []
-        },
-        {
-          "index": 3,
-          "pass": false,
-          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
-          "deltas": []
-        },
-        {
-          "index": 4,
-          "pass": false,
-          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
-          "deltas": []
-        }
-      ]
-    },
-    {
-      "id": "K111-PM026",
-      "status": "HOLD",
-      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
-      "sourceExam": 111,
-      "session": "PM",
-      "number": 26,
-      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
-      "sourceImageSha256": "5c87eb1532ba796995a3f5cfe1d52191910bf833532c7efb0d7ced6f9a8dcc1e",
-      "sourcePage": 13,
-      "coordinateClip": [
-        0,
-        244.68,
-        609.95,
-        464.53
-      ],
-      "ocrPsm6Sha256": "7809c5cecf3e1a7dee4c6edb935f99c3cd9b6392fabab371c600a0d9e2383df5",
-      "ocrPsm3Sha256": "464f2c74b9c044cafb402799186b193ee8c829ecef1fe5951675a86e47bcd449",
-      "ocrSegmentation": {
-        "psm6": "OCR_CHOICES_NON_SEQUENTIAL",
-        "psm3": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
-      }
-    },
-    {
-      "id": "K111-PM028",
-      "status": "HOLD",
-      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
-      "sourceExam": 111,
-      "session": "PM",
-      "number": 28,
-      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
-      "sourceImageSha256": "426e4556cb647a90c953e2c9ba6f742c2a207d6ec6d8120e8072b08596b6c7fa",
-      "sourcePage": 14,
-      "coordinateClip": [
-        0,
-        76.02,
-        609.95,
-        822.01
-      ],
-      "ocrPsm6Sha256": "bf10be27137f594420238500ba95313feb2267e2f2b28f85d2490c4825f0b581",
-      "ocrPsm3Sha256": "04b5ce64cd7351e0e37b8fd2805b9afdab0d3e38e5ffea702b6be09e3bcc0c07",
-      "ocrSegmentation": {
-        "psm6": null,
-        "psm3": "OCR_CHOICES_NON_SEQUENTIAL"
-      }
-    },
-    {
-      "id": "K111-PM029",
-      "status": "HOLD",
-      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
-      "sourceExam": 111,
-      "session": "PM",
-      "number": 29,
-      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
-      "sourceImageSha256": "6018eb6b72b121700cca0d350f11d61dfce645228b3b81d45eb4840b32980835",
-      "sourcePage": 15,
-      "coordinateClip": [
-        0,
-        76.02,
-        609.95,
-        512.72
-      ],
-      "ocrPsm6Sha256": "7ff7769d6c411b166af5e872d5ac6ddd943e151f33bff2294aa1c12f62115475",
-      "ocrPsm3Sha256": "405425b94adb5c333f07dc2b683ce39e390321db03747c85a1780e8953265db5",
-      "ocrSegmentation": {
-        "psm6": "OCR_CHOICES_NON_SEQUENTIAL",
-        "psm3": "OCR_CHOICES_NON_SEQUENTIAL"
-      }
-    },
-    {
-      "id": "K111-PM041",
-      "status": "HOLD",
-      "reason": "OCR_CMAP_ONLY_FULL_FIELD_GATE_FAILED",
-      "sourceExam": 111,
-      "session": "PM",
-      "number": 41,
-      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
-      "sourceImageSha256": "526edb075aa9da0fe57415c996594334e411aa4cf41ee4588a8109eb90ac46b8",
-      "sourcePage": 18,
-      "coordinateClip": [
-        0,
-        437.43,
-        609.95,
-        609.09
-      ],
-      "ocrPsm6Sha256": "f1448c210ca2d17f3a01295fafeb3065b4778d113881a9d68c08345206b4e268",
-      "ocrPsm3Sha256": "f1448c210ca2d17f3a01295fafeb3065b4778d113881a9d68c08345206b4e268",
-      "fieldChecks": [
-        {
-          "index": 0,
-          "pass": false,
-          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
-          "deltas": []
-        },
-        {
-          "index": 1,
-          "pass": false,
-          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
-          "deltas": []
-        },
-        {
-          "index": 2,
-          "pass": false,
-          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
-          "deltas": []
-        },
-        {
-          "index": 3,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        },
-        {
-          "index": 4,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        }
-      ]
-    },
-    {
-      "id": "K111-PM042",
-      "status": "HOLD",
-      "reason": "INDEPENDENT_OCR_RENDERINGS_FIELD_DISAGREE",
-      "sourceExam": 111,
-      "session": "PM",
-      "number": 42,
-      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
-      "sourceImageSha256": "cb6cfc17e756c036aa75de1d8c9ed12f6b4c0404f9f78cfa0f650ba388b0cbc5",
-      "sourcePage": 18,
-      "coordinateClip": [
-        0,
-        606.09,
-        609.95,
-        822.01
-      ],
-      "ocrPsm6Sha256": "611847a301ea76625faf08382389ab5e6abddf595e34f4d067303a2cb445a885",
-      "ocrPsm3Sha256": "60c0275142d50c5edad1086a808ad2d82986d51249e88cbbc62222e31dce283e",
-      "ocrSegmentation": {
-        "psm6Count": 5,
-        "psm3Count": 5
-      }
-    },
-    {
-      "id": "K111-PM043",
-      "status": "HOLD",
-      "reason": "OCR_CMAP_ONLY_FULL_FIELD_GATE_FAILED",
-      "sourceExam": 111,
-      "session": "PM",
-      "number": 43,
-      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
-      "sourceImageSha256": "87946ca8e379250fbae7f523cf92e5d92f5e97f9ac4a1916e5dd9bcd5e189dea",
-      "sourcePage": 19,
-      "coordinateClip": [
-        0,
-        76.02,
-        609.95,
-        319.96
-      ],
-      "ocrPsm6Sha256": "7daa98fb5b278dd748a9ae93acd34c25d49d7ac91a5bc3f7654dacc3b167c34e",
-      "ocrPsm3Sha256": "7daa98fb5b278dd748a9ae93acd34c25d49d7ac91a5bc3f7654dacc3b167c34e",
-      "fieldChecks": [
-        {
-          "index": 0,
-          "pass": false,
-          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
-          "deltas": []
-        },
-        {
-          "index": 1,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        },
-        {
-          "index": 2,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        },
-        {
-          "index": 3,
-          "pass": false,
-          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
-          "deltas": []
-        },
-        {
-          "index": 4,
-          "pass": false,
-          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
-          "deltas": []
-        }
-      ]
-    },
-    {
-      "id": "K111-PM046",
-      "status": "HOLD",
-      "reason": "INDEPENDENT_OCR_RENDERINGS_FIELD_DISAGREE",
-      "sourceExam": 111,
-      "session": "PM",
-      "number": 46,
-      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
-      "sourceImageSha256": "620a6de3b35fe78762ed6e0c09e3cdae157a37d3b63a32f4c21cfc6506675a5b",
-      "sourcePage": 19,
-      "coordinateClip": [
-        0,
-        654.28,
-        609.95,
-        822.01
-      ],
-      "ocrPsm6Sha256": "c36cdbdfe42c90fdb9c12a281ac8bc2bf61d8111ba729c93b8c041da59efe92c",
-      "ocrPsm3Sha256": "36c781748109f3ef660bac76277dea6661fe9270d4b5994909ca26c6a58fd223",
-      "ocrSegmentation": {
-        "psm6Count": 5,
-        "psm3Count": 5
-      }
-    },
-    {
-      "id": "K111-PM048",
-      "status": "HOLD",
-      "reason": "OCR_CMAP_ONLY_FULL_FIELD_GATE_FAILED",
-      "sourceExam": 111,
-      "session": "PM",
-      "number": 48,
-      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
-      "sourceImageSha256": "7cd66cb6093a6e34d086326e6d13a6aafd5d76bd8d508575fc781cd986ede88f",
-      "sourcePage": 20,
-      "coordinateClip": [
-        0,
-        244.68,
-        609.95,
-        440.43
-      ],
-      "ocrPsm6Sha256": "aee15ad17e10b4253dc2aae7880074715837e3d978965874fdbafc4b0003378d",
-      "ocrPsm3Sha256": "1f401a1c3aa7ea58b223141a27088c07aa675ba1a0ecda656f47f101aa2c4312",
-      "fieldChecks": [
-        {
-          "index": 0,
-          "pass": false,
-          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
-          "deltas": []
-        },
-        {
-          "index": 1,
-          "pass": false,
-          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
-          "deltas": []
-        },
-        {
-          "index": 2,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        },
-        {
-          "index": 3,
-          "pass": false,
-          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
-          "deltas": []
-        },
-        {
-          "index": 4,
-          "pass": false,
-          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
-          "deltas": []
-        }
-      ]
-    },
-    {
-      "id": "K111-PM050",
-      "status": "HOLD",
-      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
-      "sourceExam": 111,
-      "session": "PM",
-      "number": 50,
-      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
-      "sourceImageSha256": "ead8c2abc05055d9107fe6fa3ed8d9ac9e96912594e25437bd158af93096c492",
-      "sourcePage": 20,
-      "coordinateClip": [
-        0,
-        606.09,
-        609.95,
-        822.01
-      ],
-      "ocrPsm6Sha256": "1a167be6d412b3ba4547dfc17320c41379b855ac24afab1ff8ac8f12c8258b94",
-      "ocrPsm3Sha256": "3b645d868b8d39c3889697e52ce5f2c178deadcb3052bf8b65031137dd497aa4",
-      "ocrSegmentation": {
-        "psm6": null,
-        "psm3": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
-      }
-    },
-    {
-      "id": "K111-PM054",
-      "status": "HOLD",
-      "reason": "INDEPENDENT_OCR_RENDERINGS_FIELD_DISAGREE",
-      "sourceExam": 111,
-      "session": "PM",
-      "number": 54,
-      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
-      "sourceImageSha256": "22ba482f0d09e81b0425a95fcbf4d244240a1e82dc1060bd94b8fefc1007797a",
-      "sourcePage": 21,
-      "coordinateClip": [
-        0,
-        582,
-        609.95,
-        822.01
-      ],
-      "ocrPsm6Sha256": "565c496862e7fe1e4bf1790caa38d974f55ab4be6e03959b6835d8e048b76575",
-      "ocrPsm3Sha256": "f74124305f4a7db8626fc58d2b9c718c7760c4ed826092afb76113430a666229",
-      "ocrSegmentation": {
-        "psm6Count": 5,
-        "psm3Count": 5
-      }
-    },
-    {
-      "id": "K111-PM059",
-      "status": "HOLD",
-      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
-      "sourceExam": 111,
-      "session": "PM",
-      "number": 59,
-      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
-      "sourceImageSha256": "f9b71b821f928a861d9609dd6986a8479aa4ba19583525d99fe4a716902ca344",
-      "sourcePage": 23,
-      "coordinateClip": [
-        0,
-        76.02,
-        609.95,
-        247.68
-      ],
-      "ocrPsm6Sha256": "460cb6244abc6a3eba804f48a6fe1dfeb412ef94ddc37d527fcab7daba5fcdda",
-      "ocrPsm3Sha256": "ef7f12dcd21c9ea7d0f66860937db195b66323bc1e66a88bf8fa52d804fc0c45",
-      "ocrSegmentation": {
-        "psm6": null,
-        "psm3": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
-      }
-    },
-    {
-      "id": "K111-PM062",
-      "status": "HOLD",
-      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
-      "sourceExam": 111,
-      "session": "PM",
-      "number": 62,
-      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
-      "sourceImageSha256": "2cc27183b1a1d8f15ac5d3976dd465cd3a050494f605d6a1389b75a83663d08f",
-      "sourcePage": 24,
-      "coordinateClip": [
-        0,
-        76.02,
-        609.95,
-        247.68
-      ],
-      "ocrPsm6Sha256": "14251a406d57b451f6474c92923fb178948203c4641f81493a1b461a1aac45e3",
-      "ocrPsm3Sha256": "e7516d37786e4ef81fddd5098a4e31ab86d07cc140a724576fd7775ae3fcaea1",
-      "ocrSegmentation": {
-        "psm6": null,
-        "psm3": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
-      }
-    },
-    {
-      "id": "K111-PM063",
-      "status": "HOLD",
-      "reason": "OCR_CMAP_ONLY_FULL_FIELD_GATE_FAILED",
-      "sourceExam": 111,
-      "session": "PM",
-      "number": 63,
-      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
-      "sourceImageSha256": "51d7a8aacc5716c66517635cce6cb213ea36bbecfe30d711f92484d3658e1c06",
-      "sourcePage": 24,
-      "coordinateClip": [
-        0,
-        244.68,
-        609.95,
-        440.43
-      ],
-      "ocrPsm6Sha256": "d1d41144e508a455c24c840cf699ef6ef57336f3ab11b9173a48b4717dedaa64",
-      "ocrPsm3Sha256": "d1d41144e508a455c24c840cf699ef6ef57336f3ab11b9173a48b4717dedaa64",
-      "fieldChecks": [
-        {
-          "index": 0,
-          "pass": false,
-          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
-          "deltas": []
-        },
-        {
-          "index": 1,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        },
-        {
-          "index": 2,
-          "pass": false,
-          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
-          "deltas": []
-        },
-        {
-          "index": 3,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        },
-        {
-          "index": 4,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        }
-      ]
-    },
-    {
-      "id": "K111-PM064",
-      "status": "HOLD",
-      "reason": "OCR_CMAP_ONLY_FULL_FIELD_GATE_FAILED",
-      "sourceExam": 111,
-      "session": "PM",
-      "number": 64,
-      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
-      "sourceImageSha256": "c4bb5f2cc257a9c433fbda2ae1763cd381d548657f97ba22780d3ad58aab3880",
-      "sourcePage": 24,
-      "coordinateClip": [
-        0,
-        437.43,
-        609.95,
-        657.28
-      ],
-      "ocrPsm6Sha256": "cf4fee3c12e83d40ce2cc961a213385a60887ca7dd2f502d7cfedad130e9e9cc",
-      "ocrPsm3Sha256": "cf4fee3c12e83d40ce2cc961a213385a60887ca7dd2f502d7cfedad130e9e9cc",
-      "fieldChecks": [
-        {
-          "index": 0,
-          "pass": false,
-          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
-          "deltas": []
-        },
-        {
-          "index": 1,
-          "pass": false,
-          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
-          "deltas": []
-        },
-        {
-          "index": 2,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        },
-        {
-          "index": 3,
-          "pass": false,
-          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
-          "deltas": []
-        },
-        {
-          "index": 4,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        }
-      ]
-    },
-    {
-      "id": "K111-PM066",
-      "status": "HOLD",
-      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
-      "sourceExam": 111,
-      "session": "PM",
-      "number": 66,
-      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
-      "sourceImageSha256": "6f91808a8fafc05e1c2ac91df04ffedd97ff6ff5f5c4a93035131ed6c11e1c52",
-      "sourcePage": 25,
-      "coordinateClip": [
-        0,
-        76.02,
-        609.95,
-        247.68
-      ],
-      "ocrPsm6Sha256": "363e65ab4ccd77a971e4a61ce252a979e954adafa58a50bcfda7ea956fd7551c",
-      "ocrPsm3Sha256": "4729220e1b5987c19b13ad83169b7f0d26a2868c732f35a88a3a639ad2aa8b86",
-      "ocrSegmentation": {
-        "psm6": "OCR_CHOICES_NON_SEQUENTIAL",
-        "psm3": null
-      }
-    },
-    {
-      "id": "K111-PM067",
-      "status": "HOLD",
-      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
-      "sourceExam": 111,
-      "session": "PM",
-      "number": 67,
-      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
-      "sourceImageSha256": "9cccba1718cf4bd5d7dfc225329d2b421e0fcc528408d66a8ba2acb46ed1c0ff",
-      "sourcePage": 25,
-      "coordinateClip": [
-        0,
-        244.68,
-        609.95,
-        464.53
-      ],
-      "ocrPsm6Sha256": "196394395fe75d5c7543516a157800b5baf4cde8a7635449b789db4ec950d05e",
-      "ocrPsm3Sha256": "d0c426d2e27ad4949e127c08a4f1b3325d0c7b3b9bb2e891dede2b334d80d2d9",
-      "ocrSegmentation": {
-        "psm6": null,
-        "psm3": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
-      }
-    },
-    {
-      "id": "K111-PM068",
-      "status": "HOLD",
-      "reason": "INDEPENDENT_OCR_RENDERINGS_FIELD_DISAGREE",
-      "sourceExam": 111,
-      "session": "PM",
-      "number": 68,
-      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
-      "sourceImageSha256": "0f48a410b12fbc4decae82e6e1b570b0d927eb73af725316c7fe552a5261243b",
-      "sourcePage": 25,
-      "coordinateClip": [
-        0,
-        461.53,
-        609.95,
-        822.01
-      ],
-      "ocrPsm6Sha256": "81e7e406be8b61247ff151e8bd6d48038c51c96783563c9ccdaedc005fe28b1a",
-      "ocrPsm3Sha256": "7f699a91b145ddea769c70d4ee13ee391b2ab2268be35c436904d748fdd6087e",
-      "ocrSegmentation": {
-        "psm6Count": 5,
-        "psm3Count": 5
-      }
-    },
-    {
-      "id": "K111-PM071",
-      "status": "HOLD",
-      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
-      "sourceExam": 111,
-      "session": "PM",
-      "number": 71,
-      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
-      "sourceImageSha256": "81a79ae622ffe1e58b2d2f58cc09d57966cc65d2a2822d4e55e016b4e8e5d0a0",
-      "sourcePage": 26,
-      "coordinateClip": [
-        0,
-        533.81,
-        609.95,
-        822.01
-      ],
-      "ocrPsm6Sha256": "ff0cdec01dbc453e07c5168fa29f6147e7cbc88165d2d23b7699a7c27d2dd0c1",
-      "ocrPsm3Sha256": "f7ffcd25b93c741e0bdcce25495c4bcad45f1bc331fe6aed8b12f758891f950f",
-      "ocrSegmentation": {
-        "psm6": null,
-        "psm3": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
-      }
-    },
-    {
-      "id": "K111-PM076",
-      "status": "HOLD",
-      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
-      "sourceExam": 111,
-      "session": "PM",
-      "number": 76,
-      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
-      "sourceImageSha256": "be9683400a6832e3b926e9ef1b87b4f5564e938e0cfd4815f69532fa18ede6e9",
-      "sourcePage": 28,
-      "coordinateClip": [
-        0,
-        244.68,
-        609.95,
-        416.34
-      ],
-      "ocrPsm6Sha256": "a41b49b8a36c374f5540ca720ebab6d5eaef9bd2293d662eccb9f632d982cb05",
-      "ocrPsm3Sha256": "36228484bee4b9f0e103360505590f252ac520d1d88b44516e19d973667c2e3b",
-      "ocrSegmentation": {
-        "psm6": "OCR_CHOICES_NON_SEQUENTIAL",
-        "psm3": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
-      }
-    },
-    {
-      "id": "K111-PM078",
-      "status": "HOLD",
-      "reason": "OFFICIAL_KEY_OR_SCORING_EXCEPTION",
-      "sourceExam": 111,
-      "session": "PM",
-      "number": 78
-    },
-    {
-      "id": "K111-PM082",
-      "status": "HOLD",
-      "reason": "OFFICIAL_KEY_OR_SCORING_EXCEPTION",
-      "sourceExam": 111,
-      "session": "PM",
-      "number": 82
-    },
-    {
-      "id": "K111-PM083",
-      "status": "HOLD",
-      "reason": "INDEPENDENT_OCR_RENDERINGS_FIELD_DISAGREE",
-      "sourceExam": 111,
-      "session": "PM",
-      "number": 83,
-      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
-      "sourceImageSha256": "275f0d1e8eb1e9921a707acce857091e6087f0e84df6b9fce3a149d14900587d",
-      "sourcePage": 30,
-      "coordinateClip": [
-        0,
-        268.77,
-        609.95,
-        464.53
-      ],
-      "ocrPsm6Sha256": "d055160835717fc85c4dc6d161f6b53ab135675a2bbdcf1b68cd1eb747aa8c93",
-      "ocrPsm3Sha256": "fe288769eeda181012eb53164f759b05a8f54ddd2c901bd67a496ad5a50844e6",
-      "ocrSegmentation": {
-        "psm6Count": 6,
-        "psm3Count": 6
-      }
-    },
-    {
-      "id": "K112-AM008",
-      "status": "HOLD",
-      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
-      "sourceExam": 112,
-      "session": "AM",
-      "number": 8,
-      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
-      "sourceImageSha256": "b52bd9029590f4349b496267b38989dd3963c3921f04e4c0d45f4ee9c0794aad",
-      "sourcePage": 8,
-      "coordinateClip": [
-        0,
-        584.83,
-        615.61,
-        827.44
-      ],
-      "ocrPsm6Sha256": "ed6b060422c10b9c9cb85f78f2e3fddc0ede6392d421a0eac73a05f8df8d083e",
-      "ocrPsm3Sha256": "ed757341c12becc22dc5787190faa2140b78e99bd0d29136d074ef77b70c74e9",
-      "ocrSegmentation": {
-        "psm6": null,
-        "psm3": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
-      }
-    },
-    {
-      "id": "K112-AM009",
-      "status": "HOLD",
-      "reason": "OCR_CMAP_ONLY_FULL_FIELD_GATE_FAILED",
-      "sourceExam": 112,
-      "session": "AM",
-      "number": 9,
-      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
-      "sourceImageSha256": "d9cd9554bc2e402c452cb470dcad8629d5e273aeedaf84478e73674358c77c9b",
-      "sourcePage": 9,
-      "coordinateClip": [
-        0,
-        78.85,
-        615.61,
-        274.6
-      ],
-      "ocrPsm6Sha256": "b2e22f426d13c6140c548fdd7fb529fc61b877695675bc0fbfb0119dd2e3e0d8",
-      "ocrPsm3Sha256": "b2e22f426d13c6140c548fdd7fb529fc61b877695675bc0fbfb0119dd2e3e0d8",
-      "fieldChecks": [
-        {
-          "index": 0,
-          "pass": false,
-          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
-          "deltas": []
-        },
-        {
-          "index": 1,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        },
-        {
-          "index": 2,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        },
-        {
-          "index": 3,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        },
-        {
-          "index": 4,
-          "pass": false,
-          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
-          "deltas": []
-        }
-      ]
-    },
-    {
-      "id": "K112-AM015",
-      "status": "HOLD",
-      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
-      "sourceExam": 112,
-      "session": "AM",
-      "number": 15,
-      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
-      "sourceImageSha256": "1c7d17b9544af70e71e3c0b1e663be84df91e72979ddb8fa9e4c46ff4a0f7f79",
-      "sourcePage": 10,
-      "coordinateClip": [
-        0,
-        416.17,
-        615.61,
-        611.92
-      ],
-      "ocrPsm6Sha256": "8e90ef8dcd83dc568fc0654ec5555295aa54a79c43527a1d48d43cbaa0f3d9ba",
-      "ocrPsm3Sha256": "1c38df078a95d25f05df80daf47bc774426017ffc28692f92b6aec08fcbe3a70",
-      "ocrSegmentation": {
-        "psm6": null,
-        "psm3": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
-      }
-    },
-    {
-      "id": "K112-AM016",
-      "status": "HOLD",
-      "reason": "OCR_CMAP_ONLY_FULL_FIELD_GATE_FAILED",
-      "sourceExam": 112,
-      "session": "AM",
-      "number": 16,
-      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
-      "sourceImageSha256": "f36f07d1603764300b6836be61bb95ef208d420644e176d36ba5494ce2431c14",
-      "sourcePage": 10,
-      "coordinateClip": [
-        0,
-        608.92,
-        615.61,
-        827.44
-      ],
-      "ocrPsm6Sha256": "0ea06a71138b385868b3ef4b52438c20c9c9d8f81b75041fc2d5e245f39eafbf",
-      "ocrPsm3Sha256": "848ed25f5ea91803ae5242bcae41f8b4c5fda47ed6b64beb54a88349ae1955ee",
-      "fieldChecks": [
-        {
-          "index": 0,
-          "pass": false,
-          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
-          "deltas": []
-        },
-        {
-          "index": 1,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        },
-        {
-          "index": 2,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        },
-        {
-          "index": 3,
-          "pass": false,
-          "reason": "INSUFFICIENT_BILATERAL_CONTEXT",
-          "deltas": [
-            {
-              "at": 7,
-              "before": "ï",
-              "after": "〈",
-              "leftAnchor": "応性蛋白質",
-              "rightAnchor": "CRPñ"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "pass": false,
-          "reason": "OCR_REPLACEMENT_NOT_LOCAL",
-          "deltas": []
-        }
-      ]
-    },
-    {
-      "id": "K112-AM023",
-      "status": "HOLD",
-      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
-      "sourceExam": 112,
-      "session": "AM",
-      "number": 23,
-      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
-      "sourceImageSha256": "0a040ca00491a1e21f45bf17fd165f5c3c82ca1187499c088e57d505fa66cc7e",
-      "sourcePage": 12,
-      "coordinateClip": [
-        0,
-        416.17,
-        615.61,
-        587.83
-      ],
-      "ocrPsm6Sha256": "f56e0bb308b9e2714fc610605f54017049bc85fea74561fc5ca2809c2f6710ea",
-      "ocrPsm3Sha256": "d305e2e9f9a9730056c2061939036fbb761c926564ae4479f87dac0a766ff1bf",
-      "ocrSegmentation": {
-        "psm6": null,
-        "psm3": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
-      }
-    },
-    {
-      "id": "K112-AM026",
-      "status": "HOLD",
-      "reason": "OCR_CMAP_ONLY_FULL_FIELD_GATE_FAILED",
-      "sourceExam": 112,
-      "session": "AM",
-      "number": 26,
-      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
-      "sourceImageSha256": "29670fd39699f7bb091f871839357fa1d846f7933879e99af95bb5509bcc80a3",
-      "sourcePage": 13,
-      "coordinateClip": [
-        0,
-        271.6,
-        615.61,
-        491.45
-      ],
-      "ocrPsm6Sha256": "68cbe5ded4c2051730f7a32a575b617f1425009582c4d38fa79143dd1246c95f",
-      "ocrPsm3Sha256": "68cbe5ded4c2051730f7a32a575b617f1425009582c4d38fa79143dd1246c95f",
-      "fieldChecks": [
-        {
-          "index": 0,
-          "pass": false,
-          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
-          "deltas": [
-            {
-              "at": 9,
-              "before": "!",
-              "after": "()",
-              "leftAnchor": "細胞膜には",
-              "rightAnchor": "に対する受"
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        },
-        {
-          "index": 2,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        },
-        {
-          "index": 3,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        },
-        {
-          "index": 4,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        }
-      ]
-    },
-    {
-      "id": "K112-AM027",
-      "status": "HOLD",
-      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
-      "sourceExam": 112,
-      "session": "AM",
-      "number": 27,
-      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
-      "sourceImageSha256": "c821b4707cc29b41111885f1661b8d102b848159e48e70f2bb6d71eb907807e4",
-      "sourcePage": 13,
-      "coordinateClip": [
-        0,
-        488.45,
-        615.61,
-        827.44
-      ],
-      "ocrPsm6Sha256": "689f4703b1e4bb39bd1922c7cd7732d681f37a00ae560e5932236addf7d5cfd4",
-      "ocrPsm3Sha256": "ba15cf2798579ad336f4edcfc1c4d78a3f611f831db57a88e080c17347c32375",
-      "ocrSegmentation": {
-        "psm6": null,
-        "psm3": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
-      }
-    },
-    {
-      "id": "K112-AM031",
-      "status": "HOLD",
-      "reason": "INDEPENDENT_OCR_RENDERINGS_FIELD_DISAGREE",
-      "sourceExam": 112,
-      "session": "AM",
-      "number": 31,
-      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
-      "sourceImageSha256": "a21e9dc9daa3a21909a3dd20e2c6f40712ed335e6b4c6fa2eff90e09a1afa32f",
-      "sourcePage": 14,
-      "coordinateClip": [
-        0,
-        584.83,
-        615.61,
-        827.44
-      ],
-      "ocrPsm6Sha256": "3da06a664b6c32e3a0fe7c79a1522d7d47078bde93d5289775d300e8d17a4a21",
-      "ocrPsm3Sha256": "8d9e15e8dd93e0336441c1487401b6233fbc26d0405b4edb363079f68afd38d3",
-      "ocrSegmentation": {
-        "psm6Count": 5,
-        "psm3Count": 5
-      }
-    },
-    {
-      "id": "K112-AM033",
-      "status": "HOLD",
-      "reason": "INDEPENDENT_OCR_RENDERINGS_FIELD_DISAGREE",
-      "sourceExam": 112,
-      "session": "AM",
-      "number": 33,
-      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
-      "sourceImageSha256": "398e3c19fdbf37a877d7347b3505f14b2345c77e87b545d7c6e74b37c130a0cc",
-      "sourcePage": 15,
-      "coordinateClip": [
-        0,
-        247.51,
-        615.61,
-        419.17
-      ],
-      "ocrPsm6Sha256": "2c6eb827677d6dc69aafdbf203300d8b263f7b21e575a93dd2ca8f3ca508cfa1",
-      "ocrPsm3Sha256": "eab2794e7ba69c20a0349eb5253a8a4ecc34bb07c778bd910d3fccba97177f2a",
-      "ocrSegmentation": {
-        "psm6Count": 5,
-        "psm3Count": 5
-      }
-    },
-    {
-      "id": "K112-AM039",
-      "status": "HOLD",
-      "reason": "INDEPENDENT_OCR_RENDERINGS_FIELD_DISAGREE",
-      "sourceExam": 112,
-      "session": "AM",
-      "number": 39,
-      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
-      "sourceImageSha256": "24a48c7c9e282706d672ffcd3a31d4949a719e42348f696d63cd75b87a9b118b",
-      "sourcePage": 16,
-      "coordinateClip": [
-        0,
-        626.99,
-        615.61,
-        827.44
-      ],
-      "ocrPsm6Sha256": "ffdced65decf19ea27c45702d5fcdff753528cbc8a3613e231a6fdaf0caea90e",
-      "ocrPsm3Sha256": "e46379bf042a4f62bf505f76e5bde59156f152b5589f4d34b35442486831b56f",
-      "ocrSegmentation": {
-        "psm6Count": 5,
-        "psm3Count": 5
-      }
-    },
-    {
-      "id": "K112-AM040",
-      "status": "HOLD",
-      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
-      "sourceExam": 112,
-      "session": "AM",
-      "number": 40,
-      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
-      "sourceImageSha256": "6ef0340e68ad18f3fda4ec55c30fb871841a6b823309532765ff8736c817f09a",
-      "sourcePage": 17,
-      "coordinateClip": [
-        0,
-        78.85,
-        615.61,
-        274.6
-      ],
-      "ocrPsm6Sha256": "e91b3f839603443130902dd9c5a6dd5591a77d72ee7de75ea1263b2fde96bc59",
-      "ocrPsm3Sha256": "a036e96c7f22134e02ee78fcffb68ea81df0734efedd70e2a2c14fbfbf16d56d",
-      "ocrSegmentation": {
-        "psm6": null,
-        "psm3": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
-      }
-    },
-    {
-      "id": "K112-AM042",
-      "status": "HOLD",
-      "reason": "OCR_CMAP_ONLY_FULL_FIELD_GATE_FAILED",
-      "sourceExam": 112,
-      "session": "AM",
-      "number": 42,
-      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
-      "sourceImageSha256": "fd0e8facb1217651f5b31c8f652d5c5e428347993878abba6562a86b08b85845",
-      "sourcePage": 17,
-      "coordinateClip": [
-        0,
-        440.26,
-        615.61,
-        636.02
-      ],
-      "ocrPsm6Sha256": "17cc5dee35b3459f2c73966405ef5708a287bac39960dfc95db78ca3b165a6f4",
-      "ocrPsm3Sha256": "17cc5dee35b3459f2c73966405ef5708a287bac39960dfc95db78ca3b165a6f4",
-      "fieldChecks": [
-        {
-          "index": 0,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        },
-        {
-          "index": 1,
-          "pass": false,
-          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
-          "deltas": []
-        },
-        {
-          "index": 2,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        },
-        {
-          "index": 3,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        },
-        {
-          "index": 4,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        }
-      ]
-    },
-    {
-      "id": "K112-AM045",
-      "status": "HOLD",
-      "reason": "OCR_CMAP_ONLY_FULL_FIELD_GATE_FAILED",
-      "sourceExam": 112,
-      "session": "AM",
-      "number": 45,
-      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
-      "sourceImageSha256": "484c62df6f32f82a553cad838347c52746cf415ebb564f3b0b670aaf50a99187",
-      "sourcePage": 18,
-      "coordinateClip": [
-        0,
-        271.6,
-        615.61,
-        443.26
-      ],
-      "ocrPsm6Sha256": "3f6d0639337704fadb56c3de9316c1084fd59827be80cde6dabe7a235f5c96f2",
-      "ocrPsm3Sha256": "3f6d0639337704fadb56c3de9316c1084fd59827be80cde6dabe7a235f5c96f2",
-      "fieldChecks": [
-        {
-          "index": 0,
-          "pass": false,
-          "reason": "OCR_REPLACEMENT_NOT_LOCAL",
-          "deltas": []
-        },
-        {
-          "index": 1,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        },
-        {
-          "index": 2,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        },
-        {
-          "index": 3,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        },
-        {
-          "index": 4,
-          "pass": false,
-          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
-          "deltas": []
-        }
-      ]
-    },
-    {
-      "id": "K112-AM048",
-      "status": "HOLD",
-      "reason": "INDEPENDENT_OCR_RENDERINGS_FIELD_DISAGREE",
-      "sourceExam": 112,
-      "session": "AM",
-      "number": 48,
-      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
-      "sourceImageSha256": "2428a2bb0127a97fb21819e45fe6c421a462446532ae69ea3a91f9a325d50e34",
-      "sourcePage": 19,
-      "coordinateClip": [
-        0,
-        584.83,
-        615.61,
-        827.44
-      ],
-      "ocrPsm6Sha256": "af6ba1adaaed5ff010653fa8c5963d9f21fc65159115ce28f30112d8d136d1ff",
-      "ocrPsm3Sha256": "a3f33d1ba95e6fdabca15e5e9d5690e428cb9edf0937814e1c9b60f6605b596c",
-      "ocrSegmentation": {
-        "psm6Count": 5,
-        "psm3Count": 5
-      }
-    },
-    {
-      "id": "K112-AM050",
-      "status": "HOLD",
-      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
-      "sourceExam": 112,
-      "session": "AM",
-      "number": 50,
-      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
-      "sourceImageSha256": "3b0feff7531302123d27587d7f0979b83ec81496212826e95543a4e3704441b0",
-      "sourcePage": 20,
-      "coordinateClip": [
-        0,
-        247.51,
-        615.61,
-        419.17
-      ],
-      "ocrPsm6Sha256": "147ece876ddb7dc89d99751e5d1f576d311f27fa5bde1a816d28a73e9a9399c0",
-      "ocrPsm3Sha256": "147ece876ddb7dc89d99751e5d1f576d311f27fa5bde1a816d28a73e9a9399c0",
-      "ocrSegmentation": {
-        "psm6": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES",
-        "psm3": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
-      }
-    },
-    {
-      "id": "K112-AM055",
-      "status": "HOLD",
-      "reason": "OCR_CMAP_ONLY_FULL_FIELD_GATE_FAILED",
-      "sourceExam": 112,
-      "session": "AM",
-      "number": 55,
-      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
-      "sourceImageSha256": "d6ec5ac4474e91b1eb3ac2a49b4c04efc646fcf5e680f67cfa165a332bcf4a7c",
-      "sourcePage": 21,
-      "coordinateClip": [
-        0,
-        416.17,
-        615.61,
-        587.83
-      ],
-      "ocrPsm6Sha256": "1e92271158c2c154f2a614b15a844b3632be9b52431f2bc464b6fb331584e275",
-      "ocrPsm3Sha256": "1e92271158c2c154f2a614b15a844b3632be9b52431f2bc464b6fb331584e275",
-      "fieldChecks": [
-        {
-          "index": 0,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        },
-        {
-          "index": 1,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        },
-        {
-          "index": 2,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        },
-        {
-          "index": 3,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        },
-        {
-          "index": 4,
-          "pass": false,
-          "reason": "INSUFFICIENT_BILATERAL_CONTEXT",
-          "deltas": [
-            {
-              "at": 4,
-              "before": "ï",
-              "after": "(",
-              "leftAnchor": "通所介護",
-              "rightAnchor": "デイサービ"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "K112-AM064",
-      "status": "HOLD",
-      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
-      "sourceExam": 112,
-      "session": "AM",
-      "number": 64,
-      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
-      "sourceImageSha256": "365affae03f5f57c344be17481e92d0e85300f4ef5b529588ce9cac04bf8ba3d",
-      "sourcePage": 24,
-      "coordinateClip": [
-        0,
-        440.26,
-        615.61,
-        611.92
-      ],
-      "ocrPsm6Sha256": "524c7b4ff0e742c3eea359c700870e89f7083c1dad7ef44b95978a958939d472",
-      "ocrPsm3Sha256": "f2dac21d70769d02ca0c9f78b8bc5c7ac4602b29153f2e4e678d6e6e6072148d",
-      "ocrSegmentation": {
-        "psm6": null,
-        "psm3": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
-      }
-    },
-    {
-      "id": "K112-AM065",
-      "status": "HOLD",
-      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
-      "sourceExam": 112,
-      "session": "AM",
-      "number": 65,
-      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
-      "sourceImageSha256": "cb9db802a683912631d9759002007749188e2df93c25fcbe4c283bd41550143e",
-      "sourcePage": 24,
-      "coordinateClip": [
-        0,
-        608.92,
-        615.61,
-        827.44
-      ],
-      "ocrPsm6Sha256": "e2aacedbff2f9b0b128fc25ac0962814e884c3d945bfeb13529c72a739498217",
-      "ocrPsm3Sha256": "fc0bd65a8b13db9fa0080003140ad9cf6170c32705515253b11857ec96518944",
-      "ocrSegmentation": {
-        "psm6": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES",
-        "psm3": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
-      }
-    },
-    {
-      "id": "K112-AM067",
-      "status": "HOLD",
-      "reason": "OCR_CMAP_ONLY_FULL_FIELD_GATE_FAILED",
-      "sourceExam": 112,
-      "session": "AM",
-      "number": 67,
-      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
-      "sourceImageSha256": "cba3f9ee20782f92d7675d49eed8d56d3832da8066ca5826080602f7ff945149",
-      "sourcePage": 25,
-      "coordinateClip": [
-        0,
-        271.6,
-        615.61,
-        467.36
-      ],
-      "ocrPsm6Sha256": "f649bdbb8237dc1af98457821951afc1294eb8dc45c84a930867924c1840a5a3",
-      "ocrPsm3Sha256": "f649bdbb8237dc1af98457821951afc1294eb8dc45c84a930867924c1840a5a3",
-      "fieldChecks": [
-        {
-          "index": 0,
-          "pass": false,
-          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
-          "deltas": []
-        },
-        {
-          "index": 1,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        },
-        {
-          "index": 2,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        },
-        {
-          "index": 3,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        },
-        {
-          "index": 4,
-          "pass": false,
-          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
-          "deltas": []
-        }
-      ]
-    },
-    {
-      "id": "K112-AM069",
-      "status": "HOLD",
-      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
-      "sourceExam": 112,
-      "session": "AM",
-      "number": 69,
-      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
-      "sourceImageSha256": "3b7f84a04d740f6b057bded23897448b51014245a5108496e7aa4aaa32dd689b",
-      "sourcePage": 26,
-      "coordinateClip": [
-        0,
-        78.85,
-        615.61,
-        298.7
-      ],
-      "ocrPsm6Sha256": "16bbd9d40b362fed40745a8923c92b09484b48abc2c6cf5a9162f4b8f95b1221",
-      "ocrPsm3Sha256": "25ad5e0068f8509e4850bd9e8284bb875eccac83a5ee15abe9a2b45c899c418e",
-      "ocrSegmentation": {
-        "psm6": null,
-        "psm3": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
-      }
-    },
-    {
-      "id": "K112-AM070",
-      "status": "HOLD",
-      "reason": "OCR_CMAP_ONLY_FULL_FIELD_GATE_FAILED",
-      "sourceExam": 112,
-      "session": "AM",
-      "number": 70,
-      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
-      "sourceImageSha256": "141f5d132d009bb16e4eccde52d0b0b1f5344ac3537e737c182b374d0602c366",
-      "sourcePage": 26,
-      "coordinateClip": [
-        0,
-        295.7,
-        615.61,
-        467.36
-      ],
-      "ocrPsm6Sha256": "acb95b5f63b75c2bdfc0adede278556f070387a2c41558807bd8471c0a0f0ff8",
-      "ocrPsm3Sha256": "09889d0797bdbb9f20eefb4df01bf56467e059cee74df36014bf28c58ed94c75",
-      "fieldChecks": [
-        {
-          "index": 0,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        },
-        {
-          "index": 1,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        },
-        {
-          "index": 2,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        },
-        {
-          "index": 3,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        },
-        {
-          "index": 4,
-          "pass": false,
-          "reason": "INSUFFICIENT_BILATERAL_CONTEXT",
-          "deltas": [
-            {
-              "at": 12,
-              "before": "ï",
-              "after": "(",
-              "leftAnchor": "同生活介護",
-              "rightAnchor": "グループホ"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "K112-AM071",
-      "status": "HOLD",
-      "reason": "INDEPENDENT_OCR_RENDERINGS_FIELD_DISAGREE",
-      "sourceExam": 112,
-      "session": "AM",
-      "number": 71,
-      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
-      "sourceImageSha256": "e6b285d8f99b3533df834403b18fd79c0d4d40592d104c74f1393e8bb4d345ae",
-      "sourcePage": 26,
-      "coordinateClip": [
-        0,
-        464.36,
-        615.61,
-        827.44
-      ],
-      "ocrPsm6Sha256": "331a1d053fbad3f0ac6ad9510fd5e51ce338369b66bab6b0fa079dcba2148b8e",
-      "ocrPsm3Sha256": "82d03c6f84407b71d7c9dad44a70712f7ee4847f87f5c66bcc82d02f7938b523",
-      "ocrSegmentation": {
-        "psm6Count": 5,
-        "psm3Count": 5
-      }
-    },
-    {
-      "id": "K112-AM075",
-      "status": "HOLD",
-      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
-      "sourceExam": 112,
-      "session": "AM",
-      "number": 75,
-      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
-      "sourceImageSha256": "5c527182b71bc7f769d42148e7675866e76fcd9d4ea876c78d95f5a20ec65318",
-      "sourcePage": 28,
-      "coordinateClip": [
-        0,
-        78.85,
-        615.61,
-        274.6
-      ],
-      "ocrPsm6Sha256": "7ae889b98e9280c7fbd7a543593c5a4f90cecf7dd640c7a49eabed9a74b49726",
-      "ocrPsm3Sha256": "3ddd4a0e7bb9377501222b85c8912aaad8c9054b996d357440309c12bfbd94b1",
-      "ocrSegmentation": {
-        "psm6": "OCR_CHOICES_NON_SEQUENTIAL",
-        "psm3": null
-      }
-    },
-    {
-      "id": "K112-AM083",
-      "status": "HOLD",
-      "reason": "INDEPENDENT_OCR_RENDERINGS_FIELD_DISAGREE",
-      "sourceExam": 112,
-      "session": "AM",
-      "number": 83,
-      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
-      "sourceImageSha256": "2cfdb0ed0f0e782b28f256cf421e54881b0bc10976c98287e911ccce958255cd",
-      "sourcePage": 30,
-      "coordinateClip": [
-        0,
-        488.45,
-        615.61,
-        827.44
-      ],
-      "ocrPsm6Sha256": "fed270d07913f77c7042864578ef6c4c158f9dbbd2a3e1a9ad4b8fc75418856e",
-      "ocrPsm3Sha256": "8ffa73ee6dba126c62167c7170de89d72d1c6150bfcc222957e866c8ae97caaa",
-      "ocrSegmentation": {
-        "psm6Count": 6,
-        "psm3Count": 6
-      }
-    },
-    {
-      "id": "K112-AM085",
-      "status": "HOLD",
-      "reason": "OFFICIAL_KEY_OR_SCORING_EXCEPTION",
-      "sourceExam": 112,
-      "session": "AM",
-      "number": 85
-    },
-    {
-      "id": "K112-PM001",
-      "status": "HOLD",
-      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
-      "sourceExam": 112,
-      "session": "PM",
-      "number": 1,
-      "sourcePdfSha256": "137d583931c6ae6a7fa2f3f8655352bdce24735c6f0b2bbbb0b192e6a357d01e",
-      "sourceImageSha256": "fa24e94249c4842035151add30f53d1fa27d532757c83530efc5ab24da97c624",
-      "sourcePage": 7,
-      "coordinateClip": [
-        0,
-        78.85,
-        615.61,
-        250.51
-      ],
-      "ocrPsm6Sha256": "d5a62b8603cecce66708a7d664afc3c9c959c21c5dfe85d56b17a5b8180843ad",
-      "ocrPsm3Sha256": "7e74ec4e58b299ac5b60c5a045af7615d34ceb2eb9cec0423be308d232430af2",
-      "ocrSegmentation": {
-        "psm6": null,
-        "psm3": "OCR_CHOICES_NON_SEQUENTIAL"
-      }
-    },
-    {
-      "id": "K112-PM003",
-      "status": "HOLD",
-      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
-      "sourceExam": 112,
-      "session": "PM",
-      "number": 3,
-      "sourcePdfSha256": "137d583931c6ae6a7fa2f3f8655352bdce24735c6f0b2bbbb0b192e6a357d01e",
-      "sourceImageSha256": "3e7f45ec5136af7ea836998145be9551117312130291d15b7e20679f6de8a160",
-      "sourcePage": 7,
-      "coordinateClip": [
-        0,
-        416.17,
-        615.61,
-        587.83
-      ],
-      "ocrPsm6Sha256": "f8b30848ed6ecfbc97edd6eb9cb8417f648045a80d0a29d68faf58d9e0012506",
-      "ocrPsm3Sha256": "d4e1a2bd97e23cf698631ab0f1e79280ae6a051c9c92563743ecd15c7a390a32",
-      "ocrSegmentation": {
-        "psm6": null,
-        "psm3": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
-      }
-    },
-    {
-      "id": "K112-PM008",
-      "status": "HOLD",
-      "reason": "INDEPENDENT_OCR_RENDERINGS_FIELD_DISAGREE",
-      "sourceExam": 112,
-      "session": "PM",
-      "number": 8,
-      "sourcePdfSha256": "137d583931c6ae6a7fa2f3f8655352bdce24735c6f0b2bbbb0b192e6a357d01e",
-      "sourceImageSha256": "79774a5f9e049aa030b865a88b262e18e13fb01dea82e9e250e3127ebd8a0332",
-      "sourcePage": 8,
-      "coordinateClip": [
-        0,
-        608.92,
-        615.61,
-        827.44
-      ],
-      "ocrPsm6Sha256": "f9fd1a5cfab1abd5c491978fe32259b13fd65a1d2da8242d00f7cb338791f9b7",
-      "ocrPsm3Sha256": "d541bce89e48f733d1cb5fd1c6ba396b591729cc458a2b8359b18ca67e9461fa",
-      "ocrSegmentation": {
-        "psm6Count": 5,
-        "psm3Count": 5
-      }
-    },
-    {
-      "id": "K112-PM012",
-      "status": "HOLD",
-      "reason": "OCR_CMAP_ONLY_FULL_FIELD_GATE_FAILED",
-      "sourceExam": 112,
-      "session": "PM",
-      "number": 12,
-      "sourcePdfSha256": "137d583931c6ae6a7fa2f3f8655352bdce24735c6f0b2bbbb0b192e6a357d01e",
-      "sourceImageSha256": "34514430eb6c93313bbd6ac48c5bb02f72be10f17983e0feec18272d48137f6f",
-      "sourcePage": 9,
-      "coordinateClip": [
-        0,
-        584.83,
-        615.61,
-        827.44
-      ],
-      "ocrPsm6Sha256": "6837f1a7ddaa1043ef53398145f78653a8f35570a79f39fea5ff1c070ed7dfdf",
-      "ocrPsm3Sha256": "8bb03a1727ea3ef3d36e6b358d8130438ada0fb6f0dc981e69525b82a91bc027",
-      "fieldChecks": [
-        {
-          "index": 0,
-          "pass": false,
-          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
-          "deltas": []
-        },
-        {
-          "index": 1,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        },
-        {
-          "index": 2,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        },
-        {
-          "index": 3,
-          "pass": false,
-          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
-          "deltas": [
-            {
-              "at": 3,
-              "before": "è",
-              "after": "(",
-              "leftAnchor": "His",
-              "rightAnchor": "ヒスê束"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "pass": false,
-          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
-          "deltas": [
-            {
-              "at": 8,
-              "before": "è",
-              "after": "<",
-              "leftAnchor": "kinje",
-              "rightAnchor": "プルキンエ"
-            },
-            {
-              "at": 14,
-              "before": "ê",
-              "after": ")",
-              "leftAnchor": "プルキンエ",
-              "rightAnchor": "線維"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "K112-PM014",
-      "status": "HOLD",
-      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
-      "sourceExam": 112,
-      "session": "PM",
-      "number": 14,
-      "sourcePdfSha256": "137d583931c6ae6a7fa2f3f8655352bdce24735c6f0b2bbbb0b192e6a357d01e",
-      "sourceImageSha256": "06e59a4a148e13833506f15ec8ac08bfdb787670cf9c5a973ee53e6b30a5bddc",
-      "sourcePage": 10,
-      "coordinateClip": [
-        0,
-        247.51,
-        615.61,
-        467.36
-      ],
-      "ocrPsm6Sha256": "6257eb824172b037d16855e25ef9ced87bc2220979af4569097847b6308f69d1",
-      "ocrPsm3Sha256": "a90e9619287bcce4e2c9a431ce2619cb70964d31324f054eee51b7c7b001a53c",
-      "ocrSegmentation": {
-        "psm6": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES",
-        "psm3": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
-      }
-    },
-    {
-      "id": "K112-PM021",
-      "status": "HOLD",
-      "reason": "OCR_CMAP_ONLY_FULL_FIELD_GATE_FAILED",
-      "sourceExam": 112,
-      "session": "PM",
-      "number": 21,
-      "sourcePdfSha256": "137d583931c6ae6a7fa2f3f8655352bdce24735c6f0b2bbbb0b192e6a357d01e",
-      "sourceImageSha256": "5d99f5eadd07259d27205b695fb8876af3acc3aa18ab1527a918d9838ccb99d0",
-      "sourcePage": 12,
-      "coordinateClip": [
-        0,
-        78.85,
-        615.61,
-        250.51
-      ],
-      "ocrPsm6Sha256": "fab7397604f8d06fb2d29cdcb93ebc1b687a840ce5cc9c81da4258b100ff11a5",
-      "ocrPsm3Sha256": "fab7397604f8d06fb2d29cdcb93ebc1b687a840ce5cc9c81da4258b100ff11a5",
-      "fieldChecks": [
-        {
-          "index": 0,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        },
-        {
-          "index": 1,
-          "pass": false,
-          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
-          "deltas": []
-        },
-        {
-          "index": 2,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        },
-        {
-          "index": 3,
-          "pass": false,
-          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
-          "deltas": []
-        },
-        {
-          "index": 4,
-          "pass": false,
-          "reason": "INSUFFICIENT_BILATERAL_CONTEXT",
-          "deltas": [
-            {
-              "at": 5,
-              "before": "è",
-              "after": "く",
-              "leftAnchor": "腹部圧迫法",
-              "rightAnchor": "Heiml"
-            },
-            {
-              "at": 14,
-              "before": "è",
-              "after": "〈",
-              "leftAnchor": "mlich",
-              "rightAnchor": "ハイムリッ"
-            },
-            {
-              "at": 21,
-              "before": "ê",
-              "after": "/)",
-              "leftAnchor": "イムリック",
-              "rightAnchor": "法ê"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "K112-PM023",
-      "status": "HOLD",
-      "reason": "OCR_CMAP_ONLY_FULL_FIELD_GATE_FAILED",
-      "sourceExam": 112,
-      "session": "PM",
-      "number": 23,
-      "sourcePdfSha256": "137d583931c6ae6a7fa2f3f8655352bdce24735c6f0b2bbbb0b192e6a357d01e",
-      "sourceImageSha256": "f819a871e561a06ab4ffe383eb60489a02eb5156bb6c7e1b17c3fb18060a6e0e",
-      "sourcePage": 12,
-      "coordinateClip": [
-        0,
-        416.17,
-        615.61,
-        587.83
-      ],
-      "ocrPsm6Sha256": "e8cff003426175294d22a6ad09d87aae9e0e50e2656466ed31b767162a013b7a",
-      "ocrPsm3Sha256": "e8cff003426175294d22a6ad09d87aae9e0e50e2656466ed31b767162a013b7a",
-      "fieldChecks": [
-        {
-          "index": 0,
-          "pass": false,
-          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
-          "deltas": []
-        },
-        {
-          "index": 1,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        },
-        {
-          "index": 2,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        },
-        {
-          "index": 3,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        },
-        {
-          "index": 4,
-          "pass": true,
-          "reason": "UNCHANGED",
-          "deltas": []
-        }
-      ]
-    },
-    {
-      "id": "K112-PM024",
-      "status": "HOLD",
-      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
-      "sourceExam": 112,
-      "session": "PM",
-      "number": 24,
-      "sourcePdfSha256": "137d583931c6ae6a7fa2f3f8655352bdce24735c6f0b2bbbb0b192e6a357d01e",
-      "sourceImageSha256": "f1210684dfe2b8d37205ed5e525248beb912a095a08e0739da3f37b276825496",
-      "sourcePage": 12,
-      "coordinateClip": [
-        0,
-        584.83,
-        615.61,
-        827.44
-      ],
-      "ocrPsm6Sha256": "6cb4e67616c251b32dfc432c229698d81f6a45de00f507eacd15553db069eb1f",
-      "ocrPsm3Sha256": "1cd4fe1e5ef237531f0cbeee5f3caa2dc1cbe81abc3015010d7984a1f7ec8697",
-      "ocrSegmentation": {
-        "psm6": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES",
-        "psm3": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
-      }
-    },
-    {
-      "id": "K112-PM027",
-      "status": "HOLD",
-      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
-      "sourceExam": 112,
-      "session": "PM",
-      "number": 27,
-      "sourcePdfSha256": "137d583931c6ae6a7fa2f3f8655352bdce24735c6f0b2bbbb0b192e6a357d01e",
-      "sourceImageSha256": "c1fa2ae3de90677b84808fa1ff50e2aa50bab68fb9d5a2db2edce6c7f8638f82",
-      "sourcePage": 14,
-      "coordinateClip": [
-        0,
-        78.85,
-        615.61,
-        250.51
-      ],
-      "ocrPsm6Sha256": "a8d2f695afab944cf9ea696715df41caddc6138d623c3658b49d399a16d79d6f",
-      "ocrPsm3Sha256": "929d48a455665d02406190f6cffde8d90ab06e8ca3c710ace9c9f12a17172d37",
-      "ocrSegmentation": {
-        "psm6": null,
-        "psm3": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
-      }
-    },
-    {
-      "id": "K112-PM030",
-      "status": "HOLD",
-      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
-      "sourceExam": 112,
-      "session": "PM",
-      "number": 30,
-      "sourcePdfSha256": "137d583931c6ae6a7fa2f3f8655352bdce24735c6f0b2bbbb0b192e6a357d01e",
-      "sourceImageSha256": "566771d1eb2f9a164fb7f3ca7a7e16715b49e059320684529c720f7f6a636ada",
-      "sourcePage": 14,
-      "coordinateClip": [
-        0,
-        584.83,
-        615.61,
-        827.44
-      ],
-      "ocrPsm6Sha256": "e14eb288dfe45ba5c9fcd0569ff175c38a9c23288cdd4e6e4968258a9eb3401b",
-      "ocrPsm3Sha256": "d65774e996591a515c862ee26214028da73cd615168115c0e377fe11243136fd",
-      "ocrSegmentation": {
-        "psm6": null,
-        "psm3": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
-      }
-    },
-    {
-      "id": "K112-PM037",
-      "status": "HOLD",
-      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
-      "sourceExam": 112,
-      "session": "PM",
-      "number": 37,
-      "sourcePdfSha256": "137d583931c6ae6a7fa2f3f8655352bdce24735c6f0b2bbbb0b192e6a357d01e",
-      "sourceImageSha256": "61b8d6f1431ae59718515091d0d04cb5bd2bb891774a9614359149c1a563f48a",
-      "sourcePage": 16,
-      "coordinateClip": [
-        0,
-        416.17,
-        615.61,
-        587.83
-      ],
-      "ocrPsm6Sha256": "95f787040183dc531100989a9d61935e2bf3c3834028a07c116e107b49f7415b",
-      "ocrPsm3Sha256": "241ebdc53cf5ae114d30e09e06a2a99938f567f42d00abfa2c6a06f95f979394",
-      "ocrSegmentation": {
-        "psm6": null,
-        "psm3": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
-      }
-    },
-    {
-      "id": "K112-PM038",
-      "status": "HOLD",
-      "reason": "INDEPENDENT_OCR_RENDERINGS_FIELD_DISAGREE",
-      "sourceExam": 112,
-      "session": "PM",
-      "number": 38,
-      "sourcePdfSha256": "137d583931c6ae6a7fa2f3f8655352bdce24735c6f0b2bbbb0b192e6a357d01e",
-      "sourceImageSha256": "fd2eaea7fd368b6fbdab1532a28fa086f964b344df12768474ad42cf55da673e",
-      "sourcePage": 16,
-      "coordinateClip": [
-        0,
-        584.83,
-        615.61,
-        827.44
-      ],
-      "ocrPsm6Sha256": "4b1f03e8f7f1f0813d1fdee6787e6a15509792f5ea957c1eeb44a4b0aafe19ce",
-      "ocrPsm3Sha256": "e9e7ad8ddef98ffb2cde47b58400dce3adf29f55cef1cfc2d3f2e2b6dad3e499",
-      "ocrSegmentation": {
-        "psm6Count": 5,
-        "psm3Count": 5
       }
     },
     {
@@ -2737,6 +198,2541 @@
       }
     },
     {
+      "id": "K111-AM004",
+      "status": "HOLD",
+      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
+      "sourceExam": 111,
+      "session": "AM",
+      "number": 4,
+      "sourcePdfSha256": "e853d7a86ef06ef41e8622f550dcf9bb3ffa48af076e412394070f237827bfb3",
+      "sourceImageSha256": "14c70899c0d4969e9f174f2047aac4377ed1df1a40701c7e55439138f2a2183f",
+      "sourcePage": 7,
+      "coordinateClip": [
+        0.0,
+        582.0,
+        609.95,
+        822.01
+      ],
+      "ocrPsm6Sha256": "0388eee311022db088d09dc142e818567ef9e51143e2772519b1bd60edf90f63",
+      "ocrPsm3Sha256": "1cea16f31caba9b3fc0577370bcab1b1da372b95157c04a05a687126c33a1865",
+      "ocrSegmentation": {
+        "psm6": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES",
+        "psm3": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
+      }
+    },
+    {
+      "id": "K111-AM016",
+      "status": "HOLD",
+      "reason": "OCR_CMAP_ONLY_FULL_FIELD_GATE_FAILED",
+      "sourceExam": 111,
+      "session": "AM",
+      "number": 16,
+      "sourcePdfSha256": "e853d7a86ef06ef41e8622f550dcf9bb3ffa48af076e412394070f237827bfb3",
+      "sourceImageSha256": "2aaa9be9e2baaac2a9025db2f053ffb04e4c7a73ee9c4d9bd7fed93e09faf67e",
+      "sourcePage": 12,
+      "coordinateClip": [
+        0.0,
+        76.02,
+        609.95,
+        247.68
+      ],
+      "ocrPsm6Sha256": "41a7d2835d635b3c74745bcd5caae4cb03693909148e13372e4c286b290dc16a",
+      "ocrPsm3Sha256": "41a7d2835d635b3c74745bcd5caae4cb03693909148e13372e4c286b290dc16a",
+      "fieldChecks": [
+        {
+          "index": 0,
+          "pass": true,
+          "reason": "CMAP_ONLY_ANCHORED_GAP",
+          "deltas": [
+            {
+              "at": 18,
+              "before": "",
+              "after": "〈",
+              "leftAnchor": "stion",
+              "rightAnchor": "開かれた質"
+            },
+            {
+              "at": 25,
+              "before": "",
+              "after": ")",
+              "leftAnchor": "かれた質問",
+              "rightAnchor": "はどれか。"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 2,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 3,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 4,
+          "pass": false,
+          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
+          "deltas": []
+        }
+      ]
+    },
+    {
+      "id": "K111-AM024",
+      "status": "HOLD",
+      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
+      "sourceExam": 111,
+      "session": "AM",
+      "number": 24,
+      "sourcePdfSha256": "e853d7a86ef06ef41e8622f550dcf9bb3ffa48af076e412394070f237827bfb3",
+      "sourceImageSha256": "d0afb5c2148c35cee1faf8a7374c373f2f4eb30c15994f8842ac6f595c4a4984",
+      "sourcePage": 15,
+      "coordinateClip": [
+        0.0,
+        76.02,
+        609.95,
+        295.87
+      ],
+      "ocrPsm6Sha256": "1ca58812ff2be5e6fd1f666b954786b4c5a8b292e2eec4f304c97d81e46febba",
+      "ocrPsm3Sha256": "3d2b1297e7b5576f5d82dc9e9d85de25df157db17a5196e9062b0a46ddda76ba",
+      "ocrSegmentation": {
+        "psm6": null,
+        "psm3": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
+      }
+    },
+    {
+      "id": "K111-AM025",
+      "status": "HOLD",
+      "reason": "PRINTED_CHOICES_NOT_FOUR",
+      "sourceExam": 111,
+      "session": "AM",
+      "number": 25,
+      "sourcePdfSha256": "e853d7a86ef06ef41e8622f550dcf9bb3ffa48af076e412394070f237827bfb3",
+      "sourceImageSha256": "a274dbc6b810d227cf4c7c8791c9039ee0c0090c09142f75693d450e068d9890",
+      "sourcePage": 15,
+      "coordinateClip": [
+        0.0,
+        292.87,
+        609.95,
+        512.72
+      ],
+      "ocrPsm6Sha256": "91f16719cc1dee5afb80dbf36603d573a8384cc83aa07e89d8be6d6fcaf1dd12",
+      "ocrPsm3Sha256": "5626e65e1e2137d1aabddde02e03b395cf7bb191fced6e8446e6970de77ed0b2"
+    },
+    {
+      "id": "K111-AM030",
+      "status": "HOLD",
+      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
+      "sourceExam": 111,
+      "session": "AM",
+      "number": 30,
+      "sourcePdfSha256": "e853d7a86ef06ef41e8622f550dcf9bb3ffa48af076e412394070f237827bfb3",
+      "sourceImageSha256": "29c3e3ec72872706222e01e82dd962880be4def76df2dafa3206427ef563f0d5",
+      "sourcePage": 16,
+      "coordinateClip": [
+        0.0,
+        582.0,
+        609.95,
+        822.01
+      ],
+      "ocrPsm6Sha256": "e797711f324d5feeb946565ef44d770b6b4ed355de4acb8d845747528a51edc3",
+      "ocrPsm3Sha256": "b3ebe54f8863039b301459ad6a64609ecf6bca811c56c43dcf293b9b397d1a48",
+      "ocrSegmentation": {
+        "psm6": null,
+        "psm3": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
+      }
+    },
+    {
+      "id": "K111-AM033",
+      "status": "HOLD",
+      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
+      "sourceExam": 111,
+      "session": "AM",
+      "number": 33,
+      "sourcePdfSha256": "e853d7a86ef06ef41e8622f550dcf9bb3ffa48af076e412394070f237827bfb3",
+      "sourceImageSha256": "9544245fb4649141d60b69cd63f90a9b6d61444602da59550dac104f9a5412ea",
+      "sourcePage": 17,
+      "coordinateClip": [
+        0.0,
+        413.34,
+        609.95,
+        609.09
+      ],
+      "ocrPsm6Sha256": "dad3303aacab02574bbdf920ab365066f2c7102e0dace66d49975375481d4d35",
+      "ocrPsm3Sha256": "7ac109dd0549c0912f7066895ab46016827814c12acfa6af68df2fa82b1b18f7",
+      "ocrSegmentation": {
+        "psm6": null,
+        "psm3": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
+      }
+    },
+    {
+      "id": "K111-AM036",
+      "status": "HOLD",
+      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
+      "sourceExam": 111,
+      "session": "AM",
+      "number": 36,
+      "sourcePdfSha256": "e853d7a86ef06ef41e8622f550dcf9bb3ffa48af076e412394070f237827bfb3",
+      "sourceImageSha256": "b1c591470859008e21f3a3e26b48dd923b393c6b612bfdceda64481954ffe2a9",
+      "sourcePage": 18,
+      "coordinateClip": [
+        0.0,
+        244.68,
+        609.95,
+        416.34
+      ],
+      "ocrPsm6Sha256": "f68cf223eb8b361d089b8ea7baf13c8560af59fd0dec085da8b88d7ff8844a3a",
+      "ocrPsm3Sha256": "8020f77740aa66dcc2b2ed06e8165357dcc93e8861db3c8ff89600e3ec08da3d",
+      "ocrSegmentation": {
+        "psm6": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES",
+        "psm3": "OCR_CHOICES_NON_SEQUENTIAL"
+      }
+    },
+    {
+      "id": "K111-AM047",
+      "status": "HOLD",
+      "reason": "OCR_CMAP_ONLY_FULL_FIELD_GATE_FAILED",
+      "sourceExam": 111,
+      "session": "AM",
+      "number": 47,
+      "sourcePdfSha256": "e853d7a86ef06ef41e8622f550dcf9bb3ffa48af076e412394070f237827bfb3",
+      "sourceImageSha256": "90edbad3e985dc08d23915a3cbc0d67c9e6afccb2b7749c3bb1de7223764fef3",
+      "sourcePage": 21,
+      "coordinateClip": [
+        0.0,
+        413.34,
+        609.95,
+        585.0
+      ],
+      "ocrPsm6Sha256": "558b5d84f4b16a413f662bdf8930651da822c68d6f6e63125d3dc92260e51bb6",
+      "ocrPsm3Sha256": "558b5d84f4b16a413f662bdf8930651da822c68d6f6e63125d3dc92260e51bb6",
+      "fieldChecks": [
+        {
+          "index": 0,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 1,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 2,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 3,
+          "pass": false,
+          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
+          "deltas": []
+        },
+        {
+          "index": 4,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        }
+      ]
+    },
+    {
+      "id": "K111-AM053",
+      "status": "HOLD",
+      "reason": "OCR_CMAP_ONLY_FULL_FIELD_GATE_FAILED",
+      "sourceExam": 111,
+      "session": "AM",
+      "number": 53,
+      "sourcePdfSha256": "e853d7a86ef06ef41e8622f550dcf9bb3ffa48af076e412394070f237827bfb3",
+      "sourceImageSha256": "d1ca2337b4f494fa5f71b673e91642b3e58b503dda691e159ae6a8379a84d9e9",
+      "sourcePage": 23,
+      "coordinateClip": [
+        0.0,
+        76.02,
+        609.95,
+        247.68
+      ],
+      "ocrPsm6Sha256": "a920567bb76159ea613849523fcef928da372f339d35d3df67315c99afea626d",
+      "ocrPsm3Sha256": "a920567bb76159ea613849523fcef928da372f339d35d3df67315c99afea626d",
+      "fieldChecks": [
+        {
+          "index": 0,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 1,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 2,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 3,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 4,
+          "pass": false,
+          "reason": "INSUFFICIENT_BILATERAL_CONTEXT",
+          "deltas": [
+            {
+              "at": 12,
+              "before": "",
+              "after": "(",
+              "leftAnchor": "同生活介護",
+              "rightAnchor": "認知症高齢"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "K111-AM055",
+      "status": "HOLD",
+      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
+      "sourceExam": 111,
+      "session": "AM",
+      "number": 55,
+      "sourcePdfSha256": "e853d7a86ef06ef41e8622f550dcf9bb3ffa48af076e412394070f237827bfb3",
+      "sourceImageSha256": "4ff71985d5ea2a06cbb0c96ea391a7c59dc3a0ee5c0da257577402c794c8b08d",
+      "sourcePage": 23,
+      "coordinateClip": [
+        0.0,
+        437.43,
+        609.95,
+        822.01
+      ],
+      "ocrPsm6Sha256": "b6e77b8d79f528bc803c968ac692da3ff03ee6b806879a22a5a80dc7495618f3",
+      "ocrPsm3Sha256": "d805500965d88514fba341a910ec9499a4b0780438c6bcf1f8c41621a1c69628",
+      "ocrSegmentation": {
+        "psm6": null,
+        "psm3": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
+      }
+    },
+    {
+      "id": "K111-AM063",
+      "status": "HOLD",
+      "reason": "OCR_CMAP_ONLY_FULL_FIELD_GATE_FAILED",
+      "sourceExam": 111,
+      "session": "AM",
+      "number": 63,
+      "sourcePdfSha256": "e853d7a86ef06ef41e8622f550dcf9bb3ffa48af076e412394070f237827bfb3",
+      "sourceImageSha256": "f2d982665ce5ace108e1c85858047f24c12b282346a7c091f57edb04fc1a7a88",
+      "sourcePage": 26,
+      "coordinateClip": [
+        0.0,
+        244.68,
+        609.95,
+        416.34
+      ],
+      "ocrPsm6Sha256": "876c669fea7de6d4d4d83b6e9398c47eefe142223f6008f4dc94693fbd738676",
+      "ocrPsm3Sha256": "876c669fea7de6d4d4d83b6e9398c47eefe142223f6008f4dc94693fbd738676",
+      "fieldChecks": [
+        {
+          "index": 0,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 1,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 2,
+          "pass": false,
+          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
+          "deltas": []
+        },
+        {
+          "index": 3,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 4,
+          "pass": false,
+          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
+          "deltas": []
+        }
+      ]
+    },
+    {
+      "id": "K111-AM065",
+      "status": "HOLD",
+      "reason": "INDEPENDENT_OCR_RENDERINGS_FIELD_DISAGREE",
+      "sourceExam": 111,
+      "session": "AM",
+      "number": 65,
+      "sourcePdfSha256": "e853d7a86ef06ef41e8622f550dcf9bb3ffa48af076e412394070f237827bfb3",
+      "sourceImageSha256": "797d88005713cd29b4bfe9a6d9e1d442e774dd013a808a6fcbf14defe4999c73",
+      "sourcePage": 26,
+      "coordinateClip": [
+        0.0,
+        582.0,
+        609.95,
+        822.01
+      ],
+      "ocrPsm6Sha256": "3be673ae83fd17f8831119a48f07885ae537140b2cd3daec9826dda97abb6aec",
+      "ocrPsm3Sha256": "3395151600c34d1ae4e46d0d08307f0e405ed244ec0d267ffb0512f14116764b",
+      "ocrSegmentation": {
+        "psm6Count": 5,
+        "psm3Count": 5
+      }
+    },
+    {
+      "id": "K111-AM067",
+      "status": "HOLD",
+      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
+      "sourceExam": 111,
+      "session": "AM",
+      "number": 67,
+      "sourcePdfSha256": "e853d7a86ef06ef41e8622f550dcf9bb3ffa48af076e412394070f237827bfb3",
+      "sourceImageSha256": "7513643e2f84b0613f2f90a169990615e5acfde7fbfed3466142191652e960c5",
+      "sourcePage": 27,
+      "coordinateClip": [
+        0.0,
+        244.68,
+        609.95,
+        488.62
+      ],
+      "ocrPsm6Sha256": "92b9401786c4ce8fce695a0ff87ebf69498262e5fe75131bc91452aae6c523fc",
+      "ocrPsm3Sha256": "ca8b28716a116986eb7a7f0a3a33e6f234ecd38e7fe8e4d8be142035e934d501",
+      "ocrSegmentation": {
+        "psm6": null,
+        "psm3": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
+      }
+    },
+    {
+      "id": "K111-AM068",
+      "status": "HOLD",
+      "reason": "OCR_CMAP_ONLY_FULL_FIELD_GATE_FAILED",
+      "sourceExam": 111,
+      "session": "AM",
+      "number": 68,
+      "sourcePdfSha256": "e853d7a86ef06ef41e8622f550dcf9bb3ffa48af076e412394070f237827bfb3",
+      "sourceImageSha256": "66059b4e92bf3b1ff415fc6abbeeca74553c3b3a77cd15a5f5de365d3c1ef145",
+      "sourcePage": 27,
+      "coordinateClip": [
+        0.0,
+        485.62,
+        609.95,
+        822.01
+      ],
+      "ocrPsm6Sha256": "85f3d17b195af83d7dba4fe5ae05e4810a30d75b35816ccaf6e4dec7f4572fa7",
+      "ocrPsm3Sha256": "26561825be8ab3e79a5c27b51331c38b195bc82206913aa1ed9e238669bb34e4",
+      "fieldChecks": [
+        {
+          "index": 0,
+          "pass": false,
+          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
+          "deltas": []
+        },
+        {
+          "index": 1,
+          "pass": false,
+          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
+          "deltas": []
+        },
+        {
+          "index": 2,
+          "pass": false,
+          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
+          "deltas": []
+        },
+        {
+          "index": 3,
+          "pass": false,
+          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
+          "deltas": []
+        },
+        {
+          "index": 4,
+          "pass": false,
+          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
+          "deltas": []
+        }
+      ]
+    },
+    {
+      "id": "K111-AM069",
+      "status": "HOLD",
+      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
+      "sourceExam": 111,
+      "session": "AM",
+      "number": 69,
+      "sourcePdfSha256": "e853d7a86ef06ef41e8622f550dcf9bb3ffa48af076e412394070f237827bfb3",
+      "sourceImageSha256": "a22ea3e5449986d76460892546241d1dbca8ac380248fba8bed65233233ac867",
+      "sourcePage": 28,
+      "coordinateClip": [
+        0.0,
+        76.02,
+        609.95,
+        319.96
+      ],
+      "ocrPsm6Sha256": "264f41df69d0eccf86c18a44385ace7cbd46e273c3552cb0d3be4e56876e298e",
+      "ocrPsm3Sha256": "f306bc19f0de131d349614836b1717b8cea63741ce75f9acaae499b5216a0b55",
+      "ocrSegmentation": {
+        "psm6": null,
+        "psm3": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
+      }
+    },
+    {
+      "id": "K111-AM076",
+      "status": "HOLD",
+      "reason": "INDEPENDENT_OCR_RENDERINGS_FIELD_DISAGREE",
+      "sourceExam": 111,
+      "session": "AM",
+      "number": 76,
+      "sourcePdfSha256": "e853d7a86ef06ef41e8622f550dcf9bb3ffa48af076e412394070f237827bfb3",
+      "sourceImageSha256": "0aca90dc547b584d424a7ab90411ee183c6c6ae0c0019b61da08dd0f20fbe47e",
+      "sourcePage": 30,
+      "coordinateClip": [
+        0.0,
+        268.77,
+        609.95,
+        822.01
+      ],
+      "ocrPsm6Sha256": "50dc2445773991ab8383c3b8d26641b08c06dbfbd4d6698d4a6dfe3d0ca1e4c9",
+      "ocrPsm3Sha256": "b979c50869692e512bf4e8bb6b79409aaffad074943371da03f1e24ecf5c3b16",
+      "ocrSegmentation": {
+        "psm6Count": 5,
+        "psm3Count": 5
+      }
+    },
+    {
+      "id": "K111-AM082",
+      "status": "HOLD",
+      "reason": "INDEPENDENT_OCR_RENDERINGS_FIELD_DISAGREE",
+      "sourceExam": 111,
+      "session": "AM",
+      "number": 82,
+      "sourcePdfSha256": "e853d7a86ef06ef41e8622f550dcf9bb3ffa48af076e412394070f237827bfb3",
+      "sourceImageSha256": "eee3bd610f3db606fb9495d72d21d87a9e3643699a5956f4fb56b36c01f36ed8",
+      "sourcePage": 33,
+      "coordinateClip": [
+        0.0,
+        76.02,
+        609.95,
+        271.77
+      ],
+      "ocrPsm6Sha256": "23ec50c889836ce3ae24c02d34f376df366368c4f0b9a19bad9424a8d51d2dcb",
+      "ocrPsm3Sha256": "7da5e0648d34821b91f2eb810f7b466e05ef6db85e757ee5bf52e262cb9ce53b",
+      "ocrSegmentation": {
+        "psm6Count": 6,
+        "psm3Count": 6
+      }
+    },
+    {
+      "id": "K111-PM003",
+      "status": "HOLD",
+      "reason": "OCR_CMAP_ONLY_FULL_FIELD_GATE_FAILED",
+      "sourceExam": 111,
+      "session": "PM",
+      "number": 3,
+      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
+      "sourceImageSha256": "00478233c57ef1df2459e530f12788389353cdc41a9d54b065ec5b8c40300ed2",
+      "sourcePage": 7,
+      "coordinateClip": [
+        0.0,
+        437.43,
+        609.95,
+        609.09
+      ],
+      "ocrPsm6Sha256": "a0620b7d9e9bacd8b7f64c4b7b154c99446361f065d90f65a3138b84e45ce96b",
+      "ocrPsm3Sha256": "a0620b7d9e9bacd8b7f64c4b7b154c99446361f065d90f65a3138b84e45ce96b",
+      "fieldChecks": [
+        {
+          "index": 0,
+          "pass": false,
+          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
+          "deltas": []
+        },
+        {
+          "index": 1,
+          "pass": false,
+          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
+          "deltas": []
+        },
+        {
+          "index": 2,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 3,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 4,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        }
+      ]
+    },
+    {
+      "id": "K111-PM009",
+      "status": "HOLD",
+      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
+      "sourceExam": 111,
+      "session": "PM",
+      "number": 9,
+      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
+      "sourceImageSha256": "aee4cfd1e7ab4365670868836f2aeedebc80871e5bdb334bc41a20c29dfa6ad5",
+      "sourcePage": 9,
+      "coordinateClip": [
+        0.0,
+        76.02,
+        609.95,
+        271.77
+      ],
+      "ocrPsm6Sha256": "1db3e3d8407a4d7c526a69b6176c2fe092e78c339ce7ec5156dd5740ba574a1c",
+      "ocrPsm3Sha256": "1db3e3d8407a4d7c526a69b6176c2fe092e78c339ce7ec5156dd5740ba574a1c",
+      "ocrSegmentation": {
+        "psm6": "OCR_CHOICES_NON_SEQUENTIAL",
+        "psm3": "OCR_CHOICES_NON_SEQUENTIAL"
+      }
+    },
+    {
+      "id": "K111-PM017",
+      "status": "HOLD",
+      "reason": "INDEPENDENT_OCR_RENDERINGS_FIELD_DISAGREE",
+      "sourceExam": 111,
+      "session": "PM",
+      "number": 17,
+      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
+      "sourceImageSha256": "c808d5d85881a938aebfcd592c7a78308a30f46479a48500b52dab0503ef69a7",
+      "sourcePage": 11,
+      "coordinateClip": [
+        0.0,
+        76.02,
+        609.95,
+        247.68
+      ],
+      "ocrPsm6Sha256": "0af86e05902078425f1de5b25b7a8698ccee703f475ced4dc8a98751411eeb6b",
+      "ocrPsm3Sha256": "71fe11b3af44a661ee855cc97c186e8b9799ec7f7217e7dc62927be68f822d89",
+      "ocrSegmentation": {
+        "psm6Count": 5,
+        "psm3Count": 5
+      }
+    },
+    {
+      "id": "K111-PM018",
+      "status": "HOLD",
+      "reason": "OCR_CMAP_ONLY_FULL_FIELD_GATE_FAILED",
+      "sourceExam": 111,
+      "session": "PM",
+      "number": 18,
+      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
+      "sourceImageSha256": "de2851eb9579c223a1d8dc8b072b60e37899f2f0a7701b1d67d3418d9cdc4550",
+      "sourcePage": 11,
+      "coordinateClip": [
+        0.0,
+        244.68,
+        609.95,
+        416.34
+      ],
+      "ocrPsm6Sha256": "9acb36edc3eafb9ea09b1546314e8ed3f0a2850ff8f32065f20e2cae86f3ad46",
+      "ocrPsm3Sha256": "9acb36edc3eafb9ea09b1546314e8ed3f0a2850ff8f32065f20e2cae86f3ad46",
+      "fieldChecks": [
+        {
+          "index": 0,
+          "pass": false,
+          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
+          "deltas": []
+        },
+        {
+          "index": 1,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 2,
+          "pass": false,
+          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
+          "deltas": []
+        },
+        {
+          "index": 3,
+          "pass": false,
+          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
+          "deltas": []
+        },
+        {
+          "index": 4,
+          "pass": false,
+          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
+          "deltas": []
+        }
+      ]
+    },
+    {
+      "id": "K111-PM026",
+      "status": "HOLD",
+      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
+      "sourceExam": 111,
+      "session": "PM",
+      "number": 26,
+      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
+      "sourceImageSha256": "5c87eb1532ba796995a3f5cfe1d52191910bf833532c7efb0d7ced6f9a8dcc1e",
+      "sourcePage": 13,
+      "coordinateClip": [
+        0.0,
+        244.68,
+        609.95,
+        464.53
+      ],
+      "ocrPsm6Sha256": "7809c5cecf3e1a7dee4c6edb935f99c3cd9b6392fabab371c600a0d9e2383df5",
+      "ocrPsm3Sha256": "464f2c74b9c044cafb402799186b193ee8c829ecef1fe5951675a86e47bcd449",
+      "ocrSegmentation": {
+        "psm6": "OCR_CHOICES_NON_SEQUENTIAL",
+        "psm3": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
+      }
+    },
+    {
+      "id": "K111-PM028",
+      "status": "HOLD",
+      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
+      "sourceExam": 111,
+      "session": "PM",
+      "number": 28,
+      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
+      "sourceImageSha256": "426e4556cb647a90c953e2c9ba6f742c2a207d6ec6d8120e8072b08596b6c7fa",
+      "sourcePage": 14,
+      "coordinateClip": [
+        0.0,
+        76.02,
+        609.95,
+        822.01
+      ],
+      "ocrPsm6Sha256": "bf10be27137f594420238500ba95313feb2267e2f2b28f85d2490c4825f0b581",
+      "ocrPsm3Sha256": "04b5ce64cd7351e0e37b8fd2805b9afdab0d3e38e5ffea702b6be09e3bcc0c07",
+      "ocrSegmentation": {
+        "psm6": null,
+        "psm3": "OCR_CHOICES_NON_SEQUENTIAL"
+      }
+    },
+    {
+      "id": "K111-PM029",
+      "status": "HOLD",
+      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
+      "sourceExam": 111,
+      "session": "PM",
+      "number": 29,
+      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
+      "sourceImageSha256": "6018eb6b72b121700cca0d350f11d61dfce645228b3b81d45eb4840b32980835",
+      "sourcePage": 15,
+      "coordinateClip": [
+        0.0,
+        76.02,
+        609.95,
+        512.72
+      ],
+      "ocrPsm6Sha256": "7ff7769d6c411b166af5e872d5ac6ddd943e151f33bff2294aa1c12f62115475",
+      "ocrPsm3Sha256": "405425b94adb5c333f07dc2b683ce39e390321db03747c85a1780e8953265db5",
+      "ocrSegmentation": {
+        "psm6": "OCR_CHOICES_NON_SEQUENTIAL",
+        "psm3": "OCR_CHOICES_NON_SEQUENTIAL"
+      }
+    },
+    {
+      "id": "K111-PM041",
+      "status": "HOLD",
+      "reason": "OCR_CMAP_ONLY_FULL_FIELD_GATE_FAILED",
+      "sourceExam": 111,
+      "session": "PM",
+      "number": 41,
+      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
+      "sourceImageSha256": "526edb075aa9da0fe57415c996594334e411aa4cf41ee4588a8109eb90ac46b8",
+      "sourcePage": 18,
+      "coordinateClip": [
+        0.0,
+        437.43,
+        609.95,
+        609.09
+      ],
+      "ocrPsm6Sha256": "f1448c210ca2d17f3a01295fafeb3065b4778d113881a9d68c08345206b4e268",
+      "ocrPsm3Sha256": "f1448c210ca2d17f3a01295fafeb3065b4778d113881a9d68c08345206b4e268",
+      "fieldChecks": [
+        {
+          "index": 0,
+          "pass": false,
+          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
+          "deltas": []
+        },
+        {
+          "index": 1,
+          "pass": false,
+          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
+          "deltas": []
+        },
+        {
+          "index": 2,
+          "pass": false,
+          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
+          "deltas": []
+        },
+        {
+          "index": 3,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 4,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        }
+      ]
+    },
+    {
+      "id": "K111-PM042",
+      "status": "HOLD",
+      "reason": "INDEPENDENT_OCR_RENDERINGS_FIELD_DISAGREE",
+      "sourceExam": 111,
+      "session": "PM",
+      "number": 42,
+      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
+      "sourceImageSha256": "cb6cfc17e756c036aa75de1d8c9ed12f6b4c0404f9f78cfa0f650ba388b0cbc5",
+      "sourcePage": 18,
+      "coordinateClip": [
+        0.0,
+        606.09,
+        609.95,
+        822.01
+      ],
+      "ocrPsm6Sha256": "611847a301ea76625faf08382389ab5e6abddf595e34f4d067303a2cb445a885",
+      "ocrPsm3Sha256": "60c0275142d50c5edad1086a808ad2d82986d51249e88cbbc62222e31dce283e",
+      "ocrSegmentation": {
+        "psm6Count": 5,
+        "psm3Count": 5
+      }
+    },
+    {
+      "id": "K111-PM043",
+      "status": "HOLD",
+      "reason": "OCR_CMAP_ONLY_FULL_FIELD_GATE_FAILED",
+      "sourceExam": 111,
+      "session": "PM",
+      "number": 43,
+      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
+      "sourceImageSha256": "87946ca8e379250fbae7f523cf92e5d92f5e97f9ac4a1916e5dd9bcd5e189dea",
+      "sourcePage": 19,
+      "coordinateClip": [
+        0.0,
+        76.02,
+        609.95,
+        319.96
+      ],
+      "ocrPsm6Sha256": "7daa98fb5b278dd748a9ae93acd34c25d49d7ac91a5bc3f7654dacc3b167c34e",
+      "ocrPsm3Sha256": "7daa98fb5b278dd748a9ae93acd34c25d49d7ac91a5bc3f7654dacc3b167c34e",
+      "fieldChecks": [
+        {
+          "index": 0,
+          "pass": false,
+          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
+          "deltas": []
+        },
+        {
+          "index": 1,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 2,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 3,
+          "pass": false,
+          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
+          "deltas": []
+        },
+        {
+          "index": 4,
+          "pass": false,
+          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
+          "deltas": []
+        }
+      ]
+    },
+    {
+      "id": "K111-PM046",
+      "status": "HOLD",
+      "reason": "INDEPENDENT_OCR_RENDERINGS_FIELD_DISAGREE",
+      "sourceExam": 111,
+      "session": "PM",
+      "number": 46,
+      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
+      "sourceImageSha256": "620a6de3b35fe78762ed6e0c09e3cdae157a37d3b63a32f4c21cfc6506675a5b",
+      "sourcePage": 19,
+      "coordinateClip": [
+        0.0,
+        654.28,
+        609.95,
+        822.01
+      ],
+      "ocrPsm6Sha256": "c36cdbdfe42c90fdb9c12a281ac8bc2bf61d8111ba729c93b8c041da59efe92c",
+      "ocrPsm3Sha256": "36c781748109f3ef660bac76277dea6661fe9270d4b5994909ca26c6a58fd223",
+      "ocrSegmentation": {
+        "psm6Count": 5,
+        "psm3Count": 5
+      }
+    },
+    {
+      "id": "K111-PM048",
+      "status": "HOLD",
+      "reason": "OCR_CMAP_ONLY_FULL_FIELD_GATE_FAILED",
+      "sourceExam": 111,
+      "session": "PM",
+      "number": 48,
+      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
+      "sourceImageSha256": "7cd66cb6093a6e34d086326e6d13a6aafd5d76bd8d508575fc781cd986ede88f",
+      "sourcePage": 20,
+      "coordinateClip": [
+        0.0,
+        244.68,
+        609.95,
+        440.43
+      ],
+      "ocrPsm6Sha256": "aee15ad17e10b4253dc2aae7880074715837e3d978965874fdbafc4b0003378d",
+      "ocrPsm3Sha256": "1f401a1c3aa7ea58b223141a27088c07aa675ba1a0ecda656f47f101aa2c4312",
+      "fieldChecks": [
+        {
+          "index": 0,
+          "pass": false,
+          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
+          "deltas": []
+        },
+        {
+          "index": 1,
+          "pass": false,
+          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
+          "deltas": []
+        },
+        {
+          "index": 2,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 3,
+          "pass": false,
+          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
+          "deltas": []
+        },
+        {
+          "index": 4,
+          "pass": false,
+          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
+          "deltas": []
+        }
+      ]
+    },
+    {
+      "id": "K111-PM050",
+      "status": "HOLD",
+      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
+      "sourceExam": 111,
+      "session": "PM",
+      "number": 50,
+      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
+      "sourceImageSha256": "ead8c2abc05055d9107fe6fa3ed8d9ac9e96912594e25437bd158af93096c492",
+      "sourcePage": 20,
+      "coordinateClip": [
+        0.0,
+        606.09,
+        609.95,
+        822.01
+      ],
+      "ocrPsm6Sha256": "1a167be6d412b3ba4547dfc17320c41379b855ac24afab1ff8ac8f12c8258b94",
+      "ocrPsm3Sha256": "3b645d868b8d39c3889697e52ce5f2c178deadcb3052bf8b65031137dd497aa4",
+      "ocrSegmentation": {
+        "psm6": null,
+        "psm3": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
+      }
+    },
+    {
+      "id": "K111-PM054",
+      "status": "HOLD",
+      "reason": "INDEPENDENT_OCR_RENDERINGS_FIELD_DISAGREE",
+      "sourceExam": 111,
+      "session": "PM",
+      "number": 54,
+      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
+      "sourceImageSha256": "22ba482f0d09e81b0425a95fcbf4d244240a1e82dc1060bd94b8fefc1007797a",
+      "sourcePage": 21,
+      "coordinateClip": [
+        0.0,
+        582.0,
+        609.95,
+        822.01
+      ],
+      "ocrPsm6Sha256": "565c496862e7fe1e4bf1790caa38d974f55ab4be6e03959b6835d8e048b76575",
+      "ocrPsm3Sha256": "f74124305f4a7db8626fc58d2b9c718c7760c4ed826092afb76113430a666229",
+      "ocrSegmentation": {
+        "psm6Count": 5,
+        "psm3Count": 5
+      }
+    },
+    {
+      "id": "K111-PM059",
+      "status": "HOLD",
+      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
+      "sourceExam": 111,
+      "session": "PM",
+      "number": 59,
+      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
+      "sourceImageSha256": "f9b71b821f928a861d9609dd6986a8479aa4ba19583525d99fe4a716902ca344",
+      "sourcePage": 23,
+      "coordinateClip": [
+        0.0,
+        76.02,
+        609.95,
+        247.68
+      ],
+      "ocrPsm6Sha256": "460cb6244abc6a3eba804f48a6fe1dfeb412ef94ddc37d527fcab7daba5fcdda",
+      "ocrPsm3Sha256": "ef7f12dcd21c9ea7d0f66860937db195b66323bc1e66a88bf8fa52d804fc0c45",
+      "ocrSegmentation": {
+        "psm6": null,
+        "psm3": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
+      }
+    },
+    {
+      "id": "K111-PM062",
+      "status": "HOLD",
+      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
+      "sourceExam": 111,
+      "session": "PM",
+      "number": 62,
+      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
+      "sourceImageSha256": "2cc27183b1a1d8f15ac5d3976dd465cd3a050494f605d6a1389b75a83663d08f",
+      "sourcePage": 24,
+      "coordinateClip": [
+        0.0,
+        76.02,
+        609.95,
+        247.68
+      ],
+      "ocrPsm6Sha256": "14251a406d57b451f6474c92923fb178948203c4641f81493a1b461a1aac45e3",
+      "ocrPsm3Sha256": "e7516d37786e4ef81fddd5098a4e31ab86d07cc140a724576fd7775ae3fcaea1",
+      "ocrSegmentation": {
+        "psm6": null,
+        "psm3": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
+      }
+    },
+    {
+      "id": "K111-PM063",
+      "status": "HOLD",
+      "reason": "OCR_CMAP_ONLY_FULL_FIELD_GATE_FAILED",
+      "sourceExam": 111,
+      "session": "PM",
+      "number": 63,
+      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
+      "sourceImageSha256": "51d7a8aacc5716c66517635cce6cb213ea36bbecfe30d711f92484d3658e1c06",
+      "sourcePage": 24,
+      "coordinateClip": [
+        0.0,
+        244.68,
+        609.95,
+        440.43
+      ],
+      "ocrPsm6Sha256": "d1d41144e508a455c24c840cf699ef6ef57336f3ab11b9173a48b4717dedaa64",
+      "ocrPsm3Sha256": "d1d41144e508a455c24c840cf699ef6ef57336f3ab11b9173a48b4717dedaa64",
+      "fieldChecks": [
+        {
+          "index": 0,
+          "pass": false,
+          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
+          "deltas": []
+        },
+        {
+          "index": 1,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 2,
+          "pass": false,
+          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
+          "deltas": []
+        },
+        {
+          "index": 3,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 4,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        }
+      ]
+    },
+    {
+      "id": "K111-PM064",
+      "status": "HOLD",
+      "reason": "OCR_CMAP_ONLY_FULL_FIELD_GATE_FAILED",
+      "sourceExam": 111,
+      "session": "PM",
+      "number": 64,
+      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
+      "sourceImageSha256": "c4bb5f2cc257a9c433fbda2ae1763cd381d548657f97ba22780d3ad58aab3880",
+      "sourcePage": 24,
+      "coordinateClip": [
+        0.0,
+        437.43,
+        609.95,
+        657.28
+      ],
+      "ocrPsm6Sha256": "cf4fee3c12e83d40ce2cc961a213385a60887ca7dd2f502d7cfedad130e9e9cc",
+      "ocrPsm3Sha256": "cf4fee3c12e83d40ce2cc961a213385a60887ca7dd2f502d7cfedad130e9e9cc",
+      "fieldChecks": [
+        {
+          "index": 0,
+          "pass": false,
+          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
+          "deltas": []
+        },
+        {
+          "index": 1,
+          "pass": false,
+          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
+          "deltas": []
+        },
+        {
+          "index": 2,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 3,
+          "pass": false,
+          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
+          "deltas": []
+        },
+        {
+          "index": 4,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        }
+      ]
+    },
+    {
+      "id": "K111-PM066",
+      "status": "HOLD",
+      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
+      "sourceExam": 111,
+      "session": "PM",
+      "number": 66,
+      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
+      "sourceImageSha256": "6f91808a8fafc05e1c2ac91df04ffedd97ff6ff5f5c4a93035131ed6c11e1c52",
+      "sourcePage": 25,
+      "coordinateClip": [
+        0.0,
+        76.02,
+        609.95,
+        247.68
+      ],
+      "ocrPsm6Sha256": "363e65ab4ccd77a971e4a61ce252a979e954adafa58a50bcfda7ea956fd7551c",
+      "ocrPsm3Sha256": "4729220e1b5987c19b13ad83169b7f0d26a2868c732f35a88a3a639ad2aa8b86",
+      "ocrSegmentation": {
+        "psm6": "OCR_CHOICES_NON_SEQUENTIAL",
+        "psm3": null
+      }
+    },
+    {
+      "id": "K111-PM067",
+      "status": "HOLD",
+      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
+      "sourceExam": 111,
+      "session": "PM",
+      "number": 67,
+      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
+      "sourceImageSha256": "9cccba1718cf4bd5d7dfc225329d2b421e0fcc528408d66a8ba2acb46ed1c0ff",
+      "sourcePage": 25,
+      "coordinateClip": [
+        0.0,
+        244.68,
+        609.95,
+        464.53
+      ],
+      "ocrPsm6Sha256": "196394395fe75d5c7543516a157800b5baf4cde8a7635449b789db4ec950d05e",
+      "ocrPsm3Sha256": "d0c426d2e27ad4949e127c08a4f1b3325d0c7b3b9bb2e891dede2b334d80d2d9",
+      "ocrSegmentation": {
+        "psm6": null,
+        "psm3": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
+      }
+    },
+    {
+      "id": "K111-PM068",
+      "status": "HOLD",
+      "reason": "INDEPENDENT_OCR_RENDERINGS_FIELD_DISAGREE",
+      "sourceExam": 111,
+      "session": "PM",
+      "number": 68,
+      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
+      "sourceImageSha256": "0f48a410b12fbc4decae82e6e1b570b0d927eb73af725316c7fe552a5261243b",
+      "sourcePage": 25,
+      "coordinateClip": [
+        0.0,
+        461.53,
+        609.95,
+        822.01
+      ],
+      "ocrPsm6Sha256": "81e7e406be8b61247ff151e8bd6d48038c51c96783563c9ccdaedc005fe28b1a",
+      "ocrPsm3Sha256": "7f699a91b145ddea769c70d4ee13ee391b2ab2268be35c436904d748fdd6087e",
+      "ocrSegmentation": {
+        "psm6Count": 5,
+        "psm3Count": 5
+      }
+    },
+    {
+      "id": "K111-PM071",
+      "status": "HOLD",
+      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
+      "sourceExam": 111,
+      "session": "PM",
+      "number": 71,
+      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
+      "sourceImageSha256": "81a79ae622ffe1e58b2d2f58cc09d57966cc65d2a2822d4e55e016b4e8e5d0a0",
+      "sourcePage": 26,
+      "coordinateClip": [
+        0.0,
+        533.81,
+        609.95,
+        822.01
+      ],
+      "ocrPsm6Sha256": "ff0cdec01dbc453e07c5168fa29f6147e7cbc88165d2d23b7699a7c27d2dd0c1",
+      "ocrPsm3Sha256": "f7ffcd25b93c741e0bdcce25495c4bcad45f1bc331fe6aed8b12f758891f950f",
+      "ocrSegmentation": {
+        "psm6": null,
+        "psm3": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
+      }
+    },
+    {
+      "id": "K111-PM076",
+      "status": "HOLD",
+      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
+      "sourceExam": 111,
+      "session": "PM",
+      "number": 76,
+      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
+      "sourceImageSha256": "be9683400a6832e3b926e9ef1b87b4f5564e938e0cfd4815f69532fa18ede6e9",
+      "sourcePage": 28,
+      "coordinateClip": [
+        0.0,
+        244.68,
+        609.95,
+        416.34
+      ],
+      "ocrPsm6Sha256": "a41b49b8a36c374f5540ca720ebab6d5eaef9bd2293d662eccb9f632d982cb05",
+      "ocrPsm3Sha256": "36228484bee4b9f0e103360505590f252ac520d1d88b44516e19d973667c2e3b",
+      "ocrSegmentation": {
+        "psm6": "OCR_CHOICES_NON_SEQUENTIAL",
+        "psm3": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
+      }
+    },
+    {
+      "id": "K111-PM078",
+      "status": "HOLD",
+      "reason": "OFFICIAL_KEY_OR_SCORING_EXCEPTION",
+      "sourceExam": 111,
+      "session": "PM",
+      "number": 78
+    },
+    {
+      "id": "K111-PM082",
+      "status": "HOLD",
+      "reason": "OFFICIAL_KEY_OR_SCORING_EXCEPTION",
+      "sourceExam": 111,
+      "session": "PM",
+      "number": 82
+    },
+    {
+      "id": "K111-PM083",
+      "status": "HOLD",
+      "reason": "INDEPENDENT_OCR_RENDERINGS_FIELD_DISAGREE",
+      "sourceExam": 111,
+      "session": "PM",
+      "number": 83,
+      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
+      "sourceImageSha256": "275f0d1e8eb1e9921a707acce857091e6087f0e84df6b9fce3a149d14900587d",
+      "sourcePage": 30,
+      "coordinateClip": [
+        0.0,
+        268.77,
+        609.95,
+        464.53
+      ],
+      "ocrPsm6Sha256": "d055160835717fc85c4dc6d161f6b53ab135675a2bbdcf1b68cd1eb747aa8c93",
+      "ocrPsm3Sha256": "fe288769eeda181012eb53164f759b05a8f54ddd2c901bd67a496ad5a50844e6",
+      "ocrSegmentation": {
+        "psm6Count": 6,
+        "psm3Count": 6
+      }
+    },
+    {
+      "id": "K112-AM008",
+      "status": "HOLD",
+      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
+      "sourceExam": 112,
+      "session": "AM",
+      "number": 8,
+      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
+      "sourceImageSha256": "b52bd9029590f4349b496267b38989dd3963c3921f04e4c0d45f4ee9c0794aad",
+      "sourcePage": 8,
+      "coordinateClip": [
+        0.0,
+        584.83,
+        615.61,
+        827.44
+      ],
+      "ocrPsm6Sha256": "ed6b060422c10b9c9cb85f78f2e3fddc0ede6392d421a0eac73a05f8df8d083e",
+      "ocrPsm3Sha256": "ed757341c12becc22dc5787190faa2140b78e99bd0d29136d074ef77b70c74e9",
+      "ocrSegmentation": {
+        "psm6": null,
+        "psm3": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
+      }
+    },
+    {
+      "id": "K112-AM009",
+      "status": "HOLD",
+      "reason": "OCR_CMAP_ONLY_FULL_FIELD_GATE_FAILED",
+      "sourceExam": 112,
+      "session": "AM",
+      "number": 9,
+      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
+      "sourceImageSha256": "d9cd9554bc2e402c452cb470dcad8629d5e273aeedaf84478e73674358c77c9b",
+      "sourcePage": 9,
+      "coordinateClip": [
+        0.0,
+        78.85,
+        615.61,
+        274.6
+      ],
+      "ocrPsm6Sha256": "b2e22f426d13c6140c548fdd7fb529fc61b877695675bc0fbfb0119dd2e3e0d8",
+      "ocrPsm3Sha256": "b2e22f426d13c6140c548fdd7fb529fc61b877695675bc0fbfb0119dd2e3e0d8",
+      "fieldChecks": [
+        {
+          "index": 0,
+          "pass": false,
+          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
+          "deltas": []
+        },
+        {
+          "index": 1,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 2,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 3,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 4,
+          "pass": false,
+          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
+          "deltas": []
+        }
+      ]
+    },
+    {
+      "id": "K112-AM015",
+      "status": "HOLD",
+      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
+      "sourceExam": 112,
+      "session": "AM",
+      "number": 15,
+      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
+      "sourceImageSha256": "1c7d17b9544af70e71e3c0b1e663be84df91e72979ddb8fa9e4c46ff4a0f7f79",
+      "sourcePage": 10,
+      "coordinateClip": [
+        0.0,
+        416.17,
+        615.61,
+        611.92
+      ],
+      "ocrPsm6Sha256": "8e90ef8dcd83dc568fc0654ec5555295aa54a79c43527a1d48d43cbaa0f3d9ba",
+      "ocrPsm3Sha256": "1c38df078a95d25f05df80daf47bc774426017ffc28692f92b6aec08fcbe3a70",
+      "ocrSegmentation": {
+        "psm6": null,
+        "psm3": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
+      }
+    },
+    {
+      "id": "K112-AM016",
+      "status": "HOLD",
+      "reason": "OCR_CMAP_ONLY_FULL_FIELD_GATE_FAILED",
+      "sourceExam": 112,
+      "session": "AM",
+      "number": 16,
+      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
+      "sourceImageSha256": "f36f07d1603764300b6836be61bb95ef208d420644e176d36ba5494ce2431c14",
+      "sourcePage": 10,
+      "coordinateClip": [
+        0.0,
+        608.92,
+        615.61,
+        827.44
+      ],
+      "ocrPsm6Sha256": "0ea06a71138b385868b3ef4b52438c20c9c9d8f81b75041fc2d5e245f39eafbf",
+      "ocrPsm3Sha256": "848ed25f5ea91803ae5242bcae41f8b4c5fda47ed6b64beb54a88349ae1955ee",
+      "fieldChecks": [
+        {
+          "index": 0,
+          "pass": false,
+          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
+          "deltas": []
+        },
+        {
+          "index": 1,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 2,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 3,
+          "pass": false,
+          "reason": "INSUFFICIENT_BILATERAL_CONTEXT",
+          "deltas": [
+            {
+              "at": 7,
+              "before": "ï",
+              "after": "〈",
+              "leftAnchor": "応性蛋白質",
+              "rightAnchor": "CRPñ"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "pass": false,
+          "reason": "OCR_REPLACEMENT_NOT_LOCAL",
+          "deltas": []
+        }
+      ]
+    },
+    {
+      "id": "K112-AM023",
+      "status": "HOLD",
+      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
+      "sourceExam": 112,
+      "session": "AM",
+      "number": 23,
+      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
+      "sourceImageSha256": "0a040ca00491a1e21f45bf17fd165f5c3c82ca1187499c088e57d505fa66cc7e",
+      "sourcePage": 12,
+      "coordinateClip": [
+        0.0,
+        416.17,
+        615.61,
+        587.83
+      ],
+      "ocrPsm6Sha256": "f56e0bb308b9e2714fc610605f54017049bc85fea74561fc5ca2809c2f6710ea",
+      "ocrPsm3Sha256": "d305e2e9f9a9730056c2061939036fbb761c926564ae4479f87dac0a766ff1bf",
+      "ocrSegmentation": {
+        "psm6": null,
+        "psm3": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
+      }
+    },
+    {
+      "id": "K112-AM026",
+      "status": "HOLD",
+      "reason": "OCR_CMAP_ONLY_FULL_FIELD_GATE_FAILED",
+      "sourceExam": 112,
+      "session": "AM",
+      "number": 26,
+      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
+      "sourceImageSha256": "29670fd39699f7bb091f871839357fa1d846f7933879e99af95bb5509bcc80a3",
+      "sourcePage": 13,
+      "coordinateClip": [
+        0.0,
+        271.6,
+        615.61,
+        491.45
+      ],
+      "ocrPsm6Sha256": "68cbe5ded4c2051730f7a32a575b617f1425009582c4d38fa79143dd1246c95f",
+      "ocrPsm3Sha256": "68cbe5ded4c2051730f7a32a575b617f1425009582c4d38fa79143dd1246c95f",
+      "fieldChecks": [
+        {
+          "index": 0,
+          "pass": false,
+          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
+          "deltas": [
+            {
+              "at": 9,
+              "before": "!",
+              "after": "()",
+              "leftAnchor": "細胞膜には",
+              "rightAnchor": "に対する受"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 2,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 3,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 4,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        }
+      ]
+    },
+    {
+      "id": "K112-AM027",
+      "status": "HOLD",
+      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
+      "sourceExam": 112,
+      "session": "AM",
+      "number": 27,
+      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
+      "sourceImageSha256": "c821b4707cc29b41111885f1661b8d102b848159e48e70f2bb6d71eb907807e4",
+      "sourcePage": 13,
+      "coordinateClip": [
+        0.0,
+        488.45,
+        615.61,
+        827.44
+      ],
+      "ocrPsm6Sha256": "689f4703b1e4bb39bd1922c7cd7732d681f37a00ae560e5932236addf7d5cfd4",
+      "ocrPsm3Sha256": "ba15cf2798579ad336f4edcfc1c4d78a3f611f831db57a88e080c17347c32375",
+      "ocrSegmentation": {
+        "psm6": null,
+        "psm3": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
+      }
+    },
+    {
+      "id": "K112-AM031",
+      "status": "HOLD",
+      "reason": "INDEPENDENT_OCR_RENDERINGS_FIELD_DISAGREE",
+      "sourceExam": 112,
+      "session": "AM",
+      "number": 31,
+      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
+      "sourceImageSha256": "a21e9dc9daa3a21909a3dd20e2c6f40712ed335e6b4c6fa2eff90e09a1afa32f",
+      "sourcePage": 14,
+      "coordinateClip": [
+        0.0,
+        584.83,
+        615.61,
+        827.44
+      ],
+      "ocrPsm6Sha256": "3da06a664b6c32e3a0fe7c79a1522d7d47078bde93d5289775d300e8d17a4a21",
+      "ocrPsm3Sha256": "8d9e15e8dd93e0336441c1487401b6233fbc26d0405b4edb363079f68afd38d3",
+      "ocrSegmentation": {
+        "psm6Count": 5,
+        "psm3Count": 5
+      }
+    },
+    {
+      "id": "K112-AM033",
+      "status": "HOLD",
+      "reason": "INDEPENDENT_OCR_RENDERINGS_FIELD_DISAGREE",
+      "sourceExam": 112,
+      "session": "AM",
+      "number": 33,
+      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
+      "sourceImageSha256": "398e3c19fdbf37a877d7347b3505f14b2345c77e87b545d7c6e74b37c130a0cc",
+      "sourcePage": 15,
+      "coordinateClip": [
+        0.0,
+        247.51,
+        615.61,
+        419.17
+      ],
+      "ocrPsm6Sha256": "2c6eb827677d6dc69aafdbf203300d8b263f7b21e575a93dd2ca8f3ca508cfa1",
+      "ocrPsm3Sha256": "eab2794e7ba69c20a0349eb5253a8a4ecc34bb07c778bd910d3fccba97177f2a",
+      "ocrSegmentation": {
+        "psm6Count": 5,
+        "psm3Count": 5
+      }
+    },
+    {
+      "id": "K112-AM039",
+      "status": "HOLD",
+      "reason": "INDEPENDENT_OCR_RENDERINGS_FIELD_DISAGREE",
+      "sourceExam": 112,
+      "session": "AM",
+      "number": 39,
+      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
+      "sourceImageSha256": "24a48c7c9e282706d672ffcd3a31d4949a719e42348f696d63cd75b87a9b118b",
+      "sourcePage": 16,
+      "coordinateClip": [
+        0.0,
+        626.99,
+        615.61,
+        827.44
+      ],
+      "ocrPsm6Sha256": "ffdced65decf19ea27c45702d5fcdff753528cbc8a3613e231a6fdaf0caea90e",
+      "ocrPsm3Sha256": "e46379bf042a4f62bf505f76e5bde59156f152b5589f4d34b35442486831b56f",
+      "ocrSegmentation": {
+        "psm6Count": 5,
+        "psm3Count": 5
+      }
+    },
+    {
+      "id": "K112-AM040",
+      "status": "HOLD",
+      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
+      "sourceExam": 112,
+      "session": "AM",
+      "number": 40,
+      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
+      "sourceImageSha256": "6ef0340e68ad18f3fda4ec55c30fb871841a6b823309532765ff8736c817f09a",
+      "sourcePage": 17,
+      "coordinateClip": [
+        0.0,
+        78.85,
+        615.61,
+        274.6
+      ],
+      "ocrPsm6Sha256": "e91b3f839603443130902dd9c5a6dd5591a77d72ee7de75ea1263b2fde96bc59",
+      "ocrPsm3Sha256": "a036e96c7f22134e02ee78fcffb68ea81df0734efedd70e2a2c14fbfbf16d56d",
+      "ocrSegmentation": {
+        "psm6": null,
+        "psm3": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
+      }
+    },
+    {
+      "id": "K112-AM042",
+      "status": "HOLD",
+      "reason": "OCR_CMAP_ONLY_FULL_FIELD_GATE_FAILED",
+      "sourceExam": 112,
+      "session": "AM",
+      "number": 42,
+      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
+      "sourceImageSha256": "fd0e8facb1217651f5b31c8f652d5c5e428347993878abba6562a86b08b85845",
+      "sourcePage": 17,
+      "coordinateClip": [
+        0.0,
+        440.26,
+        615.61,
+        636.02
+      ],
+      "ocrPsm6Sha256": "17cc5dee35b3459f2c73966405ef5708a287bac39960dfc95db78ca3b165a6f4",
+      "ocrPsm3Sha256": "17cc5dee35b3459f2c73966405ef5708a287bac39960dfc95db78ca3b165a6f4",
+      "fieldChecks": [
+        {
+          "index": 0,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 1,
+          "pass": false,
+          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
+          "deltas": []
+        },
+        {
+          "index": 2,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 3,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 4,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        }
+      ]
+    },
+    {
+      "id": "K112-AM045",
+      "status": "HOLD",
+      "reason": "OCR_CMAP_ONLY_FULL_FIELD_GATE_FAILED",
+      "sourceExam": 112,
+      "session": "AM",
+      "number": 45,
+      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
+      "sourceImageSha256": "484c62df6f32f82a553cad838347c52746cf415ebb564f3b0b670aaf50a99187",
+      "sourcePage": 18,
+      "coordinateClip": [
+        0.0,
+        271.6,
+        615.61,
+        443.26
+      ],
+      "ocrPsm6Sha256": "3f6d0639337704fadb56c3de9316c1084fd59827be80cde6dabe7a235f5c96f2",
+      "ocrPsm3Sha256": "3f6d0639337704fadb56c3de9316c1084fd59827be80cde6dabe7a235f5c96f2",
+      "fieldChecks": [
+        {
+          "index": 0,
+          "pass": false,
+          "reason": "OCR_REPLACEMENT_NOT_LOCAL",
+          "deltas": []
+        },
+        {
+          "index": 1,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 2,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 3,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 4,
+          "pass": false,
+          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
+          "deltas": []
+        }
+      ]
+    },
+    {
+      "id": "K112-AM048",
+      "status": "HOLD",
+      "reason": "INDEPENDENT_OCR_RENDERINGS_FIELD_DISAGREE",
+      "sourceExam": 112,
+      "session": "AM",
+      "number": 48,
+      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
+      "sourceImageSha256": "2428a2bb0127a97fb21819e45fe6c421a462446532ae69ea3a91f9a325d50e34",
+      "sourcePage": 19,
+      "coordinateClip": [
+        0.0,
+        584.83,
+        615.61,
+        827.44
+      ],
+      "ocrPsm6Sha256": "af6ba1adaaed5ff010653fa8c5963d9f21fc65159115ce28f30112d8d136d1ff",
+      "ocrPsm3Sha256": "a3f33d1ba95e6fdabca15e5e9d5690e428cb9edf0937814e1c9b60f6605b596c",
+      "ocrSegmentation": {
+        "psm6Count": 5,
+        "psm3Count": 5
+      }
+    },
+    {
+      "id": "K112-AM050",
+      "status": "HOLD",
+      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
+      "sourceExam": 112,
+      "session": "AM",
+      "number": 50,
+      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
+      "sourceImageSha256": "3b0feff7531302123d27587d7f0979b83ec81496212826e95543a4e3704441b0",
+      "sourcePage": 20,
+      "coordinateClip": [
+        0.0,
+        247.51,
+        615.61,
+        419.17
+      ],
+      "ocrPsm6Sha256": "147ece876ddb7dc89d99751e5d1f576d311f27fa5bde1a816d28a73e9a9399c0",
+      "ocrPsm3Sha256": "147ece876ddb7dc89d99751e5d1f576d311f27fa5bde1a816d28a73e9a9399c0",
+      "ocrSegmentation": {
+        "psm6": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES",
+        "psm3": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
+      }
+    },
+    {
+      "id": "K112-AM055",
+      "status": "HOLD",
+      "reason": "OCR_CMAP_ONLY_FULL_FIELD_GATE_FAILED",
+      "sourceExam": 112,
+      "session": "AM",
+      "number": 55,
+      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
+      "sourceImageSha256": "d6ec5ac4474e91b1eb3ac2a49b4c04efc646fcf5e680f67cfa165a332bcf4a7c",
+      "sourcePage": 21,
+      "coordinateClip": [
+        0.0,
+        416.17,
+        615.61,
+        587.83
+      ],
+      "ocrPsm6Sha256": "1e92271158c2c154f2a614b15a844b3632be9b52431f2bc464b6fb331584e275",
+      "ocrPsm3Sha256": "1e92271158c2c154f2a614b15a844b3632be9b52431f2bc464b6fb331584e275",
+      "fieldChecks": [
+        {
+          "index": 0,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 1,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 2,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 3,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 4,
+          "pass": false,
+          "reason": "INSUFFICIENT_BILATERAL_CONTEXT",
+          "deltas": [
+            {
+              "at": 4,
+              "before": "ï",
+              "after": "(",
+              "leftAnchor": "通所介護",
+              "rightAnchor": "デイサービ"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "K112-AM064",
+      "status": "HOLD",
+      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
+      "sourceExam": 112,
+      "session": "AM",
+      "number": 64,
+      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
+      "sourceImageSha256": "365affae03f5f57c344be17481e92d0e85300f4ef5b529588ce9cac04bf8ba3d",
+      "sourcePage": 24,
+      "coordinateClip": [
+        0.0,
+        440.26,
+        615.61,
+        611.92
+      ],
+      "ocrPsm6Sha256": "524c7b4ff0e742c3eea359c700870e89f7083c1dad7ef44b95978a958939d472",
+      "ocrPsm3Sha256": "f2dac21d70769d02ca0c9f78b8bc5c7ac4602b29153f2e4e678d6e6e6072148d",
+      "ocrSegmentation": {
+        "psm6": null,
+        "psm3": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
+      }
+    },
+    {
+      "id": "K112-AM065",
+      "status": "HOLD",
+      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
+      "sourceExam": 112,
+      "session": "AM",
+      "number": 65,
+      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
+      "sourceImageSha256": "cb9db802a683912631d9759002007749188e2df93c25fcbe4c283bd41550143e",
+      "sourcePage": 24,
+      "coordinateClip": [
+        0.0,
+        608.92,
+        615.61,
+        827.44
+      ],
+      "ocrPsm6Sha256": "e2aacedbff2f9b0b128fc25ac0962814e884c3d945bfeb13529c72a739498217",
+      "ocrPsm3Sha256": "fc0bd65a8b13db9fa0080003140ad9cf6170c32705515253b11857ec96518944",
+      "ocrSegmentation": {
+        "psm6": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES",
+        "psm3": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
+      }
+    },
+    {
+      "id": "K112-AM067",
+      "status": "HOLD",
+      "reason": "OCR_CMAP_ONLY_FULL_FIELD_GATE_FAILED",
+      "sourceExam": 112,
+      "session": "AM",
+      "number": 67,
+      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
+      "sourceImageSha256": "cba3f9ee20782f92d7675d49eed8d56d3832da8066ca5826080602f7ff945149",
+      "sourcePage": 25,
+      "coordinateClip": [
+        0.0,
+        271.6,
+        615.61,
+        467.36
+      ],
+      "ocrPsm6Sha256": "f649bdbb8237dc1af98457821951afc1294eb8dc45c84a930867924c1840a5a3",
+      "ocrPsm3Sha256": "f649bdbb8237dc1af98457821951afc1294eb8dc45c84a930867924c1840a5a3",
+      "fieldChecks": [
+        {
+          "index": 0,
+          "pass": false,
+          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
+          "deltas": []
+        },
+        {
+          "index": 1,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 2,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 3,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 4,
+          "pass": false,
+          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
+          "deltas": []
+        }
+      ]
+    },
+    {
+      "id": "K112-AM069",
+      "status": "HOLD",
+      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
+      "sourceExam": 112,
+      "session": "AM",
+      "number": 69,
+      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
+      "sourceImageSha256": "3b7f84a04d740f6b057bded23897448b51014245a5108496e7aa4aaa32dd689b",
+      "sourcePage": 26,
+      "coordinateClip": [
+        0.0,
+        78.85,
+        615.61,
+        298.7
+      ],
+      "ocrPsm6Sha256": "16bbd9d40b362fed40745a8923c92b09484b48abc2c6cf5a9162f4b8f95b1221",
+      "ocrPsm3Sha256": "25ad5e0068f8509e4850bd9e8284bb875eccac83a5ee15abe9a2b45c899c418e",
+      "ocrSegmentation": {
+        "psm6": null,
+        "psm3": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
+      }
+    },
+    {
+      "id": "K112-AM070",
+      "status": "HOLD",
+      "reason": "OCR_CMAP_ONLY_FULL_FIELD_GATE_FAILED",
+      "sourceExam": 112,
+      "session": "AM",
+      "number": 70,
+      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
+      "sourceImageSha256": "141f5d132d009bb16e4eccde52d0b0b1f5344ac3537e737c182b374d0602c366",
+      "sourcePage": 26,
+      "coordinateClip": [
+        0.0,
+        295.7,
+        615.61,
+        467.36
+      ],
+      "ocrPsm6Sha256": "acb95b5f63b75c2bdfc0adede278556f070387a2c41558807bd8471c0a0f0ff8",
+      "ocrPsm3Sha256": "09889d0797bdbb9f20eefb4df01bf56467e059cee74df36014bf28c58ed94c75",
+      "fieldChecks": [
+        {
+          "index": 0,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 1,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 2,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 3,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 4,
+          "pass": false,
+          "reason": "INSUFFICIENT_BILATERAL_CONTEXT",
+          "deltas": [
+            {
+              "at": 12,
+              "before": "ï",
+              "after": "(",
+              "leftAnchor": "同生活介護",
+              "rightAnchor": "グループホ"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "K112-AM071",
+      "status": "HOLD",
+      "reason": "INDEPENDENT_OCR_RENDERINGS_FIELD_DISAGREE",
+      "sourceExam": 112,
+      "session": "AM",
+      "number": 71,
+      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
+      "sourceImageSha256": "e6b285d8f99b3533df834403b18fd79c0d4d40592d104c74f1393e8bb4d345ae",
+      "sourcePage": 26,
+      "coordinateClip": [
+        0.0,
+        464.36,
+        615.61,
+        827.44
+      ],
+      "ocrPsm6Sha256": "331a1d053fbad3f0ac6ad9510fd5e51ce338369b66bab6b0fa079dcba2148b8e",
+      "ocrPsm3Sha256": "82d03c6f84407b71d7c9dad44a70712f7ee4847f87f5c66bcc82d02f7938b523",
+      "ocrSegmentation": {
+        "psm6Count": 5,
+        "psm3Count": 5
+      }
+    },
+    {
+      "id": "K112-AM075",
+      "status": "HOLD",
+      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
+      "sourceExam": 112,
+      "session": "AM",
+      "number": 75,
+      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
+      "sourceImageSha256": "5c527182b71bc7f769d42148e7675866e76fcd9d4ea876c78d95f5a20ec65318",
+      "sourcePage": 28,
+      "coordinateClip": [
+        0.0,
+        78.85,
+        615.61,
+        274.6
+      ],
+      "ocrPsm6Sha256": "7ae889b98e9280c7fbd7a543593c5a4f90cecf7dd640c7a49eabed9a74b49726",
+      "ocrPsm3Sha256": "3ddd4a0e7bb9377501222b85c8912aaad8c9054b996d357440309c12bfbd94b1",
+      "ocrSegmentation": {
+        "psm6": "OCR_CHOICES_NON_SEQUENTIAL",
+        "psm3": null
+      }
+    },
+    {
+      "id": "K112-AM083",
+      "status": "HOLD",
+      "reason": "INDEPENDENT_OCR_RENDERINGS_FIELD_DISAGREE",
+      "sourceExam": 112,
+      "session": "AM",
+      "number": 83,
+      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
+      "sourceImageSha256": "2cfdb0ed0f0e782b28f256cf421e54881b0bc10976c98287e911ccce958255cd",
+      "sourcePage": 30,
+      "coordinateClip": [
+        0.0,
+        488.45,
+        615.61,
+        827.44
+      ],
+      "ocrPsm6Sha256": "fed270d07913f77c7042864578ef6c4c158f9dbbd2a3e1a9ad4b8fc75418856e",
+      "ocrPsm3Sha256": "8ffa73ee6dba126c62167c7170de89d72d1c6150bfcc222957e866c8ae97caaa",
+      "ocrSegmentation": {
+        "psm6Count": 6,
+        "psm3Count": 6
+      }
+    },
+    {
+      "id": "K112-AM085",
+      "status": "HOLD",
+      "reason": "OFFICIAL_KEY_OR_SCORING_EXCEPTION",
+      "sourceExam": 112,
+      "session": "AM",
+      "number": 85
+    },
+    {
+      "id": "K112-PM001",
+      "status": "HOLD",
+      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
+      "sourceExam": 112,
+      "session": "PM",
+      "number": 1,
+      "sourcePdfSha256": "137d583931c6ae6a7fa2f3f8655352bdce24735c6f0b2bbbb0b192e6a357d01e",
+      "sourceImageSha256": "fa24e94249c4842035151add30f53d1fa27d532757c83530efc5ab24da97c624",
+      "sourcePage": 7,
+      "coordinateClip": [
+        0.0,
+        78.85,
+        615.61,
+        250.51
+      ],
+      "ocrPsm6Sha256": "d5a62b8603cecce66708a7d664afc3c9c959c21c5dfe85d56b17a5b8180843ad",
+      "ocrPsm3Sha256": "7e74ec4e58b299ac5b60c5a045af7615d34ceb2eb9cec0423be308d232430af2",
+      "ocrSegmentation": {
+        "psm6": null,
+        "psm3": "OCR_CHOICES_NON_SEQUENTIAL"
+      }
+    },
+    {
+      "id": "K112-PM003",
+      "status": "HOLD",
+      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
+      "sourceExam": 112,
+      "session": "PM",
+      "number": 3,
+      "sourcePdfSha256": "137d583931c6ae6a7fa2f3f8655352bdce24735c6f0b2bbbb0b192e6a357d01e",
+      "sourceImageSha256": "3e7f45ec5136af7ea836998145be9551117312130291d15b7e20679f6de8a160",
+      "sourcePage": 7,
+      "coordinateClip": [
+        0.0,
+        416.17,
+        615.61,
+        587.83
+      ],
+      "ocrPsm6Sha256": "f8b30848ed6ecfbc97edd6eb9cb8417f648045a80d0a29d68faf58d9e0012506",
+      "ocrPsm3Sha256": "d4e1a2bd97e23cf698631ab0f1e79280ae6a051c9c92563743ecd15c7a390a32",
+      "ocrSegmentation": {
+        "psm6": null,
+        "psm3": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
+      }
+    },
+    {
+      "id": "K112-PM008",
+      "status": "HOLD",
+      "reason": "INDEPENDENT_OCR_RENDERINGS_FIELD_DISAGREE",
+      "sourceExam": 112,
+      "session": "PM",
+      "number": 8,
+      "sourcePdfSha256": "137d583931c6ae6a7fa2f3f8655352bdce24735c6f0b2bbbb0b192e6a357d01e",
+      "sourceImageSha256": "79774a5f9e049aa030b865a88b262e18e13fb01dea82e9e250e3127ebd8a0332",
+      "sourcePage": 8,
+      "coordinateClip": [
+        0.0,
+        608.92,
+        615.61,
+        827.44
+      ],
+      "ocrPsm6Sha256": "f9fd1a5cfab1abd5c491978fe32259b13fd65a1d2da8242d00f7cb338791f9b7",
+      "ocrPsm3Sha256": "d541bce89e48f733d1cb5fd1c6ba396b591729cc458a2b8359b18ca67e9461fa",
+      "ocrSegmentation": {
+        "psm6Count": 5,
+        "psm3Count": 5
+      }
+    },
+    {
+      "id": "K112-PM012",
+      "status": "HOLD",
+      "reason": "OCR_CMAP_ONLY_FULL_FIELD_GATE_FAILED",
+      "sourceExam": 112,
+      "session": "PM",
+      "number": 12,
+      "sourcePdfSha256": "137d583931c6ae6a7fa2f3f8655352bdce24735c6f0b2bbbb0b192e6a357d01e",
+      "sourceImageSha256": "34514430eb6c93313bbd6ac48c5bb02f72be10f17983e0feec18272d48137f6f",
+      "sourcePage": 9,
+      "coordinateClip": [
+        0.0,
+        584.83,
+        615.61,
+        827.44
+      ],
+      "ocrPsm6Sha256": "6837f1a7ddaa1043ef53398145f78653a8f35570a79f39fea5ff1c070ed7dfdf",
+      "ocrPsm3Sha256": "8bb03a1727ea3ef3d36e6b358d8130438ada0fb6f0dc981e69525b82a91bc027",
+      "fieldChecks": [
+        {
+          "index": 0,
+          "pass": false,
+          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
+          "deltas": []
+        },
+        {
+          "index": 1,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 2,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 3,
+          "pass": false,
+          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
+          "deltas": [
+            {
+              "at": 3,
+              "before": "è",
+              "after": "(",
+              "leftAnchor": "His",
+              "rightAnchor": "ヒスê束"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "pass": false,
+          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
+          "deltas": [
+            {
+              "at": 8,
+              "before": "è",
+              "after": "<",
+              "leftAnchor": "kinje",
+              "rightAnchor": "プルキンエ"
+            },
+            {
+              "at": 14,
+              "before": "ê",
+              "after": ")",
+              "leftAnchor": "プルキンエ",
+              "rightAnchor": "線維"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "K112-PM014",
+      "status": "HOLD",
+      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
+      "sourceExam": 112,
+      "session": "PM",
+      "number": 14,
+      "sourcePdfSha256": "137d583931c6ae6a7fa2f3f8655352bdce24735c6f0b2bbbb0b192e6a357d01e",
+      "sourceImageSha256": "06e59a4a148e13833506f15ec8ac08bfdb787670cf9c5a973ee53e6b30a5bddc",
+      "sourcePage": 10,
+      "coordinateClip": [
+        0.0,
+        247.51,
+        615.61,
+        467.36
+      ],
+      "ocrPsm6Sha256": "6257eb824172b037d16855e25ef9ced87bc2220979af4569097847b6308f69d1",
+      "ocrPsm3Sha256": "a90e9619287bcce4e2c9a431ce2619cb70964d31324f054eee51b7c7b001a53c",
+      "ocrSegmentation": {
+        "psm6": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES",
+        "psm3": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
+      }
+    },
+    {
+      "id": "K112-PM021",
+      "status": "HOLD",
+      "reason": "OCR_CMAP_ONLY_FULL_FIELD_GATE_FAILED",
+      "sourceExam": 112,
+      "session": "PM",
+      "number": 21,
+      "sourcePdfSha256": "137d583931c6ae6a7fa2f3f8655352bdce24735c6f0b2bbbb0b192e6a357d01e",
+      "sourceImageSha256": "5d99f5eadd07259d27205b695fb8876af3acc3aa18ab1527a918d9838ccb99d0",
+      "sourcePage": 12,
+      "coordinateClip": [
+        0.0,
+        78.85,
+        615.61,
+        250.51
+      ],
+      "ocrPsm6Sha256": "fab7397604f8d06fb2d29cdcb93ebc1b687a840ce5cc9c81da4258b100ff11a5",
+      "ocrPsm3Sha256": "fab7397604f8d06fb2d29cdcb93ebc1b687a840ce5cc9c81da4258b100ff11a5",
+      "fieldChecks": [
+        {
+          "index": 0,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 1,
+          "pass": false,
+          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
+          "deltas": []
+        },
+        {
+          "index": 2,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 3,
+          "pass": false,
+          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
+          "deltas": []
+        },
+        {
+          "index": 4,
+          "pass": false,
+          "reason": "INSUFFICIENT_BILATERAL_CONTEXT",
+          "deltas": [
+            {
+              "at": 5,
+              "before": "è",
+              "after": "く",
+              "leftAnchor": "腹部圧迫法",
+              "rightAnchor": "Heiml"
+            },
+            {
+              "at": 14,
+              "before": "è",
+              "after": "〈",
+              "leftAnchor": "mlich",
+              "rightAnchor": "ハイムリッ"
+            },
+            {
+              "at": 21,
+              "before": "ê",
+              "after": "/)",
+              "leftAnchor": "イムリック",
+              "rightAnchor": "法ê"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "K112-PM023",
+      "status": "HOLD",
+      "reason": "OCR_CMAP_ONLY_FULL_FIELD_GATE_FAILED",
+      "sourceExam": 112,
+      "session": "PM",
+      "number": 23,
+      "sourcePdfSha256": "137d583931c6ae6a7fa2f3f8655352bdce24735c6f0b2bbbb0b192e6a357d01e",
+      "sourceImageSha256": "f819a871e561a06ab4ffe383eb60489a02eb5156bb6c7e1b17c3fb18060a6e0e",
+      "sourcePage": 12,
+      "coordinateClip": [
+        0.0,
+        416.17,
+        615.61,
+        587.83
+      ],
+      "ocrPsm6Sha256": "e8cff003426175294d22a6ad09d87aae9e0e50e2656466ed31b767162a013b7a",
+      "ocrPsm3Sha256": "e8cff003426175294d22a6ad09d87aae9e0e50e2656466ed31b767162a013b7a",
+      "fieldChecks": [
+        {
+          "index": 0,
+          "pass": false,
+          "reason": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
+          "deltas": []
+        },
+        {
+          "index": 1,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 2,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 3,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 4,
+          "pass": true,
+          "reason": "UNCHANGED",
+          "deltas": []
+        }
+      ]
+    },
+    {
+      "id": "K112-PM024",
+      "status": "HOLD",
+      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
+      "sourceExam": 112,
+      "session": "PM",
+      "number": 24,
+      "sourcePdfSha256": "137d583931c6ae6a7fa2f3f8655352bdce24735c6f0b2bbbb0b192e6a357d01e",
+      "sourceImageSha256": "f1210684dfe2b8d37205ed5e525248beb912a095a08e0739da3f37b276825496",
+      "sourcePage": 12,
+      "coordinateClip": [
+        0.0,
+        584.83,
+        615.61,
+        827.44
+      ],
+      "ocrPsm6Sha256": "6cb4e67616c251b32dfc432c229698d81f6a45de00f507eacd15553db069eb1f",
+      "ocrPsm3Sha256": "1cd4fe1e5ef237531f0cbeee5f3caa2dc1cbe81abc3015010d7984a1f7ec8697",
+      "ocrSegmentation": {
+        "psm6": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES",
+        "psm3": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
+      }
+    },
+    {
+      "id": "K112-PM027",
+      "status": "HOLD",
+      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
+      "sourceExam": 112,
+      "session": "PM",
+      "number": 27,
+      "sourcePdfSha256": "137d583931c6ae6a7fa2f3f8655352bdce24735c6f0b2bbbb0b192e6a357d01e",
+      "sourceImageSha256": "c1fa2ae3de90677b84808fa1ff50e2aa50bab68fb9d5a2db2edce6c7f8638f82",
+      "sourcePage": 14,
+      "coordinateClip": [
+        0.0,
+        78.85,
+        615.61,
+        250.51
+      ],
+      "ocrPsm6Sha256": "a8d2f695afab944cf9ea696715df41caddc6138d623c3658b49d399a16d79d6f",
+      "ocrPsm3Sha256": "929d48a455665d02406190f6cffde8d90ab06e8ca3c710ace9c9f12a17172d37",
+      "ocrSegmentation": {
+        "psm6": null,
+        "psm3": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
+      }
+    },
+    {
+      "id": "K112-PM030",
+      "status": "HOLD",
+      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
+      "sourceExam": 112,
+      "session": "PM",
+      "number": 30,
+      "sourcePdfSha256": "137d583931c6ae6a7fa2f3f8655352bdce24735c6f0b2bbbb0b192e6a357d01e",
+      "sourceImageSha256": "566771d1eb2f9a164fb7f3ca7a7e16715b49e059320684529c720f7f6a636ada",
+      "sourcePage": 14,
+      "coordinateClip": [
+        0.0,
+        584.83,
+        615.61,
+        827.44
+      ],
+      "ocrPsm6Sha256": "e14eb288dfe45ba5c9fcd0569ff175c38a9c23288cdd4e6e4968258a9eb3401b",
+      "ocrPsm3Sha256": "d65774e996591a515c862ee26214028da73cd615168115c0e377fe11243136fd",
+      "ocrSegmentation": {
+        "psm6": null,
+        "psm3": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
+      }
+    },
+    {
+      "id": "K112-PM037",
+      "status": "HOLD",
+      "reason": "OCR_FIELD_SEGMENTATION_FAILED",
+      "sourceExam": 112,
+      "session": "PM",
+      "number": 37,
+      "sourcePdfSha256": "137d583931c6ae6a7fa2f3f8655352bdce24735c6f0b2bbbb0b192e6a357d01e",
+      "sourceImageSha256": "61b8d6f1431ae59718515091d0d04cb5bd2bb891774a9614359149c1a563f48a",
+      "sourcePage": 16,
+      "coordinateClip": [
+        0.0,
+        416.17,
+        615.61,
+        587.83
+      ],
+      "ocrPsm6Sha256": "95f787040183dc531100989a9d61935e2bf3c3834028a07c116e107b49f7415b",
+      "ocrPsm3Sha256": "241ebdc53cf5ae114d30e09e06a2a99938f567f42d00abfa2c6a06f95f979394",
+      "ocrSegmentation": {
+        "psm6": null,
+        "psm3": "OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
+      }
+    },
+    {
+      "id": "K112-PM038",
+      "status": "HOLD",
+      "reason": "INDEPENDENT_OCR_RENDERINGS_FIELD_DISAGREE",
+      "sourceExam": 112,
+      "session": "PM",
+      "number": 38,
+      "sourcePdfSha256": "137d583931c6ae6a7fa2f3f8655352bdce24735c6f0b2bbbb0b192e6a357d01e",
+      "sourceImageSha256": "fd2eaea7fd368b6fbdab1532a28fa086f964b344df12768474ad42cf55da673e",
+      "sourcePage": 16,
+      "coordinateClip": [
+        0.0,
+        584.83,
+        615.61,
+        827.44
+      ],
+      "ocrPsm6Sha256": "4b1f03e8f7f1f0813d1fdee6787e6a15509792f5ea957c1eeb44a4b0aafe19ce",
+      "ocrPsm3Sha256": "e9e7ad8ddef98ffb2cde47b58400dce3adf29f55cef1cfc2d3f2e2b6dad3e499",
+      "ocrSegmentation": {
+        "psm6Count": 5,
+        "psm3Count": 5
+      }
+    },
+    {
       "id": "K112-PM043",
       "status": "HOLD",
       "reason": "OCR_CMAP_ONLY_FULL_FIELD_GATE_FAILED",
@@ -2747,7 +2743,7 @@
       "sourceImageSha256": "98b0924ffb4101e3978f4676670fa0c09a61c2768c1588353c2bcf241d72239a",
       "sourcePage": 18,
       "coordinateClip": [
-        0,
+        0.0,
         416.17,
         615.61,
         587.83
@@ -2806,7 +2802,7 @@
       "sourceImageSha256": "c7e3703701053b30c903c8dfc8985f1a5a9716c8aaf6b188fcee76b797a41b5f",
       "sourcePage": 19,
       "coordinateClip": [
-        0,
+        0.0,
         78.85,
         615.61,
         322.79
@@ -2829,7 +2825,7 @@
       "sourceImageSha256": "760a87a8eee72d8b3a0dcc53fac8c9cbbecb43c17d19d811d7525c057552e0f8",
       "sourcePage": 19,
       "coordinateClip": [
-        0,
+        0.0,
         560.73,
         615.61,
         827.44
@@ -2852,7 +2848,7 @@
       "sourceImageSha256": "e651b69250524420139752f4be099a05c338e14666d84ecac5432754f488b99b",
       "sourcePage": 20,
       "coordinateClip": [
-        0,
+        0.0,
         78.85,
         615.61,
         322.79
@@ -2875,7 +2871,7 @@
       "sourceImageSha256": "b3b2e6a60c744e3ad498c62691c873fba230ea36c88dc3ea5c5400ff08d01eba",
       "sourcePage": 21,
       "coordinateClip": [
-        0,
+        0.0,
         78.85,
         615.61,
         250.51
@@ -2898,7 +2894,7 @@
       "sourceImageSha256": "7410cc26b57d5d5731eaaf522de7c9be6154eaf75f9dd1b99e1012ec52c2494d",
       "sourcePage": 22,
       "coordinateClip": [
-        0,
+        0.0,
         488.45,
         615.61,
         827.44
@@ -2921,7 +2917,7 @@
       "sourceImageSha256": "325c3b932b6bae209254196d2047cf079c4cf6aa0c288775825a6a0fc7081be9",
       "sourcePage": 24,
       "coordinateClip": [
-        0,
+        0.0,
         512.55,
         615.61,
         827.44
@@ -2944,7 +2940,7 @@
       "sourceImageSha256": "df66169bbbeca5cc3a13da9661b036633966dc2c4c8e7ca83bb9e721d53fad7f",
       "sourcePage": 25,
       "coordinateClip": [
-        0,
+        0.0,
         271.6,
         615.61,
         491.45
@@ -2967,7 +2963,7 @@
       "sourceImageSha256": "df964c8101ed7b57c2f149a47ee9a9eff0cde7bf5b453d10bd31c851c40a00b4",
       "sourcePage": 25,
       "coordinateClip": [
-        0,
+        0.0,
         488.45,
         615.61,
         827.44
@@ -2990,7 +2986,7 @@
       "sourceImageSha256": "4b95feb67ce56788f7b3008f4a282df96119f4e1aee9d385c7102185be11e951",
       "sourcePage": 26,
       "coordinateClip": [
-        0,
+        0.0,
         247.51,
         615.61,
         827.44
@@ -3013,7 +3009,7 @@
       "sourceImageSha256": "4849cd02ae06d86f5be7d809d81bc64ec4532538a7187f570d8d70be85aa99d4",
       "sourcePage": 27,
       "coordinateClip": [
-        0,
+        0.0,
         584.83,
         615.61,
         827.44
@@ -3036,7 +3032,7 @@
       "sourceImageSha256": "3246a633d34a4689a6337d1b789a90a44ab53648e2cea9ce21267f1ace33a466",
       "sourcePage": 28,
       "coordinateClip": [
-        0,
+        0.0,
         78.85,
         615.61,
         827.44
@@ -3067,7 +3063,7 @@
       "sourceImageSha256": "68a9821b1b08e602bd06a5b26a05f95140593b7d16e8d17aef2bc37bd4c5fe75",
       "sourcePage": 30,
       "coordinateClip": [
-        0,
+        0.0,
         488.45,
         615.61,
         827.44
@@ -3080,15 +3076,5 @@
       }
     }
   ],
-  "validation": "Two image OCR PSM renderings full five fields; CMap-only original gap modifications; original PDF/image hashes; single official answer; no media/scenarios; not a product release.",
-  "postOcrOriginalPageCorrections": [
-    {
-      "id": "K112-PM042",
-      "field": "question",
-      "ocrText": "成人に対する自動体外式除細動器(AED〉の使用で正しいのはどれか。",
-      "correctedText": "成人に対する自動体外式除細動器〈AED〉の使用で正しいのはどれか。",
-      "officialSource": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp230524-05c_01.pdf",
-      "pdfPage": 18
-    }
-  ]
+  "validation": "Two image OCR PSM renderings full five fields; CMap-only original gap modifications; original PDF/image hashes; single official answer; no media/scenarios; not a product release."
 }

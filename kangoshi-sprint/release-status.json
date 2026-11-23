@@ -378,13 +378,10 @@
   },
   "latestBoundaryContextAudit": {
     "date": "2026-11-24",
-    "runId": "45273825020",
+    "runId": "45277368852",
     "source": "GitHub Actions official PDF dual engine",
-    "newPromotedInRun": 2,
-    "newIds": [
-      "K111-PM010",
-      "K112-PM042"
-    ],
+    "newPromotedInRun": 0,
+    "newIds": [],
     "currentCanonical": 982,
     "currentHeld": 218,
     "reasonCountsOverlap": true,
@@ -419,24 +416,21 @@
     "quarantinedCandidateRepairs": 5
   },
   "latestContextAndControlAudit": {
-    "runId": "45273825020",
+    "runId": "45277368852",
     "date": "2026-11-24",
     "scope": "480 source candidates, prioritize 22 reextracted",
-    "newPromoted": 2,
-    "newIds": [
-      "K111-PM010",
-      "K112-PM042"
-    ],
+    "newPromoted": 0,
+    "newIds": [],
     "currentCanonical": 982,
     "remaining": 218,
     "reextractedPendingSourcePool": 22,
     "reextractedStillHeld": 0,
     "reextractionSummary": {
-      "checked": 220,
-      "previousVerified": 260,
+      "checked": 218,
+      "previousVerified": 262,
       "sourceReextractPass": 2,
       "updated": 2,
-      "notUpdated": 218
+      "notUpdated": 216
     },
     "sources": [
       "MHLW official question PDF",
@@ -556,17 +550,17 @@
     "releaseStatus": "PREFLIGHT_BLOCKED"
   },
   "latestOcrCategoryAudit": {
-    "runId": "45273825020",
-    "checked": 220,
+    "runId": "45277368852",
+    "checked": 218,
     "categories": {
       "OFFICIAL_KEY_OR_SCORING_NOT_CLEAR": 40,
-      "NO_EXACT_OCR_AND_ENGINE_FULL_FIELD_MATCH": 96,
+      "NO_EXACT_OCR_AND_ENGINE_FULL_FIELD_MATCH": 94,
       "MEDIA_RIGHTS_OR_DIAGRAM_GATE": 13,
       "SCENARIO_CONTEXT_REQUIRES_SEPARATE_OCR_PROOF": 71
     },
     "officialDecisions": {
       "EXCEPTION_HANDLING_REQUIRED_include_if_correct_exclude_if_wrong": 2,
-      "NORMAL_KEY_CONFIRMED": 180,
+      "NORMAL_KEY_CONFIRMED": 178,
       "EXCEPTION_HANDLING_REQUIRED_multiple_accepted": 3,
       "NOT_SINGLE_OFFICIAL_KEY": 30,
       "OFFICIAL_KEY_OR_STAGED_MISMATCH": 4,
@@ -577,28 +571,26 @@
     "sourceOnlyReleaseBlocked": true
   },
   "latestOcrCmapRepairAudit": {
-    "runId": "45273825020",
+    "runId": "45277368852",
     "scope": 96,
-    "actualSourceRepairs": 2,
-    "newSourcePromoted": 2,
+    "actualSourceRepairs": 0,
+    "newSourcePromoted": 0,
     "stillHeldFrom96": 94,
     "individualProof": "kangoshi-sprint/audit/ocr-cmap-repair-ledger-20261124.json",
     "beforeAfter": "kangoshi-sprint/product-content/ocr-repaired-candidates-20261124.json",
     "releaseEligible": 0,
-    "status": "SOURCE_ONLY",
-    "officialImagePostCorrection": {
-      "id": "K112-PM042",
-      "sourceExam": 112,
-      "session": "PM",
-      "number": 42,
-      "field": "question",
-      "sourcePdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp230524-05c_01.pdf",
-      "sourcePdfPage1Based": 18,
-      "ocrInitial": "自動体外式除細動器(AED〉",
-      "visuallyConfirmed": "自動体外式除細動器〈AED〉",
-      "correctionType": "CMap-bracket OCR recognition error after first promotion",
-      "verification": "OFFICIAL_PDF_VISUAL",
-      "noExtraPromotion": true
-    }
+    "status": "SOURCE_ONLY"
+  },
+  "latestOcrCoordinateRepairAudit": {
+    "runId": "45277368852",
+    "scope": 46,
+    "checkedThisRun": 46,
+    "newlyPromoted": 0,
+    "cumulativePromoted": 0,
+    "remainingFrom46": 46,
+    "individualProof": "kangoshi-sprint/audit/ocr-coordinate-repair-ledger-20261124.json",
+    "beforeAfter": "kangoshi-sprint/product-content/ocr-coordinate-repaired-candidates-20261124.json",
+    "releaseEligible": 0,
+    "status": "SOURCE_ONLY"
   }
 }

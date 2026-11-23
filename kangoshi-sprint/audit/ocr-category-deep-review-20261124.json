@@ -4,16 +4,16 @@
     111,
     112
   ],
-  "checked": 220,
+  "checked": 218,
   "categories": {
     "OFFICIAL_KEY_OR_SCORING_NOT_CLEAR": 40,
-    "NO_EXACT_OCR_AND_ENGINE_FULL_FIELD_MATCH": 96,
+    "NO_EXACT_OCR_AND_ENGINE_FULL_FIELD_MATCH": 94,
     "MEDIA_RIGHTS_OR_DIAGRAM_GATE": 13,
     "SCENARIO_CONTEXT_REQUIRES_SEPARATE_OCR_PROOF": 71
   },
   "officialDecisions": {
     "EXCEPTION_HANDLING_REQUIRED_include_if_correct_exclude_if_wrong": 2,
-    "NORMAL_KEY_CONFIRMED": 180,
+    "NORMAL_KEY_CONFIRMED": 178,
     "EXCEPTION_HANDLING_REQUIRED_multiple_accepted": 3,
     "NOT_SINGLE_OFFICIAL_KEY": 30,
     "OFFICIAL_KEY_OR_STAGED_MISMATCH": 4,
@@ -6149,204 +6149,6 @@
         }
       },
       "sourceImageSha256": "aee4cfd1e7ab4365670868836f2aeedebc80871e5bdb334bc41a20c29dfa6ad5",
-      "categoryDecision": "CHARACTER_DIFF_SAVED_HOLD_FOR_UNPROVEN_FIELD_BOUNDARIES"
-    },
-    {
-      "id": "K111-PM010",
-      "exam": 111,
-      "session": "PM",
-      "number": 10,
-      "category": "NO_EXACT_OCR_AND_ENGINE_FULL_FIELD_MATCH",
-      "previousReasons": [
-        "SUSPICIOUS_GLYPH_OR_CONTROL_IN_DRAFT",
-        "COORDINATE_BOUNDARY_NOT_UNIQUELY_CONFIRMED",
-        "COORDINATE_REGION_UNVERIFIED",
-        "PYMUPDF_FIELD_MISMATCH_0",
-        "POPPLER_FIELD_MISMATCH_0"
-      ],
-      "official": {
-        "pdfSha256": "b395c7eddb7820daaaf19ae44766889cf19b7b4f5e0d8f9411a8ba1787dfac85",
-        "officialRaw": "4",
-        "officialStatus": "KEY_SINGLE",
-        "draftRaw": "4",
-        "draftAnswer": 3,
-        "draftShaMatches": true,
-        "exception": null,
-        "decision": "NORMAL_KEY_CONFIRMED"
-      },
-      "sourceStatus": "HOLD",
-      "ocrTextEvidence": {
-        "PyMuPDF": {
-          "failure": "UNRESOLVED_SOURCE_GLYPH_OR_FOOTER"
-        },
-        "Poppler": {
-          "printedOptions": 4,
-          "fieldDiffs": [
-            {
-              "sourceCharacters": 68,
-              "ocrCharacters": 92,
-              "similarity": 0.7375,
-              "editCount": 42,
-              "protectedTokensEqual": true,
-              "protectedSource": [],
-              "protectedOcr": [],
-              "edits": [
-                {
-                  "op": "insert",
-                  "source": "",
-                  "ocr": "10 ",
-                  "sourceStart": 0,
-                  "ocrStart": 0
-                },
-                {
-                  "op": "delete",
-                  "source": "    ",
-                  "ocr": "",
-                  "sourceStart": 22,
-                  "ocrStart": 25
-                },
-                {
-                  "op": "insert",
-                  "source": "",
-                  "ocr": "\n",
-                  "sourceStart": 41,
-                  "ocrStart": 40
-                },
-                {
-                  "op": "insert",
-                  "source": "",
-                  "ocr": "\n",
-                  "sourceStart": 51,
-                  "ocrStart": 51
-                },
-                {
-                  "op": "delete",
-                  "source": "     ",
-                  "ocr": "",
-                  "sourceStart": 52,
-                  "ocrStart": 53
-                },
-                {
-                  "op": "insert",
-                  "source": "",
-                  "ocr": "\n1. 1.0\n2. 1.5\n3. 2.0\n4 2.5\n",
-                  "sourceStart": 68,
-                  "ocrStart": 64
-                }
-              ],
-              "editsTruncated": false
-            },
-            {
-              "sourceCharacters": 3,
-              "ocrCharacters": 92,
-              "similarity": 0.06316,
-              "editCount": 89,
-              "protectedTokensEqual": true,
-              "protectedSource": [],
-              "protectedOcr": [],
-              "edits": [
-                {
-                  "op": "insert",
-                  "source": "",
-                  "ocr": "10 指定訪問看護ステーションには常勤換算で(  )人以上の看護職員を配置するこ\nとが定められている。\n( )に入るのはどれか。\n1. ",
-                  "sourceStart": 0,
-                  "ocrStart": 0
-                },
-                {
-                  "op": "insert",
-                  "source": "",
-                  "ocr": "\n2. 1.5\n3. 2.0\n4 2.5\n",
-                  "sourceStart": 3,
-                  "ocrStart": 71
-                }
-              ],
-              "editsTruncated": false
-            },
-            {
-              "sourceCharacters": 3,
-              "ocrCharacters": 92,
-              "similarity": 0.06316,
-              "editCount": 89,
-              "protectedTokensEqual": true,
-              "protectedSource": [],
-              "protectedOcr": [],
-              "edits": [
-                {
-                  "op": "insert",
-                  "source": "",
-                  "ocr": "10 指定訪問看護ステーションには常勤換算で(  )人以上の看護職員を配置するこ\nとが定められている。\n( )に入るのはどれか。\n1. 1.0\n2. ",
-                  "sourceStart": 0,
-                  "ocrStart": 0
-                },
-                {
-                  "op": "insert",
-                  "source": "",
-                  "ocr": "\n3. 2.0\n4 2.5\n",
-                  "sourceStart": 3,
-                  "ocrStart": 78
-                }
-              ],
-              "editsTruncated": false
-            },
-            {
-              "sourceCharacters": 3,
-              "ocrCharacters": 92,
-              "similarity": 0.06316,
-              "editCount": 89,
-              "protectedTokensEqual": true,
-              "protectedSource": [],
-              "protectedOcr": [],
-              "edits": [
-                {
-                  "op": "insert",
-                  "source": "",
-                  "ocr": "10 指定訪問看護ステーションには常勤換算で(  )人以上の看護職員を配置するこ\nとが定められている。\n( )に入るのはどれか。\n1. 1.0\n2. 1.5\n3. ",
-                  "sourceStart": 0,
-                  "ocrStart": 0
-                },
-                {
-                  "op": "insert",
-                  "source": "",
-                  "ocr": "\n4 2.5\n",
-                  "sourceStart": 3,
-                  "ocrStart": 85
-                }
-              ],
-              "editsTruncated": false
-            },
-            {
-              "sourceCharacters": 3,
-              "ocrCharacters": 92,
-              "similarity": 0.06316,
-              "editCount": 89,
-              "protectedTokensEqual": true,
-              "protectedSource": [],
-              "protectedOcr": [],
-              "edits": [
-                {
-                  "op": "insert",
-                  "source": "",
-                  "ocr": "10 指定訪問看護ステーションには常勤換算で(  )人以上の看護職員を配置するこ\nとが定められている。\n( )に入るのはどれか。\n1. 1.0\n2. 1.5\n3. 2.0\n4 ",
-                  "sourceStart": 0,
-                  "ocrStart": 0
-                },
-                {
-                  "op": "insert",
-                  "source": "",
-                  "ocr": "\n",
-                  "sourceStart": 3,
-                  "ocrStart": 91
-                }
-              ],
-              "editsTruncated": false
-            }
-          ],
-          "ocrFullTextHash": "02731f7d1a1516c3d2fc350ba3c5bb3e60ec7b7dabeb0f417f82dbe5e44cf4be",
-          "sourceFieldsHash": "0c33f07f71265bf06ce7c092e6a51492ab7b6f61d8f1036a58200eab6311e1ca",
-          "sourceSuspicious": false
-        }
-      },
-      "sourceImageSha256": "deca885b35ac3b33aa58d183e45d24214745446a98e1efe2ed9487f33e7a0fd5",
       "categoryDecision": "CHARACTER_DIFF_SAVED_HOLD_FOR_UNPROVEN_FIELD_BOUNDARIES"
     },
     {
@@ -18696,38 +18498,6 @@
       },
       "sourceStatus": "HOLD",
       "categoryDecision": "MEDIA_REQUIRES_SEPARATE_RIGHTS_AND_FIDELITY"
-    },
-    {
-      "id": "K112-PM042",
-      "exam": 112,
-      "session": "PM",
-      "number": 42,
-      "category": "NO_EXACT_OCR_AND_ENGINE_FULL_FIELD_MATCH",
-      "previousReasons": [
-        "SUSPICIOUS_GLYPH_OR_CONTROL_IN_DRAFT",
-        "SOURCE_GLYPH_MAPPING_UNTRUSTWORTHY"
-      ],
-      "official": {
-        "pdfSha256": "c42b7b61fe9b7fd39265b0e4fef5f0a4d277db077618a98db16e9717047a9502",
-        "officialRaw": "1",
-        "officialStatus": "KEY_SINGLE",
-        "draftRaw": "1",
-        "draftAnswer": 0,
-        "draftShaMatches": true,
-        "exception": null,
-        "decision": "NORMAL_KEY_CONFIRMED"
-      },
-      "sourceStatus": "HOLD",
-      "ocrTextEvidence": {
-        "PyMuPDF": {
-          "failure": "UNRESOLVED_SOURCE_GLYPH_OR_FOOTER"
-        },
-        "Poppler": {
-          "failure": "UNRESOLVED_SOURCE_GLYPH_OR_FOOTER"
-        }
-      },
-      "sourceImageSha256": "4b7530ee0a843427eb5a798e201accd6ce3fb2595e38c1942071c77d90514d94",
-      "categoryDecision": "CHARACTER_DIFF_SAVED_HOLD_FOR_UNPROVEN_FIELD_BOUNDARIES"
     },
     {
       "id": "K112-PM043",
