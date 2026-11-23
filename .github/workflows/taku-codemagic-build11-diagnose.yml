@@ -37,6 +37,13 @@ jobs:
               res[label+'_http_status']=code
               try: data=json.loads(raw)
               except Exception: data={'message':raw[:200]}
+              if isinstance(data,dict):
+                  res[label+'_response_keys']=list(data.keys())[:50]
+                  item=data.get('data') or data
+                  res[label+'_data_type']=type(item).__name__
+                  if isinstance(item,dict):
+                      res[label+'_data_keys']=list(item.keys())[:80]
+                      res[label+'_diagnostics']={k:scrub(str(v))[:350] for k,v in item.items() if re.search(r'(?i)error|fail|reason|status|message|workflow|branch|action|stage|step',k) and not re.search(r'(?i)token|secret|private|credential|password',k) and not isinstance(v,(dict,list))}
               if label=='actions':
                   rows=data.get('data') or [] if isinstance(data,dict) else []
                   if isinstance(rows,dict): rows=rows.get('actions') or []
