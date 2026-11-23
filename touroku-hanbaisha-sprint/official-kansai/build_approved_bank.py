@@ -284,6 +284,48 @@ if crop_audit_path.exists() and crop_mobile_path.exists():
             stat["hold"]-=1
             if stat["hold"]<0:raise RuntimeError("negative crop hold: "+id)
 
+# Preserve independently certified raw-font ruby candidates across bank rebuilds.
+font_evidence=B/"RUBY_FONT_CLUSTER_ALL_20261124.json"
+if font_evidence.exists():
+    font=json.loads(font_evidence.read_text())
+    if font.get("reviewed")!=130 or len(font.get("records",[]))!=130:
+        raise RuntimeError("invalid raw-font ruby evidence count")
+    for r in font["records"]:
+        if r["status"]!="FONT_CLUSTER_PASS":continue
+        id=r["id"];year=r["year"];n=r["questionNo"]
+        if id in accepted:raise RuntimeError("ruby font record already accepted by another method: "+id)
+        q=json.loads((B/f"QUESTIONS_{year}_APP_CANDIDATE.json").read_text())["questions"][n-1]
+        geo=json.loads((B/f"GEOMETRY_AUDIT_{year}.json").read_text())["questions"][n-1]
+        ordered=json.loads((B/f"ORDERED_RUBY_{year}.json").read_text())["records"][n-1]
+        if id!=q["id"] or id!=geo["id"] or id!=ordered["id"]:
+            raise RuntimeError("ruby font source order mismatch: "+id)
+        if geo["reasons"]!=["RUBY_RENDER_NOT_CERTIFIED"] or ordered["status"]!="HOLD":
+            raise RuntimeError("another source hold prevents font ruby approval: "+id)
+        if r["reasonCodes"] or not r.get("placements"):
+            raise RuntimeError("missing font ruby evidence: "+id)
+        if q["answerNumberOfficial"]!=q["answer"]+1 or q["excludeFromAccuracyDenominator"]:
+            raise RuntimeError("official answer inconsistent: "+id)
+        fields=("id","year","questionNo","chapter","answer","answerNumberOfficial","sourceIssuer",
+          "sourceTitle","sourceUrl","answerSourceUrl","attributionDisplay","officialStatus",
+          "excludeFromAccuracyDenominator","sourcePdfPages")
+        parts=[r["questionParts"],*r["choicesParts"]]
+        if len(parts)!=len(q["choices"])+1 or sum("rubyBase" in v for field in parts for v in field)!=len(r["placements"]):
+            raise RuntimeError("ruby rich parts inconsistent: "+id)
+        plain=["".join(v.get("text",v.get("rubyBase","")) for v in field) for field in parts]
+        if not all(plain):raise RuntimeError("blank ruby content: "+id)
+        item={field:q[field] for field in fields}
+        item.update({"question":plain[0],"choices":plain[1:],"questionParts":r["questionParts"],
+          "choicesParts":r["choicesParts"],"verbatimCertified":True,"needsVisualReview":False,
+          "renderReady":True,
+          "modificationDisclosureDisplay":"原典PDF座標からルビを照合してruby要素で再配置",
+          "audit":{"status":"PASS","method":"PDF_RAW_FONT_CLUSTER_RUBY",
+            "record":"RUBY_FONT_CLUSTER_ALL_20261124.json","placements":r["placements"]}})
+        accepted[id]=item
+        stats=status_by_year[str(year)]
+        stats["rubyFontCluster"]=stats.get("rubyFontCluster",0)+1
+        stats["hold"]-=1
+        if stats["hold"]<0:raise RuntimeError("negative ruby font hold: "+id)
+
 approved=sorted(accepted.values(),key=lambda q:(q["year"],q["questionNo"]))
 out={"schema":"touroku-hanbaisha-official-approved-v2","issuer":"関西広域連合",
      "officialPastQuestionsOnly":True,"count":len(approved),"questionCountTarget":600,
