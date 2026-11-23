@@ -1338,3 +1338,11 @@ Apple固定識別子: Bundle `com.allsunday1122.tourokuhanbaisha`、ASC `6802119
 - 実測：102問中今回PASS 76、累計PASS 102、残HOLD 0。正式バンク 599/600。現mainのバンクが以前の497から468へ戻っていたため、承認済み497問の歴史的コミット(473f978287f80e2d7e2fd067936b359d20fab8c3)と現mainの和集合で承認済み0問を復旧（重複IDなし）。
 - HOLD理由（重複あり）：{}。監査台帳：\`official-kansai/RUBY_102_SOURCE_ORDER_PROMOTION_20261124.json\`。
 - 2023年問90の公式無効問題は未昇格。公開判定BLOCKED、Apple実機・App Review最終送信未実施。
+
+
+## AI Preflight Acceptance｜599問のiOSアプリ統合（2026-11-24）
+- ネイティブSwift / Expo WebView起動先を公式599問のofficial-practice.htmlに変更。旧360問の学習基盤は別画面として保持。
+- Run: https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45285966856
+- 合否: **BLOCKED**。PASS 5/12。
+- 未通過: Q1_CONTENT_AND_ATTRIBUTION, Q4_OFFLINE_RESILIENCE, Q5_PRIVACY_AND_NETWORK_DISCLOSURE, Q6_IOS_BUILD_AND_LAUNCH, Q7_TESTFLIGHT_READY, Q10_LEGACY_AND_OFFICIAL_RELEASE_VALIDATOR, Q11_CHROMIUM_FULL_BANK_375_430。
+- 詳細：touroku-hanbaisha-ios/AI_PREFLIGHT_ACCEPTANCE_20261124.json。実機・Simulator未確認、TestFlight送信なし、本審査未提出。

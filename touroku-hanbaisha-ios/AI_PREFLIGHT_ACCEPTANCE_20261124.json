@@ -1,0 +1,126 @@
+{
+  "schema": "touhan-ai-preflight-acceptance-v1",
+  "timestampJST": "2026-11-24T08:07:29.128475+09:00",
+  "canonicalBank": 599,
+  "years": {
+    "2022": 120,
+    "2023": 119,
+    "2024": 120,
+    "2025": 120,
+    "2026": 120
+  },
+  "scope": "Native entrypoint + 599 canonical app data + web UI + static readiness. Not iOS runtime attestation.",
+  "overall": "BLOCKED",
+  "checks": [
+    {
+      "id": "Q0_CANONICAL_599",
+      "status": "PASS",
+      "detail": "599 source records; unique IDs; invalid 2023-Q90 excluded; counts by year {2022: 120, 2023: 119, 2024: 120, 2025: 120, 2026: 120}",
+      "evidence": [
+        "touroku-hanbaisha-sprint/official-kansai/APPROVED_OFFICIAL_BANK.json"
+      ]
+    },
+    {
+      "id": "Q1_CONTENT_AND_ATTRIBUTION",
+      "status": "FAIL",
+      "detail": "invalid records=8; unattached ruby=102; image refs=52; inline ruby records=115; examples=['KSAI-2022-005:FIGURE', 'KSAI-2022-104:FIGURE', 'KSAI-2024-028:FIGURE', 'KSAI-2024-040:FIGURE', 'KSAI-2025-044:FIGURE', 'KSAI-2025-052:FIGURE', 'KSAI-2026-028:FIGURE', 'KSAI-2026-036:FIGURE']",
+      "evidence": [
+        "touroku-hanbaisha-sprint/official-kansai/APPROVED_OFFICIAL_BANK.json"
+      ]
+    },
+    {
+      "id": "Q2_NATIVE_WEBVIEW_INTEGRATION",
+      "status": "PASS",
+      "detail": "both native entrypoints=https://allsunday1122.github.io/touroku-hanbaisha-sprint/official-practice.html; web data URL relative; bundle/team anchored",
+      "evidence": [
+        "touroku-hanbaisha-ios/App.js",
+        "touroku-hanbaisha-ios/native-ios/Sources/TouhanSprintApp.swift"
+      ]
+    },
+    {
+      "id": "Q3_METADATA_DISCLOSURE",
+      "status": "PASS",
+      "detail": "Store metadata must disclose 599 official past questions, invalid Q90, network dependency and source links",
+      "evidence": [
+        "touroku-hanbaisha-ios/APP_STORE_METADATA.md"
+      ]
+    },
+    {
+      "id": "Q4_OFFLINE_RESILIENCE",
+      "status": "FAIL",
+      "detail": "Remote-only WebView loads GitHub Pages. No shipped offline app bundle; an unavailable network prevents studying.",
+      "evidence": [
+        "touroku-hanbaisha-ios/App.js",
+        "touroku-hanbaisha-ios/native-ios/Sources/TouhanSprintApp.swift"
+      ]
+    },
+    {
+      "id": "Q5_PRIVACY_AND_NETWORK_DISCLOSURE",
+      "status": "NOT_VERIFIED",
+      "detail": "PrivacyInfo.xcprivacy exists, but actual remote page behavior and App Store Connect App Privacy answers were not independently verified.",
+      "evidence": [
+        "touroku-hanbaisha-ios/native-ios/PrivacyInfo.xcprivacy"
+      ]
+    },
+    {
+      "id": "Q6_IOS_BUILD_AND_LAUNCH",
+      "status": "NOT_TESTED",
+      "detail": "No successful native iOS simulator build, signed archive, physical-device launch, or TestFlight install observed in this run.",
+      "evidence": [
+        "touroku-hanbaisha-ios/native-ios/project.yml"
+      ]
+    },
+    {
+      "id": "Q7_TESTFLIGHT_READY",
+      "status": "BLOCKED",
+      "detail": "Internal TestFlight distribution requires passing native build/launch and verification of signing/ASC setup. No upload or App Review submission performed.",
+      "evidence": [
+        "touroku-hanbaisha-ios/eas.json"
+      ]
+    },
+    {
+      "id": "Q8_APP_REVIEW_SUBMISSION",
+      "status": "PASS",
+      "detail": "No App Review final submission authorized; must remain false.",
+      "evidence": [
+        "touroku-hanbaisha-ios/release-status.json"
+      ]
+    },
+    {
+      "id": "Q9_SYNTAX_AND_JS",
+      "status": "PASS",
+      "detail": "GitHub Actions step success",
+      "evidence": [
+        "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45285966856"
+      ]
+    },
+    {
+      "id": "Q10_LEGACY_AND_OFFICIAL_RELEASE_VALIDATOR",
+      "status": "FAIL",
+      "detail": "GitHub Actions step failed; inspect job logs",
+      "evidence": [
+        "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45285966856"
+      ]
+    },
+    {
+      "id": "Q11_CHROMIUM_FULL_BANK_375_430",
+      "status": "FAIL",
+      "detail": "GitHub Actions step failed; inspect job logs",
+      "evidence": [
+        "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45285966856"
+      ]
+    }
+  ],
+  "blocking": [
+    "Q1_CONTENT_AND_ATTRIBUTION",
+    "Q4_OFFLINE_RESILIENCE",
+    "Q5_PRIVACY_AND_NETWORK_DISCLOSURE",
+    "Q6_IOS_BUILD_AND_LAUNCH",
+    "Q7_TESTFLIGHT_READY",
+    "Q10_LEGACY_AND_OFFICIAL_RELEASE_VALIDATOR",
+    "Q11_CHROMIUM_FULL_BANK_375_430"
+  ],
+  "explicitNoSubmission": true,
+  "actionsRunId": 45285966856,
+  "actionsHead": "759e9565a97671afe6317a56c7286179c240b904"
+}

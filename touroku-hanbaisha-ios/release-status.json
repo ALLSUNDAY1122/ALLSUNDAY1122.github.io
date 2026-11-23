@@ -811,7 +811,10 @@
     "ruby_remaining": "HOLD_78_V2_PLUS_45_OUTSIDE_V2",
     "v3_original_pdf_image_8": "PASS_8_SCOPE_RIGHTS_CHROMIUM_16",
     "v3_ruby_visual_10": "PASS_DIRECT_IMAGE_10_CHROMIUM_20",
-    "v2_ruby_78_visual_followup": "HOLD_78_MAPPING_WARNINGS_CONTACT_SHEETS_15_VIEWED"
+    "v2_ruby_78_visual_followup": "HOLD_78_MAPPING_WARNINGS_CONTACT_SHEETS_15_VIEWED",
+    "ai_preflight_acceptance": "BLOCKED",
+    "ios_offline_runtime": "BLOCKED_REMOTE_ONLY",
+    "native_simulator": "NOT_TESTED"
   },
   "evidence": [
     "touroku-hanbaisha-sprint/official-kansai/SOURCES_2022_2026.json",
@@ -1466,5 +1469,23 @@
     "unapprovedIncludingOfficialInvalidQ90": 1,
     "reasonCountsNonExclusive": {},
     "evidence": "touroku-hanbaisha-sprint/official-kansai/RUBY_102_SOURCE_ORDER_PROMOTION_20261124.json"
+  },
+  "ai_preflight_acceptance_20261124": {
+    "result": "BLOCKED",
+    "totalGates": 12,
+    "pass": 5,
+    "blocking": [
+      "Q1_CONTENT_AND_ATTRIBUTION",
+      "Q4_OFFLINE_RESILIENCE",
+      "Q5_PRIVACY_AND_NETWORK_DISCLOSURE",
+      "Q6_IOS_BUILD_AND_LAUNCH",
+      "Q7_TESTFLIGHT_READY",
+      "Q10_LEGACY_AND_OFFICIAL_RELEASE_VALIDATOR",
+      "Q11_CHROMIUM_FULL_BANK_375_430"
+    ],
+    "report": "touroku-hanbaisha-ios/AI_PREFLIGHT_ACCEPTANCE_20261124.json",
+    "run_id": 45285966856,
+    "native_ios_simulator_tested": false,
+    "testflight_uploaded": false
   }
 }
