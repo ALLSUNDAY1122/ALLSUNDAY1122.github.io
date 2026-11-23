@@ -18,7 +18,7 @@ domains=Counter(q.get("domain") for q in selected)
 answers=Counter()
 source_groups=Counter()
 def git_blob(blob):
-    return hashlib.sha1(b"blob "+str(len(blob)).encode()+b"\\x00"+blob).hexdigest()
+    return hashlib.sha1(b"blob "+str(len(blob)).encode()+b"\x00"+blob).hexdigest()
 if len(bank["questions"])!=195 or len(selected)!=120 or len(reserved)!=75:
     errors.append("canonical/selection/reserve count mismatch")
 if (bank.get("recovered_pass_count"),bank.get("recovered_fail_count"),bank.get("recovered_hold_count"))!=(180,0,0):
@@ -53,7 +53,7 @@ for q in selected:
     f=root/path if isinstance(path,str) and path.startswith("fp2-manabi-sprint/audit/") else None
     if not f or not f.is_file() or git_blob(f.read_bytes())!=q.get("audit_evidence_blob_sha"):
         errors.append(ident+": audit evidence hash mismatch")
-    if re.search(r"<script|onerror\\s*=|onload\\s*=", " ".join([stem or ""]+(opts or [])),re.I):
+    if re.search(r"<script|onerror\s*=|onload\s*=", " ".join([stem or ""]+(opts or [])),re.I):
         errors.append(ident+": active HTML in authored content")
     source_groups[q.get("source_organization","UNSPECIFIED")]+=1
 result={"status":"FAIL" if errors else "PASS","canonical":len(bank["questions"]),"selected":len(selected),"reserves":len(reserved),
