@@ -16,6 +16,9 @@ RUBY_LINE=re.compile(r"(?m)^\s*[ぁ-んァ-ン]{1,12}\s*$")
 RISK_WORDS=re.compile(r"図|図表|下図|次の表|下表|配合成分\s*含量|配合成分\s*作用|表は|構造式|化学構造|添付文書の例|グラフ|フローチャート|模式図")
 PRINT_PAGE=re.compile(r"^\s*-\s*[0-9０-９]{1,3}\s*-\s*$")
 PRINT_HASH=re.compile(r"^\s*[♯＃#]{15,}\s*$")
+def git_blob_sha(path):
+    b=path.read_bytes()
+    return hashlib.sha1(f"blob {len(b)}\\0".encode()+b).hexdigest()
 def norm(value):
     """NFC only; discard Unicode whitespace incl LF/U+3000; never remove kana, marks or punctuation."""
     return "".join(c for c in unicodedata.normalize("NFC",value) if not c.isspace())
@@ -136,6 +139,8 @@ def check_year(year):
       "normalization":"NFC Unicode, remove only Unicode whitespace including line breaks and fullwidth spaces. Ruby characters are never removed. No punctuation/symbol/kana/kanji deletion.",
       "caveat":"Source text extracted with PyMuPDF is not an independent second transcription; nontext artwork and answer tables are always held for manual review.",
       "total":120,"autoPass":len(passed),"held":120-len(passed),
+      "candidateGitBlob":git_blob_sha(B/f"QUESTIONS_{year}_APP_CANDIDATE.json"),
+      "answerIndexGitBlob":git_blob_sha(B/f"ANSWERS_{year}_OFFICIAL.json"),
       "reasonCounts":dict(sorted(distribution.items())),"passedIds":passed,"questions":rows}
     output_file=B/f"AUTO_DIFF_{year}.json"
     output_file.write_text(json.dumps(output,ensure_ascii=False,indent=2)+"\n")
