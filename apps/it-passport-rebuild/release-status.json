@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "updated_at_jst": "2026-11-23T22:50:00+09:00",
+  "project": "新ITパスポート｜ゼロベース開発",
+  "release_decision": "BLOCKED",
+  "release_stage": "CONTENT_INGEST_PENDING",
+  "app_review_submitted": false,
+  "requirements": {
+    "official_question_verbatim": true,
+    "official_exam_sessions": 5,
+    "questions_per_session": 100,
+    "official_release_target": 500,
+    "mobile_first": true,
+    "source_attribution_required": true,
+    "modification_label_required_if_changed": true
+  },
+  "current": {
+    "original_mock": {
+      "canonical": 240,
+      "target": 300,
+      "current_batch": 13,
+      "staged_batch13": 20,
+      "release_eligible": false,
+      "reason": "origin_type=original; cannot substitute for verbatim IPA past questions"
+    },
+    "official_past_exam": {
+      "canonical": 0,
+      "target": 500,
+      "verified_rounds": 0,
+      "source_verbatim_audit": "NOT_STARTED"
+    },
+    "ios": {
+      "project_exists_on_feature_branch": true,
+      "canonical_official_bank_connected": false,
+      "device_acceptance": "NOT_RUN"
+    },
+    "app_store_connect": {
+      "app_id": null,
+      "bundle_id_candidate": "jp.allsunday1122.itpassportstudy",
+      "identity_verified": false,
+      "submitted": false
+    },
+    "codemagic": {
+      "workflow_id_candidate": "it-passport-rebuild-ios",
+      "signed_build": "UNVERIFIED",
+      "app_store_upload": "UNVERIFIED"
+    }
+  },
+  "ipa_rights": {
+    "verification": "CONFIRMED_FOR_IPA_PUBLISHED_PAST_QUESTIONS_SUBJECT_TO_CONDITIONS",
+    "source": "https://www.ipa.go.jp/shiken/faq.html",
+    "official_listing": "https://www.ipa.go.jp/shiken/mondai-kaiotu/index.html",
+    "rules": [
+      "IPA retains copyright",
+      "No separate permission/fees for published past exam questions used in educational materials aligned with exam purpose unless law specifically provides otherwise",
+      "Display year/exam/number at each question",
+      "Disclose any alteration",
+      "Do not ingest undisclosed CBT test items"
+    ],
+    "legal_basis_source": "IPA_DIRECT_ONLY",
+    "verification_date": "2026-11-23",
+    "note": "Notion legal policy was not used as authority for reuse"
+  },
+  "blockers": [
+    {
+      "code": "IP-OFF-500",
+      "severity": "P0",
+      "detail": "No independently verified verbatim IPA official exam data; five annual published sets require 500 questions"
+    },
+    {
+      "code": "IP-SOURCE-FIDELITY",
+      "severity": "P0",
+      "detail": "Source PDFs, answer sheets, diagrams and question-by-question provenance not yet audited"
+    },
+    {
+      "code": "IP-IOS-BANK",
+      "severity": "P0",
+      "detail": "iOS build currently not connected to the required 500 official questions"
+    },
+    {
+      "code": "IP-APP-ID",
+      "severity": "P0",
+      "detail": "New app App Store Connect App ID not verified; existing legacy IT Passport ID must never be reused"
+    },
+    {
+      "code": "IP-RELEASE-GATES",
+      "severity": "P0",
+      "detail": "Signed build, screenshots, privacy, age rating, TestFlight device acceptance and submission read-back pending"
+    }
+  ],
+  "next_machine_actions": [
+    "Build an official-only canonical bank and source ledger for five published annual sets",
+    "Independently verify exact text, options, correct answer, tables and diagrams against IPA PDFs",
+    "Connect canonical official bank to mobile-first iOS UI and run release gates",
+    "Register or verify a NEW Apple App record without using legacy application credentials",
+    "Build, upload and prepare ASC metadata; then request device acceptance and final submit approval"
+  ],
+  "human_gates": [
+    "Apple 2FA",
+    "contracts/tax/banking where needed",
+    "device acceptance",
+    "final App Review submit"
+  ]
+}
