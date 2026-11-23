@@ -7,13 +7,13 @@
 | 種別 | 件数 | 公開範囲 |
 |---|---:|---|
 | 既存第115〜113回ソースバンク | 720 | 既存ランタイム、厳格原典監査629 PASS／91 HOLD |
-| 今回の監査前の検証済みソース拡張 | 264 | 履歴を保持、配信不可 |
-| **今回の追加昇格** | **2** | 共通文・制御文字と二方式・公式正答の再検証 |
-| **正規ソースバンク** | **986 / 1,200** | ソース拡張266問を含む |
-| **未昇格** | **214問** | 原典の疑義と未合格ゲートは保持 |
+| 今回の監査前の検証済みソース拡張 | 266 | 履歴を保持、配信不可 |
+| **今回の追加昇格** | **19** | 共通文・制御文字と二方式・公式正答の再検証 |
+| **正規ソースバンク** | **1005 / 1,200** | ソース拡張285問を含む |
+| **未昇格** | **195問** | 原典の疑義と未合格ゲートは保持 |
 | アプリへの今回の追加配信 | 0問 | 解説・図版権利・アプリ／iOSゲート未完了 |
 
-- GitHub Actions Run：45283521021。先行再抽出22問のうち**0問**が引き続き保留。
+- GitHub Actions Run：45286965092。先行再抽出22問のうち**0問**が引き続き保留。
 - 正規ソース：\`product-content/verified-additions-20261124.json\`。保留：\`audit/dual-engine-hold-20261124.json\`。
 - 昇格台帳：\`audit/dual-engine-promotion-ledger-20261124.json\`。全新規問の\`publishable=false\`、\`releaseEligible=false\`を維持。
 - 制御文字について、両抽出方式が同一の壊れたPDF文字対応表を共有する危険があるため、未確認の原典文字は自動合格としない。
@@ -408,3 +408,51 @@
 - 修正前後全文：`product-content/ocr-noncmap-visual-repaired-candidates-20261124.json`。
 - PDF原典ページ、画像ハッシュ、各選択肢OCR一致、公式正答：`audit/ocr-noncmap-visual-promotion-ledger-20261124.json`。
 - ソースのみ合格。Apple本審査・一般公開不可。
+
+
+## 今回の独立共通文・制御文字監査（Run 45286965092）
+
+- 追加昇格 **19問**、合計 **1005/1,200問**。残り **195問**。
+- 昇格ID：K111-AM036, K111-PM050, K111-PM059, K111-PM062, K111-PM066, K111-PM067, K111-PM076, K112-AM027, K112-AM040, K112-AM064, K112-AM065, K112-PM001, K112-PM003, K112-PM024, K112-PM027, K112-PM030, K112-PM051, K112-PM065, K112-PM077。
+- 保留の多い理由（重複あり）：COORDINATE_BOUNDARY_NOT_UNIQUELY_CONFIRMED 145, COORDINATE_REGION_UNVERIFIED 145, SUSPICIOUS_GLYPH_OR_CONTROL_IN_DRAFT 121, POPPLER_FIELD_MISMATCH_0 95, PYMUPDF_FIELD_MISMATCH_0 86, PAGE_FOOTER_CONTAMINATION 69, PYMUPDF_FIELD_MISMATCH_4 55, OFFICIAL_ANSWER_MISMATCH_OR_COMPLEX 38, OFFICIAL_ANSWER_NOT_SINGLE 38, INDEPENDENT_OFFICIAL_KEY_MISMATCH 38, POPPLER_FIELD_MISMATCH_4 38, SOURCE_GLYPH_MAPPING_UNTRUSTWORTHY 26。
+- 先行再抽出候補：22問のうち残存保留0問。権利・解説・アプリ配信ゲートの自動解除は行わない。
+
+## OCR区分別再監査（Run 45286965092）
+
+- 対象：214問。新規昇格：0問。
+- 区分：OFFICIAL_KEY_OR_SCORING_NOT_CLEAR 40, MEDIA_RIGHTS_OR_DIAGRAM_GATE 13, NO_EXACT_OCR_AND_ENGINE_FULL_FIELD_MATCH 90, SCENARIO_CONTEXT_REQUIRES_SEPARATE_OCR_PROOF 71。
+- 個別の正答・採点例外、OCR文字単位差分、状況設定共通文画像の証拠：`audit/ocr-category-deep-review-20261124.json`。
+- この区分別台帳のみで本文・選択肢の確定や公開フラグ解除はしない。
+
+## 画像OCRに基づくCMap欠落修復（Run 45286965092）
+
+- 96問を対象に修正判定。実際のデータ修正・ソース昇格：0問。修正未確定：94問。
+- 修正前後の本文・全選択肢：`product-content/ocr-repaired-candidates-20261124.json`。
+- 原典画像・PDFハッシュ、OCR二設定、公式正答の証拠：`audit/ocr-cmap-repair-ledger-20261124.json`。
+- OCR修正はソース限定。解説・アプリ表示・権利・Apple申請は保留。
+
+## OCR問題文・選択肢の座標別修復（Run 45286965092）
+
+- 対象46問、今回の新規昇格：0問、累計昇格：2問、残り：44問。
+- 原典各領域のOCR・選択肢座標・修正前後・公式正答の記録：`audit/ocr-coordinate-repair-ledger-20261124.json`、`product-content/ocr-coordinate-repaired-candidates-20261124.json`。
+- 合格は原典ソース限定。解説・公開・iOS・Apple審査は保留。
+
+## CMap以外のOCR文字差分21問の原典画像再検証（Run 45286965092）
+
+- 個別検証：19問。今回昇格：0問。元の21問から未確定：21問。
+- 字句差分と原典画像SHA、PDF二方式と公式正答の証拠：`audit/ocr-noncmap-repair-ledger-20261124.json`。
+- 修正前後：`product-content/ocr-noncmap-repaired-candidates-20261124.json`。OCR誤読の疑いがあっても文字を推測で置換したものは昇格しない。
+
+## 原典PDF画像直接照合で修正したOCR誤認識（Run 45286965092）
+
+- 原典画像目視確認2問のうち、今回の修正・正規ソース昇格：0問。累計：2問。
+- 修正前後全文：`product-content/ocr-noncmap-visual-repaired-candidates-20261124.json`。
+- PDF原典ページ、画像ハッシュ、各選択肢OCR一致、公式正答：`audit/ocr-noncmap-visual-promotion-ledger-20261124.json`。
+- ソースのみ合格。Apple本審査・一般公開不可。
+
+## CMap以外の文字不一致19問の原典画像逐問修復（Run 45286965092）
+
+- 原典ページ画像の逐問照合19問。今回の新規ソース昇格：19問、累計：19問、未確定：0問。
+- 第112回午後77は公式原典に従い5選択肢として保持。英語小注記は問題・肢本文とは別に保持。
+- 公式問題画像・各選択肢のOCR座標証拠・公式正答：`audit/ocr-noncmap-19-promotion-ledger-20261124.json`。
+- 全問の修正前後：`product-content/ocr-noncmap-19-before-after-20261124.json`。合格は原典ソース限定、アプリ配信・本審査は禁止。

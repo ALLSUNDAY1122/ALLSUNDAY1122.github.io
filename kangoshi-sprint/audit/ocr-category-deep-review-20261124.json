@@ -4,17 +4,17 @@
     111,
     112
   ],
-  "checked": 216,
+  "checked": 214,
   "categories": {
     "OFFICIAL_KEY_OR_SCORING_NOT_CLEAR": 40,
     "MEDIA_RIGHTS_OR_DIAGRAM_GATE": 13,
-    "NO_EXACT_OCR_AND_ENGINE_FULL_FIELD_MATCH": 92,
+    "NO_EXACT_OCR_AND_ENGINE_FULL_FIELD_MATCH": 90,
     "SCENARIO_CONTEXT_REQUIRES_SEPARATE_OCR_PROOF": 71
   },
   "officialDecisions": {
     "EXCEPTION_HANDLING_REQUIRED_include_if_correct_exclude_if_wrong": 2,
     "EXCEPTION_HANDLING_REQUIRED_multiple_accepted": 3,
-    "NORMAL_KEY_CONFIRMED": 176,
+    "NORMAL_KEY_CONFIRMED": 174,
     "NOT_SINGLE_OFFICIAL_KEY": 30,
     "OFFICIAL_KEY_OR_STAGED_MISMATCH": 4,
     "EXCEPTION_HANDLING_REQUIRED_excluded": 1
@@ -159,41 +159,6 @@
       "categoryDecision": "MEDIA_REQUIRES_SEPARATE_RIGHTS_AND_FIDELITY"
     },
     {
-      "id": "K111-AM024",
-      "exam": 111,
-      "session": "AM",
-      "number": 24,
-      "category": "NO_EXACT_OCR_AND_ENGINE_FULL_FIELD_MATCH",
-      "previousReasons": [
-        "SUSPICIOUS_GLYPH_OR_CONTROL_IN_DRAFT",
-        "COORDINATE_BOUNDARY_NOT_UNIQUELY_CONFIRMED",
-        "COORDINATE_REGION_UNVERIFIED",
-        "PYMUPDF_FIELD_MISMATCH_0",
-        "POPPLER_FIELD_MISMATCH_0"
-      ],
-      "official": {
-        "pdfSha256": "b395c7eddb7820daaaf19ae44766889cf19b7b4f5e0d8f9411a8ba1787dfac85",
-        "officialRaw": "3",
-        "officialStatus": "KEY_SINGLE",
-        "draftRaw": "3",
-        "draftAnswer": 2,
-        "draftShaMatches": true,
-        "exception": null,
-        "decision": "NORMAL_KEY_CONFIRMED"
-      },
-      "sourceStatus": "HOLD",
-      "ocrTextEvidence": {
-        "PyMuPDF": {
-          "failure": "UNRESOLVED_SOURCE_GLYPH_OR_FOOTER"
-        },
-        "Poppler": {
-          "failure": "UNRESOLVED_SOURCE_GLYPH_OR_FOOTER"
-        }
-      },
-      "sourceImageSha256": "d0afb5c2148c35cee1faf8a7374c373f2f4eb30c15994f8842ac6f595c4a4984",
-      "categoryDecision": "CHARACTER_DIFF_SAVED_HOLD_FOR_UNPROVEN_FIELD_BOUNDARIES"
-    },
-    {
       "id": "K111-AM025",
       "exam": 111,
       "session": "AM",
@@ -260,211 +225,6 @@
         }
       },
       "sourceImageSha256": "29c3e3ec72872706222e01e82dd962880be4def76df2dafa3206427ef563f0d5",
-      "categoryDecision": "CHARACTER_DIFF_SAVED_HOLD_FOR_UNPROVEN_FIELD_BOUNDARIES"
-    },
-    {
-      "id": "K111-AM033",
-      "exam": 111,
-      "session": "AM",
-      "number": 33,
-      "category": "NO_EXACT_OCR_AND_ENGINE_FULL_FIELD_MATCH",
-      "previousReasons": [
-        "SUSPICIOUS_GLYPH_OR_CONTROL_IN_DRAFT",
-        "COORDINATE_BOUNDARY_NOT_UNIQUELY_CONFIRMED",
-        "COORDINATE_REGION_UNVERIFIED",
-        "PYMUPDF_FIELD_MISMATCH_0",
-        "POPPLER_FIELD_MISMATCH_0"
-      ],
-      "official": {
-        "pdfSha256": "b395c7eddb7820daaaf19ae44766889cf19b7b4f5e0d8f9411a8ba1787dfac85",
-        "officialRaw": "1",
-        "officialStatus": "KEY_SINGLE",
-        "draftRaw": "1",
-        "draftAnswer": 0,
-        "draftShaMatches": true,
-        "exception": null,
-        "decision": "NORMAL_KEY_CONFIRMED"
-      },
-      "sourceStatus": "HOLD",
-      "ocrTextEvidence": {
-        "PyMuPDF": {
-          "failure": "UNRESOLVED_SOURCE_GLYPH_OR_FOOTER"
-        },
-        "Poppler": {
-          "printedOptions": 4,
-          "fieldDiffs": [
-            {
-              "sourceCharacters": 55,
-              "ocrCharacters": 84,
-              "similarity": 0.61871,
-              "editCount": 50,
-              "protectedTokensEqual": true,
-              "protectedSource": [],
-              "protectedOcr": [],
-              "edits": [
-                {
-                  "op": "insert",
-                  "source": "",
-                  "ocr": "33 ",
-                  "sourceStart": 0,
-                  "ocrStart": 0
-                },
-                {
-                  "op": "replace",
-                  "source": "「",
-                  "ocr": "[",
-                  "sourceStart": 5,
-                  "ocrStart": 8
-                },
-                {
-                  "op": "replace",
-                  "source": "」",
-                  "ocr": "]",
-                  "sourceStart": 9,
-                  "ocrStart": 12
-                },
-                {
-                  "op": "delete",
-                  "source": "     ",
-                  "ocr": "",
-                  "sourceStart": 28,
-                  "ocrStart": 31
-                },
-                {
-                  "op": "insert",
-                  "source": "",
-                  "ocr": "\n",
-                  "sourceStart": 38,
-                  "ocrStart": 36
-                },
-                {
-                  "op": "replace",
-                  "source": "     ",
-                  "ocr": "。",
-                  "sourceStart": 40,
-                  "ocrStart": 39
-                },
-                {
-                  "op": "insert",
-                  "source": "",
-                  "ocr": "\n1. 健康管理\n2. 総括管理\n3. 労務管理\n4. 出退勤管理\n",
-                  "sourceStart": 55,
-                  "ocrStart": 50
-                }
-              ],
-              "editsTruncated": false
-            },
-            {
-              "sourceCharacters": 4,
-              "ocrCharacters": 84,
-              "similarity": 0.09091,
-              "editCount": 80,
-              "protectedTokensEqual": true,
-              "protectedSource": [],
-              "protectedOcr": [],
-              "edits": [
-                {
-                  "op": "insert",
-                  "source": "",
-                  "ocr": "33 労働衛生の[3管理]とは、作業環境管理と作業管理と(  )である。\n( 。)に入るのはどれか。\n1. ",
-                  "sourceStart": 0,
-                  "ocrStart": 0
-                },
-                {
-                  "op": "insert",
-                  "source": "",
-                  "ocr": "\n2. 総括管理\n3. 労務管理\n4. 出退勤管理\n",
-                  "sourceStart": 4,
-                  "ocrStart": 58
-                }
-              ],
-              "editsTruncated": false
-            },
-            {
-              "sourceCharacters": 4,
-              "ocrCharacters": 84,
-              "similarity": 0.09091,
-              "editCount": 80,
-              "protectedTokensEqual": true,
-              "protectedSource": [],
-              "protectedOcr": [],
-              "edits": [
-                {
-                  "op": "insert",
-                  "source": "",
-                  "ocr": "33 労働衛生の[3管理]とは、作業環境管理と作業管理と(  )である。\n( 。)に入るのはどれか。\n1. 健康管理\n2. ",
-                  "sourceStart": 0,
-                  "ocrStart": 0
-                },
-                {
-                  "op": "insert",
-                  "source": "",
-                  "ocr": "\n3. 労務管理\n4. 出退勤管理\n",
-                  "sourceStart": 4,
-                  "ocrStart": 66
-                }
-              ],
-              "editsTruncated": false
-            },
-            {
-              "sourceCharacters": 4,
-              "ocrCharacters": 84,
-              "similarity": 0.09091,
-              "editCount": 80,
-              "protectedTokensEqual": true,
-              "protectedSource": [],
-              "protectedOcr": [],
-              "edits": [
-                {
-                  "op": "insert",
-                  "source": "",
-                  "ocr": "33 労働衛生の[3管理]とは、作業環境管理と作業管理と(  )である。\n( 。)に入るのはどれか。\n1. 健康管理\n2. 総括管理\n3. ",
-                  "sourceStart": 0,
-                  "ocrStart": 0
-                },
-                {
-                  "op": "insert",
-                  "source": "",
-                  "ocr": "\n4. 出退勤管理\n",
-                  "sourceStart": 4,
-                  "ocrStart": 74
-                }
-              ],
-              "editsTruncated": false
-            },
-            {
-              "sourceCharacters": 5,
-              "ocrCharacters": 84,
-              "similarity": 0.11236,
-              "editCount": 79,
-              "protectedTokensEqual": true,
-              "protectedSource": [],
-              "protectedOcr": [],
-              "edits": [
-                {
-                  "op": "insert",
-                  "source": "",
-                  "ocr": "33 労働衛生の[3管理]とは、作業環境管理と作業管理と(  )である。\n( 。)に入るのはどれか。\n1. 健康管理\n2. 総括管理\n3. 労務管理\n4. ",
-                  "sourceStart": 0,
-                  "ocrStart": 0
-                },
-                {
-                  "op": "insert",
-                  "source": "",
-                  "ocr": "\n",
-                  "sourceStart": 5,
-                  "ocrStart": 83
-                }
-              ],
-              "editsTruncated": false
-            }
-          ],
-          "ocrFullTextHash": "dad3303aacab02574bbdf920ab365066f2c7102e0dace66d49975375481d4d35",
-          "sourceFieldsHash": "c72cb58ad783497762b2b40af14b074cbefe84a4c4eabfe8646fc2dce06ad642",
-          "sourceSuspicious": false
-        }
-      },
-      "sourceImageSha256": "9544245fb4649141d60b69cd63f90a9b6d61444602da59550dac104f9a5412ea",
       "categoryDecision": "CHARACTER_DIFF_SAVED_HOLD_FOR_UNPROVEN_FIELD_BOUNDARIES"
     },
     {
