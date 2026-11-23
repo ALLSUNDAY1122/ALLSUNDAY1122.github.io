@@ -1763,8 +1763,27 @@ workflows:
           xcodebuild -help > "$TMPDIR/fp2-xcode-help.txt" 2>&1
           grep -q testFlightInternalTestingOnly "$TMPDIR/fp2-xcode-help.txt"
           python3 - <<'PY'
-          import os, plistlib
+          import hashlib, os, plistlib, shutil, subprocess
           from pathlib import Path
+
+          library = Path.home() / 'Library'
+          legacy = library / 'MobileDevice/Provisioning Profiles'
+          profiles = library / 'Developer/Xcode/UserData/Provisioning Profiles'
+          installed = subprocess.check_output(['security', 'find-identity', '-v', '-p', 'codesigning'], text=True)
+          for candidate in legacy.glob('*.mobileprovision'):
+              profile = plistlib.loads(subprocess.check_output(['security', 'cms', '-D', '-i', str(candidate)]))
+              if profile.get('Name') != 'FP2 App Store Codemagic':
+                  continue
+              assert profile['Entitlements']['application-identifier'] == 'MN3D2ZM44N.com.allsunday1122.fp2manabisprint'
+              assert 'ProvisionedDevices' not in profile and not profile.get('ProvisionsAllDevices')
+              fingerprints = [hashlib.sha1(cert).hexdigest().upper() for cert in profile['DeveloperCertificates']]
+              assert any(fingerprint in installed for fingerprint in fingerprints), 'Profile certificate is missing from the keychain'
+              profiles.mkdir(parents=True, exist_ok=True)
+              shutil.copyfile(candidate, profiles / (profile['UUID'] + '.mobileprovision'))
+              print('Verified FP2 App Store profile and installed its matching identity in Xcode')
+              break
+          else:
+              raise SystemExit('FP2 App Store profile not installed by Codemagic')
 
           options = {'method': 'app-store-connect', 'destination': 'export',
                      'teamID': 'MN3D2ZM44N', 'signingStyle': 'automatic',
