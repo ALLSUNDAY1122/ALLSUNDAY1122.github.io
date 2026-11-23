@@ -1,3 +1,15 @@
+## 2026-11-24｜最新正本：選抜298のみ・0b1dc28のFP2 CI 8/8 SUCCESS
+
+**この追記は旧312/300/12・309/300/9・古いCI未完了の記載に優先する。** 正規310＝公式逐語PASS298＋独立監査済みオリジナル予備12、選抜298のみ（2024-05:59、2024-09:59、2025-01:60、2025-05:60、2026-05:60。6分野48/50/50/50/50/50）。オリジナル・言い換えによる不足2問の補充禁止。2024-09 Q07・2024-05 Q08はFAILとして隔離、HOLD0。公開許可0。
+
+対象HEAD `0b1dc287b5a6f2f8d39c1b4560e30411f730cf0c` のGitHub Check Runsを直接読戻し、**FP2関連8/8 completed/success**。内訳：Preflight静的×2、unsigned Simulator×2、Chromium E2E×2、Registry audit×1、Golden Master migration×1。証拠：`audit/FP2_PREFLIGHT_298_SELECTED_CI8_20261124.md`。この追記コミットより新しいソースについて成功を保証しない。
+
+**AUTO-FIX:** CI失敗なし／旧300・312固定の誤表示・検査が再発すれば298へ整合。**BUILD-REQUIRED:** 署名済み298問IPAとSHA照合、TestFlight、サポート・Privacy公開HTTP200。**HUMAN-REQUIRED:** App Store Connect実物のApp ID/Bundle/Version/Build/IAP/Privacy/AppIcon/スクショ/URL、iOS実機受入、公式逐語原題・二次利用主体・法令・出典表示/図版の責任者承認。**FINAL-APPROVAL:** Q0〜Q5全通過後のユーザー明示的App Review提出許可。
+
+**Q0 BLOCKED／Q1 CONTENT AUDIT PASS298（出版BLOCKED）／Q2 Chromium PASS・実機受入待ち／Q3 Golden Master移行・Chromium PASS・実機待ち／Q4 NOT COMPLETED／Q5 unsigned Simulator PASS・署名IPA/ASC/配信 BLOCKED。** PR #5717 Draft、main未マージ、TestFlight/App Review未提出、**NOT_SUBMISSION_READY / NOT_SUBMITTED**。
+
+---
+
 ## 2026-11-23｜最新正本：5回分の逐語PASS298のみ選抜（補充禁止）
 
 **この節が旧309/300/9・310/300/10・旧HOLD1等の履歴記述に優先する。**
