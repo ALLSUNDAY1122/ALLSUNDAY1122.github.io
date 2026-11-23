@@ -1,6 +1,6 @@
 {
   "app": "登録販売者｜学びスプリント",
-  "updated_at": "2026-11-23T22:52:00+09:00",
+  "updated_at": "2026-11-23T23:00:00+09:00",
   "version": "1.0.0",
   "bundle_id": "com.allsunday1122.tourokuhanbaisha",
   "app_store_connect_app_id": "6802119268",
@@ -20,28 +20,59 @@
       "神奈川県",
       "青森県"
     ],
-    "license": "政府標準利用規約第2.0版（適用範囲・表示条件の最終照合待ち）",
+    "license": "関西広域連合サイト利用ルール（2024-03-29制定、政府標準利用規約第2.0版準拠、商用利用可・出典と加工表示必須・第三者権利は別処理）",
     "source_url": "https://www.kouiki-kansai.jp/koikirengo/jisijimu/shikakumenkyo/touroku/7607.html",
-    "required_attribution_per_question": true
+    "required_attribution_per_question": true,
+    "usage_rule_url": "https://www.kouiki-kansai.jp/site/221.html",
+    "license_scope_verified": true,
+    "third_party_rights_check_required": true
   },
   "question_bank": {
     "existing_canonical": 360,
     "existing_type": "独自問題（旧版）",
     "target_official": 600,
     "verified_official_imported": 0,
-    "year_2023_invalid_question_review": "PENDING"
+    "year_2023_invalid_question_review": "PASS: Q90, 解なし・受験者全員正解・模試採点から除外",
+    "official_answer_keys_indexed": 600,
+    "official_answer_keys_by_year": {
+      "2022": 120,
+      "2023": 120,
+      "2024": 120,
+      "2025": 120,
+      "2026": 120
+    },
+    "official_single_answer_keys": 599,
+    "official_invalid_question_count": 1,
+    "official_question_text_imported": 0,
+    "answer_index_readback_pass": true,
+    "official_question_pdf_binaries_downloaded": 0,
+    "sha256_verified": 0
   },
   "gates": {
     "notion_v28_full_read": "PENDING",
     "notion_submission_steps_full_read": "PENDING",
-    "official_source_import": "BLOCKED",
-    "verbatim_and_answer_audit": "BLOCKED",
+    "official_source_import": "BLOCKED_0_OF_600_VERBATIM",
+    "verbatim_and_answer_audit": "BLOCKED_0_OF_600_VERBATIM",
     "mobile_ui": "PENDING",
     "ios_build": "PENDING",
     "internal_testflight": "PENDING",
     "screenshots": "PENDING",
     "privacy_and_metadata": "PENDING",
     "device_check": "USER_REQUIRED",
-    "final_app_review_send": "USER_REQUIRED"
-  }
+    "final_app_review_send": "USER_REQUIRED",
+    "official_source_license": "PASS_WITH_THIRD_PARTY_RIGHTS_CAVEAT",
+    "official_pdf_url_manifest": "PASS_15_URLS",
+    "official_answer_index": "PASS_600_ENTRIES_INITIAL_TRANSCRIPTION",
+    "official_answer_independent_double_check": "PENDING",
+    "invalid_2023_q90": "PASS"
+  },
+  "evidence": [
+    "touroku-hanbaisha-sprint/official-kansai/SOURCES_2022_2026.json",
+    "touroku-hanbaisha-sprint/official-kansai/ANSWERS_2022_OFFICIAL.json",
+    "touroku-hanbaisha-sprint/official-kansai/ANSWERS_2023_OFFICIAL.json",
+    "touroku-hanbaisha-sprint/official-kansai/ANSWERS_2024_OFFICIAL.json",
+    "touroku-hanbaisha-sprint/official-kansai/ANSWERS_2025_OFFICIAL.json",
+    "touroku-hanbaisha-sprint/official-kansai/ANSWERS_2026_OFFICIAL.json",
+    "touroku-hanbaisha-sprint/official-kansai/LICENSE_AND_AUDIT_20261123.md"
+  ]
 }
