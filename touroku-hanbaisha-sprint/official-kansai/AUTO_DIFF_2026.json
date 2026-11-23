@@ -2,22 +2,35 @@
   "year": 2026,
   "method": "FRESH_OFFICIAL_PDF_SHA256_PINNED_NORMALIZED_DIFF",
   "normalization": "NFC Unicode, remove only Unicode whitespace including line breaks and fullwidth spaces. Ruby characters are never removed. No punctuation/symbol/kana/kanji deletion.",
-  "caveat": "Source text extracted with PyMuPDF is not an independent second transcription; nontext artwork and answer tables are always held for manual review.",
+  "caveat": "Source text extracted with PyMuPDF is not an independent second transcription; nontext artwork and answer tables are always held for manual review. Legacy raw staging drift is tracked but never substitutes for direct fresh PDF-to-app comparison.",
   "total": 120,
-  "autoPass": 3,
-  "held": 117,
+  "autoPass": 14,
+  "held": 106,
   "candidateGitBlob": "c5d09ad0e1de592808063a4873bd6ae59eedbdea",
   "answerIndexGitBlob": "3f13754324fcf489ea423616b370f90a854552b3",
   "reasonCounts": {
     "ANSWER_TABLE_REVIEW": 85,
     "FIGURE_OR_FORM_REVIEW": 11,
-    "RUBY_POSITION_REVIEW": 48,
-    "STAGING_PDF_DIFF": 96
+    "RUBY_POSITION_REVIEW": 48
+  },
+  "advisoryCounts": {
+    "LEGACY_STAGING_PDF_DRIFT": 96
   },
   "passedIds": [
     "KSAI-2026-010",
+    "KSAI-2026-031",
+    "KSAI-2026-069",
+    "KSAI-2026-071",
+    "KSAI-2026-087",
     "KSAI-2026-088",
-    "KSAI-2026-097"
+    "KSAI-2026-091",
+    "KSAI-2026-094",
+    "KSAI-2026-097",
+    "KSAI-2026-098",
+    "KSAI-2026-099",
+    "KSAI-2026-104",
+    "KSAI-2026-107",
+    "KSAI-2026-117"
   ],
   "questions": [
     {
@@ -26,8 +39,10 @@
       "questionNo": 1,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
@@ -48,9 +63,11 @@
       "questionNo": 2,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "FIGURE_OR_FORM_REVIEW",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
@@ -71,8 +88,10 @@
       "questionNo": 3,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
@@ -93,8 +112,10 @@
       "questionNo": 4,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
@@ -115,8 +136,10 @@
       "questionNo": 5,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
@@ -139,6 +162,7 @@
       "reasons": [
         "ANSWER_TABLE_REVIEW"
       ],
+      "advisories": [],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
       "sourcePages": [
@@ -158,8 +182,10 @@
       "questionNo": 7,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
@@ -182,6 +208,7 @@
       "reasons": [
         "FIGURE_OR_FORM_REVIEW"
       ],
+      "advisories": [],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
       "sourcePages": [
@@ -201,9 +228,11 @@
       "questionNo": 9,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "FIGURE_OR_FORM_REVIEW",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
@@ -224,6 +253,7 @@
       "questionNo": 10,
       "status": "AUTO_PASS",
       "reasons": [],
+      "advisories": [],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
       "sourcePages": [
@@ -243,9 +273,11 @@
       "questionNo": 11,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "RUBY_POSITION_REVIEW",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
@@ -266,9 +298,11 @@
       "questionNo": 12,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "RUBY_POSITION_REVIEW",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
@@ -289,8 +323,10 @@
       "questionNo": 13,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
@@ -311,8 +347,10 @@
       "questionNo": 14,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
@@ -333,8 +371,10 @@
       "questionNo": 15,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
@@ -355,8 +395,10 @@
       "questionNo": 16,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
@@ -377,8 +419,10 @@
       "questionNo": 17,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "FIGURE_OR_FORM_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
@@ -399,10 +443,12 @@
       "questionNo": 18,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "RUBY_POSITION_REVIEW",
         "FIGURE_OR_FORM_REVIEW",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
@@ -423,8 +469,10 @@
       "questionNo": 19,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "RUBY_POSITION_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
@@ -445,8 +493,10 @@
       "questionNo": 20,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
@@ -471,6 +521,7 @@
         "FIGURE_OR_FORM_REVIEW",
         "ANSWER_TABLE_REVIEW"
       ],
+      "advisories": [],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
       "sourcePages": [
@@ -490,8 +541,10 @@
       "questionNo": 22,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "RUBY_POSITION_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
@@ -512,9 +565,11 @@
       "questionNo": 23,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "RUBY_POSITION_REVIEW",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
@@ -535,8 +590,10 @@
       "questionNo": 24,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
@@ -557,9 +614,11 @@
       "questionNo": 25,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "RUBY_POSITION_REVIEW",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
@@ -582,6 +641,7 @@
       "reasons": [
         "RUBY_POSITION_REVIEW"
       ],
+      "advisories": [],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
       "sourcePages": [
@@ -601,9 +661,11 @@
       "questionNo": 27,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "RUBY_POSITION_REVIEW",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
@@ -626,6 +688,7 @@
       "reasons": [
         "ANSWER_TABLE_REVIEW"
       ],
+      "advisories": [],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
       "sourcePages": [
@@ -645,8 +708,10 @@
       "questionNo": 29,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "RUBY_POSITION_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
@@ -670,6 +735,7 @@
         "RUBY_POSITION_REVIEW",
         "FIGURE_OR_FORM_REVIEW"
       ],
+      "advisories": [],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
       "sourcePages": [
@@ -687,9 +753,10 @@
       "id": "KSAI-2026-031",
       "year": 2026,
       "questionNo": 31,
-      "status": "HOLD",
-      "reasons": [
-        "STAGING_PDF_DIFF"
+      "status": "AUTO_PASS",
+      "reasons": [],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
@@ -712,6 +779,7 @@
       "reasons": [
         "RUBY_POSITION_REVIEW"
       ],
+      "advisories": [],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
       "sourcePages": [
@@ -731,9 +799,11 @@
       "questionNo": 33,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "RUBY_POSITION_REVIEW",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
@@ -757,6 +827,7 @@
         "RUBY_POSITION_REVIEW",
         "ANSWER_TABLE_REVIEW"
       ],
+      "advisories": [],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
       "sourcePages": [
@@ -776,9 +847,11 @@
       "questionNo": 35,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "RUBY_POSITION_REVIEW",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
@@ -799,9 +872,11 @@
       "questionNo": 36,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "RUBY_POSITION_REVIEW",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
@@ -822,9 +897,11 @@
       "questionNo": 37,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "RUBY_POSITION_REVIEW",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
@@ -845,8 +922,10 @@
       "questionNo": 38,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
@@ -867,9 +946,11 @@
       "questionNo": 39,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "RUBY_POSITION_REVIEW",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
@@ -890,8 +971,10 @@
       "questionNo": 40,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
@@ -914,6 +997,7 @@
       "reasons": [
         "RUBY_POSITION_REVIEW"
       ],
+      "advisories": [],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
       "sourcePages": [
@@ -933,8 +1017,10 @@
       "questionNo": 42,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "RUBY_POSITION_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
@@ -955,8 +1041,10 @@
       "questionNo": 43,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "RUBY_POSITION_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
@@ -977,9 +1065,11 @@
       "questionNo": 44,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "RUBY_POSITION_REVIEW",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
@@ -1000,8 +1090,10 @@
       "questionNo": 45,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "RUBY_POSITION_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
@@ -1022,8 +1114,10 @@
       "questionNo": 46,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
@@ -1044,10 +1138,12 @@
       "questionNo": 47,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "RUBY_POSITION_REVIEW",
         "FIGURE_OR_FORM_REVIEW",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
@@ -1068,9 +1164,11 @@
       "questionNo": 48,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "RUBY_POSITION_REVIEW",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
@@ -1091,8 +1189,10 @@
       "questionNo": 49,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
@@ -1113,9 +1213,11 @@
       "questionNo": 50,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "RUBY_POSITION_REVIEW",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
@@ -1136,8 +1238,10 @@
       "questionNo": 51,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
@@ -1161,6 +1265,7 @@
         "RUBY_POSITION_REVIEW",
         "ANSWER_TABLE_REVIEW"
       ],
+      "advisories": [],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
       "sourcePages": [
@@ -1180,8 +1285,10 @@
       "questionNo": 53,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "RUBY_POSITION_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
@@ -1202,9 +1309,11 @@
       "questionNo": 54,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "RUBY_POSITION_REVIEW",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
@@ -1225,8 +1334,10 @@
       "questionNo": 55,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "RUBY_POSITION_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
@@ -1247,9 +1358,11 @@
       "questionNo": 56,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "RUBY_POSITION_REVIEW",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
@@ -1272,6 +1385,7 @@
       "reasons": [
         "ANSWER_TABLE_REVIEW"
       ],
+      "advisories": [],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
       "sourcePages": [
@@ -1291,8 +1405,10 @@
       "questionNo": 58,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
@@ -1313,8 +1429,10 @@
       "questionNo": 59,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
@@ -1335,9 +1453,11 @@
       "questionNo": 60,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "RUBY_POSITION_REVIEW",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
@@ -1361,6 +1481,7 @@
       "reasons": [
         "ANSWER_TABLE_REVIEW"
       ],
+      "advisories": [],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
       "sourcePages": [
@@ -1380,8 +1501,10 @@
       "questionNo": 62,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
@@ -1404,6 +1527,7 @@
       "reasons": [
         "ANSWER_TABLE_REVIEW"
       ],
+      "advisories": [],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
       "sourcePages": [
@@ -1423,9 +1547,11 @@
       "questionNo": 64,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "RUBY_POSITION_REVIEW",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
@@ -1449,6 +1575,7 @@
         "RUBY_POSITION_REVIEW",
         "ANSWER_TABLE_REVIEW"
       ],
+      "advisories": [],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
       "sourcePages": [
@@ -1468,9 +1595,11 @@
       "questionNo": 66,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "RUBY_POSITION_REVIEW",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
@@ -1493,6 +1622,7 @@
       "reasons": [
         "RUBY_POSITION_REVIEW"
       ],
+      "advisories": [],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
       "sourcePages": [
@@ -1512,9 +1642,11 @@
       "questionNo": 68,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "RUBY_POSITION_REVIEW",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
@@ -1533,9 +1665,10 @@
       "id": "KSAI-2026-069",
       "year": 2026,
       "questionNo": 69,
-      "status": "HOLD",
-      "reasons": [
-        "STAGING_PDF_DIFF"
+      "status": "AUTO_PASS",
+      "reasons": [],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
@@ -1559,6 +1692,7 @@
         "RUBY_POSITION_REVIEW",
         "ANSWER_TABLE_REVIEW"
       ],
+      "advisories": [],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
       "sourcePages": [
@@ -1576,9 +1710,10 @@
       "id": "KSAI-2026-071",
       "year": 2026,
       "questionNo": 71,
-      "status": "HOLD",
-      "reasons": [
-        "STAGING_PDF_DIFF"
+      "status": "AUTO_PASS",
+      "reasons": [],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
@@ -1602,6 +1737,7 @@
         "RUBY_POSITION_REVIEW",
         "ANSWER_TABLE_REVIEW"
       ],
+      "advisories": [],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
       "sourcePages": [
@@ -1621,8 +1757,10 @@
       "questionNo": 73,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "RUBY_POSITION_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
@@ -1643,9 +1781,11 @@
       "questionNo": 74,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "RUBY_POSITION_REVIEW",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
@@ -1666,9 +1806,11 @@
       "questionNo": 75,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "RUBY_POSITION_REVIEW",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
@@ -1689,8 +1831,10 @@
       "questionNo": 76,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
@@ -1711,8 +1855,10 @@
       "questionNo": 77,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
@@ -1733,8 +1879,10 @@
       "questionNo": 78,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "RUBY_POSITION_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
@@ -1757,6 +1905,7 @@
       "reasons": [
         "ANSWER_TABLE_REVIEW"
       ],
+      "advisories": [],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
       "sourcePages": [
@@ -1776,8 +1925,10 @@
       "questionNo": 80,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "RUBY_POSITION_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
@@ -1799,9 +1950,11 @@
       "questionNo": 81,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "FIGURE_OR_FORM_REVIEW",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
@@ -1822,8 +1975,10 @@
       "questionNo": 82,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
@@ -1844,8 +1999,10 @@
       "questionNo": 83,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
@@ -1866,8 +2023,10 @@
       "questionNo": 84,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
@@ -1888,8 +2047,10 @@
       "questionNo": 85,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
@@ -1912,6 +2073,7 @@
       "reasons": [
         "ANSWER_TABLE_REVIEW"
       ],
+      "advisories": [],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
       "sourcePages": [
@@ -1929,9 +2091,10 @@
       "id": "KSAI-2026-087",
       "year": 2026,
       "questionNo": 87,
-      "status": "HOLD",
-      "reasons": [
-        "STAGING_PDF_DIFF"
+      "status": "AUTO_PASS",
+      "reasons": [],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
@@ -1952,6 +2115,7 @@
       "questionNo": 88,
       "status": "AUTO_PASS",
       "reasons": [],
+      "advisories": [],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
       "sourcePages": [
@@ -1971,8 +2135,10 @@
       "questionNo": 89,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
@@ -1995,6 +2161,7 @@
       "reasons": [
         "RUBY_POSITION_REVIEW"
       ],
+      "advisories": [],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
       "sourcePages": [
@@ -2012,9 +2179,10 @@
       "id": "KSAI-2026-091",
       "year": 2026,
       "questionNo": 91,
-      "status": "HOLD",
-      "reasons": [
-        "STAGING_PDF_DIFF"
+      "status": "AUTO_PASS",
+      "reasons": [],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
@@ -2035,8 +2203,10 @@
       "questionNo": 92,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
@@ -2057,8 +2227,10 @@
       "questionNo": 93,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
@@ -2077,9 +2249,10 @@
       "id": "KSAI-2026-094",
       "year": 2026,
       "questionNo": 94,
-      "status": "HOLD",
-      "reasons": [
-        "STAGING_PDF_DIFF"
+      "status": "AUTO_PASS",
+      "reasons": [],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
@@ -2100,8 +2273,10 @@
       "questionNo": 95,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
@@ -2122,8 +2297,10 @@
       "questionNo": 96,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
@@ -2144,6 +2321,7 @@
       "questionNo": 97,
       "status": "AUTO_PASS",
       "reasons": [],
+      "advisories": [],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
       "sourcePages": [
@@ -2161,9 +2339,10 @@
       "id": "KSAI-2026-098",
       "year": 2026,
       "questionNo": 98,
-      "status": "HOLD",
-      "reasons": [
-        "STAGING_PDF_DIFF"
+      "status": "AUTO_PASS",
+      "reasons": [],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
@@ -2182,9 +2361,10 @@
       "id": "KSAI-2026-099",
       "year": 2026,
       "questionNo": 99,
-      "status": "HOLD",
-      "reasons": [
-        "STAGING_PDF_DIFF"
+      "status": "AUTO_PASS",
+      "reasons": [],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
@@ -2205,8 +2385,10 @@
       "questionNo": 100,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
@@ -2228,8 +2410,10 @@
       "questionNo": 101,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
@@ -2250,8 +2434,10 @@
       "questionNo": 102,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
@@ -2272,8 +2458,10 @@
       "questionNo": 103,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
@@ -2292,9 +2480,10 @@
       "id": "KSAI-2026-104",
       "year": 2026,
       "questionNo": 104,
-      "status": "HOLD",
-      "reasons": [
-        "STAGING_PDF_DIFF"
+      "status": "AUTO_PASS",
+      "reasons": [],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
@@ -2315,8 +2504,10 @@
       "questionNo": 105,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
@@ -2337,8 +2528,10 @@
       "questionNo": 106,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
@@ -2357,9 +2550,10 @@
       "id": "KSAI-2026-107",
       "year": 2026,
       "questionNo": 107,
-      "status": "HOLD",
-      "reasons": [
-        "STAGING_PDF_DIFF"
+      "status": "AUTO_PASS",
+      "reasons": [],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
@@ -2380,8 +2574,10 @@
       "questionNo": 108,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
@@ -2402,9 +2598,11 @@
       "questionNo": 109,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "FIGURE_OR_FORM_REVIEW",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
@@ -2425,8 +2623,10 @@
       "questionNo": 110,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
@@ -2447,8 +2647,10 @@
       "questionNo": 111,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
@@ -2469,8 +2671,10 @@
       "questionNo": 112,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
@@ -2493,6 +2697,7 @@
       "reasons": [
         "RUBY_POSITION_REVIEW"
       ],
+      "advisories": [],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
       "sourcePages": [
@@ -2512,8 +2717,10 @@
       "questionNo": 114,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
@@ -2534,8 +2741,10 @@
       "questionNo": 115,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
@@ -2556,9 +2765,11 @@
       "questionNo": 116,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "RUBY_POSITION_REVIEW",
         "FIGURE_OR_FORM_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
@@ -2577,9 +2788,10 @@
       "id": "KSAI-2026-117",
       "year": 2026,
       "questionNo": 117,
-      "status": "HOLD",
-      "reasons": [
-        "STAGING_PDF_DIFF"
+      "status": "AUTO_PASS",
+      "reasons": [],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
@@ -2600,8 +2812,10 @@
       "questionNo": 118,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
@@ -2622,9 +2836,11 @@
       "questionNo": 119,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "RUBY_POSITION_REVIEW",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
@@ -2645,8 +2861,10 @@
       "questionNo": 120,
       "status": "HOLD",
       "reasons": [
-        "STAGING_PDF_DIFF",
         "ANSWER_TABLE_REVIEW"
+      ],
+      "advisories": [
+        "LEGACY_STAGING_PDF_DRIFT"
       ],
       "officialPdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
       "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",

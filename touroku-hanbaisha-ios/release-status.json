@@ -1,6 +1,6 @@
 {
   "app": "登録販売者｜学びスプリント",
-  "updated_at": "2026-11-24T00:00:18+09:00",
+  "updated_at": "2026-11-24T00:02:25+09:00",
   "version": "1.0.0",
   "bundle_id": "com.allsunday1122.tourokuhanbaisha",
   "app_store_connect_app_id": "6802119268",
@@ -31,7 +31,7 @@
     "existing_canonical": 360,
     "existing_type": "独自問題（旧版）",
     "target_official": 600,
-    "verified_official_imported": 91,
+    "verified_official_imported": 102,
     "year_2023_invalid_question_review": "PASS: Q90, 解なし・受験者全員正解・模試採点から除外",
     "official_answer_keys_indexed": 600,
     "official_answer_keys_by_year": {
@@ -43,7 +43,7 @@
     },
     "official_single_answer_keys": 599,
     "official_invalid_question_count": 1,
-    "official_question_text_imported": 91,
+    "official_question_text_imported": 102,
     "answer_index_readback_pass": true,
     "official_question_pdf_binaries_downloaded": 10,
     "sha256_verified": 10,
@@ -119,14 +119,14 @@
       ]
     },
     "production_official_bank_path": "touroku-hanbaisha-sprint/official-kansai/APPROVED_OFFICIAL_BANK.json",
-    "production_official_bank_count": 91,
+    "production_official_bank_count": 102,
     "official_preview_ui": "touroku-hanbaisha-sprint/official-practice.html",
     "official_preview_ui_integrated_into_home": true,
     "four_five_choices_supported_in_official_ui": true,
     "invalid_2023_q90_scoring_implemented_in_official_ui": true,
     "invalid_2023_q90_integrated": false,
     "official_ui_browser_verified": false,
-    "auto_diff_pass_promoted": 77,
+    "auto_diff_pass_promoted": 88,
     "manual_visual_pass_preserved": 14,
     "auto_diff_per_year": {
       "2022": {
@@ -140,6 +140,7 @@
           "FIGURE_OR_FORM_REVIEW": 13,
           "RUBY_POSITION_REVIEW": 45
         },
+        "advisories": {},
         "evidence": "touroku-hanbaisha-sprint/official-kansai/AUTO_DIFF_2022.json"
       },
       "2023": {
@@ -153,6 +154,7 @@
           "OFFICIAL_INVALID_Q90_REVIEW": 1,
           "RUBY_POSITION_REVIEW": 41
         },
+        "advisories": {},
         "evidence": "touroku-hanbaisha-sprint/official-kansai/AUTO_DIFF_2023.json"
       },
       "2024": {
@@ -165,6 +167,7 @@
           "FIGURE_OR_FORM_REVIEW": 11,
           "RUBY_POSITION_REVIEW": 46
         },
+        "advisories": {},
         "evidence": "touroku-hanbaisha-sprint/official-kansai/AUTO_DIFF_2024.json"
       },
       "2025": {
@@ -177,18 +180,21 @@
           "FIGURE_OR_FORM_REVIEW": 5,
           "RUBY_POSITION_REVIEW": 53
         },
+        "advisories": {},
         "evidence": "touroku-hanbaisha-sprint/official-kansai/AUTO_DIFF_2025.json"
       },
       "2026": {
         "candidate": 120,
-        "autoDiffPass": 3,
-        "autoDiffHeld": 117,
+        "autoDiffPass": 14,
+        "autoDiffHeld": 106,
         "notYetDiffed": 0,
         "reasons": {
           "ANSWER_TABLE_REVIEW": 85,
           "FIGURE_OR_FORM_REVIEW": 11,
-          "RUBY_POSITION_REVIEW": 48,
-          "STAGING_PDF_DIFF": 96
+          "RUBY_POSITION_REVIEW": 48
+        },
+        "advisories": {
+          "LEGACY_STAGING_PDF_DRIFT": 96
         },
         "evidence": "touroku-hanbaisha-sprint/official-kansai/AUTO_DIFF_2026.json"
       }
@@ -198,15 +204,17 @@
       "CHOICE_DIFF": 1,
       "FIGURE_OR_FORM_REVIEW": 48,
       "RUBY_POSITION_REVIEW": 233,
-      "OFFICIAL_INVALID_Q90_REVIEW": 1,
-      "STAGING_PDF_DIFF": 96
+      "OFFICIAL_INVALID_Q90_REVIEW": 1
+    },
+    "auto_diff_advisory_totals": {
+      "LEGACY_STAGING_PDF_DRIFT": 96
     }
   },
   "gates": {
     "notion_v28_full_read": "PENDING",
     "notion_submission_steps_full_read": "PENDING",
-    "official_source_import": "PARTIAL_APPROVED_91_OF_600",
-    "verbatim_and_answer_audit": "AUTO_77_VISUAL_14_REMAINING_509",
+    "official_source_import": "PARTIAL_APPROVED_102_OF_600",
+    "verbatim_and_answer_audit": "AUTO_88_VISUAL_14_REMAINING_498",
     "mobile_ui": "PENDING",
     "ios_build": "PENDING",
     "internal_testflight": "PENDING",
