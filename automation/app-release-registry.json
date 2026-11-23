@@ -201,18 +201,18 @@
       "iap": false,
       "iap_product_ids": [],
       "app2_task": null,
-      "status": "CANONICAL312_SELECTED300_PREFLIGHT_PARTIAL_LATEST_HEAD_CI_PENDING_NO_SUBMISSION",
+      "status": "VERBATIM_AUDITED_309_PASS_SELECTED_300_RESERVE_9_QUARANTINED_3_LATEST_CI_PENDING",
       "readback": false,
       "ios_project": "fp2-manabi-sprint/ios/project.yml",
       "native_source_branch": "feature/fp2-release-scope-20261123",
       "source_bank": "fp2-manabi-sprint/questions/canonical/approved-questions-20261123.json",
-      "content_review_pass": 312,
+      "content_review_pass": 309,
       "publishable_questions": 0,
       "icon_source_blob_sha": "ce0cb5bc61296d7ca2ebde213c729ae5d1e4ab9d",
       "icon_apple_hash_verified": false,
-      "build_validation": "300_CONTENT_AND_E2E_PRIOR_PASS_LATEST_HEAD_NOT_ALL_COMPLETE",
+      "build_validation": "VERBATIM_300_CI_NOT_VERIFIED",
       "app_store_upload": "NOT_STARTED",
-      "note": "312 content PASS; 300 selected, 12 reserve, publishable 0. Reference 300 CI passed on earlier head; latest source head 38eeaee1 check results still pending at time of record. ASC and device HUMAN REQUIRED; no submission.",
+      "note": "Replace historical 2024 adapted 120 with 117 independently audited current-law PASS verbatim. Q07 2024-09 and Q08 2024-05 FAIL by 2026-04-01 law; Q53 HOLD pending faithful family diagram binary and source verification. New canonical approved309=180 recovered+117 verbatim+12 independently reviewed originals; selected300 includes 3 of originals, remaining 9 reserves, 3 invalid items quarantined outside distributable. publishable 0. Historic unsigned Simulator success applies to prior adapted bank; 55ddf49 CI success predates this conversion. Current post-change CI pending. ASC/rights/real device not verified.",
       "ci_run_url": "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45158866204",
       "ci_source_sha": "5a72059f69e77375dbfa6568f613362a2712cc75",
       "ci_verified_steps": [
@@ -226,8 +226,8 @@
         "static_content_web_shell"
       ],
       "release_selected": 300,
-      "reserve_questions": 12,
-      "preflight_classification": "AUTO-FIX_BUILD-REQUIRED_HUMAN-REQUIRED_FINAL-APPROVAL",
+      "reserve_questions": 9,
+      "preflight_classification": "VERBATIM_300_CI_PENDING_Q0_Q5_BLOCKED",
       "ci_8_of_8_verified": false,
       "ci_8_of_8_reference_commit": "5a72059f69e77375dbfa6568f613362a2712cc75",
       "ci_8_of_8_categories": {
@@ -238,7 +238,7 @@
         "registry_audit": 1
       },
       "ci_8_of_8_evidence": "fp2-manabi-sprint/audit/FP2_PREFLIGHT_CI8_HUMAN_REQUIRED_20261123.md",
-      "ci_8_of_8_conclusions": "HISTORICAL_120_ONLY_5a72059f_NOT_300_RELEASE",
+      "ci_8_of_8_conclusions": "HISTORICAL_PRE_VERBATIM_CI_SUCCESS_NOT_POST_VERBATIM_VALIDATION",
       "icon_internal_verification": "PASS_IDENTICAL_FP2_LEGACY_GIT_BLOB",
       "icon_current_sha256": "d456178b2a7b04f180e39b3ad62f5c194832e85aa15102bf6452751551db8033",
       "icon_asc_verification": "HUMAN_REQUIRED",
@@ -276,7 +276,18 @@
       "final_approval_required": [
         "Q0_TO_Q5_COMPLETE",
         "EXPLICIT_APP_REVIEW_SUBMISSION_APPROVAL"
-      ]
+      ],
+      "quarantined_questions": 3,
+      "verbatim_current_law_audit": {
+        "pass": 117,
+        "fail": 2,
+        "hold": 1,
+        "excluded_ids": [
+          "fp2-2024-09-gakka-007",
+          "fp2-2024-05-gakka-008",
+          "fp2-2024-05-gakka-053"
+        ]
+      }
     }
   }
 }
