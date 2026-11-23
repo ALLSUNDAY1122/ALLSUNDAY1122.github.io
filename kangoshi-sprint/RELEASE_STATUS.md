@@ -7,13 +7,13 @@
 | 種別 | 件数 | 公開範囲 |
 |---|---:|---|
 | 既存第115〜113回ソースバンク | 720 | 既存ランタイム、厳格原典監査629 PASS／91 HOLD |
-| 今回の監査前の検証済みソース拡張 | 200 | 履歴を保持、配信不可 |
-| **今回の追加昇格** | **20** | 共通文・制御文字と二方式・公式正答の再検証 |
+| 今回の監査前の検証済みソース拡張 | 220 | 履歴を保持、配信不可 |
+| **今回の追加昇格** | **0** | 共通文・制御文字と二方式・公式正答の再検証 |
 | **正規ソースバンク** | **940 / 1,200** | ソース拡張220問を含む |
 | **未昇格** | **260問** | 原典の疑義と未合格ゲートは保持 |
 | アプリへの今回の追加配信 | 0問 | 解説・図版権利・アプリ／iOSゲート未完了 |
 
-- GitHub Actions Run：45259501753。先行再抽出22問のうち**0問**が引き続き保留。
+- GitHub Actions Run：45260033942。先行再抽出22問のうち**0問**が引き続き保留。
 - 正規ソース：\`product-content/verified-additions-20261124.json\`。保留：\`audit/dual-engine-hold-20261124.json\`。
 - 昇格台帳：\`audit/dual-engine-promotion-ledger-20261124.json\`。全新規問の\`publishable=false\`、\`releaseEligible=false\`を維持。
 - 制御文字について、両抽出方式が同一の壊れたPDF文字対応表を共有する危険があるため、未確認の原典文字は自動合格としない。
@@ -139,5 +139,13 @@
 
 - 追加昇格 **20問**、合計 **940/1,200問**。残り **260問**。
 - 昇格ID：K112-AM014, K112-AM029, K112-AM030, K112-AM049, K112-AM051, K112-PM028, K112-PM029, K112-PM054, K111-AM029, K111-AM032, K111-AM039, K111-AM043, K111-AM045, K111-AM051, K111-AM064, K111-AM073, K111-PM045, K111-PM049, K111-PM070, K111-PM072。
+- 保留の多い理由（重複あり）：COORDINATE_BOUNDARY_NOT_UNIQUELY_CONFIRMED 210, COORDINATE_REGION_UNVERIFIED 210, SUSPICIOUS_GLYPH_OR_CONTROL_IN_DRAFT 149, POPPLER_FIELD_MISMATCH_0 117, PYMUPDF_FIELD_MISMATCH_0 106, CHOICE_COUNT_NOT_FOUR 86, PAGE_FOOTER_CONTAMINATION 84, PYMUPDF_FIELD_MISMATCH_4 63, OFFICIAL_ANSWER_MISMATCH_OR_COMPLEX 48, POPPLER_FIELD_MISMATCH_4 39, OFFICIAL_ANSWER_NOT_SINGLE 38, INDEPENDENT_OFFICIAL_KEY_MISMATCH 38。
+- 先行再抽出候補：22問のうち残存保留0問。権利・解説・アプリ配信ゲートの自動解除は行わない。
+
+
+## 今回の独立共通文・制御文字監査（Run 45260033942）
+
+- 追加昇格 **0問**、合計 **940/1,200問**。残り **260問**。
+- 昇格ID：なし。
 - 保留の多い理由（重複あり）：COORDINATE_BOUNDARY_NOT_UNIQUELY_CONFIRMED 210, COORDINATE_REGION_UNVERIFIED 210, SUSPICIOUS_GLYPH_OR_CONTROL_IN_DRAFT 149, POPPLER_FIELD_MISMATCH_0 117, PYMUPDF_FIELD_MISMATCH_0 106, CHOICE_COUNT_NOT_FOUR 86, PAGE_FOOTER_CONTAMINATION 84, PYMUPDF_FIELD_MISMATCH_4 63, OFFICIAL_ANSWER_MISMATCH_OR_COMPLEX 48, POPPLER_FIELD_MISMATCH_4 39, OFFICIAL_ANSWER_NOT_SINGLE 38, INDEPENDENT_OFFICIAL_KEY_MISMATCH 38。
 - 先行再抽出候補：22問のうち残存保留0問。権利・解説・アプリ配信ゲートの自動解除は行わない。
