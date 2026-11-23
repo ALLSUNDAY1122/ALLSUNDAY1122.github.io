@@ -1429,3 +1429,8 @@ Apple固定識別子: Bundle `com.allsunday1122.tourokuhanbaisha`、ASC `6802119
 - Build 6b04ce3d6b11322d3b7eee5a：failed / 判定 FAILED。
 - エラーメッセージ（該当時）：App Store Connect integration "tourokuhanbaisha_appstore" does not exist。署名ファイルとIPA証跡がない限りPASSにしない。
 - 証跡 `Q7_AUTO_PROVISION_RESULT_20261124.json` / https://codemagic.io/app/6a769d81a1add9d06020b524/build/6b04ce3d6b11322d3b7eee5a。TestFlightアップロード・本審査送信は未実施。
+
+
+## Q7自動プロビジョニング試行（2026-11-24）
+- 結果: True / build ID: 6b04cf7092306a39e3981ca4、署名完了は未実測。
+- CodemagicによるIOS_APP_STOREプロファイル取得/必要時生成を試行。署名付きIPAのみが対象でASCアップロード・本審査送信はなし。
