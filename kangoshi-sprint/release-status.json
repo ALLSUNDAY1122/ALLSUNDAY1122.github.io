@@ -117,7 +117,9 @@
     "latestHoldRunId": 45240759737,
     "latestHoldArtifactId": 14851731484,
     "mediaRoutingRunId": 45241710210,
-    "mediaRoutingArtifactId": 14852120867
+    "mediaRoutingArtifactId": 14852120867,
+    "latestBoundaryContextRunId": 45244159028,
+    "latestBoundaryContextRunResult": "SUCCESS_SOURCE_ONLY_PLUS_3"
   },
   "stagedCandidateCount": 480,
   "staging": {
@@ -249,7 +251,7 @@
     "unverifiedRemaining": 336,
     "extensionFile": "kangoshi-sprint/product-content/verified-additions-20261124.json",
     "manifest": "kangoshi-sprint/product-content/manifest.json",
-    "extensionAuditResult": "PASS_12_OF_12_TEXT_CHOICES_KEYS_ONLY",
+    "extensionAuditResult": "RUN_45244159028_ADDITIONAL_3_SOURCE_AND_OFFICIAL_KEY_ONLY",
     "extensionRuntimeEligible": 0,
     "extensionPublished": 0,
     "notes": "55 new candidates independently passed PyMuPDF and Poppler full stem/four choices, original glyph integrity gate, and official answer PDF; plus 12 prior verified. Explanations, app integration, license and release remain blocked.",
@@ -259,7 +261,7 @@
     "newBulkPromotedFromPreviousState": 74,
     "previousVerifiedTotal": 787,
     "latestPromotionLedger": "kangoshi-sprint/audit/dual-engine-promotion-ledger-20261124.json",
-    "note": "The 141 additions are canonical source/answer verified only; independent explanation, media, law and iOS runtime not cleared."
+    "note": "Current verified source-only total 864 (existing runtime 720 plus extension 144); 336 candidate questions held. Explanation/media/iOS clearance pending."
   },
   "mediaReaudit": {
     "target": 38,
@@ -314,7 +316,9 @@
     "sourcePdfCropRunId": 45240759737,
     "sourcePdfCropArtifactId": 14851731484,
     "rightsTerms": "https://www.mhlw.go.jp/chosakuken/index.html",
-    "note": "JPG 15 classified usable under MHLW PDL1 with official source and edit attribution; third party ownership caveat retained. Five formerly unfaithful SVGs routed to original PDF pixel crops but quarantined pending individual rights, 18 other SVG still need full fidelity review."
+    "note": "JPG 15 classified usable under MHLW PDL1 with official source and edit attribution; third party ownership caveat retained. Five formerly unfaithful SVGs routed to original PDF pixel crops but quarantined pending individual rights, 18 other SVG still need full fidelity review.",
+    "latestComparisonRunId": 45244159028,
+    "latestSourceDiagramObservation": "K113-AM023 source question page references a separate booklet, so question-page vs SVG comparison alone cannot certify diagram fidelity"
   },
   "holdRemediation": {
     "scope": "480 additional candidates",
@@ -374,6 +378,12 @@
     "scenarioContextRequiresDualEngineSourcePassage": true,
     "svgOriginalDiagramFaithfulnessVerified": 0,
     "svgPendingDetailedVisualInspection": 18,
-    "status": "SOURCE_ONLY_NO_RELEASE"
+    "status": "SOURCE_ONLY_NO_RELEASE",
+    "promotedIds": [
+      "K112-PM113",
+      "K111-AM106",
+      "K111-PM106"
+    ],
+    "workflowRunId": 45244159028
   }
 }
