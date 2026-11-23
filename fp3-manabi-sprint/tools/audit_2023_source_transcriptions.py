@@ -43,14 +43,14 @@ def main() -> int:
         lines = [line.strip() for line in atext.splitlines()]
         extracted = []
         for i, line in enumerate(lines):
-            labels = re.findall(r"問\\s*(\\d+)", line)
+            labels = re.findall("問 *([0-9]+)", line)
             if len(labels) == 10:
                 j = i + 1
                 while j < len(lines) and not lines[j]:
                     j += 1
                 if j >= len(lines):
                     fail(f"{exam}: answer row missing after labels")
-                values = [int(v) for v in re.findall(r"(?<!\\d)[123](?!\\d)", lines[j])]
+                values = [int(v) for v in re.findall("(?<![0-9])[123](?![0-9])", lines[j])]
                 if len(values) != 10:
                     fail(f"{exam}: expected 10 answer values, got {values}")
                 extracted.extend(values)
