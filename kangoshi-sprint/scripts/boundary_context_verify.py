@@ -23,13 +23,13 @@ def context_for_group(text,number):
     lines=text.splitlines()
     first=91+3*((number-91)//3)
     last=first+2
-    rx=re.compile(r"次の文を読み\\s*"+str(first)+r"\\s*[〜～~－−-]\\s*"+str(last))
+    rx=re.compile(r"次の文を読み\s*"+str(first)+r"\s*[〜～~－−-]\s*"+str(last))
     headers=[i for i,line in enumerate(lines) if rx.search(line)]
     anchors=number_lines(text,first)
     candidates=[(h,a) for h in headers for a in anchors if a>h]
     if len(candidates)!=1:return None
     h,a=candidates[0]
-    passage="\\n".join(lines[h:a]).strip()
+    passage="\n".join(lines[h:a]).strip()
     if len(normalized(passage))<35:return None
     return {"first":first,"last":last,"passage":passage,"header":lines[h].strip()}
 
@@ -53,9 +53,9 @@ def safe_context(raw,clean_font):
     # Both parsers can share a wrong source CMap. Unmapped control bytes and
     # suspicious glyphs in context cannot be auto-cleared by parser agreement.
     fixed=set((2,4,5,6,7,8,11,12,31))
-    bad=[ord(c) for c in raw if ord(c)<32 and ord(c) not in fixed and c not in "\\n\\r\\t"]
+    bad=[ord(c) for c in raw if ord(c)<32 and ord(c) not in fixed and c not in "\n\r\t"]
     val=clean_font(raw)
-    return not bad and not re.search(r"[\\ufffd઄¹¼ïñèêçâ\\u0080-\\u009f!?]",val),bad
+    return not bad and not re.search(r"[\ufffd઄¹¼ïñèêçâ\u0080-\u009f!?]",val),bad
 
 def _anchors(page, n, clean_font):
     words=page.get_text("words",sort=True)
