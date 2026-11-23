@@ -4,7 +4,7 @@ import argparse, hashlib, json, pathlib, re, sys, unicodedata
 
 def normalize(value):
     s=unicodedata.normalize("NFKC",str(value))
-    return re.sub(r"[\s\u200b\ufeff]+","",s).replace("−","-").replace("‐","-")
+    return re.sub(r"[\s\u200b\ufeff]+","",s).replace("−","-").replace("‐","-").replace("〜","~").replace("～","~")
 
 def assess(question,pages):
     stem=normalize(question.get("question") or question.get("stem") or question.get("text") or "")
