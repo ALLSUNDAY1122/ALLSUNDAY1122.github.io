@@ -23628,7 +23628,7 @@
         "妻Ｃさん、子Ｅさん、子Ｆさん、子Ｇさん、子Ｄさんの夫Ｈさん、孫Ｉさんの計６名"
       ],
       "answer": 3,
-      "explanation": "【2024年5月公式解答：3】図の子ＤさんはＡさんの相続開始前に死亡しているため、孫Ｉさんが代襲相続人となる。前妻Ｂさんと子Ｄさんの夫ＨさんはＡさんの法定相続人に該当しない。現妻Ｃさん、子Ｅさん、子Ｆさん、子Ｇさん、孫Ｉさんの計５名が法定相続人。図は公式PDF（g2_202405_q.pdf、22ページ）を200 DPIで直接切り出した画像を参照。2026年4月1日法令での全肢独立再監査は別途必要。",
+      "explanation": "【2024年5月公式解答：3】図の子ＤさんはＡさんの相続開始前に死亡しているため、孫Ｉさんが代襲相続人となる。前妻Ｂさんと子Ｄさんの夫ＨさんはＡさんの法定相続人に該当しない。現妻Ｃさん、子Ｅさん、子Ｆさん、子Ｇさん、孫Ｉさんの計５名が法定相続人。図は公式PDF（g2_202405_q.pdf、22ページ）を200 DPIで直接切り出した画像を参照。2026年4月1日基準の法定相続人・全4選択肢の再監査は監査記録FP2_202405_VERBATIM_60_INDEPENDENT_LEGAL_20261123.jsonのQ53でPASSを確認。",
       "legalReferenceDate": "2023-10-01",
       "sourceUrl": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
       "status": "active",
@@ -23636,12 +23636,12 @@
       "audit": {
         "questionChecked": true,
         "answerChecked": true,
-        "explanationChecked": false,
-        "legalChecked": false,
+        "explanationChecked": true,
+        "legalChecked": true,
         "law_target_date": "2026-04-01",
-        "recheck_status": "2026_LAW_INDEPENDENT_RECHECK_PENDING",
+        "recheck_status": "2026_04_01_FAMILY_DIAGRAM_INDEPENDENT_REAUDIT_PASS",
         "official_answer_one_based": 3,
-        "verified_2026_answer": null,
+        "verified_2026_answer": 3,
         "exhibit_status": "OFFICIAL_PDF_FAMILY_DIAGRAM_ASSET_LINKED",
         "uploaded_visual_source": {
           "filename": "fp2-202405-q53-family-diagram.png",
@@ -23669,6 +23669,19 @@
           "source_page": 22,
           "extracted_at_dpi": 200,
           "visual_verified_by": "user/Muse report"
+        },
+        "flag_sync_evidence": {
+          "date": "2026-11-24",
+          "source": "fp2-manabi-sprint/audit/FP2_202405_VERBATIM_60_INDEPENDENT_LEGAL_20261123.json",
+          "audit_blob_sha": "460e5c4fe2e578e6694728f641c020685d7e616e",
+          "figure_asset_blob_sha": "98911a09460d990d65c60e45494e80a3f0c578eb",
+          "scope": "2024-05 Q53 only; confirmed 4-option heirship and explanatory statement",
+          "previous": {
+            "legalChecked": false,
+            "explanationChecked": false,
+            "recheck_status": "2026_LAW_INDEPENDENT_RECHECK_PENDING",
+            "verified_2026_answer": null
+          }
         }
       },
       "source_organization": "日本FP協会",
@@ -23720,7 +23733,7 @@
   "release_clear_count": 0,
   "release_candidate_questions": 298,
   "reserve_content_pass_questions": 12,
-  "provenance_qualification": "2024 verbatim sources have official stems/options audited against independent review; all PDFs not char-by-char independently checked; modified=false means transcription/literal wording not externally certified byte-level. Official text licensing/illustrations remain Q0 BLOCKED. 2024-05 Q53 PNG binary not committed.",
+  "provenance_qualification": "2024 verbatim sources have official stems/options audited against independent review; all PDFs not char-by-char independently checked; modified=false means transcription/literal wording not externally certified byte-level. Official text licensing/illustrations remain Q0 BLOCKED. 2024-05 Q53 PNG committed and content figure audit PASS (asset blob 98911a09460d990d65c60e45494e80a3f0c578eb).",
   "domain_release_selection": [
     {
       "domain": "ライフプランニングと資金計画",
