@@ -11,12 +11,12 @@
   ],
   "targetQuestions": 1200,
   "recordedImported": 720,
-  "verifiedThisSession": 628,
+  "verifiedThisSession": 629,
   "additionalRequired": 480,
   "releaseStatus": "PREFLIGHT_BLOCKED",
   "submissionAllowed": false,
-  "contentGate": "EXISTING_628_TEXT_PASS_92_HOLD_NEW_430_TEXT_PASS_50_HOLD_ALL_480_NOT_RELEASE_READY",
-  "mediaGate": "38_HOLD_RIGHTS_PROOF_REQUIRED",
+  "contentGate": "EXISTING_629_TEXT_PASS_91_HOLD_NEW_430_TEXT_PASS_50_HOLD_ALL_NEW_QUARANTINED",
+  "mediaGate": "38_HOLD_PENDING_INDIVIDUAL_RIGHTS_PROOF",
   "appleAppId": "6801792293",
   "bundleId": "jp.allsunday1122.kangoshi",
   "appIconGate": "NOT_INTEGRATED_AS_OF_COORDINATOR_STATUS",
@@ -39,19 +39,19 @@
     "status": "SUCCESS_IN_GITHUB_ACTIONS",
     "countFetched": 15,
     "countFailed": 0,
-    "source": "GitHub Actions run 45216945937 artifact 14838617222",
+    "source": "GitHub Actions run 45217628155 artifact 14838003424",
     "sha256Computed": 15
   },
   "textAudit": {
     "executedOnRealQuestions": 720,
-    "pass": 628,
-    "hold": 92,
+    "pass": 629,
+    "hold": 91,
     "notExecutedExisting": 0,
     "notImported": 480,
-    "rate": 0.8722222222222222,
+    "rate": 0.8736111111111111,
     "holdByReason": {
       "HOLD_MEDIA_RIGHTS": 38,
-      "HOLD_STEM_MISMATCH": 47,
+      "HOLD_STEM_MISMATCH": 46,
       "HOLD_CHOICES_MISMATCH": 3,
       "HOLD_INCOMPLETE_DATA": 4
     },
@@ -68,16 +68,16 @@
       },
       "115": {
         "checked": 240,
-        "pass": 227,
-        "hold": 13
+        "pass": 228,
+        "hold": 12
       }
     },
     "passMeaning": "TEXT_ONLY: no key, scoring exception, or media clearance",
-    "resultSource": "audit artifact zip",
+    "resultSource": "run 45217628155 official PDF audit",
     "perQuestionResultsStoredIn": "GitHub Actions artifact 14837008371"
   },
   "automation": {
-    "status": "STAGING_AND_SECONDARY_AUDITS_EXECUTED_WITH_UNRESOLVED_HOLDS",
+    "status": "CI_SUCCESS_CONTENT_GATES_BLOCKED",
     "path": "kangoshi-sprint/scripts/audit_official_pdf.py",
     "sourceManifest": "kangoshi-sprint/audit/official-source-manifest-20261124.json",
     "mode": "AM/PM separate strict attribution/media isolation",
@@ -85,21 +85,21 @@
     "runner": "kangoshi-sprint/scripts/run_official_pdf_audit.py",
     "ciResult": "SUCCESS_INFRASTRUCTURE_CONTENT_GATES_BLOCKED",
     "warning": "Job SUCCESS because runner returns 0 even when 92 content holds exist; NOT release-quality PASS",
-    "runId": 45216945937,
+    "runId": 45217628155,
     "jobId": 137828435420,
-    "artifactId": 14838617222,
+    "artifactId": 14838003424,
     "artifactFileCount": 7,
     "artifactSizeBytes": 9580,
-    "artifactSha256": "e68b51ed2c17637ec4502f299029445cefc5ccbacc383194e85ae53a598e3322",
-    "runCommit": "a09aedd5ad6397f3638ead647e122d557933b49a",
+    "artifactSha256": "16c05776d50db4551e9d3210e6975aef13886514d2acfc9e477ab2458ae8c57d",
+    "runCommit": "85f024b8399217e4c70b35840578ec03b16fa618",
     "runAt": "2026-11-24T01:10:46+09:00",
-    "stagingBranch": "feature/kangoshi-112-111-staging-audit-20261124",
-    "stagingCommit": "730c54fa189ab7f2a36c747b7afae57b47c8e7f4"
+    "stagingBranch": "feature/kangoshi-112-111-staging-audit-v3-20261124",
+    "stagingCommit": "d9f774797926304a993b962919c217e8d13075e2"
   },
   "stagedCandidateCount": 480,
   "staging": {
-    "branch": "feature/kangoshi-112-111-staging-audit-20261124",
-    "commit": "730c54fa189ab7f2a36c747b7afae57b47c8e7f4",
+    "branch": "feature/kangoshi-112-111-staging-audit-v3-20261124",
+    "commit": "d9f774797926304a993b962919c217e8d13075e2",
     "pdfExams": [
       112,
       111
@@ -121,10 +121,10 @@
   "holdReaudit": {
     "previousHolds": 92,
     "secondaryRecheckedNonMedia": 54,
-    "existingTextMismatch": 50,
+    "existingTextMismatch": 49,
     "alternateExactMatches": 0,
     "confirmedCorrections": 0,
-    "remainingExistingHolds": 92,
+    "remainingExistingHolds": 91,
     "mediaHolds": 38,
     "mediaTriage": {
       "EXAM_CREATED_CHART_CANDIDATE_UNPROVEN": 29,
@@ -132,6 +132,11 @@
       "MEDIA_TYPE_UNDETERMINED": 3
     },
     "incompleteExisting": 4,
-    "note": "50 mismatches unresolved using independent extraction modes; 4 incomplete data remain separate. Previously 3 false positive secondary matches fixed."
+    "note": "1 wave-dash character variant cleared after strict normalization; 49 text/options mismatches and 4 incomplete items remain. No unverified content edits.",
+    "normalizationOnlyResolved": 1,
+    "normalizationOnlyIds": [
+      "K115-AM096"
+    ],
+    "otherExactAlternateMatches": 0
   }
 }
