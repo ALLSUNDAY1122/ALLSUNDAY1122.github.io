@@ -81,6 +81,17 @@ if OCR_REPAIR.exists():
     "individualProof":"kangoshi-sprint/audit/ocr-cmap-repair-ledger-20261124.json",
     "beforeAfter":"kangoshi-sprint/product-content/ocr-repaired-candidates-20261124.json",
     "releaseEligible":0,"status":"SOURCE_ONLY"}
+OCR_COORD=R/"audit/ocr-coordinate-repair-ledger-20261124.json"
+if OCR_COORD.exists():
+  proof=json.loads(OCR_COORD.read_text(encoding="utf8"))
+  assert len(proof["originalTargetIds"])==46
+  assert proof["remaining"]+proof["cumulativePromoted"]==46
+  S["latestOcrCoordinateRepairAudit"]={
+    "runId":run_id,"scope":46,"checkedThisRun":proof["processedThisRun"],
+    "newlyPromoted":proof["newPromoted"],"cumulativePromoted":proof["cumulativePromoted"],
+    "remainingFrom46":proof["remaining"],"individualProof":"kangoshi-sprint/audit/ocr-coordinate-repair-ledger-20261124.json",
+    "beforeAfter":"kangoshi-sprint/product-content/ocr-coordinate-repaired-candidates-20261124.json",
+    "releaseEligible":0,"status":"SOURCE_ONLY"}
 J.write_text(json.dumps(S,ensure_ascii=False,indent=2)+"\n",encoding="utf8")
 old=MD.read_text(encoding="utf8")
 # Preserve historical change log, remove previously appended dynamic summaries.
@@ -138,6 +149,14 @@ if OCR_REPAIR.exists():
       "- 原典画像・PDFハッシュ、OCR二設定、公式正答の証拠："
       "`audit/ocr-cmap-repair-ledger-20261124.json`。\n"
       "- OCR修正はソース限定。解説・アプリ表示・権利・Apple申請は保留。\n")
+if OCR_COORD.exists():
+    proof=json.loads(OCR_COORD.read_text(encoding="utf8"))
+    tail+=("\n## OCR問題文・選択肢の座標別修復（Run "+str(run_id)+"）\n\n"
+        "- 対象46問、今回の新規昇格："+str(proof["newPromoted"])+"問、累計昇格："+str(proof["cumulativePromoted"])+"問、残り："+str(proof["remaining"])+"問。\n"
+        "- 原典各領域のOCR・選択肢座標・修正前後・公式正答の記録："
+        "`audit/ocr-coordinate-repair-ledger-20261124.json`、"
+        "`product-content/ocr-coordinate-repaired-candidates-20261124.json`。\n"
+        "- 合格は原典ソース限定。解説・公開・iOS・Apple審査は保留。\n")
 MD.write_text(summary+history+"\n"+tail,encoding="utf8")
 print(json.dumps({"canonical":total,"remaining":len(hold),"new":P["newPromoted"],
                   "pending22Remaining":len(active_pending),"svgPending":18},ensure_ascii=False))
