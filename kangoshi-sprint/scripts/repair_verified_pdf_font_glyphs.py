@@ -70,7 +70,7 @@ payload={"schemaVersion":1,"date":"2026-11-24","font":"RyuminPr6-Regular",
  "digitGlyphs":{f"U+{k:04X}":v for k,v in MAP.items()},
  "mappingEvidence":"Original rendered glyphs inspected at MHLW 111/112 official pages; count and shapes stable across AM/PM. U+000E and U+000F intentionally unresolved.",
  "parenthesisRule":"U+001F opens parenthesis, close '!' only when paired with that open in same source line. Other exclamation marks preserved.",
- "sourceDocuments":[f"https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp{2022 if ex==111 else 2023}0{4 if ex==111 else 5}21-05a_01.pdf" for ex in (111,112)],
+ "sourceDocuments":["https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp220421-05a_01.pdf","https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp230524-05a_01.pdf"],
  "reparsed":480,"changedQuestions":len(revisions),"sessionCounts":byexam,
  "originalAndRepaired":revisions,
  "policy":"Reparsed 480 source texts from official PDF, but NOT an independent full content audit. All question records still require two-engine & official key gate; exclude uncertain C0 and suspicious ruby."}
