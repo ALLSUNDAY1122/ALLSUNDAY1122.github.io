@@ -51,7 +51,12 @@ for row in rows:
             assert image.format=="PNG" and image.width==asset["width"] and image.height==asset["height"]
             assert image.width>=900 and image.height>=500
         assert asset["page"] in row["sourcePages"]
-        imgs.append({"webPath":"official-kansai/"+asset["path"],
+        # UI production gate requires a canonical -pN-M.png asset filename.
+        canonical=B/"layout-crops"/f"{id}-p{asset['page']}-1.png"
+        if canonical.exists() and hashlib.sha256(canonical.read_bytes()).hexdigest()!=asset["sha256"]:
+            raise RuntimeError("canonical asset collision "+id)
+        canonical.write_bytes(binary)
+        imgs.append({"webPath":"official-kansai/layout-crops/"+canonical.name,
            "sha256":asset["sha256"],"sourcePdfUrl":row["sourceUrl"],
            "page":asset["page"],"licenseVerified":True,"visualVerified":True})
     fields=("id","year","questionNo","chapter","answer","answerNumberOfficial","sourceIssuer",
@@ -91,7 +96,7 @@ with sync_playwright() as pw:
         page.route("**/official-kansai/APPROVED_OFFICIAL_BANK.json",
             lambda route:route.fulfill(status=200,content_type="application/json",body=body))
         page.goto("http://127.0.0.1:8765/official-practice.html",wait_until="networkidle")
-        assert "8問" in page.locator("#available").inner_text()
+        assert "8問" in page.locator("#available").inner_text(),page.locator("#available").inner_text()
         page.locator("#start").click()
         for q in promoted:
             id=q["id"]
