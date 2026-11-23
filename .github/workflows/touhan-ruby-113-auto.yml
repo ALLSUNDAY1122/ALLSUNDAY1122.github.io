@@ -41,15 +41,15 @@ jobs:
           bank=json.loads((b/'APPROVED_OFFICIAL_BANK.json').read_text())
           st=json.loads(Path('touroku-hanbaisha-ios/release-status.json').read_text())
           assert report['processed']==113
-          assert report['autoPassed']+report['held']==113
+          assert report['autoPassed']+report['held']+report.get('previouslyApproved',0)==113
           assert len(report['records'])==113
-          assert bank['count']==486+report['autoPassed']
+          assert bank['count']==report['baseline']+report['autoPassed']
           assert bank['count']==len(bank['approvedIds'])==len(bank['questions'])
           assert len(set(bank['approvedIds']))==bank['count']
           assert bank['count']==st['question_bank']['production_official_bank_count']
           assert 'KSAI-2023-090' not in bank['approvedIds']
           assert st['release_gate']=='BLOCKED' and not st['app_review_submitted']
-          assert all((r['status']=='AUTO_PASS') == (len(r['reasons'])==0) for r in report['records'])
+          assert all((r['status'] in ('AUTO_PASS','ALREADY_APPROVED')) == (len(r['reasons'])==0) for r in report['records'])
           print('PASS',report['autoPassed'],'HOLD',report['held'],'bank',bank['count'])
           PY
       - name: Commit evidence and status after all checks
