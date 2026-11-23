@@ -10,20 +10,20 @@
     111
   ],
   "targetQuestions": 1200,
-  "recordedImported": 732,
+  "recordedImported": 787,
   "verifiedThisSession": 629,
-  "additionalRequired": 468,
+  "additionalRequired": 413,
   "releaseStatus": "PREFLIGHT_BLOCKED",
   "submissionAllowed": false,
-  "contentGate": "CANONICAL_732_OF_1200_720_RUNTIME_12_SOURCE_AND_KEY_PASS_REQUIRES_EXPLANATION_RUNTIME_468_PENDING",
-  "mediaGate": "38_ASSETS_PRESENT_23_VECTOR_15_JPEG_ZERO_NEW_RIGHTS_CLEARANCE",
+  "contentGate": "CANONICAL_SOURCE_VERIFIED_787_1200_RUNTIME_720_ONLY_413_HOLD_38_MEDIA_RIGHTS_HOLD",
+  "mediaGate": "38_ASSETS_PRESENT_JPG15_NO_PHOTO_VISIBLE_SVG5_CONTENT_FAIL_18_FIDELITY_PENDING_RIGHTS_ALL_HOLD",
   "appleAppId": "6801792293",
   "bundleId": "jp.allsunday1122.kangoshi",
   "appIconGate": "NOT_INTEGRATED_AS_OF_COORDINATOR_STATUS",
   "iapGate": "NOT_REGISTERED_AS_OF_COORDINATOR_STATUS",
   "finalSubmission": "PROHIBITED_WITHOUT_EXPLICIT_APPROVAL",
   "note": "Existing 720-question PASS claims are historical and do not establish 5-exam completeness or current independent PDF verification.",
-  "newlyImported": 12,
+  "newlyImported": 67,
   "officialSourcePagesVerified": [
     112,
     111
@@ -47,7 +47,7 @@
     "pass": 629,
     "hold": 91,
     "notExecutedExisting": 0,
-    "notImported": 468,
+    "notImported": 413,
     "rate": 0.8736111111111111,
     "holdByReason": {
       "HOLD_MEDIA_RIGHTS": 38,
@@ -79,14 +79,14 @@
     "note": "Existing 720 strict PDF text recheck 629 PASS, 91 HOLD after 114-PM017 source-choice correction; visual signoffs do not automatically clear strict text gate."
   },
   "automation": {
-    "status": "CANONICAL_12_PASS_AND_38_MEDIA_INTEGRITY_PASS_RELEASE_BLOCKED",
+    "status": "DUAL_ENGINE_480_AUDITED_55_NEW_CANONICAL_PROMOTED_413_HELD_MEDIA_38_REVIEWED",
     "path": "kangoshi-sprint/scripts/audit_official_pdf.py",
     "sourceManifest": "kangoshi-sprint/audit/official-source-manifest-20261124.json",
     "mode": "AM/PM separate strict attribution/media isolation",
     "workflow": ".github/workflows/kangoshi-official-pdf-audit.yml",
     "runner": "kangoshi-sprint/scripts/run_official_pdf_audit.py",
-    "ciResult": "SUCCESS_SOURCE_12_AND_MEDIA_BYTE_INTEGRITY_ONLY_CONTENT_RIGHTS_REMAIN_BLOCKED",
-    "warning": "GitHub Actions SUCCESS is not product release PASS. Strict existing text 91 HOLD, media rights 38 HOLD, 468 additional candidates unverified; 12 canonical additions not published.",
+    "ciResult": "SUCCESS_WORKFLOW_CANONICAL_SOURCE_GATES_ONLY_RELEASE_BLOCKED",
+    "warning": "Source PASS/CI success does not mean content, copyright or app release PASS. 55 new extension items remain publishable=false; 5 svg source mismatches and 413 questions pending.",
     "runId": 45217628155,
     "jobId": 137828435420,
     "artifactId": 14838003424,
@@ -105,7 +105,14 @@
     "verifiedExtensionRunId": 45232275084,
     "verifiedExtensionArtifactId": 14847463373,
     "verifiedExtensionArtifactSha256": "4bad6deb048ad72271ccf6d471fd8c29f6c7f0001c9dcade299f94f4263331fc",
-    "latestExistingTextRunId": 45232275084
+    "latestExistingTextRunId": 45232275084,
+    "bulkRunId": 45235747892,
+    "bulkArtifactId": 14850585285,
+    "bulkArtifactSha256": "0534d96a05931c3efb2f8ee0f943b22abf3a698aaf4adb666508582f3434d53b",
+    "promotionCommit": "b82f206b82b1b853f734d6479a74a2eaaa78c5fc",
+    "bookletRunId": 45236334522,
+    "bookletArtifactId": 14850665593,
+    "bulkHoldCount": 413
   },
   "stagedCandidateCount": 480,
   "staging": {
@@ -127,14 +134,22 @@
     "invalidStructure": 24,
     "officialAnswerKeysChecked": 0,
     "releaseEligible": 0,
-    "warning": "The original 480 staging branch stays quarantine-only; 12 source-and-key-verified copies promoted into a canonical extension, still runtime gated.",
+    "warning": "Original 480 staged branch remains unchanged. Only the 67 independently source-verified copies in canonical extension; none are enabled in iOS without explanation and integration QA.",
     "keyedRunId": 45220877977,
     "answersMappedSingle": 442,
     "ambiguousOrMulti": 37,
     "officiallyExcluded": 1,
     "allCandidatesQuarantined": true,
-    "verifiedExtensionCount": 12,
-    "remainingNotCanonicalVerified": 468
+    "verifiedExtensionCount": 67,
+    "remainingNotCanonicalVerified": 413,
+    "newDualEnginePromoted": 55,
+    "alreadyVerified": 12,
+    "dualEngineHoldCount": 413,
+    "holdLedger": "kangoshi-sprint/audit/dual-engine-hold-20261124.json",
+    "passLedger": "kangoshi-sprint/audit/dual-engine-promotion-ledger-20261124.json",
+    "dualEngineRunId": 45235747892,
+    "dualEngineArtifactId": 14850585285,
+    "publishableNew": 0
   },
   "holdReaudit": {
     "previousHolds": 92,
@@ -215,16 +230,19 @@
   },
   "canonicalBank": {
     "existingRuntimeRecords": 720,
-    "sourceVerifiedExtension": 12,
-    "verifiedTotal": 732,
+    "sourceVerifiedExtension": 67,
+    "verifiedTotal": 787,
     "target": 1200,
-    "unverifiedRemaining": 468,
+    "unverifiedRemaining": 413,
     "extensionFile": "kangoshi-sprint/product-content/verified-additions-20261124.json",
     "manifest": "kangoshi-sprint/product-content/manifest.json",
     "extensionAuditResult": "PASS_12_OF_12_TEXT_CHOICES_KEYS_ONLY",
     "extensionRuntimeEligible": 0,
     "extensionPublished": 0,
-    "notes": "Twelve are registered in canonical source-verified extension; separate explanation review and app integration remain gates."
+    "notes": "55 new candidates independently passed PyMuPDF and Poppler full stem/four choices, original glyph integrity gate, and official answer PDF; plus 12 prior verified. Explanations, app integration, license and release remain blocked.",
+    "newBulkPromoted": 55,
+    "dualEngineLatestRunId": 45235747892,
+    "promotionCommit": "b82f206b82b1b853f734d6479a74a2eaaa78c5fc"
   },
   "mediaReaudit": {
     "target": 38,
@@ -241,6 +259,24 @@
     "individualBlobEvidence": "kangoshi-sprint/audit/media-38-asset-readback-20261124.json",
     "structuralEvidenceArtifactId": 14847463373,
     "ciRunId": 45232275084,
-    "policy": "PDL1.0 does not automatically extend to third-party photographs; source-rights and redraw answer-position fidelity are unverified."
+    "policy": "No patient/clinical photograph visually found in 15 JPG captures; diagrams may still have third-party rights. Five source SVGs are clinically incomplete/mismatched. No media is cleared for publication.",
+    "jpgPhotoDetectedOnVisualInspection": 0,
+    "jpgPhotographicContentReviewed": 15,
+    "svgComparisonImagesMade": 23,
+    "svgContentConfirmedFailures": 5,
+    "svgFailureIds": [
+      "K115-AM063",
+      "K115-PM020",
+      "K114-AM013",
+      "K114-AM051",
+      "K114-AM107"
+    ],
+    "svgFidelityStillOpen": 18,
+    "bookletPdfSourcesDownloaded": 3,
+    "bookletRunId": 45236334522,
+    "bookletArtifactId": 14850665593,
+    "sourceVisualComparisonLedger": "kangoshi-sprint/audit/media-38-visual-content-recheck-20261124.json",
+    "comparisonImageArtifactId": 14850680030,
+    "comparisonRunId": 45235747892
   }
 }
