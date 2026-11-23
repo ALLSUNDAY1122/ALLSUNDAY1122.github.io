@@ -1066,6 +1066,79 @@ workflows:
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
+  touhan-q7-signing-preflight:
+    name: 登録販売者 - Q7 Signed IPA TestFlight Preflight (No Upload)
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    integrations:
+      app_store_connect: tourokuhanbaisha_appstore
+    environment:
+      groups:
+        - app2_010_touhan_signing
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.allsunday1122.tourokuhanbaisha
+      vars:
+        BUNDLE_ID: com.allsunday1122.tourokuhanbaisha
+        APP_STORE_CONNECT_APP_ID: "6802119268"
+        XCODE_PROJECT: touroku-hanbaisha-ios/native-ios/TouhanSprint.xcodeproj
+        XCODE_SCHEME: TouhanSprint
+      xcode: latest
+    scripts:
+      - name: Install tooling and prepare reproducible native assets
+        script: |
+          set -euo pipefail
+          HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+          python3 -m pip install --disable-pip-version-check 'cairosvg==2.8.2'
+          cd "$CM_BUILD_DIR"
+          bash touroku-hanbaisha-ios/native-ios/prepare-ios.sh
+          python3 touroku-hanbaisha-ios/scripts/validate_release.py
+          python3 scripts/audit_touhan_release_pipeline.py
+      - name: Build native Xcode project with unique build number
+        script: |
+          set -euo pipefail
+          cd "$CM_BUILD_DIR/touroku-hanbaisha-ios/native-ios"
+          python3 - <<'PY'
+          from pathlib import Path
+          import os
+          p=Path('project.yml')
+          s=p.read_text()
+          build=os.environ.get('CM_BUILD_NUMBER')
+          if not build or not build.isdigit(): raise RuntimeError('Codemagic CM_BUILD_NUMBER missing/invalid')
+          s=s.replace('CURRENT_PROJECT_VERSION: 1','CURRENT_PROJECT_VERSION: '+build,1)
+          p.write_text(s)
+          PY
+          xcodegen generate --spec project.yml
+          grep -q 'com.allsunday1122.tourokuhanbaisha' TouhanSprint.xcodeproj/project.pbxproj
+          grep -q 'MN3D2ZM44N' TouhanSprint.xcodeproj/project.pbxproj
+      - name: Apply managed App Store signing files
+        script: |
+          set -euo pipefail
+          cd "$CM_BUILD_DIR/touroku-hanbaisha-ios/native-ios"
+          xcode-project use-profiles
+      - name: Build a signed IPA without upload
+        script: |
+          set -euo pipefail
+          xcode-project build-ipa --project "$CM_BUILD_DIR/$XCODE_PROJECT" --scheme "$XCODE_SCHEME"
+      - name: Verify signed IPA identity and provisioning profile
+        script: |
+          set -euo pipefail
+          IPA_PATH="$(find "$CM_BUILD_DIR/build/ios/ipa" -maxdepth 1 -name '*.ipa' -type f -print -quit)"
+          test -n "$IPA_PATH" && test -s "$IPA_PATH"
+          mkdir -p /tmp/touhan-q7-verify
+          unzip -q "$IPA_PATH" -d /tmp/touhan-q7-verify
+          APP_PATH="$(find /tmp/touhan-q7-verify/Payload -maxdepth 1 -name '*.app' -type d -print -quit)"
+          test -n "$APP_PATH"
+          /usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP_PATH/Info.plist" | grep -Fx "$BUNDLE_ID"
+          codesign --verify --deep --strict --verbose=2 "$APP_PATH"
+          test -s "$APP_PATH/embedded.mobileprovision"
+          security cms -D -i "$APP_PATH/embedded.mobileprovision" > /tmp/touhan-q7-profile.plist
+          /usr/libexec/PlistBuddy -c 'Print :TeamIdentifier:0' /tmp/touhan-q7-profile.plist | grep -Fx 'MN3D2ZM44N'
+          /usr/libexec/PlistBuddy -c 'Print :Entitlements:application-identifier' /tmp/touhan-q7-profile.plist | grep -F 'com.allsunday1122.tourokuhanbaisha'
+          echo "PASS Q7 signed IPA identity, entitlements and distribution profile; no App Store Connect upload performed"
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
   touhan-ios:
     name: 登録販売者 - iOS App Store Release Candidate
     max_build_duration: 60
