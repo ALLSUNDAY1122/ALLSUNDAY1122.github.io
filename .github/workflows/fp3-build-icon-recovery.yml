@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   issues: write
 
 jobs:
@@ -39,6 +39,111 @@ jobs:
             fp3-build9-appstore-icon-recovery.json
           if-no-files-found: error
           retention-days: 7
+      - name: Install recovered FP3 AppIcon and Build 11 workflow
+        if: success() && github.event_name == 'issues'
+        run: |
+          set -euo pipefail
+          test -s fp3-build9-appstore-icon.png
+          mkdir -p fp3-manabi-sprint/ios/Assets.xcassets/AppIcon.appiconset
+          cp fp3-build9-appstore-icon.png fp3-manabi-sprint/ios/Assets.xcassets/AppIcon.appiconset/AppIcon.png
+          python3 - <<'PY'
+          from pathlib import Path
+          import json, struct, hashlib
+          icon=Path('fp3-manabi-sprint/ios/Assets.xcassets/AppIcon.appiconset/AppIcon.png')
+          b=icon.read_bytes()
+          assert b[:8] == bytes([137,80,78,71,13,10,26,10]) and b[25] in (0,2), 'App Store icon must be opaque PNG'
+          assert struct.unpack('>II',b[16:24]) == (1024,1024), 'AppIcon must be 1024x1024'
+          print('AppIcon SHA-256:',hashlib.sha256(b).hexdigest())
+          contents={'images':[{'filename':'AppIcon.png','idiom':'universal','platform':'ios','size':'1024x1024'}],'info':{'author':'xcode','version':1}}
+          Path('fp3-manabi-sprint/ios/Assets.xcassets/AppIcon.appiconset/Contents.json').write_text(json.dumps(contents,ensure_ascii=False,indent=2)+chr(10),encoding='utf-8')
+          p=Path('fp3-manabi-sprint/ios/project.yml')
+          lines=p.read_text(encoding='utf-8').splitlines()
+          for i,line in enumerate(lines):
+              if line.strip() == 'CURRENT_PROJECT_VERSION: 10':
+                  lines[i]='    CURRENT_PROJECT_VERSION: 11'
+                  lines.insert(i+1,'    ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon')
+                  break
+          if not any('ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon' in x for x in lines):
+              raise SystemExit('AppIcon build setting insertion failed')
+          if not any('path: Assets.xcassets' in x for x in lines):
+              i=next(i for i,x in enumerate(lines) if x.strip() == 'buildPhase: resources' and i>0 and lines[i-1].strip() == 'type: folder')
+              lines[i+1:i+1]=['      - path: Assets.xcassets','        buildPhase: resources']
+          if not any('CFBundleIconName: AppIcon' in x for x in lines):
+              i=next(i for i,x in enumerate(lines) if 'CFBundleDisplayName:' in x)
+              lines.insert(i+1,'        CFBundleIconName: AppIcon')
+          p.write_text(chr(10).join(lines)+chr(10),encoding='utf-8')
+          PY
+          cat >> codemagic.yaml <<'YAML'
+
+            fp3-ios-build11-internal:
+              name: FP3 Manabi Sprint - Build 11 Internal TestFlight
+              max_build_duration: 60
+              instance_type: mac_mini_m2
+              integrations:
+                app_store_connect: "Codemagic Shiwake Swipe"
+              environment:
+                ios_signing:
+                  distribution_type: app_store
+                  bundle_identifier: com.allsunday1122.fp3kakomoncoach
+                vars:
+                  BUNDLE_ID: com.allsunday1122.fp3kakomoncoach
+                  BUILD_NUMBER: "11"
+                  XCODE_PROJECT: fp3-manabi-sprint/ios/FP3ManabiSprint.xcodeproj
+                  XCODE_SCHEME: FP3ManabiSprint
+                xcode: latest
+              scripts:
+                - name: Install XcodeGen
+                  script: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+                - name: Prepare offline FP3 bundle
+                  script: bash "$CM_BUILD_DIR/fp3-manabi-sprint/ios/prepare-ios.sh"
+                - name: Generate Xcode project
+                  script: |
+                    cd "$CM_BUILD_DIR/fp3-manabi-sprint/ios"
+                    xcodegen generate
+                - name: Verify FP3 release identity and icon
+                  script: |
+                    set -euo pipefail
+                    cd "$CM_BUILD_DIR"
+                    python3 - <<'PY'
+                    import json,struct
+                    from pathlib import Path
+                    root=Path('fp3-manabi-sprint/ios')
+                    p=(root/'project.yml').read_text()
+                    assert 'CURRENT_PROJECT_VERSION: 11' in p
+                    assert 'ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon' in p
+                    assert 'PRODUCT_BUNDLE_IDENTIFIER: com.allsunday1122.fp3kakomoncoach' in p
+                    c=json.loads((root/'Assets.xcassets/AppIcon.appiconset/Contents.json').read_text())
+                    assert any(x.get('filename')=='AppIcon.png' and x.get('size')=='1024x1024' for x in c['images'])
+                    b=(root/'Assets.xcassets/AppIcon.appiconset/AppIcon.png').read_bytes()
+                    assert b[25] in (0,2) and struct.unpack('>II',b[16:24])==(1024,1024)
+                    print('PASS: FP3 Bundle ID, Build 11 and opaque 1024px AppIcon')
+                    PY
+                - name: Apply App Store signing profiles
+                  script: |
+                    cd "$CM_BUILD_DIR/fp3-manabi-sprint/ios"
+                    xcode-project use-profiles
+                - name: Build signed FP3 IPA
+                  script: |
+                    xcode-project build-ipa \\
+                      --project "$CM_BUILD_DIR/$XCODE_PROJECT" \\
+                      --scheme "$XCODE_SCHEME"
+              artifacts:
+                - build/ios/ipa/*.ipa
+                - /tmp/xcodebuild_logs/*.log
+              publishing:
+                app_store_connect:
+                  auth: integration
+                  submit_to_testflight: true
+                  beta_groups:
+                    - sun
+                  submit_to_app_store: false
+          YAML
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add fp3-manabi-sprint/ios/Assets.xcassets/AppIcon.appiconset/AppIcon.png fp3-manabi-sprint/ios/Assets.xcassets/AppIcon.appiconset/Contents.json fp3-manabi-sprint/ios/project.yml codemagic.yaml
+          git commit -m "FP3: restore Build 9 AppIcon and add Build 11 TestFlight workflow"
+          git push origin HEAD:main
+
       - name: Report issue-triggered result
         if: always() && github.event_name == 'issues'
         uses: actions/github-script@v8

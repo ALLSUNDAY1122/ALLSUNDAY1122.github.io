@@ -66,9 +66,11 @@ def main() -> int:
         else:
             fail(f"{qid}: unsupported type={qtype!r}")
 
-        for field in ("question", "explanation", "domain", "topic"):
+        for field in ("question", "explanation", "domain", "topic", "source_name", "source_url"):
             if not isinstance(q.get(field), str) or not q[field].strip():
                 fail(f"{qid}: missing {field}")
+        if not q["source_url"].startswith("https://"):
+            fail(f"{qid}: source_url must use HTTPS")
 
     if tf != 90 or mc != 90:
         fail(f"type counts true_false={tf} multiple_choice={mc}")

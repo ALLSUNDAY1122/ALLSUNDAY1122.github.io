@@ -1,0 +1,28 @@
+name: Kangoshi Official Media Booklet Review
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'kangoshi-sprint/scripts/build_media_booklet_evidence.py'
+      - '.github/workflows/kangoshi-media-booklet-review.yml'
+permissions:
+  contents: read
+jobs:
+  render-booklets:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install render tools
+        run: python -m pip install --disable-pip-version-check 'pymupdf>=1.24,<3' pillow
+      - name: Render MHLW original nurse exam appendix/booklets from official PDFs
+        run: python kangoshi-sprint/scripts/build_media_booklet_evidence.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: kangoshi-official-media-booklets
+          path: kangoshi-sprint/audit/runs/media-booklets/
+          if-no-files-found: warn

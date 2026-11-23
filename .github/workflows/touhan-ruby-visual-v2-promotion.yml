@@ -1,0 +1,79 @@
+name: Registered Seller Verified Visual Ruby V2 Promotion
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'touroku-hanbaisha-sprint/official-kansai/promote_ruby_visual_v2.py'
+      - 'touroku-hanbaisha-sprint/official-kansai/RUBY_VISUAL_AUDIT_V2_120_20261124.json'
+      - '.github/workflows/touhan-ruby-visual-v2-promotion.yml'
+permissions:
+  contents: write
+concurrency:
+  group: touhan-ruby-visual-v2-promotion-main
+  cancel-in-progress: false
+jobs:
+  approve:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Promote only 28 visually matched source/candidate screenshots
+        run: |
+          set -o pipefail
+          python touroku-hanbaisha-sprint/official-kansai/promote_ruby_visual_v2.py > /tmp/touhan-v2-promote.log 2>&1
+          status=$?
+          cat /tmp/touhan-v2-promote.log
+          if [ "$status" -ne 0 ]; then
+            python - <<'PY'
+          from pathlib import Path
+          import json
+          b=Path('touroku-hanbaisha-sprint/official-kansai')
+          (b/'RUBY_VISUAL_V2_PROMOTION_ERROR.json').write_text(
+            json.dumps({'status':'FAIL','log':Path('/tmp/touhan-v2-promote.log').read_text(errors='replace')[-5500:]},ensure_ascii=False,indent=2)+'\n')
+          PY
+            exit 1
+          fi
+      - name: Audit release invariants
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          b=Path('touroku-hanbaisha-sprint/official-kansai')
+          bank=json.loads((b/'APPROVED_OFFICIAL_BANK.json').read_text())
+          status=json.loads(Path('touroku-hanbaisha-ios/release-status.json').read_text())
+          report=json.loads((b/'RUBY_VISUAL_AUDIT_V2_120_20261124.json').read_text())
+          assert bank['count']==status['question_bank']['production_official_bank_count']==468
+          assert len(bank['questions'])==len(set(bank['approvedIds']))==468
+          assert 'KSAI-2023-090' not in bank['approvedIds']
+          assert not status['app_review_submitted'] and status['release_gate']=='BLOCKED'
+          assert len(report['approvedIds'])==28
+          assert all(next(x for x in bank['questions'] if x['id']==id)['audit']['method']=='DIRECT_VISUAL_SOURCE_AND_NOTO_RUBY_SCREENSHOT_V2' for id in report['approvedIds'])
+          assert sum(q['audit']['method']=='OFFICIAL_PDF_IMAGE_CROP_SCOPE_RIGHTS_MOBILE' for q in bank['questions'])==44
+          for id in report['approvedIds']:
+            q=next(q for q in bank['questions'] if q['id']==id)
+            assert q['questionParts'] and len(q['choicesParts'])==len(q['choices'])
+            assert any('rubyBase' in part for group in [q['questionParts'],*q['choicesParts']] for part in group)
+          print('PASS 28 visual ruby promotions / existing 440 preserved / official Q90 excluded')
+          PY
+      - name: Preserve actual success or failure results
+        if: always()
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          b=touroku-hanbaisha-sprint/official-kansai
+          git add -f "$b/RUBY_VISUAL_V2_PROMOTION_ERROR.json" 2>/dev/null || true
+          git add "$b/APPROVED_OFFICIAL_BANK.json" 2>/dev/null || true
+          git add touroku-hanbaisha-ios/release-status.json touroku-hanbaisha-ios/RELEASE_STATUS.md
+          if ! git diff --cached --quiet; then
+            git commit -m 'audit(touhan): promote 28 visually matched ruby questions and update canonical release registry'
+            for attempt in 1 2 3; do
+              git pull --rebase origin main
+              if git push origin HEAD:main; then exit 0; fi
+              if [ "$attempt" -eq 3 ]; then exit 1; fi
+            done
+          fi

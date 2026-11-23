@@ -1,0 +1,86 @@
+name: Registered Seller SHA-pinned 600 PDF Normalized Diff
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'touroku-hanbaisha-sprint/official-kansai/auto_diff_pdf.py'
+      - 'touroku-hanbaisha-sprint/official-kansai/build_approved_bank.py'
+      - 'touroku-hanbaisha-sprint/official-kansai/write_auto_release_status.py'
+      - '.github/workflows/touhan-600-auto-diff.yml'
+permissions:
+  contents: write
+concurrency:
+  group: touhan-600-auto-diff-main
+  cancel-in-progress: false
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: PyMuPDF fixed version
+        run: python -m pip install --disable-pip-version-check 'pymupdf==1.26.5'
+      - name: Re-download original PDFs, pin SHA and perform year-by-year diff
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for y in 2022 2023 2024 2025 2026; do
+            python touroku-hanbaisha-sprint/official-kansai/auto_diff_pdf.py --year "$y"
+            git add "touroku-hanbaisha-sprint/official-kansai/AUTO_DIFF_${y}.json"
+            if ! git diff --cached --quiet; then
+              git commit -m "audit(touhan): persist official normalized PDF diff year ${y}"
+              for attempt in 1 2 3; do
+                git pull --rebase origin main
+                if git push origin HEAD:main; then break; fi
+                if [ "$attempt" = 3 ]; then exit 1; fi
+              done
+            fi
+          done
+      - name: Promote eligible only and report detailed state
+        run: |
+          python touroku-hanbaisha-sprint/official-kansai/build_approved_bank.py
+          python touroku-hanbaisha-sprint/official-kansai/write_auto_release_status.py
+      - name: Strict fail-closed release gates
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          b=Path('touroku-hanbaisha-sprint/official-kansai')
+          bank=json.loads((b/'APPROVED_OFFICIAL_BANK.json').read_text())
+          assert len(bank['questions'])==bank['count'] and len(bank['approvedIds'])==bank['count']
+          ids={q['id'] for q in bank['questions']}
+          assert len(ids)==bank['count'] and 'KSAI-2023-090' not in ids
+          assert all(q['verbatimCertified'] and q['renderReady'] and not q['needsVisualReview'] for q in bank['questions'])
+          assert all(q['attributionDisplay'] and q['sourceUrl'] and len(q['choices']) in (4,5) for q in bank['questions'])
+          for y in range(2022,2027):
+            diff=json.loads((b/f'AUTO_DIFF_{y}.json').read_text())
+            assert len(diff['questions'])==120 and diff['autoPass']+diff['held']==120
+            assert all((q['status']=='AUTO_PASS') == (len(q['reasons'])==0) for q in diff['questions'])
+          status=json.loads(Path('touroku-hanbaisha-ios/release-status.json').read_text())
+          assert status['release_gate']=='BLOCKED' and not status['app_review_submitted']
+          assert status['question_bank']['production_official_bank_count']==bank['count']
+          print('PASS: 600 source diff records, only audited approved bank, Q90 excluded')
+          PY
+      - name: Commit evidence, promoted bank and release status
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for y in 2022 2023 2024 2025 2026; do
+            git add "touroku-hanbaisha-sprint/official-kansai/AUTO_DIFF_${y}.json"
+          done
+          git add touroku-hanbaisha-sprint/official-kansai/APPROVED_OFFICIAL_BANK.json
+          git add touroku-hanbaisha-ios/release-status.json touroku-hanbaisha-ios/RELEASE_STATUS.md
+          if ! git diff --cached --quiet; then
+            git commit -m 'audit(touhan): persist official 600 normalized PDF diff and release-ready subset'
+            for try in 1 2 3; do
+              git pull --rebase origin main
+              if git push origin HEAD:main; then exit 0; fi
+            done
+            exit 1
+          fi

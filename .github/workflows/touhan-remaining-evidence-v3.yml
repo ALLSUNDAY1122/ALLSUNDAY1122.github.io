@@ -1,0 +1,80 @@
+name: Touhan Remaining 45 Ruby and 4 Table Source Evidence
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/touhan-remaining-evidence-v3.yml'
+      - 'touroku-hanbaisha-sprint/official-kansai/prepare_remaining_evidence_v3.py'
+permissions:
+  contents: write
+concurrency:
+  group: touhan-remaining-evidence-v3
+  cancel-in-progress: false
+jobs:
+  source-recovery:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install exact PDF tools and Japanese fonts
+        run: |
+          sudo apt-get update -qq
+          sudo env DEBIAN_FRONTEND=noninteractive apt-get install -y fonts-noto-cjk fontconfig
+          sudo fc-cache -f
+          python -m pip install 'pymupdf==1.26.5' 'playwright==1.56.0' 'pillow==11.3.0'
+          google-chrome --version
+          fc-match 'Noto Sans CJK JP'
+      - name: Retrieve issuer SHA-pinned source PDFs and generate review assets
+        run: python touroku-hanbaisha-sprint/official-kansai/prepare_remaining_evidence_v3.py
+      - name: Fail closed validation
+        run: |
+          python - <<'PY'
+          import json,hashlib
+          from pathlib import Path
+          b=Path('touroku-hanbaisha-sprint/official-kansai')
+          d=json.loads((b/'REMAINING_EVIDENCE_V3_20261124.json').read_text())
+          assert len(d['records'])==53
+          assert len({r['id'] for r in d['records']})==53
+          assert sum(r['category']=='RUBY_COMPARISON_NEW' for r in d['records'])==45
+          assert sum(r['category']=='TABLE_SOURCE_IMAGE' for r in d['records'])==4
+          assert sum(r['category']=='EXCEPTION_MANUAL_REAUDIT' for r in d['records'])==4
+          assert d['newlyPromoted']==0 and d['visualPass']==0
+          for r in d['records']:
+              assert not r['promoted']
+              if 'candidateScreenshot' in r:
+                  assert (b/r['candidateScreenshot']).read_bytes()[:8]==b'\x89PNG\r\n\x1a\n'
+              for a in r.get('assets',[]):
+                  data=(b/a['path']).read_bytes()
+                  assert data[:8]==b'\x89PNG\r\n\x1a\n'
+                  assert hashlib.sha256(data).hexdigest()==a['sha256']
+          print('PASS 53 disjoint source evidence items, 0 implied approvals')
+          PY
+      - name: Commit reviewed-source candidate evidence without publishing questions
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          b=touroku-hanbaisha-sprint/official-kansai
+          git add -f "$b/REMAINING_EVIDENCE_V3_20261124.json"
+          git add -f "$b/ruby-font-review/" "$b/layout-crops/"
+          if ! git diff --cached --quiet; then
+            git commit -m 'audit(touhan): preserve 45 ruby comparison images and four official table crops'
+            for attempt in 1 2 3; do
+              git pull --rebase origin main
+              if git push origin HEAD:main; then exit 0; fi
+            done
+            exit 1
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: touhan-remaining-evidence-v3
+          path: |
+            touroku-hanbaisha-sprint/official-kansai/REMAINING_EVIDENCE_V3_20261124.json
+            touroku-hanbaisha-sprint/official-kansai/ruby-font-review/*-v3.png
+            touroku-hanbaisha-sprint/official-kansai/layout-crops/*-recovery-*.png
+          if-no-files-found: ignore

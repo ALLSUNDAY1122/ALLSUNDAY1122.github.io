@@ -1,0 +1,61 @@
+name: Registered Seller Official Approval Gate
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'touroku-hanbaisha-sprint/official-kansai/MANUAL_VISUAL_AUDIT_20261123.json'
+      - 'touroku-hanbaisha-sprint/official-kansai/build_approved_bank.py'
+      - 'touroku-hanbaisha-sprint/official-practice.html'
+      - '.github/workflows/touhan-official-approval-gate.yml'
+permissions:
+  contents: write
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Approve only manually visually checked questions
+        run: python touroku-hanbaisha-sprint/official-kansai/build_approved_bank.py
+      - name: Bank and UI safety gates
+        run: |
+          python - <<'PY'
+          import json,re
+          from pathlib import Path
+          b=Path('touroku-hanbaisha-sprint/official-kansai')
+          bank=json.loads((b/'APPROVED_OFFICIAL_BANK.json').read_text())
+          qa=bank['questions']
+          audit=json.loads((b/'MANUAL_VISUAL_AUDIT_20261123.json').read_text())
+          expected=sorted(r['id'] for r in audit['reviewedQuestions'] if r['status']=='PASS')
+          assert len(qa)==bank['count']==len(expected)
+          assert [q['id'] for q in qa]==expected
+          assert all(q['verbatimCertified'] and q['renderReady'] and not q['needsVisualReview'] for q in qa)
+          assert all(len(q['choices']) in (4,5) and 0<=q['answer']<len(q['choices']) for q in qa)
+          text=Path('touroku-hanbaisha-sprint/official-practice.html').read_text()
+          assert 'APPROVED_OFFICIAL_BANK.json' in text
+          assert 'excludeFromAccuracyDenominator' in text
+          assert 'official-practice.html' in Path('touroku-hanbaisha-sprint/app-v07.js').read_text()
+          q90=json.loads((b/'QUESTIONS_2023_APP_CANDIDATE.json').read_text())['questions'][89]
+          assert q90['id']=='KSAI-2023-090' and q90['answer'] is None and q90['excludeFromAccuracyDenominator']
+          scripts=re.findall(r'<script>(.*?)</script>',text,re.S)
+          assert len(scripts)==1
+          Path('/tmp/touhan-official-practice.js').write_text(scripts[0])
+          print('PASS approval/data/source/invalid question gates')
+          PY
+          node --check /tmp/touhan-official-practice.js
+          node --check touroku-hanbaisha-sprint/app-v07.js
+      - name: Commit deterministic approved bank
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add touroku-hanbaisha-sprint/official-kansai/APPROVED_OFFICIAL_BANK.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'data(touhan): regenerate visually approved official bank'
+            for i in 1 2 3; do
+              git pull --rebase origin main
+              if git push origin HEAD:main; then exit 0; fi
+            done
+            exit 1
+          fi

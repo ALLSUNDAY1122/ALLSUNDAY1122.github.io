@@ -7,7 +7,8 @@ settings:
   base:
     SWIFT_VERSION: 5.0
     MARKETING_VERSION: 1.0.0
-    CURRENT_PROJECT_VERSION: 10
+    CURRENT_PROJECT_VERSION: 11
+    ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
     GENERATE_INFOPLIST_FILE: NO
     TARGETED_DEVICE_FAMILY: "1"
     SUPPORTS_MACCATALYST: NO
@@ -23,6 +24,8 @@ targets:
       - path: Web
         type: folder
         buildPhase: resources
+      - path: Assets.xcassets
+        buildPhase: resources
       - path: PrivacyInfo.xcprivacy
         buildPhase: resources
     settings:
@@ -34,6 +37,7 @@ targets:
       path: Info.plist
       properties:
         CFBundleDisplayName: FP3級 学びスプリント
+        CFBundleIconName: AppIcon
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         ITSAppUsesNonExemptEncryption: false

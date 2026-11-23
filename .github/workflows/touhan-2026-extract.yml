@@ -1,0 +1,49 @@
+name: Registered Seller 2026 Official PDF Extraction
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'touroku-hanbaisha-sprint/official-kansai/extract_2026.py'
+      - '.github/workflows/touhan-2026-extract.yml'
+      - 'touroku-hanbaisha-sprint/official-kansai/build_2026_app_candidate.py'
+permissions:
+  contents: write
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --disable-pip-version-check 'pymupdf==1.26.5'
+      - name: Download and extract question PDFs with strict 120-question validation
+        run: python touroku-hanbaisha-sprint/official-kansai/extract_2026.py
+      - name: Validate official key and mark content as staging
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('touroku-hanbaisha-sprint/official-kansai/QUESTIONS_2026_RAW_STAGING.json')
+          d=json.loads(p.read_text())
+          q=d['questions']
+          assert len(q)==120 and [a['questionNo'] for a in q]==list(range(1,121))
+          assert all(not a['renderReady'] and a['needsVisualReview'] for a in q)
+          assert len({a['id'] for a in q})==120
+          assert len(d['sourcePdfs'])==2
+          print('STAGING checks passed; manual visual review is NOT waived')
+          PY
+      - name: Build 120-question review-only app candidate
+        run: python touroku-hanbaisha-sprint/official-kansai/build_2026_app_candidate.py
+      - name: Commit staging data and SHA evidence
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add touroku-hanbaisha-sprint/official-kansai/QUESTIONS_2026_RAW_STAGING.json touroku-hanbaisha-sprint/official-kansai/PDF_SHA256_2026.json touroku-hanbaisha-sprint/official-kansai/QUESTIONS_2026_APP_CANDIDATE.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'data(touhan): extract 2026 source PDF 120 question raw staging and hashes'
+            git push
+          fi

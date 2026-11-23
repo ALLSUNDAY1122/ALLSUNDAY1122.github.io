@@ -1,0 +1,78 @@
+name: Registered Seller 2022-2025 Official PDF Extraction
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'touroku-hanbaisha-sprint/official-kansai/extract_year.py'
+      - 'touroku-hanbaisha-sprint/official-kansai/build_year_app_candidate.py'
+      - '.github/workflows/touhan-2022-2025-extract.yml'
+permissions:
+  contents: write
+concurrency:
+  group: touhan-year-extract-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        year: [2022, 2023, 2024, 2025]
+    env:
+      EXAM_YEAR: ${{ matrix.year }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install 'pymupdf==1.26.5'
+      - name: Extract and build candidate
+        run: |
+          python touroku-hanbaisha-sprint/official-kansai/extract_year.py
+          python touroku-hanbaisha-sprint/official-kansai/build_year_app_candidate.py
+      - name: Validate year and answer index
+        run: |
+          python - <<'PY'
+          import os,json
+          from pathlib import Path
+          y=int(os.environ['EXAM_YEAR'])
+          b=Path('touroku-hanbaisha-sprint/official-kansai')
+          d=json.loads((b/f'QUESTIONS_{y}_APP_CANDIDATE.json').read_text())
+          raw=json.loads((b/f'QUESTIONS_{y}_RAW_STAGING.json').read_text())
+          keys=json.loads((b/f'ANSWERS_{y}_OFFICIAL.json').read_text())['questions']
+          hashes=json.loads((b/f'PDF_SHA256_{y}.json').read_text())
+          qs=d['questions']
+          assert len(qs)==len(raw['questions'])==len(keys)==120
+          assert [q['questionNo'] for q in qs]==list(range(1,121))
+          assert len({q['id'] for q in qs})==120
+          assert len(hashes)==2 and all(len(f['sha256'])==64 and f['bytes']>1000 for f in hashes)
+          for q,k in zip(qs,keys):
+            assert q['questionNo']==k['question_no']
+            assert q['answerNumberOfficial']==k['official_answer']
+            assert q['choices'] is None or len(q['choices']) in (4,5)
+            assert q['needsVisualReview'] and not q['renderReady'] and not q['verbatimCertified']
+            if y==2023 and q['questionNo']==90:
+              assert q['answer'] is None
+              assert q['officialStatus']=='OFFICIALLY_INVALID_ALL_CANDIDATES_CORRECT'
+              assert q['excludeFromAccuracyDenominator']
+              assert q['scoringPolicy']=='ALL_CANDIDATES_CORRECT_NO_STANDARD_GRADING'
+            else:
+              assert q['answer']==k['official_answer']-1 and not q['excludeFromAccuracyDenominator']
+          print('Verified', y, len(qs), 'Q90 exception', y==2023)
+          PY
+      - name: Commit individual year
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          b=touroku-hanbaisha-sprint/official-kansai
+          git add "$b/QUESTIONS_${EXAM_YEAR}_RAW_STAGING.json" "$b/QUESTIONS_${EXAM_YEAR}_APP_CANDIDATE.json" "$b/PDF_SHA256_${EXAM_YEAR}.json"
+          if ! git diff --cached --quiet; then
+            git commit -m "data(touhan): stage official ${EXAM_YEAR} exam 120 questions and PDF hashes"
+            for i in 1 2 3; do
+              git pull --rebase origin main
+              if git push origin HEAD:main; then exit 0; fi
+            done
+            exit 1
+          fi

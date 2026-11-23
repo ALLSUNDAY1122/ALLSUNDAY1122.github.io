@@ -1,0 +1,32 @@
+name: IT Passport five official exams release gate
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/itp-official-five-exams-release-gate.yml'
+      - 'apps/it-passport-rebuild/questions/official-verbatim.json'
+      - 'apps/it-passport-rebuild/questions/official-source-ledger.json'
+      - 'apps/it-passport-rebuild/questions/manifest.json'
+      - 'apps/it-passport-rebuild/quality/validate-official-release.py'
+permissions:
+  contents: read
+jobs:
+  verify-official-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate 5 complete original IPA public exam sets (500 items)
+        run: python3 apps/it-passport-rebuild/quality/validate-official-release.py
+      - name: Guard against independent-mock data in official release
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path('apps/it-passport-rebuild/questions')
+          q=json.loads((root/'official-verbatim.json').read_text())
+          assert len(q)==500
+          assert all(x['origin_type']=='ipa_published_verbatim' for x in q)
+          print('PASS: only IPA official public exam items in release pool')
+          PY

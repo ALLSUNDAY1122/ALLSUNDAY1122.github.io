@@ -1,0 +1,80 @@
+name: Touhan Promote Only 28 Directly Compared Ruby Questions
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'touroku-hanbaisha-sprint/official-kansai/RUBY_VISUAL_REAUDIT_V2_20261124.json'
+      - 'touroku-hanbaisha-sprint/official-kansai/apply_ruby_visual_reaudit_v2.py'
+      - '.github/workflows/touhan-ruby-visual-v2-promote.yml'
+permissions:
+  contents: write
+concurrency:
+  group: touhan-ruby-visual-v2
+  cancel-in-progress: false
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Apply individually certified source-image ruby reading matches
+        run: |
+          python touroku-hanbaisha-sprint/official-kansai/apply_ruby_visual_reaudit_v2.py > /tmp/touhan-visual-v2.log 2>&1
+          status=$?
+          cat /tmp/touhan-visual-v2.log
+          if [ "$status" -ne 0 ]; then
+            python - <<'PY'
+          import json
+          from pathlib import Path
+          b=Path('touroku-hanbaisha-sprint/official-kansai')
+          (b/'RUBY_VISUAL_V2_PROMOTION_ERROR.json').write_text(json.dumps({'status':'BLOCKED','trace':Path('/tmp/touhan-visual-v2.log').read_text()[-5500:]},ensure_ascii=False,indent=2)+'\n')
+          PY
+            exit 1
+          fi
+      - name: Verify exact 28, all source/rt parts, 2023 Q90 and release blocked
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          b=Path('touroku-hanbaisha-sprint/official-kansai')
+          d=json.loads((b/'APPROVED_OFFICIAL_BANK.json').read_text())
+          s=json.loads(Path('touroku-hanbaisha-ios/release-status.json').read_text())
+          visual=json.loads((b/'RUBY_VISUAL_REAUDIT_V2_20261124.json').read_text())
+          assert len(d['questions'])==d['count']==468
+          assert len(set(d['approvedIds']))==468
+          assert s['question_bank']['production_official_bank_count']==468
+          assert s['release_gate']=='BLOCKED' and s['app_review_submitted'] is False
+          assert 'KSAI-2023-090' not in d['approvedIds']
+          certified=[q for q in d['questions'] if q['audit']['method']=='DIRECT_VISUAL_PDF_JP_RUBY_RT_COMPARED_V2']
+          assert len(certified)==28
+          assert {q['id'] for q in certified}==set(visual['approvedIds'])
+          for q in certified:
+            parts=[q['questionParts'],*q['choicesParts']]
+            assert len(parts)==1+len(q['choices'])
+            assert [''.join(z.get('text',z.get('rubyBase','')) for z in field) for field in parts]==[q['question'],*q['choices']]
+            assert sum('rubyBase' in x for field in parts for x in field)==q['audit']['rubyElementCount']
+            assert q['answerNumberOfficial']==q['answer']+1
+            assert q['verbatimCertified'] and q['renderReady'] and not q['needsVisualReview']
+          print('PASS: all 28 certified visual ruby/rt, 468/600 bank, unchanged invalid 2023 Q90')
+          PY
+      - name: Commit promoted bank and both canonical state files, or diagnostic
+        if: always()
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -f touroku-hanbaisha-sprint/official-kansai/RUBY_VISUAL_V2_PROMOTION_ERROR.json 2>/dev/null || true
+          git add touroku-hanbaisha-sprint/official-kansai/APPROVED_OFFICIAL_BANK.json
+          git add touroku-hanbaisha-ios/release-status.json touroku-hanbaisha-ios/RELEASE_STATUS.md
+          if ! git diff --cached --quiet; then
+            git commit -m 'audit(touhan): promote 28 visually matched ruby questions to canonical 468 bank'
+            for attempt in 1 2 3; do
+              git pull --rebase origin main
+              if git push origin HEAD:main; then exit 0; fi
+            done
+            exit 1
+          fi

@@ -1,0 +1,25 @@
+name: Kangoshi 22 Shared Context Diagnostic
+on:
+  push:
+    paths:
+      - '.github/workflows/kangoshi-context-22-diagnostic.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq poppler-utils
+          python -m pip install --disable-pip-version-check 'pymupdf>=1.24,<3' pillow cairosvg
+      - name: Download official exam PDF sources
+        run: python kangoshi-sprint/scripts/run_official_pdf_audit.py
+      - name: Diagnose exact shared-case boundaries with PDF text and Poppler
+        run: python kangoshi-sprint/scripts/diagnose_context_22.py

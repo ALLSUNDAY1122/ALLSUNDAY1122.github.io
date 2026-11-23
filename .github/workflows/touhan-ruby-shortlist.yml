@@ -1,0 +1,37 @@
+name: Touhan Ruby Visual Shortlist Sheets
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'touroku-hanbaisha-sprint/official-kansai/make_ruby_visual_shortlist.py'
+      - '.github/workflows/touhan-ruby-shortlist.yml'
+permissions:
+  contents: write
+jobs:
+  contact:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install 'pillow==11.3.0'
+      - name: Build high-resolution original and repaired ruby previews
+        run: python touroku-hanbaisha-sprint/official-kansai/make_ruby_visual_shortlist.py
+      - name: Commit 32-pair original/app visual comparison sheets
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -f touroku-hanbaisha-sprint/official-kansai/RUBY_VISUAL_SHORTLIST_V2.json
+          git add -f touroku-hanbaisha-sprint/official-kansai/ruby-font-review/SHORTLIST_REVIEW_*.jpg
+          if ! git diff --cached --quiet; then
+            git commit -m 'audit(touhan): prepare high-resolution ruby source preview shortlist'
+            for attempt in 1 2 3; do
+              git pull --rebase origin main
+              if git push origin HEAD:main; then exit 0; fi
+            done
+            exit 1
+          fi

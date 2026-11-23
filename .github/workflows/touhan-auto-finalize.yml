@@ -1,0 +1,81 @@
+name: Registered Seller Auto-diff Finalize and 2026 Retry
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'touroku-hanbaisha-sprint/official-kansai/write_auto_release_status.py'
+      - 'touroku-hanbaisha-sprint/official-kansai/QUESTIONS_2026_APP_CANDIDATE.json'
+      - 'touroku-hanbaisha-sprint/official-kansai/build_2026_app_candidate.py'
+      - '.github/workflows/touhan-auto-finalize.yml'
+permissions:
+  contents: write
+concurrency:
+  group: touhan-auto-finalize
+  cancel-in-progress: false
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install PDF extractor
+        run: python -m pip install --disable-pip-version-check 'pymupdf==1.26.5'
+      - name: Retry 2026 PDF proof while retaining four successful years
+        run: |
+          set +e
+          for i in 1 2; do
+            python touroku-hanbaisha-sprint/official-kansai/auto_diff_pdf.py --year 2026 > /tmp/touhan_2026.log 2>&1
+            code=$?
+            cat /tmp/touhan_2026.log
+            if [ "$code" = 0 ]; then exit 0; fi
+          done
+          python - <<'PY'
+          from pathlib import Path
+          import json,datetime
+          b=Path('touroku-hanbaisha-sprint/official-kansai')
+          out={'year':2026,'status':'BLOCKED','reason':'AUTOMATED_PDF_DIFF_FAILED',
+               'lastError':Path('/tmp/touhan_2026.log').read_text()[-4000:],
+               'updated_utc':datetime.datetime.now(datetime.timezone.utc).isoformat()}
+          (b/'AUTO_DIFF_ERROR_2026.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
+          PY
+          exit 0
+      - name: Strict promotion from available year reports
+        run: |
+          python touroku-hanbaisha-sprint/official-kansai/build_approved_bank.py
+          python touroku-hanbaisha-sprint/official-kansai/write_auto_release_status.py
+      - name: Verify counts and no erroneous Q90 promotion
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          b=Path('touroku-hanbaisha-sprint/official-kansai')
+          bank=json.loads((b/'APPROVED_OFFICIAL_BANK.json').read_text())
+          assert len(bank['questions'])==bank['count']>14
+          assert 'KSAI-2023-090' not in bank['approvedIds']
+          assert all(q['audit']['status']=='PASS' and q['attributionDisplay'] for q in bank['questions'])
+          assert all(not q['needsVisualReview'] and q['renderReady'] for q in bank['questions'])
+          state=json.loads(Path('touroku-hanbaisha-ios/release-status.json').read_text())
+          assert state['release_gate']=='BLOCKED' and not state['app_review_submitted']
+          assert bank['count']==state['question_bank']['production_official_bank_count']
+          PY
+      - name: Commit evidence and state
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add touroku-hanbaisha-sprint/official-kansai/APPROVED_OFFICIAL_BANK.json
+          git add touroku-hanbaisha-ios/release-status.json touroku-hanbaisha-ios/RELEASE_STATUS.md
+          git add -f touroku-hanbaisha-sprint/official-kansai/AUTO_DIFF_2026.json 2>/dev/null || true
+          git add -f touroku-hanbaisha-sprint/official-kansai/AUTO_DIFF_ERROR_2026.json 2>/dev/null || true
+          if ! git diff --cached --quiet; then
+            git commit -m 'audit(touhan): finalize normalized auto-diff promotions and release evidence'
+            for attempt in 1 2 3; do
+              git pull --rebase origin main
+              if git push origin HEAD:main; then exit 0; fi
+            done
+            exit 1
+          fi

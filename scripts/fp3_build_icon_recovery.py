@@ -77,6 +77,8 @@ def download_icon(item: dict) -> tuple[dict, bytes]:
         "asset_height": height,
         "png_width": actual_width,
         "png_height": actual_height,
+        "png_color_type": png[25],
+        "png_has_alpha_channel": png[25] in (4, 6),
         "png_bytes": len(png),
         "png_sha256": hashlib.sha256(png).hexdigest(),
     }
@@ -155,25 +157,17 @@ def main() -> None:
             prerendered = str(bool(metadata.get("icon_masked"))).lower()
             Path(f"fp3-build9-appstore-icon-variant-{index}-prerendered-{prerendered}.png").write_bytes(png)
 
-        unique_hashes = {metadata["png_sha256"] for metadata in variants}
-        if len(unique_hashes) != 1:
-            write_manifest(build=build, build_id=build_id, variants=variants, status="DISTINCT_VARIANTS")
-            raise RuntimeError(
-                "Distinct APP_STORE BuildIcon variants preserved for visual audit; refusing arbitrary selection: "
-                + json.dumps([
-                    {
-                        "build_icon_id": x["build_icon_id"],
-                        "icon_masked": x["icon_masked"],
-                        "asset_width": x["asset_width"],
-                        "asset_height": x["asset_height"],
-                        "png_sha256": x["png_sha256"],
-                    }
-                    for x in variants
-                ], ensure_ascii=False, sort_keys=True)
-            )
+        # App Store marketing icons must not carry alpha. If Apple exposes
+        # transparent and opaque variants, select the unique opaque RGB rendition.
+        opaque = [(metadata, png) for metadata, png in recovered
+                  if metadata.get("png_color_type") in (0, 2)]
+        if len(opaque) != 1:
+            write_manifest(build=build, build_id=build_id, variants=variants, status="AMBIGUOUS_OPAQUE_VARIANTS")
+            raise RuntimeError("Expected exactly one opaque APP_STORE BuildIcon rendition; refusing arbitrary selection: "
+                               + json.dumps(variants, ensure_ascii=False, sort_keys=True))
 
-        canonical = variants[0]
-        OUT_PNG.write_bytes(recovered[0][1])
+        canonical, canonical_png = opaque[0]
+        OUT_PNG.write_bytes(canonical_png)
         write_manifest(build=build, build_id=build_id, variants=variants, status="CANONICAL_RECOVERED", canonical=canonical)
         print(OUT_JSON.read_text(encoding="utf-8"))
     finally:

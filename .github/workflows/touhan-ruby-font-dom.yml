@@ -1,0 +1,70 @@
+name: Touhan font cluster approved ruby Chrome mobile QA
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'touroku-hanbaisha-sprint/official-kansai/test_font_cluster_dom.py'
+      - '.github/workflows/touhan-ruby-font-dom.yml'
+permissions:
+  contents: write
+jobs:
+  chrome-font-ruby:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install testing harness
+        run: python -m pip install --disable-pip-version-check 'playwright==1.56.0'
+      - name: Run real Chrome 375px and 430px DOM and scoring test
+        run: |
+          python -m http.server 8765 --directory touroku-hanbaisha-sprint > /tmp/touhan-font-server.log 2>&1 &
+          sleep 2
+          set -o pipefail
+          python touroku-hanbaisha-sprint/official-kansai/test_font_cluster_dom.py 2>&1 | tee /tmp/touhan-font-dom.log
+      - name: Persist failure diagnostics
+        if: failure()
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('touroku-hanbaisha-sprint/official-kansai/RUBY_FONT_DOM_QA_ERROR_20261124.json')
+          log=Path('/tmp/touhan-font-dom.log')
+          p.write_text(json.dumps({'status':'FAIL','error':log.read_text(errors='replace')[-5000:] if log.exists() else 'No log'},ensure_ascii=False,indent=2)+'\n')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -f touroku-hanbaisha-sprint/official-kansai/RUBY_FONT_DOM_QA_ERROR_20261124.json
+          git commit -m 'test(touhan): record Chrome ruby DOM failure' || true
+          for retry in 1 2 3; do
+            git pull --rebase origin main
+            if git push origin HEAD:main; then exit 0; fi
+          done
+          exit 1
+      - name: Attach screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: touhan-font-ruby-375-430-qa
+          path: |
+            /tmp/touhan-font-dom-*.png
+            touroku-hanbaisha-sprint/official-kansai/RUBY_FONT_DOM_QA_20261124.json
+          if-no-files-found: ignore
+      - name: Commit QA result only on true browser PASS
+        if: success()
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -f touroku-hanbaisha-sprint/official-kansai/RUBY_FONT_DOM_QA_20261124.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'test(touhan): persist Chrome mobile ruby DOM ten question QA'
+            for i in 1 2 3; do
+              git pull --rebase origin main
+              if git push origin HEAD:main; then exit 0; fi
+            done
+            exit 1
+          fi

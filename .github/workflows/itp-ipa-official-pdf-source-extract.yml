@@ -1,0 +1,126 @@
+name: IT Passport IPA official PDF staging (non-release)
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/itp-ipa-official-pdf-source-extract.yml'
+  workflow_dispatch:
+  issues:
+    types: [opened]
+permissions:
+  contents: write
+concurrency:
+  group: itp-ipa-official-source-staging
+  cancel-in-progress: false
+jobs:
+  source-extract:
+    if: github.event_name != 'issues' || (github.actor == 'ALLSUNDAY1122' && github.event.issue.title == '[ITP-IPA] Official PDF Staging')
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Fetch IPA public PDFs and stage raw text with SHA-256, never mark audit PASS
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/itp-ipa-pdf apps/it-passport-rebuild/questions/ipa-staging
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib, json, subprocess
+          out = Path('apps/it-passport-rebuild/questions/ipa-staging')
+          rows = []
+          for year in range(2022,2027):
+              era = year - 2018
+              row = {'year':year,'raw_text_only':True,'release_eligible':False,'files':{}}
+              for typ in ('qs','ans'):
+                  url=f'https://www3.jitec.ipa.go.jp/JitesCbt/html/openinfo/pdf/questions/{year}r{era:02}_ip_{typ}.pdf'
+                  pdf=Path(f'/tmp/itp-ipa-pdf/{year}-{typ}.pdf')
+                  txt=out/f'{year}-{typ}-raw.txt'
+                  # Prefer ordinary direct download; if the official host returns its
+                  # request-validation HTML, retry through the site's published
+                  # navigation flow using a fresh browser-style cookie jar.
+                  jar=Path('/tmp/itp-ipa-pdf/browser-cookies.txt')
+                  common=['curl','--location','--silent','--show-error','--max-time','35','--retry','0',
+                          '--compressed','--user-agent','Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36']
+                  candidate_paths=[
+                      ('direct',url),
+                      ('official-site-navigation',url),
+                      ('official-site-navigation-ipv4',url),
+                  ]
+                  attempts=[]
+                  valid=False
+                  for route,attempt_url in candidate_paths:
+                      if route != 'direct':
+                          home='https://www3.jitec.ipa.go.jp/JitesCbt/html/openinfo/questions.html'
+                          subprocess.run(common+['--ipv4','--cookie-jar',str(jar),
+                                 '--referer','https://www.ipa.go.jp/shiken/mondai-kaiotu/index.html',
+                                 home,'--output','/tmp/itp-ipa-pdf/home.html'],
+                                 capture_output=True,text=True)
+                      extra=[]
+                      if route != 'direct':
+                          extra=['--cookie',str(jar),'--cookie-jar',str(jar),
+                                 '--referer','https://www3.jitec.ipa.go.jp/JitesCbt/html/openinfo/questions.html',
+                                 '--header','Accept: application/pdf,application/octet-stream;q=0.9,*/*;q=0.8']
+                      if route == 'official-site-navigation-ipv4':
+                          extra+=['--ipv4']
+                      run=subprocess.run(common+extra+[attempt_url,'--output',str(pdf)],
+                                         capture_output=True,text=True)
+                      good=run.returncode==0 and pdf.is_file() and pdf.read_bytes().startswith(b'%PDF')
+                      attempts.append({'route':route,'curl_exit':run.returncode,
+                                       'pdf_signature_valid':good,
+                                       'response_bytes':pdf.stat().st_size if pdf.is_file() else 0})
+                      if good:
+                          valid=True
+                          break
+                  record={'status':'FETCH_FAILED','url_candidate':url,'attempts':attempts}
+                  if valid:
+                      result=subprocess.run(['pdftotext','-layout',str(pdf),str(txt)],capture_output=True,text=True)
+                      if result.returncode == 0 and txt.exists() and txt.stat().st_size > 100:
+                          record={'status':'RAW_TEXT_EXTRACTED_NOT_AUDITED','verified_source_url':url,
+                                  'pdf_sha256':hashlib.sha256(pdf.read_bytes()).hexdigest(),
+                                  'pdf_bytes':pdf.stat().st_size,
+                                  'raw_sha256':hashlib.sha256(txt.read_bytes()).hexdigest(),
+                                  'raw_bytes':txt.stat().st_size,'raw_path':str(txt)}
+                      else:
+                          record={'status':'PDF_EXTRACT_FAILED','url_candidate':url}
+                  elif pdf.is_file():
+                      record={'status':'NOT_PDF','url_candidate':url,'attempts':attempts}
+                  row['files'][typ]=record
+              rows.append(row)
+          # Stage a year only if BOTH official question and answer PDFs are valid.
+          # Drafts remain HOLD and are never promoted to the canonical bank.
+          for row in rows:
+              year=row['year']
+              q=row['files']['qs']
+              a=row['files']['ans']
+              if q['status']=='RAW_TEXT_EXTRACTED_NOT_AUDITED' and a['status']=='RAW_TEXT_EXTRACTED_NOT_AUDITED':
+                  proc=subprocess.run(['python3','apps/it-passport-rebuild/quality/stage-ipa-pdf.py',
+                                      str(year),f'/tmp/itp-ipa-pdf/{year}-qs.pdf',
+                                      f'/tmp/itp-ipa-pdf/{year}-ans.pdf'],
+                                      capture_output=True,text=True)
+                  row['staging_result']='STAGED_UNVERIFIED_ONLY' if proc.returncode==0 else 'STAGING_FAILED'
+                  row['staging_exit_code']=proc.returncode
+              else:
+                  row['staging_result']='BLOCKED_MISSING_VERIFIED_OFFICIAL_PDFS'
+          p=out/'extraction-evidence.json'
+          p.write_text(json.dumps({'official_source':'IPA','rights_conditions':'https://www.ipa.go.jp/shiken/faq.html','items':rows,'release_promoted':False},ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print(json.dumps([{'year':r['year'],'qs':r['files']['qs']['status'],'ans':r['files']['ans']['status']} for r in rows],ensure_ascii=False))
+          PY
+      - name: Save staged evidence to canonical repository
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add apps/it-passport-rebuild/questions/ipa-staging/
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'evidence(itp): preserve IPA official raw-PDF extraction, not audited'
+          for attempt in 1 2 3; do
+            git pull --rebase origin main
+            if git push origin HEAD:main; then exit 0; fi
+            sleep $((attempt*2))
+          done
+          echo 'Unable to push extracted evidence' >&2
+          exit 1

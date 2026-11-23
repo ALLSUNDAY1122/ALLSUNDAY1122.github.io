@@ -1,0 +1,60 @@
+name: Registered Seller Ordered Ruby and Official Crop Registry
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/touhan-ordered-crop-status.yml'
+      - 'touroku-hanbaisha-sprint/official-kansai/write_ordered_crop_status.py'
+permissions:
+  contents: write
+concurrency:
+  group: touhan-ordered-crop-status
+  cancel-in-progress: false
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify all 5 years and update canonical release evidence
+        run: python touroku-hanbaisha-sprint/official-kansai/write_ordered_crop_status.py
+      - name: Check artifact SHA and app source rights contract
+        run: |
+          python - <<'PY'
+          import json,hashlib
+          from pathlib import Path
+          b=Path('touroku-hanbaisha-sprint/official-kansai')
+          state=json.loads(Path('touroku-hanbaisha-ios/release-status.json').read_text())
+          bank=json.loads((b/'APPROVED_OFFICIAL_BANK.json').read_text())
+          assert bank['count']==state['question_bank']['production_official_bank_count']
+          assert 'KSAI-2023-090' not in bank['approvedIds']
+          assert not state['app_review_submitted'] and state['release_gate']=='BLOCKED'
+          for y in range(2022,2027):
+            evidence=json.loads((b/f'LAYOUT_CROPS_{y}.json').read_text())
+            for item in evidence['records']:
+              assert item['rights']=='REVIEW_THIRD_PARTY_COMPONENTS' and item['publishable']==False
+              for asset in item['assets']:
+                data=(b/asset['relativePath']).read_bytes()
+                assert data.startswith(b'\x89PNG\r\n\x1a\n')
+                assert hashlib.sha256(data).hexdigest()==asset['sha256']
+          assert state['question_bank']['official_pdf_crops_staged_questions']==49
+          print('PASS: provenance, source image hashes, rights gate, 2023 invalid exception')
+          PY
+      - name: Commit official release registry records
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add touroku-hanbaisha-ios/release-status.json touroku-hanbaisha-ios/RELEASE_STATUS.md
+          if ! git diff --cached --quiet; then
+            git commit -m 'docs(touhan): record 386 official approved and 49 SHA-pinned PDF crops'
+            for attempt in 1 2 3; do
+              git pull --rebase origin main
+              if git push origin HEAD:main; then exit 0; fi
+              if [ "$attempt" -eq 3 ]; then exit 1; fi
+            done
+          fi

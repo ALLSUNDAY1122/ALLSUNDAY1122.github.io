@@ -1,0 +1,64 @@
+name: Registered Seller Ruby DOM Real Browser QA
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/touhan-ruby-dom-only.yml'
+      - 'touroku-hanbaisha-sprint/official-kansai/test_ruby_dom.py'
+permissions:
+  contents: write
+concurrency:
+  group: touhan-ruby-dom-only
+  cancel-in-progress: false
+jobs:
+  mobile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install real Chromium and Playwright
+        run: |
+          python -m pip install 'playwright==1.56.0'
+          python -m playwright install --with-deps chromium
+      - name: Render audited ruby+rt on both iPhone viewports
+        run: |
+          python -m http.server 8765 --directory touroku-hanbaisha-sprint >/tmp/touhan-ruby-web.log 2>&1 &
+          sleep 2
+          python touroku-hanbaisha-sprint/official-kansai/test_ruby_dom.py > /tmp/touhan-ruby-qa.log 2>&1
+          status=$?
+          cat /tmp/touhan-ruby-qa.log
+          if [ "$status" -ne 0 ]; then
+            python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('touroku-hanbaisha-sprint/official-kansai/RUBY_DOM_QA_ERROR.json')
+          p.write_text(json.dumps({'status':'FAIL','lastLog':Path('/tmp/touhan-ruby-qa.log').read_text()[-4000:]},ensure_ascii=False,indent=2)+'\n')
+          PY
+            exit 1
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ruby-375-and-430-pixel-rendering
+          path: /tmp/touhan-ruby-*.png
+          if-no-files-found: ignore
+      - name: Persist authentic browser QA result
+        if: always()
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -f touroku-hanbaisha-sprint/official-kansai/RUBY_DOM_QA_RESULT.json 2>/dev/null || true
+          git add -f touroku-hanbaisha-sprint/official-kansai/RUBY_DOM_QA_ERROR.json 2>/dev/null || true
+          if ! git diff --cached --quiet; then
+            git commit -m 'test(touhan): preserve actual Chromium ruby glyph-layout results'
+            for n in 1 2 3; do
+              git pull --rebase origin main
+              if git push origin HEAD:main; then exit 0; fi
+              if [ "$n" -eq 3 ]; then exit 1; fi
+            done
+          fi

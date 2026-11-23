@@ -1,0 +1,75 @@
+name: Kangoshi Answer Key and Visual Audit
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'kangoshi-sprint/scripts/key_layout_diagnostic.py'
+      - 'kangoshi-sprint/scripts/official_answer_key_audit.py'
+      - 'kangoshi-sprint/scripts/apply_official_keys_to_staging.py'
+      - 'kangoshi-sprint/audit/official-scoring-exceptions-20261124.json'
+      - 'kangoshi-sprint/product-content/raw/set1-raw.json'
+      - 'kangoshi-sprint/product-content/raw/set2-raw.json'
+      - 'kangoshi-sprint/product-content/raw/set3-raw.json'
+      - 'kangoshi-sprint/scripts/official_visual_evidence.py'
+      - '.github/workflows/kangoshi-answer-key-visual-audit.yml'
+permissions:
+  contents: write
+jobs:
+  audit-answer-key:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install extraction libraries
+        run: python -m pip install --disable-pip-version-check pymupdf
+      - name: Download official PDFs and verify existing bank
+        run: python kangoshi-sprint/scripts/run_official_pdf_audit.py
+      - name: Prepare ephemeral 112 and 111 original PDF evidence
+        run: |
+          mkdir -p kangoshi-sprint/audit/source-pdfs
+          for exam in 112 111; do
+            for session in AM PM; do
+              cp "/tmp/kangoshi-official/${exam}-${session}.pdf" "kangoshi-sprint/audit/source-pdfs/${exam}-${session}.pdf"
+            done
+          done
+      - name: Upload source PDF evidence (no repository commit)
+        uses: actions/upload-artifact@v4
+        with:
+          name: kangoshi-112-111-source-pdfs
+          path: kangoshi-sprint/audit/source-pdfs/
+          retention-days: 7
+      - name: Extract 480 quarantined question drafts
+        run: python kangoshi-sprint/scripts/extract_official_drafts.py
+      - name: Extract all official answer-key pages and word geometry
+        run: python kangoshi-sprint/scripts/key_layout_diagnostic.py
+      - name: Compare all 1200 records with official answer key PDFs
+        run: python kangoshi-sprint/scripts/official_answer_key_audit.py
+      - name: Attach official keys and scoring notices to all 480 staging drafts
+        run: python kangoshi-sprint/scripts/apply_official_keys_to_staging.py
+      - name: Locate unresolved mismatches with secondary PDF text order
+        run: python kangoshi-sprint/scripts/secondary_pdf_audit.py
+      - name: Render original PDF pages for visual re-audit
+        run: python kangoshi-sprint/scripts/official_visual_evidence.py
+      - name: Persist keyed candidates in isolated run-specific staging branch
+        run: |
+          set -euo pipefail
+          mkdir -p kangoshi-sprint/product-content/keyed-candidates
+          cp kangoshi-sprint/audit/runs/keyed-drafts/*.json kangoshi-sprint/product-content/keyed-candidates/
+          mkdir -p kangoshi-sprint/audit/key-evidence
+          cp kangoshi-sprint/audit/runs/answer-audit/answer-summary.json kangoshi-sprint/audit/key-evidence/
+          cp kangoshi-sprint/audit/runs/visual-evidence/visual-index.json kangoshi-sprint/audit/key-evidence/
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add kangoshi-sprint/product-content/keyed-candidates/ kangoshi-sprint/audit/key-evidence/
+          git commit -m "kangoshi: preserve 480 keyed non-publishable drafts and visual audit index"
+          git push origin HEAD:refs/heads/feature/kangoshi-keyed-staging-${{ github.run_id }}
+      - name: Upload answer-key and text audit evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kangoshi-answer-key-visual-audit
+          path: kangoshi-sprint/audit/runs/
+          if-no-files-found: warn

@@ -1,0 +1,67 @@
+name: Registered Seller Official PDF Layout Crops
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/touhan-official-pdf-crops.yml'
+      - 'touroku-hanbaisha-sprint/official-kansai/crop_official_layouts.py'
+permissions:
+  contents: write
+concurrency:
+  group: touhan-official-crops
+  cancel-in-progress: false
+jobs:
+  stage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install 'pymupdf==1.26.5'
+      - name: Crop only printed official question regions, never re-illustrate
+        run: |
+          set -euo pipefail
+          for year in 2022 2023 2024 2025 2026; do
+            python touroku-hanbaisha-sprint/official-kansai/crop_official_layouts.py --year "$year"
+          done
+      - name: Validate pixel artifacts before persistence
+        run: |
+          python - <<'PY'
+          import json,hashlib
+          from pathlib import Path
+          b=Path('touroku-hanbaisha-sprint/official-kansai')
+          count=0
+          for year in range(2022,2027):
+            data=json.loads((b/f'LAYOUT_CROPS_{year}.json').read_text())
+            assert data['staged']+data['unresolved']==data['requested']
+            for item in data['records']:
+              assert not item['publishable'] and item['rights']=='REVIEW_THIRD_PARTY_COMPONENTS'
+              for art in item['assets']:
+                f=b/art['relativePath']
+                assert f.exists() and f.read_bytes()[:8]==b'\x89PNG\r\n\x1a\n'
+                assert hashlib.sha256(f.read_bytes()).hexdigest()==art['sha256']
+                count+=1
+          print('PASS',count,'PDF crop assets - staging only, no rights/QA clearance implied')
+          PY
+      - name: Save source images, source hashes, crop rectangles and blocked state
+        if: always()
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          b=touroku-hanbaisha-sprint/official-kansai
+          for year in 2022 2023 2024 2025 2026; do
+            git add -f "$b/LAYOUT_CROPS_${year}.json" 2>/dev/null || true
+          done
+          git add -f "$b/layout-crops" 2>/dev/null || true
+          if ! git diff --cached --quiet; then
+            git commit -m 'audit(touhan): stage SHA-pinned original PDF question crops (unpublished)'
+            for attempt in 1 2 3; do
+              git pull --rebase origin main
+              if git push origin HEAD:main; then exit 0; fi
+              if [ "$attempt" -eq 3 ]; then exit 1; fi
+            done
+          fi

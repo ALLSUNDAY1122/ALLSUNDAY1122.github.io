@@ -1,0 +1,33 @@
+name: Registered Seller 600-Question Visual Audit Ledger
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'touroku-hanbaisha-sprint/official-kansai/build_audit_matrix.py'
+      - 'touroku-hanbaisha-sprint/official-kansai/MANUAL_VISUAL_AUDIT_20261123.json'
+      - '.github/workflows/touhan-audit-matrix.yml'
+permissions:
+  contents: write
+jobs:
+  ledger:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build exhaustive audit ledger
+        run: python touroku-hanbaisha-sprint/official-kansai/build_audit_matrix.py
+      - name: Commit audit ledger
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add touroku-hanbaisha-sprint/official-kansai/AUDIT_MATRIX_600.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'audit(touhan): write per-question 600-line audit evidence matrix'
+            for i in 1 2 3; do
+              git pull --rebase origin main
+              if git push origin HEAD:main; then exit 0; fi
+            done
+            exit 1
+          fi

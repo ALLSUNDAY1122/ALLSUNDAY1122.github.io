@@ -10,6 +10,7 @@ style.textContent=`
 @media(max-width:520px){.question-media{margin:14px 0 18px;padding:8px}.question-media img{max-height:390px}}
 `;
 document.head.appendChild(style);
+const blockedMediaIds=new Set(['K115-AM063','K115-PM020','K114-AM013','K114-AM051','K114-AM107']);
 function norm(s){return String(s||'').replace(/\s+/g,' ').trim()}
 function apply(){
   const card=app.querySelector('.qcard');
@@ -19,6 +20,11 @@ function apply(){
   const matches=(window.KANGOSHI_QUESTIONS||[]).filter(q=>norm(q.question)===needle);
   if(matches.length!==1)return;
   const q=matches[0],assets=Array.isArray(q.mediaAssets)?q.mediaAssets:[];
+  if(blockedMediaIds.has(q.id)){
+    const fig=document.createElement('figure');fig.className='question-media';fig.dataset.questionId=q.id;
+    const cap=document.createElement('figcaption');cap.textContent='公式PDFからの図版切り出しを準備済みですが、画像の権利・表示監査が未完了のため、従来の図版表示を停止しています。';
+    fig.appendChild(cap);text.insertAdjacentElement('afterend',fig);return;
+  }
   if(!assets.length||q.mediaReleaseStatus!=='resolved')return;
   const fig=document.createElement('figure');fig.className='question-media';fig.dataset.questionId=q.id;
   for(const asset of assets){

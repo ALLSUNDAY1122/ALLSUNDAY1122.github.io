@@ -33,3 +33,13 @@
 
 ## Data policy
 公式公開問題と独自問題は `origin_type` で分離する。各問題に `syllabus_version`, `source_url`, `source_label`, `basis_date`, `copyright_note` を持たせる。公式問題は出典を表示し、改変時は改変を明記する。
+
+## 2026-11-23 release contract: five IPA public exam sets
+
+- Machine state: [release-status.json](release-status.json); human audit: [RELEASE_STATUS.md](RELEASE_STATUS.md).
+- The requested five complete yearly IPA exams are **500 questions** (100/year), **not** the existing independent 240/300-question mock pool.
+- Official content only: [official-verbatim.json](questions/official-verbatim.json), 2022–2026, one question at a time with IPA PDF citation and official answer audit.
+- Legal basis directly confirmed at [IPA examination FAQ](https://www.ipa.go.jp/shiken/faq.html): attribution and explicit alteration notice required. This is not a reuse ruling derived from Notion.
+- Release gate: `python3 quality/validate-official-release.py`; it intentionally blocks release until all 500 official questions have verified provenance, answers and figures.
+- Preserve `original-mock.json` (240/300) and staged Batch13 in their independent training track; never label these as official IPA verbatim questions.
+- The original iOS prototype still reads `starter-v1.json` (30 independent questions); it is **not an eligible release build**. The new Store app record must be separate from the legacy IT Passport app.

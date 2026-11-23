@@ -44,6 +44,29 @@ jobs:
           fi
           grep -q 'release requires 300 questions' /tmp/itp-release-gate.log
           echo 'PASS: incomplete canonical pool is blocked from release'
+      - name: Check official 500-question release gate (expected BLOCKED until complete)
+        shell: bash
+        run: |
+          set +e
+          python3 apps/it-passport-rebuild/quality/validate-official-release.py > /tmp/itp-official-release.log 2>&1
+          rc=$?
+          set -e
+          cat /tmp/itp-official-release.log
+          current="$(python3 - <<'PY'
+          import json
+          m=json.load(open('apps/it-passport-rebuild/questions/manifest.json'))
+          print(m['canonical']['official']['current'])
+          PY
+          )"
+          if [ "$current" -eq 500 ]; then
+            test "$rc" -eq 0 || { echo 'Official release data must pass independently' >&2; exit 1; }
+          else
+            test "$rc" -ne 0 || { echo 'Premature official release gate PASS' >&2; exit 1; }
+            grep -q 'OFFICIAL_NOT_READY:' /tmp/itp-official-release.log
+            echo "PASS: official release remains correctly blocked at $current/500"
+          fi
+      - name: Compile official-source PDF staging parser
+        run: python3 -m py_compile apps/it-passport-rebuild/quality/stage-ipa-pdf.py
       - name: Report issue-triggered run
         if: github.event_name == 'issues' && always()
         uses: actions/github-script@v8

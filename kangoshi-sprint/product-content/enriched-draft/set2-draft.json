@@ -908,17 +908,26 @@
       "contentConcernReason": null,
       "contentConcernEvidenceRefs": [],
       "specialistExplanationStatus": "quarantined_media",
-      "specialistQuarantineStatus": "clear",
-      "specialistQuarantineReasons": [],
-      "mediaReleaseStatus": "resolved",
-      "mediaRightsStatus": "original_authored",
-      "mediaAssets": [
-        "media/redraw/K114-AM013.svg"
+      "specialistQuarantineStatus": "quarantined",
+      "specialistQuarantineReasons": [
+        {
+          "kind": "mediaDependent",
+          "status": "quarantined_media",
+          "reason": "心電図波形の別冊図が正答判定に必要"
+        },
+        {
+          "kind": "mediaDependent",
+          "reason": "Source media cropped but rights and visual QA remain blocked"
+        }
       ],
-      "mediaAttribution": "学びスプリント独自再作図（公式設問の学習上必要な情報を独自の線画・模式図で再構成）",
+      "mediaReleaseStatus": "hold_rights_and_crop_review",
+      "mediaRightsStatus": "original_official_pdf_crop_rights_pending",
+      "mediaAssets": [
+        "media/official-crops/K114-AM013.png"
+      ],
+      "mediaAttribution": "出典：厚生労働省『第114回看護師国家試験問題』（https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf）から該当領域を切り出し・加工して作成",
       "mediaSourceUrl": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
-      "mediaProcessed": true,
-      "mediaResolutionMethod": "original_redraw"
+      "mediaResolutionMethod": "official_pdf_exact_page_crop"
     },
     {
       "id": "K114-AM014",
@@ -3463,17 +3472,21 @@
       "contentConcernReason": null,
       "contentConcernEvidenceRefs": [],
       "canonicalL3FallbackSource": "final-category-canonical",
-      "mediaReleaseStatus": "resolved",
-      "mediaRightsStatus": "original_authored",
+      "mediaReleaseStatus": "hold_rights_and_crop_review",
+      "mediaRightsStatus": "original_official_pdf_crop_rights_pending",
       "mediaAssets": [
-        "media/redraw/K114-AM051.svg"
+        "media/official-crops/K114-AM051.png"
       ],
-      "mediaAttribution": "学びスプリント独自再作図（公式設問の学習上必要な情報を独自の線画・模式図で再構成）",
+      "mediaAttribution": "出典：厚生労働省『第114回看護師国家試験問題』（https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf）から該当領域を切り出し・加工して作成",
       "mediaSourceUrl": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
-      "mediaProcessed": true,
-      "mediaResolutionMethod": "original_redraw",
-      "specialistQuarantineReasons": [],
-      "specialistQuarantineStatus": "clear"
+      "mediaResolutionMethod": "official_pdf_exact_page_crop",
+      "specialistQuarantineReasons": [
+        {
+          "kind": "mediaDependent",
+          "reason": "Source media cropped but rights and visual QA remain blocked"
+        }
+      ],
+      "specialistQuarantineStatus": "quarantined"
     },
     {
       "id": "K114-AM052",
@@ -5540,7 +5553,7 @@
       "majorSubject": "人体の構造と機能",
       "subject": "血液・免疫の機能",
       "answerType": "multiChoice",
-      "question": "血液凝固因子はどれか。઄つ選べ。",
+      "question": "血液凝固因子はどれか。2つ選べ。",
       "choices": [
         "トロンボプラスチン",
         "エリスロポエチン",
@@ -5612,7 +5625,7 @@
       "majorSubject": "疾病の成り立ちと回復の促進",
       "subject": "病態・診断・治療",
       "answerType": "multiChoice",
-      "question": "同種造血幹細胞移植の前に行われる全身放射線照射の目的はどれか。઄つ選べ。",
+      "question": "同種造血幹細胞移植の前に行われる全身放射線照射の目的はどれか。2つ選べ。",
       "choices": [
         "感染の予防",
         "拒絶反応の防止",
@@ -5685,7 +5698,7 @@
       "majorSubject": "疾病の成り立ちと回復の促進",
       "subject": "病態・診断・治療",
       "answerType": "multiChoice",
-      "question": "肝細胞癌で正しいのはどれか。઄つ選べ。 hepatocellular carcinoma",
+      "question": "肝細胞癌で正しいのはどれか。2つ選べ。 hepatocellular carcinoma",
       "choices": [
         "早期から黄疸が出現する。",
         "原発性肝癌の中で最も頻度が高い。 primary liver cancer",
@@ -5758,7 +5771,7 @@
       "majorSubject": "疾病の成り立ちと回復の促進",
       "subject": "病態・診断・治療",
       "answerType": "multiChoice",
-      "question": "片側性の末ç性顔面神経麻痺の症状はどれか。઄つ選べ。 peripheral facial palsy",
+      "question": "片側性の末梢性顔面神経麻痺の症状はどれか。2つ選べ。",
       "choices": [
         "眼瞼が下垂する。",
         "顔面の知覚が鈍い。",
@@ -5830,7 +5843,7 @@
       "majorSubject": "健康支援と社会保障制度",
       "subject": "保健医療福祉制度・社会保障",
       "answerType": "multiChoice",
-      "question": "障害者の日常生活及び社会生活を総合的に支援するための法律?障害者総合支援 法Cに基づく障害福祉サービスはどれか。઄つ選べ。",
+      "question": "障害者の日常生活及び社会生活を総合的に支援するための法律?障害者総合支援 法Cに基づく障害福祉サービスはどれか。2つ選べ。",
       "choices": [
         "訪問介護",
         "訪問看護",
@@ -5903,7 +5916,7 @@
       "majorSubject": "健康支援と社会保障制度",
       "subject": "公衆衛生・予防",
       "answerType": "multiChoice",
-      "question": "感染症の予防及び感染症の患者に対する医療に関する法律?感染症法Cで、類感 染症に分類されるのはどれか。઄つ選べ。",
+      "question": "感染症の予防及び感染症の患者に対する医療に関する法律〈感染症法〉で、2類感染症に分類されるのはどれか。2つ選べ。",
       "choices": [
         "ポリオ?急性灰白髄炎C poliomyelitis",
         "細菌性赤痢 shigellosis",
@@ -5976,7 +5989,7 @@
       "majorSubject": "健康支援と社会保障制度",
       "subject": "保健医療福祉制度・社会保障",
       "answerType": "multiChoice",
-      "question": "日常生活自立支援事業のサービス内容で正しいのはどれか。઄つ選べ。",
+      "question": "日常生活自立支援事業のサービス内容で正しいのはどれか。2つ選べ。",
       "choices": [
         "住民票の届出",
         "福祉用具の貸与",
@@ -6048,7 +6061,7 @@
       "majorSubject": "疾病の成り立ちと回復の促進",
       "subject": "病態・診断・治療",
       "answerType": "multiChoice",
-      "question": "ドパミン受容体が遮断されることで出現する症状はどれか。઄つ選べ。",
+      "question": "ドパミン受容体が遮断されることで出現する症状はどれか。2つ選べ。",
       "choices": [
         "幻 聴",
         "口 渇",
@@ -6874,7 +6887,7 @@
       "majorSubject": "成人看護学",
       "subject": "運動器",
       "answerType": "multiChoice",
-      "question": "術後日。午前中に看護師が A さんのバイタルサインを測定しているときは 眠っていた。昼食後に看護師が訪室すると、A さんは多弁で、落ち着かない様子 がみられた。 看護師の A さんへの対応で適切なのはどれか。઄つ選べ。",
+      "question": "術後1日。午前中に看護師が A さんのバイタルサインを測定しているときは 眠っていた。昼食後に看護師が訪室すると、A さんは多弁で、落ち着かない様子 がみられた。 看護師の A さんへの対応で適切なのはどれか。2つ選べ。",
       "choices": [
         "医師に抗不安薬の処方を依頼する。",
         "ベッド上で安静に過ごしてもらう。",
@@ -7305,7 +7318,7 @@
       "majorSubject": "小児看護学",
       "subject": "小児看護",
       "answerType": "multiChoice",
-      "question": "A ちゃんは、腹部エックス線撮影で胃内にボタン型電池が認められ、全身麻酔 下での内視鏡でボタン型電池を摘出し、消化管粘膜に大きな問題はなかった。摘出 後、小児病棟に泊入院した。小児病棟に入院時間後、看護師が訪室すると A ちゃんは覚醒しており、図 別冊No. 3!のように｢ママー、ママー｣と言いながら大 声で泣き、ベッドから両親の方に手を伸ばしている。両親は戸惑った様子で、ベッ ドの傍に立っている。 このときの看護師による安全な療養環境の整備で適切なのはどれか。઄つ選べ。",
+      "question": "A ちゃんは、腹部エックス線撮影で胃内にボタン型電池が認められ、全身麻酔 下での内視鏡でボタン型電池を摘出し、消化管粘膜に大きな問題はなかった。摘出 後、小児病棟に泊入院した。小児病棟に入院時間後、看護師が訪室すると A ちゃんは覚醒しており、図 別冊No. 3!のように｢ママー、ママー｣と言いながら大 声で泣き、ベッドから両親の方に手を伸ばしている。両親は戸惑った様子で、ベッ ドの傍に立っている。 このときの看護師による安全な療養環境の整備で適切なのはどれか。2つ選べ。",
       "choices": [
         "ぬいぐるみを取り除く。",
         "毛布をベッド柵にかける。",
@@ -7373,17 +7386,21 @@
       "contentConcernType": null,
       "contentConcernReason": null,
       "contentConcernEvidenceRefs": [],
-      "mediaReleaseStatus": "resolved",
-      "mediaRightsStatus": "original_authored",
+      "mediaReleaseStatus": "hold_rights_and_crop_review",
+      "mediaRightsStatus": "original_official_pdf_crop_rights_pending",
       "mediaAssets": [
-        "media/redraw/K114-AM107.svg"
+        "media/official-crops/K114-AM107.png"
       ],
-      "mediaAttribution": "学びスプリント独自再作図（公式設問の学習上必要な情報を独自の線画・模式図で再構成）",
+      "mediaAttribution": "出典：厚生労働省『第114回看護師国家試験問題』（https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf）から該当領域を切り出し・加工して作成",
       "mediaSourceUrl": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
-      "mediaProcessed": true,
-      "mediaResolutionMethod": "original_redraw",
-      "specialistQuarantineReasons": [],
-      "specialistQuarantineStatus": "clear"
+      "mediaResolutionMethod": "official_pdf_exact_page_crop",
+      "specialistQuarantineReasons": [
+        {
+          "kind": "mediaDependent",
+          "reason": "Source media cropped but rights and visual QA remain blocked"
+        }
+      ],
+      "specialistQuarantineStatus": "quarantined"
     },
     {
       "id": "K114-AM108",
@@ -7674,12 +7691,12 @@
       "majorSubject": "母性看護学",
       "subject": "母性看護",
       "answerType": "multiChoice",
-      "question": "このときの A さんへの説明で適切なのはどれか。઄つ選べ。",
+      "question": "このときの A さんへの説明で適切なのはどれか。2つ選べ。",
       "choices": [
         "｢痛み止めは使用できません｣",
         "｢授乳をすると痛みが和らぎます｣",
         "｢経産婦のほうが痛みを強く感じます｣",
-        "｢産後日くらいまで痛みは続きます｣",
+        "｢産後5日くらいまで痛みは続きます｣",
         "｢子宮が元の大きさに戻るための痛みです｣"
       ],
       "answer": [
@@ -10105,8 +10122,8 @@
       "point": "大量発汗後に自由水のみを多量摂取した状況では低Na血症と細胞外液量変化を考えるが、設問の体液区画を確定するには図が必要。",
       "detail": "公式正答は循環血液量減少。細胞外Na濃度と水分量のグラフ位置を読み取る設問なので、図を視認せず一般テキスト問題として解放しない。",
       "requiresMedia": true,
-      "mediaAuditStatus": "pending",
-      "rightsStatus": "mhlw-pdl1.0-text; media-pending",
+      "mediaAuditStatus": "pending_content_quality_independent_of_rights",
+      "rightsStatus": "mhlw-pdl1.0-media-reuse-permitted-with-attribution",
       "reviewStatus": "official_import_pending_explanation_and_classification",
       "sourceRefs": [
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/tp250428-03_04_05.html",
@@ -10119,6 +10136,10 @@
         "3"
       ],
       "mediaDetectionReason": "media_reference_in_stem_conservative",
+      "mediaRightsReview": "mhlw-pdl1.0-no-third-party-photo-visible-no-special-rights-marker",
+      "mediaRightsSource": "https://www.mhlw.go.jp/chosakuken/index.html",
+      "mediaRightsAuditStatus": "USABLE_UNDER_MHLW_PDL1_WITH_SOURCE_AND_EDIT_LABEL",
+      "mediaAttribution": "出典：厚生労働省『第114回看護師国家試験問題』を学習用に切り出し・加工して作成",
       "classificationStatus": "high",
       "classificationScore": 20,
       "classificationSignals": [
@@ -10150,7 +10171,6 @@
       "mediaAssets": [
         "media/official/K114-PM027.jpg"
       ],
-      "mediaAttribution": "出典：厚生労働省『第114回看護師国家試験問題』を学習用に切り出し・加工して作成",
       "mediaSourceUrl": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
       "mediaProcessed": true,
       "mediaResolutionMethod": "official_pdl1_excerpt",
@@ -10908,8 +10928,8 @@
       "point": "Holter心電図では日常生活中の心電図を連続記録するため、装着したまま普段に近い生活を送り、強い電気的干渉を避ける。",
       "detail": "Holter心電図は通常24時間以上、胸部電極を装着したまま日常生活中の心拍・不整脈を記録する。就寝時に電極を外さず、普段どおり活動して症状と心電図の関係をみる。一部の電気機器は記録へ雑音を入れる可能性があるため、設問では電気カーペットを使用しない説明が適切。",
       "requiresMedia": true,
-      "mediaAuditStatus": "pending",
-      "rightsStatus": "mhlw-pdl1.0-text; media-pending",
+      "mediaAuditStatus": "pending_content_quality_independent_of_rights",
+      "rightsStatus": "mhlw-pdl1.0-media-reuse-permitted-with-attribution",
       "reviewStatus": "official_import_pending_explanation_and_classification",
       "sourceRefs": [
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/tp250428-03_04_05.html",
@@ -10922,6 +10942,10 @@
         "3"
       ],
       "mediaDetectionReason": "media_reference_in_stem_conservative",
+      "mediaRightsReview": "mhlw-pdl1.0-no-third-party-photo-visible-no-special-rights-marker",
+      "mediaRightsSource": "https://www.mhlw.go.jp/chosakuken/index.html",
+      "mediaRightsAuditStatus": "USABLE_UNDER_MHLW_PDL1_WITH_SOURCE_AND_EDIT_LABEL",
+      "mediaAttribution": "出典：厚生労働省『第114回看護師国家試験問題』を学習用に切り出し・加工して作成",
       "classificationStatus": "high",
       "classificationScore": 50,
       "classificationSignals": [
@@ -10953,7 +10977,6 @@
       "mediaAssets": [
         "media/official/K114-PM039.jpg"
       ],
-      "mediaAttribution": "出典：厚生労働省『第114回看護師国家試験問題』を学習用に切り出し・加工して作成",
       "mediaSourceUrl": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
       "mediaProcessed": true,
       "mediaResolutionMethod": "official_pdl1_excerpt",
@@ -11655,8 +11678,8 @@
       "point": "飲酒後の上腹部～背部激痛と嘔吐では急性膵炎を疑い、血清リパーゼを優先して確認する。",
       "detail": "急性膵炎の診断では典型的な上腹部痛、膵酵素上昇、画像所見のうち2項目以上を用いる。リパーゼは膵炎診断に有用で、アミラーゼより長く上昇が持続する。心電図に異常がなく、飲酒後の上腹部から背部への激痛・嘔吐という状況では、選択肢の中でリパーゼが最も優先度が高い。",
       "requiresMedia": true,
-      "mediaAuditStatus": "pending",
-      "rightsStatus": "mhlw-pdl1.0-text; media-pending",
+      "mediaAuditStatus": "pending_content_quality_independent_of_rights",
+      "rightsStatus": "mhlw-pdl1.0-media-reuse-permitted-with-attribution",
       "reviewStatus": "official_import_pending_explanation_and_classification",
       "sourceRefs": [
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/tp250428-03_04_05.html",
@@ -11669,6 +11692,10 @@
         "4"
       ],
       "mediaDetectionReason": "media_reference_in_stem_conservative",
+      "mediaRightsReview": "mhlw-pdl1.0-no-third-party-photo-visible-no-special-rights-marker",
+      "mediaRightsSource": "https://www.mhlw.go.jp/chosakuken/index.html",
+      "mediaRightsAuditStatus": "USABLE_UNDER_MHLW_PDL1_WITH_SOURCE_AND_EDIT_LABEL",
+      "mediaAttribution": "出典：厚生労働省『第114回看護師国家試験問題』を学習用に切り出し・加工して作成",
       "classificationStatus": "high",
       "classificationScore": 5,
       "classificationSignals": [
@@ -11700,7 +11727,6 @@
       "mediaAssets": [
         "media/official/K114-PM050.jpg"
       ],
-      "mediaAttribution": "出典：厚生労働省『第114回看護師国家試験問題』を学習用に切り出し・加工して作成",
       "mediaSourceUrl": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
       "mediaProcessed": true,
       "mediaResolutionMethod": "official_pdl1_excerpt",
@@ -11995,8 +12021,8 @@
       "point": "2021年の65～84歳不慮の事故死亡グラフでDを『溺死及び溺水』と対応させるにはグラフの系列確認が必要。",
       "detail": "歴史統計そのものは人口動態統計で確認できるが、A～Dの線の対応を問う図表問題であり、rawのrequiresMedia=falseを上書きして隔離する。",
       "requiresMedia": true,
-      "mediaAuditStatus": "pending",
-      "rightsStatus": "mhlw-pdl1.0-text; media-pending",
+      "mediaAuditStatus": "pending_content_quality_independent_of_rights",
+      "rightsStatus": "mhlw-pdl1.0-media-reuse-permitted-with-attribution",
       "reviewStatus": "official_import_pending_explanation_and_classification",
       "sourceRefs": [
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/tp250428-03_04_05.html",
@@ -12009,6 +12035,10 @@
         "3"
       ],
       "mediaDetectionReason": "media_reference_in_stem_conservative",
+      "mediaRightsReview": "mhlw-pdl1.0-no-third-party-photo-visible-no-special-rights-marker",
+      "mediaRightsSource": "https://www.mhlw.go.jp/chosakuken/index.html",
+      "mediaRightsAuditStatus": "USABLE_UNDER_MHLW_PDL1_WITH_SOURCE_AND_EDIT_LABEL",
+      "mediaAttribution": "出典：厚生労働省『第114回看護師国家試験問題』を学習用に切り出し・加工して作成",
       "classificationStatus": "high",
       "classificationScore": 10,
       "classificationSignals": [
@@ -12047,7 +12077,6 @@
       "mediaAssets": [
         "media/official/K114-PM055.jpg"
       ],
-      "mediaAttribution": "出典：厚生労働省『第114回看護師国家試験問題』を学習用に切り出し・加工して作成",
       "mediaSourceUrl": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
       "mediaProcessed": true,
       "mediaResolutionMethod": "official_pdl1_excerpt",
@@ -13070,8 +13099,8 @@
       "point": "スタッフ組織で専門知識を基に助言する役割という概念は確認できるが、①がどの位置かは組織図依存。",
       "detail": "組織図中の①の位置・線の関係を視覚確認する必要があるため、画像権利監査まで解放しない。",
       "requiresMedia": true,
-      "mediaAuditStatus": "pending",
-      "rightsStatus": "mhlw-pdl1.0-text; media-pending",
+      "mediaAuditStatus": "pending_content_quality_independent_of_rights",
+      "rightsStatus": "mhlw-pdl1.0-media-reuse-permitted-with-attribution",
       "reviewStatus": "official_import_pending_explanation_and_classification",
       "sourceRefs": [
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/tp250428-03_04_05.html",
@@ -13084,6 +13113,10 @@
         "4"
       ],
       "mediaDetectionReason": "media_reference_in_stem_conservative",
+      "mediaRightsReview": "mhlw-pdl1.0-no-third-party-photo-visible-no-special-rights-marker",
+      "mediaRightsSource": "https://www.mhlw.go.jp/chosakuken/index.html",
+      "mediaRightsAuditStatus": "USABLE_UNDER_MHLW_PDL1_WITH_SOURCE_AND_EDIT_LABEL",
+      "mediaAttribution": "出典：厚生労働省『第114回看護師国家試験問題』を学習用に切り出し・加工して作成",
       "classificationStatus": "high",
       "classificationScore": 50,
       "classificationSignals": [
@@ -13115,7 +13148,6 @@
       "mediaAssets": [
         "media/official/K114-PM071.jpg"
       ],
-      "mediaAttribution": "出典：厚生労働省『第114回看護師国家試験問題』を学習用に切り出し・加工して作成",
       "mediaSourceUrl": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
       "mediaProcessed": true,
       "mediaResolutionMethod": "official_pdl1_excerpt",
@@ -13683,8 +13715,8 @@
       "point": "死因別死亡率の年次推移でCを『老衰』と対応させるにはグラフの形・ラベル確認が不可欠。",
       "detail": "人口動態統計の死因順位・推移は一次統計で確認するが、設問は図中Cの系列を特定する形式。rawのrequiresMedia=falseを上書きして隔離する。",
       "requiresMedia": true,
-      "mediaAuditStatus": "pending",
-      "rightsStatus": "mhlw-pdl1.0-text; media-pending",
+      "mediaAuditStatus": "pending_content_quality_independent_of_rights",
+      "rightsStatus": "mhlw-pdl1.0-media-reuse-permitted-with-attribution",
       "reviewStatus": "official_import_pending_explanation_and_classification",
       "sourceRefs": [
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/tp250428-03_04_05.html",
@@ -13697,6 +13729,10 @@
         "2"
       ],
       "mediaDetectionReason": "media_reference_in_stem_conservative",
+      "mediaRightsReview": "mhlw-pdl1.0-no-third-party-photo-visible-no-special-rights-marker",
+      "mediaRightsSource": "https://www.mhlw.go.jp/chosakuken/index.html",
+      "mediaRightsAuditStatus": "USABLE_UNDER_MHLW_PDL1_WITH_SOURCE_AND_EDIT_LABEL",
+      "mediaAttribution": "出典：厚生労働省『第114回看護師国家試験問題』を学習用に切り出し・加工して作成",
       "classificationStatus": "high",
       "classificationScore": 15,
       "classificationSignals": [
@@ -13738,7 +13774,6 @@
       "mediaAssets": [
         "media/official/K114-PM080.jpg"
       ],
-      "mediaAttribution": "出典：厚生労働省『第114回看護師国家試験問題』を学習用に切り出し・加工して作成",
       "mediaSourceUrl": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
       "mediaProcessed": true,
       "mediaResolutionMethod": "official_pdl1_excerpt",
@@ -13820,7 +13855,7 @@
       "majorSubject": "人体の構造と機能",
       "subject": "循環・消化器の構造",
       "answerType": "multiChoice",
-      "question": "門脈系の血管はどれか。઄つ選べ。",
+      "question": "門脈系の血管はどれか。2つ選べ。",
       "choices": [
         "肝静脈",
         "脾静脈",
@@ -13892,7 +13927,7 @@
       "majorSubject": "人体の構造と機能",
       "subject": "腎・内分泌の機能",
       "answerType": "multiChoice",
-      "question": "A さん 35 歳、女性!は年前に子宮体癌のために単純子宮全摘出術と両側卵巣 uterine corpus cancer 摘出術を受け、その後、ホルモン補充療法は受けずに健康に過ごしている。 A さんの血液中で術前よりも濃度が上昇しているホルモンはどれか。઄つ選べ。",
+      "question": "Aさん（35歳、女性）は1年前に子宮体癌のために単純子宮全摘出術と両側卵巣摘出術を受け、その後、ホルモン補充療法は受けずに健康に過ごしている。Aさんの血液中で術前よりも濃度が上昇しているホルモンはどれか。2つ選べ。",
       "choices": [
         "テストステロン",
         "プロゲステロン",
@@ -13964,7 +13999,7 @@
       "majorSubject": "疾病の成り立ちと回復の促進",
       "subject": "循環器の病態",
       "answerType": "multiChoice",
-      "question": "後天性の大動脈弁狭窄症について正しいのはどれか。઄つ選べ。 aortic stenosis",
+      "question": "後天性の大動脈弁狭窄症について正しいのはどれか。2つ選べ。 aortic stenosis",
       "choices": [
         "二尖弁が多い。",
         "弁尖の石灰化による。",
@@ -14037,7 +14072,7 @@
       "majorSubject": "健康支援と社会保障制度",
       "subject": "生活習慣病予防",
       "answerType": "multiChoice",
-      "question": "内臓脂肪の蓄積を推定するために用いるのはどれか。઄つ選べ。",
+      "question": "内臓脂肪の蓄積を推定するために用いるのはどれか。2つ選べ。",
       "choices": [
         "身 長",
         "体 重",
@@ -14110,7 +14145,7 @@
       "majorSubject": "健康支援と社会保障制度",
       "subject": "社会保障・保険",
       "answerType": "multiChoice",
-      "question": "介護保険法で定める特定疾病はどれか。઄つ選べ。",
+      "question": "介護保険法で定める特定疾病はどれか。2つ選べ。",
       "choices": [
         "ウイルス肝炎 viral hepatitis",
         "脊髄小脳変性症 spinocerebellar degeneration",
@@ -14184,7 +14219,7 @@
       "majorSubject": "健康支援と社会保障制度",
       "subject": "障害福祉制度",
       "answerType": "multiChoice",
-      "question": "介護保険法で地域包括支援センターに配置が義務付けられているのはどれか。઄ つ選べ。",
+      "question": "介護保険法で地域包括支援センターに配置が義務付けられているのはどれか。2つ選べ。",
       "choices": [
         "介護福祉士",
         "社会福祉士",
@@ -14257,7 +14292,7 @@
       "majorSubject": "老年看護学",
       "subject": "高齢者の特徴",
       "answerType": "multiChoice",
-      "question": "高齢者における感覚器の変化の特徴で正しいのはどれか。઄つ選べ。",
+      "question": "高齢者における感覚器の変化の特徴で正しいのはどれか。2つ選べ。",
       "choices": [
         "高音域の聴力が保持される。",
         "痛覚の感受性が低下する。",
@@ -14330,7 +14365,7 @@
       "majorSubject": "小児看護学",
       "subject": "成長発達",
       "answerType": "multiChoice",
-      "question": "子どもの成長・発達で正しいのはどれか。઄つ選べ。",
+      "question": "子どもの成長・発達で正しいのはどれか。2つ選べ。",
       "choices": [
         "基本的な運動発達は末âから中枢へ向かう。",
         "発達の臨界期は身体の各部位によって異なる。",
@@ -14745,7 +14780,7 @@
       "majorSubject": "成人看護学",
       "subject": "循環器",
       "answerType": "multiChoice",
-      "question": "術後日、A さんは人工呼吸管理を離脱し、離床が検討されたが中止となった。 看護師が A さんの離床中止を判断した指標はどれか。઄つ選べ。",
+      "question": "術後日、A さんは人工呼吸管理を離脱し、離床が検討されたが中止となった。 看護師が A さんの離床中止を判断した指標はどれか。2つ選べ。",
       "choices": [
         "ドレーンが留置中である。",
         "安静時の呼吸数が 20/分である。",
@@ -16227,7 +16262,7 @@
       "majorSubject": "精神看護学",
       "subject": "精神看護",
       "answerType": "multiChoice",
-      "question": "A さんの症状は半年ほどで落ち着き、夫との散歩や料理を楽しみ、特に問題な く過ごせるようになった。精神科受診を終了して年後、A さんは再び家にこも りがちになった。夫の話では、急に料理の作り方や人の名前を何度も確認するな ど、家事に時間がかかるようになった。A さんは｢何もできないと思っているで しょ｣と、ささいなことに怒ったり、急に泣き出すことが増え、夫と一緒に精神科 外来を再受診した。 頭部 MRI 検査の結果、多発性脳梗塞がみられ、血管性認知症 と診断された。A vascular dementia さんは｢自分が認知症なんて信じられない。もう治らない｣と話した。 dementia A さんに認められるのはどれか。઄つ選べ。",
+      "question": "A さんの症状は半年ほどで落ち着き、夫との散歩や料理を楽しみ、特に問題な く過ごせるようになった。精神科受診を終了して年後、A さんは再び家にこも りがちになった。夫の話では、急に料理の作り方や人の名前を何度も確認するな ど、家事に時間がかかるようになった。A さんは｢何もできないと思っているで しょ｣と、ささいなことに怒ったり、急に泣き出すことが増え、夫と一緒に精神科 外来を再受診した。 頭部 MRI 検査の結果、多発性脳梗塞がみられ、血管性認知症 と診断された。A vascular dementia さんは｢自分が認知症なんて信じられない。もう治らない｣と話した。 dementia A さんに認められるのはどれか。2つ選べ。",
       "choices": [
         "感情失禁",
         "観念奔逸",

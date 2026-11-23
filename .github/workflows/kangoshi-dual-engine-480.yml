@@ -1,0 +1,178 @@
+name: Kangoshi Efficient PDF Engine Recovery and Gloss Alignment Audit
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/kangoshi-dual-engine-480.yml'
+permissions:
+  contents: write
+jobs:
+  dual-engine-and-figures:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install independent PDF engines and render dependencies
+        run: |
+          if ! command -v pdftotext >/dev/null 2>&1; then
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq poppler-utils
+          fi
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq tesseract-ocr tesseract-ocr-jpn tesseract-ocr-eng
+          python -m pip install --disable-pip-version-check 'pymupdf>=1.24,<3' pillow cairosvg
+      - name: Fetch MHLW official PDF texts and answer sources
+        run: python kangoshi-sprint/scripts/run_official_pdf_audit.py
+      - name: Render 20 verified question rectangles from official PDF coordinates
+        run: python kangoshi-sprint/scripts/render_geometry_recovery_evidence.py
+      - name: Read staged 480 keyed records from historic audit branch
+        run: |
+          set -euo pipefail
+          mkdir -p kangoshi-sprint/product-content/keyed-candidates
+          git fetch --no-tags --depth=1 origin feature/kangoshi-keyed-staging-45220877977
+          for exam in 111 112; do
+            for session in AM PM; do
+              git show "FETCH_HEAD:kangoshi-sprint/product-content/keyed-candidates/exam${exam}-${session}-draft.json" > "kangoshi-sprint/product-content/keyed-candidates/exam${exam}-${session}-draft.json"
+            done
+          done
+      - name: Generate visual evidence for remaining source-text and situation holds
+        run: python kangoshi-sprint/scripts/context_control_visual_evidence.py
+      - name: Independently compare remaining shared scenario passage glyphs
+        run: python kangoshi-sprint/scripts/diagnose_pending_context.py
+      - name: Overlay 22 independently confirmed quarantined text corrections
+        run: python kangoshi-sprint/scripts/overlay_reextracted_pending.py
+      - name: Restore clean prior visually reviewed text as unverified candidates
+        run: python kangoshi-sprint/scripts/overlay_prior_source_repairs.py
+      - name: Render pre-repair original PDF regions with pinned image hashes
+        run: python kangoshi-sprint/scripts/render_residual_geometric_evidence.py
+      - name: Diagnose PDF-number coordinates on source originals
+        run: python kangoshi-sprint/scripts/debug_pdf_coordinates.py
+      - name: Confirm 220 unresolved source questions before new full-text coordinate verification
+        run: |
+          python - <<'PY'
+          import json, pathlib
+          p=pathlib.Path('kangoshi-sprint')
+          status=json.loads((p/'release-status.json').read_text())
+          held=json.loads((p/'audit/dual-engine-hold-20261124.json').read_text())
+          verified=json.loads((p/'product-content/verified-additions-20261124.json').read_text())
+          assert status['recordedImported']==720+len(verified['questions'])
+          assert len(held['hold'])+len(verified['questions'])==480
+          assert len({q['id'] for q in held['hold']})==len(held['hold'])
+          assert not ({q['id'] for q in held['hold']} & {q['id'] for q in verified['questions']})
+          print('REVALIDATE_SOURCE_CANDIDATES',len(held['hold']),'PREVIOUS_CANONICAL',status['recordedImported'])
+          PY
+      - name: Reextract original coordinate question regions by both independent PDF engines
+        run: python kangoshi-sprint/scripts/reextract_coordinate_candidates.py
+      - name: Save candidate before and after text comparisons
+        run: cp kangoshi-sprint/audit/runs/dual-engine-20261124/coordinate-reextraction-evidence.json kangoshi-sprint/audit/coordinate-reextraction-evidence-20261124.json
+      - name: Apply three PDF-and-image SHA-pinned numeric glyph repairs
+        run: python kangoshi-sprint/scripts/apply_visual_glyph_evidence.py
+      - name: Reconstruct image-verified missing numerals and paired parentheses
+        run: python kangoshi-sprint/scripts/apply_image_pinned_cmap_repairs.py
+      - name: Perform 480 question Poppler versus PyMuPDF dual engine and official key audit
+        run: python kangoshi-sprint/scripts/bulk_dual_engine_verify.py
+      - name: Produce 38 side-by-side source PDF versus image comparisons
+        run: python kangoshi-sprint/scripts/build_media_comparison.py
+      - name: Promote only independently verified items to nonpublishable canonical extension
+        run: python kangoshi-sprint/scripts/promote_dual_engine.py
+      - name: Verify held questions with source-image OCR as third independent engine
+        run: python kangoshi-sprint/scripts/ocr_third_engine_recovery.py
+      - name: Analyze OCR character-level diffs, official scoring exceptions, and 71 scenario passages
+        run: python kangoshi-sprint/scripts/audit_ocr_residual_by_category.py
+      - name: Repair only OCR-verified CMap character omissions in 96 question source records
+        run: python kangoshi-sprint/scripts/repair_ocr_cmap_96.py
+      - name: Render each residual held question from geometric source PDF evidence
+        run: python kangoshi-sprint/scripts/render_residual_geometric_evidence.py
+      - name: Render original PDF source rectangles for every new verified promotion
+        run: python kangoshi-sprint/scripts/render_latest_new_source_regions.py
+      - name: Update status from actual promotion and media audit evidence
+        run: python kangoshi-sprint/scripts/write_release_audit_status.py
+      - name: Persist canonical extensions and per-item PASS/HOLD evidence to GitHub main
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add kangoshi-sprint/product-content/verified-additions-20261124.json
+          git add kangoshi-sprint/product-content/manifest.json
+          git add kangoshi-sprint/audit/dual-engine-promotion-ledger-20261124.json
+          git add kangoshi-sprint/audit/dual-engine-hold-20261124.json
+          git add kangoshi-sprint/release-status.json kangoshi-sprint/RELEASE_STATUS.md
+          git add kangoshi-sprint/audit/coordinate-reextraction-evidence-20261124.json
+          git add kangoshi-sprint/audit/context-passage-glyph-diagnostics-20261124.json
+          git add kangoshi-sprint/audit/geometry-recovery-image-index-20261124.json
+          git add kangoshi-sprint/audit/latest-new-source-images-20261124.json
+          git add kangoshi-sprint/audit/residual-geometric-source-index-20261124.json
+          git add kangoshi-sprint/audit/image-pinned-cmap-repair-results-20261124.json
+          git add kangoshi-sprint/audit/ocr-third-engine-results-20261124.json
+          git add kangoshi-sprint/audit/ocr-category-deep-review-20261124.json
+          git add kangoshi-sprint/audit/ocr-cmap-repair-ledger-20261124.json
+          git add kangoshi-sprint/product-content/ocr-repaired-candidates-20261124.json
+          git diff --cached --quiet || git commit -m "kangoshi: apply independent boundary/context recheck and persist source-only gates"
+          git pull --rebase -X theirs origin main
+          git push origin HEAD:main
+      - name: Upload OCR CMap repair before-after proof and per-image results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kangoshi-ocr-cmap-96-repair-evidence
+          path: kangoshi-sprint/audit/runs/ocr-cmap-repair-20261124/
+          if-no-files-found: warn
+      - name: Upload individual category evidence and original scenario images
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kangoshi-ocr-category-and-scenario-images
+          path: kangoshi-sprint/audit/runs/ocr-category-20261124/
+          if-no-files-found: warn
+      - name: Upload OCR text output and per-question summary
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kangoshi-third-engine-ocr-evidence
+          path: kangoshi-sprint/audit/runs/ocr-third-engine-20261124/
+          if-no-files-found: warn
+      - name: Upload source-page evidence for every remaining held question
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kangoshi-residual-geometric-page-evidence
+          path: kangoshi-sprint/audit/runs/residual-geometric-images-20261124/
+          if-no-files-found: warn
+      - name: Upload latest individually verified question source crops
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kangoshi-latest-new-official-source-regions
+          path: kangoshi-sprint/audit/runs/latest-new-source-regions-20261124/
+          if-no-files-found: warn
+      - name: Upload individual PDF question region images and 20 item contact sheet
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kangoshi-20-geometric-source-regions
+          path: kangoshi-sprint/audit/runs/geometry-recovery-images-20261124/
+          if-no-files-found: warn
+      - name: Upload source PDF visual evidence of pending cases
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kangoshi-context-control-visual-evidence
+          path: kangoshi-sprint/audit/runs/context-control-visual-20261124/
+          if-no-files-found: warn
+      - name: Upload 480 record detailed gate report even when a failure occurs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kangoshi-480-dual-engine-evidence
+          path: kangoshi-sprint/audit/runs/dual-engine-20261124/
+          if-no-files-found: warn
+      - name: Upload 38 media source-page visual comparisons
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kangoshi-media-38-visual-comparisons
+          path: kangoshi-sprint/audit/runs/media-visual-20261124/
+          if-no-files-found: warn

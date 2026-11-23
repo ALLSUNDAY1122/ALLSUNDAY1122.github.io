@@ -19,16 +19,28 @@ for path in FILES:
         if not qid or qid in rows: raise SystemExit(f'duplicate/missing media resolution id: {qid}')
         rows[qid]=row
 
-applied=[]
+applied=[];held=[]
 for qid,row in rows.items():
     q=index.get(qid)
     if not q: raise SystemExit(f'unknown media resolution id: {qid}')
-    if row.get('mediaReleaseStatus')!='resolved':raise SystemExit(f'{qid}: mediaReleaseStatus must be resolved')
+    status=row.get('mediaReleaseStatus')
+    if status not in {'resolved','hold_rights_and_crop_review'}:raise SystemExit(f'{qid}: unknown mediaReleaseStatus {status}')
     assets=row.get('mediaAssets') or []
     if not assets:raise SystemExit(f'{qid}: no mediaAssets')
     for rel in assets:
         p=ROOT.parent/rel
         if not p.exists():raise SystemExit(f'{qid}: missing asset {rel}')
+    if status!='resolved':
+        q['mediaReleaseStatus']=status
+        q['mediaRightsStatus']=row.get('mediaRightsStatus')
+        q['mediaAssets']=assets
+        q['mediaAttribution']=row.get('mediaAttribution')
+        q['mediaSourceUrl']=row.get('mediaSourceUrl')
+        q['mediaResolutionMethod']='official_pdf_exact_page_crop'
+        q['specialistQuarantineReasons']=(q.get('specialistQuarantineReasons') or [])+[{'kind':'mediaDependent','reason':'Source media cropped but rights and visual QA remain blocked'}]
+        q['specialistQuarantineStatus']='quarantined'
+        held.append(qid)
+        continue
     q['mediaReleaseStatus']='resolved'
     q['mediaRightsStatus']=row.get('mediaRightsStatus')
     q['mediaAssets']=assets
@@ -42,6 +54,6 @@ for qid,row in rows.items():
     applied.append(qid)
 
 for p,d in sets.values():p.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
-report={'schemaVersion':1,'resolutionCount':len(rows),'appliedCount':len(applied),'appliedIds':sorted(applied),'pass':len(rows)==len(applied)}
+report={'schemaVersion':2,'resolutionCount':len(rows),'appliedCount':len(applied),'heldCount':len(held),'heldIds':sorted(held),'appliedIds':sorted(applied),'integrityPass':len(rows)==len(applied)+len(held),'pass':len(held)==0 and len(rows)==len(applied)}
 (DRAFT/'media-release-resolution-report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 print(json.dumps(report,ensure_ascii=False))

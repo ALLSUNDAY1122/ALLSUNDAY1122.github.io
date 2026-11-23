@@ -1,0 +1,98 @@
+name: Touhan Repair 120 Original-vs-Ruby Screenshots
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'touroku-hanbaisha-sprint/official-kansai/rebuild_ruby_comparison_120.py'
+      - '.github/workflows/touhan-ruby-comparison-repair.yml'
+permissions:
+  contents: write
+concurrency:
+  group: touhan-ruby-comparison-repair
+  cancel-in-progress: false
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    timeout-minutes: 38
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Japanese fonts and use GitHub runner Chrome
+        run: |
+          set -o pipefail
+          {
+            echo '=== chrome ==='; google-chrome --version
+            echo '=== before ==='; fc-match 'Noto Sans CJK JP'
+            sudo apt-get update -qq
+            sudo env DEBIAN_FRONTEND=noninteractive apt-get install -y fonts-noto-cjk fontconfig
+            sudo fc-cache -f
+            echo '=== after ==='; fc-match -f '%{family}\n' 'Noto Sans CJK JP'
+            python -m pip install --disable-pip-version-check 'pymupdf==1.26.5' 'playwright==1.56.0' 'pillow==11.3.0'
+          } > /tmp/touhan-ruby-env.log 2>&1
+          status=$?
+          cat /tmp/touhan-ruby-env.log
+          exit "$status"
+      - name: Generate actual ruby/rt markup and source comparisons for 120 questions
+        run: |
+          set -o pipefail
+          python touroku-hanbaisha-sprint/official-kansai/rebuild_ruby_comparison_120.py 2>&1 | tee /tmp/touhan-ruby-repair.log
+      - name: Check all 120 screenshots, font and valid markup evidence
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('touroku-hanbaisha-sprint/official-kansai')
+          d=json.loads((p/'RUBY_REBUILT_COMPARISON_120_20261124.json').read_text())
+          assert d['screenshotsRegenerated']==d['comparisonPagesRegenerated']==120
+          assert d['fontInstalledAndDetected'] and d['font']=='Noto Sans CJK JP'
+          assert len(d['records'])==120 and len(d['contactSheets'])==15
+          assert d['directVisuallyApproved']==d['newlyPromoted']==0
+          for r in d['records']:
+            assert r['imageRegenerated']
+            html=(p/r['repairedCandidateHtml']).read_text()
+            assert 'ruby' in html and r['rubyDomExpected']==html.count('<ruby>')
+            assert r['rubyDomExpected']==html.count('<rt>')
+            assert (p/r['repairedCandidateScreenshot']).read_bytes()[:8]==b'\x89PNG\r\n\x1a\n'
+            assert r['fontProof']['fontJP'] and r['fontProof']['domRuby']==r['rubyDomExpected']
+          assert all((p/x).exists() for x in d['contactSheets'])
+          print('PASS 120 Japanese-glyph screenshots / verified ruby DOM / 15 contact sheets')
+          PY
+      - name: Commit 120 regenerated comparisons and explicit failure logs
+        if: always()
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          b=Path('touroku-hanbaisha-sprint/official-kansai')
+          if not (b/'RUBY_REBUILT_COMPARISON_120_20261124.json').exists():
+            log=Path('/tmp/touhan-ruby-repair.log')
+            (b/'RUBY_REPAIR_ERROR_20261124.json').write_text(
+              json.dumps({'status':'BLOCKED','diagnosis':((Path('/tmp/touhan-ruby-env.log').read_text(errors='replace') if Path('/tmp/touhan-ruby-env.log').exists() else '')+'\n'+(log.read_text(errors='replace') if log.exists() else 'No script output'))[-8000:]},
+              ensure_ascii=False,indent=2)+'\n')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -f touroku-hanbaisha-sprint/official-kansai/RUBY_REBUILT_COMPARISON_120_20261124.json 2>/dev/null || true
+          git add -f touroku-hanbaisha-sprint/official-kansai/RUBY_REPAIR_ERROR_20261124.json 2>/dev/null || true
+          git add -f touroku-hanbaisha-sprint/official-kansai/ruby-font-review/ 2>/dev/null || true
+          if ! git diff --cached --quiet; then
+            git commit -m 'audit(touhan): regenerate 120 ruby candidate screenshots with Noto Japanese font'
+            for retry in 1 2 3; do
+              git pull --rebase origin main
+              if git push origin HEAD:main; then exit 0; fi
+            done
+            exit 1
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: touhan-rebuilt-ruby-120-evidence
+          path: |
+            touroku-hanbaisha-sprint/official-kansai/RUBY_REBUILT_COMPARISON_120_20261124.json
+            touroku-hanbaisha-sprint/official-kansai/RUBY_REPAIR_ERROR_20261124.json
+            touroku-hanbaisha-sprint/official-kansai/ruby-font-review/CONTACT_SHEET_V2_*.jpg
+          if-no-files-found: ignore

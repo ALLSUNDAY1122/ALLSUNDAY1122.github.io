@@ -30,13 +30,33 @@
       ],
       "target_max": 600,
       "current": 0,
-      "status": "PENDING_INGEST_AND_CURRENTNESS_AUDIT"
+      "status": "PENDING_OFFICIAL_PDF_TRANSCRIPTION",
+      "source_policy": "IPA_PUBLISHED_VERBATIM_ONLY",
+      "release_years": [
+        2022,
+        2023,
+        2024,
+        2025,
+        2026
+      ],
+      "release_target": 500,
+      "release_path": "official-verbatim.json",
+      "audit_status": "BLOCKED_NO_VERIFIED_VERBATIM_QUESTIONS",
+      "attribution_rule": "year/exam/question number for every question",
+      "alteration_rule": "explicit modified label when text or figure differs",
+      "rights_url": "https://www.ipa.go.jp/shiken/faq.html"
     }
   },
   "release_guards": {
     "require_explicit_syllabus_version": true,
     "block_draft_questions_from_live_pool": true,
-    "require_source_and_basis_date": true
+    "require_source_and_basis_date": true,
+    "official_release_only": true,
+    "require_500_official_questions": true,
+    "no_original_mock_for_official_release": true,
+    "require_ipa_published_source_pdf": true,
+    "require_exact_official_answer": true,
+    "require_verbatim_visual_audit": true
   },
   "prototype_questions_are_canonical": false,
   "old_it_passport_assets_allowed": false

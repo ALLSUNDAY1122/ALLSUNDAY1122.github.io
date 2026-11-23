@@ -116,12 +116,12 @@
     "dynamicPending": 0,
     "queues": {
       "textPending": 0,
-      "mediaPending": 0,
+      "mediaPending": 5,
       "dynamicPending": 0,
       "contentConcerns": 0,
       "scoringExceptionPending": 0,
       "expertReviewPending": 0,
-      "releaseQuarantined": 0,
+      "releaseQuarantined": 5,
       "explained": 720,
       "queueDetectedMediaOverrides": 0
     },
@@ -140,5 +140,41 @@
       113
     ],
     "pendingExamSets": []
+  },
+  "plannedFiveExamTarget": 1200,
+  "verifiedExtension": {
+    "schemaVersion": 1,
+    "file": "verified-additions-20261124.json",
+    "newExamNumbers": [
+      112,
+      111
+    ],
+    "canonicalSourceVerifiedCount": 260,
+    "canonicalSourceVerifiedTotal": 980,
+    "remainingNotVerified": 220,
+    "verifiedTextAndOfficialKeyCiRunId": 45240759737,
+    "evidenceArtifactId": 14851731484,
+    "runtimeAdditionalCount": 0,
+    "releaseEligibleAdditionalCount": 0,
+    "reviewStatus": "DUAL_ENGINE_SOURCE_KEY_VERIFIED_EXPLANATIONS_RUNTIME_PENDING",
+    "note": "Source-only verification: 720 existing + 141 newly verified exam 111/112 records; 339 remain held. No new runtime release until independent explanations and UI/iOS checks.",
+    "newBulkVerified": 0,
+    "verificationMethod": "PyMuPDF+Poppler independent full stem/options and MHLW official answer PDF, reject control glyphs/footer/media/scenarios",
+    "lastPromotionCommit": "b82f206b82b1b853f734d6479a74a2eaaa78c5fc",
+    "newBulkVerifiedFromPriorStatus": 74,
+    "sourceGlyphReparsed": 480,
+    "sourceGlyphTranscriptionChanges": 340,
+    "pageFooterRepaired": 152,
+    "runTimeAdditionalCount": 0,
+    "lastReauditStatus": "GATE_PASSED_SOURCE_AND_KEY_ONLY"
+  },
+  "mediaAuditLatest": {
+    "checkedAt": "2026-11-24",
+    "officialJpgRightsUsable": 15,
+    "sourceCropAssetCount": 5,
+    "sourceCropGatedRights": 5,
+    "remainingOriginalSvg": 18,
+    "mediaRoutesVerifiedRun": 45241710210,
+    "allContentPass": false
   }
 }

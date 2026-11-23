@@ -35,9 +35,7 @@ workflows:
           xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
       - name: Build signed IPA
         script: |
-          xcode-project build-ipa \
-            --project "$CM_BUILD_DIR/$XCODE_PROJECT" \
-            --scheme "$XCODE_SCHEME"
+          xcode-project build-ipa --project "$CM_BUILD_DIR/$XCODE_PROJECT" --scheme "$XCODE_SCHEME"
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
@@ -1504,4 +1502,215 @@ workflows:
         auth: integration
         submit_to_testflight: true
         submit_to_app_store: false
+  taku-calc-build11-internal:
+    name: TAKU CALC - Build 11 Internal TestFlight
+    max_build_duration: 80
+    instance_type: mac_mini_m2
+    integrations:
+      app_store_connect: "Codemagic Shiwake Swipe"
+    environment:
+      groups:
+        - taku_calc_source_credentials
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.koheimorita.takucalc
+      vars:
+        TAKU_CALC_SOURCE_REPO: git@github.com:ALLSUNDAY1122/taku-calc-app.git
+        TAKU_CALC_SOURCE_BRANCH: main
+        TAKU_CALC_MIN_SOURCE_COMMIT: 27a00ecc84f0d2762de24ee177f4ef16c77c2201
+        TAKU_CALC_BUNDLE_ID: com.koheimorita.takucalc
+        TAKU_CALC_VERSION: 1.5.0
+        TAKU_CALC_BUILD_NUMBER: "11"
+        APP_STORE_CONNECT_APP_ID: "6794350490"
+      node: 22.13.0
+      xcode: latest
+    scripts:
+      - name: Verify source-repository access and clone main
+        script: |
+          set -euo pipefail
+          test -n "${TAKU_CALC_SOURCE_SSH_KEY:-}" || {
+            echo "Missing secret TAKU_CALC_SOURCE_SSH_KEY in group taku_calc_source_credentials" >&2
+            exit 1
+          }
+          ssh-add -l
+          mkdir -p "$CM_BUILD_DIR/taku-calc-source"
+          git clone --depth 1 --branch "$TAKU_CALC_SOURCE_BRANCH" "$TAKU_CALC_SOURCE_REPO" "$CM_BUILD_DIR/taku-calc-source"
+          cd "$CM_BUILD_DIR/taku-calc-source"
+          git fetch --unshallow origin "$TAKU_CALC_SOURCE_BRANCH"
+          git merge-base --is-ancestor "$TAKU_CALC_MIN_SOURCE_COMMIT" HEAD
+          printf '%s\n' "$(git rev-parse HEAD)" > "$CM_BUILD_DIR/taku-calc-source-commit.txt"
+          echo "PASS: source main contains required baseline $TAKU_CALC_MIN_SOURCE_COMMIT; actual=$(git rev-parse HEAD)"
+      - name: Install dependencies and run release tests
+        script: |
+          set -euo pipefail
+          cd "$CM_BUILD_DIR/taku-calc-source"
+          node --version
+          npm ci --no-audit --no-fund
+          npm run verify:release
+      - name: Set Build 11 in temporary Expo config and prebuild iOS
+        script: |
+          set -euo pipefail
+          cd "$CM_BUILD_DIR/taku-calc-source"
+          node - <<'NODE'
+          const fs = require('fs');
+          const p = 'app.json';
+          const data = JSON.parse(fs.readFileSync(p, 'utf8'));
+          if (!data.expo || data.expo.version !== process.env.TAKU_CALC_VERSION) {
+            throw new Error('Unexpected Expo version; refusing to change release version');
+          }
+          if (data.expo.ios?.bundleIdentifier !== process.env.TAKU_CALC_BUNDLE_ID) {
+            throw new Error('Unexpected iOS bundle identifier');
+          }
+          data.expo.ios = data.expo.ios || {};
+          data.expo.ios.buildNumber = process.env.TAKU_CALC_BUILD_NUMBER;
+          fs.writeFileSync(p, JSON.stringify(data, null, 2) + '\n');
+          NODE
+          npx expo config --type public --json > /tmp/taku-calc-expo-config.json
+          python3 - <<'PY'
+          import json,os
+          d=json.load(open('/tmp/taku-calc-expo-config.json',encoding='utf-8'))
+          assert d['version']==os.environ['TAKU_CALC_VERSION'], d.get('version')
+          assert d['ios']['bundleIdentifier']==os.environ['TAKU_CALC_BUNDLE_ID'], d['ios']
+          assert str(d['ios']['buildNumber'])==os.environ['TAKU_CALC_BUILD_NUMBER'], d['ios']
+          print('PASS: Expo config version/bundle/build =',d['version'],d['ios']['bundleIdentifier'],d['ios']['buildNumber'])
+          PY
+          npx expo prebuild --platform ios --clean --no-install
+      - name: Verify generated Xcode project identity and build number
+        script: |
+          set -euo pipefail
+          cd "$CM_BUILD_DIR/taku-calc-source"
+          PROJECT="$(find ios -maxdepth 2 -type d -name '*.xcodeproj' -print -quit)"
+          test -n "$PROJECT"
+          python3 - "$PROJECT/project.pbxproj" <<'PY'
+          from pathlib import Path
+          import os,re,sys
+          p=Path(sys.argv[1])
+          s=p.read_text(encoding='utf-8')
+          expected=os.environ['TAKU_CALC_BUILD_NUMBER']
+          s,n=re.subn(r'CURRENT_PROJECT_VERSION = [^;]+;',f'CURRENT_PROJECT_VERSION = {expected};',s)
+          if n < 1:
+              raise SystemExit('CURRENT_PROJECT_VERSION not found in generated Xcode project')
+          if 'com.koheimorita.takucalc' not in s:
+              raise SystemExit('Expected bundle identifier missing from generated Xcode project')
+          p.write_text(s,encoding='utf-8')
+          print(f'PASS: generated Xcode project build number set to {expected}; replacements={n}')
+          PY
+          printf '%s\n' "$PROJECT" > /tmp/taku-calc-project-path.txt
+      - name: Apply App Store signing profile for Internal TestFlight only
+        script: |
+          set -euo pipefail
+          cd "$CM_BUILD_DIR/taku-calc-source"
+          xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
+      - name: Build signed IPA
+        script: |
+          set -euo pipefail
+          cd "$CM_BUILD_DIR/taku-calc-source"
+          PROJECT="$(cat /tmp/taku-calc-project-path.txt)"
+          SCHEME="$(xcodebuild -list -json -project "$PROJECT" | python3 -c 'import json,sys; d=json.load(sys.stdin); p=next(iter(d["project"].values())) if "project" not in d else d["project"]; print(p["schemes"][0])')"
+          test -n "$SCHEME"
+          xcode-project build-ipa --project "$PROJECT" --scheme "$SCHEME"
+      - name: Verify signed IPA before publishing
+        script: |
+          set -euo pipefail
+          cd "$CM_BUILD_DIR/taku-calc-source"
+          IPA_PATH="$(find build/ios/ipa -maxdepth 1 -type f -name '*.ipa' -print -quit)"
+          test -n "$IPA_PATH"
+          VERIFY_DIR="$(mktemp -d)"
+          unzip -q "$IPA_PATH" -d "$VERIFY_DIR"
+          APP_DIR="$(find "$VERIFY_DIR/Payload" -maxdepth 1 -type d -name '*.app' -print -quit)"
+          test -n "$APP_DIR"
+          python3 - "$APP_DIR/Info.plist" <<'PY'
+          import os,plistlib,sys
+          d=plistlib.load(open(sys.argv[1],'rb'))
+          expected={
+            'CFBundleIdentifier':os.environ['TAKU_CALC_BUNDLE_ID'],
+            'CFBundleShortVersionString':os.environ['TAKU_CALC_VERSION'],
+            'CFBundleVersion':os.environ['TAKU_CALC_BUILD_NUMBER'],
+          }
+          for k,v in expected.items():
+            actual=str(d.get(k,''))
+            if actual != v:
+              raise SystemExit(f'{k} mismatch: {actual!r} != {v!r}')
+          print('PASS: signed IPA identity/version/build verified:',expected)
+          PY
+          test -f "$APP_DIR/embedded.mobileprovision"
+          test -d "$APP_DIR/_CodeSignature"
+          test -f "$APP_DIR/Assets.car"
+      - name: Preserve source revision evidence
+        script: |
+          set -euo pipefail
+          cp "$CM_BUILD_DIR/taku-calc-source-commit.txt" "$CM_EXPORT_DIR/taku-calc-source-commit.txt"
+    artifacts:
+      - taku-calc-source/build/ios/ipa/*.ipa
+      - taku-calc-source-commit.txt
+      - /tmp/xcodebuild_logs/*.log
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.app
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+        beta_groups:
+          - sun
+        submit_to_app_store: false
 
+  fp3-ios-build11-internal:
+    name: FP3 Manabi Sprint - Build 11 Internal TestFlight
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    integrations:
+      app_store_connect: "Codemagic Shiwake Swipe"
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.allsunday1122.fp3kakomoncoach
+      vars:
+        BUNDLE_ID: com.allsunday1122.fp3kakomoncoach
+        BUILD_NUMBER: "11"
+        XCODE_PROJECT: fp3-manabi-sprint/ios/FP3ManabiSprint.xcodeproj
+        XCODE_SCHEME: FP3ManabiSprint
+      xcode: latest
+    scripts:
+      - name: Install XcodeGen
+        script: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+      - name: Prepare offline FP3 bundle
+        script: bash "$CM_BUILD_DIR/fp3-manabi-sprint/ios/prepare-ios.sh"
+      - name: Generate Xcode project
+        script: |
+          cd "$CM_BUILD_DIR/fp3-manabi-sprint/ios"
+          xcodegen generate
+      - name: Verify FP3 release identity and icon
+        script: |
+          set -euo pipefail
+          cd "$CM_BUILD_DIR"
+          python3 - <<'PY'
+          import json,struct
+          from pathlib import Path
+          root=Path('fp3-manabi-sprint/ios')
+          p=(root/'project.yml').read_text()
+          assert 'CURRENT_PROJECT_VERSION: 11' in p
+          assert 'ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon' in p
+          assert 'PRODUCT_BUNDLE_IDENTIFIER: com.allsunday1122.fp3kakomoncoach' in p
+          c=json.loads((root/'Assets.xcassets/AppIcon.appiconset/Contents.json').read_text())
+          assert any(x.get('filename')=='AppIcon.png' and x.get('size')=='1024x1024' for x in c['images'])
+          b=(root/'Assets.xcassets/AppIcon.appiconset/AppIcon.png').read_bytes()
+          assert b[25] in (0,2) and struct.unpack('>II',b[16:24])==(1024,1024)
+          print('PASS: FP3 Bundle ID, Build 11 and opaque 1024px AppIcon')
+          PY
+      - name: Apply App Store signing profiles
+        script: |
+          cd "$CM_BUILD_DIR/fp3-manabi-sprint/ios"
+          xcode-project use-profiles
+      - name: Build signed FP3 IPA
+        script: |
+          xcode-project build-ipa --project "$CM_BUILD_DIR/$XCODE_PROJECT" --scheme "$XCODE_SCHEME"
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+        beta_groups:
+          - sun
+        submit_to_app_store: false

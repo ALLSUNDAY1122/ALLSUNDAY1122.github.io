@@ -1,0 +1,53 @@
+name: Kangoshi JPG15 Rights and Five Official Crop Routing
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'kangoshi-sprint/product-content/media-redraw-resolutions.json'
+      - 'kangoshi-sprint/product-content/apply_media_release_resolutions.py'
+      - 'kangoshi-sprint/media-runtime.js'
+      - '.github/workflows/kangoshi-media-routing-verify.yml'
+permissions:
+  contents: read
+jobs:
+  media-routing-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply all historical 38 media routes in isolated CI worktree
+        run: python kangoshi-sprint/product-content/apply_media_release_resolutions.py
+      - name: Independently assert 15 official JPG rights and 5 PDF crops held in runtime
+        run: |
+          python - <<'PY'
+          import json,pathlib,hashlib
+          root=pathlib.Path('kangoshi-sprint')
+          report=json.loads((root/'product-content/enriched-draft/media-release-resolution-report.json').read_text())
+          assert report['resolutionCount']==38,report
+          assert report['appliedCount']==33 and report['heldCount']==5,report
+          assert report['integrityPass'] is True and report['pass'] is False,report
+          crop=json.loads((root/'audit/official-pdf-crop-replacements-20261124.json').read_text())
+          for entry in crop['items']:
+              p=root/entry['replacementAsset']
+              assert p.exists(),str(p)
+              assert hashlib.sha256(p.read_bytes()).hexdigest()==entry['newAssetSha256'],entry['id']
+              assert entry['published'] is False
+          jpgs=json.loads((root/'audit/jpg15-pdl1-rights-approval-20261124.json').read_text())
+          assert jpgs['count']==15
+          checked=set()
+          for exam in (115,114,113):
+              bank=json.loads((root/f'product-content/raw/set{116-exam}-raw.json').read_text())
+              for q in bank['questions']:
+                  if q['id'] in {x['id'] for x in jpgs['items']}:
+                      assert q['mediaRightsAuditStatus']=='USABLE_UNDER_MHLW_PDL1_WITH_SOURCE_AND_EDIT_LABEL',q['id']
+                      assert q['mediaAttribution'] and '厚生労働省' in q['mediaAttribution'],q['id']
+                      checked.add(q['id'])
+          assert len(checked)==15
+          print(json.dumps({'jpgPdl1Approved':15,'svgOriginalCropsPrepared':5,'cropRightsStillHeld':5,'mediaOtherResolved':33,'appFinalRelease':False}))
+          PY
+      - name: Export media route QA proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kangoshi-media-routing-audit
+          path: kangoshi-sprint/product-content/enriched-draft/media-release-resolution-report.json
+          if-no-files-found: warn

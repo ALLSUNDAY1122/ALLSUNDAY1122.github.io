@@ -1,0 +1,79 @@
+name: Kangoshi 413 Hold Remediation and Official Crops
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'kangoshi-sprint/scripts/repair_page_footers.py'
+      - 'kangoshi-sprint/scripts/repair_verified_pdf_font_glyphs.py'
+      - 'kangoshi-sprint/scripts/bulk_dual_engine_verify.py'
+      - 'kangoshi-sprint/scripts/crop_five_official_figures.py'
+      - 'kangoshi-sprint/scripts/promote_dual_engine.py'
+      - '.github/workflows/kangoshi-hold-remediation-20261124.yml'
+concurrency:
+  group: kangoshi-canonical-bank-writes
+  cancel-in-progress: false
+permissions:
+  contents: write
+jobs:
+  remediate-and-crop:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install independent PDF engines
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq poppler-utils
+          python -m pip install --disable-pip-version-check 'pymupdf>=1.24,<3' pillow cairosvg
+      - name: Fetch MHLW PDFs
+        run: python kangoshi-sprint/scripts/run_official_pdf_audit.py
+      - name: Read original 480 candidate records
+        run: |
+          set -euo pipefail
+          mkdir -p kangoshi-sprint/product-content/keyed-candidates
+          git fetch --no-tags --depth=1 origin feature/kangoshi-keyed-staging-45220877977
+          for exam in 111 112; do
+            for session in AM PM; do
+              git show "FETCH_HEAD:kangoshi-sprint/product-content/keyed-candidates/exam${exam}-${session}-draft.json" > "kangoshi-sprint/product-content/keyed-candidates/exam${exam}-${session}-draft.json"
+            done
+          done
+      - name: Repair uniquely recognized PDF page footers
+        run: python kangoshi-sprint/scripts/repair_page_footers.py
+      - name: Re-extract all 480 using visually verified Ryumin glyph mappings
+        run: python kangoshi-sprint/scripts/repair_verified_pdf_font_glyphs.py
+      - name: Recheck 480 with Poppler, PyMuPDF and official key
+        run: python kangoshi-sprint/scripts/bulk_dual_engine_verify.py
+      - name: Promote only newly eligible records
+        run: python kangoshi-sprint/scripts/promote_dual_engine.py
+      - name: Crop five original PDF figures instead of SVG redraw
+        run: python kangoshi-sprint/scripts/crop_five_official_figures.py
+      - name: Commit only evidence-backed records and source figures
+        run: |
+          set -euo pipefail
+          mkdir -p kangoshi-sprint/audit/staging-repair-evidence
+          cp kangoshi-sprint/audit/runs/footer-repair-20261124/footer-repairs.json kangoshi-sprint/audit/staging-repair-evidence/
+          cp kangoshi-sprint/audit/runs/glyph-map-repair-20261124/glyph-map-repair-ledger.json kangoshi-sprint/audit/staging-repair-evidence/
+          cp kangoshi-sprint/audit/runs/dual-engine-20261124/summary.json kangoshi-sprint/audit/staging-repair-evidence/
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add kangoshi-sprint/product-content/verified-additions-20261124.json kangoshi-sprint/product-content/manifest.json
+          git add kangoshi-sprint/audit/dual-engine-promotion-ledger-20261124.json kangoshi-sprint/audit/dual-engine-hold-20261124.json
+          git add kangoshi-sprint/audit/official-pdf-crop-replacements-20261124.json kangoshi-sprint/audit/staging-repair-evidence/ kangoshi-sprint/media/official-crops/
+          git commit -m "kangoshi: remediate footer holds and stage five original PDF image crops"
+          git pull --rebase origin main
+          git push origin HEAD:main
+      - name: Upload complete audit evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kangoshi-413-hold-remediation
+          path: |
+            kangoshi-sprint/audit/runs/footer-repair-20261124/
+            kangoshi-sprint/audit/runs/glyph-map-repair-20261124/
+            kangoshi-sprint/audit/runs/dual-engine-20261124/
+            kangoshi-sprint/audit/official-pdf-crop-replacements-20261124.json
+            kangoshi-sprint/media/official-crops/
+          if-no-files-found: warn

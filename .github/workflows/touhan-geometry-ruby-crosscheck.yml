@@ -1,0 +1,78 @@
+name: Registered Seller 600 XY-Geometry and Cross-Engine Audit
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'touroku-hanbaisha-sprint/official-kansai/geometry_second_gate.py'
+      - 'touroku-hanbaisha-sprint/official-kansai/crosscheck_pdfplumber.py'
+      - 'touroku-hanbaisha-sprint/official-kansai/write_geometry_release_status.py'
+      - 'touroku-hanbaisha-sprint/official-kansai/run_geometry_audit.py'
+      - '.github/workflows/touhan-geometry-ruby-crosscheck.yml'
+permissions:
+  contents: write
+concurrency:
+  group: touhan-geometry-ruby-crosscheck-main
+  cancel-in-progress: false
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Pin both PDF engines
+        run: python -m pip install --disable-pip-version-check 'pymupdf==1.26.5' 'pdfplumber==0.11.8'
+      - name: Inspect all 600 questions and record per-year failure evidence
+        run: python touroku-hanbaisha-sprint/official-kansai/run_geometry_audit.py
+      - name: Only promote questions with complete evidence and update release records
+        run: |
+          python touroku-hanbaisha-sprint/official-kansai/build_approved_bank.py
+          python touroku-hanbaisha-sprint/official-kansai/write_auto_release_status.py
+          python touroku-hanbaisha-sprint/official-kansai/write_geometry_release_status.py
+      - name: Validate audit/bank and 2023 Q90 exception
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          b=Path('touroku-hanbaisha-sprint/official-kansai')
+          bank=json.loads((b/'APPROVED_OFFICIAL_BANK.json').read_text())
+          assert len(bank['questions'])==bank['count']
+          assert len(set(bank['approvedIds']))==bank['count']
+          assert 'KSAI-2023-090' not in bank['approvedIds']
+          assert all(q['audit']['status']=='PASS' and q['renderReady'] for q in bank['questions'])
+          for year in range(2022,2027):
+            geo=json.loads((b/f'GEOMETRY_AUDIT_{year}.json').read_text())
+            cross=json.loads((b/f'CROSSCHECK_{year}.json').read_text())
+            assert geo['total']==120 and geo['previousAutoPass']+geo['newGeometryPass']+geo['remainingHold']==120
+            assert len(geo['questions'])==120 and len(cross['results'])==cross['samples']==10
+            assert all(x['status']!='GEOMETRY_PASS' or (not x['reasons'] and x['table']['status']=='PASS' and not x['ruby']) for x in geo['questions'])
+          status=json.loads(Path('touroku-hanbaisha-ios/release-status.json').read_text())
+          assert status['release_gate']=='BLOCKED' and not status['app_review_submitted']
+          assert status['question_bank']['production_official_bank_count']==bank['count']
+          assert status['question_bank']['cross_engine_sample_size']==50
+          print('PASS 600 XY evidence / 50 cross-engine samples / release never auto-submitted')
+          PY
+      - name: Commit audit evidence and canonical release files
+        if: always()
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for year in 2022 2023 2024 2025 2026; do
+            git add -f "touroku-hanbaisha-sprint/official-kansai/GEOMETRY_AUDIT_${year}.json" 2>/dev/null || true
+            git add -f "touroku-hanbaisha-sprint/official-kansai/CROSSCHECK_${year}.json" 2>/dev/null || true
+          done
+          git add -f touroku-hanbaisha-sprint/official-kansai/GEOMETRY_PIPELINE_DIAGNOSTICS.json 2>/dev/null || true
+          git add touroku-hanbaisha-sprint/official-kansai/APPROVED_OFFICIAL_BANK.json
+          git add touroku-hanbaisha-ios/release-status.json touroku-hanbaisha-ios/RELEASE_STATUS.md
+          if ! git diff --cached --quiet; then
+            git commit -m 'audit(touhan): verify 600 PDF XY tables/rubies and 50 cross-engine samples'
+            for attempt in 1 2 3; do
+              git pull --rebase origin main
+              if git push origin HEAD:main; then exit 0; fi
+              if [ "$attempt" -eq 3 ]; then exit 1; fi
+            done
+          fi

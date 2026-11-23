@@ -1,0 +1,44 @@
+name: Registered Seller Ruby Fast Evidence Only
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/touhan-ruby-fast-evidence.yml'
+      - 'touroku-hanbaisha-sprint/official-kansai/layout_exception_triage.py'
+      - 'touroku-hanbaisha-sprint/official-kansai/reconstruct_ruby.py'
+permissions:
+  contents: write
+concurrency:
+  group: touhan-ruby-fast-evidence
+  cancel-in-progress: false
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install 'pymupdf==1.26.5'
+      - name: Detect glyph and ruby exact positions and layout exceptions
+        run: python touroku-hanbaisha-sprint/official-kansai/run_ruby_pipeline.py
+      - name: Store verified source evidence only
+        if: always()
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          b=touroku-hanbaisha-sprint/official-kansai
+          git add -f "$b/RUBY_PIPELINE_DIAGNOSTICS.json" 2>/dev/null || true
+          for year in 2022 2023 2024 2025 2026; do
+            git add -f "$b/RUBY_RECON_${year}.json" 2>/dev/null || true
+            git add -f "$b/LAYOUT_TRIAGE_${year}.json" 2>/dev/null || true
+          done
+          if ! git diff --cached --quiet; then
+            git commit -m 'audit(touhan): stage five-year glyph and special-layout evidence before mobile QA'
+            for attempt in 1 2 3; do
+              git pull --rebase origin main
+              if git push origin HEAD:main; then exit 0; fi
+              if [ "$attempt" -eq 3 ]; then exit 1; fi
+            done
+          fi

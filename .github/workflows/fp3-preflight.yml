@@ -23,6 +23,8 @@ jobs:
           python-version: '3.12'
       - name: Audit canonical learning bank
         run: python fp3-manabi-sprint/tools/audit_learning_bank.py
+      - name: Verify 2023 JAFP source transcriptions and answer keys
+        run: python fp3-manabi-sprint/tools/audit_2023_source_transcriptions.py
       - name: Extract and syntax-check product JavaScript
         run: |
           python - <<'PY'
