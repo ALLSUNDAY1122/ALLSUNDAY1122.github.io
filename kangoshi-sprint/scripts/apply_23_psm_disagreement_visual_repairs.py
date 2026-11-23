@@ -185,7 +185,7 @@ def main():
                 +[{"field":f"choice{i+1}","edits":mutations(a,b)}
                     for i,(a,b) in enumerate(zip(before["choices"],after["choices"]))],
               "sourceFieldImageProof":clipped,"extraFifthChoiceImageProof":special_fifth,
-              "reviewEvidence":item["review"],"editorialStatus":"source-only; explanation/runtime/rights release pending"}
+              "reviewEvidence":{"status":item["status"],"officialPdf":item["originalSourceUrl"],"reviewedOn":"2026-11-24"},"editorialStatus":"source-only; explanation/runtime/rights release pending"}
         revised=dict(q)
         revised.update(question=item["question"],choices=choices,sourcePage=item["pdfPage"],
             printedOptionCount=required,officialAcceptedAnswers=[expected_answer],
