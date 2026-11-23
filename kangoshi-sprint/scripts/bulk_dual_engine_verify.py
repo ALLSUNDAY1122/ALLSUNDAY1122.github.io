@@ -66,21 +66,21 @@ for exam in (112,111):
         if any(re.search(r"DKIX|[前後]H-\\d+|[-−]H[-−]\\d+",x) for x in [stem]+choices):failures.append("PAGE_FOOTER_CONTAMINATION")
         boundary_evidence=None
         scenario_evidence=None
+        coordinate_segment=None
         if not isinstance(pg,int) or not 1<=pg<=len(doc):
             failures.append("SOURCE_PAGE_INVALID")
         else:
-            verified_page, boundary_errors, scenario_evidence=verify_boundary(
+            verified_page, boundary_errors, scenario_evidence, geometry, coordinate_segment=verify_boundary(
                 doc,pdf,n,pg,stem,choices,cached_pdftotext,clean_font,norm)
-            if verified_page is not None and verified_page!=pg:
-                boundary_evidence={"previousPage":pg,"correctedPage":verified_page,
-                                   "method":"unique numbered page and 5 fields across 2 engines"}
+            if verified_page is not None:
+                boundary_evidence={"previousPage":pg,"correctedPage":verified_page,**(geometry or {})}
                 pg=verified_page
             failures.extend(boundary_errors)
         if isinstance(pg,int) and 1<=pg<=len(doc):
             page=doc[pg-1]
-            source_segment=fitz_segment(page,n)
+            source_segment=coordinate_segment
             if source_segment is not None:source_segment=clean_font(source_segment)
-            if source_segment is None:failures.append("QUESTION_NUMBER_NOT_ISOLATED_ON_SOURCE_PAGE")
+            if source_segment is None:failures.append("COORDINATE_REGION_UNVERIFIED")
             else:
                 if re.search(r"[\x00-\x08\x0b-\x1f\x7f]",source_segment):failures.append("C0_SOURCE_GLYPH_MAPPING_UNTRUSTWORTHY")
                 if re.search(r"[\ufffd઄¹¼ïñèêçâ\u0080-\u009f\u00a1-\u00ff]",source_segment):failures.append("SOURCE_GLYPH_MAPPING_UNTRUSTWORTHY")
@@ -98,7 +98,7 @@ for exam in (112,111):
         failures=list(dict.fromkeys(failures))
         status="PASS_DUAL_ENGINE_AND_OFFICIAL_KEY" if not failures else "HOLD"
         row={"id":qid,"exam":exam,"session":session,"number":n,"status":status,"reasons":failures,"sourcePdfPage":pg,"pageHasRaster":media_in_page,
-            "officialKeyRaw":q.get("officialKeyRaw"),"answer":q.get("answer"),"boundaryCorrection":boundary_evidence,"scenarioContext":scenario_evidence,
+            "officialKeyRaw":q.get("officialKeyRaw"),"answer":q.get("answer"),"coordinateBoundaryEvidence":boundary_evidence,"scenarioContext":scenario_evidence,
             "sourcePdfSha256":hashlib.sha256(pdf.read_bytes()).hexdigest()}
         rows.append(row);all_rows.append(row)
         if status.startswith("PASS"):
@@ -108,7 +108,7 @@ for exam in (112,111):
               "answerType":"singleChoice","sourceAnswerTokens":q["sourceAnswerTokens"],"officialScoringStatus":"normal",
               "scoringException":None,"requiresMedia":False,"mediaAuditStatus":"not_required",
               "rightsStatus":"mhlw-pdl1.0-text","sourceRefs":q["sourceRefs"],"sourceAttribution":q["sourceAttribution"],
-              "sourcePage":pg,"scenarioContextEvidence":scenario_evidence,"sourcePdfSha256":row["sourcePdfSha256"],"officialKeyPdfSha256":q.get("officialKeyPdfSha256"),
+              "sourcePage":pg,"scenarioContextEvidence":scenario_evidence,"coordinateBoundaryEvidence":boundary_evidence,"sourcePdfSha256":row["sourcePdfSha256"],"officialKeyPdfSha256":q.get("officialKeyPdfSha256"),
               "reviewStatus":"source_dual_engine_and_official_key_verified","canonicalStatus":"source_verified_extension",
               "publishable":False,"releaseEligible":False,
               "audit":{"questionDualEngineMatched":True,"allChoicesDualEngineMatched":True,"officialKeyMatched":True,
@@ -117,8 +117,8 @@ for exam in (112,111):
             approved.append(canonical)
     by_session[f"{exam}-{session}"]={"total":len(rows),"pass":sum(x["status"].startswith("PASS") for x in rows),"hold":sum(x["status"]=="HOLD" for x in rows)}
     (OUT/f"{exam}-{session}-per-question.json").write_text(json.dumps(rows,ensure_ascii=False,indent=2)+"\n")
-summary={"engine1":"PyMuPDF document page text and question-boundary segment", "engine2":"Poppler pdftotext -layout", "key":"MHLW 2026-11-24 official answer PDF tokens",
- "policy":"Conservative bulk gates: reject source control glyphs, raster pages, scoring exceptions; require uniquely numbered dual-engine page and dual-engine scenario context.",
+summary={"engine1":"PyMuPDF geometric word bounding boxes + clipped question rectangle", "engine2":"Poppler pdftotext -layout", "key":"MHLW 2026-11-24 official answer PDF tokens",
+ "policy":"Conservative coordinate boundary gate: question number x/y, bounded question rectangle, full stem/four choices in crop and independent Poppler PDF page, official answer source; reject source control glyphs, raster pages, scoring exceptions and unverified scenario context.",
  "total":len(all_rows),"freshPromotable":len(approved),"alreadyCanonical":len(existing),
  "holds":len(all_rows)-len(approved),"bySession":by_session,
  "holdReasons":dict(collections.Counter(reason for row in all_rows for reason in row["reasons"])),
