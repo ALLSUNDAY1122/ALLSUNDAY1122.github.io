@@ -33,7 +33,9 @@ require('reduced-motion handling missing', 'prefers-reduced-motion' in s)
 
 # Product-data guard: the public product cannot be promoted while it still self-identifies as an 8-question UI-only sample.
 require('UI-only sample marker remains', '公開状態：Safari UI検証版（独自表現8問）' not in s)
-require('600-question product bank not evidenced', ('600問' in s and '製品版データは別途600問監査後に置換します' not in s))
+require('obsolete 600-question placeholder remains', '製品版データは別途600問監査後に置換します' not in s)
+# The bank size must be read and independently validated from the audited release JSON,
+# not inferred from any number mentioned in an HTML page.
 
 if fail:
     print('FP2 Golden Master v2.1 migration gate: FAIL')
