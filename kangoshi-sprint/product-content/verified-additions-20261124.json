@@ -3,7 +3,7 @@
   "updatedAt": "2026-11-24",
   "qualification": "看護師国家試験",
   "policy": "Verified 112/111 canonical SOURCE bank; new questions pass two independent PDF text extraction and official answer token tests, but still require explanation, app tests, rights checks. Never auto-publish.",
-  "count": 180,
+  "count": 188,
   "sourceExams": [
     112,
     111
@@ -2439,6 +2439,280 @@
             "latinTokenMultisetExactMatch": true,
             "japaneseChars": 179,
             "latinTokens": 7
+          },
+          "engines": [
+            "PyMuPDF",
+            "Poppler"
+          ],
+          "status": "DUAL_ENGINE_CONTEXT_MATCH"
+        }
+      }
+    },
+    {
+      "id": "K112-AM092",
+      "sourceExam": 112,
+      "session": "AM",
+      "questionNo": 92,
+      "question": "A さんは術前からタクロリムスなど複数の免疫抑制薬を服用している。A さん は｢移植したら免疫抑制薬を飲む必要があることは分かっているのですが、退院後 は何に気を付ければよいですか｣と看護師に質問した。 A さんへの看護師の説明で適切なのはどれか。",
+      "choices": [
+        "｢犬は今まで通り室内で飼育できます｣",
+        "｢グレープフルーツは摂取しないでください｣",
+        "｢感染予防のため風疹のワクチン接種をしてください｣",
+        "｢薬を飲み忘れたときは2回分をまとめて服用してください｣"
+      ],
+      "answer": 1,
+      "officialAcceptedAnswers": [
+        1
+      ],
+      "answerType": "singleChoice",
+      "sourceAnswerTokens": [
+        "2"
+      ],
+      "officialScoringStatus": "normal",
+      "scoringException": null,
+      "requiresMedia": false,
+      "mediaAuditStatus": "not_required",
+      "rightsStatus": "mhlw-pdl1.0-text",
+      "sourceRefs": [
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp230524-05a_01.pdf",
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp230524-05seitou.pdf"
+      ],
+      "sourceAttribution": "出典：厚生労働省『第112回看護師国家試験』を学習用データとして加工",
+      "sourcePage": 34,
+      "scenarioContextEvidence": {
+        "page": 34,
+        "groupFirst": 91,
+        "groupLast": 93,
+        "commonText": "次の文を読み91〜93 の問いに答えよ。\nA さん（47 歳、男性、会社員）は妻と2人暮らしで、自宅の室内で犬を飼っている。\n15 年前に慢性糸球体腎炎と診\nchronic glomerulonephritis\n断され、徐々に腎機能低下が認められたので、2年前\nから慢性腎不全の\nchronic renal failureため血液透析療法を週3回受けている。今回、弟から腎臓の提供の\n申し出があり、生体腎移植の目的で入院した。入院3日、A さんの生体腎移植手術\nは予定通り終了した。",
+        "normalizedLength": 225,
+        "method": "printed range header + first question position + exact Japanese content and Latin token multiset",
+        "comparison": {
+          "japaneseExactMatch": true,
+          "latinTokenMultisetExactMatch": true,
+          "japaneseChars": 179,
+          "latinTokens": 7
+        },
+        "engines": [
+          "PyMuPDF",
+          "Poppler"
+        ],
+        "status": "DUAL_ENGINE_CONTEXT_MATCH"
+      },
+      "visualNumericGlyphEvidence": null,
+      "coordinateBoundaryEvidence": {
+        "previousPage": 34,
+        "correctedPage": 34,
+        "anchorBox": [
+          78.91,
+          443.26,
+          90.95,
+          455.31
+        ],
+        "clip": [
+          0.0,
+          440.26,
+          615.61,
+          827.44
+        ],
+        "nextAnchorFound": false,
+        "verifiedPage": 34,
+        "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+      },
+      "shortStemVerifiedByCoordinates": false,
+      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
+      "officialKeyPdfSha256": "c42b7b61fe9b7fd39265b0e4fef5f0a4d277db077618a98db16e9717047a9502",
+      "reviewStatus": "DUAL_ENGINE_SOURCE_AND_OFFICIAL_KEY_VERIFIED_EXPLANATION_PENDING",
+      "canonicalStatus": "source_verified_extension",
+      "publishable": false,
+      "releaseEligible": false,
+      "audit": {
+        "questionDualEngineMatched": true,
+        "allChoicesDualEngineMatched": true,
+        "officialKeyMatched": true,
+        "sourceGlyphControlAbsent": true,
+        "mediaNotRequired": true,
+        "explanationIndependentlyReviewed": false,
+        "runtimeIntegrationChecked": false
+      },
+      "category": "状況設定",
+      "majorSubject": null,
+      "point": null,
+      "detail": null,
+      "evidence": {
+        "sourcePdfPage": 34,
+        "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
+        "dualEngineAuditRun": "GitHub Actions 2026-11-24",
+        "verifier": "PyMuPDF + Poppler pdftotext -layout",
+        "originalPdfGlyphControlAbsent": true,
+        "officialKeyRetestedAgainstPdf": true,
+        "coordinateBoundaryEvidence": {
+          "previousPage": 34,
+          "correctedPage": 34,
+          "anchorBox": [
+            78.91,
+            443.26,
+            90.95,
+            455.31
+          ],
+          "clip": [
+            0.0,
+            440.26,
+            615.61,
+            827.44
+          ],
+          "nextAnchorFound": false,
+          "verifiedPage": 34,
+          "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+        },
+        "scenarioContextEvidence": {
+          "page": 34,
+          "groupFirst": 91,
+          "groupLast": 93,
+          "commonText": "次の文を読み91〜93 の問いに答えよ。\nA さん（47 歳、男性、会社員）は妻と2人暮らしで、自宅の室内で犬を飼っている。\n15 年前に慢性糸球体腎炎と診\nchronic glomerulonephritis\n断され、徐々に腎機能低下が認められたので、2年前\nから慢性腎不全の\nchronic renal failureため血液透析療法を週3回受けている。今回、弟から腎臓の提供の\n申し出があり、生体腎移植の目的で入院した。入院3日、A さんの生体腎移植手術\nは予定通り終了した。",
+          "normalizedLength": 225,
+          "method": "printed range header + first question position + exact Japanese content and Latin token multiset",
+          "comparison": {
+            "japaneseExactMatch": true,
+            "latinTokenMultisetExactMatch": true,
+            "japaneseChars": 179,
+            "latinTokens": 7
+          },
+          "engines": [
+            "PyMuPDF",
+            "Poppler"
+          ],
+          "status": "DUAL_ENGINE_CONTEXT_MATCH"
+        }
+      }
+    },
+    {
+      "id": "K112-AM104",
+      "sourceExam": 112,
+      "session": "AM",
+      "questionNo": 104,
+      "question": "A ちゃんの入院中、母親は一度も自宅に帰らずに付き添いを続けている。入院 3日の朝に看護師が訪室したところ、母親が｢夫から電話があって、A の入院後、 兄がほとんど寝ずに大泣きしているらしく、私は心配です｣と話している。 母親への看護師の対応で適切なのはどれか。",
+      "choices": [
+        "病室内でA ちゃんと兄を面会させてよいと伝える。",
+        "A ちゃんのことに集中するべきであると伝える。",
+        "兄と関わる時間を持てるよう母親に帰宅を促す。",
+        "退院の可否を医師と相談すると伝える。"
+      ],
+      "answer": 2,
+      "officialAcceptedAnswers": [
+        2
+      ],
+      "answerType": "singleChoice",
+      "sourceAnswerTokens": [
+        "3"
+      ],
+      "officialScoringStatus": "normal",
+      "scoringException": null,
+      "requiresMedia": false,
+      "mediaAuditStatus": "not_required",
+      "rightsStatus": "mhlw-pdl1.0-text",
+      "sourceRefs": [
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp230524-05a_01.pdf",
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp230524-05seitou.pdf"
+      ],
+      "sourceAttribution": "出典：厚生労働省『第112回看護師国家試験』を学習用データとして加工",
+      "sourcePage": 42,
+      "scenarioContextEvidence": {
+        "page": 42,
+        "groupFirst": 103,
+        "groupLast": 105,
+        "commonText": "次の文を読み103〜105 の問いに答えよ。\nA ちゃん（2歳、男児）は両親、兄（5歳）の4人家族である。3日前から発熱が続\nくため、母親と一緒に外来を受診した。診察の結果、川崎病と診断\nKawasaki disease\nされ、個室に入院\nとなり左手背に点滴静脈内留置針が挿入された。入院中は母親が希望し、A ちゃん\nに付き添っている。A ちゃんにγ-グロブリン療法とアスピリンの内服が開始される\nことになった。看護師がγ-グロブリン療法の開始のために訪室すると、A ちゃんは\n不機嫌にぐずって泣いている。",
+        "normalizedLength": 239,
+        "method": "printed range header + first question position + exact Japanese content and Latin token multiset",
+        "comparison": {
+          "japaneseExactMatch": true,
+          "latinTokenMultisetExactMatch": true,
+          "japaneseChars": 220,
+          "latinTokens": 6
+        },
+        "engines": [
+          "PyMuPDF",
+          "Poppler"
+        ],
+        "status": "DUAL_ENGINE_CONTEXT_MATCH"
+      },
+      "visualNumericGlyphEvidence": null,
+      "coordinateBoundaryEvidence": {
+        "previousPage": 42,
+        "correctedPage": 42,
+        "anchorBox": [
+          72.89,
+          491.45,
+          90.96,
+          503.5
+        ],
+        "clip": [
+          0.0,
+          488.45,
+          615.61,
+          827.44
+        ],
+        "nextAnchorFound": false,
+        "verifiedPage": 42,
+        "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+      },
+      "shortStemVerifiedByCoordinates": false,
+      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
+      "officialKeyPdfSha256": "c42b7b61fe9b7fd39265b0e4fef5f0a4d277db077618a98db16e9717047a9502",
+      "reviewStatus": "DUAL_ENGINE_SOURCE_AND_OFFICIAL_KEY_VERIFIED_EXPLANATION_PENDING",
+      "canonicalStatus": "source_verified_extension",
+      "publishable": false,
+      "releaseEligible": false,
+      "audit": {
+        "questionDualEngineMatched": true,
+        "allChoicesDualEngineMatched": true,
+        "officialKeyMatched": true,
+        "sourceGlyphControlAbsent": true,
+        "mediaNotRequired": true,
+        "explanationIndependentlyReviewed": false,
+        "runtimeIntegrationChecked": false
+      },
+      "category": "状況設定",
+      "majorSubject": null,
+      "point": null,
+      "detail": null,
+      "evidence": {
+        "sourcePdfPage": 42,
+        "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
+        "dualEngineAuditRun": "GitHub Actions 2026-11-24",
+        "verifier": "PyMuPDF + Poppler pdftotext -layout",
+        "originalPdfGlyphControlAbsent": true,
+        "officialKeyRetestedAgainstPdf": true,
+        "coordinateBoundaryEvidence": {
+          "previousPage": 42,
+          "correctedPage": 42,
+          "anchorBox": [
+            72.89,
+            491.45,
+            90.96,
+            503.5
+          ],
+          "clip": [
+            0.0,
+            488.45,
+            615.61,
+            827.44
+          ],
+          "nextAnchorFound": false,
+          "verifiedPage": 42,
+          "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+        },
+        "scenarioContextEvidence": {
+          "page": 42,
+          "groupFirst": 103,
+          "groupLast": 105,
+          "commonText": "次の文を読み103〜105 の問いに答えよ。\nA ちゃん（2歳、男児）は両親、兄（5歳）の4人家族である。3日前から発熱が続\nくため、母親と一緒に外来を受診した。診察の結果、川崎病と診断\nKawasaki disease\nされ、個室に入院\nとなり左手背に点滴静脈内留置針が挿入された。入院中は母親が希望し、A ちゃん\nに付き添っている。A ちゃんにγ-グロブリン療法とアスピリンの内服が開始される\nことになった。看護師がγ-グロブリン療法の開始のために訪室すると、A ちゃんは\n不機嫌にぐずって泣いている。",
+          "normalizedLength": 239,
+          "method": "printed range header + first question position + exact Japanese content and Latin token multiset",
+          "comparison": {
+            "japaneseExactMatch": true,
+            "latinTokenMultisetExactMatch": true,
+            "japaneseChars": 220,
+            "latinTokens": 6
           },
           "engines": [
             "PyMuPDF",
@@ -5177,6 +5451,143 @@
             515.55
           ],
           "nextAnchorFound": true,
+          "verifiedPage": 48,
+          "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+        },
+        "scenarioContextEvidence": {
+          "page": 48,
+          "groupFirst": 109,
+          "groupLast": 111,
+          "commonText": "次の文を読み109〜111 の問いに答えよ。\nA さん（58 歳、男性）は、年金の給付を受けて生活している父親（82 歳）と2人暮ら\nしで、母親は2年前に亡くなっている。20 歳のときに統合失調症\nschizophrenia\nと診断された。20\n歳代で何回か仕事に就いたが長続きはしなかった。40 歳からは無職で、デイケアへ\n通所していた。1年前にデイケアを中断してからは、ほとんどの時間を自宅で過ごし\nているが、月1回の外来通院は継続している。A さんが飲まなかった薬がたくさん\n残っていることを父親が発見し、主治医に相談した。この相談をきっかけに、週1回\nの精神科訪問看護を導入することになった。初回訪問時にA さんは｢薬は飲み忘れた\nんです。心配かけてごめんなさい｣と父親と訪問看護師に話した。",
+          "normalizedLength": 332,
+          "method": "printed range header + first question position + exact Japanese content and Latin token multiset",
+          "comparison": {
+            "japaneseExactMatch": true,
+            "latinTokenMultisetExactMatch": true,
+            "japaneseChars": 316,
+            "latinTokens": 4
+          },
+          "engines": [
+            "PyMuPDF",
+            "Poppler"
+          ],
+          "status": "DUAL_ENGINE_CONTEXT_MATCH"
+        }
+      }
+    },
+    {
+      "id": "K112-PM110",
+      "sourceExam": 112,
+      "session": "PM",
+      "questionNo": 110,
+      "question": "初回訪問から1か月、訪問看護師はA さんが適切に服薬できていることを確認 した。A さんは｢調子はいいですね。やる気も少し出てきました。主治医は今の薬 を飲み続けるのがいいと話しています。ただ、夜の薬は朝に眠気が残るので昼まで 寝てしまいます｣と話した。 このときの訪問看護師のA さんへの声かけで最も適切なのはどれか。",
+      "choices": [
+        "｢朝起きられるように毎朝の日課を何か作りましょう｣",
+        "｢朝に眠気が残ることを主治医に相談してみませんか｣",
+        "｢来週は朝早く一緒に散歩へ行けるように訪問しますね｣",
+        "｢朝起こしてもらうようにお父さんにお願いしてみませんか｣"
+      ],
+      "answer": 1,
+      "officialAcceptedAnswers": [
+        1
+      ],
+      "answerType": "singleChoice",
+      "sourceAnswerTokens": [
+        "2"
+      ],
+      "officialScoringStatus": "normal",
+      "scoringException": null,
+      "requiresMedia": false,
+      "mediaAuditStatus": "not_required",
+      "rightsStatus": "mhlw-pdl1.0-text",
+      "sourceRefs": [
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp230524-05c_01.pdf",
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp230524-05seitou.pdf"
+      ],
+      "sourceAttribution": "出典：厚生労働省『第112回看護師国家試験』を学習用データとして加工",
+      "sourcePage": 48,
+      "scenarioContextEvidence": {
+        "page": 48,
+        "groupFirst": 109,
+        "groupLast": 111,
+        "commonText": "次の文を読み109〜111 の問いに答えよ。\nA さん（58 歳、男性）は、年金の給付を受けて生活している父親（82 歳）と2人暮ら\nしで、母親は2年前に亡くなっている。20 歳のときに統合失調症\nschizophrenia\nと診断された。20\n歳代で何回か仕事に就いたが長続きはしなかった。40 歳からは無職で、デイケアへ\n通所していた。1年前にデイケアを中断してからは、ほとんどの時間を自宅で過ごし\nているが、月1回の外来通院は継続している。A さんが飲まなかった薬がたくさん\n残っていることを父親が発見し、主治医に相談した。この相談をきっかけに、週1回\nの精神科訪問看護を導入することになった。初回訪問時にA さんは｢薬は飲み忘れた\nんです。心配かけてごめんなさい｣と父親と訪問看護師に話した。",
+        "normalizedLength": 332,
+        "method": "printed range header + first question position + exact Japanese content and Latin token multiset",
+        "comparison": {
+          "japaneseExactMatch": true,
+          "latinTokenMultisetExactMatch": true,
+          "japaneseChars": 316,
+          "latinTokens": 4
+        },
+        "engines": [
+          "PyMuPDF",
+          "Poppler"
+        ],
+        "status": "DUAL_ENGINE_CONTEXT_MATCH"
+      },
+      "visualNumericGlyphEvidence": null,
+      "coordinateBoundaryEvidence": {
+        "previousPage": 48,
+        "correctedPage": 48,
+        "anchorBox": [
+          72.89,
+          515.55,
+          90.96,
+          527.59
+        ],
+        "clip": [
+          0.0,
+          512.55,
+          615.61,
+          827.44
+        ],
+        "nextAnchorFound": false,
+        "verifiedPage": 48,
+        "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+      },
+      "shortStemVerifiedByCoordinates": false,
+      "sourcePdfSha256": "137d583931c6ae6a7fa2f3f8655352bdce24735c6f0b2bbbb0b192e6a357d01e",
+      "officialKeyPdfSha256": "c42b7b61fe9b7fd39265b0e4fef5f0a4d277db077618a98db16e9717047a9502",
+      "reviewStatus": "DUAL_ENGINE_SOURCE_AND_OFFICIAL_KEY_VERIFIED_EXPLANATION_PENDING",
+      "canonicalStatus": "source_verified_extension",
+      "publishable": false,
+      "releaseEligible": false,
+      "audit": {
+        "questionDualEngineMatched": true,
+        "allChoicesDualEngineMatched": true,
+        "officialKeyMatched": true,
+        "sourceGlyphControlAbsent": true,
+        "mediaNotRequired": true,
+        "explanationIndependentlyReviewed": false,
+        "runtimeIntegrationChecked": false
+      },
+      "category": "状況設定",
+      "majorSubject": null,
+      "point": null,
+      "detail": null,
+      "evidence": {
+        "sourcePdfPage": 48,
+        "sourcePdfSha256": "137d583931c6ae6a7fa2f3f8655352bdce24735c6f0b2bbbb0b192e6a357d01e",
+        "dualEngineAuditRun": "GitHub Actions 2026-11-24",
+        "verifier": "PyMuPDF + Poppler pdftotext -layout",
+        "originalPdfGlyphControlAbsent": true,
+        "officialKeyRetestedAgainstPdf": true,
+        "coordinateBoundaryEvidence": {
+          "previousPage": 48,
+          "correctedPage": 48,
+          "anchorBox": [
+            72.89,
+            515.55,
+            90.96,
+            527.59
+          ],
+          "clip": [
+            0.0,
+            512.55,
+            615.61,
+            827.44
+          ],
+          "nextAnchorFound": false,
           "verifiedPage": 48,
           "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
         },
@@ -8282,6 +8693,143 @@
             560.91
           ],
           "nextAnchorFound": true,
+          "verifiedPage": 52,
+          "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+        },
+        "scenarioContextEvidence": {
+          "page": 52,
+          "groupFirst": 112,
+          "groupLast": 114,
+          "commonText": "次の文を読み112〜114 の問いに答えよ。\nA さん（23 歳、女性）は大学を卒業後、会社に就職して1人暮らしを始めた。入社\n後に｢会社の制服が似合うようになりたい｣とダイエットを始め、次第にるいそうが目\n立つようになった。｢太るのが怖い｣と言って食事を拒否するようになり、体重は1年\n間で10 kg 減少した。しかし、本人は｢まだ太っているから、痩せないといけない｣と\n話していた。久しぶりにA さんと会った母親が、過度のるいそうを心配して、内科\n受診を勧めた。内科ではるいそう以外に大きな異常を認めず、精神科受診を勧められ\nた。精神科では神経性無食欲症\nanorexia nervosa\nと診断され、外来通院を開始した。その後、低血糖に\nよるふらつきのため職場で頻回に転倒するようになった。それでも食事を十分に摂ら\nないため、精神科病棟へ入院した。入院時、身長166 cm、体重36 kg であった。入\n院後、食事のほかに点滴による栄養補給が始まった。",
+          "normalizedLength": 407,
+          "method": "printed range header + first question position + exact Japanese content and Latin token multiset",
+          "comparison": {
+            "japaneseExactMatch": true,
+            "latinTokenMultisetExactMatch": true,
+            "japaneseChars": 384,
+            "latinTokens": 7
+          },
+          "engines": [
+            "PyMuPDF",
+            "Poppler"
+          ],
+          "status": "DUAL_ENGINE_CONTEXT_MATCH"
+        }
+      }
+    },
+    {
+      "id": "K111-AM113",
+      "sourceExam": 111,
+      "session": "AM",
+      "questionNo": 113,
+      "question": "入院後2週が経過した。食事のときにA さんは食べ物を細かく刻み、1時間以 上時間をかけるが、摂取量は全体の25 % 程度である。時間があるとベッド上でい つもストレッチを行っている。A さんと話し合ったところ｢私はこの病棟で太って いるほうだから少しでも痩せなきゃ｣と話した。 看護師の関わりとして適切なのはどれか。",
+      "choices": [
+        "体重測定の回数を増やす。",
+        "鏡でA さんの全身を映して見せる。",
+        "痩せたいと思う気持ちについて話し合う。",
+        "A さんは他の患者よりも痩せていると伝える。"
+      ],
+      "answer": 2,
+      "officialAcceptedAnswers": [
+        2
+      ],
+      "answerType": "singleChoice",
+      "sourceAnswerTokens": [
+        "3"
+      ],
+      "officialScoringStatus": "normal",
+      "scoringException": null,
+      "requiresMedia": false,
+      "mediaAuditStatus": "not_required",
+      "rightsStatus": "mhlw-pdl1.0-text",
+      "sourceRefs": [
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp220421-05a_01.pdf",
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp220421-05seitou.pdf"
+      ],
+      "sourceAttribution": "出典：厚生労働省『第111回看護師国家試験』を学習用データとして加工",
+      "sourcePage": 52,
+      "scenarioContextEvidence": {
+        "page": 52,
+        "groupFirst": 112,
+        "groupLast": 114,
+        "commonText": "次の文を読み112〜114 の問いに答えよ。\nA さん（23 歳、女性）は大学を卒業後、会社に就職して1人暮らしを始めた。入社\n後に｢会社の制服が似合うようになりたい｣とダイエットを始め、次第にるいそうが目\n立つようになった。｢太るのが怖い｣と言って食事を拒否するようになり、体重は1年\n間で10 kg 減少した。しかし、本人は｢まだ太っているから、痩せないといけない｣と\n話していた。久しぶりにA さんと会った母親が、過度のるいそうを心配して、内科\n受診を勧めた。内科ではるいそう以外に大きな異常を認めず、精神科受診を勧められ\nた。精神科では神経性無食欲症\nanorexia nervosa\nと診断され、外来通院を開始した。その後、低血糖に\nよるふらつきのため職場で頻回に転倒するようになった。それでも食事を十分に摂ら\nないため、精神科病棟へ入院した。入院時、身長166 cm、体重36 kg であった。入\n院後、食事のほかに点滴による栄養補給が始まった。",
+        "normalizedLength": 407,
+        "method": "printed range header + first question position + exact Japanese content and Latin token multiset",
+        "comparison": {
+          "japaneseExactMatch": true,
+          "latinTokenMultisetExactMatch": true,
+          "japaneseChars": 384,
+          "latinTokens": 7
+        },
+        "engines": [
+          "PyMuPDF",
+          "Poppler"
+        ],
+        "status": "DUAL_ENGINE_CONTEXT_MATCH"
+      },
+      "visualNumericGlyphEvidence": null,
+      "coordinateBoundaryEvidence": {
+        "previousPage": 52,
+        "correctedPage": 52,
+        "anchorBox": [
+          70.06,
+          560.91,
+          88.13,
+          572.95
+        ],
+        "clip": [
+          0.0,
+          557.91,
+          609.95,
+          822.01
+        ],
+        "nextAnchorFound": false,
+        "verifiedPage": 52,
+        "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+      },
+      "shortStemVerifiedByCoordinates": false,
+      "sourcePdfSha256": "e853d7a86ef06ef41e8622f550dcf9bb3ffa48af076e412394070f237827bfb3",
+      "officialKeyPdfSha256": "b395c7eddb7820daaaf19ae44766889cf19b7b4f5e0d8f9411a8ba1787dfac85",
+      "reviewStatus": "DUAL_ENGINE_SOURCE_AND_OFFICIAL_KEY_VERIFIED_EXPLANATION_PENDING",
+      "canonicalStatus": "source_verified_extension",
+      "publishable": false,
+      "releaseEligible": false,
+      "audit": {
+        "questionDualEngineMatched": true,
+        "allChoicesDualEngineMatched": true,
+        "officialKeyMatched": true,
+        "sourceGlyphControlAbsent": true,
+        "mediaNotRequired": true,
+        "explanationIndependentlyReviewed": false,
+        "runtimeIntegrationChecked": false
+      },
+      "category": "状況設定",
+      "majorSubject": null,
+      "point": null,
+      "detail": null,
+      "evidence": {
+        "sourcePdfPage": 52,
+        "sourcePdfSha256": "e853d7a86ef06ef41e8622f550dcf9bb3ffa48af076e412394070f237827bfb3",
+        "dualEngineAuditRun": "GitHub Actions 2026-11-24",
+        "verifier": "PyMuPDF + Poppler pdftotext -layout",
+        "originalPdfGlyphControlAbsent": true,
+        "officialKeyRetestedAgainstPdf": true,
+        "coordinateBoundaryEvidence": {
+          "previousPage": 52,
+          "correctedPage": 52,
+          "anchorBox": [
+            70.06,
+            560.91,
+            88.13,
+            572.95
+          ],
+          "clip": [
+            0.0,
+            557.91,
+            609.95,
+            822.01
+          ],
+          "nextAnchorFound": false,
           "verifiedPage": 52,
           "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
         },
@@ -11687,6 +12235,417 @@
       }
     },
     {
+      "id": "K111-PM098",
+      "sourceExam": 111,
+      "session": "PM",
+      "questionNo": 98,
+      "question": "入所した日の夕方、A さんは自分の荷物をまとめて｢夕食を作らなければいけな いので、家に帰ります｣と施設内を歩いている。 A さんへの看護師の対応で適切なのはどれか。",
+      "choices": [
+        "｢他の入所者と話をしましょう｣",
+        "｢椅子に座ってお話ししませんか｣",
+        "｢入所中なので家には帰れません｣",
+        "｢歩くのは危ないのでやめましょう｣"
+      ],
+      "answer": 1,
+      "officialAcceptedAnswers": [
+        1
+      ],
+      "answerType": "singleChoice",
+      "sourceAnswerTokens": [
+        "2"
+      ],
+      "officialScoringStatus": "normal",
+      "scoringException": null,
+      "requiresMedia": false,
+      "mediaAuditStatus": "not_required",
+      "rightsStatus": "mhlw-pdl1.0-text",
+      "sourceRefs": [
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp220421-05c_01.pdf",
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp220421-05seitou.pdf"
+      ],
+      "sourceAttribution": "出典：厚生労働省『第111回看護師国家試験』を学習用データとして加工",
+      "sourcePage": 38,
+      "scenarioContextEvidence": {
+        "page": 38,
+        "groupFirst": 97,
+        "groupLast": 99,
+        "commonText": "次の文を読み97〜99 の問いに答えよ。\nA さん（82 歳、女性）は息子（57 歳、会社員）と息子の妻（55 歳、パート勤務）との3\n人暮らし。3年前にAlzheimerÖアルツハイマーÙ型認知症\nAlzheimer disease\nと診断され、認知症高齢者\nの日常生活自立度判定基準Ⅱb、要介護2である。A さんの介護は、主に息子の妻が\n行っていた。A さんは、声かけがあれば日常生活動作ÖADLÙを自分で行うことがで\nきた。しかし、A さんは徐々に認知症が重度化し、1人で外出すると帰ってくるこ\nとができなくなり、夜間に落ちつきなく動き回ることが多くなった。息子と息子の妻\nはA さんの介護について介護支援専門員に相談していたが、息子の妻は睡眠不足と\nなり、体調を崩してしまった。そのため、A さんは介護老人保健施設に入所するこ\nとになった。",
+        "normalizedLength": 353,
+        "method": "printed range header + first question position + exact Japanese content and Latin token multiset",
+        "comparison": {
+          "japaneseExactMatch": true,
+          "latinTokenMultisetExactMatch": true,
+          "japaneseChars": 318,
+          "latinTokens": 11
+        },
+        "engines": [
+          "PyMuPDF",
+          "Poppler"
+        ],
+        "status": "DUAL_ENGINE_CONTEXT_MATCH"
+      },
+      "visualNumericGlyphEvidence": null,
+      "coordinateBoundaryEvidence": {
+        "previousPage": 38,
+        "correctedPage": 38,
+        "anchorBox": [
+          76.08,
+          609.09,
+          88.13,
+          621.14
+        ],
+        "clip": [
+          0.0,
+          606.09,
+          609.95,
+          822.01
+        ],
+        "nextAnchorFound": false,
+        "verifiedPage": 38,
+        "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+      },
+      "shortStemVerifiedByCoordinates": false,
+      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
+      "officialKeyPdfSha256": "b395c7eddb7820daaaf19ae44766889cf19b7b4f5e0d8f9411a8ba1787dfac85",
+      "reviewStatus": "DUAL_ENGINE_SOURCE_AND_OFFICIAL_KEY_VERIFIED_EXPLANATION_PENDING",
+      "canonicalStatus": "source_verified_extension",
+      "publishable": false,
+      "releaseEligible": false,
+      "audit": {
+        "questionDualEngineMatched": true,
+        "allChoicesDualEngineMatched": true,
+        "officialKeyMatched": true,
+        "sourceGlyphControlAbsent": true,
+        "mediaNotRequired": true,
+        "explanationIndependentlyReviewed": false,
+        "runtimeIntegrationChecked": false
+      },
+      "category": "状況設定",
+      "majorSubject": null,
+      "point": null,
+      "detail": null,
+      "evidence": {
+        "sourcePdfPage": 38,
+        "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
+        "dualEngineAuditRun": "GitHub Actions 2026-11-24",
+        "verifier": "PyMuPDF + Poppler pdftotext -layout",
+        "originalPdfGlyphControlAbsent": true,
+        "officialKeyRetestedAgainstPdf": true,
+        "coordinateBoundaryEvidence": {
+          "previousPage": 38,
+          "correctedPage": 38,
+          "anchorBox": [
+            76.08,
+            609.09,
+            88.13,
+            621.14
+          ],
+          "clip": [
+            0.0,
+            606.09,
+            609.95,
+            822.01
+          ],
+          "nextAnchorFound": false,
+          "verifiedPage": 38,
+          "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+        },
+        "scenarioContextEvidence": {
+          "page": 38,
+          "groupFirst": 97,
+          "groupLast": 99,
+          "commonText": "次の文を読み97〜99 の問いに答えよ。\nA さん（82 歳、女性）は息子（57 歳、会社員）と息子の妻（55 歳、パート勤務）との3\n人暮らし。3年前にAlzheimerÖアルツハイマーÙ型認知症\nAlzheimer disease\nと診断され、認知症高齢者\nの日常生活自立度判定基準Ⅱb、要介護2である。A さんの介護は、主に息子の妻が\n行っていた。A さんは、声かけがあれば日常生活動作ÖADLÙを自分で行うことがで\nきた。しかし、A さんは徐々に認知症が重度化し、1人で外出すると帰ってくるこ\nとができなくなり、夜間に落ちつきなく動き回ることが多くなった。息子と息子の妻\nはA さんの介護について介護支援専門員に相談していたが、息子の妻は睡眠不足と\nなり、体調を崩してしまった。そのため、A さんは介護老人保健施設に入所するこ\nとになった。",
+          "normalizedLength": 353,
+          "method": "printed range header + first question position + exact Japanese content and Latin token multiset",
+          "comparison": {
+            "japaneseExactMatch": true,
+            "latinTokenMultisetExactMatch": true,
+            "japaneseChars": 318,
+            "latinTokens": 11
+          },
+          "engines": [
+            "PyMuPDF",
+            "Poppler"
+          ],
+          "status": "DUAL_ENGINE_CONTEXT_MATCH"
+        }
+      }
+    },
+    {
+      "id": "K111-PM101",
+      "sourceExam": 111,
+      "session": "PM",
+      "questionNo": 101,
+      "question": "A さんは妻や看護師との話の内容は理解しているようだが、返答の際に言葉を 間違えてしまうことや言葉がなかなか出てこないことがある。 A さんへの看護師の対応で適切なのはどれか。",
+      "choices": [
+        "A さんの言葉を推測しながら話す。",
+        "A さんの言い誤りを訂正する。",
+        "大きな声で話す。",
+        "話題を変える。"
+      ],
+      "answer": 0,
+      "officialAcceptedAnswers": [
+        0
+      ],
+      "answerType": "singleChoice",
+      "sourceAnswerTokens": [
+        "1"
+      ],
+      "officialScoringStatus": "normal",
+      "scoringException": null,
+      "requiresMedia": false,
+      "mediaAuditStatus": "not_required",
+      "rightsStatus": "mhlw-pdl1.0-text",
+      "sourceRefs": [
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp220421-05c_01.pdf",
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp220421-05seitou.pdf"
+      ],
+      "sourceAttribution": "出典：厚生労働省『第111回看護師国家試験』を学習用データとして加工",
+      "sourcePage": 40,
+      "scenarioContextEvidence": {
+        "page": 40,
+        "groupFirst": 100,
+        "groupLast": 102,
+        "commonText": "次の文を読み100〜102 の問いに答えよ。\nA さん（83 歳、男性）は妻（81 歳）と2人暮らし。息子夫婦は共働きで同市内に住ん\nでいる。A さんは自宅の廊下で倒れているところを妻に発見され、救急搬送された。\nA さんは右上下肢に力が入らず、妻の声かけにうなずくが発語はなかった。頭部CT\nで左中大脳動脈領域の脳梗塞と診断\ncerebral infarction されたため救急外来で血栓溶解療法が行われ、入\n院となった。血栓溶解療法による治療後2週。A さんは右上下肢麻痺、失語などの\n後遺症があるが、自宅への退院を希望したため、機能訓練の目的で回復期リハビリ\nテーション病棟に転棟した。転棟後1日。A さんはベッドから車椅子への移乗動作\nの訓練を始めたが、健側の下肢筋力が低下しているため、立位のときにバランスを崩\nしやすい状況である。",
+        "normalizedLength": 352,
+        "method": "printed range header + first question position + exact Japanese content and Latin token multiset",
+        "comparison": {
+          "japaneseExactMatch": true,
+          "latinTokenMultisetExactMatch": true,
+          "japaneseChars": 327,
+          "latinTokens": 8
+        },
+        "engines": [
+          "PyMuPDF",
+          "Poppler"
+        ],
+        "status": "DUAL_ENGINE_CONTEXT_MATCH"
+      },
+      "visualNumericGlyphEvidence": null,
+      "coordinateBoundaryEvidence": {
+        "previousPage": 40,
+        "correctedPage": 40,
+        "anchorBox": [
+          70.06,
+          560.91,
+          88.13,
+          572.95
+        ],
+        "clip": [
+          0.0,
+          557.91,
+          609.95,
+          822.01
+        ],
+        "nextAnchorFound": false,
+        "verifiedPage": 40,
+        "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+      },
+      "shortStemVerifiedByCoordinates": false,
+      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
+      "officialKeyPdfSha256": "b395c7eddb7820daaaf19ae44766889cf19b7b4f5e0d8f9411a8ba1787dfac85",
+      "reviewStatus": "DUAL_ENGINE_SOURCE_AND_OFFICIAL_KEY_VERIFIED_EXPLANATION_PENDING",
+      "canonicalStatus": "source_verified_extension",
+      "publishable": false,
+      "releaseEligible": false,
+      "audit": {
+        "questionDualEngineMatched": true,
+        "allChoicesDualEngineMatched": true,
+        "officialKeyMatched": true,
+        "sourceGlyphControlAbsent": true,
+        "mediaNotRequired": true,
+        "explanationIndependentlyReviewed": false,
+        "runtimeIntegrationChecked": false
+      },
+      "category": "状況設定",
+      "majorSubject": null,
+      "point": null,
+      "detail": null,
+      "evidence": {
+        "sourcePdfPage": 40,
+        "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
+        "dualEngineAuditRun": "GitHub Actions 2026-11-24",
+        "verifier": "PyMuPDF + Poppler pdftotext -layout",
+        "originalPdfGlyphControlAbsent": true,
+        "officialKeyRetestedAgainstPdf": true,
+        "coordinateBoundaryEvidence": {
+          "previousPage": 40,
+          "correctedPage": 40,
+          "anchorBox": [
+            70.06,
+            560.91,
+            88.13,
+            572.95
+          ],
+          "clip": [
+            0.0,
+            557.91,
+            609.95,
+            822.01
+          ],
+          "nextAnchorFound": false,
+          "verifiedPage": 40,
+          "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+        },
+        "scenarioContextEvidence": {
+          "page": 40,
+          "groupFirst": 100,
+          "groupLast": 102,
+          "commonText": "次の文を読み100〜102 の問いに答えよ。\nA さん（83 歳、男性）は妻（81 歳）と2人暮らし。息子夫婦は共働きで同市内に住ん\nでいる。A さんは自宅の廊下で倒れているところを妻に発見され、救急搬送された。\nA さんは右上下肢に力が入らず、妻の声かけにうなずくが発語はなかった。頭部CT\nで左中大脳動脈領域の脳梗塞と診断\ncerebral infarction されたため救急外来で血栓溶解療法が行われ、入\n院となった。血栓溶解療法による治療後2週。A さんは右上下肢麻痺、失語などの\n後遺症があるが、自宅への退院を希望したため、機能訓練の目的で回復期リハビリ\nテーション病棟に転棟した。転棟後1日。A さんはベッドから車椅子への移乗動作\nの訓練を始めたが、健側の下肢筋力が低下しているため、立位のときにバランスを崩\nしやすい状況である。",
+          "normalizedLength": 352,
+          "method": "printed range header + first question position + exact Japanese content and Latin token multiset",
+          "comparison": {
+            "japaneseExactMatch": true,
+            "latinTokenMultisetExactMatch": true,
+            "japaneseChars": 327,
+            "latinTokens": 8
+          },
+          "engines": [
+            "PyMuPDF",
+            "Poppler"
+          ],
+          "status": "DUAL_ENGINE_CONTEXT_MATCH"
+        }
+      }
+    },
+    {
+      "id": "K111-PM104",
+      "sourceExam": 111,
+      "session": "PM",
+      "questionNo": 104,
+      "question": "A ちゃんは、個室隔離での入院となり、持続点滴静脈内注射が開始された。排 泄が自立していないため普段から紙オムツを使用している。 A ちゃんのオムツ交換における注意点について、入院に付き添う母親への看護 師の説明で適切なのはどれか。",
+      "choices": [
+        "布オムツに切り替える。",
+        "使い捨て手袋は1日1回交換する。",
+        "オムツ交換後に石けんで手洗いを行う。",
+        "アルコール入りのおしり拭きで殿部の清拭を行う。"
+      ],
+      "answer": 2,
+      "officialAcceptedAnswers": [
+        2
+      ],
+      "answerType": "singleChoice",
+      "sourceAnswerTokens": [
+        "3"
+      ],
+      "officialScoringStatus": "normal",
+      "scoringException": null,
+      "requiresMedia": false,
+      "mediaAuditStatus": "not_required",
+      "rightsStatus": "mhlw-pdl1.0-text",
+      "sourceRefs": [
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp220421-05c_01.pdf",
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp220421-05seitou.pdf"
+      ],
+      "sourceAttribution": "出典：厚生労働省『第111回看護師国家試験』を学習用データとして加工",
+      "sourcePage": 42,
+      "scenarioContextEvidence": {
+        "page": 42,
+        "groupFirst": 103,
+        "groupLast": 105,
+        "commonText": "次の文を読み103〜105 の問いに答えよ。\nA ちゃん（2歳10 か月、女児）は昨日から下痢と嘔吐を繰り返し、食事が摂れなく\nなったため、母親に抱かれて小児科外来を受診した。診察の結果、ウイルス性胃腸炎\nviral gastroenteritis\nによる中等度の脱水症と\ndehydration 診断され入院した。入院時、体温38.2 ℃、呼吸数36/分、\n心拍数136/分であった。3日前の保育所の身体計測では身長90 cm、体重12.5 kg で\nあった。",
+        "normalizedLength": 216,
+        "method": "printed range header + first question position + exact Japanese content and Latin token multiset",
+        "comparison": {
+          "japaneseExactMatch": true,
+          "latinTokenMultisetExactMatch": true,
+          "japaneseChars": 180,
+          "latinTokens": 6
+        },
+        "engines": [
+          "PyMuPDF",
+          "Poppler"
+        ],
+        "status": "DUAL_ENGINE_CONTEXT_MATCH"
+      },
+      "visualNumericGlyphEvidence": null,
+      "coordinateBoundaryEvidence": {
+        "previousPage": 42,
+        "correctedPage": 42,
+        "anchorBox": [
+          70.06,
+          464.53,
+          88.13,
+          476.57
+        ],
+        "clip": [
+          0.0,
+          461.53,
+          609.95,
+          822.01
+        ],
+        "nextAnchorFound": false,
+        "verifiedPage": 42,
+        "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+      },
+      "shortStemVerifiedByCoordinates": false,
+      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
+      "officialKeyPdfSha256": "b395c7eddb7820daaaf19ae44766889cf19b7b4f5e0d8f9411a8ba1787dfac85",
+      "reviewStatus": "DUAL_ENGINE_SOURCE_AND_OFFICIAL_KEY_VERIFIED_EXPLANATION_PENDING",
+      "canonicalStatus": "source_verified_extension",
+      "publishable": false,
+      "releaseEligible": false,
+      "audit": {
+        "questionDualEngineMatched": true,
+        "allChoicesDualEngineMatched": true,
+        "officialKeyMatched": true,
+        "sourceGlyphControlAbsent": true,
+        "mediaNotRequired": true,
+        "explanationIndependentlyReviewed": false,
+        "runtimeIntegrationChecked": false
+      },
+      "category": "状況設定",
+      "majorSubject": null,
+      "point": null,
+      "detail": null,
+      "evidence": {
+        "sourcePdfPage": 42,
+        "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
+        "dualEngineAuditRun": "GitHub Actions 2026-11-24",
+        "verifier": "PyMuPDF + Poppler pdftotext -layout",
+        "originalPdfGlyphControlAbsent": true,
+        "officialKeyRetestedAgainstPdf": true,
+        "coordinateBoundaryEvidence": {
+          "previousPage": 42,
+          "correctedPage": 42,
+          "anchorBox": [
+            70.06,
+            464.53,
+            88.13,
+            476.57
+          ],
+          "clip": [
+            0.0,
+            461.53,
+            609.95,
+            822.01
+          ],
+          "nextAnchorFound": false,
+          "verifiedPage": 42,
+          "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+        },
+        "scenarioContextEvidence": {
+          "page": 42,
+          "groupFirst": 103,
+          "groupLast": 105,
+          "commonText": "次の文を読み103〜105 の問いに答えよ。\nA ちゃん（2歳10 か月、女児）は昨日から下痢と嘔吐を繰り返し、食事が摂れなく\nなったため、母親に抱かれて小児科外来を受診した。診察の結果、ウイルス性胃腸炎\nviral gastroenteritis\nによる中等度の脱水症と\ndehydration 診断され入院した。入院時、体温38.2 ℃、呼吸数36/分、\n心拍数136/分であった。3日前の保育所の身体計測では身長90 cm、体重12.5 kg で\nあった。",
+          "normalizedLength": 216,
+          "method": "printed range header + first question position + exact Japanese content and Latin token multiset",
+          "comparison": {
+            "japaneseExactMatch": true,
+            "latinTokenMultisetExactMatch": true,
+            "japaneseChars": 180,
+            "latinTokens": 6
+          },
+          "engines": [
+            "PyMuPDF",
+            "Poppler"
+          ],
+          "status": "DUAL_ENGINE_CONTEXT_MATCH"
+        }
+      }
+    },
+    {
       "id": "K111-PM106",
       "sourceExam": 111,
       "session": "PM",
@@ -11867,6 +12826,143 @@
             488.62
           ],
           "nextAnchorFound": true,
+          "verifiedPage": 46,
+          "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+        },
+        "scenarioContextEvidence": {
+          "page": 46,
+          "groupFirst": 109,
+          "groupLast": 111,
+          "commonText": "次の文を読み109〜111 の問いに答えよ。\nA さん（35 歳、男性、会社員）は妻（32 歳、主婦）と子ども（2歳）と3人暮らし。5\n年前にうつ病と\ndepression\n診断された。半年前に営業部門に異動し、帰宅後も深夜まで仕事をす\nる日が続いていた。｢仕事のことが気になってしまい、焦りと不安ばかりが増して眠\nれない。会社に行くのが苦しい、入院させてもらえないか｣と訴えがあり、休養と薬\n物の調整を目的として精神科病院に入院となった。入院後、A さんから｢実は薬を飲\nむのが嫌で、途中から飲むのをやめていたんです。薬を飲みたくないのですが、どう\nしたらよいでしょうか｣と看護師に相談があった。",
+          "normalizedLength": 285,
+          "method": "printed range header + first question position + exact Japanese content and Latin token multiset",
+          "comparison": {
+            "japaneseExactMatch": true,
+            "latinTokenMultisetExactMatch": true,
+            "japaneseChars": 273,
+            "latinTokens": 3
+          },
+          "engines": [
+            "PyMuPDF",
+            "Poppler"
+          ],
+          "status": "DUAL_ENGINE_CONTEXT_MATCH"
+        }
+      }
+    },
+    {
+      "id": "K111-PM110",
+      "sourceExam": 111,
+      "session": "PM",
+      "questionNo": 110,
+      "question": "入院後1か月、面会に来た妻から、｢夫の会社から休業給付が出ないかもしれな いと言われました。子どもが小さく、生活費もかかるので、入院費用が払えるか心 配です｣と看護師に相談があった。 妻の相談に関して、看護師が連携する職種として最も適切なのはどれか。",
+      "choices": [
+        "公認心理師",
+        "作業療法士",
+        "理学療法士",
+        "精神保健福祉士"
+      ],
+      "answer": 3,
+      "officialAcceptedAnswers": [
+        3
+      ],
+      "answerType": "singleChoice",
+      "sourceAnswerTokens": [
+        "4"
+      ],
+      "officialScoringStatus": "normal",
+      "scoringException": null,
+      "requiresMedia": false,
+      "mediaAuditStatus": "not_required",
+      "rightsStatus": "mhlw-pdl1.0-text",
+      "sourceRefs": [
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp220421-05c_01.pdf",
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp220421-05seitou.pdf"
+      ],
+      "sourceAttribution": "出典：厚生労働省『第111回看護師国家試験』を学習用データとして加工",
+      "sourcePage": 46,
+      "scenarioContextEvidence": {
+        "page": 46,
+        "groupFirst": 109,
+        "groupLast": 111,
+        "commonText": "次の文を読み109〜111 の問いに答えよ。\nA さん（35 歳、男性、会社員）は妻（32 歳、主婦）と子ども（2歳）と3人暮らし。5\n年前にうつ病と\ndepression\n診断された。半年前に営業部門に異動し、帰宅後も深夜まで仕事をす\nる日が続いていた。｢仕事のことが気になってしまい、焦りと不安ばかりが増して眠\nれない。会社に行くのが苦しい、入院させてもらえないか｣と訴えがあり、休養と薬\n物の調整を目的として精神科病院に入院となった。入院後、A さんから｢実は薬を飲\nむのが嫌で、途中から飲むのをやめていたんです。薬を飲みたくないのですが、どう\nしたらよいでしょうか｣と看護師に相談があった。",
+        "normalizedLength": 285,
+        "method": "printed range header + first question position + exact Japanese content and Latin token multiset",
+        "comparison": {
+          "japaneseExactMatch": true,
+          "latinTokenMultisetExactMatch": true,
+          "japaneseChars": 273,
+          "latinTokens": 3
+        },
+        "engines": [
+          "PyMuPDF",
+          "Poppler"
+        ],
+        "status": "DUAL_ENGINE_CONTEXT_MATCH"
+      },
+      "visualNumericGlyphEvidence": null,
+      "coordinateBoundaryEvidence": {
+        "previousPage": 46,
+        "correctedPage": 46,
+        "anchorBox": [
+          70.06,
+          488.62,
+          88.13,
+          500.67
+        ],
+        "clip": [
+          0.0,
+          485.62,
+          609.95,
+          822.01
+        ],
+        "nextAnchorFound": false,
+        "verifiedPage": 46,
+        "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+      },
+      "shortStemVerifiedByCoordinates": false,
+      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
+      "officialKeyPdfSha256": "b395c7eddb7820daaaf19ae44766889cf19b7b4f5e0d8f9411a8ba1787dfac85",
+      "reviewStatus": "DUAL_ENGINE_SOURCE_AND_OFFICIAL_KEY_VERIFIED_EXPLANATION_PENDING",
+      "canonicalStatus": "source_verified_extension",
+      "publishable": false,
+      "releaseEligible": false,
+      "audit": {
+        "questionDualEngineMatched": true,
+        "allChoicesDualEngineMatched": true,
+        "officialKeyMatched": true,
+        "sourceGlyphControlAbsent": true,
+        "mediaNotRequired": true,
+        "explanationIndependentlyReviewed": false,
+        "runtimeIntegrationChecked": false
+      },
+      "category": "状況設定",
+      "majorSubject": null,
+      "point": null,
+      "detail": null,
+      "evidence": {
+        "sourcePdfPage": 46,
+        "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
+        "dualEngineAuditRun": "GitHub Actions 2026-11-24",
+        "verifier": "PyMuPDF + Poppler pdftotext -layout",
+        "originalPdfGlyphControlAbsent": true,
+        "officialKeyRetestedAgainstPdf": true,
+        "coordinateBoundaryEvidence": {
+          "previousPage": 46,
+          "correctedPage": 46,
+          "anchorBox": [
+            70.06,
+            488.62,
+            88.13,
+            500.67
+          ],
+          "clip": [
+            0.0,
+            485.62,
+            609.95,
+            822.01
+          ],
+          "nextAnchorFound": false,
           "verifiedPage": 46,
           "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
         },
