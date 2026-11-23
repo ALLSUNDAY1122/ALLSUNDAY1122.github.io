@@ -15,7 +15,7 @@
   "additionalRequired": 480,
   "releaseStatus": "PREFLIGHT_BLOCKED",
   "submissionAllowed": false,
-  "contentGate": "EXISTING_629_TEXT_PASS_91_HOLD_NEW_430_TEXT_PASS_50_HOLD_ALL_NEW_QUARANTINED",
+  "contentGate": "ANSWER_KEYS_1200_CHECKED_EXISTING_TEXT_629_PASS_91_HOLD_NEW_480_STAGING_NOT_PUBLISHABLE",
   "mediaGate": "38_HOLD_PENDING_INDIVIDUAL_RIGHTS_PROOF",
   "appleAppId": "6801792293",
   "bundleId": "jp.allsunday1122.kangoshi",
@@ -74,10 +74,12 @@
     },
     "passMeaning": "TEXT_ONLY: no key, scoring exception, or media clearance",
     "resultSource": "run 45217628155 official PDF audit",
-    "perQuestionResultsStoredIn": "GitHub Actions artifact 14837008371"
+    "perQuestionResultsStoredIn": "GitHub Actions artifact 14837008371",
+    "sourcePostEditRun": 45222199248,
+    "note": "Latest source-corrected raw 720 retest: 629 strict text matches and 91 holds. Six confirmed edits have NOT yet cleared PDF text gate."
   },
   "automation": {
-    "status": "CI_SUCCESS_CONTENT_GATES_BLOCKED",
+    "status": "OFFICIAL_1200_ANSWER_AUDIT_EXECUTED_AND_49_IMAGE_EVIDENCE_CREATED",
     "path": "kangoshi-sprint/scripts/audit_official_pdf.py",
     "sourceManifest": "kangoshi-sprint/audit/official-source-manifest-20261124.json",
     "mode": "AM/PM separate strict attribution/media isolation",
@@ -94,11 +96,16 @@
     "runCommit": "85f024b8399217e4c70b35840578ec03b16fa618",
     "runAt": "2026-11-24T01:10:46+09:00",
     "stagingBranch": "feature/kangoshi-112-111-staging-audit-v3-20261124",
-    "stagingCommit": "d9f774797926304a993b962919c217e8d13075e2"
+    "stagingCommit": "d9f774797926304a993b962919c217e8d13075e2",
+    "answerAuditRunId": 45222199248,
+    "answerAuditArtifactId": 14841122447,
+    "answerAuditArtifactSha256": "e2c0caab29d6f01fd440ae6d105d5bae2bd9849b4328c8f8bca298b5b30aff2f",
+    "keyedStagingRunId": 45220877977,
+    "lastTextAuditRunId": 45222199248
   },
   "stagedCandidateCount": 480,
   "staging": {
-    "branch": "feature/kangoshi-112-111-staging-audit-v3-20261124",
+    "branch": "feature/kangoshi-keyed-staging-45220877977",
     "commit": "d9f774797926304a993b962919c217e8d13075e2",
     "pdfExams": [
       112,
@@ -116,7 +123,12 @@
     "invalidStructure": 24,
     "officialAnswerKeysChecked": 0,
     "releaseEligible": 0,
-    "warning": "Extraction reuses PDF text layer with missing glyph mapping. PASS_TEXT_ONLY does not mean verbatim original PDF fidelity; all 480 in isolated staging."
+    "warning": "Extraction reuses PDF text layer with missing glyph mapping. PASS_TEXT_ONLY does not mean verbatim original PDF fidelity; all 480 in isolated staging.",
+    "keyedRunId": 45220877977,
+    "answersMappedSingle": 442,
+    "ambiguousOrMulti": 37,
+    "officiallyExcluded": 1,
+    "allCandidatesQuarantined": true
   },
   "holdReaudit": {
     "previousHolds": 92,
@@ -138,5 +150,57 @@
       "K115-AM096"
     ],
     "otherExactAlternateMatches": 0
+  },
+  "answerKeyAudit": {
+    "targetCount": 1200,
+    "auditedCount": 1200,
+    "officialAnswerPdfCount": 5,
+    "officialKeyRowsExtracted": 1199,
+    "existingQuestions": 720,
+    "existingRawTokenMatches": 718,
+    "existingBlankOfficialAnswers": 2,
+    "existingMismatches": 0,
+    "stagedQuestions": 480,
+    "stagedOfficialKeyRows": 479,
+    "stagedExcludedNotice": 1,
+    "stagedSingleChoiceMapped": 442,
+    "stagedComplexKeysHeld": 37,
+    "stagedPublishable": 0,
+    "sourceRunId": 45222199248,
+    "evidenceArtifactId": 14841122447,
+    "artifactSha256": "e2c0caab29d6f01fd440ae6d105d5bae2bd9849b4328c8f8bca298b5b30aff2f",
+    "readbackVerified": true,
+    "interpretation": "Official answer token comparison and scoring rule registry; does not certify verbatim question text, media rights or any release eligibility"
+  },
+  "scoringExceptions": {
+    "registry": "kangoshi-sprint/audit/official-scoring-exceptions-20261124.json",
+    "total": 14,
+    "excluded": 3,
+    "multipleAccepted": 4,
+    "correctOnlyOtherwiseExcluded": 7,
+    "byExam": {
+      "111": 4,
+      "112": 2,
+      "113": 6,
+      "114": 0,
+      "115": 2
+    },
+    "officialNoticeEvidence": "Per-item MHLW scoring notice URLs; 111 modes corroborated against contemporary analysis"
+  },
+  "visualReaudit": {
+    "initialTextMismatchCount": 49,
+    "originalPdfPageImagesRendered": 49,
+    "sourceVerifiedCorrectedQuestions": 6,
+    "otherItemsPendingDetailedVisualSignoff": 43,
+    "glyphTwoChoiceTranscriptionsCorrected": 38,
+    "sourceImageEvidenceArtifactId": 14841122447,
+    "originalCorrections": [
+      "kangoshi-sprint/audit/verified-glyph-repairs-20261124.json",
+      "kangoshi-sprint/audit/visual-corrections-20261124.json",
+      "kangoshi-sprint/audit/visual-corrections-addendum-20261124.json"
+    ],
+    "individualReviewLedger": "kangoshi-sprint/audit/visual-49-case-ledger-20261124.json",
+    "qualityOutcome": "6 edited, no HOLD cleared by strict PDF text retest; text sorting and embedded gloss obstruct direct match",
+    "releaseDecision": "HOLD"
   }
 }
