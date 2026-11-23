@@ -1,4 +1,4 @@
-name: Touhan Q7 Inspect Automatic Signing
+name: Touhan Q7 Inspect Automatic Signing Read Only
 on:
   workflow_dispatch:
   push:
@@ -6,7 +6,7 @@ on:
       - '.github/workflows/touhan-q7-auto-provision-inspect.yml'
       - 'touroku-hanbaisha-ios/scripts/inspect_q7_auto_provision.py'
 permissions:
-  contents: write
+  contents: read
 jobs:
   inspect:
     runs-on: ubuntu-24.04
@@ -20,31 +20,6 @@ jobs:
         env:
           CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
         run: python touroku-hanbaisha-ios/scripts/inspect_q7_auto_provision.py
-      - name: Save exact Q7 result and human-blocker status
-        run: |
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          p=Path('touroku-hanbaisha-ios')
-          report=json.loads((p/'Q7_ENV_SIGNING_RESULT_20261124.json').read_text())
-          state=p/'release-status.json';s=json.loads(state.read_text())
-          s['q7_env_signing_attempt_20261124']={'buildId':report['buildId'],'status':report['status'],'gate':report['gate'],'failureMessage':report['message'] if report['gate']=='FAILED' else None,'evidence':'touroku-hanbaisha-ios/Q7_ENV_SIGNING_RESULT_20261124.json','ipaUploadedToASC':False,'appReviewSubmitted':False}
-          s['gates']['internal_testflight']='Q7_'+report['gate']+'_NO_TESTFLIGHT_UPLOAD'
-          if 'ai_preflight_acceptance_20261124' in s:
-            a=s['ai_preflight_acceptance_20261124']
-            a['q7_later_evidence']='touroku-hanbaisha-ios/Q7_ENV_SIGNING_RESULT_20261124.json'
-            a['q7_later_result']=report['gate']
-          s['release_gate']='BLOCKED';s['app_review_submitted']=False
-          state.write_text(json.dumps(s,ensure_ascii=False,indent=2)+'\n')
-          md=p/'RELEASE_STATUS.md'
-          md.write_text(md.read_text()+f"\n\n## Q7 Codemagic自動署名 試行結果（2026-11-24）\n- Build {report['buildId']}：{report['status']} / 判定 {report['gate']}。\n- エラーメッセージ（該当時）：{report['message']}。署名ファイルとIPA証跡がない限りPASSにしない。\n- 証跡 `Q7_ENV_SIGNING_RESULT_20261124.json` / {report['codemagicUrl']}。TestFlightアップロード・本審査送信は未実施。\n")
-          PY
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add touroku-hanbaisha-ios/Q7_ENV_SIGNING_RESULT_20261124.json touroku-hanbaisha-ios/release-status.json touroku-hanbaisha-ios/RELEASE_STATUS.md
-          git commit -m 'audit(touhan): read back auto provisioning signature status and Q7 gate' || true
-          for i in 1 2 3; do git pull --rebase origin main && git push origin HEAD:main && exit 0; done
-          exit 1
       - uses: actions/upload-artifact@v4
         if: always()
         with:
