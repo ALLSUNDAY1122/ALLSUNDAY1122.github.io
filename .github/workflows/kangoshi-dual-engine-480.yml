@@ -48,6 +48,20 @@ jobs:
         run: python kangoshi-sprint/scripts/render_residual_geometric_evidence.py
       - name: Diagnose PDF-number coordinates on source originals
         run: python kangoshi-sprint/scripts/debug_pdf_coordinates.py
+      - name: Confirm 220 unresolved source questions before new full-text coordinate verification
+        run: |
+          python - <<'PY'
+          import json, pathlib
+          p=pathlib.Path('kangoshi-sprint')
+          status=json.loads((p/'release-status.json').read_text())
+          held=json.loads((p/'audit/dual-engine-hold-20261124.json').read_text())
+          verified=json.loads((p/'product-content/verified-additions-20261124.json').read_text())
+          assert status['recordedImported']==720+len(verified['questions'])
+          assert len(held['hold'])+len(verified['questions'])==480
+          assert len({q['id'] for q in held['hold']})==len(held['hold'])
+          assert not ({q['id'] for q in held['hold']} & {q['id'] for q in verified['questions']})
+          print('REVALIDATE_SOURCE_CANDIDATES',len(held['hold']),'PREVIOUS_CANONICAL',status['recordedImported'])
+          PY
       - name: Reextract original coordinate question regions by both independent PDF engines
         run: python kangoshi-sprint/scripts/reextract_coordinate_candidates.py
       - name: Save candidate before and after text comparisons
