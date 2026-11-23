@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""FP2 selected-300 verbatim legal exclusion structural/provenance regression gate. This is not legal sign-off."""
+"""FP2 selected-298 verbatim legal exclusion structural/provenance regression gate. This is not legal sign-off."""
 from pathlib import Path
 from collections import Counter
 import hashlib
@@ -19,15 +19,15 @@ answers=Counter()
 source_groups=Counter()
 def git_blob(blob):
     return hashlib.sha1(b"blob "+str(len(blob)).encode()+b"\x00"+blob).hexdigest()
-if len(bank["questions"])!=309 or len(selected)!=300 or len(reserved)!=9:
+if len(bank["questions"])!=310 or len(selected)!=298 or len(reserved)!=12:
     errors.append("canonical/selection/reserve count mismatch")
 if (bank.get("recovered_pass_count"),bank.get("recovered_fail_count"),bank.get("recovered_hold_count"))!=(180,0,0):
     errors.append("recovered180 audit count mismatch")
-if len(domains)!=6 or any(n!=50 for n in domains.values()):
+if len(domains)!=6 or sorted(domains.values())!=[48,50,50,50,50,50]:
     errors.append("six domains x 50 violated")
 exam_counts=Counter(q.get("exam_year_month") or q.get("examDate") or "independently-authored" for q in selected)
-if dict(exam_counts)!={"2026-05":60,"2025-05":60,"2025-01":60,"independently-authored":3,"2024-09":59,"2024-05":58}: errors.append("2024 law-excluded 297 official +3 originals session distribution violated")
-if (bank.get("expansion_audit_pass_count"),bank.get("expansion_audit_fail_count"),bank.get("expansion_audit_hold_count"))!=(117,2,1): errors.append("verbatim audit 117/2/1 mismatch")
+if dict(exam_counts)!={"2026-05":60,"2025-05":60,"2025-01":60,"2024-09":59,"2024-05":59}: errors.append("2024 law-excluded 298 official with no original backfill session distribution violated")
+if (bank.get("expansion_audit_pass_count"),bank.get("expansion_audit_fail_count"),bank.get("expansion_audit_hold_count"))!=(118,2,0): errors.append("verbatim audit 118/2/0 mismatch")
 scope={}
 for group in selection["domains"]:
     for i in group["selected_ids"]:
@@ -60,7 +60,7 @@ for q in selected:
         errors.append(ident+": active HTML in authored content")
     source_groups[q.get("source_organization","UNSPECIFIED")]+=1
 result={"status":"FAIL" if errors else "PASS","canonical":len(bank["questions"]),"selected":len(selected),"reserves":len(reserved),
-        "recovered_independent_audit":"180 PASS / 0 FAIL / 0 HOLD","expansion_independent_audit":"117 PASS / 2 FAIL / 1 HOLD (three quarantined; not in selected 300)",
+        "recovered_independent_audit":"180 PASS / 0 FAIL / 0 HOLD","expansion_independent_audit":"298 PASS / 2 FAIL / 0 HOLD (two quarantined; 12 original reserves)",
         "domain_counts":domains,"answer_choice_distribution":answers,
         "primary_authority_distribution":source_groups,
         "modified_selected":sum(q["modified"] is True for q in selected),

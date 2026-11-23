@@ -30,11 +30,11 @@ jobs:
         run: |
           npm install --no-save --no-package-lock playwright@1.56.1
           npx playwright install --with-deps chromium
-      - name: Reconcile both verbatim legal audits PASS117 FAIL2 HOLD1, selected 300
+      - name: Reconcile both verbatim legal audits PASS298 FAIL2 HOLD0, selected 300
         run: python3 scripts/fp2_five_exam_audit_gate.py
-      - name: Check all 300 selected questions and source/evidence fields
+      - name: Check all 298 selected questions and source/evidence fields
         run: python3 scripts/fp2_selected_quality_gate.py
-      - name: Generate native offline 300-only payload and verify source selection
+      - name: Generate native offline 298-only payload and verify source selection
         run: |
           python3 fp2-manabi-sprint/ios/prepare-ios.py
           python3 - <<'PY'
@@ -46,20 +46,20 @@ jobs:
           native_bytes=(app/'ios/Web/questions/canonical/approved-questions-20261123.json').read_bytes()
           native=json.loads(native_bytes)
           selected={q['id']:q for q in source['questions'] if q['release_selected'] is True}
-          assert len(source['questions'])==309 and len(native['questions'])==300 and len(selected)==300
+          assert len(source['questions'])==310 and len(native['questions'])==298 and len(selected)==298
           assert all(q==selected[q['id']] for q in native['questions'])
           assert not set(q['id'] for q in native['questions']) & {q['id'] for q in source['questions'] if not q['release_selected']}
           evidence=json.loads((app/'ios/Web/bundle-evidence.json').read_text())
           assert evidence['canonical_sha256']==hashlib.sha256(canonical).hexdigest()
           assert evidence['release_payload_sha256']==hashlib.sha256(native_bytes).hexdigest()
-          assert evidence['reserve_content_pass_not_bundled']==9
+          assert evidence['reserve_content_pass_not_bundled']==12
           html=(app/'ios/Web/index.html').read_text()
           encoded=re.search(r'<script type="application/json" id="fp2-offline-bank">(.*?)</script>',html,re.S)
           assert encoded, 'inline offline bank missing'
           embedded=json.loads(encoded.group(1).replace('<\\/','</'))
           assert embedded==native
           assert (app/'ios/Web/manifest.webmanifest').is_file()
-          print('FP2 offline payload: 309 canonical PASS, exactly 300 shipped, 9 reserves and 3 quarantined excluded, embedded/source/hash PASS')
+          print('FP2 offline payload: 310 canonical PASS, exactly 298 shipped, 12 original reserves and 2 quarantined excluded, embedded/source/hash PASS')
           PY
       - name: Start static app server and run browser E2E
         run: |

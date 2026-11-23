@@ -36,26 +36,26 @@ def main():
         errors.append("duplicate question IDs")
     selected = [q for q in questions if q.get("release_selected") is True]
     reserve = [q for q in questions if q.get("release_selected") is False]
-    if len(selected) != 300 or len(reserve) != 9 or bank.get("release_candidate_questions") != 300 or bank.get("reserve_content_pass_questions") != 9:
+    if len(selected) != 298 or len(reserve) != 12 or bank.get("release_candidate_questions") != 298 or bank.get("reserve_content_pass_questions") != 12:
         errors.append(f"release scope mismatch: selected={len(selected)}, reserves={len(reserve)}")
     domain_counts = {}
     for q in selected:
         d = q.get("domain")
         domain_counts[d] = domain_counts.get(d, 0) + 1
-    if len(domain_counts) != 6 or any(n != 50 for n in domain_counts.values()):
-        errors.append("release scope must be 6 domains x 50 questions")
+    if len(domain_counts) != 6 or sorted(domain_counts.values()) != [48, 50, 50, 50, 50, 50]:
+        errors.append("release scope must be 48+50*5=298 official only")
     if bank.get("recovered_pass_count") != 180 or bank.get("recovered_fail_count") != 0 or bank.get("recovered_hold_count") != 0:
         errors.append("independent corrected re-audit 180/0/0 mismatch")
-    if (bank.get("expansion_audit_pass_count"), bank.get("expansion_audit_fail_count"), bank.get("expansion_audit_hold_count")) != (117, 2, 1):
-        errors.append("verbatim independent audit PASS117 FAIL2 HOLD1 mismatch")
+    if (bank.get("expansion_audit_pass_count"), bank.get("expansion_audit_fail_count"), bank.get("expansion_audit_hold_count")) != (118, 2, 0):
+        errors.append("verbatim independent audit PASS118 FAIL2 HOLD0 (2024 rounds; total five PASS298) mismatch")
     sessions = {}
     for q in selected:
         session = q.get("exam_year_month") or q.get("examDate") or "independently-authored"
         sessions[session] = sessions.get(session, 0) + 1
-    if sessions != {"2024-05":58,"2024-09":59,"2025-01":60,"2025-05":60,"2026-05":60,"independently-authored":3}:
-        errors.append("session distribution invalid: 297 official PASS +3 original replacements")
-    if len(questions) != 309:
-        errors.append("309 canonical PASS expected (297 original past exam +12 independently authored)")
+    if sessions != {"2024-05":59,"2024-09":59,"2025-01":60,"2025-05":60,"2026-05":60}:
+        errors.append("session distribution invalid: 298 official PASS and no replacements")
+    if len(questions) != 310:
+        errors.append("310 canonical PASS expected (298 official +12 original reserves)")
     reaudited_pass = {
        "fp2-2025-05-gakka-036", "fp2-2025-05-gakka-039",
        "fp2-2025-01-gakka-017", "fp2-2025-01-gakka-013"
@@ -63,11 +63,11 @@ def main():
     q20 = "fp2-2025-01-gakka-020"
     q20_entries = [q for q in questions if q.get("id") == q20]
     if len(q20_entries) != 1 or q20_entries[0].get("release_selected") is not True or q20_entries[0].get("independent_audit_status") != "PASS" or q20_entries[0].get("audit_evidence_path") != "fp2-manabi-sprint/audit/FP2_2025_01_Q20_SECOND_CORRECTION_REAUDIT_PASS_20261123.md":
-        errors.append("Q20: second independent re-audit PASS evidence must exist and join 300 selection")
+        errors.append("Q20: second independent re-audit PASS evidence must exist and join 298 selection")
     for ident in reaudited_pass:
         matches = [q for q in questions if q.get("id") == ident]
         if len(matches) != 1 or matches[0].get("release_selected") is not True or matches[0].get("audit_evidence_path") != "fp2-manabi-sprint/audit/FP2_FAIL5_CORRECTED_INDEPENDENT_REAUDIT_20261123.md" or matches[0].get("independent_audit_status") != "PASS":
-            errors.append(f"{ident}: corrected PASS must be independently evidenced in 300 selection")
+            errors.append(f"{ident}: corrected PASS must be independently evidenced in 298 selection")
     if any((q.get("modification_verification", "").startswith("PROVISIONAL") or "PENDING" in q.get("modification_verification", "")) for q in selected):
         warnings.append("release selection has provisionally classified modified flags; NOT release ready")
     independent_paths = set()

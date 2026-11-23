@@ -25,16 +25,16 @@ selection = json.loads((web / "release/release-selection-300-20261123.json").rea
 selected = [q for q in questions if q.get("release_selected") is True]
 selected_ids = [q["id"] for q in selected]
 scoped_ids = [item for group in selection["domains"] for item in group["selected_ids"]]
-if (len(selected) != 300 or len(set(selected_ids)) != 300
-        or len(scoped_ids) != 300 or set(selected_ids) != set(scoped_ids)
-        or selection["selected_count"] != 300 or selection["reserve_count"] != 9
-        or len(questions) != 309):
-    raise SystemExit("FP2 native bundle: 309 content PASS, 300 selected, 9 reserve, 3 quarantine contract violated")
+if (len(selected) != 298 or len(set(selected_ids)) != 298
+        or len(scoped_ids) != 298 or set(selected_ids) != set(scoped_ids)
+        or selection["selected_count"] != 298 or selection["reserve_count"] != 12
+        or len(questions) != 310):
+    raise SystemExit("FP2 native bundle: 310 content PASS, 298 selected, 12 original reserve, 2 legal FAIL quarantine contract violated")
 payload = dict(bank)
 payload.update({
-    "status": "CONTENT_PASS_NATIVE_300_PAYLOAD_NOT_PUBLICATION_APPROVED",
-    "content_approved_questions": 300,
-    "release_candidate_questions": 300,
+    "status": "CONTENT_PASS_NATIVE_298_PAYLOAD_NOT_PUBLICATION_APPROVED",
+    "content_approved_questions": 298,
+    "release_candidate_questions": 298,
     "reserve_content_pass_questions": 0,
     "questions": selected,
 })
