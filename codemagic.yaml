@@ -1139,6 +1139,75 @@ workflows:
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
+  touhan-q7-auto-provision:
+    name: 登録販売者 - Q7 Automatically Fetch App Store Signing (No Upload)
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    integrations:
+      app_store_connect: tourokuhanbaisha_appstore
+    environment:
+      groups:
+        - app2_010_touhan_signing
+      vars:
+        BUNDLE_ID: com.allsunday1122.tourokuhanbaisha
+        APP_STORE_CONNECT_APP_ID: "6802119268"
+        XCODE_PROJECT: touroku-hanbaisha-ios/native-ios/TouhanSprint.xcodeproj
+        XCODE_SCHEME: TouhanSprint
+      xcode: latest
+    scripts:
+      - name: Validate signing inputs without exposing secrets
+        script: |
+          set -euo pipefail
+          test -n "${CERTIFICATE_PRIVATE_KEY:-}" || { echo "HUMAN_GATE: encrypted CERTIFICATE_PRIVATE_KEY missing in Codemagic environment"; exit 2; }
+          test -n "${APP_STORE_CONNECT_PRIVATE_KEY:-}" || { echo "HUMAN_GATE: encrypted APP_STORE_CONNECT_PRIVATE_KEY missing"; exit 2; }
+          test -n "${APP_STORE_CONNECT_KEY_IDENTIFIER:-}" && test -n "${APP_STORE_CONNECT_ISSUER_ID:-}"
+          HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+          python3 -m pip install --disable-pip-version-check 'cairosvg==2.8.2'
+          cd "$CM_BUILD_DIR"
+          bash touroku-hanbaisha-ios/native-ios/prepare-ios.sh
+          python3 touroku-hanbaisha-ios/scripts/validate_release.py
+      - name: Generate native Xcode project
+        script: |
+          set -euo pipefail
+          cd "$CM_BUILD_DIR/touroku-hanbaisha-ios/native-ios"
+          python3 - <<'PY'
+          from pathlib import Path
+          import os
+          p=Path('project.yml'); s=p.read_text()
+          b=os.environ.get('CM_BUILD_NUMBER')
+          if not b or not b.isdigit():raise RuntimeError('Codemagic build number unavailable')
+          p.write_text(s.replace('CURRENT_PROJECT_VERSION: 1','CURRENT_PROJECT_VERSION: '+b,1))
+          PY
+          xcodegen generate --spec project.yml
+      - name: Obtain or create only necessary App Store signing files
+        script: |
+          set -euo pipefail
+          keychain initialize
+          app-store-connect fetch-signing-files "$BUNDLE_ID" --type IOS_APP_STORE --create
+          keychain add-certificates
+          cd "$CM_BUILD_DIR/touroku-hanbaisha-ios/native-ios"
+          xcode-project use-profiles
+      - name: Build App Store signed IPA without uploading
+        script: |
+          set -euo pipefail
+          xcode-project build-ipa --project "$CM_BUILD_DIR/$XCODE_PROJECT" --scheme "$XCODE_SCHEME"
+      - name: Verify App Store signing and generated IPA
+        script: |
+          set -euo pipefail
+          IPA="$(find "$CM_BUILD_DIR/build/ios/ipa" -maxdepth 1 -type f -name '*.ipa' -print -quit)"
+          test -n "$IPA" && test -s "$IPA"
+          mkdir -p /tmp/touhan-q7-check
+          unzip -q "$IPA" -d /tmp/touhan-q7-check
+          APP="$(find /tmp/touhan-q7-check/Payload -maxdepth 1 -type d -name '*.app' -print -quit)"
+          test -n "$APP" && test -s "$APP/embedded.mobileprovision"
+          /usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP/Info.plist" | grep -Fx "$BUNDLE_ID"
+          security cms -D -i "$APP/embedded.mobileprovision" > /tmp/touhan-q7-profile.plist
+          /usr/libexec/PlistBuddy -c 'Print :TeamIdentifier:0' /tmp/touhan-q7-profile.plist | grep -Fx 'MN3D2ZM44N'
+          codesign --verify --strict --verbose=2 "$APP"
+          echo "PASS verified signed IPA, not uploaded to App Store Connect or TestFlight"
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
   touhan-ios:
     name: 登録販売者 - iOS App Store Release Candidate
     max_build_duration: 60
