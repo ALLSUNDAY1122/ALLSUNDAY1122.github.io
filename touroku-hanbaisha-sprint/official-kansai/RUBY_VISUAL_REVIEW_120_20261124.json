@@ -1,0 +1,2964 @@
+{
+  "schema": "touhan-ruby-visual-review-v1",
+  "date": "2026-11-24",
+  "subject": "120 unresolved ruby questions: original question crop vs Chrome 375px candidate screenshot",
+  "sourceAudit": "touroku-hanbaisha-sprint/official-kansai/RUBY_FONT_CLUSTER_ALL_20261124.json",
+  "rule": "Promote only where the exact kanji/ruby location is visually identifiable and matched to an actual ruby/rt rendering, with answer and other release gates passed.",
+  "directlyViewedCount": 7,
+  "directlyViewedIds": [
+    "KSAI-2022-003",
+    "KSAI-2022-019",
+    "KSAI-2022-023",
+    "KSAI-2023-003",
+    "KSAI-2024-004",
+    "KSAI-2025-003",
+    "KSAI-2026-011"
+  ],
+  "allCandidateHtmlStructuralProblem": "Existing ruby-font-review candidates generated from plain q.question and q.choices (html.escape), without <ruby>/<rt>. They cannot demonstrate ruby alignment. This fact comes from the generator ruby_font_cluster_recovery.py, not individual visual review of all 120.",
+  "directlyViewedObservedProblem": "At 375px, Japanese text appears as tofu squares on seven directly viewed screenshots (sampled across all five years); fonts missing or not available in the screenshot-generating browser. Source images show readable original Japanese and furigana.",
+  "evidencePolicy": "A readable source PNG does not certify a candidate screenshot with missing Japanese glyphs. Do not convert sample observations into a claim of direct human/AI visual inspection of the remaining 113.",
+  "summary": {
+    "unresolvedCandidates": 120,
+    "directlyViewedImagePairs": 7,
+    "notIndividuallyViewed": 113,
+    "visuallyCertifiedMatch": 0,
+    "promoted": 0,
+    "hold": 120,
+    "existingOfficialBank": 440
+  },
+  "records": [
+    {
+      "id": "KSAI-2022-003",
+      "year": 2022,
+      "originalReasons": [
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-003-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-003-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-003-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-003-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "VIEWED_BOTH_IMAGES_THIS_SESSION",
+      "sourceImageReadability": "SOURCE_JAPANESE_READABLE",
+      "candidateScreenReadability": "FAIL_JAPANESE_TOFU_MISSING_GLYPHS",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "CANDIDATE_SCREENSHOT_JAPANESE_GLYPHS_MISSING",
+        "NO_ACTUAL_RUBY_RT_RENDERING_IN_CANDIDATE_PREVIEW"
+      ]
+    },
+    {
+      "id": "KSAI-2022-019",
+      "year": 2022,
+      "originalReasons": [
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-019-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-019-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-019-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-019-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "VIEWED_BOTH_IMAGES_THIS_SESSION",
+      "sourceImageReadability": "SOURCE_JAPANESE_READABLE",
+      "candidateScreenReadability": "FAIL_JAPANESE_TOFU_MISSING_GLYPHS",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "CANDIDATE_SCREENSHOT_JAPANESE_GLYPHS_MISSING",
+        "NO_ACTUAL_RUBY_RT_RENDERING_IN_CANDIDATE_PREVIEW"
+      ]
+    },
+    {
+      "id": "KSAI-2022-023",
+      "year": 2022,
+      "originalReasons": [
+        "INCOMPLETE_RUBY_MAPPING",
+        "RUBY_GROUP_SOURCE_NONUNIQUE",
+        "RUBY_TEXT_DIFF_FROM_PDF_ASSOCIATION"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-023-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-023-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-023-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-023-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "VIEWED_BOTH_IMAGES_THIS_SESSION",
+      "sourceImageReadability": "SOURCE_JAPANESE_READABLE",
+      "candidateScreenReadability": "FAIL_JAPANESE_TOFU_MISSING_GLYPHS",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "CANDIDATE_SCREENSHOT_JAPANESE_GLYPHS_MISSING",
+        "NO_ACTUAL_RUBY_RT_RENDERING_IN_CANDIDATE_PREVIEW"
+      ]
+    },
+    {
+      "id": "KSAI-2022-024",
+      "year": 2022,
+      "originalReasons": [
+        "INCOMPLETE_RUBY_MAPPING",
+        "RUBY_GROUP_SOURCE_NONUNIQUE"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-024-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-024-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-024-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-024-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2022-031",
+      "year": 2022,
+      "originalReasons": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW",
+        "RUBY_GROUP_SOURCE_NONUNIQUE",
+        "RUBY_TEXT_DIFF_FROM_PDF_ASSOCIATION"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-031-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-031-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-031-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-031-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2022-034",
+      "year": 2022,
+      "originalReasons": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-034-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-034-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-034-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-034-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2022-035",
+      "year": 2022,
+      "originalReasons": [
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-035-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-035-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-035-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-035-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2022-040",
+      "year": 2022,
+      "originalReasons": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-040-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-040-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-040-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-040-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2022-043",
+      "year": 2022,
+      "originalReasons": [
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-043-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-043-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-043-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-043-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2022-047",
+      "year": 2022,
+      "originalReasons": [
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-047-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-047-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-047-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-047-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2022-052",
+      "year": 2022,
+      "originalReasons": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-052-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-052-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-052-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-052-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2022-055",
+      "year": 2022,
+      "originalReasons": [
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-055-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-055-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-055-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-055-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2022-057",
+      "year": 2022,
+      "originalReasons": [
+        "BASE_LITERAL_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING",
+        "RUBY_GROUP_SOURCE_NONUNIQUE",
+        "RUBY_TEXT_DIFF_FROM_PDF_ASSOCIATION"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-057-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-057-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-057-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-057-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2022-059",
+      "year": 2022,
+      "originalReasons": [
+        "OTHER_LAYOUT_HOLD"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-059-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-059-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-059-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-059-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2022-062",
+      "year": 2022,
+      "originalReasons": [
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-062-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-062-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-062-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-062-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2022-066",
+      "year": 2022,
+      "originalReasons": [
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-066-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-066-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-066-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-066-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2022-067",
+      "year": 2022,
+      "originalReasons": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-067-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-067-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-067-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-067-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2022-072",
+      "year": 2022,
+      "originalReasons": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-072-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-072-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-072-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-072-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2022-075",
+      "year": 2022,
+      "originalReasons": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-075-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-075-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-075-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-075-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2022-077",
+      "year": 2022,
+      "originalReasons": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-077-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-077-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-077-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-077-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2022-079",
+      "year": 2022,
+      "originalReasons": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-079-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-079-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-079-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-079-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2022-087",
+      "year": 2022,
+      "originalReasons": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-087-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-087-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-087-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-087-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2022-119",
+      "year": 2022,
+      "originalReasons": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-119-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-119-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-119-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2022-119-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2023-003",
+      "year": 2023,
+      "originalReasons": [
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-003-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-003-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-003-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-003-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "VIEWED_BOTH_IMAGES_THIS_SESSION",
+      "sourceImageReadability": "SOURCE_JAPANESE_READABLE",
+      "candidateScreenReadability": "FAIL_JAPANESE_TOFU_MISSING_GLYPHS",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "CANDIDATE_SCREENSHOT_JAPANESE_GLYPHS_MISSING",
+        "NO_ACTUAL_RUBY_RT_RENDERING_IN_CANDIDATE_PREVIEW"
+      ]
+    },
+    {
+      "id": "KSAI-2023-008",
+      "year": 2023,
+      "originalReasons": [
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-008-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-008-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-008-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-008-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2023-024",
+      "year": 2023,
+      "originalReasons": [
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-024-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-024-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-024-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-024-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2023-025",
+      "year": 2023,
+      "originalReasons": [
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-025-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-025-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-025-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-025-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2023-027",
+      "year": 2023,
+      "originalReasons": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING",
+        "RUBY_GROUP_SOURCE_NONUNIQUE",
+        "RUBY_TEXT_DIFF_FROM_PDF_ASSOCIATION"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-027-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-027-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-027-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-027-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2023-029",
+      "year": 2023,
+      "originalReasons": [
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-029-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-029-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-029-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-029-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2023-030",
+      "year": 2023,
+      "originalReasons": [
+        "OTHER_LAYOUT_HOLD"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-030-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-030-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-030-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-030-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2023-031",
+      "year": 2023,
+      "originalReasons": [
+        "BASE_LITERAL_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-031-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-031-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-031-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-031-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2023-034",
+      "year": 2023,
+      "originalReasons": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-034-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-034-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-034-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-034-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2023-035",
+      "year": 2023,
+      "originalReasons": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-035-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-035-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-035-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-035-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2023-053",
+      "year": 2023,
+      "originalReasons": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING",
+        "RUBY_GROUP_SOURCE_NONUNIQUE"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-053-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-053-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-053-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-053-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2023-054",
+      "year": 2023,
+      "originalReasons": [
+        "OTHER_LAYOUT_HOLD"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-054-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-054-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-054-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-054-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2023-057",
+      "year": 2023,
+      "originalReasons": [
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW",
+        "RUBY_GROUP_SOURCE_NONUNIQUE",
+        "RUBY_TEXT_DIFF_FROM_PDF_ASSOCIATION"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-057-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-057-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-057-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-057-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2023-067",
+      "year": 2023,
+      "originalReasons": [
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-067-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-067-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-067-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-067-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2023-074",
+      "year": 2023,
+      "originalReasons": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-074-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-074-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-074-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-074-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2023-078",
+      "year": 2023,
+      "originalReasons": [
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-078-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-078-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-078-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-078-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2023-080",
+      "year": 2023,
+      "originalReasons": [
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-080-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-080-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-080-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-080-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2023-088",
+      "year": 2023,
+      "originalReasons": [
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-088-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-088-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-088-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-088-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2023-097",
+      "year": 2023,
+      "originalReasons": [
+        "INCOMPLETE_RUBY_MAPPING",
+        "RUBY_GROUP_SOURCE_NONUNIQUE"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-097-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-097-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-097-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-097-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2023-115",
+      "year": 2023,
+      "originalReasons": [
+        "BASE_LITERAL_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-115-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-115-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-115-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-115-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2023-119",
+      "year": 2023,
+      "originalReasons": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-119-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-119-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-119-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2023-119-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2024-004",
+      "year": 2024,
+      "originalReasons": [
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-004-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-004-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-004-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-004-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "VIEWED_BOTH_IMAGES_THIS_SESSION",
+      "sourceImageReadability": "SOURCE_JAPANESE_READABLE",
+      "candidateScreenReadability": "FAIL_JAPANESE_TOFU_MISSING_GLYPHS",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "CANDIDATE_SCREENSHOT_JAPANESE_GLYPHS_MISSING",
+        "NO_ACTUAL_RUBY_RT_RENDERING_IN_CANDIDATE_PREVIEW"
+      ]
+    },
+    {
+      "id": "KSAI-2024-010",
+      "year": 2024,
+      "originalReasons": [
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-010-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-010-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-010-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-010-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2024-018",
+      "year": 2024,
+      "originalReasons": [
+        "OTHER_LAYOUT_HOLD"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-018-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-018-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-018-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-018-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2024-021",
+      "year": 2024,
+      "originalReasons": [
+        "OTHER_LAYOUT_HOLD"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-021-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-021-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-021-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-021-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2024-022",
+      "year": 2024,
+      "originalReasons": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-022-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-022-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-022-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-022-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2024-025",
+      "year": 2024,
+      "originalReasons": [
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-025-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-025-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-025-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-025-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2024-026",
+      "year": 2024,
+      "originalReasons": [
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW",
+        "RUBY_GROUP_SOURCE_NONUNIQUE",
+        "RUBY_TEXT_DIFF_FROM_PDF_ASSOCIATION"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-026-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-026-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-026-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-026-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2024-030",
+      "year": 2024,
+      "originalReasons": [
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW",
+        "RUBY_GROUP_SOURCE_NONUNIQUE",
+        "RUBY_TEXT_DIFF_FROM_PDF_ASSOCIATION"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-030-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-030-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-030-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-030-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2024-032",
+      "year": 2024,
+      "originalReasons": [
+        "BASE_LITERAL_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-032-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-032-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-032-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-032-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2024-035",
+      "year": 2024,
+      "originalReasons": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-035-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-035-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-035-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-035-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2024-037",
+      "year": 2024,
+      "originalReasons": [
+        "BASE_LITERAL_NONUNIQUE",
+        "DETACHED_READING_FIELD_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-037-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-037-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-037-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-037-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2024-040",
+      "year": 2024,
+      "originalReasons": [
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-040-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-040-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-040-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-040-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2024-043",
+      "year": 2024,
+      "originalReasons": [
+        "INCOMPLETE_RUBY_MAPPING",
+        "RUBY_GROUP_SOURCE_NONUNIQUE",
+        "RUBY_TEXT_DIFF_FROM_PDF_ASSOCIATION"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-043-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-043-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-043-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-043-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2024-045",
+      "year": 2024,
+      "originalReasons": [
+        "BASE_LITERAL_NONUNIQUE",
+        "DETACHED_READING_FIELD_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-045-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-045-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-045-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-045-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2024-046",
+      "year": 2024,
+      "originalReasons": [
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-046-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-046-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-046-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-046-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2024-049",
+      "year": 2024,
+      "originalReasons": [
+        "OTHER_LAYOUT_HOLD"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-049-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-049-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-049-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-049-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2024-052",
+      "year": 2024,
+      "originalReasons": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW",
+        "RUBY_GROUP_SOURCE_NONUNIQUE"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-052-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-052-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-052-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-052-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2024-062",
+      "year": 2024,
+      "originalReasons": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-062-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-062-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-062-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-062-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2024-063",
+      "year": 2024,
+      "originalReasons": [
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-063-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-063-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-063-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-063-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2024-066",
+      "year": 2024,
+      "originalReasons": [
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-066-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-066-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-066-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-066-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2024-067",
+      "year": 2024,
+      "originalReasons": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-067-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-067-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-067-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-067-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2024-069",
+      "year": 2024,
+      "originalReasons": [
+        "MULTI_KANJI_RENDERER_NOT_CERTIFIED"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-069-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-069-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-069-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-069-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2024-072",
+      "year": 2024,
+      "originalReasons": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-072-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-072-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-072-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-072-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2024-075",
+      "year": 2024,
+      "originalReasons": [
+        "BASE_LITERAL_NONUNIQUE",
+        "DETACHED_READING_FIELD_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-075-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-075-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-075-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-075-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2024-078",
+      "year": 2024,
+      "originalReasons": [
+        "BASE_LITERAL_NONUNIQUE",
+        "DETACHED_READING_FIELD_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-078-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-078-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-078-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-078-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2024-079",
+      "year": 2024,
+      "originalReasons": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-079-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-079-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-079-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-079-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2024-080",
+      "year": 2024,
+      "originalReasons": [
+        "OTHER_LAYOUT_HOLD"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-080-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-080-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-080-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-080-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2024-088",
+      "year": 2024,
+      "originalReasons": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-088-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-088-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-088-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-088-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2024-115",
+      "year": 2024,
+      "originalReasons": [
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-115-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-115-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-115-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2024-115-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2025-003",
+      "year": 2025,
+      "originalReasons": [
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-003-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-003-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-003-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-003-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "VIEWED_BOTH_IMAGES_THIS_SESSION",
+      "sourceImageReadability": "SOURCE_JAPANESE_READABLE",
+      "candidateScreenReadability": "FAIL_JAPANESE_TOFU_MISSING_GLYPHS",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "CANDIDATE_SCREENSHOT_JAPANESE_GLYPHS_MISSING",
+        "NO_ACTUAL_RUBY_RT_RENDERING_IN_CANDIDATE_PREVIEW"
+      ]
+    },
+    {
+      "id": "KSAI-2025-020",
+      "year": 2025,
+      "originalReasons": [
+        "OTHER_LAYOUT_HOLD"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-020-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-020-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-020-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-020-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2025-021",
+      "year": 2025,
+      "originalReasons": [
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-021-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-021-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-021-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-021-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2025-022",
+      "year": 2025,
+      "originalReasons": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW",
+        "RUBY_GROUP_SOURCE_NONUNIQUE",
+        "RUBY_TEXT_DIFF_FROM_PDF_ASSOCIATION"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-022-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-022-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-022-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-022-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2025-028",
+      "year": 2025,
+      "originalReasons": [
+        "BASE_LITERAL_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING",
+        "RUBY_GROUP_SOURCE_NONUNIQUE",
+        "RUBY_TEXT_DIFF_FROM_PDF_ASSOCIATION"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-028-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-028-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-028-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-028-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2025-030",
+      "year": 2025,
+      "originalReasons": [
+        "BASE_LITERAL_NONUNIQUE",
+        "DETACHED_READING_FIELD_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-030-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-030-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-030-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-030-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2025-031",
+      "year": 2025,
+      "originalReasons": [
+        "BASE_LITERAL_NONUNIQUE",
+        "DETACHED_READING_FIELD_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-031-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-031-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-031-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-031-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2025-033",
+      "year": 2025,
+      "originalReasons": [
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-033-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-033-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-033-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-033-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2025-034",
+      "year": 2025,
+      "originalReasons": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-034-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-034-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-034-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-034-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2025-044",
+      "year": 2025,
+      "originalReasons": [
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-044-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-044-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-044-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-044-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2025-052",
+      "year": 2025,
+      "originalReasons": [
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-052-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-052-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-052-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-052-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2025-053",
+      "year": 2025,
+      "originalReasons": [
+        "BASE_LITERAL_NONUNIQUE",
+        "DETACHED_READING_FIELD_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW",
+        "RUBY_GROUP_SOURCE_NONUNIQUE"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-053-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-053-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-053-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-053-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2025-056",
+      "year": 2025,
+      "originalReasons": [
+        "BASE_LITERAL_NONUNIQUE",
+        "DETACHED_READING_FIELD_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW",
+        "RUBY_GROUP_SOURCE_NONUNIQUE",
+        "RUBY_TEXT_DIFF_FROM_PDF_ASSOCIATION"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-056-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-056-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-056-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-056-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2025-065",
+      "year": 2025,
+      "originalReasons": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-065-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-065-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-065-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-065-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2025-066",
+      "year": 2025,
+      "originalReasons": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-066-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-066-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-066-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-066-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2025-070",
+      "year": 2025,
+      "originalReasons": [
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-070-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-070-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-070-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-070-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2025-074",
+      "year": 2025,
+      "originalReasons": [
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-074-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-074-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-074-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-074-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2025-075",
+      "year": 2025,
+      "originalReasons": [
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-075-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-075-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-075-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-075-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2025-082",
+      "year": 2025,
+      "originalReasons": [
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-082-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-082-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-082-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-082-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2025-088",
+      "year": 2025,
+      "originalReasons": [
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-088-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-088-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-088-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-088-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2025-112",
+      "year": 2025,
+      "originalReasons": [
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW",
+        "RUBY_GROUP_SOURCE_NONUNIQUE"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-112-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-112-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-112-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-112-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2025-114",
+      "year": 2025,
+      "originalReasons": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-114-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-114-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-114-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-114-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2025-119",
+      "year": 2025,
+      "originalReasons": [
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-119-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-119-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-119-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-119-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2025-120",
+      "year": 2025,
+      "originalReasons": [
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-120-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-120-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-120-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2025-120-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2026-011",
+      "year": 2026,
+      "originalReasons": [
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-011-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-011-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-011-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-011-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "VIEWED_BOTH_IMAGES_THIS_SESSION",
+      "sourceImageReadability": "SOURCE_JAPANESE_READABLE",
+      "candidateScreenReadability": "FAIL_JAPANESE_TOFU_MISSING_GLYPHS",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "CANDIDATE_SCREENSHOT_JAPANESE_GLYPHS_MISSING",
+        "NO_ACTUAL_RUBY_RT_RENDERING_IN_CANDIDATE_PREVIEW"
+      ]
+    },
+    {
+      "id": "KSAI-2026-018",
+      "year": 2026,
+      "originalReasons": [
+        "OTHER_LAYOUT_HOLD"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-018-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-018-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-018-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-018-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2026-019",
+      "year": 2026,
+      "originalReasons": [
+        "DUPLICATE_READING_IN_FIELD"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-019-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-019-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-019-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-019-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2026-022",
+      "year": 2026,
+      "originalReasons": [
+        "INCOMPLETE_RUBY_MAPPING",
+        "RUBY_GROUP_SOURCE_NONUNIQUE",
+        "RUBY_TEXT_DIFF_FROM_PDF_ASSOCIATION"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-022-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-022-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-022-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-022-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2026-025",
+      "year": 2026,
+      "originalReasons": [
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-025-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-025-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-025-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-025-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2026-026",
+      "year": 2026,
+      "originalReasons": [
+        "INCOMPLETE_RUBY_MAPPING",
+        "RUBY_GROUP_SOURCE_NONUNIQUE",
+        "RUBY_TEXT_DIFF_FROM_PDF_ASSOCIATION"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-026-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-026-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-026-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-026-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2026-029",
+      "year": 2026,
+      "originalReasons": [
+        "INCOMPLETE_RUBY_MAPPING",
+        "RUBY_GROUP_SOURCE_NONUNIQUE",
+        "RUBY_TEXT_DIFF_FROM_PDF_ASSOCIATION"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-029-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-029-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-029-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-029-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2026-033",
+      "year": 2026,
+      "originalReasons": [
+        "BASE_LITERAL_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-033-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-033-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-033-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-033-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2026-035",
+      "year": 2026,
+      "originalReasons": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-035-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-035-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-035-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-035-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2026-036",
+      "year": 2026,
+      "originalReasons": [
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-036-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-036-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-036-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-036-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2026-037",
+      "year": 2026,
+      "originalReasons": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-037-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-037-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-037-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-037-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2026-042",
+      "year": 2026,
+      "originalReasons": [
+        "INCOMPLETE_RUBY_MAPPING",
+        "RUBY_GROUP_SOURCE_NONUNIQUE",
+        "RUBY_TEXT_DIFF_FROM_PDF_ASSOCIATION"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-042-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-042-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-042-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-042-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2026-044",
+      "year": 2026,
+      "originalReasons": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW",
+        "RUBY_GROUP_SOURCE_NONUNIQUE",
+        "RUBY_TEXT_DIFF_FROM_PDF_ASSOCIATION"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-044-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-044-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-044-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-044-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2026-052",
+      "year": 2026,
+      "originalReasons": [
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-052-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-052-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-052-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-052-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2026-053",
+      "year": 2026,
+      "originalReasons": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-053-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-053-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-053-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-053-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2026-054",
+      "year": 2026,
+      "originalReasons": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-054-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-054-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-054-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-054-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2026-055",
+      "year": 2026,
+      "originalReasons": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-055-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-055-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-055-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-055-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2026-067",
+      "year": 2026,
+      "originalReasons": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-067-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-067-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-067-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-067-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2026-068",
+      "year": 2026,
+      "originalReasons": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-068-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-068-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-068-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-068-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2026-078",
+      "year": 2026,
+      "originalReasons": [
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-078-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-078-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-078-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-078-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2026-080",
+      "year": 2026,
+      "originalReasons": [
+        "MULTI_KANJI_RENDERER_NOT_CERTIFIED"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-080-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-080-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-080-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-080-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2026-090",
+      "year": 2026,
+      "originalReasons": [
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-090-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-090-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-090-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-090-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "KSAI-2026-116",
+      "year": 2026,
+      "originalReasons": [
+        "OTHER_LAYOUT_HOLD"
+      ],
+      "officialSourceImage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-116-source.png",
+      "candidate375Screenshot": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-116-candidate-375.png",
+      "sideBySidePage": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-116-review.html",
+      "candidateHtml": "touroku-hanbaisha-sprint/official-kansai/ruby-font-review/KSAI-2026-116-candidate.html",
+      "imageFileAvailability": "SAVED_IN_GITHUB_PER_PRIOR_AUDIT",
+      "directVisualInspection": "NOT_INDIVIDUALLY_VIEWED_THIS_SESSION",
+      "sourceImageReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateScreenReadability": "NOT_INDIVIDUALLY_ASSESSED",
+      "candidateRubyMarkup": "NOT_GENERATED_BY_COMMON_PREVIEW_TEMPLATE",
+      "rubyPositionMatch": "NOT_CERTIFIABLE",
+      "decision": "HOLD",
+      "nonPromotionReasons": [
+        "NOT_DIRECTLY_VISUALLY_INSPECTED",
+        "COMMON_PREVIEW_HAS_NO_ACTUAL_RUBY_RT_RENDERING",
+        "SCREENSHOT_FONT_RENDERING_QUALITY_NOT_VERIFIED"
+      ]
+    }
+  ]
+}
