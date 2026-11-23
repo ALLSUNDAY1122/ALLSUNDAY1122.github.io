@@ -146,6 +146,33 @@ if visual_proof.exists():
             "sourcePdfSha256":original_hash,"pngFilename":filename.name,
             "pngSha256":hashlib.sha256(filename.read_bytes()).hexdigest(),
             "status":"SOURCE_PDF_VISUAL_REVIEW_WITH_OCR_CHOICES_NOT_APP_RELEASE"})
+visual19=ROOT/"audit/ocr-noncmap-19-promotion-ledger-20261124.json"
+if visual19.exists():
+    result=json.loads(visual19.read_text())
+    for e in result["cases"]:
+        if e["id"] not in set(L.get("newIds",[])):continue
+        qid=e["id"];exam=e["sourceExam"];sess=e["session"]
+        page_n=e["originalPdfPage"];clip=e["originalRegionClip"]
+        if any(row["id"]==qid for row in rows):raise ValueError("Duplicate 19-case proof "+qid)
+        pdf=pathlib.Path("/tmp/kangoshi-official")/f"{exam}-{sess}.pdf"
+        digest=hashlib.sha256(pdf.read_bytes()).hexdigest()
+        if digest!=e["questionPdfSha256"]:raise ValueError("19-case question PDF SHA mismatch "+qid)
+        page=fitz.open(pdf)[page_n-1]
+        x0,y0,x1,y1=map(float,clip)
+        if not (0<=x0<x1<=page.rect.width+.1 and 0<=y0<y1<=page.rect.height+.1):
+            raise ValueError("19-case crop outside page "+qid)
+        f=OUT/f"{qid}-official-region.png"
+        page.get_pixmap(matrix=fitz.Matrix(2.6,2.6),clip=fitz.Rect(*clip),alpha=False).save(str(f))
+        thumb=Image.open(f);thumb.thumbnail((660,420))
+        box=Image.new("RGB",(680,465),"white")
+        box.paste(thumb,((680-thumb.width)//2,34))
+        ImageDraw.Draw(box).text((10,10),qid+"  PDF source "+str(page_n),fill="black")
+        thumbs.append(box)
+        rows.append({"id":qid,"exam":exam,"session":sess,"page":page_n,
+            "clip":clip,"sourcePdfSha256":digest,"pngFilename":f.name,
+            "pngSha256":hashlib.sha256(f.read_bytes()).hexdigest(),
+            "printedOptionCount":e["printedOptionCount"],
+            "status":"PDF_PIXELS_VISUALLY_REVIEWED_SOURCE_ONLY_NO_APP_APPROVAL"})
 if len(rows)!=L["newPromoted"]:raise ValueError("image evidence count differs from actual promotion ledger")
 if rows:
     grid=Image.new("RGB",(680*4,465*((len(rows)+3)//4)),"#f0f0f0")
