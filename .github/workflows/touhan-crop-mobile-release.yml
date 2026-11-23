@@ -40,7 +40,7 @@ jobs:
           log=Path('/tmp/touhan-crop-run.log')
           p.write_text(json.dumps({'status':'FAIL','promoted':0,
             'errorTail':log.read_text(errors='replace')[-5000:] if log.exists() else 'setup did not write logs',
-            'note':'No approval unless full real-browser pass'},ensure_ascii=False,indent=2)+'\\n')
+            'note':'No approval unless full real-browser pass'},ensure_ascii=False,indent=2)+'\n')
           PY
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
