@@ -35,6 +35,7 @@ from official_answer_key_audit import parse as read_official_key
 from boundary_context_verify import verify as verify_boundary
 from boundary_context_verify import _region,equivalent_shared_context
 from reextract_coordinate_candidates import split_fields,segment_poppler,equivalent_english_gloss_reorder
+from apply_image_pinned_cmap_repairs import BY as PINNED_CMAP,extract_and_match as pinned_extract,validate_image as pinned_image_check
 keys={e:read_official_key(e) for e in (111,112)}
 VISUAL={x["id"]:x for x in json.loads((ROOT/"audit/visual-glyph-confirmation-20261124.json").read_text())["items"]}
 VISUAL_DIR=ROOT/"audit/runs/context-control-visual-20261124"
@@ -95,6 +96,29 @@ for exam in (112,111):
         scenario_evidence=None
         coordinate_segment=None
         geometric_crosscheck=None
+        cmap_verified=None
+        # Every exception is pinned to a PDF AND to a visually reviewed source image.
+        # The verifier rechecks the PDF rectangle and every printed field itself.
+        if qid in PINNED_CMAP and q.get("imagePinnedCmapRepair"):
+            pin=PINNED_CMAP[qid]
+            if (pin["exam"]==exam and pin["session"]==session and
+                pin["number"]==n and pin["page"]==pg and not pinned_image_check(pdf,pin)):
+                independent,reason=pinned_extract(doc,pdf,n,pg,pin)
+                if not reason:
+                    target=[stem]+choices
+                    reextracted=[independent["question"]]+independent["choices"]
+                    if (len(target)==len(reextracted) and
+                        all(equivalent_shared_context(x,y)[0] or equivalent_english_gloss_reorder(x,y) for x,y in zip(target,reextracted)) and
+                        q["imagePinnedCmapRepair"].get("pngSha256")==pin["sourcePngSha256"]):
+                        cmap_verified={"sourcePdfSha256":pin["sourcePdfSha256"],
+                            "sourceImageSha256":pin["sourcePngSha256"],"sourcePage":pg,
+                            "fieldComparison":independent["checks"],
+                            "sourceAnchor":independent["geometry"]["anchorBox"]}
+                        geometric_crosscheck={"page":pg,"anchor":independent["geometry"]["anchorBox"],
+                            "rectangle":independent["geometry"]["clip"],
+                            "fields":len(target),"printedOptionCount":len(choices),
+                            "method":"image-pinned source numerals + independent PyMuPDF and Poppler field residual equality",
+                            "requiresOfficialAnswer":True}
         if isinstance(pg,int) and 1<=pg<=len(doc) and q.get("coordinateReextraction"):
             raw_clip,geom=_region(doc[pg-1],n,clean_font)
             alt_crop=segment_poppler(cached_pdftotext(pdf,pg),n)
@@ -129,7 +153,9 @@ for exam in (112,111):
             if source_segment is None:failures.append("COORDINATE_REGION_UNVERIFIED")
             else:
                 if re.search(r"[\x00-\x08\x0b-\x1f\x7f]",source_segment) and not visual:failures.append("C0_SOURCE_GLYPH_MAPPING_UNTRUSTWORTHY")
-                if re.search(r"[\ufffd઄¹¼ïñèêçâ\u0080-\u009f\u00a1-\u00ff]",source_segment):failures.append("SOURCE_GLYPH_MAPPING_UNTRUSTWORTHY")
+                source_for_glyph_gate=(source_segment.replace("ï","（").replace("ñ","）")
+                    if cmap_verified and PINNED_CMAP[qid].get("allowedPairedGlyphs") else source_segment)
+                if re.search(r"[\\ufffd઄¹¼ïñèêçâ\\u0080-\\u009f\\u00a1-\\u00ff]",source_for_glyph_gate):failures.append("SOURCE_GLYPH_MAPPING_UNTRUSTWORTHY")
             poppler=cached_pdftotext(pdf,pg)
             wordblob=norm(page.get_text("text",sort=False))
             altblob=norm(poppler)
@@ -146,7 +172,7 @@ for exam in (112,111):
         failures=list(dict.fromkeys(failures))
         status="PASS_DUAL_ENGINE_AND_OFFICIAL_KEY" if not failures else "HOLD"
         row={"id":qid,"exam":exam,"session":session,"number":n,"status":status,"reasons":failures,"sourcePdfPage":pg,"pageHasRaster":media_in_page,
-            "officialKeyRaw":q.get("officialKeyRaw"),"answer":q.get("answer"),"coordinateBoundaryEvidence":boundary_evidence,"scenarioContext":scenario_evidence,"visualNumericGlyphEvidence":visual,"visualScenarioGlyphEvidence":scenario_visual,"geometricCrosscheckEvidence":geometric_crosscheck,
+            "officialKeyRaw":q.get("officialKeyRaw"),"answer":q.get("answer"),"coordinateBoundaryEvidence":boundary_evidence,"scenarioContext":scenario_evidence,"visualNumericGlyphEvidence":visual,"visualScenarioGlyphEvidence":scenario_visual,"geometricCrosscheckEvidence":geometric_crosscheck,"imagePinnedSourceCmapEvidence":cmap_verified,
             "sourcePdfSha256":hashlib.sha256(pdf.read_bytes()).hexdigest()}
         rows.append(row);all_rows.append(row)
         if status.startswith("PASS"):
@@ -156,11 +182,11 @@ for exam in (112,111):
               "answerType":"singleChoice","sourceAnswerTokens":q["sourceAnswerTokens"],"officialScoringStatus":"normal",
               "scoringException":None,"requiresMedia":False,"mediaAuditStatus":"not_required",
               "rightsStatus":"mhlw-pdl1.0-text","sourceRefs":q["sourceRefs"],"sourceAttribution":q["sourceAttribution"],
-              "sourcePage":pg,"scenarioContextEvidence":scenario_evidence,"visualNumericGlyphEvidence":visual,"coordinateBoundaryEvidence":boundary_evidence,"shortStemVerifiedByCoordinates":bool(short_stem and coordinate_segment is not None),"sourcePdfSha256":row["sourcePdfSha256"],"officialKeyPdfSha256":q.get("officialKeyPdfSha256"),
+              "sourcePage":pg,"scenarioContextEvidence":scenario_evidence,"visualNumericGlyphEvidence":visual,"imagePinnedSourceCmapEvidence":cmap_verified,"coordinateBoundaryEvidence":boundary_evidence,"shortStemVerifiedByCoordinates":bool(short_stem and coordinate_segment is not None),"sourcePdfSha256":row["sourcePdfSha256"],"officialKeyPdfSha256":q.get("officialKeyPdfSha256"),
               "reviewStatus":"source_dual_engine_and_official_key_verified","canonicalStatus":"source_verified_extension",
               "publishable":False,"releaseEligible":False,
               "audit":{"questionDualEngineMatched":True,"allChoicesDualEngineMatched":True,"officialKeyMatched":True,
-                       "sourceGlyphControlAbsent":True,"mediaNotRequired":True,
+                       "sourceGlyphControlAbsent":not bool(cmap_verified),"sourceGlyphRepairVisuallyPinned":bool(cmap_verified),"mediaNotRequired":True,
                        "explanationIndependentlyReviewed":False,"runtimeIntegrationChecked":False}}
             approved.append(canonical)
     by_session[f"{exam}-{session}"]={"total":len(rows),"pass":sum(x["status"].startswith("PASS") for x in rows),"hold":sum(x["status"]=="HOLD" for x in rows)}
