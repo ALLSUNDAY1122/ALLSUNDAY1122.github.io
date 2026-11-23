@@ -46,6 +46,14 @@ Q20の登録正答③、原題4肢、修正履歴2件を維持し、下書きの
 
 ---
 
+## 最終静的CI読戻し（Q20第2次PASS反映後）
+
+コミット `f2ff66a22b8047c63dea8319c83ca164c0a36a99` で以下のPRチェックを確認。
+- **PASS** FP2 canonical bank and web source preflight: https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45150492137 （静的問題バンク・出典/証拠Blob SHA・source asset lock・6分野×20・web shell/JS）
+- **PASS** FP2 Golden Master v2.1 migration gate: https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45150492115
+- **PASS** App Release Registry Audit: https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45150492026
+- バンク合計195、初回120、予備75、回収内容監査180/180の静的ゲート。**iOS署名済IPA・実配布バンドルのビット同一性・実機動作・ASC読戻しは未検証。** CI成功は公開可能判定を意味しない。
+
 ## 過去の履歴（以下は旧判定・旧件数であり現行状態を上書きしない）
 
 ## CI evidence after corrected PASS4 integration (2026-11-23 JST)
