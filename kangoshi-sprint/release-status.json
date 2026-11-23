@@ -47,7 +47,7 @@
     "pass": 629,
     "hold": 91,
     "notExecutedExisting": 0,
-    "notImported": 339,
+    "notImported": 321,
     "rate": 0.8736111111111111,
     "holdByReason": {
       "HOLD_MEDIA_RIGHTS": 38,
@@ -79,7 +79,7 @@
     "note": "Existing exam 115-113 strict text gate still 629 PASS/91 HOLD; new 111/112 content separately tracked."
   },
   "automation": {
-    "status": "C0_GLYPH_RECOVERY_480_141_SOURCE_VERIFIED_339_HOLD_JPG15_PDL_CROPS5_STAGED",
+    "status": "COORDINATE_BOUNDARY_AUDIT_159_VERIFIED_EXTENSION_321_HOLD_RELEASE_BLOCKED",
     "path": "kangoshi-sprint/scripts/audit_official_pdf.py",
     "sourceManifest": "kangoshi-sprint/audit/official-source-manifest-20261124.json",
     "mode": "AM/PM separate strict attribution/media isolation",
@@ -118,8 +118,8 @@
     "latestHoldArtifactId": 14851731484,
     "mediaRoutingRunId": 45241710210,
     "mediaRoutingArtifactId": 14852120867,
-    "latestBoundaryContextRunId": 45244159028,
-    "latestBoundaryContextRunResult": "SUCCESS_SOURCE_ONLY_PLUS_3"
+    "latestBoundaryContextRunId": 45246704920,
+    "latestBoundaryContextRunResult": "SUCCESS_SOURCE_ONLY_PLUS_15"
   },
   "stagedCandidateCount": 480,
   "staging": {
@@ -251,7 +251,7 @@
     "unverifiedRemaining": 321,
     "extensionFile": "kangoshi-sprint/product-content/verified-additions-20261124.json",
     "manifest": "kangoshi-sprint/product-content/manifest.json",
-    "extensionAuditResult": "RUN_45244159028_ADDITIONAL_3_SOURCE_AND_OFFICIAL_KEY_ONLY",
+    "extensionAuditResult": "RUN_45246704920_ADDITIONAL_15_COORDINATE_DUAL_ENGINE_AND_OFFICIAL_KEY_ONLY",
     "extensionRuntimeEligible": 0,
     "extensionPublished": 0,
     "notes": "55 new candidates independently passed PyMuPDF and Poppler full stem/four choices, original glyph integrity gate, and official answer PDF; plus 12 prior verified. Explanations, app integration, license and release remain blocked.",
@@ -261,7 +261,7 @@
     "newBulkPromotedFromPreviousState": 74,
     "previousVerifiedTotal": 787,
     "latestPromotionLedger": "kangoshi-sprint/audit/dual-engine-promotion-ledger-20261124.json",
-    "note": "Current verified source-only total 864 (existing runtime 720 plus extension 144); 336 candidate questions held. Explanation/media/iOS clearance pending."
+    "note": "Current source-only total 879 (existing runtime 720 plus verified extension 159); 321 candidate questions held. Independent explanation, law, media, iOS and release gates still pending."
   },
   "mediaReaudit": {
     "target": 38,
@@ -378,6 +378,26 @@
     "scenarioContextRequiresDualEngineSourcePassage": true,
     "svgOriginalDiagramFaithfulnessVerified": 0,
     "svgPendingDetailedVisualInspection": 18,
-    "status": "SOURCE_ONLY_NO_RELEASE"
+    "status": "SOURCE_ONLY_NO_RELEASE",
+    "workflowRunId": 45246704920,
+    "method": "PyMuPDF question number x/y word bbox and next number clipped rectangle, Poppler independent PDF page text and official key PDF",
+    "shortStemGate": "shorter than 18 normalized characters is acceptable only when unique coordinate question region and five full fields match independent PDF engines",
+    "promotedIds": [
+      "K112-AM013",
+      "K112-AM034",
+      "K112-AM036",
+      "K112-AM038",
+      "K112-AM058",
+      "K112-AM063",
+      "K112-PM009",
+      "K112-PM015",
+      "K112-PM055",
+      "K112-PM059",
+      "K111-AM049",
+      "K111-PM013",
+      "K111-PM014",
+      "K111-PM019",
+      "K111-PM053"
+    ]
   }
 }
