@@ -182,3 +182,12 @@
 - 昇格ID：なし。
 - 保留の多い理由（重複あり）：COORDINATE_BOUNDARY_NOT_UNIQUELY_CONFIRMED 172, COORDINATE_REGION_UNVERIFIED 172, SUSPICIOUS_GLYPH_OR_CONTROL_IN_DRAFT 148, POPPLER_FIELD_MISMATCH_0 113, PYMUPDF_FIELD_MISMATCH_0 101, PAGE_FOOTER_CONTAMINATION 75, PYMUPDF_FIELD_MISMATCH_4 61, OFFICIAL_ANSWER_MISMATCH_OR_COMPLEX 38, OFFICIAL_ANSWER_NOT_SINGLE 38, INDEPENDENT_OFFICIAL_KEY_MISMATCH 38, POPPLER_FIELD_MISMATCH_4 38, SOURCE_GLYPH_MAPPING_UNTRUSTWORTHY 33。
 - 先行再抽出候補：22問のうち残存保留0問。権利・解説・アプリ配信ゲートの自動解除は行わない。
+
+## 残り260問からの4択・5択座標再監査（2026-11-24）
+
+- 原典の4択・5択を区別し、公式解答PDFと全選択肢の独立照合を行うよう検証器・正規ソース昇格ゲートを改修。無回答や採点例外、図版疑義は従来どおり保留。
+- 初回改修実行では正答null候補による例外を検出、保留扱いに修正して再実行。Run `45261935811` は **SUCCESS**。今回の個別新規昇格は **5問**：`K112-AM079`, `K112-AM081`, `K112-PM079`, `K112-PM084`, `K111-AM084`。5問の高解像度原典領域画像とSHA-256は`audit/latest-new-source-images-20261124.json`に収録。
+- 作業開始時は940問、同じ期間に別セッションで26問の並行昇格あり。今回昇格5問を含む現況は**正規971/1200問、保留229問**。今回の追加昇格として並行作業分26問は二重計上しない。
+- 続けて残229問の原典設問番号をPyMuPDFで座標確認し、各問を2倍拡大のPDF領域画像として再出力。Run `45262412566` **SUCCESS**、229問すべてに一意な設問番号アンカーがあり、画像・座標・PDF SHA-256・保留理由を`audit/residual-geometric-source-index-20261124.json`に保存。画像Artifactsは`kangoshi-residual-geometric-page-evidence`、ID `14861452631`。
+- **設問番号の座標が一意であることは、本文と選択肢の文字・図版・正答が確定したことを意味しない**。この追加画像監査での昇格は0問。次工程は残229問のPDF CMap/本文と選択肢の差分をページ画像で照合し、2方式・正答が一致した問だけ昇格。
+- 新規拡張のアプリへの配信は0問。公開ゲートは`PREFLIGHT_BLOCKED`。本審査送信・契約・課金は未実施。
