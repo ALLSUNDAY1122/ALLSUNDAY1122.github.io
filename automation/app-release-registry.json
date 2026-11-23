@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-04T11:12:00Z",
+  "updated_at": "2026-11-23T08:32:00Z",
   "policy": {
     "final_approval": "Explicit user approval is required for the exact App ID / Version / Build immediately read back before App Review submission.",
     "submission_complete": "Only App Store Connect read-back at WAITING_FOR_REVIEW or a later review state counts as App Review submission complete.",
@@ -191,6 +191,25 @@
       "app2_task": null,
       "status": "active",
       "readback": true
+    },
+    "fp2": {
+      "name": "FP2級｜学びスプリント",
+      "app_id": "6797228406",
+      "bundle_id": "com.allsunday1122.fp2manabisprint",
+      "app2_task": null,
+      "status": "preflight_blocked",
+      "readback": false,
+      "version": null,
+      "build": null,
+      "iap": {
+        "planned": false,
+        "verified_in_target_binary": false,
+        "status": "NO_IAP_IN_20261124_MVP_SCOPE_TARGET_BINARY_UNVERIFIED"
+      },
+      "support_url": "https://allsunday1122.github.io/fp2-manabi-sprint/support.html",
+      "privacy_policy_url": "https://allsunday1122.github.io/fp2-manabi-sprint/privacy.html",
+      "url_reachability": "UNVERIFIED_NOT_DEPLOYED_ON_MAIN",
+      "note": "App ID/Bundle ID historical ASC evidence 2026-09-05. Do not use legacy fp2-kakomon-coach iOS app.json 1.0.0/1: different bundle ID. Version/build need target binary/ASC readback."
     }
   }
 }
