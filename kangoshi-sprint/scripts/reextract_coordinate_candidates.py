@@ -28,19 +28,19 @@ def segment_poppler(text,n):
     # Unlike PDF image coordinates, Poppler's -x/-y crop on some source files
     # omitted the final choice; independently segment full page by heading numbers.
     lines=text.splitlines()
-    heading=re.compile(r"^\\s*(?:問\\s*)?0*"+str(n)+r"(?=\\s|$)")
-    next_heading=re.compile(r"^\\s*(?:問\\s*)?0*"+str(n+1)+r"(?=\\s|$)")
+    heading=re.compile(r"^\s*(?:問\s*)?0*"+str(n)+r"(?=\s|$)")
+    next_heading=re.compile(r"^\s*(?:問\s*)?0*"+str(n+1)+r"(?=\s|$)")
     starts=[i for i,x in enumerate(lines) if heading.match(x)]
     if len(starts)!=1:return None
     i=starts[0]
     stop=next((k for k in range(i+1,len(lines)) if next_heading.match(lines[k])),len(lines))
-    return "\\n".join(lines[i:stop])
+    return "\n".join(lines[i:stop])
 
 def split_fields(raw,n):
     lines=[line.strip() for line in clean_font(raw).splitlines() if line.strip()]
     if not lines: return None,"EMPTY_CROP"
     # A question anchor may occupy a standalone line or start the stem line.
-    first=re.compile(r"^(?:問\s*)?0*"+str(n)+r"(?:[\s.．。]|$)")
+    first=re.compile(r"^(?:問\s*)?0*"+str(n)+r"(?=\s|$)")
     while lines and not first.match(lines[0]):
         lines.pop(0)
     if not lines:return None,"NUMBER_ANCHOR_NOT_IN_CROP"
@@ -50,7 +50,7 @@ def split_fields(raw,n):
     # Choice labels must appear in order at line start; no missing or fifth choice.
     ch=re.compile(r"^([1-5])[.．、)）]\s*(.*)$")
     for line in lines:
-        if current==4 and (line.startswith("DKIX-") or re.fullmatch(r"\\d{1,3}",line)):
+        if current==4 and (line.startswith("DKIX-") or re.fullmatch(r"\d{1,3}",line)):
             break
         m=ch.match(line)
         if m:
