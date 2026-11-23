@@ -3,7 +3,7 @@
   "created_at_jst": "2026-11-24T02:20:00+09:00",
   "branch": "feature/fp2-release-scope-20261123",
   "canonical_path": "fp2-manabi-sprint/questions/canonical/approved-questions-20261123.json",
-  "canonical_source_blob_sha": "bec2bf08d686707849cf6ab8121e75a6ed121e48",
+  "canonical_source_blob_sha": "469a94ab8e12aa42bc0c878d96d9edd92c4092ee",
   "law_effective_date": "2026-04-01",
   "scope": {
     "total": 180,
@@ -25,14 +25,14 @@
   "gate_policy": "以前のPASSは内容一次判定であり、本最終証拠監査の完了を意味しない。証拠行未固定の問題のlegalChecked/explanationCheckedを機械的にtrueへ変更しない。",
   "summary": {
     "target": 180,
-    "pending": 170,
-    "verified": 10,
+    "pending": 160,
+    "verified": 20,
     "hold": 0,
     "fail": 0,
     "by_exam": {
       "2025-01": {
-        "pending": 50,
-        "verified": 10,
+        "pending": 40,
+        "verified": 20,
         "hold": 0,
         "fail": 0
       },
@@ -690,161 +690,631 @@
       "id": "fp2-2025-01-gakka-011",
       "exam_date": "2025-01",
       "question_number": 11,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 3,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "FALSE",
+          "reason": "少額短期保険業者の保険料は生命保険料控除の対象外。",
+          "primary_urls": [
+            "https://jili.or.jp/knows_learns/basic/tax/22.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "FALSE",
+          "reason": "少短業者は生保・損保契約者保護機構のセーフティネット対象外。",
+          "primary_urls": [
+            "https://www.fsa.go.jp/ordinary/syougaku/index.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "TRUE",
+          "reason": "通常区分の被保険者単位の合計上限は1,000万円、低発生率保険の特例は別枠。区分ごとの上限も別途存在。",
+          "primary_urls": [
+            "https://www.fsa.go.jp/common/law/guide/syougaku/02b.html",
+            "https://www.fsa.go.jp/ordinary/syougaku/index.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "FALSE",
+          "reason": "少短は生保・傷害疾病1年、損保は最長2年。",
+          "primary_urls": [
+            "https://www.fsa.go.jp/ordinary/syougaku/index.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS_WITH_CLARIFICATION",
+        "reason": "原解説と正規設問・全4肢を一次公的・制度運営主体資料へ独立照合し、法令上の条件・商品例外・税務上の例外を明確化。",
+        "conclusion": "少短の保険料は生命保険料控除の対象外。契約者保護機構の対象外。低発生率保険を除く被保険者単位の合計額1,000万円のほか保険種類ごとの限度額もある。生命・傷害疾病は最長1年、損害保険は最長2年。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 3,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026-04-01基準。商品・約款・税法適用条件と一般的商品性を区別。Q17の2024年契約は歴史的始期条件で判定。"
     },
     {
       "id": "fp2-2025-01-gakka-012",
       "exam_date": "2025-01",
       "question_number": 12,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 2,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "FALSE",
+          "reason": "低解約返戻金型は保険料払込期間中の解約返戻金額を抑えるが死亡保険金まで低くするという一般化は誤り。",
+          "primary_urls": [
+            "https://www.jili.or.jp/knows_learns/kind/main/27.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "TRUE",
+          "reason": "変額保険の終身型では死亡保険金の基本保険金額は最低保証。解約返戻金には保証がない。",
+          "primary_urls": [
+            "https://www.jili.or.jp/knows_learns/kind/main/29.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "FALSE",
+          "reason": "更新型の定期特約は所定上限内で原則健康状態・告知診査に関係なく更新できる。",
+          "primary_urls": [
+            "https://www.jili.or.jp/knows_learns/q_a/life_insurance/155.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "FALSE",
+          "reason": "逓減定期保険は保険金額が契約経過に従って減少し保険料が同率に逓減する仕組みではない。",
+          "primary_urls": [
+            "https://www.jili.or.jp/knows_learns/kind/main/28.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS_WITH_CLARIFICATION",
+        "reason": "原解説と正規設問・全4肢を一次公的・制度運営主体資料へ独立照合し、法令上の条件・商品例外・税務上の例外を明確化。",
+        "conclusion": "低解約返戻金型終身は解約返戻金を抑える仕組みで、死亡保険金が必ず低くなるわけではない。変額終身の基本死亡保険金は最低保証（解約返戻金は非保証）。更新型定期特約は通常健康状態に関係なく更新。逓減定期は主に保険金額が逓減。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 2,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026-04-01基準。商品・約款・税法適用条件と一般的商品性を区別。Q17の2024年契約は歴史的始期条件で判定。"
     },
     {
       "id": "fp2-2025-01-gakka-013",
       "exam_date": "2025-01",
       "question_number": 13,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "FAIL_CORRECTED_REAUDIT_PENDING",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 3,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "FALSE",
+          "reason": "年金開始前の死亡給付は通常払込保険料相当等の商品所定額であり確定年金の年金受取総額と常に同額ではない。",
+          "primary_urls": [
+            "https://www.jili.or.jp/knows_learns/kind/main/30.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "FALSE",
+          "reason": "終身年金は一般に長寿の女性のほうが同一条件で保険料が高くなる。性別同一以外の条件固定を前提。",
+          "primary_urls": [
+            "https://www.jili.or.jp/knows_learns/kind/main/30.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "TRUE",
+          "reason": "MVAを適用する商品では契約時から解約時の市場金利上昇による運用債券価格下落を返戻金へ反映する。変額年金すべてへの適用ではない。",
+          "primary_urls": [
+            "https://www.fsa.go.jp/common/law/guide/ins/02d.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "FALSE",
+          "reason": "円換算支払特約は受取時等の所定レートで換算する方式で、契約後の円高による円換算額の減少は回避しない。",
+          "primary_urls": [
+            "https://www.fsa.go.jp/news/r7/kokyakuhoni/20260317/kpi_hoken_20260317.pdf"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS_WITH_CLARIFICATION",
+        "reason": "原解説と正規設問・全4肢を一次公的・制度運営主体資料へ独立照合し、法令上の条件・商品例外・税務上の例外を明確化。",
+        "conclusion": "確定年金の開始前死亡給付金は商品ごとの金額で年金総額と当然同額ではない。保証期間付終身年金は女性の長い平均余命等を反映した保険料設計が一般的。MVA適用商品は金利上昇時に返戻金が低下し得る。円換算支払特約を付けても為替リスクは残る。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 3,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026-04-01基準。商品・約款・税法適用条件と一般的商品性を区別。Q17の2024年契約は歴史的始期条件で判定。",
+      "previous_failure_resolution": {
+        "previous_status": "FAIL_CORRECTED_REAUDIT_PENDING",
+        "result": "PREVIOUS_CORRECTION_RECHECK_PASS",
+        "reason": "確定年金の開始前死亡給付金は商品ごとの金額で年金総額と当然同額ではない。保証期間付終身年金は女性の長い平均余命等を反映した保険料設計が一般的。MVA適用商品は金利上昇時に返戻金が低下し得る。円換算支払特約を付けても為替リスクは残る。"
+      }
     },
     {
       "id": "fp2-2025-01-gakka-014",
       "exam_date": "2025-01",
       "question_number": 14,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 4,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "TRUE",
+          "reason": "変額個人年金は税制適格の個人年金要件を満たさず、通常一般生命保険料控除に区分される。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1141.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "TRUE",
+          "reason": "2012年以後の新契約における傷害のみの特約保険料は死亡・介護医療の控除対象外。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1141.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "TRUE",
+          "reason": "保険料の所属月にかかわらず実際の支払年2024年の控除対象（翌年分と取り違えない）。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1140.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "FALSE",
+          "reason": "自動振替貸付により保険料へ充当された場合も保険料払込として控除対象。借入返済時に再控除するものではない。所得税基本通達76-3。",
+          "primary_urls": [
+            "https://www.nta.go.jp/law/tsutatsu/menu.htm",
+            "https://www.jili.or.jp/knows_learns/q_a/life_insurance/157.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS_WITH_CLARIFICATION",
+        "reason": "原解説と正規設問・全4肢を一次公的・制度運営主体資料へ独立照合し、法令上の条件・商品例外・税務上の例外を明確化。",
+        "conclusion": "変額個人年金の保険料は通常一般生命保険料控除。傷害のみの特約部分は新制度の控除対象外。保険料は払込年で控除判定。自動振替貸付で充当した保険料も控除対象で、貸付返済時の二重控除はない。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 4,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026-04-01基準。商品・約款・税法適用条件と一般的商品性を区別。Q17の2024年契約は歴史的始期条件で判定。"
     },
     {
       "id": "fp2-2025-01-gakka-015",
       "exam_date": "2025-01",
       "question_number": 15,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 4,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "TRUE",
+          "reason": "保険料負担者兼被保険者死亡による保険金は受取人が相続人でなくても相続税対象。ただし相続人以外は生命保険非課税枠なし。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4114.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "TRUE",
+          "reason": "リビングニーズ特約による所定の生前給付は非課税。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1750.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "TRUE",
+          "reason": "一時払終身保険は一時払養老保険等の金融類似商品と通常異なり、解約益は原則一時所得。5年以内というだけで源泉分離にはならない。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1755.htm",
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1520.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "FALSE",
+          "reason": "被相続人と年金受取人が同一で保証期間中死亡したときの残余年金受給権は相続税の課税対象。一時所得として一括して課税されない。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4123.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS_WITH_CLARIFICATION",
+        "reason": "原解説と正規設問・全4肢を一次公的・制度運営主体資料へ独立照合し、法令上の条件・商品例外・税務上の例外を明確化。",
+        "conclusion": "被保険者兼負担者の死亡保険金は相続人以外が受けても相続税対象（相続人外には非課税枠なし）。リビングニーズの所定生前給付は非課税。通常の一時払終身の解約益は一時所得で、5年以内でも一時払養老等の源泉分離課税を一律適用しない。残存保証年金受給権は相続税対象。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 4,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026-04-01基準。商品・約款・税法適用条件と一般的商品性を区別。Q17の2024年契約は歴史的始期条件で判定。"
     },
     {
       "id": "fp2-2025-01-gakka-016",
       "exam_date": "2025-01",
       "question_number": 16,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "HOLD_PRIMARY_SOURCE_REVIEW_PENDING",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 3,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "FALSE",
+          "reason": "法人が死亡保険金を受ける終身保険の支払保険料は資産計上が原則で、全額を毎期損金算入しない。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/hojin/5363.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "FALSE",
+          "reason": "死亡保険金受取人が遺族、満期保険金受取人が被保険者の養老保険は、原則給与扱い（両者とも被保険者側）。福利厚生プランの半額損金半額資産と混同しない。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/hojin/5363.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "TRUE",
+          "reason": "特定役員のみ被保険者で遺族が保険金受取人の定期保険料は役員への給与として扱う。給与に係る損金算入可否は別途法人税の役員給与規定による。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/hojin/5364.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "FALSE",
+          "reason": "解約返戻金なし・全期払の終身がん保険は第三分野保険で、最高解約返戻率を前提とした前半4割/60%資産計上区分に該当しない。116歳は終身第三分野の期間計算の基準に過ぎない。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/hojin/5364.htm",
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/hojin/5364-2.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS_WITH_CLARIFICATION",
+        "reason": "原解説と正規設問・全4肢を一次公的・制度運営主体資料へ独立照合し、法令上の条件・商品例外・税務上の例外を明確化。",
+        "conclusion": "法人受取の終身保険料は原則資産計上。養老保険で死亡保険金は遺族・満期保険金は被保険者の場合は原則給与（半額資産計上の福利厚生契約とは異なる）。特定役員を対象に遺族が受け取る定期保険料も役員給与。全期払・返戻金のない終身がん保険は前半4割期間に60%資産計上する区分には該当しない。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 3,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026-04-01基準。商品・約款・税法適用条件と一般的商品性を区別。Q17の2024年契約は歴史的始期条件で判定。",
+      "prior_hold_resolution": {
+        "prior_status": "HOLD_PRIMARY_SOURCE_REVIEW_PENDING",
+        "result": "RESOLVED",
+        "reason": "国税庁No.5363および5364で受取人別給与/資産処理と終身第三分野・全期払例外を独立確認。"
+      }
     },
     {
       "id": "fp2-2025-01-gakka-017",
       "exam_date": "2025-01",
       "question_number": 17,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "FAIL_CORRECTED_REAUDIT_PENDING",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 1,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "FALSE",
+          "reason": "2022年10月以降始期の住宅向け火災保険は通常最長5年。2024年契約で最長10年という記述は誤り。",
+          "primary_urls": [
+            "https://www.sonpo.or.jp/insurance/jishin/",
+            "https://soudanguide.sonpo.or.jp/home/q066.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "TRUE",
+          "reason": "地震保険は居住用火災保険に原則付帯するが不付帯の意思表示で外せる。",
+          "primary_urls": [
+            "https://www.mof.go.jp/policy/financial_system/earthquake_insurance/jisin.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "TRUE",
+          "reason": "地震保険4割引制度は所定要件を満たしても重複適用不可。",
+          "primary_urls": [
+            "https://soudanguide.sonpo.or.jp/home/q063.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "TRUE",
+          "reason": "地震保険の損害区分は全損・大半損・小半損・一部損の4段階。",
+          "primary_urls": [
+            "https://www.sonpo.or.jp/insurance/jishin/"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS_WITH_CLARIFICATION",
+        "reason": "原解説と正規設問・全4肢を一次公的・制度運営主体資料へ独立照合し、法令上の条件・商品例外・税務上の例外を明確化。",
+        "conclusion": "2024年始期の住宅火災保険は通常最長5年。地震保険は火災保険とセットだが不付帯選択は可能。4つの耐震等割引は重複できず、地震保険の損害区分は全損・大半損・小半損・一部損。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 1,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026-04-01基準。商品・約款・税法適用条件と一般的商品性を区別。Q17の2024年契約は歴史的始期条件で判定。",
+      "previous_failure_resolution": {
+        "previous_status": "FAIL_CORRECTED_REAUDIT_PENDING",
+        "result": "PREVIOUS_CORRECTION_RECHECK_PASS",
+        "reason": "2024年始期の住宅火災保険は通常最長5年。地震保険は火災保険とセットだが不付帯選択は可能。4つの耐震等割引は重複できず、地震保険の損害区分は全損・大半損・小半損・一部損。"
+      }
     },
     {
       "id": "fp2-2025-01-gakka-018",
       "exam_date": "2025-01",
       "question_number": 18,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 3,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "FALSE",
+          "reason": "被保険者が運転中の自動車で父母所有の財物を壊した場合は対物賠償保険の親族財物免責に該当。",
+          "primary_urls": [
+            "https://soudanguide.sonpo.or.jp/car/q008.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "FALSE",
+          "reason": "対人賠償の親族免責では被保険者本人の配偶者の死傷は対象外（同乗者の傷害に関する他保険とは別）。",
+          "primary_urls": [
+            "https://soudanguide.sonpo.or.jp/car/q007.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "TRUE",
+          "reason": "人身傷害保険は約款算定損害額を保険金額上限内で、本人の過失割合による減額なく補償する（既払賠償金調整あり）。",
+          "primary_urls": [
+            "https://soudanguide.sonpo.or.jp/car/q011.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "FALSE",
+          "reason": "一般車両保険でも地震・噴火・津波起因損害は通常免責。地震等の特約は別枠。",
+          "primary_urls": [
+            "https://faq2.ms-ins.com/faq/show/792?site_domain=default"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS_WITH_CLARIFICATION",
+        "reason": "原解説と正規設問・全4肢を一次公的・制度運営主体資料へ独立照合し、法令上の条件・商品例外・税務上の例外を明確化。",
+        "conclusion": "対物賠償では被保険者の父母等の財物は免責。対人賠償では被保険者の配偶者等は免責。人身傷害は保険金額・約款算定損害の範囲内で本人過失相当部分も補償。一般車両保険の地震津波損害は特約がなければ免責。『実際の損害全額』とする従来解説は約款算定額に限定して理解する。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 3,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026-04-01基準。商品・約款・税法適用条件と一般的商品性を区別。Q17の2024年契約は歴史的始期条件で判定。"
     },
     {
       "id": "fp2-2025-01-gakka-019",
       "exam_date": "2025-01",
       "question_number": 19,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 3,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "TRUE",
+          "reason": "通常のがん保険では契約後90日/3か月程度の待ち期間中のがん診断給付は対象外（商品別の例外あり）。",
+          "primary_urls": [
+            "https://www.jili.or.jp/knows_learns/kind/main/34.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "TRUE",
+          "reason": "先進医療給付対象は受診した時点の厚労大臣指定技術・医療機関等の条件に基づく。申込時指定と混同しない。",
+          "primary_urls": [
+            "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/iryouhoken/sensiniryo/index.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "FALSE",
+          "reason": "民間介護保険は契約の要介護要件を満たす際に一時金・年金などの定額給付が一般的で、公的介護サービス自己負担額の実費が上限ではない。",
+          "primary_urls": [
+            "https://www.jili.or.jp/knows_learns/q_a/nursing_security/537.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "TRUE",
+          "reason": "特定三大疾病保険金が支払われると当該契約が消滅し死亡保険金との重複受取はない。",
+          "primary_urls": [
+            "https://www.jili.or.jp/knows_learns/q_a/medical_security/424.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS_WITH_CLARIFICATION",
+        "reason": "原解説と正規設問・全4肢を一次公的・制度運営主体資料へ独立照合し、法令上の条件・商品例外・税務上の例外を明確化。",
+        "conclusion": "一般的ながん保険には約90日間の待ち期間がある。先進医療は療養時に指定されている技術・施設等の要件が必要。民間の定額介護給付は公的介護保険の自己負担額に限定されない。特定疾病保険金支払後は契約が消滅し死亡保険金との二重支払はない。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 3,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026-04-01基準。商品・約款・税法適用条件と一般的商品性を区別。Q17の2024年契約は歴史的始期条件で判定。"
     },
     {
       "id": "fp2-2025-01-gakka-020",
       "exam_date": "2025-01",
       "question_number": 20,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "PASS",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 3,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "TRUE",
+          "reason": "製造販売した食品による食中毒に起因する第三者賠償責任はPL保険の典型的補償対象。",
+          "primary_urls": [
+            "https://www.sonpo.or.jp/sme_insurance/liability/"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "TRUE",
+          "reason": "従業員の業務中災害による政府労災の上乗せ法定外補償には労働災害総合保険が対応する。",
+          "primary_urls": [
+            "https://www.sonpo.or.jp/sme_insurance/employee/"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "FALSE",
+          "reason": "AIG機械保険の標準約款例では火災・火災に伴う爆発破裂を免責。落雷および所定のボイラー爆発破裂は補償例に含まれる。対象は個別約款・特約による。",
+          "primary_urls": [
+            "https://www.aig.co.jp/content/dam/aig/sonpo/jp/ja/pamphlets/1A2-853.pdf"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "TRUE",
+          "reason": "施設の欠陥・管理不備により来店客への法律上の賠償責任を負うリスクは施設所有管理者賠償責任保険に適合。",
+          "primary_urls": [
+            "https://www.sonpo.or.jp/sme_insurance/liability/"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS_WITH_CLARIFICATION",
+        "reason": "原解説と正規設問・全4肢を一次公的・制度運営主体資料へ独立照合し、法令上の条件・商品例外・税務上の例外を明確化。",
+        "conclusion": "食中毒等の製造物賠償にはPL保険、労災上乗せには労働災害総合保険、施設管理の賠償には施設所有管理者賠償が適合。機械保険は火災による機械損害を通常対象とせず、火災保険を検討する。AIGの約款例では落雷・ボイラー爆発等は一定条件下で補償されるため『すべての爆発を免責』との説明はしない。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 3,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026-04-01基準。商品・約款・税法適用条件と一般的商品性を区別。Q17の2024年契約は歴史的始期条件で判定。"
     },
     {
       "id": "fp2-2025-01-gakka-021",
@@ -3407,6 +3877,6 @@
       "verified_at": null
     }
   ],
-  "verified_records_count": 10,
-  "audit_progress_note": "2025-01 Q01-Q10 verified; Q05 prior primary-source HOLD resolved; remaining 170 PENDING. Canonical legal/explanation flags synchronized."
+  "verified_records_count": 20,
+  "audit_progress_note": "2025-01 Q01-Q20 verified with four-choice evidence; Q16 previous primary-source HOLD resolved. Remaining 160 PENDING."
 }
