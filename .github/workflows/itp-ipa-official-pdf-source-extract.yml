@@ -89,6 +89,21 @@ jobs:
                       record={'status':'NOT_PDF','url_candidate':url,'attempts':attempts}
                   row['files'][typ]=record
               rows.append(row)
+          # Stage a year only if BOTH official question and answer PDFs are valid.
+          # Drafts remain HOLD and are never promoted to the canonical bank.
+          for row in rows:
+              year=row['year']
+              q=row['files']['qs']
+              a=row['files']['ans']
+              if q['status']=='RAW_TEXT_EXTRACTED_NOT_AUDITED' and a['status']=='RAW_TEXT_EXTRACTED_NOT_AUDITED':
+                  proc=subprocess.run(['python3','apps/it-passport-rebuild/quality/stage-ipa-pdf.py',
+                                      str(year),f'/tmp/itp-ipa-pdf/{year}-qs.pdf',
+                                      f'/tmp/itp-ipa-pdf/{year}-ans.pdf'],
+                                      capture_output=True,text=True)
+                  row['staging_result']='STAGED_UNVERIFIED_ONLY' if proc.returncode==0 else 'STAGING_FAILED'
+                  row['staging_exit_code']=proc.returncode
+              else:
+                  row['staging_result']='BLOCKED_MISSING_VERIFIED_OFFICIAL_PDFS'
           p=out/'extraction-evidence.json'
           p.write_text(json.dumps({'official_source':'IPA','rights_conditions':'https://www.ipa.go.jp/shiken/faq.html','items':rows,'release_promoted':False},ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
           print(json.dumps([{'year':r['year'],'qs':r['files']['qs']['status'],'ans':r['files']['ans']['status']} for r in rows],ensure_ascii=False))
