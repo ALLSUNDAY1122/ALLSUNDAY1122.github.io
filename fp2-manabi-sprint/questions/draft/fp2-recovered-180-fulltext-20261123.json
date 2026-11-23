@@ -7,7 +7,7 @@
   "complete_structural_count": 180,
   "release_approved_count": 0,
   "status": "DRAFT_QUARANTINED_CURRENT_LAW_RIGHTS_REVIEW_PENDING",
-  "note": "Original 180 objects preserved and augmented with provenance metadata. Do not treat legacy audit flags as fresh content review. Modified remains null pending original PDF comparison; current law and independently authored explanation provenance remain unverified. Correction on 2026-05 Q14 and 2025-01 Q34 applied 2026-11-23, original values stored in correction_prior. Both remain quarantined for fresh independent review.  Batch04 FAIL Q36/Q39 explanation corrected using NTA primary sources; independent re-review not yet performed.",
+  "note": "Original 180 objects preserved and augmented with provenance metadata. Do not treat legacy audit flags as fresh content review. Modified remains null pending original PDF comparison; current law and independently authored explanation provenance remain unverified. Correction on 2026-05 Q14 and 2025-01 Q34 applied 2026-11-23, original values stored in correction_prior. Both remain quarantined for fresh independent review.  Batch04 FAIL Q36/Q39 explanation corrected using NTA primary sources; independent re-review not yet performed. 2026-11-23: FAIL5独立再監査 PASS4/FAIL1。Q20の機械保険解説再修正、旧文はcorrection_priorに保存、再監査待ち。",
   "questions": [
     {
       "id": "fp2-2026-05-gakka-001",
@@ -5644,15 +5644,16 @@
       "explanation_revision_status": "CORRECTED_AFTER_FAIL_AWAITING_INDEPENDENT_REAUDIT",
       "current_law_support_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1900.htm",
       "modification_explanation_only": true,
-      "independent_audit_status": "FAIL",
-      "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_INDEPENDENT_BATCH04_30_20261123.md",
-      "approved_for_content_bank": false,
+      "independent_audit_status": "PASS",
+      "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_FAIL5_CORRECTED_INDEPENDENT_REAUDIT_20261123.md",
+      "approved_for_content_bank": true,
       "question_text_modified": false,
       "explanation_modified": true,
       "modification_scope": "explanation_only",
       "correction_primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1900.htm",
-      "audit_status": "FAIL_CORRECTED_REAUDIT_PENDING",
-      "release_selected": false
+      "audit_status": "PASS_CORRECTED_INDEPENDENT_REAUDIT",
+      "release_selected": false,
+      "audit_evidence_blob_sha": "26f92519480b8c32f44d246440b556a176b472af"
     },
     {
       "id": "fp2-2025-05-gakka-037",
@@ -5836,15 +5837,16 @@
       "explanation_revision_status": "CORRECTED_AFTER_FAIL_AWAITING_INDEPENDENT_REAUDIT",
       "current_law_support_url": "https://www.nta.go.jp/law/tsutatsu/kihon/shohi/01/05.htm",
       "modification_explanation_only": true,
-      "independent_audit_status": "FAIL",
-      "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_INDEPENDENT_BATCH04_30_20261123.md",
-      "approved_for_content_bank": false,
+      "independent_audit_status": "PASS",
+      "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_FAIL5_CORRECTED_INDEPENDENT_REAUDIT_20261123.md",
+      "approved_for_content_bank": true,
       "question_text_modified": false,
       "explanation_modified": true,
       "modification_scope": "explanation_only",
       "correction_primary_source_url": "https://www.nta.go.jp/law/tsutatsu/kihon/shohi/01/05.htm",
-      "audit_status": "FAIL_CORRECTED_REAUDIT_PENDING",
-      "release_selected": false
+      "audit_status": "PASS_CORRECTED_INDEPENDENT_REAUDIT",
+      "release_selected": false,
+      "audit_evidence_blob_sha": "26f92519480b8c32f44d246440b556a176b472af"
     },
     {
       "id": "fp2-2025-05-gakka-040",
@@ -7795,8 +7797,12 @@
       "explanation_modified": true,
       "modification_scope": "explanation_only",
       "correction_primary_source_url": "https://www.jili.or.jp/knows_learns/q_a/life_insurance/134.html",
-      "audit_status": "FAIL_CORRECTED_REAUDIT_PENDING",
-      "release_selected": false
+      "audit_status": "PASS_CORRECTED_INDEPENDENT_REAUDIT",
+      "release_selected": false,
+      "independent_audit_status": "PASS",
+      "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_FAIL5_CORRECTED_INDEPENDENT_REAUDIT_20261123.md",
+      "audit_evidence_blob_sha": "26f92519480b8c32f44d246440b556a176b472af",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-01-gakka-014",
@@ -8031,8 +8037,12 @@
       "explanation_modified": true,
       "modification_scope": "explanation_only",
       "correction_primary_source_url": "https://faq2.ms-ins.com/faq/show/8148?site_domain=default",
-      "audit_status": "FAIL_CORRECTED_REAUDIT_PENDING",
-      "release_selected": false
+      "audit_status": "PASS_CORRECTED_INDEPENDENT_REAUDIT",
+      "release_selected": false,
+      "independent_audit_status": "PASS",
+      "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_FAIL5_CORRECTED_INDEPENDENT_REAUDIT_20261123.md",
+      "audit_evidence_blob_sha": "26f92519480b8c32f44d246440b556a176b472af",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-01-gakka-018",
@@ -8162,7 +8172,7 @@
         "複合商業ビルを運営する事業者が、来店客が施設の管理不備によりケガをして、法律上の損害賠償責任を負うリスクに備えて、施設所有(管理)者賠償責任保険を契約した。"
       ],
       "answer": 3,
-      "explanation": "正解は③（不適切）。機械保険は、機械・設備の運転中などに生じる不測かつ突発的な機械的・電気的事故などを対象とする保険で、一般に火災・落雷・破裂・爆発等は対象外のため、火災への備えには適切な火災保険等を検討する。実際の補償・免責範囲は個別の適用約款と特約で確認すること。①食中毒の製造物賠償はPL保険、②従業員の業務災害への法定外補償は労働災害総合保険、④施設管理上の法律上の賠償責任は施設所有（管理）者賠償責任保険が適切な活用例。",
+      "explanation": "正解は③（不適切）。火災による機械・設備の損害への備えとして機械保険のみを契約することは通常適切ではなく、火災保険等を検討する必要がある。機械保険は、不測かつ突発的な機械的・電気的事故や取扱上のミス等による損害を補償する保険である。AIG損保「機械保険」（2022年10月版、2023年1月1日以降始期）の例では、落雷による損害や、ボイラーの爆発・破裂など約款所定の事故は補償対象となる一方、火災による損害および火災による爆発・破裂による損害は対象外である。補償範囲は商品・約款・特約により異なるため個別に確認する。①食中毒に係る製造物賠償にはPL保険、②労災への法定外補償には労働災害総合保険、④施設管理に伴う法律上の賠償責任には施設所有（管理）者賠償責任保険が適切な例である。",
       "legalReferenceDate": "2024-10-01",
       "sourceUrl": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
       "status": "active",
@@ -8200,14 +8210,28 @@
           "answer": 3,
           "modified": null,
           "modification_note": null
+        },
+        {
+          "explanation": "正解は③（不適切）。機械保険は、機械・設備の運転中などに生じる不測かつ突発的な機械的・電気的事故などを対象とする保険で、一般に火災・落雷・破裂・爆発等は対象外のため、火災への備えには適切な火災保険等を検討する。実際の補償・免責範囲は個別の適用約款と特約で確認すること。①食中毒の製造物賠償はPL保険、②従業員の業務災害への法定外補償は労働災害総合保険、④施設管理上の法律上の賠償責任は施設所有（管理）者賠償責任保険が適切な活用例。",
+          "answer": 3,
+          "audit_status": "FAIL_REAUDIT_20261123",
+          "reason": "独立再監査で落雷および特定ボイラー事故まで免責と誤記していたことが判明",
+          "evidence_path": "fp2-manabi-sprint/audit/FP2_FAIL5_CORRECTED_INDEPENDENT_REAUDIT_20261123.md",
+          "evidence_blob_sha": "26f92519480b8c32f44d246440b556a176b472af"
         }
       ],
       "question_text_modified": false,
       "explanation_modified": true,
       "modification_scope": "explanation_only",
-      "correction_primary_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "correction_primary_source_url": "https://www.aig.co.jp/content/dam/aig/sonpo/jp/ja/pamphlets/1A2-853.pdf",
       "audit_status": "FAIL_CORRECTED_REAUDIT_PENDING",
-      "release_selected": false
+      "release_selected": false,
+      "independent_audit_status": "FAIL",
+      "approved_for_content_bank": false,
+      "modification_explanation_only": true,
+      "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_FAIL5_CORRECTED_INDEPENDENT_REAUDIT_20261123.md",
+      "audit_evidence_blob_sha": "26f92519480b8c32f44d246440b556a176b472af",
+      "audit_reason": "再修正実施、独立再監査待ち。2026-11-23の監査FAILをPASSに変更していない。"
     },
     {
       "id": "fp2-2025-01-gakka-021",
