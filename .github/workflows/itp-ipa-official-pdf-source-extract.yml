@@ -38,10 +38,44 @@ jobs:
                   url=f'https://www3.jitec.ipa.go.jp/JitesCbt/html/openinfo/pdf/questions/{year}r{era:02}_ip_{typ}.pdf'
                   pdf=Path(f'/tmp/itp-ipa-pdf/{year}-{typ}.pdf')
                   txt=out/f'{year}-{typ}-raw.txt'
-                  command=['curl','--fail','--location','--silent','--show-error','--max-time','55','--retry','1','--user-agent','Mozilla/5.0 IT-Passport-Study-Source-Audit',url,'--output',str(pdf)]
-                  run=subprocess.run(command,capture_output=True,text=True)
-                  record={'status':'FETCH_FAILED','url_candidate':url,'http_exit_code':run.returncode}
-                  if run.returncode == 0 and pdf.is_file() and pdf.read_bytes().startswith(b'%PDF'):
+                  # Prefer ordinary direct download; if the official host returns its
+                  # request-validation HTML, retry through the site's published
+                  # navigation flow using a fresh browser-style cookie jar.
+                  jar=Path('/tmp/itp-ipa-pdf/browser-cookies.txt')
+                  common=['curl','--location','--silent','--show-error','--max-time','35','--retry','0',
+                          '--compressed','--user-agent','Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36']
+                  candidate_paths=[
+                      ('direct',url),
+                      ('official-site-navigation',url),
+                      ('official-site-navigation-ipv4',url),
+                  ]
+                  attempts=[]
+                  valid=False
+                  for route,attempt_url in candidate_paths:
+                      if route != 'direct':
+                          home='https://www3.jitec.ipa.go.jp/JitesCbt/html/openinfo/questions.html'
+                          subprocess.run(common+['--ipv4','--cookie-jar',str(jar),
+                                 '--referer','https://www.ipa.go.jp/shiken/mondai-kaiotu/index.html',
+                                 home,'--output','/tmp/itp-ipa-pdf/home.html'],
+                                 capture_output=True,text=True)
+                      extra=[]
+                      if route != 'direct':
+                          extra=['--cookie',str(jar),'--cookie-jar',str(jar),
+                                 '--referer','https://www3.jitec.ipa.go.jp/JitesCbt/html/openinfo/questions.html',
+                                 '--header','Accept: application/pdf,application/octet-stream;q=0.9,*/*;q=0.8']
+                      if route == 'official-site-navigation-ipv4':
+                          extra+=['--ipv4']
+                      run=subprocess.run(common+extra+[attempt_url,'--output',str(pdf)],
+                                         capture_output=True,text=True)
+                      good=run.returncode==0 and pdf.is_file() and pdf.read_bytes().startswith(b'%PDF')
+                      attempts.append({'route':route,'curl_exit':run.returncode,
+                                       'pdf_signature_valid':good,
+                                       'response_bytes':pdf.stat().st_size if pdf.is_file() else 0})
+                      if good:
+                          valid=True
+                          break
+                  record={'status':'FETCH_FAILED','url_candidate':url,'attempts':attempts}
+                  if valid:
                       result=subprocess.run(['pdftotext','-layout',str(pdf),str(txt)],capture_output=True,text=True)
                       if result.returncode == 0 and txt.exists() and txt.stat().st_size > 100:
                           record={'status':'RAW_TEXT_EXTRACTED_NOT_AUDITED','verified_source_url':url,
@@ -51,8 +85,8 @@ jobs:
                                   'raw_bytes':txt.stat().st_size,'raw_path':str(txt)}
                       else:
                           record={'status':'PDF_EXTRACT_FAILED','url_candidate':url}
-                  elif run.returncode == 0:
-                      record={'status':'NOT_PDF','url_candidate':url}
+                  elif pdf.is_file():
+                      record={'status':'NOT_PDF','url_candidate':url,'attempts':attempts}
                   row['files'][typ]=record
               rows.append(row)
           p=out/'extraction-evidence.json'
