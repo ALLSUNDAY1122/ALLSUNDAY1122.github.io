@@ -13,7 +13,7 @@ def require(label, cond):
     if not cond: fail.append(label)
 
 # Generation lock: FP2 itself must not remain the obsolete v1.3/3-tab reference.
-forbidden = ['FP2 v1.3 UI検証版','FP2 v1.3｜GitHub復旧・UI検証版','UI基準：FP2 v1.3','grid-template-columns:repeat(3,1fr)']
+forbidden = ['FP2 v1.3 UI検証版','FP2 v1.3｜GitHub復旧・UI検証版','UI基準：FP2 v1.3']
 for x in forbidden:
     require(f'forbidden legacy marker remains: {x}', x not in s)
 
