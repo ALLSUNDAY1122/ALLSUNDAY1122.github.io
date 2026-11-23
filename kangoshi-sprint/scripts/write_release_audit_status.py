@@ -92,6 +92,19 @@ if OCR_COORD.exists():
     "remainingFrom46":proof["remaining"],"individualProof":"kangoshi-sprint/audit/ocr-coordinate-repair-ledger-20261124.json",
     "beforeAfter":"kangoshi-sprint/product-content/ocr-coordinate-repaired-candidates-20261124.json",
     "releaseEligible":0,"status":"SOURCE_ONLY"}
+NONCMAP21=R/"audit/ocr-noncmap-repair-ledger-20261124.json"
+if NONCMAP21.exists():
+  evidence=json.loads(NONCMAP21.read_text(encoding="utf8"))
+  assert len(evidence["originalTargetIds"])==21
+  assert evidence["remaining"]+evidence["cumulativePromoted"]==21
+  S["latestNonCmap21ImageAudit"]={
+    "runId":run_id,"originalTarget":21,"checkedThisRun":evidence["checkedThisRun"],
+    "newlyPromoted":evidence["newlyPromoted"],"cumulativePromoted":evidence["cumulativePromoted"],
+    "remainingFrom21":evidence["remaining"],
+    "reasons":evidence["reasonCounts"],
+    "individualProof":"kangoshi-sprint/audit/ocr-noncmap-repair-ledger-20261124.json",
+    "beforeAfter":"kangoshi-sprint/product-content/ocr-noncmap-repaired-candidates-20261124.json",
+    "releaseEligible":0,"status":"SOURCE_ONLY"}
 J.write_text(json.dumps(S,ensure_ascii=False,indent=2)+"\n",encoding="utf8")
 old=MD.read_text(encoding="utf8")
 # Preserve historical change log, remove previously appended dynamic summaries.
@@ -157,6 +170,15 @@ if OCR_COORD.exists():
         "`audit/ocr-coordinate-repair-ledger-20261124.json`、"
         "`product-content/ocr-coordinate-repaired-candidates-20261124.json`。\n"
         "- 合格は原典ソース限定。解説・公開・iOS・Apple審査は保留。\n")
+if NONCMAP21.exists():
+    e=json.loads(NONCMAP21.read_text(encoding="utf8"))
+    tail+=("\n## CMap以外のOCR文字差分21問の原典画像再検証（Run "+str(run_id)+"）\n\n"
+      "- 個別検証："+str(e["checkedThisRun"])+"問。今回昇格："+str(e["newlyPromoted"])+"問。"
+      "元の21問から未確定："+str(e["remaining"])+"問。\n"
+      "- 字句差分と原典画像SHA、PDF二方式と公式正答の証拠："
+      "`audit/ocr-noncmap-repair-ledger-20261124.json`。\n"
+      "- 修正前後：`product-content/ocr-noncmap-repaired-candidates-20261124.json`。"
+      "OCR誤読の疑いがあっても文字を推測で置換したものは昇格しない。\n")
 MD.write_text(summary+history+"\n"+tail,encoding="utf8")
 print(json.dumps({"canonical":total,"remaining":len(hold),"new":P["newPromoted"],
                   "pending22Remaining":len(active_pending),"svgPending":18},ensure_ascii=False))
