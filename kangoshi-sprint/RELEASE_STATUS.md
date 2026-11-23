@@ -277,3 +277,9 @@
 - 修正前後の本文・全選択肢：`product-content/ocr-repaired-candidates-20261124.json`。
 - 原典画像・PDFハッシュ、OCR二設定、公式正答の証拠：`audit/ocr-cmap-repair-ledger-20261124.json`。
 - OCR修正はソース限定。解説・アプリ表示・権利・Apple申請は保留。
+
+## OCR昇格後の原典画像再照合・表記訂正（2026-11-24）
+
+- `K112-PM042` のOCRが開き括弧を `(`、閉じ括弧を `〉` と誤認したため、公式問題PDFの18ページを画像で再確認し、原典表記 `〈AED〉` に訂正。訂正前は `(AED〉`。問題本文・選択肢・正答は原典照合済みで、昇格件数の追加変更はない。
+- 元PDF：`https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp230524-05c_01.pdf`。差分と証拠は `product-content/ocr-repaired-candidates-20261124.json` および `audit/ocr-cmap-repair-ledger-20261124.json` に保存。
+- 正規ソースは **982/1,200問**、未昇格 **218問**。公開・アプリ統合ゲートは従来どおり保留。
