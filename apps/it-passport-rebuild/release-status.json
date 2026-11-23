@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
-  "updated_at_jst": "2026-11-24T08:15:00+09:00",
+  "updated_at_jst": "2026-11-24T08:35:00+09:00",
   "project": "新ITパスポート｜ゼロベース開発",
   "release_decision": "BLOCKED",
-  "release_stage": "OFFICIAL_PDF_RECEIVED_500_ANSWERS_VERIFIED_OCR_FIDELITY_PENDING",
+  "release_stage": "CROP_21_REPAIRED_RASTER_500_PASS_VERBATIM_QA_PENDING",
   "app_review_submitted": false,
   "requirements": {
     "official_question_verbatim": true,
@@ -69,18 +69,31 @@
         "source": "5 user-uploaded scanned question PDFs",
         "source_image_crops_generated": 500,
         "automatic_question_crops": 479,
-        "full_pdf_page_fallbacks": 21,
+        "full_pdf_page_fallbacks": 0,
         "each_crop_lossless_webp": true,
         "visual_fidelity_reviewed": 0,
         "status": "HOLD_IMAGE_CROP_UNREVIEWED",
-        "local_archive": "itp_500_verbatim_image_audit_pack.zip",
-        "archive_sha256": "62afc7885a1309b3d49db37aa9405d193c15301ef8948bbe742f4d48b75e553b",
+        "local_archive": "itp_500_original_images_repaired.zip",
+        "archive_sha256": "60f957e1ec30e373f2f86e95387dcbddf6f0f3fa9d4f33f89879a4d0f470e782",
         "github_image_assets_committed": false,
         "repair_methods": [
           "OCR PSM6 first pass",
           "OCR PSM4 fallback retries",
           "OCR PSM3 fallback retries"
-        ]
+        ],
+        "repaired_previous_fallbacks": 21,
+        "source_raster_equivalent": 500,
+        "source_pixel_exact": 402,
+        "source_raster_minor_rendering_difference": 98,
+        "raster_max_channel_difference": 9,
+        "original_pdf_source_images_present_in_local_artifact": true,
+        "independent_word_by_word_checked": 0,
+        "archive_bytes": 47200937,
+        "private_drive_staging_id": "1R94-C3Q7hKhWt2Px01z9y6eX8qDN8FqG",
+        "github_boundary_repair_manifest": "questions/official-image-boundary-repairs.json",
+        "github_500_image_audit_manifest": "questions/official-image-audit-500.json",
+        "visual_boundary_manual_checks": 21,
+        "content_lexical_audit_pass": 0
       }
     },
     "ios": {
@@ -122,7 +135,12 @@
       "github_canonical_quality_conclusion": "SUCCESS",
       "official_candidate_index_integrity": "PASS_500_OF_500",
       "official_verbatim_release_gate": "EXPECTED_BLOCK_0_OF_500",
-      "original_mock_excluded_from_official_pool": true
+      "original_mock_excluded_from_official_pool": true,
+      "original_image_crop_fallback_repair": "PASS_21_OF_21",
+      "original_raster_equivalence": "PASS_500_OF_500",
+      "official_text_verbatim": "HOLD_500_OF_500",
+      "binary_assets_in_github": "NOT_COMMITTED",
+      "app_release_gate": "BLOCKED"
     }
   },
   "ipa_rights": {
@@ -144,7 +162,7 @@
     {
       "code": "IP-OFF-500",
       "severity": "P0",
-      "detail": "All 500 question/answer/page indexes and lossless local image evidence are prepared; 479 question crops auto-separated, 21 remain full-page fallback. Neither per-question image crop nor OCR text has passed independent visual verification or been deployed as app assets; production verbatim bank is 0."
+      "detail": "Original source image crop boundary repair completed 21/21; 500 raster comparisons pass. No independent character-by-character OCR transcription and four choices verification yet, zero questions in official-verbatim.json; source image binaries not committed to GitHub."
     },
     {
       "code": "IP-SOURCE-FIDELITY",
@@ -168,11 +186,10 @@
     }
   ],
   "next_machine_actions": [
-    "Resolve 21 full-page fallback question-image crops and visually verify 479 automatic crops; independently audit OCR question/choices/figures and release only confirmed exact representations",
-    "Make official image assets durable in the GitHub repository and connect only verified official questions to mobile-first iOS UI",
-    "Run complete release gates and simulator/device tests on the exact selected build",
-    "Verify new App Store Connect record and prepare screenshots, privacy and review information",
-    "Request only Apple 2FA, contracts, device acceptance or final App Review submit confirmation when reached"
+    "Commit the 500 original source image binary files to GitHub (asset archive is preserved privately in Drive and attached in this conversation; GitHub image manifests committed, binary transfer route not available from connected GitHub content API)",
+    "Independently compare OCR prose/choices/figures and original scans question by question; certify only exact matches, preserving official year, question number and correct answer",
+    "Promote independently audited official questions to official-verbatim.json while linking committed image assets; update manifest count and CI locks",
+    "Connect only officially audited questions to iOS and pass build/simulator/App Store prep gates"
   ],
   "human_gates": [
     "Apple 2FA",
