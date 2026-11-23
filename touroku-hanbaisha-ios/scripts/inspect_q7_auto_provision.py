@@ -3,8 +3,8 @@
 import datetime,json,os,urllib.request,re
 from pathlib import Path
 APP="6a769d81a1add9d06020b524"
-BUILD="6b04cec46623f499d912aea1"
-OUT=Path("touroku-hanbaisha-ios/Q7_ENV_SIGNING_RESULT_20261124.json")
+BUILD="6b04cf7092306a39e3981ca4"
+OUT=Path("touroku-hanbaisha-ios/Q7_ENV_SIGNING_ATTEMPT2_RESULT_20261124.json")
 def red(x):
     if isinstance(x,str):
         x=re.sub(r'eyJ[A-Za-z0-9._-]{20,}','[JWT_REDACTED]',x)
