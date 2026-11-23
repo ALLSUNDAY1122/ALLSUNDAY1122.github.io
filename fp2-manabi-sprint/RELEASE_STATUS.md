@@ -1,5 +1,14 @@
 # FP2 RELEASE STATUS（最新正本・2026-11-23）
 
+## Corrected FAIL5 follow-up / canonical 194 (2026-11-23 JST)
+
+Independent re-audit: `audit/FP2_FAIL5_CORRECTED_INDEPENDENT_REAUDIT_20261123.md` (blob `26f92519480b8c32f44d246440b556a176b472af`). Recovered 180: **PASS179 / FAIL1 / HOLD0**. Four corrected PASS (2025-05 Q36/Q39, 2025-01 Q17/Q13) are admitted to the **content-reviewed reserve only**, not the 120-question release selection. Canonical **194** = 120 selected + 74 reserve; all `publishable=false`. Original 120 IDs unchanged.
+
+2025-01 Q20 (`fp2-2025-01-gakka-020`) still **FAIL**. Explanation re-corrected to distinguish covered lightning loss and covered specified boiler explosion/rupture from excluded fire and fire-caused explosion/rupture; old text preserved in draft `correction_prior`; answer ③ unchanged. **Re-audit pending and excluded from canonical, release selection and bundle.** Prior PASS4 evidence must not be treated as Q20 PASS.
+
+Q0 BLOCKED (operator rights, final provenance); Q1 BLOCKED FOR FINAL RELEASE (Q20 quarantined; release 120 content PASS, integrated CI verification pending); Q2 NOT TESTED; Q3 FAIL/DEVICE E2E NOT TESTED; Q4 NOT TESTED; Q5 BLOCKED (signed IPA, TestFlight/ASC and device evidence missing). CI workflow updated to assert 194/120/74, exact offline bank bytes and SHA256, but passing run after latest head must be independently read back. **NOT_SUBMISSION_READY / NOT_SUBMITTED.**
+
+
 ## Coordinator handoff / post-native integration (2026-11-23 18:34 JST)
 
 **Actual: BLOCKED / NOT_SUBMITTED / NOT_SUBMISSION_READY.** Target: SUBMISSION_READY / WAITING_FINAL_APPROVAL by 2026-11-24 08:00 JST; target is not achieved or asserted.
