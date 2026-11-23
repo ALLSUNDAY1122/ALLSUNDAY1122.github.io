@@ -1,12 +1,12 @@
 # HM2 canonical technical execution result
 
-- Checked UTC: 2026-11-22T05:26:53.812286+00:00
-- Bank SHA-256: `e5061112c8ab6073dc40063b736cfa77b2ee93f57cfe82cdbedcd8098aadc6da`
+- Checked UTC: 2026-11-23T01:03:25.147491+00:00
+- Bank SHA-256: `50d25e48f223a70d543ab61066d789141fafec322341d4163de17e24e7ac942c`
 - Actual Node canonical exit: `0`
 - Canonical exact bytes: **True**
 - Readiness command exit: `1`
-- technical_errors: `["STRICT_EXPORT_UNEXPECTED_FAILURE"]`
-- submission_blockers: `["CURRENT_BUILD_ASC_READBACK_MISSING", "CLAUDE_300_ID_COMMIT_CSV_NOT_IMPORTED", "ACTUAL_APP_SCREENSHOTS_NOT_STORED"]`
+- technical_errors: `["UNREVIEWED_BANK_SHA"]`
+- submission_blockers: `["178_QUESTION_INDEPENDENT_REVIEW_PENDING", "ALTERNATIVE_Q0_178_DOUBLE_CHECK_AND_300_RIGHTS_PENDING", "CURRENT_BUILD_ASC_READBACK_MISSING", "CLAUDE_300_ID_COMMIT_CSV_NOT_IMPORTED", "ACTUAL_APP_SCREENSHOTS_NOT_STORED"]`
 - Python 18-case unittest exit: `0`
 - Technical verification: **FAIL**
 
@@ -17,7 +17,7 @@ This is a technical check; it does not approve Q0 content/rights, allow TestFlig
 ```text
 PASS HM2_LIVE_LAW_PINS {"assertions":17,"questionIds":13}
 REVIEW_REQUIRED HM2_LEGACY_TOPIC_METADATA {"originalPins":24,"apparentStale":19,"examples":["健康診断後の医師等の意見聴取","自発的健康診断後の意見聴取","衛生管理者の選任期限","衛生委員会記録の保存","暑熱な場所の基準","法定労働時間（日）","法定労働時間（週）","6時間超の休憩"],"independentReviewMarked":177}
-PASS HM2_CANONICAL_JSON {"total":300,"uniqueStems":300,"choiceDrift":0,"correctAnswerDrift":0,"groups":30,"sha256":"e5061112c8ab6073dc40063b736cfa77b2ee93f57cfe82cdbedcd8098aadc6da","bytes":607878,"path":"/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/ios/health-manager-2/release-questions.json"}
+PASS HM2_CANONICAL_JSON {"total":300,"uniqueStems":300,"choiceDrift":0,"correctAnswerDrift":0,"groups":30,"sha256":"50d25e48f223a70d543ab61066d789141fafec322341d4163de17e24e7ac942c","bytes":607903,"path":"/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/ios/health-manager-2/release-questions.json"}
 NOTE: Snapshot is not an independent legal/medical content review or iOS device test.
 
 ```
@@ -25,7 +25,7 @@ NOTE: Snapshot is not an independent legal/medical content review or iOS device 
 ## Readiness stdout/stderr
 
 ```text
-{"technical_errors": ["STRICT_EXPORT_UNEXPECTED_FAILURE"], "submission_blockers": ["CURRENT_BUILD_ASC_READBACK_MISSING", "CLAUDE_300_ID_COMMIT_CSV_NOT_IMPORTED", "ACTUAL_APP_SCREENSHOTS_NOT_STORED"], "submission_ready": false}
+{"technical_errors": ["UNREVIEWED_BANK_SHA"], "submission_blockers": ["178_QUESTION_INDEPENDENT_REVIEW_PENDING", "ALTERNATIVE_Q0_178_DOUBLE_CHECK_AND_300_RIGHTS_PENDING", "CURRENT_BUILD_ASC_READBACK_MISSING", "CLAUDE_300_ID_COMMIT_CSV_NOT_IMPORTED", "ACTUAL_APP_SCREENSHOTS_NOT_STORED"], "submission_ready": false}
 
 ```
 
@@ -52,7 +52,7 @@ test_stale_bank_hash_fails (test_hm2_alternative_q0_gate.GateTests.test_stale_ba
 test_wrong_choice_text_fails (test_hm2_alternative_q0_gate.GateTests.test_wrong_choice_text_fails) ... ok
 
 ----------------------------------------------------------------------
-Ran 18 tests in 0.248s
+Ran 18 tests in 0.249s
 
 OK
 
