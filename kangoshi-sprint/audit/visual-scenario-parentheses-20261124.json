@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "date": "2026-11-24",
   "method": "Original printed source PDF screenshots inspected; matched paired source CMap glyph symbols, preserving all Japanese letters and numerals and requiring full independent parser equivalence and official answer",
-  "rules": "Only declared exact PDF SHA + PNG SHA + question ID + context page, paired glyphs, no other unrecognized glyph, original source text equivalence across both engines. Does not permit scoring, media or runtime release.",
+  "rules": "Only declared exact PDF SHA + PNG SHA + question ID + context page, paired glyphs, no other unrecognized glyph, original source text equivalence across both engines. Does not permit scoring, media or runtime release. For K112-AM100 alone, the officially printed 7 in 7年前より may restore one uniquely identified omitted numeral in Poppler when all other text matches.",
   "items": [
     {
       "id": "K112-AM095",
@@ -115,6 +115,21 @@
       ],
       "observedPrintedGlyph": "paired parentheses on the official source rendering",
       "review": "visual source glyph confirmed; other text and official key require independent pass"
+    },
+    {
+      "id": "K112-AM100",
+      "exam": 112,
+      "session": "AM",
+      "contextPage": 40,
+      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
+      "contextPngSha256": "c26bcc17eab42d42e0d303771e5066755c8fb93daf146889d43605138618c9b6",
+      "allowedPairedGlyphs": [
+        "ï",
+        "ñ"
+      ],
+      "allowedPopplerOmission": "7年前より => 年前より, source PDF shows printed 7",
+      "visualObservation": "Official source rendering reads 7年前より, while Poppler dropped this single glyph; all other Japanese and Latin tokens must match exactly",
+      "review": "visual screenshot source page checked; special case only K112-AM100"
     }
   ]
 }
