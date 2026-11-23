@@ -9,7 +9,7 @@ import argparse, hashlib, json, pathlib, tempfile, os
 
 # This file is a monitored trigger path for the canonical materialization workflow.
 EXPECTED_QUESTIONS = 300
-EXPECTED_PAYLOAD_SHA256 = "63f110cc5bff5cfa0b6c57396e2ba9339305d166b6c9c07526099a594b61c485"
+EXPECTED_PAYLOAD_SHA256 = "deceb3943286559cc9e087af4cbc4c2845caa6fc09b00c477a5468146c9e1690"
 PREFIX = "const BANK = "
 
 
