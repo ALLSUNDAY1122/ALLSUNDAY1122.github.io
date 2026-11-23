@@ -1,6 +1,6 @@
 {
   "app": "登録販売者｜学びスプリント",
-  "updated_at": "2026-11-24T08:18:46+09:00",
+  "updated_at": "2026-11-23T23:24:18.550Z",
   "version": "1.0.0",
   "bundle_id": "com.allsunday1122.tourokuhanbaisha",
   "app_store_connect_app_id": "6802119268",
@@ -758,7 +758,7 @@
     "official_source_import": "PARTIAL_APPROVED_599_OF_600",
     "verbatim_and_answer_audit": "AUTO_88_GEOMETRY_215_RUBY_51_ORDERED_5_LAYOUT_13_VISUAL_14_REMAINING_214",
     "mobile_ui": "PENDING",
-    "ios_build": "PENDING",
+    "ios_build": "PASS_SIMULATOR_DEBUG_NO_SIGNING",
     "internal_testflight": "PENDING",
     "screenshots": "PENDING",
     "privacy_and_metadata": "ASC_PENDING",
@@ -812,9 +812,9 @@
     "v3_original_pdf_image_8": "PASS_8_SCOPE_RIGHTS_CHROMIUM_16",
     "v3_ruby_visual_10": "PASS_DIRECT_IMAGE_10_CHROMIUM_20",
     "v2_ruby_78_visual_followup": "HOLD_78_MAPPING_WARNINGS_CONTACT_SHEETS_15_VIEWED",
-    "ai_preflight_acceptance": "BLOCKED",
+    "ai_preflight_acceptance": "BLOCKED_11_OF_14_Q4_Q5_Q7",
     "ios_offline_runtime": "BLOCKED_REMOTE_ONLY",
-    "native_simulator": "NOT_TESTED",
+    "native_simulator": "PASS_XCODEBUILD_BOOT_INSTALL_LAUNCH_SCREENSHOT",
     "app_privacy": "NOT_VERIFIED_ASC"
   },
   "evidence": [
@@ -1483,8 +1483,19 @@
     ],
     "report": "touroku-hanbaisha-ios/AI_PREFLIGHT_ACCEPTANCE_20261124.json",
     "run_id": 45286288944,
-    "native_ios_simulator_tested": false,
-    "testflight_uploaded": false
+    "native_ios_simulator_tested": true,
+    "testflight_uploaded": false,
+    "q6_later_evidence": "touroku-hanbaisha-ios/IOS_SIMULATOR_Q6_20261124.json",
+    "q6_later_result": "PASS",
+    "q5_later_evidence": "touroku-hanbaisha-ios/PRIVACY_Q5_AUDIT_20261124.json",
+    "q5_later_result": "SOURCE_BROWSER_PASS_ASC_NOT_VERIFIED",
+    "current_pass": 11,
+    "current_blocking": [
+      "Q4_OFFLINE_RESILIENCE",
+      "Q5_PRIVACY_AND_NETWORK_DISCLOSURE",
+      "Q7_TESTFLIGHT_READY"
+    ],
+    "reassessment_note": "Original preflight 10/14 remains historical; Q6 measured PASS by later macOS workflow; Q5 source/browser PASS but ASC declaration unverified."
   },
   "q5_privacy_audit_20261124": {
     "sourceAndBrowserAudit": "PASS",
@@ -1492,5 +1503,24 @@
     "gate": "NOT_VERIFIED",
     "evidence": "touroku-hanbaisha-ios/PRIVACY_Q5_AUDIT_20261124.json",
     "githubRunId": 45287794947
+  },
+  "q6_ios_simulator_20261124": {
+    "result": "PASS",
+    "xcodebuild": "PASS",
+    "simulatorBoot": "PASS",
+    "install": "PASS",
+    "launch": "PASS",
+    "screenshot": "PASS",
+    "appProcessPid": 5055,
+    "simulator": "iPhone 16 Pro",
+    "simulatorUDID": "DA1C9012-81EC-4C70-B52A-068AEAFBA1DE",
+    "runId": 45287450236,
+    "jobId": 138087341791,
+    "evidence": "touroku-hanbaisha-ios/IOS_SIMULATOR_Q6_20261124.json",
+    "artifactId": 14872941877,
+    "workflowOverall": "FAIL_DUE_TO_GIT_RELEASE_STATUS_REBASE_CONFLICT",
+    "actualNativeAppScreenVisuallyVerified": false,
+    "physicalDeviceTested": false,
+    "testflightUploaded": false
   }
 }
