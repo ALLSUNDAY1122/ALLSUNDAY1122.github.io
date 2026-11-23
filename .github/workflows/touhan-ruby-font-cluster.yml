@@ -5,6 +5,7 @@ on:
     paths:
       - 'touroku-hanbaisha-sprint/official-kansai/ruby_font_cluster_recovery.py'
       - '.github/workflows/touhan-ruby-font-cluster.yml'
+      - 'touroku-hanbaisha-sprint/official-kansai/apply_ruby_font_cluster.py'
 permissions:
   contents: write
 concurrency:
@@ -30,6 +31,28 @@ jobs:
         run: |
           set -o pipefail
           python touroku-hanbaisha-sprint/official-kansai/ruby_font_cluster_recovery.py 2>&1 | tee /tmp/touhan-font.log
+      - name: Promote only strictly proven ruby and update canonical release files
+        run: |
+          set -o pipefail
+          python touroku-hanbaisha-sprint/official-kansai/apply_ruby_font_cluster.py 2>&1 | tee -a /tmp/touhan-font.log
+      - name: Assert bank and exact evidence counts
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          b=Path('touroku-hanbaisha-sprint/official-kansai')
+          audit=json.loads((b/'RUBY_FONT_CLUSTER_ALL_20261124.json').read_text())
+          bank=json.loads((b/'APPROVED_OFFICIAL_BANK.json').read_text())
+          state=json.loads(Path('touroku-hanbaisha-ios/release-status.json').read_text())
+          assert audit['reviewed']==130 and audit['newPass']+audit['remainHold']==130
+          assert len(bank['questions'])==bank['count']==len(set(bank['approvedIds']))
+          assert bank['count']==state['question_bank']['production_official_bank_count']
+          assert 'KSAI-2023-090' not in bank['approvedIds']
+          assert state['release_gate']=='BLOCKED' and not state['app_review_submitted']
+          assert len(list((b/'ruby-font-review').glob('*-source.png')))==audit['remainHold']
+          assert len(list((b/'ruby-font-review').glob('*-candidate-375.png')))==audit['remainHold']
+          assert len(list((b/'ruby-font-review').glob('*-review.html')))==audit['remainHold']
+          PY
       - name: Persist success or explicit failure evidence
         if: always()
         run: |
@@ -48,6 +71,7 @@ jobs:
           git add -f touroku-hanbaisha-sprint/official-kansai/RUBY_FONT_CLUSTER_ALL_20261124.json 2>/dev/null || true
           git add -f touroku-hanbaisha-sprint/official-kansai/RUBY_FONT_CLUSTER_ERROR_20261124.json 2>/dev/null || true
           git add -f touroku-hanbaisha-sprint/official-kansai/ruby-font-review/ 2>/dev/null || true
+          git add touroku-hanbaisha-sprint/official-kansai/APPROVED_OFFICIAL_BANK.json touroku-hanbaisha-ios/release-status.json touroku-hanbaisha-ios/RELEASE_STATUS.md
           if ! git diff --cached --quiet; then
             git commit -m 'audit(touhan): save raw font ruby results and source/app compare images'
             for retry in 1 2 3; do
