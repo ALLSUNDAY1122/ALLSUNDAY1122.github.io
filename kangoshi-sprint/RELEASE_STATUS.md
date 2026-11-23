@@ -8,12 +8,12 @@
 |---|---:|---|
 | 既存第115〜113回ソースバンク | 720 | 既存ランタイム、厳格原典監査629 PASS／91 HOLD |
 | 今回の監査前の検証済みソース拡張 | 251 | 履歴を保持、配信不可 |
-| **今回の追加昇格** | **0** | 共通文・制御文字と二方式・公式正答の再検証 |
-| **正規ソースバンク** | **971 / 1,200** | ソース拡張251問を含む |
-| **未昇格** | **229問** | 原典の疑義と未合格ゲートは保持 |
+| **今回の追加昇格** | **7** | 共通文・制御文字と二方式・公式正答の再検証 |
+| **正規ソースバンク** | **978 / 1,200** | ソース拡張258問を含む |
+| **未昇格** | **222問** | 原典の疑義と未合格ゲートは保持 |
 | アプリへの今回の追加配信 | 0問 | 解説・図版権利・アプリ／iOSゲート未完了 |
 
-- GitHub Actions Run：45264232204。先行再抽出22問のうち**0問**が引き続き保留。
+- GitHub Actions Run：45264606229。先行再抽出22問のうち**0問**が引き続き保留。
 - 正規ソース：\`product-content/verified-additions-20261124.json\`。保留：\`audit/dual-engine-hold-20261124.json\`。
 - 昇格台帳：\`audit/dual-engine-promotion-ledger-20261124.json\`。全新規問の\`publishable=false\`、\`releaseEligible=false\`を維持。
 - 制御文字について、両抽出方式が同一の壊れたPDF文字対応表を共有する危険があるため、未確認の原典文字は自動合格としない。
@@ -198,4 +198,12 @@
 - 追加昇格 **0問**、合計 **971/1,200問**。残り **229問**。
 - 昇格ID：なし。
 - 保留の多い理由（重複あり）：COORDINATE_BOUNDARY_NOT_UNIQUELY_CONFIRMED 165, COORDINATE_REGION_UNVERIFIED 165, SUSPICIOUS_GLYPH_OR_CONTROL_IN_DRAFT 145, POPPLER_FIELD_MISMATCH_0 109, PYMUPDF_FIELD_MISMATCH_0 97, PAGE_FOOTER_CONTAMINATION 75, SOURCE_GLYPH_MAPPING_UNTRUSTWORTHY 64, PYMUPDF_FIELD_MISMATCH_4 60, OFFICIAL_ANSWER_MISMATCH_OR_COMPLEX 38, OFFICIAL_ANSWER_NOT_SINGLE 38, INDEPENDENT_OFFICIAL_KEY_MISMATCH 38, POPPLER_FIELD_MISMATCH_4 38。
+- 先行再抽出候補：22問のうち残存保留0問。権利・解説・アプリ配信ゲートの自動解除は行わない。
+
+
+## 今回の独立共通文・制御文字監査（Run 45264606229）
+
+- 追加昇格 **7問**、合計 **978/1,200問**。残り **222問**。
+- 昇格ID：K112-AM003, K112-AM007, K112-AM041, K112-AM062, K112-PM036, K111-AM057, K111-AM060。
+- 保留の多い理由（重複あり）：COORDINATE_BOUNDARY_NOT_UNIQUELY_CONFIRMED 165, COORDINATE_REGION_UNVERIFIED 165, SUSPICIOUS_GLYPH_OR_CONTROL_IN_DRAFT 145, POPPLER_FIELD_MISMATCH_0 109, PYMUPDF_FIELD_MISMATCH_0 97, PAGE_FOOTER_CONTAMINATION 75, PYMUPDF_FIELD_MISMATCH_4 60, OFFICIAL_ANSWER_MISMATCH_OR_COMPLEX 38, OFFICIAL_ANSWER_NOT_SINGLE 38, INDEPENDENT_OFFICIAL_KEY_MISMATCH 38, POPPLER_FIELD_MISMATCH_4 38, SOURCE_GLYPH_MAPPING_UNTRUSTWORTHY 33。
 - 先行再抽出候補：22問のうち残存保留0問。権利・解説・アプリ配信ゲートの自動解除は行わない。

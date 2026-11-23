@@ -3,7 +3,7 @@
   "updatedAt": "2026-11-24",
   "qualification": "看護師国家試験",
   "policy": "Verified 112/111 canonical SOURCE bank; new questions pass two independent PDF text extraction and official answer token tests, but still require explanation, app tests, rights checks. Never auto-publish.",
-  "count": 251,
+  "count": 258,
   "sourceExams": [
     112,
     111
@@ -128,6 +128,147 @@
       }
     },
     {
+      "id": "K112-AM003",
+      "sourceExam": 112,
+      "session": "AM",
+      "questionNo": 3,
+      "question": "喫煙指数（Brinkman（ブリンクマン）指数）を算出するために、喫煙年数のほかに必要なのはどれか。",
+      "choices": [
+        "喫煙開始年齢",
+        "受動喫煙年数",
+        "家庭内の喫煙者数",
+        "1日の平均喫煙本数"
+      ],
+      "answer": 3,
+      "officialAcceptedAnswers": [
+        3
+      ],
+      "answerType": "singleChoice",
+      "sourceAnswerTokens": [
+        "4"
+      ],
+      "officialScoringStatus": "normal",
+      "scoringException": null,
+      "requiresMedia": false,
+      "mediaAuditStatus": "not_required",
+      "rightsStatus": "mhlw-pdl1.0-text",
+      "sourceRefs": [
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp230524-05a_01.pdf",
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp230524-05seitou.pdf"
+      ],
+      "sourceAttribution": "出典：厚生労働省『第112回看護師国家試験』を学習用データとして加工",
+      "sourcePage": 7,
+      "scenarioContextEvidence": null,
+      "visualNumericGlyphEvidence": null,
+      "imagePinnedSourceCmapEvidence": {
+        "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
+        "sourceImageSha256": "9085dc9175170fd307d6de638f832627fd3e9b33383ea6d0f79b6dd27423f396",
+        "sourcePage": 7,
+        "fieldComparison": [
+          {
+            "field": 0,
+            "twoEngineAgreement": true,
+            "visuallyPinnedOmissions": []
+          },
+          {
+            "field": 1,
+            "twoEngineAgreement": true,
+            "visuallyPinnedOmissions": []
+          },
+          {
+            "field": 2,
+            "twoEngineAgreement": true,
+            "visuallyPinnedOmissions": []
+          },
+          {
+            "field": 3,
+            "twoEngineAgreement": true,
+            "visuallyPinnedOmissions": []
+          },
+          {
+            "field": 4,
+            "twoEngineAgreement": true,
+            "visuallyPinnedOmissions": []
+          }
+        ],
+        "sourceAnchor": [
+          84.93,
+          443.26,
+          90.96,
+          455.31
+        ]
+      },
+      "coordinateBoundaryEvidence": {
+        "previousPage": 7,
+        "correctedPage": 7,
+        "anchorBox": [
+          84.93,
+          443.26,
+          90.96,
+          455.31
+        ],
+        "clip": [
+          0.0,
+          440.26,
+          615.61,
+          636.02
+        ],
+        "nextAnchorFound": true,
+        "verifiedPage": 7,
+        "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+      },
+      "shortStemVerifiedByCoordinates": false,
+      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
+      "officialKeyPdfSha256": "c42b7b61fe9b7fd39265b0e4fef5f0a4d277db077618a98db16e9717047a9502",
+      "reviewStatus": "DUAL_ENGINE_SOURCE_AND_OFFICIAL_KEY_VERIFIED_EXPLANATION_PENDING",
+      "canonicalStatus": "source_verified_extension",
+      "publishable": false,
+      "releaseEligible": false,
+      "audit": {
+        "questionDualEngineMatched": true,
+        "allChoicesDualEngineMatched": true,
+        "officialKeyMatched": true,
+        "sourceGlyphControlAbsent": false,
+        "sourceGlyphRepairVisuallyPinned": true,
+        "mediaNotRequired": true,
+        "explanationIndependentlyReviewed": false,
+        "runtimeIntegrationChecked": false
+      },
+      "printedOptionCount": 4,
+      "category": "必修",
+      "majorSubject": null,
+      "point": null,
+      "detail": null,
+      "evidence": {
+        "sourcePdfPage": 7,
+        "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
+        "dualEngineAuditRun": "GitHub Actions 2026-11-24",
+        "verifier": "PyMuPDF + Poppler pdftotext -layout",
+        "originalPdfGlyphControlAbsent": true,
+        "officialKeyRetestedAgainstPdf": true,
+        "coordinateBoundaryEvidence": {
+          "previousPage": 7,
+          "correctedPage": 7,
+          "anchorBox": [
+            84.93,
+            443.26,
+            90.96,
+            455.31
+          ],
+          "clip": [
+            0.0,
+            440.26,
+            615.61,
+            636.02
+          ],
+          "nextAnchorFound": true,
+          "verifiedPage": 7,
+          "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+        },
+        "scenarioContextEvidence": null
+      }
+    },
+    {
       "id": "K112-AM004",
       "sourceExam": 112,
       "session": "AM",
@@ -241,6 +382,147 @@
         "officialAnswerPdfSha256": "c42b7b61fe9b7fd39265b0e4fef5f0a4d277db077618a98db16e9717047a9502",
         "reviewDate": "2026-11-24",
         "reviewMethod": "Direct manual image visual check of source PDF page with official answer PDF key raw code"
+      }
+    },
+    {
+      "id": "K112-AM007",
+      "sourceExam": 112,
+      "session": "AM",
+      "questionNo": 7,
+      "question": "運動機能の発達で3歳以降に獲得するのはどれか。",
+      "choices": [
+        "階段を昇る。",
+        "ひとりで立つ。",
+        "ボールを蹴る。",
+        "けんけん（片足跳び）をする。"
+      ],
+      "answer": 3,
+      "officialAcceptedAnswers": [
+        3
+      ],
+      "answerType": "singleChoice",
+      "sourceAnswerTokens": [
+        "4"
+      ],
+      "officialScoringStatus": "normal",
+      "scoringException": null,
+      "requiresMedia": false,
+      "mediaAuditStatus": "not_required",
+      "rightsStatus": "mhlw-pdl1.0-text",
+      "sourceRefs": [
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp230524-05a_01.pdf",
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp230524-05seitou.pdf"
+      ],
+      "sourceAttribution": "出典：厚生労働省『第112回看護師国家試験』を学習用データとして加工",
+      "sourcePage": 8,
+      "scenarioContextEvidence": null,
+      "visualNumericGlyphEvidence": null,
+      "imagePinnedSourceCmapEvidence": {
+        "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
+        "sourceImageSha256": "cd34e070c8aaa2f4f1ed0f67627d3c101e1675b3527b96c6761b01caad3e9452",
+        "sourcePage": 8,
+        "fieldComparison": [
+          {
+            "field": 0,
+            "twoEngineAgreement": true,
+            "visuallyPinnedOmissions": []
+          },
+          {
+            "field": 1,
+            "twoEngineAgreement": true,
+            "visuallyPinnedOmissions": []
+          },
+          {
+            "field": 2,
+            "twoEngineAgreement": true,
+            "visuallyPinnedOmissions": []
+          },
+          {
+            "field": 3,
+            "twoEngineAgreement": true,
+            "visuallyPinnedOmissions": []
+          },
+          {
+            "field": 4,
+            "twoEngineAgreement": true,
+            "visuallyPinnedOmissions": []
+          }
+        ],
+        "sourceAnchor": [
+          84.93,
+          419.17,
+          90.96,
+          431.21
+        ]
+      },
+      "coordinateBoundaryEvidence": {
+        "previousPage": 8,
+        "correctedPage": 8,
+        "anchorBox": [
+          84.93,
+          419.17,
+          90.96,
+          431.21
+        ],
+        "clip": [
+          0.0,
+          416.17,
+          615.61,
+          587.83
+        ],
+        "nextAnchorFound": true,
+        "verifiedPage": 8,
+        "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+      },
+      "shortStemVerifiedByCoordinates": false,
+      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
+      "officialKeyPdfSha256": "c42b7b61fe9b7fd39265b0e4fef5f0a4d277db077618a98db16e9717047a9502",
+      "reviewStatus": "DUAL_ENGINE_SOURCE_AND_OFFICIAL_KEY_VERIFIED_EXPLANATION_PENDING",
+      "canonicalStatus": "source_verified_extension",
+      "publishable": false,
+      "releaseEligible": false,
+      "audit": {
+        "questionDualEngineMatched": true,
+        "allChoicesDualEngineMatched": true,
+        "officialKeyMatched": true,
+        "sourceGlyphControlAbsent": false,
+        "sourceGlyphRepairVisuallyPinned": true,
+        "mediaNotRequired": true,
+        "explanationIndependentlyReviewed": false,
+        "runtimeIntegrationChecked": false
+      },
+      "printedOptionCount": 4,
+      "category": "必修",
+      "majorSubject": null,
+      "point": null,
+      "detail": null,
+      "evidence": {
+        "sourcePdfPage": 8,
+        "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
+        "dualEngineAuditRun": "GitHub Actions 2026-11-24",
+        "verifier": "PyMuPDF + Poppler pdftotext -layout",
+        "originalPdfGlyphControlAbsent": true,
+        "officialKeyRetestedAgainstPdf": true,
+        "coordinateBoundaryEvidence": {
+          "previousPage": 8,
+          "correctedPage": 8,
+          "anchorBox": [
+            84.93,
+            419.17,
+            90.96,
+            431.21
+          ],
+          "clip": [
+            0.0,
+            416.17,
+            615.61,
+            587.83
+          ],
+          "nextAnchorFound": true,
+          "verifiedPage": 8,
+          "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+        },
+        "scenarioContextEvidence": null
       }
     },
     {
@@ -1792,6 +2074,159 @@
       }
     },
     {
+      "id": "K112-AM041",
+      "sourceExam": 112,
+      "session": "AM",
+      "questionNo": 41,
+      "question": "輸血用血液製剤と保存温度の組合せで正しいのはどれか。",
+      "choices": [
+        "血小板成分製剤2〜6℃",
+        "赤血球成分製剤2〜6℃",
+        "血漿成分製剤20〜24 ℃",
+        "全血製剤20〜24 ℃"
+      ],
+      "answer": 1,
+      "officialAcceptedAnswers": [
+        1
+      ],
+      "answerType": "singleChoice",
+      "sourceAnswerTokens": [
+        "2"
+      ],
+      "officialScoringStatus": "normal",
+      "scoringException": null,
+      "requiresMedia": false,
+      "mediaAuditStatus": "not_required",
+      "rightsStatus": "mhlw-pdl1.0-text",
+      "sourceRefs": [
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp230524-05a_01.pdf",
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp230524-05seitou.pdf"
+      ],
+      "sourceAttribution": "出典：厚生労働省『第112回看護師国家試験』を学習用データとして加工",
+      "sourcePage": 17,
+      "scenarioContextEvidence": null,
+      "visualNumericGlyphEvidence": null,
+      "imagePinnedSourceCmapEvidence": {
+        "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
+        "sourceImageSha256": "aff6581d96ef2a4452bc086c6622bcf8f3d4a27aa761b7c5b34fe3df9c3ab47d",
+        "sourcePage": 17,
+        "fieldComparison": [
+          {
+            "field": 0,
+            "twoEngineAgreement": true,
+            "visuallyPinnedOmissions": []
+          },
+          {
+            "field": 1,
+            "twoEngineAgreement": true,
+            "visuallyPinnedOmissions": [
+              {
+                "field": 1,
+                "source": "2〜6℃",
+                "poppler": "2〜℃"
+              }
+            ]
+          },
+          {
+            "field": 2,
+            "twoEngineAgreement": true,
+            "visuallyPinnedOmissions": [
+              {
+                "field": 2,
+                "source": "2〜6℃",
+                "poppler": "2〜℃"
+              }
+            ]
+          },
+          {
+            "field": 3,
+            "twoEngineAgreement": true,
+            "visuallyPinnedOmissions": []
+          },
+          {
+            "field": 4,
+            "twoEngineAgreement": true,
+            "visuallyPinnedOmissions": []
+          }
+        ],
+        "sourceAnchor": [
+          78.9,
+          274.6,
+          90.95,
+          286.65
+        ]
+      },
+      "coordinateBoundaryEvidence": {
+        "previousPage": 17,
+        "correctedPage": 17,
+        "anchorBox": [
+          78.9,
+          274.6,
+          90.95,
+          286.65
+        ],
+        "clip": [
+          0.0,
+          271.6,
+          615.61,
+          443.26
+        ],
+        "nextAnchorFound": true,
+        "verifiedPage": 17,
+        "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+      },
+      "shortStemVerifiedByCoordinates": false,
+      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
+      "officialKeyPdfSha256": "c42b7b61fe9b7fd39265b0e4fef5f0a4d277db077618a98db16e9717047a9502",
+      "reviewStatus": "DUAL_ENGINE_SOURCE_AND_OFFICIAL_KEY_VERIFIED_EXPLANATION_PENDING",
+      "canonicalStatus": "source_verified_extension",
+      "publishable": false,
+      "releaseEligible": false,
+      "audit": {
+        "questionDualEngineMatched": true,
+        "allChoicesDualEngineMatched": true,
+        "officialKeyMatched": true,
+        "sourceGlyphControlAbsent": false,
+        "sourceGlyphRepairVisuallyPinned": true,
+        "mediaNotRequired": true,
+        "explanationIndependentlyReviewed": false,
+        "runtimeIntegrationChecked": false
+      },
+      "printedOptionCount": 4,
+      "category": "一般",
+      "majorSubject": null,
+      "point": null,
+      "detail": null,
+      "evidence": {
+        "sourcePdfPage": 17,
+        "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
+        "dualEngineAuditRun": "GitHub Actions 2026-11-24",
+        "verifier": "PyMuPDF + Poppler pdftotext -layout",
+        "originalPdfGlyphControlAbsent": true,
+        "officialKeyRetestedAgainstPdf": true,
+        "coordinateBoundaryEvidence": {
+          "previousPage": 17,
+          "correctedPage": 17,
+          "anchorBox": [
+            78.9,
+            274.6,
+            90.95,
+            286.65
+          ],
+          "clip": [
+            0.0,
+            271.6,
+            615.61,
+            443.26
+          ],
+          "nextAnchorFound": true,
+          "verifiedPage": 17,
+          "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+        },
+        "scenarioContextEvidence": null
+      }
+    },
+    {
       "id": "K112-AM043",
       "sourceExam": 112,
       "session": "AM",
@@ -2602,6 +3037,153 @@
         "verifier": "PyMuPDF + Poppler pdftotext -layout",
         "originalPdfGlyphControlAbsent": true,
         "officialKeyRetestedAgainstPdf": true
+      }
+    },
+    {
+      "id": "K112-AM062",
+      "sourceExam": 112,
+      "session": "AM",
+      "questionNo": 62,
+      "question": "不妊症infertility について正しいのはどれか。",
+      "choices": [
+        "約6割は原因不明である。",
+        "検査に基礎体温測定がある。",
+        "治療の1つに不妊手術がある。",
+        "女性の年齢は治療効果に影響しない。"
+      ],
+      "answer": 1,
+      "officialAcceptedAnswers": [
+        1
+      ],
+      "answerType": "singleChoice",
+      "sourceAnswerTokens": [
+        "2"
+      ],
+      "officialScoringStatus": "normal",
+      "scoringException": null,
+      "requiresMedia": false,
+      "mediaAuditStatus": "not_required",
+      "rightsStatus": "mhlw-pdl1.0-text",
+      "sourceRefs": [
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp230524-05a_01.pdf",
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp230524-05seitou.pdf"
+      ],
+      "sourceAttribution": "出典：厚生労働省『第112回看護師国家試験』を学習用データとして加工",
+      "sourcePage": 24,
+      "scenarioContextEvidence": null,
+      "visualNumericGlyphEvidence": null,
+      "imagePinnedSourceCmapEvidence": {
+        "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
+        "sourceImageSha256": "64a40e462956814db78f8b09d6f794402a171403ed7e2f7a48bc57eaa9b4a8c8",
+        "sourcePage": 24,
+        "fieldComparison": [
+          {
+            "field": 0,
+            "twoEngineAgreement": true,
+            "visuallyPinnedOmissions": []
+          },
+          {
+            "field": 1,
+            "twoEngineAgreement": true,
+            "visuallyPinnedOmissions": [
+              {
+                "field": 1,
+                "source": "約6割",
+                "poppler": "約割"
+              }
+            ]
+          },
+          {
+            "field": 2,
+            "twoEngineAgreement": true,
+            "visuallyPinnedOmissions": []
+          },
+          {
+            "field": 3,
+            "twoEngineAgreement": true,
+            "visuallyPinnedOmissions": []
+          },
+          {
+            "field": 4,
+            "twoEngineAgreement": true,
+            "visuallyPinnedOmissions": []
+          }
+        ],
+        "sourceAnchor": [
+          78.91,
+          81.85,
+          90.96,
+          93.89
+        ]
+      },
+      "coordinateBoundaryEvidence": {
+        "previousPage": 24,
+        "correctedPage": 24,
+        "anchorBox": [
+          78.91,
+          81.85,
+          90.96,
+          93.89
+        ],
+        "clip": [
+          0.0,
+          78.85,
+          615.61,
+          250.51
+        ],
+        "nextAnchorFound": true,
+        "verifiedPage": 24,
+        "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+      },
+      "shortStemVerifiedByCoordinates": false,
+      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
+      "officialKeyPdfSha256": "c42b7b61fe9b7fd39265b0e4fef5f0a4d277db077618a98db16e9717047a9502",
+      "reviewStatus": "DUAL_ENGINE_SOURCE_AND_OFFICIAL_KEY_VERIFIED_EXPLANATION_PENDING",
+      "canonicalStatus": "source_verified_extension",
+      "publishable": false,
+      "releaseEligible": false,
+      "audit": {
+        "questionDualEngineMatched": true,
+        "allChoicesDualEngineMatched": true,
+        "officialKeyMatched": true,
+        "sourceGlyphControlAbsent": false,
+        "sourceGlyphRepairVisuallyPinned": true,
+        "mediaNotRequired": true,
+        "explanationIndependentlyReviewed": false,
+        "runtimeIntegrationChecked": false
+      },
+      "printedOptionCount": 4,
+      "category": "一般",
+      "majorSubject": null,
+      "point": null,
+      "detail": null,
+      "evidence": {
+        "sourcePdfPage": 24,
+        "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
+        "dualEngineAuditRun": "GitHub Actions 2026-11-24",
+        "verifier": "PyMuPDF + Poppler pdftotext -layout",
+        "originalPdfGlyphControlAbsent": true,
+        "officialKeyRetestedAgainstPdf": true,
+        "coordinateBoundaryEvidence": {
+          "previousPage": 24,
+          "correctedPage": 24,
+          "anchorBox": [
+            78.91,
+            81.85,
+            90.96,
+            93.89
+          ],
+          "clip": [
+            0.0,
+            78.85,
+            615.61,
+            250.51
+          ],
+          "nextAnchorFound": true,
+          "verifiedPage": 24,
+          "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+        },
+        "scenarioContextEvidence": null
       }
     },
     {
@@ -6382,6 +6964,153 @@
         "verifier": "PyMuPDF + Poppler pdftotext -layout",
         "originalPdfGlyphControlAbsent": true,
         "officialKeyRetestedAgainstPdf": true
+      }
+    },
+    {
+      "id": "K112-PM036",
+      "sourceExam": 112,
+      "session": "PM",
+      "questionNo": 36,
+      "question": "針刺し事故を防止する方法で適切なのはどれか。",
+      "choices": [
+        "採血時に手袋を着用する。",
+        "採血部位をアルコールで消毒する。",
+        "抜針した採血針はキャップをして破棄する。",
+        "針専用の廃棄容器は容量が7割程度に達したら処分する。"
+      ],
+      "answer": 3,
+      "officialAcceptedAnswers": [
+        3
+      ],
+      "answerType": "singleChoice",
+      "sourceAnswerTokens": [
+        "4"
+      ],
+      "officialScoringStatus": "normal",
+      "scoringException": null,
+      "requiresMedia": false,
+      "mediaAuditStatus": "not_required",
+      "rightsStatus": "mhlw-pdl1.0-text",
+      "sourceRefs": [
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp230524-05c_01.pdf",
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp230524-05seitou.pdf"
+      ],
+      "sourceAttribution": "出典：厚生労働省『第112回看護師国家試験』を学習用データとして加工",
+      "sourcePage": 16,
+      "scenarioContextEvidence": null,
+      "visualNumericGlyphEvidence": null,
+      "imagePinnedSourceCmapEvidence": {
+        "sourcePdfSha256": "137d583931c6ae6a7fa2f3f8655352bdce24735c6f0b2bbbb0b192e6a357d01e",
+        "sourceImageSha256": "77363e44c26d3b5b1752dc4a7f94f1861cd83053759b1387b3faee4981d4d1b5",
+        "sourcePage": 16,
+        "fieldComparison": [
+          {
+            "field": 0,
+            "twoEngineAgreement": true,
+            "visuallyPinnedOmissions": []
+          },
+          {
+            "field": 1,
+            "twoEngineAgreement": true,
+            "visuallyPinnedOmissions": []
+          },
+          {
+            "field": 2,
+            "twoEngineAgreement": true,
+            "visuallyPinnedOmissions": []
+          },
+          {
+            "field": 3,
+            "twoEngineAgreement": true,
+            "visuallyPinnedOmissions": []
+          },
+          {
+            "field": 4,
+            "twoEngineAgreement": true,
+            "visuallyPinnedOmissions": [
+              {
+                "field": 4,
+                "source": "容量が7割",
+                "poppler": "容量が割"
+              }
+            ]
+          }
+        ],
+        "sourceAnchor": [
+          78.91,
+          250.51,
+          90.96,
+          262.55
+        ]
+      },
+      "coordinateBoundaryEvidence": {
+        "previousPage": 16,
+        "correctedPage": 16,
+        "anchorBox": [
+          78.91,
+          250.51,
+          90.96,
+          262.55
+        ],
+        "clip": [
+          0.0,
+          247.51,
+          615.61,
+          419.17
+        ],
+        "nextAnchorFound": true,
+        "verifiedPage": 16,
+        "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+      },
+      "shortStemVerifiedByCoordinates": false,
+      "sourcePdfSha256": "137d583931c6ae6a7fa2f3f8655352bdce24735c6f0b2bbbb0b192e6a357d01e",
+      "officialKeyPdfSha256": "c42b7b61fe9b7fd39265b0e4fef5f0a4d277db077618a98db16e9717047a9502",
+      "reviewStatus": "DUAL_ENGINE_SOURCE_AND_OFFICIAL_KEY_VERIFIED_EXPLANATION_PENDING",
+      "canonicalStatus": "source_verified_extension",
+      "publishable": false,
+      "releaseEligible": false,
+      "audit": {
+        "questionDualEngineMatched": true,
+        "allChoicesDualEngineMatched": true,
+        "officialKeyMatched": true,
+        "sourceGlyphControlAbsent": false,
+        "sourceGlyphRepairVisuallyPinned": true,
+        "mediaNotRequired": true,
+        "explanationIndependentlyReviewed": false,
+        "runtimeIntegrationChecked": false
+      },
+      "printedOptionCount": 4,
+      "category": "一般",
+      "majorSubject": null,
+      "point": null,
+      "detail": null,
+      "evidence": {
+        "sourcePdfPage": 16,
+        "sourcePdfSha256": "137d583931c6ae6a7fa2f3f8655352bdce24735c6f0b2bbbb0b192e6a357d01e",
+        "dualEngineAuditRun": "GitHub Actions 2026-11-24",
+        "verifier": "PyMuPDF + Poppler pdftotext -layout",
+        "originalPdfGlyphControlAbsent": true,
+        "officialKeyRetestedAgainstPdf": true,
+        "coordinateBoundaryEvidence": {
+          "previousPage": 16,
+          "correctedPage": 16,
+          "anchorBox": [
+            78.91,
+            250.51,
+            90.96,
+            262.55
+          ],
+          "clip": [
+            0.0,
+            247.51,
+            615.61,
+            419.17
+          ],
+          "nextAnchorFound": true,
+          "verifiedPage": 16,
+          "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+        },
+        "scenarioContextEvidence": null
       }
     },
     {
@@ -12503,6 +13232,153 @@
       }
     },
     {
+      "id": "K111-AM057",
+      "sourceExam": 111,
+      "session": "AM",
+      "questionNo": 57,
+      "question": "発育と発達に遅れのない生後6か月の男児。BCG 接種の翌日に接種部位が赤く腫れ次第に増悪して膿がみられたため、母親は接種後4日目に医療機関に電話で相談し、看護師が対応した。児に発熱はなく、哺乳や機嫌は良好である。このときの看護師の説明で適切なのはどれか。",
+      "choices": [
+        "｢通常の反応です｣",
+        "｢速やかに来院してください｣",
+        "｢1週間後にまた電話をください｣",
+        "｢患部をアルコール消毒してください｣"
+      ],
+      "answer": 1,
+      "officialAcceptedAnswers": [
+        1
+      ],
+      "answerType": "singleChoice",
+      "sourceAnswerTokens": [
+        "2"
+      ],
+      "officialScoringStatus": "normal",
+      "scoringException": null,
+      "requiresMedia": false,
+      "mediaAuditStatus": "not_required",
+      "rightsStatus": "mhlw-pdl1.0-text",
+      "sourceRefs": [
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp220421-05a_01.pdf",
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp220421-05seitou.pdf"
+      ],
+      "sourceAttribution": "出典：厚生労働省『第111回看護師国家試験』を学習用データとして加工",
+      "sourcePage": 24,
+      "scenarioContextEvidence": null,
+      "visualNumericGlyphEvidence": null,
+      "imagePinnedSourceCmapEvidence": {
+        "sourcePdfSha256": "e853d7a86ef06ef41e8622f550dcf9bb3ffa48af076e412394070f237827bfb3",
+        "sourceImageSha256": "afd021c1ac87ee752b67203296675bdf63772eeeac419dc971cf032f8e9a1446",
+        "sourcePage": 24,
+        "fieldComparison": [
+          {
+            "field": 0,
+            "twoEngineAgreement": true,
+            "visuallyPinnedOmissions": [
+              {
+                "field": 0,
+                "source": "生後6か月",
+                "poppler": "生後か月"
+              }
+            ]
+          },
+          {
+            "field": 1,
+            "twoEngineAgreement": true,
+            "visuallyPinnedOmissions": []
+          },
+          {
+            "field": 2,
+            "twoEngineAgreement": true,
+            "visuallyPinnedOmissions": []
+          },
+          {
+            "field": 3,
+            "twoEngineAgreement": true,
+            "visuallyPinnedOmissions": []
+          },
+          {
+            "field": 4,
+            "twoEngineAgreement": true,
+            "visuallyPinnedOmissions": []
+          }
+        ],
+        "sourceAnchor": [
+          76.08,
+          319.96,
+          88.13,
+          332.01
+        ]
+      },
+      "coordinateBoundaryEvidence": {
+        "previousPage": 24,
+        "correctedPage": 24,
+        "anchorBox": [
+          76.08,
+          319.96,
+          88.13,
+          332.01
+        ],
+        "clip": [
+          0.0,
+          316.96,
+          609.95,
+          560.91
+        ],
+        "nextAnchorFound": true,
+        "verifiedPage": 24,
+        "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+      },
+      "shortStemVerifiedByCoordinates": false,
+      "sourcePdfSha256": "e853d7a86ef06ef41e8622f550dcf9bb3ffa48af076e412394070f237827bfb3",
+      "officialKeyPdfSha256": "b395c7eddb7820daaaf19ae44766889cf19b7b4f5e0d8f9411a8ba1787dfac85",
+      "reviewStatus": "DUAL_ENGINE_SOURCE_AND_OFFICIAL_KEY_VERIFIED_EXPLANATION_PENDING",
+      "canonicalStatus": "source_verified_extension",
+      "publishable": false,
+      "releaseEligible": false,
+      "audit": {
+        "questionDualEngineMatched": true,
+        "allChoicesDualEngineMatched": true,
+        "officialKeyMatched": true,
+        "sourceGlyphControlAbsent": false,
+        "sourceGlyphRepairVisuallyPinned": true,
+        "mediaNotRequired": true,
+        "explanationIndependentlyReviewed": false,
+        "runtimeIntegrationChecked": false
+      },
+      "printedOptionCount": 4,
+      "category": "一般",
+      "majorSubject": null,
+      "point": null,
+      "detail": null,
+      "evidence": {
+        "sourcePdfPage": 24,
+        "sourcePdfSha256": "e853d7a86ef06ef41e8622f550dcf9bb3ffa48af076e412394070f237827bfb3",
+        "dualEngineAuditRun": "GitHub Actions 2026-11-24",
+        "verifier": "PyMuPDF + Poppler pdftotext -layout",
+        "originalPdfGlyphControlAbsent": true,
+        "officialKeyRetestedAgainstPdf": true,
+        "coordinateBoundaryEvidence": {
+          "previousPage": 24,
+          "correctedPage": 24,
+          "anchorBox": [
+            76.08,
+            319.96,
+            88.13,
+            332.01
+          ],
+          "clip": [
+            0.0,
+            316.96,
+            609.95,
+            560.91
+          ],
+          "nextAnchorFound": true,
+          "verifiedPage": 24,
+          "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+        },
+        "scenarioContextEvidence": null
+      }
+    },
+    {
       "id": "K111-AM058",
       "sourceExam": 111,
       "session": "AM",
@@ -12618,6 +13494,153 @@
         "verifier": "PyMuPDF + Poppler pdftotext -layout",
         "originalPdfGlyphControlAbsent": true,
         "officialKeyRetestedAgainstPdf": true
+      }
+    },
+    {
+      "id": "K111-AM060",
+      "sourceExam": 111,
+      "session": "AM",
+      "questionNo": 60,
+      "question": "A 君（小学6年生）は病院に併設された院内学級に通いながら骨肉腫のosteosarcoma治療を続けていた。現在、肺転移があり終末期にある。呼吸障害のため鼻腔カニューレで酸素（2L/分）を吸入中である。A 君の食事摂取量は減っているが意識は清明である。1週後に院内で卒業式が予定されている。A 君は｢卒業式に出席したい｣と話している。看護師のA 君への対応として適切なのはどれか。",
+      "choices": [
+        "両親に判断してもらおうと話す。",
+        "今の状態では出席は難しいと話す。",
+        "出席できるように準備しようと話す。",
+        "出席を決める前に体力をつけようと話す。"
+      ],
+      "answer": 2,
+      "officialAcceptedAnswers": [
+        2
+      ],
+      "answerType": "singleChoice",
+      "sourceAnswerTokens": [
+        "3"
+      ],
+      "officialScoringStatus": "normal",
+      "scoringException": null,
+      "requiresMedia": false,
+      "mediaAuditStatus": "not_required",
+      "rightsStatus": "mhlw-pdl1.0-text",
+      "sourceRefs": [
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp220421-05a_01.pdf",
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp220421-05seitou.pdf"
+      ],
+      "sourceAttribution": "出典：厚生労働省『第111回看護師国家試験』を学習用データとして加工",
+      "sourcePage": 25,
+      "scenarioContextEvidence": null,
+      "visualNumericGlyphEvidence": null,
+      "imagePinnedSourceCmapEvidence": {
+        "sourcePdfSha256": "e853d7a86ef06ef41e8622f550dcf9bb3ffa48af076e412394070f237827bfb3",
+        "sourceImageSha256": "e7cd595764a98df4dd05742431c0fec4573125c734f6b764d05f575eb7768cbf",
+        "sourcePage": 25,
+        "fieldComparison": [
+          {
+            "field": 0,
+            "twoEngineAgreement": true,
+            "visuallyPinnedOmissions": [
+              {
+                "field": 0,
+                "source": "小学6年生",
+                "poppler": "小学年生"
+              }
+            ]
+          },
+          {
+            "field": 1,
+            "twoEngineAgreement": true,
+            "visuallyPinnedOmissions": []
+          },
+          {
+            "field": 2,
+            "twoEngineAgreement": true,
+            "visuallyPinnedOmissions": []
+          },
+          {
+            "field": 3,
+            "twoEngineAgreement": true,
+            "visuallyPinnedOmissions": []
+          },
+          {
+            "field": 4,
+            "twoEngineAgreement": true,
+            "visuallyPinnedOmissions": []
+          }
+        ],
+        "sourceAnchor": [
+          76.08,
+          247.68,
+          88.13,
+          259.73
+        ]
+      },
+      "coordinateBoundaryEvidence": {
+        "previousPage": 25,
+        "correctedPage": 25,
+        "anchorBox": [
+          76.08,
+          247.68,
+          88.13,
+          259.73
+        ],
+        "clip": [
+          0.0,
+          244.68,
+          609.95,
+          536.81
+        ],
+        "nextAnchorFound": true,
+        "verifiedPage": 25,
+        "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+      },
+      "shortStemVerifiedByCoordinates": false,
+      "sourcePdfSha256": "e853d7a86ef06ef41e8622f550dcf9bb3ffa48af076e412394070f237827bfb3",
+      "officialKeyPdfSha256": "b395c7eddb7820daaaf19ae44766889cf19b7b4f5e0d8f9411a8ba1787dfac85",
+      "reviewStatus": "DUAL_ENGINE_SOURCE_AND_OFFICIAL_KEY_VERIFIED_EXPLANATION_PENDING",
+      "canonicalStatus": "source_verified_extension",
+      "publishable": false,
+      "releaseEligible": false,
+      "audit": {
+        "questionDualEngineMatched": true,
+        "allChoicesDualEngineMatched": true,
+        "officialKeyMatched": true,
+        "sourceGlyphControlAbsent": false,
+        "sourceGlyphRepairVisuallyPinned": true,
+        "mediaNotRequired": true,
+        "explanationIndependentlyReviewed": false,
+        "runtimeIntegrationChecked": false
+      },
+      "printedOptionCount": 4,
+      "category": "一般",
+      "majorSubject": null,
+      "point": null,
+      "detail": null,
+      "evidence": {
+        "sourcePdfPage": 25,
+        "sourcePdfSha256": "e853d7a86ef06ef41e8622f550dcf9bb3ffa48af076e412394070f237827bfb3",
+        "dualEngineAuditRun": "GitHub Actions 2026-11-24",
+        "verifier": "PyMuPDF + Poppler pdftotext -layout",
+        "originalPdfGlyphControlAbsent": true,
+        "officialKeyRetestedAgainstPdf": true,
+        "coordinateBoundaryEvidence": {
+          "previousPage": 25,
+          "correctedPage": 25,
+          "anchorBox": [
+            76.08,
+            247.68,
+            88.13,
+            259.73
+          ],
+          "clip": [
+            0.0,
+            244.68,
+            609.95,
+            536.81
+          ],
+          "nextAnchorFound": true,
+          "verifiedPage": 25,
+          "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+        },
+        "scenarioContextEvidence": null
       }
     },
     {
