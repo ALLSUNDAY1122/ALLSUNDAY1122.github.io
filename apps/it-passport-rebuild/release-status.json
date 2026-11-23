@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
-  "updated_at_jst": "2026-11-24T08:25:00+09:00",
+  "updated_at_jst": "2026-11-24T08:58:00+09:00",
   "project": "新ITパスポート｜ゼロベース開発",
   "release_decision": "BLOCKED",
-  "release_stage": "CROP_21_REPAIRED_RASTER_500_PASS_VERBATIM_QA_PENDING",
+  "release_stage": "CROP_REPAIRED_500_OCR_SCREENED_INDEPENDENT_AUDIT_PENDING",
   "app_review_submitted": false,
   "requirements": {
     "official_question_verbatim": true,
@@ -95,9 +95,19 @@
         "visual_boundary_manual_checks": 21,
         "content_lexical_audit_pass": 0,
         "raster_note": "21 repaired crops are pixel-identical to freshly rendered source image crops; 479 existing crops are pixel-identical for 381 or raster-equivalent with only maximum 2-9 channel-level conversion variance for 98; total 500/500 raster equivalent. This is not independent text/choice audit.",
-        "verbatim_ocr_second_pass": "ATTEMPTED_500_TIMED_OUT_NO_COMPLETED_RESULT",
+        "verbatim_ocr_second_pass": "COMPLETED_500_SAME_ENGINE_DISCREPANCY_SCREEN_ONLY",
         "archive_storage": "LOCAL_ATTACHMENT_AND_PRIVATE_GOOGLE_DRIVE_STAGING",
-        "source_crop_boundary_21": "REPAIRED_AND_VISUALLY_INSPECTED"
+        "source_crop_boundary_21": "REPAIRED_AND_VISUALLY_INSPECTED",
+        "ocr_screening": {
+          "processed": 500,
+          "exact": 12,
+          "high_including_exact": 307,
+          "mid": 175,
+          "low": 18,
+          "independent_engine": false,
+          "reference": "questions/official-ocr-screening-summary.json"
+        },
+        "archive_zip_integrity": "PASS"
       }
     },
     "ios": {
@@ -150,7 +160,8 @@
       "image_bounds_21": "PASS",
       "source_raster_500": "PASS",
       "textual_verbatim_500": "NOT_PASSED",
-      "github_asset_binary": "MISSING"
+      "github_asset_binary": "MISSING",
+      "ocr_discrepancy_screen": "COMPLETE_500_NOT_VERBATIM_PASS"
     }
   },
   "ipa_rights": {
