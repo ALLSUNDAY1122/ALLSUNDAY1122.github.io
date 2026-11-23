@@ -1382,3 +1382,8 @@ Apple固定識別子: Bundle `com.allsunday1122.tourokuhanbaisha`、ASC `6802119
 - **Q5：ブラウザ・ソース監査PASS、App Store Connect申告照合NOT_VERIFIED**。Chromiumで公式599問起動時のリクエスト3件（HTML・JSON）、回答後のlocalStorage/sessionStorage/cookie空、プライバシー・サポート導線、PrivacyInfo.xcprivacyを確認。監査はローカル配信でありGitHub Pages側のログ保持・収集目的は確定できない。
 - Q5証拠：<https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45287794947>、`touroku-hanbaisha-ios/PRIVACY_Q5_AUDIT_20261124.json`。ASCアプリID `6802119268` のプライバシー回答現物を直接読めないため、WebView通信由来のIP等の処理と表示上の「データ収集なし」を未確認でPASSにしない。
 - **AI Preflight再評価：11/14 PASS、BLOCKED**。残るQ4（オフライン対応・別設計課題）、Q5（ASC申告現物とGitHub Pagesのデータ処理）、Q7（署名・TestFlight配布）。iOS SimulatorのQ6は解消。本審査最終送信は実施しない。
+
+
+## Q5 ASC read-onlyメタデータ照合（2026-11-24）
+- API読戻し：success、Privacy Policy URL一致：True、プライバシー質問票：**未検証**。
+- Run https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45288770909。データ収集申告は確認せずにPASSとしない。
