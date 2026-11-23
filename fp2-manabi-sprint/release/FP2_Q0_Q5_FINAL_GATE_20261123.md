@@ -18,7 +18,7 @@
 | Q4 独立実利用 | **NOT TESTED** | 独立した受験者相当の実利用・復旧テスト |
 | Q5 配布・申請 | **BLOCKED** | 署名IPA、TestFlight/端末受入、App Store Connect実値、Privacy/スクリーンショット/公開URL、ユーザー最終承認 |
 
-**総合：NOT_SUBMISSION_READY / NOT_SUBMITTED。Q0・Q5のユーザー側BLOCKEDは残存。** PR #5717 Draftを維持し、mainマージ・App Review本審査提出・課金/契約の確定はしない。
+**総合：NOT_SUBMISSION_READY / NOT_SUBMITTED。Q0・Q5のユーザー側BLOCKEDは残存。** PR #5717はopen／Draft=false／未マージであり、mainマージ・App Review本審査提出・課金/契約の確定はしない。
 
 ---
 
