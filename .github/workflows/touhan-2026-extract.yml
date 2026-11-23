@@ -5,6 +5,7 @@ on:
     paths:
       - 'touroku-hanbaisha-sprint/official-kansai/extract_2026.py'
       - '.github/workflows/touhan-2026-extract.yml'
+      - 'touroku-hanbaisha-sprint/official-kansai/build_2026_app_candidate.py'
 permissions:
   contents: write
 jobs:
@@ -35,11 +36,13 @@ jobs:
           assert len(d['sourcePdfs'])==2
           print('STAGING checks passed; manual visual review is NOT waived')
           PY
+      - name: Build 120-question review-only app candidate
+        run: python touroku-hanbaisha-sprint/official-kansai/build_2026_app_candidate.py
       - name: Commit staging data and SHA evidence
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add touroku-hanbaisha-sprint/official-kansai/QUESTIONS_2026_RAW_STAGING.json touroku-hanbaisha-sprint/official-kansai/PDF_SHA256_2026.json
+          git add touroku-hanbaisha-sprint/official-kansai/QUESTIONS_2026_RAW_STAGING.json touroku-hanbaisha-sprint/official-kansai/PDF_SHA256_2026.json touroku-hanbaisha-sprint/official-kansai/QUESTIONS_2026_APP_CANDIDATE.json
           if ! git diff --cached --quiet; then
             git commit -m 'data(touhan): extract 2026 source PDF 120 question raw staging and hashes'
             git push
