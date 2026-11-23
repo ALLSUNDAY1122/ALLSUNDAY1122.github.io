@@ -180,7 +180,7 @@ def main():
       "evidence":"touroku-hanbaisha-sprint/official-kansai/"+OUT.name
     }
     st["ruby_113_auto_pipeline_20261124"]["bankVerified"]=bank["count"]
-    st["ruby_113_auto_pipeline_20261124"]["remainingRubyHold"]=102-len(created)
+    st["ruby_113_auto_pipeline_20261124"]["remainingRubyHold"]=102-len(created)-len(previously_approved)
     st["gates"]["official_source_import"]=f"PARTIAL_APPROVED_{bank['count']}_OF_600"
     st["gates"]["release_readiness"]="BLOCKED"
     st["gates"]["content_complete"]="BLOCKED"
