@@ -19,6 +19,26 @@ if not questions or not all(q.get("approved_for_content_bank") is True and
     raise SystemExit("FP2 bank has unapproved content")
 if bank.get("publishable_questions", 0) != 0:
     raise SystemExit("Release authorization unexpectedly changed; manually re-audit the bundle")
+# Ship only the fixed release selection. Audited reserves stay in GitHub canonical but
+# are never copied into the native distributable payload.
+selection = json.loads((web / "release/release-selection-120-20261123.json").read_text(encoding="utf-8"))
+selected = [q for q in questions if q.get("release_selected") is True]
+selected_ids = [q["id"] for q in selected]
+scoped_ids = [item for group in selection["domains"] for item in group["selected_ids"]]
+if (len(selected) != 120 or len(set(selected_ids)) != 120
+        or len(scoped_ids) != 120 or set(selected_ids) != set(scoped_ids)
+        or selection["selected_count"] != 120 or selection["reserve_count"] != 75
+        or len(questions) != 195):
+    raise SystemExit("FP2 native bundle: 195 canonical, 120 selected, 75 reserve contract violated")
+payload = dict(bank)
+payload.update({
+    "status": "CONTENT_PASS_NATIVE_120_PAYLOAD_NOT_PUBLICATION_APPROVED",
+    "content_approved_questions": 120,
+    "release_candidate_questions": 120,
+    "reserve_content_pass_questions": 0,
+    "questions": selected,
+})
+payload_bytes = json.dumps(payload, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
 if dst.exists():
     shutil.rmtree(dst)
 dst.mkdir(parents=True)
@@ -26,10 +46,10 @@ html = (web / "index.html").read_text(encoding="utf-8")
 adapter = (web / "fp2-approved-bank.js").read_text(encoding="utf-8")
 if '<script src="fp2-approved-bank.js"></script>' not in html:
     raise SystemExit("Adapter script marker changed")
-data = json.dumps(bank, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
+data = payload_bytes.decode("utf-8").replace("</", "<\\/")
 # The same exact canonical data is shipped as JSON and embedded for WKWebView file-origin use.
 (dst / "questions/canonical").mkdir(parents=True)
-(dst / "questions/canonical/approved-questions-20261123.json").write_bytes(bank_bytes)
+(dst / "questions/canonical/approved-questions-20261123.json").write_bytes(payload_bytes)
 shim = """<script type="application/json" id="fp2-offline-bank">""" + data + """</script>
 <script>
 (function(){
@@ -49,12 +69,16 @@ html = html.replace('<script src="fp2-approved-bank.js"></script>', shim, 1)
 if 'id="fp2-offline-bank"' not in html or "FP2ApprovedBank" not in html:
     raise SystemExit("Embedded FP2 bank missing")
 (dst / "index.html").write_text(html, encoding="utf-8")
+shutil.copy2(web / "manifest.webmanifest", dst / "manifest.webmanifest")
 manifest = {
     "app_id": "6797228406", "bundle_id": "com.allsunday1122.fp2manabisprint",
     "version": "1.0.0", "build": "1", "iap_product_ids": [],
     "canonical_path": str(source.relative_to(root)),
     "canonical_sha256": hashlib.sha256(bank_bytes).hexdigest(),
     "content_approved_questions": len(questions),
+    "selected_release_questions": len(selected),
+    "reserve_content_pass_not_bundled": len(questions) - len(selected),
+    "release_payload_sha256": hashlib.sha256(payload_bytes).hexdigest(),
     "publication_release_clear": bank.get("publishable_questions", 0),
     "distribution_approval": "BLOCKED",
 }
