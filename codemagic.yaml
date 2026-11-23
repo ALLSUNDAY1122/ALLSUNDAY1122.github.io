@@ -1174,8 +1174,8 @@ workflows:
           from pathlib import Path
           import os
           p=Path('project.yml'); s=p.read_text()
-          b=os.environ.get('CM_BUILD_NUMBER')
-          if not b or not b.isdigit():raise RuntimeError('Codemagic build number unavailable')
+          b=os.environ.get('BUILD_NUMBER') or os.environ.get('PROJECT_BUILD_NUMBER')
+          if not b or not b.isdigit():raise RuntimeError('Codemagic BUILD_NUMBER/PROJECT_BUILD_NUMBER unavailable')
           p.write_text(s.replace('CURRENT_PROJECT_VERSION: 1','CURRENT_PROJECT_VERSION: '+b,1))
           PY
           xcodegen generate --spec project.yml
