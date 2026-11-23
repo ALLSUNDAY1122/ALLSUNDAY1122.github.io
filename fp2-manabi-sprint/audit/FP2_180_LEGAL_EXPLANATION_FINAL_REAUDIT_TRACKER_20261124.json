@@ -3,7 +3,7 @@
   "created_at_jst": "2026-11-24T02:20:00+09:00",
   "branch": "feature/fp2-release-scope-20261123",
   "canonical_path": "fp2-manabi-sprint/questions/canonical/approved-questions-20261123.json",
-  "canonical_source_blob_sha": "6004d16a5fec2c274662c41c2df3bff136be3961",
+  "canonical_source_blob_sha": "02c73f4079bfc03c0e8abb2e9f5db59dce7eb3bf",
   "law_effective_date": "2026-04-01",
   "scope": {
     "total": 180,
@@ -25,14 +25,14 @@
   "gate_policy": "以前のPASSは内容一次判定であり、本最終証拠監査の完了を意味しない。証拠行未固定の問題のlegalChecked/explanationCheckedを機械的にtrueへ変更しない。",
   "summary": {
     "target": 180,
-    "pending": 177,
-    "verified": 3,
+    "pending": 176,
+    "verified": 4,
     "hold": 0,
     "fail": 0,
     "by_exam": {
       "2025-01": {
-        "pending": 57,
-        "verified": 3,
+        "pending": 56,
+        "verified": 4,
         "hold": 0,
         "fail": 0
       },
@@ -242,17 +242,66 @@
       "id": "fp2-2025-01-gakka-004",
       "exam_date": "2025-01",
       "question_number": 4,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 2,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
       "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "FALSE",
+          "reason": "老齢厚生年金の繰下げ増額率は1月当たり0.7％であり0.5％ではない。",
+          "primary_urls": [
+            "https://www.nenkin.go.jp/section/faq/jukyu/seido/rourei/rourei-kousei/kurisage/20140421-01.html",
+            "https://www.nenkin.go.jp/service/jukyu/seido/roureinenkin/kuriage-kurisage/20140421-02.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "TRUE",
+          "reason": "老齢厚生年金の受給権取得時に遺族厚生年金の受給権があれば、2026年4月1日時点の原則では繰下げ申出不可。2028年以降に予定される改正の経過措置を本基準日に遡及適用しない。",
+          "primary_urls": [
+            "https://www.nenkin.go.jp/section/faq/jukyu/seido/rourei/rourei-kousei/kurisage/20140421-04.html",
+            "https://www.nenkin.go.jp/service/jukyu/seido/roureinenkin/kuriage-kurisage/20140421-02.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "FALSE",
+          "reason": "老齢基礎年金と老齢厚生年金は別々に繰下げでき、同時申出義務はない。",
+          "primary_urls": [
+            "https://www.nenkin.go.jp/service/yougo/kagyo/kurisage.html",
+            "https://www.nenkin.go.jp/service/jukyu/seido/roureinenkin/kuriage-kurisage/20140421-02.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "FALSE",
+          "reason": "加給年金額は繰下げ増額の計算対象から除外される。",
+          "primary_urls": [
+            "https://www.nenkin.go.jp/section/faq/jukyu/seido/rourei/rourei-kousei/kurisage/20140421-01.html",
+            "https://www.nenkin.go.jp/service/jukyu/seido/roureinenkin/kuriage-kurisage/20140421-02.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS",
+        "reason": "既存解説を正規問題の全4肢と照合。0.7％、遺族厚生年金受給権による制限、基礎・厚生別々の選択、加給年金額の増額対象外という4論点はいずれも整合。",
+        "conclusion": "正答2を維持。2026-04-01基準で正答一意。将来施行予定の遺族年金改正は当該基準日の判定に含めない。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 2,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "日本年金機構の制度説明を2026-04-01施行基準として照合。将来改正に関する記載は基準日と区別。"
     },
     {
       "id": "fp2-2025-01-gakka-005",
@@ -3071,6 +3120,6 @@
       "verified_at": null
     }
   ],
-  "verified_records_count": 3,
-  "audit_progress_note": "2025-01 Q01-Q03 first three 4-choice checks documented. Remaining 177 PENDING. All verified flags must sync to canonical source and be read back."
+  "verified_records_count": 4,
+  "audit_progress_note": "2025-01 Q01-Q04 verified with 4-choice source evidence. Q05 onward pending (176)."
 }
