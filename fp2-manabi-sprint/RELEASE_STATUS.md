@@ -8,7 +8,7 @@ Canonical procedures: see RELEASE_SCOPE_20261124.md.
 
 | Quality gate | Status | Blocker |
 |---|---|---|
-| Q0 | BLOCKED | 12 primary-source original drafts produced; per-item rights/legal applicability and independent Q0 signoff remain |
+| Q0 | BLOCKED | Official JAFP + Kinzai reuse rules verified CONDITIONAL_PASS; per-item citation, modification disclosure, historical/current law audit and independent signoff remain. See audits/FP2_Q0_OFFICIAL_PAST_EXAM_RIGHTS_20261123.md |
 | Q1 | BLOCKED | Draft batch A: mechanical 12 PASS / 0 FAIL, independent review 0 PASS / 0 FAIL / 12 HOLD; canonical integration not done |
 | Q2 | NOT TESTED | Real learning cycle not tested |
 | Q3 | FAIL | GitHub HTML source retains v1.3 marker, 8-question sample and 600-question placeholder; lacks v2.1 identity, 4/8/16 setting, 5-week heatmap and JSON import evidence. Real-device inspection remains NOT TESTED. |
@@ -27,3 +27,6 @@ Direct inspection of the current branch's `fp2-manabi-sprint/index.html` confirm
 - Draft: `questions/draft/fp2-original-20261123-a.json` (6 domains x 2, 12 questions, not shipped)
 - Audit: `audits/FP2_ORIGINAL_BATCH_A_AUDIT_20261123.md`
 - Source desk-check provisional 12; rights final review and independent content review pending. No independent workers were launched. Current draft PR #5717 must not be merged as submission ready.
+
+## 2026-11-23 Q0 rights-policy update
+Both official entities affirm conditional reuse of publicly released common 2nd-grade academic exam questions, with source attribution, modification disclosure, and exclusions. Remaining batches should prioritize authorized official past questions. Third-party FP2過去問道場 content, explanations, wording and datasets must not be copied. This policy verification does NOT approve any specific new question; current Q0 remains BLOCKED. Source: `audits/FP2_Q0_OFFICIAL_PAST_EXAM_RIGHTS_20261123.md`.
