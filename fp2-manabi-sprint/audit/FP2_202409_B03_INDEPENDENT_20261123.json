@@ -1,0 +1,1164 @@
+{
+  "audit_id": "FP2-202409-B03-INDEPENDENT-20261123",
+  "scope": "2024-09 Q41-Q60",
+  "reviewed_at": "2026-11-23",
+  "source_branch": "feature/fp2-academic-300-expansion-20261123",
+  "source_path": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b03.json",
+  "source_blob_sha": "c4a0180b205efbcbf4169e3d34858d6711ca9d16",
+  "applicable_on": "2026-04-01",
+  "audit_type": "independent_primary_source_choice_by_choice",
+  "summary": {
+    "pass": 20,
+    "fail": 0,
+    "hold": 0,
+    "critical_confirmed": 0,
+    "high_confirmed": 0,
+    "canonical_content_eligible": 20,
+    "release_approval": false
+  },
+  "critical_high_issues": [],
+  "limitations": "参照された一次資料の全件について2026-04-01時点の版の完全な保存・対照は未完了。一部の公表説明資料は現在公開版。原題の公式正答について制作JSON上の値を独立に公式PDFから再抽出したわけではない。加工利用・権利ゲートは別途未承認。Q49の期限表現は原文の『相続開始があった年から数えて』より、法文どおり『相続開始日から3年を経過する日の属する年』が明晰。",
+  "release_note": "内容監査では20問PASS。公開・正規バンク実統合は権利ゲートとリリース選定の承認を要する。DRAFT_NOT_FOR_RELEASE維持。",
+  "items": [
+    {
+      "id": "FP2-OFFICIAL-202409-Q41",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "不動産登記の抵当権設定に関する説明として適切なのはどれか。",
+      "answer_zero_based": 2,
+      "answer_one_based": 3,
+      "correct_choice": "抵当権は原則として権利部の乙区に記録される",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "抵当権は権利部の甲区に記録される",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "甲区は所有権に関する登記",
+          "primary_source_url": "https://www.moj.go.jp/MINJI/minji05_00391.html"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "抵当権は表題部の地積欄だけで確認できる",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "地積は表題部の表示事項、抵当権の登記ではない",
+          "primary_source_url": "https://www.moj.go.jp/MINJI/minji05_00391.html"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "抵当権は原則として権利部の乙区に記録される",
+          "correct": true,
+          "independent_verdict": "SUPPORTED",
+          "reason": "所有権以外の権利は原則乙区",
+          "primary_source_url": "https://www.moj.go.jp/MINJI/minji05_00391.html"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "登記された所有者が実際の所有者であることは国が必ず保証する",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "不動産登記には公信力なし",
+          "primary_source_url": "https://www.moj.go.jp/MINJI/minji05_00391.html"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "抵当権等所有権以外の権利は乙区。甲区は所有権、表題部は表示。登記に公信力なし。",
+      "primary_sources": [
+        "https://www.moj.go.jp/MINJI/minji05_00391.html"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 3,
+      "original_answer_matches_official": "NOT_INDEPENDENTLY_REEXTRACTED",
+      "modified": true,
+      "modification_note_review": "原題のテーマから単一論点を選定し、設問・選択肢・必要に応じ数値を独自に再構成。原題の公式正答と加工後の正答は別管理。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q42",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "宅地建物取引業者が自ら売主となり、宅建業者ではない買主と売買する場合の手付に関する説明で正しいのはどれか。",
+      "answer_zero_based": 0,
+      "answer_one_based": 1,
+      "correct_choice": "受領した手付は、原則として解約手付として扱われる",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "受領した手付は、原則として解約手付として扱われる",
+          "correct": true,
+          "independent_verdict": "SUPPORTED",
+          "reason": "宅建業法39条により解約手付とみなす",
+          "primary_source_url": "https://laws.e-gov.go.jp/law/327AC1000000176?occasion_date=20260101"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "手付金の上限は常に代金の5％である",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "上限は20％、5％ではない",
+          "primary_source_url": "https://laws.e-gov.go.jp/law/327AC1000000176?occasion_date=20260101"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "売主が手付倍返しすれば、買主が履行着手後でも無条件に解除できる",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "買主の履行着手後は売主に無条件解除権なし",
+          "primary_source_url": "https://laws.e-gov.go.jp/law/327AC1000000176?occasion_date=20260101"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "買主の契約違反による違約金の定めは常に禁止される",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "契約違反時の違約金の定めが一律禁止ではない",
+          "primary_source_url": "https://laws.e-gov.go.jp/law/327AC1000000176?occasion_date=20260101"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "宅建業法39条。自ら売主の売買では受領手付は解約手付とみなす。代金の2割超禁止、履行着手後の解除は制限される。",
+      "primary_sources": [
+        "https://laws.e-gov.go.jp/law/327AC1000000176?occasion_date=20260101"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 1,
+      "original_answer_matches_official": "NOT_INDEPENDENTLY_REEXTRACTED",
+      "modified": true,
+      "modification_note_review": "原題のテーマから単一論点を選定し、設問・選択肢・必要に応じ数値を独自に再構成。原題の公式正答と加工後の正答は別管理。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q43",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "普通借地権について、契約書に存続期間の明示がない場合の原則的な存続期間はどれか。",
+      "answer_zero_based": 2,
+      "answer_one_based": 3,
+      "correct_choice": "30年",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "10年",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "期間未指定の普通借地は30年",
+          "primary_source_url": "https://laws.e-gov.go.jp/law/403AC0000000090?occasion_date=20251215"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "20年",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "期間未指定の普通借地は30年",
+          "primary_source_url": "https://laws.e-gov.go.jp/law/403AC0000000090?occasion_date=20251215"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "30年",
+          "correct": true,
+          "independent_verdict": "SUPPORTED",
+          "reason": "借地借家法3条による",
+          "primary_source_url": "https://laws.e-gov.go.jp/law/403AC0000000090?occasion_date=20251215"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "50年",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "50年以上は一般定期借地権等の別枠",
+          "primary_source_url": "https://laws.e-gov.go.jp/law/403AC0000000090?occasion_date=20251215"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "借地借家法3条：普通借地権当初期間30年、これより長い期間合意は別。",
+      "primary_sources": [
+        "https://laws.e-gov.go.jp/law/403AC0000000090?occasion_date=20251215"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 1,
+      "original_answer_matches_official": "NOT_INDEPENDENTLY_REEXTRACTED",
+      "modified": true,
+      "modification_note_review": "原題のテーマから単一論点を選定し、設問・選択肢・必要に応じ数値を独自に再構成。原題の公式正答と加工後の正答は別管理。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q44",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "都市計画法上の市街化区域について、一般的な扱いとして最も適切なのはどれか。",
+      "answer_zero_based": 0,
+      "answer_one_based": 1,
+      "correct_choice": "原則として用途地域を定める",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "原則として用途地域を定める",
+          "correct": true,
+          "independent_verdict": "SUPPORTED",
+          "reason": "市街化区域では原則用途地域を定める",
+          "primary_source_url": "https://www.mlit.go.jp/common/001118983.pdf"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "一切の開発行為を禁止する区域である",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "市街化区域は開発禁止区域でない",
+          "primary_source_url": "https://www.mlit.go.jp/common/001118983.pdf"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "すべての都市計画区域で必ず市街化区域を設ける",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "区域区分のない都市計画区域もある",
+          "primary_source_url": "https://www.mlit.go.jp/common/001118983.pdf"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "おおむね20年間市街化を抑制する区域である",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "市街化抑制は調整区域であり20年の説明も誤り",
+          "primary_source_url": "https://www.mlit.go.jp/common/001118983.pdf"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "都市計画法7条・8条・13条に基づき市街化区域は市街化推進で用途地域を原則指定、調整区域と区別。",
+      "primary_sources": [
+        "https://www.mlit.go.jp/common/001118983.pdf"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 3,
+      "original_answer_matches_official": "NOT_INDEPENDENTLY_REEXTRACTED",
+      "modified": true,
+      "modification_note_review": "原題のテーマから単一論点を選定し、設問・選択肢・必要に応じ数値を独自に再構成。原題の公式正答と加工後の正答は別管理。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q45",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "準防火地域で一定の準耐火建築物を建てる際、建蔽率の扱いとして正しいのはどれか。",
+      "answer_zero_based": 1,
+      "answer_one_based": 2,
+      "correct_choice": "法定要件を満たせば建蔽率の緩和を受けられる",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "必ず建蔽率の上限が0％となる",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "建蔽率ゼロとはならない",
+          "primary_source_url": "https://www.mlit.go.jp/tochi_fudousan_kensetsugyo/const/content/001739663.pdf"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "法定要件を満たせば建蔽率の緩和を受けられる",
+          "correct": true,
+          "independent_verdict": "SUPPORTED",
+          "reason": "所定の準耐火建築物等は建蔽率緩和可能",
+          "primary_source_url": "https://www.mlit.go.jp/tochi_fudousan_kensetsugyo/const/content/001739663.pdf"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "前面道路が12m未満だと建蔽率そのものが道路幅員で決まる",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "前面道路幅員に関連する主な規制は容積率",
+          "primary_source_url": "https://www.mlit.go.jp/tochi_fudousan_kensetsugyo/const/content/001739663.pdf"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "建蔽率の計算にはセットバック部分を必ず含める",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "セットバック部分は敷地面積に含めない",
+          "primary_source_url": "https://www.mlit.go.jp/tochi_fudousan_kensetsugyo/const/content/001739663.pdf"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "建築基準法53条3項、準防火地域の要件を満たす耐火・準耐火建築物等で建蔽率緩和あり。容積率の前面道路制限と混同不可。",
+      "primary_sources": [
+        "https://www.mlit.go.jp/tochi_fudousan_kensetsugyo/const/content/001739663.pdf"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 2,
+      "original_answer_matches_official": "NOT_INDEPENDENTLY_REEXTRACTED",
+      "modified": true,
+      "modification_note_review": "原題のテーマから単一論点を選定し、設問・選択肢・必要に応じ数値を独自に再構成。原題の公式正答と加工後の正答は別管理。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q46",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "マンションの共用部分を規約で定めることについて適切なのはどれか。",
+      "answer_zero_based": 2,
+      "answer_one_based": 3,
+      "correct_choice": "規約により所定の専有可能部分を共用部分とすることができる",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "構造上・利用上独立した部分を規約共用部分にすることは絶対にできない",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "規約共用部分を設定可能",
+          "primary_source_url": "https://laws.e-gov.go.jp/law/337AC0000000069?occasion_date=20260314"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "共用部分の持分割合は必ず各戸一律である",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "共用持分は必ず同一割合ではない",
+          "primary_source_url": "https://laws.e-gov.go.jp/law/337AC0000000069?occasion_date=20260314"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "規約により所定の専有可能部分を共用部分とすることができる",
+          "correct": true,
+          "independent_verdict": "SUPPORTED",
+          "reason": "区分所有法4条2項の規約共用部分",
+          "primary_source_url": "https://laws.e-gov.go.jp/law/337AC0000000069?occasion_date=20260314"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "専有部分が共有なら全共有者が別々に議決権を行使できる",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "共有専有部分の議決権は行使者一人を定める",
+          "primary_source_url": "https://laws.e-gov.go.jp/law/337AC0000000069?occasion_date=20260314"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "区分所有法4条2項規約共用部分、14条持分、40条共有者の議決権を区別。",
+      "primary_sources": [
+        "https://laws.e-gov.go.jp/law/337AC0000000069?occasion_date=20260314"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 3,
+      "original_answer_matches_official": "NOT_INDEPENDENTLY_REEXTRACTED",
+      "modified": true,
+      "modification_note_review": "原題のテーマから単一論点を選定し、設問・選択肢・必要に応じ数値を独自に再構成。原題の公式正答と加工後の正答は別管理。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q47",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "個人が不動産を相続して所有権移転登記をする場合と、贈与により移転登記をする場合の登録免許税率の関係として正しいのはどれか。",
+      "answer_zero_based": 1,
+      "answer_one_based": 2,
+      "correct_choice": "相続による移転と贈与による移転で税率は異なる",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "どちらも無条件に非課税である",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "相続・贈与とも原則課税",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/inshi/7191.htm"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "相続による移転と贈与による移転で税率は異なる",
+          "correct": true,
+          "independent_verdict": "SUPPORTED",
+          "reason": "原則相続0.4%、贈与2%",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/inshi/7191.htm"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "相続による移転の税率が贈与より必ず高い",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "相続の方が原則低税率",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/inshi/7191.htm"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "取引時の実際の売買代金だけを課税標準とする",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "課税標準は原則不動産価額",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/inshi/7191.htm"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "所有権移転登記の原則税率は相続0.4%、贈与2%。免税・軽減特例は個別。",
+      "primary_sources": [
+        "https://www.nta.go.jp/taxes/shiraberu/taxanswer/inshi/7191.htm"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 4,
+      "original_answer_matches_official": "NOT_INDEPENDENTLY_REEXTRACTED",
+      "modified": true,
+      "modification_note_review": "原題のテーマから単一論点を選定し、設問・選択肢・必要に応じ数値を独自に再構成。原題の公式正答と加工後の正答は別管理。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q48",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "亡くなった親から相続した土地を子が売却する場合、長期・短期譲渡所得の所有期間判定として原則正しいのはどれか。",
+      "answer_zero_based": 2,
+      "answer_one_based": 3,
+      "correct_choice": "被相続人の取得時期を引き継いで判定する",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "相続登記の日から数え始める",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "相続登記日で判定しない",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/joto/3270.htm"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "相続開始日の翌日から数え始める",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "相続開始日の翌日から開始しない",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/joto/3270.htm"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "被相続人の取得時期を引き継いで判定する",
+          "correct": true,
+          "independent_verdict": "SUPPORTED",
+          "reason": "被相続人の取得時期を引き継ぐ",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/joto/3270.htm"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "売買契約をした日以降の期間しか数えられない",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "売買契約日から数え始めない",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/joto/3270.htm"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "相続・贈与取得の取得時期は被相続人等の取得時期を引き継ぐ。登記日でリセットされない。",
+      "primary_sources": [
+        "https://www.nta.go.jp/taxes/shiraberu/taxanswer/joto/3270.htm"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 1,
+      "original_answer_matches_official": "NOT_INDEPENDENTLY_REEXTRACTED",
+      "modified": true,
+      "modification_note_review": "原題のテーマから単一論点を選定し、設問・選択肢・必要に応じ数値を独自に再構成。原題の公式正答と加工後の正答は別管理。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q49",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "相続した空き家について譲渡所得の特別控除を検討する場合、適用期限について正しいのはどれか。",
+      "answer_zero_based": 3,
+      "answer_one_based": 4,
+      "correct_choice": "相続開始があった年から数えて3年を経過する日の属する年の12月31日まで等の条件がある",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "相続開始日から必ず90日以内に売却する",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "90日以内という規定はない",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/joto/3306.htm"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "相続開始の翌日から20年以内なら無条件に対象",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "20年以内無条件はない",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/joto/3306.htm"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "売却期限は存在しない",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "譲渡期限がある",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/joto/3306.htm"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "相続開始があった年から数えて3年を経過する日の属する年の12月31日まで等の条件がある",
+          "correct": true,
+          "independent_verdict": "SUPPORTED",
+          "reason": "相続開始日から3年経過日の属する年の年末まで等の条件",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/joto/3306.htm"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "被相続人居住用財産特例：相続開始日から3年経過日の属する年12月31日等の要件。原文の『相続開始があった年から数えて』は若干曖昧だが他肢が明確に誤りで単一正答。",
+      "primary_sources": [
+        "https://www.nta.go.jp/taxes/shiraberu/taxanswer/joto/3306.htm"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 4,
+      "original_answer_matches_official": "NOT_INDEPENDENTLY_REEXTRACTED",
+      "modified": true,
+      "modification_note_review": "原題のテーマから単一論点を選定し、設問・選択肢・必要に応じ数値を独自に再構成。原題の公式正答と加工後の正答は別管理。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q50",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "年間の家賃収入900万円、運営費用300万円、物件価格1億2,000万円の収益不動産のNOI利回りはいくらか。",
+      "answer_zero_based": 1,
+      "answer_one_based": 2,
+      "correct_choice": "5.0％",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "2.5％",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "600/12000=5.0%",
+          "primary_source_url": "https://www.mlit.go.jp/common/001191116.pdf"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "5.0％",
+          "correct": true,
+          "independent_verdict": "SUPPORTED",
+          "reason": "900-300=600万円、利回り5%",
+          "primary_source_url": "https://www.mlit.go.jp/common/001191116.pdf"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "7.5％",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "計算結果は7.5%でない",
+          "primary_source_url": "https://www.mlit.go.jp/common/001191116.pdf"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "10.0％",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "計算結果は10%でない",
+          "primary_source_url": "https://www.mlit.go.jp/common/001191116.pdf"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "NOI=運営収入900-運営費用300=600万円、600/12000=5.0%。利息・減価償却とは区別。",
+      "primary_sources": [
+        "https://www.mlit.go.jp/common/001191116.pdf"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 3,
+      "original_answer_matches_official": "NOT_INDEPENDENTLY_REEXTRACTED",
+      "modified": true,
+      "modification_note_review": "原題のテーマから単一論点を選定し、設問・選択肢・必要に応じ数値を独自に再構成。原題の公式正答と加工後の正答は別管理。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q51",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "毎年一定額の金銭を贈与する定期贈与契約がある場合、当事者の死亡による扱いとして適切なのはどれか。",
+      "answer_zero_based": 2,
+      "answer_one_based": 3,
+      "correct_choice": "贈与者または受贈者の死亡によって効力を失う",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "一方の死亡後も必ず同じ条件で永続する",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "死亡で将来の定期給付は失効",
+          "primary_source_url": "https://laws.e-gov.go.jp/law/129AC0000000089?occasion_date=20260401"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "死亡すると過去の贈与もすべて無効になる",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "履行済み贈与を遡及して無効としない",
+          "primary_source_url": "https://laws.e-gov.go.jp/law/129AC0000000089?occasion_date=20260401"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "贈与者または受贈者の死亡によって効力を失う",
+          "correct": true,
+          "independent_verdict": "SUPPORTED",
+          "reason": "民法552条の規定",
+          "primary_source_url": "https://laws.e-gov.go.jp/law/129AC0000000089?occasion_date=20260401"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "受贈者の死亡時には必ず贈与税が倍額になる",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "死亡により必ず贈与税が倍額となる規定なし",
+          "primary_source_url": "https://laws.e-gov.go.jp/law/129AC0000000089?occasion_date=20260401"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "民法552条の定期給付贈与死亡失効。履行済み部分を当然遡及無効とする規定ではない。",
+      "primary_sources": [
+        "https://laws.e-gov.go.jp/law/129AC0000000089?occasion_date=20260401"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 1,
+      "original_answer_matches_official": "NOT_INDEPENDENTLY_REEXTRACTED",
+      "modified": true,
+      "modification_note_review": "原題のテーマから単一論点を選定し、設問・選択肢・必要に応じ数値を独自に再構成。原題の公式正答と加工後の正答は別管理。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q52",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "贈与税の配偶者控除について、婚姻期間が20年を超える夫婦が初めて適用を検討する場合、正しいのはどれか。",
+      "answer_zero_based": 2,
+      "answer_one_based": 3,
+      "correct_choice": "配偶者からの居住用不動産または取得資金の贈与など、所定の要件を満たす必要がある",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "贈与対象は現金なら用途を問わずよい",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "居住用不動産またはその取得資金に限る",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/zoyo/4452.htm"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "婚姻期間は贈与年の1月1日時点で20年以上必要である",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "贈与年の1月1日で20年判定するのではない",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/zoyo/4452.htm"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "配偶者からの居住用不動産または取得資金の贈与など、所定の要件を満たす必要がある",
+          "correct": true,
+          "independent_verdict": "SUPPORTED",
+          "reason": "婚姻期間と対象資産など要件を満たす",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/zoyo/4452.htm"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "適用には税務申告が不要である",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "特例を受けるには贈与税申告が必要",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/zoyo/4452.htm"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "婚姻20年以上、居住用不動産または取得資金の贈与で申告が必要。婚姻期間は贈与時に判定。",
+      "primary_sources": [
+        "https://www.nta.go.jp/taxes/shiraberu/taxanswer/zoyo/4452.htm"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 2,
+      "original_answer_matches_official": "NOT_INDEPENDENTLY_REEXTRACTED",
+      "modified": true,
+      "modification_note_review": "原題のテーマから単一論点を選定し、設問・選択肢・必要に応じ数値を独自に再構成。原題の公式正答と加工後の正答は別管理。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q53",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "父からの贈与に相続時精算課税を選択した子の扱いとして正しいのはどれか。",
+      "answer_zero_based": 0,
+      "answer_one_based": 1,
+      "correct_choice": "父について選択しても、母からの贈与まで自動的に同制度になるわけではない",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "父について選択しても、母からの贈与まで自動的に同制度になるわけではない",
+          "correct": true,
+          "independent_verdict": "SUPPORTED",
+          "reason": "贈与者ごとに制度を選択",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4103.htm"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "父からの贈与について翌年以降いつでも暦年課税に戻せる",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "同じ贈与者から暦年課税へ戻せない",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4103.htm"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "贈与財産は不動産に限られる",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "贈与財産は不動産限定でない",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4103.htm"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "一度の贈与にしか適用されない",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "選択後同じ贈与者の複数年の贈与に適用",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4103.htm"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "贈与者ごとの相続時精算課税選択。同じ贈与者について暦年課税へ戻せない。",
+      "primary_sources": [
+        "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4103.htm"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 4,
+      "original_answer_matches_official": "NOT_INDEPENDENTLY_REEXTRACTED",
+      "modified": true,
+      "modification_note_review": "原題のテーマから単一論点を選定し、設問・選択肢・必要に応じ数値を独自に再構成。原題の公式正答と加工後の正答は別管理。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q54",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "任意後見契約が実際に効力を生じるために必要な手続として適切なのはどれか。",
+      "answer_zero_based": 3,
+      "answer_one_based": 4,
+      "correct_choice": "家庭裁判所が任意後見監督人を選任する必要がある",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "本人が日記に書けば効力が生じる",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "日記の意思表示だけでは効力発生しない",
+          "primary_source_url": "https://www.moj.go.jp/MINJI/a03.html"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "契約書を任意の形式でメール送信すれば効力が生じる",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "公正証書が必要でメール契約だけでは不可",
+          "primary_source_url": "https://www.moj.go.jp/MINJI/a03.html"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "判断能力の低下と同時に裁判所の手続なしで開始する",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "監督人選任前に自動発効しない",
+          "primary_source_url": "https://www.moj.go.jp/MINJI/a03.html"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "家庭裁判所が任意後見監督人を選任する必要がある",
+          "correct": true,
+          "independent_verdict": "SUPPORTED",
+          "reason": "家庭裁判所による監督人選任が要件",
+          "primary_source_url": "https://www.moj.go.jp/MINJI/a03.html"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "公正証書による任意後見契約と裁判所による任意後見監督人選任で効力発生。",
+      "primary_sources": [
+        "https://www.moj.go.jp/MINJI/a03.html"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 3,
+      "original_answer_matches_official": "NOT_INDEPENDENTLY_REEXTRACTED",
+      "modified": true,
+      "modification_note_review": "原題のテーマから単一論点を選定し、設問・選択肢・必要に応じ数値を独自に再構成。原題の公式正答と加工後の正答は別管理。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q55",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "共同相続人が協議によって遺産分割を合意した場合、遺産分割協議書の作成形式について正しいのはどれか。",
+      "answer_zero_based": 2,
+      "answer_one_based": 3,
+      "correct_choice": "公正証書でなければならないという一般的な法定要件はない",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "必ず公正証書を作成しなければ効力がない",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "公正証書の一般的義務はない",
+          "primary_source_url": "https://www.koshonin.gr.jp/notary/ow03"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "必ず家庭裁判所の審判を経なければならない",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "相続人全員が協議で合意でき審判不要",
+          "primary_source_url": "https://www.koshonin.gr.jp/notary/ow03"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "公正証書でなければならないという一般的な法定要件はない",
+          "correct": true,
+          "independent_verdict": "SUPPORTED",
+          "reason": "一般的な公正証書強制要件なし",
+          "primary_source_url": "https://www.koshonin.gr.jp/notary/ow03"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "未成年の相続人がいれば他の相続人の署名のみで常に有効",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "未成年者や利益相反は特別代理人等の検討が必要",
+          "primary_source_url": "https://www.koshonin.gr.jp/notary/ow03"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "共同相続人全員の合意による遺産分割協議に公正証書の一般的な強制要件はない。",
+      "primary_sources": [
+        "https://www.koshonin.gr.jp/notary/ow03"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 4,
+      "original_answer_matches_official": "NOT_INDEPENDENTLY_REEXTRACTED",
+      "modified": true,
+      "modification_note_review": "原題のテーマから単一論点を選定し、設問・選択肢・必要に応じ数値を独自に再構成。原題の公式正答と加工後の正答は別管理。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q56",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "配偶者居住権について、被相続人所有の建物が相続開始時に配偶者の住まいでなかった場合の原則として正しいのはどれか。",
+      "answer_zero_based": 0,
+      "answer_one_based": 1,
+      "correct_choice": "配偶者居住権の成立には通常、相続開始時にその建物に居住していたことが必要",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "配偶者居住権の成立には通常、相続開始時にその建物に居住していたことが必要",
+          "correct": true,
+          "independent_verdict": "SUPPORTED",
+          "reason": "相続開始時の居住が要件",
+          "primary_source_url": "https://www.nta.go.jp/law/joho-zeikaishaku/hyoka/200701/pdf/01.pdf"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "相続開始時の居住と無関係に必ず取得できる",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "相続開始時居住に無関係ではない",
+          "primary_source_url": "https://www.nta.go.jp/law/joho-zeikaishaku/hyoka/200701/pdf/01.pdf"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "配偶者居住権は必ず所有権と同一である",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "配偶者居住権は所有権と別権利",
+          "primary_source_url": "https://www.nta.go.jp/law/joho-zeikaishaku/hyoka/200701/pdf/01.pdf"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "配偶者は所有者の承諾なく自由に建物を第三者へ賃貸できる",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "第三者への賃貸は承諾等の要件あり",
+          "primary_source_url": "https://www.nta.go.jp/law/joho-zeikaishaku/hyoka/200701/pdf/01.pdf"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "民法1028条、相続開始時の居住が成立要件。所有権と異なり無断賃貸不可。",
+      "primary_sources": [
+        "https://www.nta.go.jp/law/joho-zeikaishaku/hyoka/200701/pdf/01.pdf"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 1,
+      "original_answer_matches_official": "NOT_INDEPENDENTLY_REEXTRACTED",
+      "modified": true,
+      "modification_note_review": "原題のテーマから単一論点を選定し、設問・選択肢・必要に応じ数値を独自に再構成。原題の公式正答と加工後の正答は別管理。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q57",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "相続税の配偶者に対する税額軽減で適用対象となる配偶者について、正しいのはどれか。",
+      "answer_zero_based": 1,
+      "answer_one_based": 2,
+      "correct_choice": "法律上の婚姻関係にある配偶者に限られる",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "事実婚のパートナーを全て含む",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "法律上の婚姻届のない内縁は対象外",
+          "primary_source_url": "https://www.nta.go.jp/about/organization/ntc/kohon/souzoku/pdf/all.pdf"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "法律上の婚姻関係にある配偶者に限られる",
+          "correct": true,
+          "independent_verdict": "SUPPORTED",
+          "reason": "法律上の配偶者が対象",
+          "primary_source_url": "https://www.nta.go.jp/about/organization/ntc/kohon/souzoku/pdf/all.pdf"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "結婚予定者も必ず対象となる",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "婚約だけでは配偶者にならない",
+          "primary_source_url": "https://www.nta.go.jp/about/organization/ntc/kohon/souzoku/pdf/all.pdf"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "離婚済みでも過去の婚姻期間が長ければ対象となる",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "離婚済みは法律上の配偶者でない",
+          "primary_source_url": "https://www.nta.go.jp/about/organization/ntc/kohon/souzoku/pdf/all.pdf"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "相続税配偶者税額軽減は法律上の婚姻届のある配偶者が対象。内縁等は除外。",
+      "primary_sources": [
+        "https://www.nta.go.jp/about/organization/ntc/kohon/souzoku/pdf/all.pdf"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 4,
+      "original_answer_matches_official": "NOT_INDEPENDENTLY_REEXTRACTED",
+      "modified": true,
+      "modification_note_review": "原題のテーマから単一論点を選定し、設問・選択肢・必要に応じ数値を独自に再構成。原題の公式正答と加工後の正答は別管理。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q58",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "相続開始時点の外貨預金を円換算して相続税評価する場合、原則として適切なのはどれか。",
+      "answer_zero_based": 2,
+      "answer_one_based": 3,
+      "correct_choice": "課税時期の取引金融機関のTTB等を用いる",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "預入時のTTSを用いる",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "預入時TTSではない",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/hyoka/4665.htm"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "預入時のTTBを用いる",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "預入時TTBではない",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/hyoka/4665.htm"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "課税時期の取引金融機関のTTB等を用いる",
+          "correct": true,
+          "independent_verdict": "SUPPORTED",
+          "reason": "課税時期のTTB等を採用",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/hyoka/4665.htm"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "必ず課税時期のTTMの2倍で評価する",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "TTMの2倍にする規定はない",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/hyoka/4665.htm"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "外貨の相続税評価は課税時期の取引金融機関TTB等による。",
+      "primary_sources": [
+        "https://www.nta.go.jp/taxes/shiraberu/taxanswer/hyoka/4665.htm"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 2,
+      "original_answer_matches_official": "NOT_INDEPENDENTLY_REEXTRACTED",
+      "modified": true,
+      "modification_note_review": "原題のテーマから単一論点を選定し、設問・選択肢・必要に応じ数値を独自に再構成。原題の公式正答と加工後の正答は別管理。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q59",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "遺言による遺産分割方法の指定に関する説明として正しいのはどれか。",
+      "answer_zero_based": 0,
+      "answer_one_based": 1,
+      "correct_choice": "遺言者は第三者に遺産分割方法の指定を委託できる",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "遺言者は第三者に遺産分割方法の指定を委託できる",
+          "correct": true,
+          "independent_verdict": "SUPPORTED",
+          "reason": "民法908条で委託可",
+          "primary_source_url": "https://laws.e-gov.go.jp/law/129AC0000000089?occasion_date=20260401"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "遺留分を侵害する遺言は当然に全体が無効になる",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "遺留分侵害は原則金銭請求で処理",
+          "primary_source_url": "https://laws.e-gov.go.jp/law/129AC0000000089?occasion_date=20260401"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "一部の相続人だけ相続分を指定する遺言は必ず無効となる",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "一部の相続人の指定が一律無効でない",
+          "primary_source_url": "https://laws.e-gov.go.jp/law/129AC0000000089?occasion_date=20260401"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "遺言執行者を指定する遺言は法的効力を持たない",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "遺言執行者指定は法的効力あり",
+          "primary_source_url": "https://laws.e-gov.go.jp/law/129AC0000000089?occasion_date=20260401"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "民法908条は第三者への遺産分割方法指定の委託を認める。遺留分侵害で遺言全体が当然無効にはならない。",
+      "primary_sources": [
+        "https://laws.e-gov.go.jp/law/129AC0000000089?occasion_date=20260401"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 3,
+      "original_answer_matches_official": "NOT_INDEPENDENTLY_REEXTRACTED",
+      "modified": true,
+      "modification_note_review": "原題のテーマから単一論点を選定し、設問・選択肢・必要に応じ数値を独自に再構成。原題の公式正答と加工後の正答は別管理。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q60",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "株式会社が事業の全部を他社へ譲渡する際、原則として会社内部で必要となる意思決定はどれか。",
+      "answer_zero_based": 2,
+      "answer_one_based": 3,
+      "correct_choice": "通常、株主総会の特別決議による承認が必要",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "従業員の過半数投票だけで十分",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "従業員過半数投票のみでは会社法上の承認不可",
+          "primary_source_url": "https://laws.e-gov.go.jp/law/417AC0000000086?occasion_date=20260401"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "代表取締役の個人的な署名だけで十分",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "代表取締役のみでは通常不足",
+          "primary_source_url": "https://laws.e-gov.go.jp/law/417AC0000000086?occasion_date=20260401"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "通常、株主総会の特別決議による承認が必要",
+          "correct": true,
+          "independent_verdict": "SUPPORTED",
+          "reason": "467条・309条の特別決議が原則",
+          "primary_source_url": "https://laws.e-gov.go.jp/law/417AC0000000086?occasion_date=20260401"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "許可を受けず会社法上の決議を全て省略できる",
+          "correct": false,
+          "independent_verdict": "REJECTED",
+          "reason": "例外要件なしに全決議を省略不可",
+          "primary_source_url": "https://laws.e-gov.go.jp/law/417AC0000000086?occasion_date=20260401"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "会社法467条・309条：事業全部譲渡は原則株主総会の特別決議による承認が必要。法定例外は設問の『原則』で除外。",
+      "primary_sources": [
+        "https://laws.e-gov.go.jp/law/417AC0000000086?occasion_date=20260401"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 3,
+      "original_answer_matches_official": "NOT_INDEPENDENTLY_REEXTRACTED",
+      "modified": true,
+      "modification_note_review": "原題のテーマから単一論点を選定し、設問・選択肢・必要に応じ数値を独自に再構成。原題の公式正答と加工後の正答は別管理。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    }
+  ]
+}
