@@ -717,10 +717,20 @@
     "canonical": 1026,
     "totalHeld": 174,
     "reviewLedger": "kangoshi-sprint/audit/ocr-other48-visual-review-20261124.json",
-    "status": "HOLD_PENDING_FIELD_OCR_REVALIDATION",
+    "status": "RETRY_REQUIRED_AFTER_INITIALIZATION_FIX",
     "publishableNew": 0,
     "releaseEligibleNew": 0,
     "lastReviewedId": "K111-AM025",
-    "independentOcrBlocker": "PDF binary download DNS failure; web visual and PDF text readback successful"
+    "independentOcrBlocker": "PDF binary download DNS failure; web visual and PDF text readback successful",
+    "failedRun": {
+      "runId": 45295386950,
+      "jobId": 138114338656,
+      "conclusion": "failure",
+      "officialPdfFetch": "success",
+      "ocrExecuted": 0,
+      "artifactCount": 0,
+      "error": "TypeError: unsupported operand type(s) for &: 'dict' and 'set'",
+      "fixCommit": "d3bdc0e75ed554f4ccc3936a4fb7ce24b5b26e2f"
+    }
   }
 }
