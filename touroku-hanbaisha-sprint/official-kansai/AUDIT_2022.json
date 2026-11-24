@@ -1,9 +1,9 @@
 {
   "year": 2022,
   "targetCount": 120,
-  "auditedCount": 10,
-  "auditPassedCount": 9,
-  "holdCount": 1,
+  "auditedCount": 20,
+  "auditPassedCount": 20,
+  "holdCount": 0,
   "sourceExplanationBlob": "149761e7ae675567ed501fa4a72249603b116edd",
   "sourceBank": "APPROVED_OFFICIAL_BANK(5).json",
   "auditDate": "2026-11-24",
@@ -577,7 +577,7 @@
     {
       "questionId": "KSAI-2022-009",
       "questionNo": 9,
-      "verdict": "HOLD",
+      "verdict": "PASS",
       "evidence": {
         "explanationAnswerNumberOfficial": 3,
         "bankAnswerNumberOfficial": 3,
@@ -640,9 +640,20 @@
           "pdfPageIndex": 6,
           "imageChecked": true
         },
-        "numericAndRegulatoryCheck": "HOLD_ADDITIONAL_CLAIM"
+        "numericAndRegulatoryCheck": "PASS",
+        "supplementalPrimarySource": {
+          "url": "https://www.pmda.go.jp/PmdaSearch/iyakuDetail/ResultDataSetPDF/830039_1141001X1045_1_13",
+          "title": "アセトアミノフェン「ヨシダ」電子添文 2026年8月改訂",
+          "sections": [
+            "9.1.1",
+            "10.2",
+            "11.1.4"
+          ],
+          "basis": "アルコール多量常飲者では肝障害リスクが高く、CYP2E1誘導で肝毒性代謝物生成が促進。手引き印刷9頁のアセトアミノフェン例と対応。全医薬品・全飲酒者への一般化ではない。",
+          "verification": "PMDA本文取得・確認"
+        }
       },
-      "notes": "bの補足の肝障害リスクについて当該頁は有害代謝物による副作用を述べるが、肝障害を明示しないため補足の独立根拠未確定。"
+      "notes": "前回HOLDを再検証し、アセトアミノフェンとアルコール多量常飲の文脈における肝障害リスクをPMDA電子添文で確認。自己増量を避ける注意と整合。HOLD→PASS。"
     },
     {
       "questionId": "KSAI-2022-010",
@@ -713,6 +724,706 @@
         "numericAndRegulatoryCheck": "PASS"
       },
       "notes": "全a〜dの理由と正答組合せが一次資料に整合。"
+    },
+    {
+      "questionId": "KSAI-2022-011",
+      "questionNo": 11,
+      "verdict": "PASS",
+      "evidence": {
+        "explanationAnswerNumberOfficial": 5,
+        "bankAnswerNumberOfficial": 5,
+        "answerMatch": true,
+        "truthPattern": "誤誤正正",
+        "handbook": {
+          "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+          "edition": "2022-03",
+          "statements": [
+            {
+              "statement": "a",
+              "judgment": "誤",
+              "printedPages": [
+                11
+              ],
+              "pdfPageIndices": [
+                18
+              ],
+              "basis": "基礎疾患の悪化・治療妨害"
+            },
+            {
+              "statement": "b",
+              "judgment": "誤",
+              "printedPages": [
+                11
+              ],
+              "pdfPageIndices": [
+                18
+              ],
+              "basis": "腎機能低下で作用増強"
+            },
+            {
+              "statement": "c",
+              "judgment": "正",
+              "printedPages": [
+                11
+              ],
+              "pdfPageIndices": [
+                18
+              ],
+              "basis": "口渇による誤嚥リスク"
+            },
+            {
+              "statement": "d",
+              "judgment": "正",
+              "printedPages": [
+                11
+              ],
+              "pdfPageIndices": [
+                18
+              ],
+              "basis": "生理機能の個人差"
+            }
+          ],
+          "pageImagesChecked": true
+        },
+        "officialQuestion": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R4touhanmondaimae.pdf",
+          "printedPage": 7,
+          "pdfPageIndex": 7,
+          "imageChecked": true
+        },
+        "numericAndRegulatoryCheck": "PASS"
+      },
+      "notes": "公式問題画像と正規バンクの正答組合せ、解説の各記述を手引き本文画像に逐項照合。"
+    },
+    {
+      "questionId": "KSAI-2022-012",
+      "questionNo": 12,
+      "verdict": "PASS",
+      "evidence": {
+        "explanationAnswerNumberOfficial": 4,
+        "bankAnswerNumberOfficial": 4,
+        "answerMatch": true,
+        "truthPattern": "正誤誤正",
+        "handbook": {
+          "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+          "edition": "2022-03",
+          "statements": [
+            {
+              "statement": "a",
+              "judgment": "正",
+              "printedPages": [
+                12
+              ],
+              "pdfPageIndices": [
+                19
+              ],
+              "basis": "血液胎盤関門と移行防御の限界"
+            },
+            {
+              "statement": "b",
+              "judgment": "誤",
+              "printedPages": [
+                12
+              ],
+              "pdfPageIndices": [
+                19
+              ],
+              "basis": "妊婦の安全性評価困難"
+            },
+            {
+              "statement": "c",
+              "judgment": "誤",
+              "printedPages": [
+                12
+              ],
+              "pdfPageIndices": [
+                19
+              ],
+              "basis": "便秘薬の成分・用量による流早産"
+            },
+            {
+              "statement": "d",
+              "judgment": "正",
+              "printedPages": [
+                12
+              ],
+              "pdfPageIndices": [
+                19
+              ],
+              "basis": "乳汁移行"
+            }
+          ],
+          "pageImagesChecked": true
+        },
+        "officialQuestion": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R4touhanmondaimae.pdf",
+          "printedPage": 7,
+          "pdfPageIndex": 7,
+          "imageChecked": true
+        },
+        "numericAndRegulatoryCheck": "PASS"
+      },
+      "notes": "公式問題画像と正規バンクの正答組合せ、解説の各記述を手引き本文画像に逐項照合。"
+    },
+    {
+      "questionId": "KSAI-2022-013",
+      "questionNo": 13,
+      "verdict": "PASS",
+      "evidence": {
+        "explanationAnswerNumberOfficial": 4,
+        "bankAnswerNumberOfficial": 4,
+        "answerMatch": true,
+        "truthPattern": "誤正誤正",
+        "handbook": {
+          "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+          "edition": "2022-03",
+          "statements": [
+            {
+              "statement": "a",
+              "judgment": "誤",
+              "printedPages": [
+                13
+              ],
+              "pdfPageIndices": [
+                20
+              ],
+              "basis": "非薬理作用"
+            },
+            {
+              "statement": "b",
+              "judgment": "正",
+              "printedPages": [
+                13
+              ],
+              "pdfPageIndices": [
+                20
+              ],
+              "basis": "有益・不都合な反応"
+            },
+            {
+              "statement": "c",
+              "judgment": "誤",
+              "printedPages": [
+                13
+              ],
+              "pdfPageIndices": [
+                20
+              ],
+              "basis": "客観的変化も不確実"
+            },
+            {
+              "statement": "d",
+              "judgment": "正",
+              "printedPages": [
+                13
+              ],
+              "pdfPageIndices": [
+                20
+              ],
+              "basis": "自然緩解の関与"
+            }
+          ],
+          "pageImagesChecked": true
+        },
+        "officialQuestion": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R4touhanmondaimae.pdf",
+          "printedPage": 8,
+          "pdfPageIndex": 8,
+          "imageChecked": true
+        },
+        "numericAndRegulatoryCheck": "PASS"
+      },
+      "notes": "公式問題画像と正規バンクの正答組合せ、解説の各記述を手引き本文画像に逐項照合。"
+    },
+    {
+      "questionId": "KSAI-2022-014",
+      "questionNo": 14,
+      "verdict": "PASS",
+      "evidence": {
+        "explanationAnswerNumberOfficial": 2,
+        "bankAnswerNumberOfficial": 2,
+        "answerMatch": true,
+        "truthPattern": "正誤正正",
+        "handbook": {
+          "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+          "edition": "2022-03",
+          "statements": [
+            {
+              "statement": "a",
+              "judgment": "正",
+              "printedPages": [
+                14
+              ],
+              "pdfPageIndices": [
+                21
+              ],
+              "basis": "経時劣化"
+            },
+            {
+              "statement": "b",
+              "judgment": "誤",
+              "printedPages": [
+                13
+              ],
+              "pdfPageIndices": [
+                20
+              ],
+              "basis": "添加物も高温多湿光で劣化"
+            },
+            {
+              "statement": "c",
+              "judgment": "正",
+              "printedPages": [
+                14
+              ],
+              "pdfPageIndices": [
+                21
+              ],
+              "basis": "未開封時の期限"
+            },
+            {
+              "statement": "d",
+              "judgment": "正",
+              "printedPages": [
+                14
+              ],
+              "pdfPageIndices": [
+                21
+              ],
+              "basis": "期限に余裕ある販売"
+            }
+          ],
+          "pageImagesChecked": true
+        },
+        "officialQuestion": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R4touhanmondaimae.pdf",
+          "printedPage": 8,
+          "pdfPageIndex": 8,
+          "imageChecked": true
+        },
+        "numericAndRegulatoryCheck": "PASS"
+      },
+      "notes": "公式問題画像と正規バンクの正答組合せ、解説の各記述を手引き本文画像に逐項照合。"
+    },
+    {
+      "questionId": "KSAI-2022-015",
+      "questionNo": 15,
+      "verdict": "PASS",
+      "evidence": {
+        "explanationAnswerNumberOfficial": 1,
+        "bankAnswerNumberOfficial": 1,
+        "answerMatch": true,
+        "truthPattern": "正正正誤",
+        "handbook": {
+          "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+          "edition": "2022-03",
+          "statements": [
+            {
+              "statement": "a",
+              "judgment": "正",
+              "printedPages": [
+                14
+              ],
+              "pdfPageIndices": [
+                21
+              ],
+              "basis": "一般用医薬品の役割"
+            },
+            {
+              "statement": "b",
+              "judgment": "正",
+              "printedPages": [
+                14
+              ],
+              "pdfPageIndices": [
+                21
+              ],
+              "basis": "生活者が主体"
+            },
+            {
+              "statement": "c",
+              "judgment": "正",
+              "printedPages": [
+                14
+              ],
+              "pdfPageIndices": [
+                21
+              ],
+              "basis": "科学的根拠による支援・受診勧奨"
+            },
+            {
+              "statement": "d",
+              "judgment": "誤",
+              "printedPages": [
+                15
+              ],
+              "pdfPageIndices": [
+                22
+              ],
+              "basis": "乳幼児・妊婦は対処範囲が狭い"
+            }
+          ],
+          "pageImagesChecked": true
+        },
+        "officialQuestion": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R4touhanmondaimae.pdf",
+          "printedPage": 9,
+          "pdfPageIndex": 9,
+          "imageChecked": true
+        },
+        "numericAndRegulatoryCheck": "PASS"
+      },
+      "notes": "公式問題画像と正規バンクの正答組合せ、解説の各記述を手引き本文画像に逐項照合。"
+    },
+    {
+      "questionId": "KSAI-2022-016",
+      "questionNo": 16,
+      "verdict": "PASS",
+      "evidence": {
+        "explanationAnswerNumberOfficial": 3,
+        "bankAnswerNumberOfficial": 3,
+        "answerMatch": true,
+        "truthPattern": "正正正誤",
+        "handbook": {
+          "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+          "edition": "2022-03",
+          "statements": [
+            {
+              "statement": "a",
+              "judgment": "正",
+              "printedPages": [
+                15
+              ],
+              "pdfPageIndices": [
+                22
+              ],
+              "basis": "説明理解の把握"
+            },
+            {
+              "statement": "b",
+              "judgment": "正",
+              "printedPages": [
+                15
+              ],
+              "pdfPageIndices": [
+                22
+              ],
+              "basis": "購入者と使用者の相違"
+            },
+            {
+              "statement": "c",
+              "judgment": "正",
+              "printedPages": [
+                16
+              ],
+              "pdfPageIndices": [
+                23
+              ],
+              "basis": "常備薬か即時使用か確認"
+            },
+            {
+              "statement": "d",
+              "judgment": "誤",
+              "printedPages": [
+                16
+              ],
+              "pdfPageIndices": [
+                23
+              ],
+              "basis": "状況変化と継続相談"
+            }
+          ],
+          "pageImagesChecked": true
+        },
+        "officialQuestion": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R4touhanmondaimae.pdf",
+          "printedPage": 10,
+          "pdfPageIndex": 10,
+          "imageChecked": true
+        },
+        "numericAndRegulatoryCheck": "PASS"
+      },
+      "notes": "公式問題画像と正規バンクの正答組合せ、解説の各記述を手引き本文画像に逐項照合。"
+    },
+    {
+      "questionId": "KSAI-2022-017",
+      "questionNo": 17,
+      "verdict": "PASS",
+      "evidence": {
+        "explanationAnswerNumberOfficial": 3,
+        "bankAnswerNumberOfficial": 3,
+        "answerMatch": true,
+        "truthPattern": "誤正誤正",
+        "handbook": {
+          "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+          "edition": "2022-03",
+          "statements": [
+            {
+              "statement": "a",
+              "judgment": "誤",
+              "printedPages": [
+                17
+              ],
+              "pdfPageIndices": [
+                24
+              ],
+              "basis": "注意しても未知の薬害"
+            },
+            {
+              "statement": "b",
+              "judgment": "正",
+              "printedPages": [
+                20
+              ],
+              "pdfPageIndices": [
+                27
+              ],
+              "basis": "C型肝炎訴訟後の行政評価監視委員会"
+            },
+            {
+              "statement": "c",
+              "judgment": "誤",
+              "printedPages": [
+                20
+              ],
+              "pdfPageIndices": [
+                27
+              ],
+              "basis": "一般用サリドマイド・キノホルム"
+            },
+            {
+              "statement": "d",
+              "judgment": "正",
+              "printedPages": [
+                20
+              ],
+              "pdfPageIndices": [
+                27
+              ],
+              "basis": "情報提供・副作用報告による拡大防止"
+            }
+          ],
+          "pageImagesChecked": true
+        },
+        "officialQuestion": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R4touhanmondaimae.pdf",
+          "printedPage": 10,
+          "pdfPageIndex": 10,
+          "imageChecked": true
+        },
+        "numericAndRegulatoryCheck": "PASS"
+      },
+      "notes": "公式問題画像と正規バンクの正答組合せ、解説の各記述を手引き本文画像に逐項照合。"
+    },
+    {
+      "questionId": "KSAI-2022-018",
+      "questionNo": 18,
+      "verdict": "PASS",
+      "evidence": {
+        "explanationAnswerNumberOfficial": 3,
+        "bankAnswerNumberOfficial": 3,
+        "answerMatch": true,
+        "truthPattern": "正正誤誤",
+        "handbook": {
+          "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+          "edition": "2022-03",
+          "statements": [
+            {
+              "statement": "a",
+              "judgment": "正",
+              "printedPages": [
+                17
+              ],
+              "pdfPageIndices": [
+                24
+              ],
+              "basis": "胎芽症と損害賠償"
+            },
+            {
+              "statement": "b",
+              "judgment": "正",
+              "printedPages": [
+                17
+              ],
+              "pdfPageIndices": [
+                24
+              ],
+              "basis": "胎盤通過"
+            },
+            {
+              "statement": "c",
+              "judgment": "誤",
+              "printedPages": [
+                17
+              ],
+              "pdfPageIndices": [
+                24
+              ],
+              "basis": "血管新生阻害"
+            },
+            {
+              "statement": "d",
+              "judgment": "誤",
+              "printedPages": [
+                17
+              ],
+              "pdfPageIndices": [
+                24
+              ],
+              "basis": "R/S体の相互変換"
+            }
+          ],
+          "pageImagesChecked": true
+        },
+        "officialQuestion": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R4touhanmondaimae.pdf",
+          "printedPage": 11,
+          "pdfPageIndex": 11,
+          "imageChecked": true
+        },
+        "numericAndRegulatoryCheck": "PASS"
+      },
+      "notes": "公式問題画像と正規バンクの正答組合せ、解説の各記述を手引き本文画像に逐項照合。"
+    },
+    {
+      "questionId": "KSAI-2022-019",
+      "questionNo": 19,
+      "verdict": "PASS",
+      "evidence": {
+        "explanationAnswerNumberOfficial": 5,
+        "bankAnswerNumberOfficial": 5,
+        "answerMatch": true,
+        "truthPattern": "正正誤正",
+        "handbook": {
+          "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+          "edition": "2022-03",
+          "statements": [
+            {
+              "statement": "a",
+              "judgment": "正",
+              "printedPages": [
+                18
+              ],
+              "pdfPageIndices": [
+                25
+              ],
+              "basis": "キノホルムによるスモン"
+            },
+            {
+              "statement": "b",
+              "judgment": "正",
+              "printedPages": [
+                18
+              ],
+              "pdfPageIndices": [
+                25
+              ],
+              "basis": "消化器症状から神経障害・視覚障害"
+            },
+            {
+              "statement": "c",
+              "judgment": "誤",
+              "printedPages": [
+                18
+              ],
+              "pdfPageIndices": [
+                25
+              ],
+              "basis": "米国1960年勧告、日本1970年9月販売停止"
+            },
+            {
+              "statement": "d",
+              "judgment": "正",
+              "printedPages": [
+                18
+              ],
+              "pdfPageIndices": [
+                25
+              ],
+              "basis": "治療研究・介護支援"
+            }
+          ],
+          "pageImagesChecked": true
+        },
+        "officialQuestion": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R4touhanmondaimae.pdf",
+          "printedPage": 12,
+          "pdfPageIndex": 12,
+          "imageChecked": true
+        },
+        "numericAndRegulatoryCheck": "PASS"
+      },
+      "notes": "公式問題画像と正規バンクの正答組合せ、解説の各記述を手引き本文画像に逐項照合。"
+    },
+    {
+      "questionId": "KSAI-2022-020",
+      "questionNo": 20,
+      "verdict": "PASS",
+      "evidence": {
+        "explanationAnswerNumberOfficial": 2,
+        "bankAnswerNumberOfficial": 2,
+        "answerMatch": true,
+        "truthPattern": "正誤正正",
+        "handbook": {
+          "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+          "edition": "2022-03",
+          "statements": [
+            {
+              "statement": "a",
+              "judgment": "正",
+              "printedPages": [
+                19
+              ],
+              "pdfPageIndices": [
+                26
+              ],
+              "basis": "不十分なプリオン不活化"
+            },
+            {
+              "statement": "b",
+              "judgment": "誤",
+              "printedPages": [
+                19
+              ],
+              "pdfPageIndices": [
+                26
+              ],
+              "basis": "ウイルスでなくタンパク質"
+            },
+            {
+              "statement": "c",
+              "judgment": "正",
+              "printedPages": [
+                20
+              ],
+              "pdfPageIndices": [
+                27
+              ],
+              "basis": "入院・在宅対策"
+            },
+            {
+              "statement": "d",
+              "judgment": "正",
+              "printedPages": [
+                20
+              ],
+              "pdfPageIndices": [
+                27
+              ],
+              "basis": "診療録長期保存"
+            }
+          ],
+          "pageImagesChecked": true
+        },
+        "officialQuestion": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R4touhanmondaimae.pdf",
+          "printedPage": 12,
+          "pdfPageIndex": 12,
+          "imageChecked": true
+        },
+        "numericAndRegulatoryCheck": "PASS"
+      },
+      "notes": "公式問題画像と正規バンクの正答組合せ、解説の各記述を手引き本文画像に逐項照合。"
     }
   ]
 }
