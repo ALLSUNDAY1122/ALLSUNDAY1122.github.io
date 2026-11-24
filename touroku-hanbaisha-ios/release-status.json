@@ -1694,7 +1694,7 @@
     "simulatorLaunch": "PASS",
     "privacyRun": 45310938525,
     "privacyStatus": "SOURCE_BROWSER_PASS_ASC_QUESTIONNAIRE_NOT_VERIFIED",
-    "releaseValidationRun": 45311442822,
+    "releaseValidationRun": 45312865201,
     "releaseValidation": "PASS",
     "offlineThirdRun": 45311443007,
     "offlineThirdStatus": "IN_PROGRESS_BROWSER_INSTALL",
@@ -1714,6 +1714,19 @@
     "offlineAlternativeResult": "FAIL_WEBKIT_FILE_NAVIGATION_INTERNAL_ERROR",
     "offlineBundleVerifiedQuestions": 599,
     "offlineBundleVerifiedFigures": 52,
-    "offlineAlternativeRetry": "HTTP_HTTPS_REQUEST_ABORT_WITH_EXTERNAL_REQUEST_ASSERTION_AND_ENGINE_COUNTS"
+    "offlineAlternativeRetry": "HTTP_HTTPS_REQUEST_ABORT_WITH_EXTERNAL_REQUEST_ASSERTION_AND_ENGINE_COUNTS",
+    "offlineAlternativeRetryRun": 45312864891,
+    "offlineChromium": {
+      "completed": 599,
+      "externalRequests": 0,
+      "pageErrors": 0,
+      "result": "PASS",
+      "artifactId": 14884121611
+    },
+    "offlineWebKit": {
+      "result": "FAIL_FEEDBACK_TEXT_ASSERTION",
+      "fileNavigation": "PASS"
+    },
+    "offlineNextFix": "Wait for exact feedback result element and verify selected correct class; preserve all 599 questions and network assertions"
   }
 }

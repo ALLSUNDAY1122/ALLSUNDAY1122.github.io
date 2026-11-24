@@ -1495,3 +1495,8 @@ Apple固定識別子: Bundle `com.allsunday1122.tourokuhanbaisha`、ASC `6802119
 ## Q4 代替CI結果（2026-11-24 11:29 JST）
 - Run 45312594314: コンテナ・599問/52図版同梱PASS。Chromium処理後、WebKit file:// navigation internal error。エンジン別完走証跡未出力のためQ4未確定。
 - offline=Trueによるローカルファイルへの影響を切り分けるためHTTP(S)全リクエスト遮断＋外部要求ゼロのassertを維持し、エンジン別件数を即時出力する方式へ修正。再実行要求。既存Run 45311443007は導入中。12/14維持、新IPA未開始。Q5質問票ユーザー確認中。
+
+
+## Q4 エンジン別実測（2026-11-24 11:31 JST）
+- Run 45312864891: Chromium 599/599、外部要求0、page error 0、完走PASS（artifact 14884121611）。WebKit file navigation成功、feedback inner_text完全一致assertでFAIL。表示タイミング/空白差を切り分けるため結果要素の待機付き完全テキスト検証と正答class検証を追加して再実行要求。両エンジンPASSまでQ4保留、12/14、新IPA未開始。
+- 整合性 Run 45312865201 PASS。Q5質問票はユーザー確認中。

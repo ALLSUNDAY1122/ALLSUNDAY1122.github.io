@@ -2,7 +2,7 @@
 """Exercise packaged file URLs with networking disabled and all official questions."""
 import json,hashlib
 from pathlib import Path
-from playwright.sync_api import sync_playwright
+from playwright.sync_api import sync_playwright, expect
 ROOT=Path(__file__).resolve().parents[2]
 OUT=ROOT/'touroku-hanbaisha-ios/native-ios/OfflineWeb'
 bank=json.loads((ROOT/'touroku-hanbaisha-sprint/official-kansai/APPROVED_OFFICIAL_BANK.json').read_text())
@@ -32,10 +32,12 @@ with sync_playwright() as pw:
                 assert img.evaluate("(el)=>el.naturalWidth>0")
                 report['figures']+=1
             page.locator('#choices button').nth(q['answer']).click()
-            assert page.locator('#feedback').inner_text()=='正解'
+            print('CHECK '+engine.name+' '+q['id'],flush=True) if report['count']-before<2 else None
+            expect(page.locator('#feedback .result')).to_have_text('正解', timeout=5000)
+            assert page.locator('#choices button').nth(q['answer']).evaluate("el=>el.classList.contains('good')"), q['id']
             page.locator('#next').click()
             report['count']+=1
-        assert '599 / 599' in page.locator('#summary').inner_text()
+        expect(page.locator('#summary')).to_contain_text('599 / 599')
         page.locator('#restart').click()
         page.locator('a[href="./privacy.html"]').click()
         assert 'プライバシーポリシー' in page.locator('body').inner_text()
