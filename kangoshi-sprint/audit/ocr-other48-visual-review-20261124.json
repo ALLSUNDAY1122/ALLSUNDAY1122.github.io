@@ -178,7 +178,7 @@
           "to": "U+300C / U+300D"
         }
       ],
-      "unresolved": "Existing OCR CMap ledger field 4 failed non-CMap-only comparison; raw OCR field evidence and independent corrected-field rerun not verified in this session.",
+      "unresolved": "STRICT_FIELD_OCR_NOT_MATCHED_IN_TWO_MODES",
       "revalidation": {
         "date": "2026-11-24",
         "originalPageImageReviewedAgain": true,
@@ -187,6 +187,44 @@
         "officialAnswerTableVisualMatch": true,
         "independentOcrExecuted": false,
         "executionBlocker": "Local runtime DNS resolution of www.mhlw.go.jp failed; PDF binary download failed. Web original screenshot and PDF text accessible, not a new OCR execution."
+      },
+      "independentOcr": {
+        "runId": 45296008387,
+        "status": "HOLD",
+        "reason": "STRICT_FIELD_OCR_NOT_MATCHED_IN_TWO_MODES",
+        "officialKeyMatched": true,
+        "matchingModesByField": [
+          {
+            "index": 0,
+            "modes": [
+              3,
+              6,
+              7
+            ]
+          },
+          {
+            "index": 1,
+            "modes": []
+          },
+          {
+            "index": 2,
+            "modes": [
+              3,
+              6,
+              7,
+              11
+            ]
+          },
+          {
+            "index": 3,
+            "modes": []
+          },
+          {
+            "index": 4,
+            "modes": []
+          }
+        ],
+        "artifactId": 14875634424
       }
     },
     {
@@ -291,7 +329,57 @@
           "detail": "Line break and spaced two-character option labels normalized; five options retained"
         }
       ],
-      "unresolved": "Independent OCR not executed; original PDF binary unavailable in runtime."
+      "unresolved": "STRICT_FIELD_OCR_NOT_MATCHED_IN_TWO_MODES",
+      "independentOcr": {
+        "runId": 45296008387,
+        "status": "HOLD",
+        "reason": "STRICT_FIELD_OCR_NOT_MATCHED_IN_TWO_MODES",
+        "officialKeyMatched": true,
+        "matchingModesByField": [
+          {
+            "index": 0,
+            "modes": []
+          },
+          {
+            "index": 1,
+            "modes": [
+              6,
+              7
+            ]
+          },
+          {
+            "index": 2,
+            "modes": [
+              6,
+              7,
+              11
+            ]
+          },
+          {
+            "index": 3,
+            "modes": [
+              6,
+              7
+            ]
+          },
+          {
+            "index": 4,
+            "modes": [
+              3,
+              6,
+              7,
+              11
+            ]
+          },
+          {
+            "index": 5,
+            "modes": [
+              6
+            ]
+          }
+        ],
+        "artifactId": 14875634424
+      }
     }
   ],
   "policy": "Source only; publishable false; no app release or submission.",
@@ -375,7 +463,7 @@
       "sourcePage": 12,
       "imageSha256": "df01af9c834f89e97e25f0d7723995fed10d81f39fc5451934ae69a0efd87033",
       "clip": [
-        0.0,
+        0,
         76.02,
         609.95,
         247.68
@@ -486,7 +574,7 @@
       "sourcePage": 15,
       "imageSha256": "66f6e90fc7d6be5bc84de0ceb16d37af63503c619f5d62e072dab1d8a6ac2716",
       "clip": [
-        0.0,
+        0,
         292.87,
         609.95,
         512.72
@@ -507,10 +595,10 @@
       "sourcePage": 21,
       "imageSha256": "937591d379a79e599ef95327d7f6984dc450d8491b63ba1bee90cd6d7a1be0a5",
       "clip": [
-        0.0,
+        0,
         413.34,
         609.95,
-        585.0
+        585
       ],
       "regionOcr": {
         "3": "47 脳血管造影を行う患者の看護について適切なのはどれか。\n1. 前日に頭部の剃毛を行う。\n\n検査中は愚者に話しかけない。\n\n刺部末栓側の動脈の拍動を確認する。\n\n検査 30 分前まで食事摂取が可能である。\n\n",
@@ -527,7 +615,7 @@
       "sourcePage": 23,
       "imageSha256": "f10e469b423965e1d7cf9a68cf8606b625b29b4fea36c5d5c98158785f0f009a",
       "clip": [
-        0.0,
+        0,
         76.02,
         609.95,
         247.68
@@ -547,7 +635,7 @@
       "sourcePage": 26,
       "imageSha256": "fd4cc06376158e98acbb21268f418f426e92ba76bc126145f2d46f71fdb9f5d2",
       "clip": [
-        0.0,
+        0,
         244.68,
         609.95,
         416.34
@@ -567,8 +655,8 @@
       "sourcePage": 26,
       "imageSha256": "3d7395c11751b3916844262c20d0fc6bf0c0b3c8304a5419204fa8f521af6787",
       "clip": [
-        0.0,
-        582.0,
+        0,
+        582,
         609.95,
         822.01
       ],
@@ -587,7 +675,7 @@
       "sourcePage": 27,
       "imageSha256": "bb4fcd430aa1a664b74a02c32fc7ea4cf6b5cc84a40994acfa7c38b8c5b88afe",
       "clip": [
-        0.0,
+        0,
         485.62,
         609.95,
         822.01
@@ -607,7 +695,7 @@
       "sourcePage": 30,
       "imageSha256": "5ba69881452dca2bd884ed83a17a95170a2c92830def3d5b9ac8f21b7b31b96b",
       "clip": [
-        0.0,
+        0,
         268.77,
         609.95,
         822.01
@@ -627,7 +715,7 @@
       "sourcePage": 33,
       "imageSha256": "993a7e7d54aa64e9ee6fab9f84448cb2669323a5621f5adda73601a42cf99664",
       "clip": [
-        0.0,
+        0,
         76.02,
         609.95,
         271.77
@@ -647,7 +735,7 @@
       "sourcePage": 7,
       "imageSha256": "a04da0e0d138df2b123c67074024b9d4a9ffe3085f1bd18f1fca90b8143a2498",
       "clip": [
-        0.0,
+        0,
         437.43,
         609.95,
         609.09
@@ -667,7 +755,7 @@
       "sourcePage": 11,
       "imageSha256": "0de689ae39be34aef6e77f5cb981b23f90f810f9b81bbff479663dc8b4d255d4",
       "clip": [
-        0.0,
+        0,
         76.02,
         609.95,
         247.68
@@ -687,7 +775,7 @@
       "sourcePage": 11,
       "imageSha256": "4e4b29516299315019038ecf3ffa91728731679057990c3b4ac1d58acbdeae79",
       "clip": [
-        0.0,
+        0,
         244.68,
         609.95,
         416.34
@@ -707,7 +795,7 @@
       "sourcePage": 18,
       "imageSha256": "a789ef7b56f61f74871315b8a37dc4cda599067abbaefc4fa6be7922e7192cc6",
       "clip": [
-        0.0,
+        0,
         437.43,
         609.95,
         609.09
@@ -727,7 +815,7 @@
       "sourcePage": 18,
       "imageSha256": "57efdc6e17c807d265d8a194ef355e1c4f6ee7916e3ab5665f1936a2075abf16",
       "clip": [
-        0.0,
+        0,
         606.09,
         609.95,
         822.01
@@ -747,7 +835,7 @@
       "sourcePage": 19,
       "imageSha256": "0f1a469704af2f1850671f9fe847bc061811afd9431e8b071a1e501795a5e627",
       "clip": [
-        0.0,
+        0,
         76.02,
         609.95,
         319.96
@@ -767,7 +855,7 @@
       "sourcePage": 19,
       "imageSha256": "c02c3e83b65547eeb558e8251de6f0ca6a62b7e2fe0b84b770ccac15458c81de",
       "clip": [
-        0.0,
+        0,
         654.28,
         609.95,
         822.01
@@ -787,7 +875,7 @@
       "sourcePage": 20,
       "imageSha256": "3f03514faf677b1405eb7c0389c7d2615930a08dd5332f1e733f5ad3e2fa65d6",
       "clip": [
-        0.0,
+        0,
         244.68,
         609.95,
         440.43
@@ -807,8 +895,8 @@
       "sourcePage": 21,
       "imageSha256": "4be6ae31f248a6af3a5641a071cd14860966c1f4139bd8e40f30bc49db3573e6",
       "clip": [
-        0.0,
-        582.0,
+        0,
+        582,
         609.95,
         822.01
       ],
@@ -827,7 +915,7 @@
       "sourcePage": 24,
       "imageSha256": "0d460c304b0a1f37b736b2ef83a99e8d494ac373ad88b052ca12005cd50e31be",
       "clip": [
-        0.0,
+        0,
         244.68,
         609.95,
         440.43
@@ -847,7 +935,7 @@
       "sourcePage": 24,
       "imageSha256": "f9210f42968b95a7c28d8fddb908016be2f4bc9d1c938bdf04e5daf197dcd2f1",
       "clip": [
-        0.0,
+        0,
         437.43,
         609.95,
         657.28
@@ -867,7 +955,7 @@
       "sourcePage": 25,
       "imageSha256": "28c8683d9b0750b04fc0f55aaedd761c74a6f7a7ce54ec04a963e7e5e4abd134",
       "clip": [
-        0.0,
+        0,
         461.53,
         609.95,
         822.01
@@ -887,7 +975,7 @@
       "sourcePage": 28,
       "imageSha256": "2a8f042b471e4aa919def89a7fd7a79a66feac6bebc4cb288afef23f1ce597e2",
       "clip": [
-        0.0,
+        0,
         606.09,
         609.95,
         822.01
@@ -907,7 +995,7 @@
       "sourcePage": 30,
       "imageSha256": "b507d17a5ba4476a69236c98d19ebdbfa8dd5371dfbb51be16d398534817c4a7",
       "clip": [
-        0.0,
+        0,
         76.02,
         609.95,
         271.77
@@ -927,7 +1015,7 @@
       "sourcePage": 30,
       "imageSha256": "8baae7eecda1ef9f5c508cc3bf9b82a6714c3b064e30f0a70e4a77e2ab608646",
       "clip": [
-        0.0,
+        0,
         268.77,
         609.95,
         464.53
@@ -947,7 +1035,7 @@
       "sourcePage": 9,
       "imageSha256": "95cf853ce3121cc1c05bdfcaacd38557e5a8de32f1f2093a93ae4ce6bbacf0cd",
       "clip": [
-        0.0,
+        0,
         78.85,
         615.61,
         274.6
@@ -967,7 +1055,7 @@
       "sourcePage": 10,
       "imageSha256": "9f3dc4d6f93925bd38f88eed0715fc270af949726ba8e3459590e804526a2ce3",
       "clip": [
-        0.0,
+        0,
         608.92,
         615.61,
         827.44
@@ -987,7 +1075,7 @@
       "sourcePage": 13,
       "imageSha256": "77496d73a98431e25bbf45b4086459ff5b6ca4425b2df79a7f7b1df338732f83",
       "clip": [
-        0.0,
+        0,
         271.6,
         615.61,
         491.45
@@ -1007,7 +1095,7 @@
       "sourcePage": 14,
       "imageSha256": "a542847b97810ed52f99767c111ca752eee7976325c6879b0738eb4f9187ff2e",
       "clip": [
-        0.0,
+        0,
         584.83,
         615.61,
         827.44
@@ -1027,7 +1115,7 @@
       "sourcePage": 15,
       "imageSha256": "0e910269b4513cfc906cde00ee9d8c58f957e09a5a376c687acb330c6bc792c5",
       "clip": [
-        0.0,
+        0,
         247.51,
         615.61,
         419.17
@@ -1047,7 +1135,7 @@
       "sourcePage": 16,
       "imageSha256": "e606e79bd15aac06a8c73a062606e82b80895e34c54c63bb0f0deeea58c6e36f",
       "clip": [
-        0.0,
+        0,
         626.99,
         615.61,
         827.44
@@ -1067,7 +1155,7 @@
       "sourcePage": 17,
       "imageSha256": "bae1248036c7a32bf31ebe1310022da621102c37ee17894aeac082e44fcd67b3",
       "clip": [
-        0.0,
+        0,
         440.26,
         615.61,
         636.02
@@ -1087,7 +1175,7 @@
       "sourcePage": 18,
       "imageSha256": "e7cdc7b46101a35e0eddb76699ac4ec2695d7941fd11ef90f9baae78e80b5885",
       "clip": [
-        0.0,
+        0,
         271.6,
         615.61,
         443.26
@@ -1107,7 +1195,7 @@
       "sourcePage": 19,
       "imageSha256": "c33f52bfc6024d8e33524b422e9652c9b64d39e2b00448df5ebc99203d16d18c",
       "clip": [
-        0.0,
+        0,
         584.83,
         615.61,
         827.44
@@ -1127,7 +1215,7 @@
       "sourcePage": 21,
       "imageSha256": "643d6997dc39da5cb4ddfd6d09d590686a088b487dfcdbb82bbb7733ed678508",
       "clip": [
-        0.0,
+        0,
         416.17,
         615.61,
         587.83
@@ -1147,7 +1235,7 @@
       "sourcePage": 25,
       "imageSha256": "8e81c60a8df2a1bd2750ccad895c2fbede50d248bc0c274f09660b455506d429",
       "clip": [
-        0.0,
+        0,
         271.6,
         615.61,
         467.36
@@ -1167,7 +1255,7 @@
       "sourcePage": 26,
       "imageSha256": "7cb65489b7a08f5266b435c990756b88ce87d2d50e67d1bdd9257e910f9c9bb1",
       "clip": [
-        0.0,
+        0,
         295.7,
         615.61,
         467.36
@@ -1187,7 +1275,7 @@
       "sourcePage": 26,
       "imageSha256": "797945eeb28a9eab9c1f31b5208c0214522fbb771b8589b64bec68f2c22684d8",
       "clip": [
-        0.0,
+        0,
         464.36,
         615.61,
         827.44
@@ -1207,7 +1295,7 @@
       "sourcePage": 30,
       "imageSha256": "b21f92c4be4349f75c3f05e33683009ed2d8f2983d737e6cfe1f042f97acee9d",
       "clip": [
-        0.0,
+        0,
         488.45,
         615.61,
         827.44
@@ -1227,7 +1315,7 @@
       "sourcePage": 31,
       "imageSha256": "42dca7d96a479b157d4d82f73660794721e12ff2df2ac9399dce279de95ad11b",
       "clip": [
-        0.0,
+        0,
         271.6,
         615.61,
         467.36
@@ -1247,7 +1335,7 @@
       "sourcePage": 8,
       "imageSha256": "0d53c806ab32a7c2c59ab98aa4584b6d78efe978f654f60202bc1d7c43c2cbeb",
       "clip": [
-        0.0,
+        0,
         608.92,
         615.61,
         827.44
@@ -1267,7 +1355,7 @@
       "sourcePage": 9,
       "imageSha256": "399cd065826ec7484363ec4c9e9f3f0523b656778bdc85ec451a742ca479b38a",
       "clip": [
-        0.0,
+        0,
         584.83,
         615.61,
         827.44
@@ -1287,7 +1375,7 @@
       "sourcePage": 12,
       "imageSha256": "c6cae1a525c96bd786c6cb962a36d369bd838971724abff81d235ff321561f81",
       "clip": [
-        0.0,
+        0,
         78.85,
         615.61,
         250.51
@@ -1307,7 +1395,7 @@
       "sourcePage": 12,
       "imageSha256": "34150ef04cb3f9af67d05b820839665b0659209a85c9e43594b6be4c163725b3",
       "clip": [
-        0.0,
+        0,
         416.17,
         615.61,
         587.83
@@ -1327,7 +1415,7 @@
       "sourcePage": 16,
       "imageSha256": "0a8ed3564880f9e9f42e71213f306f348425a3f467010e9d703785be880101b5",
       "clip": [
-        0.0,
+        0,
         584.83,
         615.61,
         827.44
@@ -1347,7 +1435,7 @@
       "sourcePage": 18,
       "imageSha256": "61a4732a235490bccd3de08e16e08f0e89dfec12f723f3527b8e9df399c56870",
       "clip": [
-        0.0,
+        0,
         416.17,
         615.61,
         587.83
@@ -1367,7 +1455,7 @@
       "sourcePage": 24,
       "imageSha256": "162fa4351b7435f147a21cd90611c1d4d72a2393c1f19ed362339882de4fad51",
       "clip": [
-        0.0,
+        0,
         512.55,
         615.61,
         827.44
@@ -1387,7 +1475,7 @@
       "sourcePage": 27,
       "imageSha256": "64df55ff8a7b860378180ece98f220587528ac875d6f286803433ecf2c7df95c",
       "clip": [
-        0.0,
+        0,
         584.83,
         615.61,
         827.44
@@ -1407,7 +1495,7 @@
       "sourcePage": 30,
       "imageSha256": "5104ccacb3dd7622274c3f16c2f91be0bb97718baeeba5381ff857fb26e99461",
       "clip": [
-        0.0,
+        0,
         271.6,
         615.61,
         491.45
@@ -1418,6 +1506,42 @@
         "11": "76 全身性エリテマトーデス〈SLE〉)でプレドニゾロンを長期間服用している成人女性\n\nsystemic lupus erythematosus\n\nの愚者で、血中濃度が顕著に低下しているのはどれか。\n\n1\n\nインスリン\n\n2\n\nHARB ab UE y\n\n3\n\nエストラジオール\n\n副甲状腺ホルモン〈PTH)\n\n副腎皮質刺激ホルモン〈ACTH)\n"
       },
       "reason": "ORIGINAL_IMAGE_AND_OCR_READY_FOR_INDEPENDENT_VISUAL_REVIEW"
+    }
+  ],
+  "latestRunConclusion": "success",
+  "latestArtifactId": 14875634424,
+  "errorClassification": [
+    {
+      "id": "K111-AM016",
+      "kind": "OCR_OPEN_QUOTE_AS_ASCII_BAR_OR_BRACKET",
+      "fields": [
+        1,
+        3,
+        4
+      ]
+    },
+    {
+      "id": "K111-AM016",
+      "kind": "OCR_KANJI_SUBSTITUTION",
+      "expected": "悪",
+      "observed": "加",
+      "fields": [
+        3
+      ]
+    },
+    {
+      "id": "K111-AM025",
+      "kind": "OCR_KANJI_AND_ANGLE_BRACKET_SUBSTITUTION",
+      "fields": [
+        0
+      ]
+    },
+    {
+      "id": "K111-AM025",
+      "kind": "OCR_SHORT_FIELD_INCONSISTENT",
+      "fields": [
+        5
+      ]
     }
   ]
 }
