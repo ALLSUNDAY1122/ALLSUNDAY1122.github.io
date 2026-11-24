@@ -1,10 +1,10 @@
 {
   "year": 2026,
   "targetCount": 120,
-  "auditedCount": 90,
-  "auditPassedCount": 90,
-  "holdCount": 0,
-  "pendingCount": 30,
+  "auditedCount": 100,
+  "auditPassedCount": 99,
+  "holdCount": 1,
+  "pendingCount": 20,
   "sourceExplanationPath": "touroku-hanbaisha-sprint/official-kansai/EXPLANATIONS_2026.json",
   "sourceExplanationBlobSha": "ed5e24ed3310cc99ceb2bf92aa29379a145c6ce0",
   "auditDate": "2026-11-24",
@@ -5711,6 +5711,649 @@
         }
       },
       "notes": "添付正規バンクの1-based正答と一致。公式試験後半PDF原典画像と手引き該当頁原典画像から全記述・全選択肢を逐項照合。公式正答PDFは直接再取得せず、了承済み正規バンクを使用。医薬品成分の例外は薬理作用が期待できない量以下という条件の明記を推奨（設問の絶対禁止を否定する趣旨は正しい）。"
+    },
+    {
+      "questionId": "KSAI-2026-091",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "1",
+            "printedPage": "223",
+            "pdfPages": [
+              231
+            ],
+            "truth": "誤",
+            "topic": "疾病治療・食品衛生法が誤り",
+            "result": "MATCH"
+          },
+          {
+            "item": "2",
+            "printedPage": "223",
+            "pdfPages": [
+              231
+            ],
+            "truth": "誤",
+            "topic": "目的・法・機関が誤り",
+            "result": "MATCH"
+          },
+          {
+            "item": "3",
+            "printedPage": "223",
+            "pdfPages": [
+              231
+            ],
+            "truth": "誤",
+            "topic": "疾病治療・厚労省が誤り",
+            "result": "MATCH"
+          },
+          {
+            "item": "4",
+            "printedPage": "223",
+            "pdfPages": [
+              231
+            ],
+            "truth": "正",
+            "topic": "健康保持・健康増進法・消費者庁",
+            "result": "MATCH"
+          },
+          {
+            "item": "5",
+            "printedPage": "223",
+            "pdfPages": [
+              231
+            ],
+            "truth": "誤",
+            "topic": "厚労省が誤り",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 4,
+        "bankAnswerNumber": 4,
+        "answerMatch": true,
+        "questionImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
+          "pdfPage": 23,
+          "printedPage": 21,
+          "checked": true,
+          "reason": "全問追加原典画像照合"
+        }
+      },
+      "notes": "添付APPROVED_OFFICIAL_BANK(3).jsonの1-based正答と一致。手引き原典画像及び公式試験PDF後半原典画像で逐項照合。公式正答PDFは直接再取得せず、ユーザー了承済み正規バンクを使用。正答理由・全選択肢理由に合否を左右する不整合なし。"
+    },
+    {
+      "questionId": "KSAI-2026-092",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "a",
+            "printedPage": "227",
+            "pdfPages": [
+              235
+            ],
+            "truth": "正",
+            "topic": "薬局名称の例外",
+            "result": "MATCH"
+          },
+          {
+            "item": "b",
+            "printedPage": "226–227",
+            "pdfPages": [
+              234,
+              235
+            ],
+            "truth": "誤",
+            "topic": "販売業許可不要",
+            "result": "MATCH"
+          },
+          {
+            "item": "c",
+            "printedPage": "228",
+            "pdfPages": [
+              236
+            ],
+            "truth": "正",
+            "topic": "薬剤師不在時間",
+            "result": "MATCH"
+          },
+          {
+            "item": "d",
+            "printedPage": "227",
+            "pdfPages": [
+              235
+            ],
+            "truth": "正",
+            "topic": "管理者監督",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 1,
+        "bankAnswerNumber": 1,
+        "answerMatch": true,
+        "questionImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
+          "pdfPage": 24,
+          "printedPage": 22,
+          "checked": true,
+          "reason": "全問追加原典画像照合"
+        }
+      },
+      "notes": "添付APPROVED_OFFICIAL_BANK(3).jsonの1-based正答と一致。手引き原典画像及び公式試験PDF後半原典画像で逐項照合。公式正答PDFは直接再取得せず、ユーザー了承済み正規バンクを使用。正答理由・全選択肢理由に合否を左右する不整合なし。"
+    },
+    {
+      "questionId": "KSAI-2026-093",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "a",
+            "printedPage": "226",
+            "pdfPages": [
+              234
+            ],
+            "truth": "正",
+            "topic": "事前小分け不可",
+            "result": "MATCH"
+          },
+          {
+            "item": "b",
+            "printedPage": "229",
+            "pdfPages": [
+              237
+            ],
+            "truth": "誤",
+            "topic": "第一類は薬剤師",
+            "result": "MATCH"
+          },
+          {
+            "item": "c",
+            "printedPage": "231",
+            "pdfPages": [
+              239
+            ],
+            "truth": "正",
+            "topic": "書面意見",
+            "result": "MATCH"
+          },
+          {
+            "item": "d",
+            "printedPage": "229",
+            "pdfPages": [
+              237
+            ],
+            "truth": "誤",
+            "topic": "調剤不可",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 4,
+        "bankAnswerNumber": 4,
+        "answerMatch": true,
+        "questionImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
+          "pdfPage": 25,
+          "printedPage": 23,
+          "checked": true,
+          "reason": "全問追加原典画像照合"
+        }
+      },
+      "notes": "添付APPROVED_OFFICIAL_BANK(3).jsonの1-based正答と一致。手引き原典画像及び公式試験PDF後半原典画像で逐項照合。公式正答PDFは直接再取得せず、ユーザー了承済み正規バンクを使用。正答理由・全選択肢理由に合否を左右する不整合なし。"
+    },
+    {
+      "questionId": "KSAI-2026-094",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "a",
+            "printedPage": "231",
+            "pdfPages": [
+              239
+            ],
+            "truth": "正",
+            "topic": "都道府県単位許可",
+            "result": "MATCH"
+          },
+          {
+            "item": "b",
+            "printedPage": "234",
+            "pdfPages": [
+              242
+            ],
+            "truth": "誤",
+            "topic": "開封分割禁止",
+            "result": "MATCH"
+          },
+          {
+            "item": "c",
+            "printedPage": "233",
+            "pdfPages": [
+              241
+            ],
+            "truth": "正",
+            "topic": "配置以外禁止",
+            "result": "MATCH"
+          },
+          {
+            "item": "d",
+            "printedPage": "233",
+            "pdfPages": [
+              241
+            ],
+            "truth": "誤",
+            "topic": "事前届出",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 2,
+        "bankAnswerNumber": 2,
+        "answerMatch": true,
+        "questionImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
+          "pdfPage": 26,
+          "printedPage": 24,
+          "checked": true,
+          "reason": "全問追加原典画像照合"
+        }
+      },
+      "notes": "添付APPROVED_OFFICIAL_BANK(3).jsonの1-based正答と一致。手引き原典画像及び公式試験PDF後半原典画像で逐項照合。公式正答PDFは直接再取得せず、ユーザー了承済み正規バンクを使用。正答理由・全選択肢理由に合否を左右する不整合なし。"
+    },
+    {
+      "questionId": "KSAI-2026-095",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "a",
+            "printedPage": "244",
+            "pdfPages": [
+              252
+            ],
+            "truth": "正",
+            "topic": "年齢",
+            "result": "MATCH"
+          },
+          {
+            "item": "b",
+            "printedPage": "244",
+            "pdfPages": [
+              252
+            ],
+            "truth": "正",
+            "topic": "18歳未満氏名",
+            "result": "MATCH"
+          },
+          {
+            "item": "c",
+            "printedPage": "244",
+            "pdfPages": [
+              252
+            ],
+            "truth": "正",
+            "topic": "購入・譲受状況",
+            "result": "MATCH"
+          },
+          {
+            "item": "d",
+            "printedPage": "244–245",
+            "pdfPages": [
+              252,
+              253
+            ],
+            "truth": "正",
+            "topic": "プソイドエフェドリン含有かぜ薬7日分超の理由",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 3,
+        "bankAnswerNumber": 3,
+        "answerMatch": true,
+        "questionImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
+          "pdfPage": 27,
+          "printedPage": 25,
+          "checked": true,
+          "reason": "全問追加原典画像照合"
+        }
+      },
+      "notes": "添付APPROVED_OFFICIAL_BANK(3).jsonの1-based正答と一致。手引き原典画像及び公式試験PDF後半原典画像で逐項照合。公式正答PDFは直接再取得せず、ユーザー了承済み正規バンクを使用。正答理由・全選択肢理由に合否を左右する不整合なし。"
+    },
+    {
+      "questionId": "KSAI-2026-096",
+      "verdict": "HOLD",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "a",
+            "printedPage": "246",
+            "pdfPages": [
+              254
+            ],
+            "truth": "正",
+            "topic": "要指導と一般用の区別",
+            "result": "MATCH"
+          },
+          {
+            "item": "b",
+            "printedPage": "247",
+            "pdfPages": [
+              255
+            ],
+            "truth": "正",
+            "topic": "第一類区画の例外",
+            "result": "MATCH"
+          },
+          {
+            "item": "c",
+            "printedPage": "247",
+            "pdfPages": [
+              255
+            ],
+            "truth": "誤",
+            "topic": "指定第二類7m以内、施錠又は陳列設備から1.2m以内進入防止。現行解説の直接触れられない設備という表現は第一類の例外と混同のおそれ",
+            "result": "EXPLANATION_SOURCE_MISMATCH"
+          },
+          {
+            "item": "d",
+            "printedPage": "247",
+            "pdfPages": [
+              255
+            ],
+            "truth": "誤",
+            "topic": "医薬部外品との区別",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 1,
+        "bankAnswerNumber": 1,
+        "answerMatch": true,
+        "questionImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
+          "pdfPage": 28,
+          "printedPage": 26,
+          "checked": true,
+          "reason": "全問追加原典画像照合"
+        }
+      },
+      "notes": "添付APPROVED_OFFICIAL_BANK(3).jsonの1-based正答と一致。手引き原典画像及び公式試験PDF後半原典画像で逐項照合。公式正答PDFは直接再取得せず、ユーザー了承済み正規バンクを使用。HOLD：cの例外規定の説明が不正確。施錠設備又は指定第二類医薬品の陳列設備から1.2メートル以内の範囲に購入者等が進入できない措置、と訂正するよう作成側へ修正依頼推奨。正答番号変更不要。"
+    },
+    {
+      "questionId": "KSAI-2026-097",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "a",
+            "printedPage": "252",
+            "pdfPages": [
+              260
+            ],
+            "truth": "正",
+            "topic": "行政庁閲覧可能",
+            "result": "MATCH"
+          },
+          {
+            "item": "b",
+            "printedPage": "252",
+            "pdfPages": [
+              260
+            ],
+            "truth": "誤",
+            "topic": "区分別表示",
+            "result": "MATCH"
+          },
+          {
+            "item": "c",
+            "printedPage": "251",
+            "pdfPages": [
+              259
+            ],
+            "truth": "正",
+            "topic": "使用期限表示",
+            "result": "MATCH"
+          },
+          {
+            "item": "d",
+            "printedPage": "250",
+            "pdfPages": [
+              258
+            ],
+            "truth": "誤",
+            "topic": "当該店舗の貯蔵陳列品",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 2,
+        "bankAnswerNumber": 2,
+        "answerMatch": true,
+        "questionImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
+          "pdfPage": 29,
+          "printedPage": 27,
+          "checked": true,
+          "reason": "全問追加原典画像照合"
+        }
+      },
+      "notes": "添付APPROVED_OFFICIAL_BANK(3).jsonの1-based正答と一致。手引き原典画像及び公式試験PDF後半原典画像で逐項照合。公式正答PDFは直接再取得せず、ユーザー了承済み正規バンクを使用。正答理由・全選択肢理由に合否を左右する不整合なし。"
+    },
+    {
+      "questionId": "KSAI-2026-098",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "1",
+            "printedPage": "259",
+            "pdfPages": [
+              267
+            ],
+            "truth": "正",
+            "topic": "構成生薬単独説明不適当",
+            "result": "MATCH"
+          },
+          {
+            "item": "2",
+            "printedPage": "259",
+            "pdfPages": [
+              267
+            ],
+            "truth": "誤",
+            "topic": "同一紙面掲載自体可",
+            "result": "MATCH"
+          },
+          {
+            "item": "3",
+            "printedPage": "259",
+            "pdfPages": [
+              267
+            ],
+            "truth": "正",
+            "topic": "自己治療可能とする広告不可",
+            "result": "MATCH"
+          },
+          {
+            "item": "4",
+            "printedPage": "259",
+            "pdfPages": [
+              267
+            ],
+            "truth": "正",
+            "topic": "保証広告は虚偽誇大",
+            "result": "MATCH"
+          },
+          {
+            "item": "5",
+            "printedPage": "260",
+            "pdfPages": [
+              268
+            ],
+            "truth": "正",
+            "topic": "推薦等原則不適当",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 2,
+        "bankAnswerNumber": 2,
+        "answerMatch": true,
+        "questionImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
+          "pdfPage": 29,
+          "printedPage": 27,
+          "checked": true,
+          "reason": "全問追加原典画像照合"
+        }
+      },
+      "notes": "添付APPROVED_OFFICIAL_BANK(3).jsonの1-based正答と一致。手引き原典画像及び公式試験PDF後半原典画像で逐項照合。公式正答PDFは直接再取得せず、ユーザー了承済み正規バンクを使用。正答理由・全選択肢理由に合否を左右する不整合なし。選択肢4の『該当し得る』は手引きの断定表現に合わせることを推奨。"
+    },
+    {
+      "questionId": "KSAI-2026-099",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "a",
+            "printedPage": "260",
+            "pdfPages": [
+              268
+            ],
+            "truth": "正",
+            "topic": "景品表示法限度内",
+            "result": "MATCH"
+          },
+          {
+            "item": "b",
+            "printedPage": "261",
+            "pdfPages": [
+              269
+            ],
+            "truth": "誤",
+            "topic": "積極的事情確認",
+            "result": "MATCH"
+          },
+          {
+            "item": "c",
+            "printedPage": "260",
+            "pdfPages": [
+              268
+            ],
+            "truth": "正",
+            "topic": "合理性と十分な情報提供",
+            "result": "MATCH"
+          },
+          {
+            "item": "d",
+            "printedPage": "260–261",
+            "pdfPages": [
+              268,
+              269
+            ],
+            "truth": "誤",
+            "topic": "先用後利によらない現金売りは配置販売外",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 2,
+        "bankAnswerNumber": 2,
+        "answerMatch": true,
+        "questionImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
+          "pdfPage": 30,
+          "printedPage": 28,
+          "checked": true,
+          "reason": "全問追加原典画像照合"
+        }
+      },
+      "notes": "添付APPROVED_OFFICIAL_BANK(3).jsonの1-based正答と一致。手引き原典画像及び公式試験PDF後半原典画像で逐項照合。公式正答PDFは直接再取得せず、ユーザー了承済み正規バンクを使用。正答理由・全選択肢理由に合否を左右する不整合なし。景品が医薬品そのものである場合は原則不可との補足推奨。"
+    },
+    {
+      "questionId": "KSAI-2026-100",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "a",
+            "printedPage": "261",
+            "pdfPages": [
+              269
+            ],
+            "truth": "正",
+            "topic": "立入質問・法69条",
+            "result": "MATCH"
+          },
+          {
+            "item": "b",
+            "printedPage": "262",
+            "pdfPages": [
+              270
+            ],
+            "truth": "正",
+            "topic": "構造設備改善・法72条4項",
+            "result": "MATCH"
+          },
+          {
+            "item": "c",
+            "printedPage": "263",
+            "pdfPages": [
+              271
+            ],
+            "truth": "正",
+            "topic": "廃棄回収命令・法70条",
+            "result": "MATCH"
+          },
+          {
+            "item": "d",
+            "printedPage": "264",
+            "pdfPages": [
+              272
+            ],
+            "truth": "誤",
+            "topic": "行政命令なしでも危害防止措置・法68条の9",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 1,
+        "bankAnswerNumber": 1,
+        "answerMatch": true,
+        "questionImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
+          "pdfPage": 31,
+          "printedPage": 29,
+          "checked": true,
+          "reason": "全問追加原典画像照合"
+        }
+      },
+      "notes": "添付APPROVED_OFFICIAL_BANK(3).jsonの1-based正答と一致。手引き原典画像及び公式試験PDF後半原典画像で逐項照合。公式正答PDFは直接再取得せず、ユーザー了承済み正規バンクを使用。正答理由・全選択肢理由に合否を左右する不整合なし。"
     }
   ],
   "sourceDiffHistory": [
