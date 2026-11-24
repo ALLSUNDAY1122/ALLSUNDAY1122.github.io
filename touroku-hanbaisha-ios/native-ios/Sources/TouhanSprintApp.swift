@@ -9,12 +9,23 @@ private enum ReleaseConfig {
 
 @main
 struct TouhanSprintApp: App {
+    @StateObject private var premium = TouhanPremium()
+    @State private var paywall = false
+    @Environment(\.scenePhase) private var phase
     var body: some Scene {
-        WindowGroup { TouhanWebView().ignoresSafeArea(.container, edges: .bottom) }
+        WindowGroup {
+            TouhanWebView(unlocked: premium.unlocked, openPaywall: { paywall = true })
+                .ignoresSafeArea(.container, edges: .bottom)
+                .sheet(isPresented: $paywall) { TouhanPaywall(premium: premium) }
+                .task { await premium.start() }
+                .onChange(of: phase) { value in if value == .active { Task { await premium.refresh() } } }
+        }
     }
 }
 
 struct TouhanWebView: UIViewRepresentable {
+    let unlocked: Bool
+    let openPaywall: () -> Void
     func makeCoordinator() -> Coordinator { Coordinator() }
 
     func makeUIView(context: Context) -> WKWebView {
@@ -23,6 +34,9 @@ struct TouhanWebView: UIViewRepresentable {
         configuration.defaultWebpagePreferences.allowsContentJavaScript = true
         StudyStore.installSnapshot(in: configuration.userContentController)
         configuration.userContentController.add(context.coordinator, name: "studyRecord")
+        configuration.userContentController.add(context.coordinator, name: "premiumPaywall")
+        context.coordinator.openPaywall = openPaywall
+        context.coordinator.unlocked = unlocked
         let webView = WKWebView(frame: .zero, configuration: configuration)
         webView.navigationDelegate = context.coordinator
         webView.uiDelegate = context.coordinator
@@ -35,13 +49,26 @@ struct TouhanWebView: UIViewRepresentable {
         return webView
     }
 
-    func updateUIView(_ webView: WKWebView, context: Context) {}
+    func updateUIView(_ webView: WKWebView, context: Context) {
+        context.coordinator.openPaywall = openPaywall
+        context.coordinator.unlocked = unlocked
+        context.coordinator.syncEntitlement(webView)
+    }
     static func dismantleUIView(_ uiView: WKWebView, coordinator: Coordinator) {
         uiView.configuration.userContentController.removeScriptMessageHandler(forName: "studyRecord")
+        uiView.configuration.userContentController.removeScriptMessageHandler(forName: "premiumPaywall")
     }
 
     final class Coordinator: NSObject, WKNavigationDelegate, WKUIDelegate, WKScriptMessageHandler {
+        var openPaywall: (() -> Void)?
+        var unlocked = false
+        func syncEntitlement(_ webView: WKWebView) {
+            guard webView.url?.lastPathComponent == "official-practice.html" else { return }
+            webView.evaluateJavaScript("window.setPremiumEntitlement?.(" + (unlocked ? "true" : "false") + ")")
+        }
         func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+            if message.name == "premiumPaywall", message.frameInfo.isMainFrame,
+               let url = message.frameInfo.request.url, isLocal(url), url.lastPathComponent == "official-practice.html" { openPaywall?(); return }
             guard message.name == "studyRecord", message.frameInfo.isMainFrame,
                   let url = message.frameInfo.request.url, isLocal(url),
                   url.lastPathComponent == "official-practice.html",
@@ -85,13 +112,17 @@ struct TouhanWebView: UIViewRepresentable {
 
 #if DEBUG
         private var smokeStarted = false
+#endif
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+            syncEntitlement(webView)
+#if DEBUG
             guard !smokeStarted, webView.url?.lastPathComponent == "official-practice.html" else { return }
             let args = ProcessInfo.processInfo.arguments
             let write = args.contains("--touhan-ui-smoke-write")
             let read = args.contains("--touhan-ui-smoke-read")
             guard write || read else { return }
             smokeStarted = true
+            webView.evaluateJavaScript("window.setPremiumEntitlement?.(true)")
             let script: String
             if write {
                 script = """
@@ -133,8 +164,8 @@ struct TouhanWebView: UIViewRepresentable {
                     try? output.write(to: folder.appendingPathComponent(write ? "touhan-smoke-write.json" : "touhan-smoke-read.json"), options: .atomic)
                 }
             }
+ #endif
         }
-#endif
 
         func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
             if (error as NSError).code != NSURLErrorCancelled { showFailure(in: webView) }

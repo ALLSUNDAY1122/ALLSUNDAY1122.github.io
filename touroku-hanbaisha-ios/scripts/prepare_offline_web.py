@@ -31,6 +31,10 @@ html=(WEB/'official-practice.html').read_text()
 old="fetch(BANK,{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(d=>{"
 assert html.count(old)==1
 html=html.replace(old,"Promise.resolve().then(()=>JSON.parse(document.getElementById('offlineBank').textContent)).then(d=>{")
+premium=json.loads((ROOT/'touroku-hanbaisha-ios/IAP_POLICY.json').read_text())
+free= premium['freeIds']
+assert len(free)==len(set(free))==50 and set(free)<= {q['id'] for q in rows}
+assert all(sum(q['id'] in free and q['chapter']==c for q in rows)==10 for c in {q['chapter'] for q in rows})
 payload=raw.decode('utf-8').replace('<',r'\u003c')
 assert html.count('</main><script>')==1
 html=html.replace('</main><script>','</main><script type="application/json" id="offlineBank">'+payload+'</script><script>')
@@ -39,7 +43,13 @@ html=html.replace('<a href="./index.html">‹ ホーム</a>','<button class="but
 # Apply only to the native bundle; keep the public legacy web page unchanged.
 from pathlib import Path
 shell=Path(__file__).with_name('offline_learning_shell.html').read_text()
-logic=Path(__file__).with_name('offline_learning.js').read_text()
+logic="const freeIds=new Set("+json.dumps(free)+");\n"+Path(__file__).with_name('offline_learning.js').read_text()
+logic+=Path(__file__).with_name('offline_premium.js').read_text()
+html=html.replace("return records.filter(q=>($('year')","return records.filter(q=>canStudy(q)&&($('year')")
+html=html.replace("if(selected)return;selected=true;const q=subset[position]","if(selected)return;if(!canStudy(subset[position])){beginSetup();return}selected=true;const q=subset[position]")
+html=html.replace("selected=false;const q=subset[position];","selected=false;const q=subset[position];if(!canStudy(q)){beginSetup();return;}")
+html=html.replace("+'（採点対象）'","+'（セッション正解数 / 回答数）'")
+
 html=html.replace('</style>',Path(__file__).with_name('offline_learning.css').read_text()+'</style>',1)
 html=html.replace('<section class="card" id="setup">',shell+'<p id="saveWarning" class="saveWarning" role="alert"></p><section class="card hidden" id="setup">',1)
 html=html.replace("let records=[],subset=[],position=0,correct=0,denominator=0,selected=false,excluded=0;","let records=[],subset=[],position=0,correct=0,denominator=0,selected=false,excluded=0;"+logic+"\n$('headerHome').onclick=showHome;")
