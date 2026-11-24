@@ -1550,3 +1550,8 @@ Apple固定識別子: Bundle `com.allsunday1122.tourokuhanbaisha`、ASC `6802119
 ## 学習ホーム版 MainActor修正後の再検証
 - Simulator 45334990399: Xcode環境・iOSコンパイルSUCCESS、インストール/起動工程実行中、保存復元・重複防止未確定。旧コンパイル失敗解消。
 - 整合性45334990413 SUCCESS。総合品質45334990367実行中。新IPAはSimulator実測PASSまで保留。Build15配信維持、本審査未送信。
+
+
+## 学習ホーム・記録版 Simulator実測PASS（2026-11-24 14:44 JST）
+- Run 45334990399 SUCCESS、artifact 14893742623。コンパイル・起動・撮影・実WKWebView記録保存/プロセス終了再起動/再開重複防止PASS。write: KSAI-2024-081, position=1, progress=1, accuracy=100%。read: progress=2, accuracy=50%, position=1, attempts=2。画像独立目視・新ビルド実機未確認。
+- ブラウザ両エンジン599問・整合性PASS、総合品質45334990367実行中。新署名ビルド要求 touhan-home-records-20261124-1444。Q5未確認、13/14、Build15配信維持。本審査未送信。

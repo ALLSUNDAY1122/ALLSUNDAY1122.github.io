@@ -812,9 +812,9 @@
     "v3_original_pdf_image_8": "PASS_8_SCOPE_RIGHTS_CHROMIUM_16",
     "v3_ruby_visual_10": "PASS_DIRECT_IMAGE_10_CHROMIUM_20",
     "v2_ruby_78_visual_followup": "HOLD_78_MAPPING_WARNINGS_CONTACT_SHEETS_15_VIEWED",
-    "ai_preflight_acceptance": "BLOCKED",
-    "ios_offline_runtime": "BLOCKED_REMOTE_ONLY",
-    "native_simulator": "NOT_TESTED",
+    "ai_preflight_acceptance": "BLOCKED_13_OF_14_Q5",
+    "ios_offline_runtime": "PASS_599_CHROMIUM_WEBKIT_AND_SIMULATOR",
+    "native_simulator": "PASS_HOME_RECORDS_RESTART_RESUME",
     "app_privacy": "NOT_VERIFIED_QUESTIONNAIRE",
     "asc_metadata_599": "PASS"
   },
@@ -1487,7 +1487,11 @@
     "report": "touroku-hanbaisha-ios/AI_PREFLIGHT_ACCEPTANCE_20261124.json",
     "run_id": 45326744723,
     "native_ios_simulator_tested": false,
-    "testflight_uploaded": false
+    "testflight_uploaded": false,
+    "current_pass": 13,
+    "current_blocking": [
+      "Q5_PRIVACY_AND_NETWORK_DISCLOSURE"
+    ]
   },
   "q5_privacy_audit_20261124": {
     "sourceAndBrowserAudit": "PASS",
@@ -1766,7 +1770,7 @@
     "directBuildGroupRelationship": "NOT_QUERIED"
   },
   "learning_home_records_20261124": {
-    "status": "SIMULATOR_COMPILE_PASS_RUNTIME_PENDING",
+    "status": "NATIVE_SMOKE_PASS_NEW_BUILD_REQUESTED",
     "previousBuild15DeviceReport": {
       "source": "user report",
       "airplaneMode": "PASS",
@@ -1776,9 +1780,9 @@
       "missingHomeAndRecords": true
     },
     "scope": "Native-only home, start/resume, year/chapter unique progress and attempt accuracy, recent history, app-local UserDefaults CA92.1",
-    "newTestFlight": "PENDING_NATIVE_SMOKE",
+    "newTestFlight": "BUILD_REQUESTED",
     "appReviewSubmitted": false,
-    "nativeSmoke": "IN_PROGRESS_INSTALL_LAUNCH",
+    "nativeSmoke": "PASS",
     "browserRegression": "PASS_CHROMIUM_WEBKIT_599_HOME_RECORDS_RESUME_NO_DUPLICATE",
     "browserRun": 45326744724,
     "browserArtifact": 14889673638,
@@ -1801,6 +1805,32 @@
     "nativeCompileRetest": "PASS",
     "nativeRetestHead": "c930d1273a6cab481bbdd0b13047bfe836f66e5d",
     "overallRetestRun": 45334990367,
-    "overallRetest": "IN_PROGRESS"
+    "overallRetest": "IN_PROGRESS",
+    "nativeEvidence": {
+      "run": 45334990399,
+      "job": 138244859501,
+      "head": "c930d1273a6cab481bbdd0b13047bfe836f66e5d",
+      "artifact": 14893742623,
+      "status": "PASS",
+      "write": {
+        "phase": "write",
+        "status": "PASS",
+        "question": "KSAI-2024-081",
+        "position": 1,
+        "progress": 1,
+        "accuracy": "100%"
+      },
+      "read": {
+        "phase": "read",
+        "status": "PASS",
+        "progress": 2,
+        "accuracy": "50%",
+        "position": 1,
+        "attempts": 2
+      },
+      "screenshots": "CAPTURED_NOT_INDEPENDENTLY_VISUALLY_INSPECTED",
+      "physicalDevice": "PENDING_NEW_BUILD"
+    },
+    "newBuildRequest": "touhan-home-records-20261124-1444"
   }
 }
