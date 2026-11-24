@@ -151,6 +151,7 @@ struct TouhanWebView: UIViewRepresentable {
 
 private enum StudyStore {
     static let key = "touhan.study.v1"
+    @MainActor
     static func installSnapshot(in controller: WKUserContentController) {
         controller.removeAllUserScripts()
         let source = "if(location.protocol==='file:' && location.pathname.endsWith('/official-practice.html')) window.__touhanStudyState = " + load() + ";"

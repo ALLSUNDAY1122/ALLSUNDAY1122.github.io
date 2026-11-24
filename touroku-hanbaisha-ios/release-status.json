@@ -1766,7 +1766,7 @@
     "directBuildGroupRelationship": "NOT_QUERIED"
   },
   "learning_home_records_20261124": {
-    "status": "BROWSER_PASS_NATIVE_SMOKE_PENDING",
+    "status": "SIMULATOR_COMPILE_FIX_PENDING_RETEST",
     "previousBuild15DeviceReport": {
       "source": "user report",
       "airplaneMode": "PASS",
@@ -1778,7 +1778,7 @@
     "scope": "Native-only home, start/resume, year/chapter unique progress and attempt accuracy, recent history, app-local UserDefaults CA92.1",
     "newTestFlight": "PENDING_NATIVE_SMOKE",
     "appReviewSubmitted": false,
-    "nativeSmoke": "PENDING",
+    "nativeSmoke": "NOT_RUN_COMPILE_FAILED",
     "browserRegression": "PASS_CHROMIUM_WEBKIT_599_HOME_RECORDS_RESUME_NO_DUPLICATE",
     "browserRun": 45326744724,
     "browserArtifact": 14889673638,
@@ -1792,6 +1792,11 @@
     },
     "releaseValidationRun": 45326744709,
     "releaseValidation": "PASS",
-    "nativeSmokeRun": 45326744802
+    "nativeSmokeRun": 45326744802,
+    "nativeFailedRun": 45326744802,
+    "nativeFailedArtifact": 14890805697,
+    "nativeCompileErrors": 3,
+    "nativeCompileCause": "Swift 6 actor isolation: installSnapshot calls three MainActor WebKit APIs from nonisolated context; compiler explicitly recommends @MainActor at line 154",
+    "nativeCompileFix": "Annotate StudyStore.installSnapshot with @MainActor"
   }
 }

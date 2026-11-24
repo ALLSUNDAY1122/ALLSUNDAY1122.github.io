@@ -1540,3 +1540,8 @@ Apple固定識別子: Bundle `com.allsunday1122.tourokuhanbaisha`、ASC `6802119
 - 合否: **BLOCKED**。PASS 8/14。
 - 未通過: Q2_NATIVE_WEBVIEW_INTEGRATION, Q3_METADATA_DISCLOSURE, Q4_OFFLINE_RESILIENCE, Q5_PRIVACY_AND_NETWORK_DISCLOSURE, Q6_IOS_BUILD_AND_LAUNCH, Q7_TESTFLIGHT_READY。
 - 詳細：touroku-hanbaisha-ios/AI_PREFLIGHT_ACCEPTANCE_20261124.json。実機・Simulator未確認、TestFlight送信なし、本審査未提出。
+
+
+## 学習ホーム版 Simulatorコンパイル修正（2026-11-24）
+- Run 45326744802 FAIL、13:37 JST。環境準備PASS、Swift 6 compile 3 errors、起動・記録復元・重複防止未実施。artifact 14890805697。
+- コンパイラ診断: TouhanSprintApp.swift:154:17 note: add '@MainActor' to make static method 'installSnapshot(in:)' part of global actor 'MainActor'。155/157行のWebKit API 3件。指示どおりメソッドに@MainActorを追加。Swift 6設定と問題・集計ロジック変更なし。Simulator再検証待ち。新IPA未開始、Build15維持。本審査未送信。
