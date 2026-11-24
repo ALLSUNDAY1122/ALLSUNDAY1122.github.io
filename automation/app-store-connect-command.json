@@ -1,21 +1,16 @@
 {
-  "request_id": "toru-tango-eula-localizations-20261124-r1",
-  "requests": [
+  "request_id": "toru-tango-eula-append-20261124-r1",
+  "action": "write",
+  "expected_app_id": "6795968222",
+  "expected_bundle_id": "com.allsunday1122.torutango",
+  "operations": [
     {
-      "label": "app",
-      "path": "/v1/apps/6795968222"
-    },
-    {
-      "label": "version",
-      "path": "/v1/appStoreVersions/c19fe956-165f-474c-af0b-bbfa86a138df"
-    },
-    {
-      "label": "build",
-      "path": "/v1/appStoreVersions/c19fe956-165f-474c-af0b-bbfa86a138df/build"
-    },
-    {
-      "label": "localizations",
-      "path": "/v1/appStoreVersions/c19fe956-165f-474c-af0b-bbfa86a138df/appStoreVersionLocalizations?limit=200"
+      "type": "update_version_localization",
+      "id": "5e089062-31d4-4b43-b707-e50d6bafb74b",
+      "app_store_version_id": "c19fe956-165f-474c-af0b-bbfa86a138df",
+      "attributes": {
+        "description": "撮る単語帳は、教材を撮影・取り込みして、自分だけの単語カードを作成・学習できるアプリです。\n\n主な機能\n・教材写真をOCRで文字認識\n・iPhone内AIまたは端末内の簡易作問でカード作成\n・必要に応じてGemini AIによる作問/OCRも選択可能\n・フォルダごとのカード整理\n・表/裏の読み上げと自動送り\n・苦手/未学習カードの絞り込み\n・連続学習や正答率の記録\n・JSONバックアップ/復元\n\nカードと学習履歴は原則として端末内に保存されます。外部AI機能を選択した場合のみ、対象の教材本文または画像を外部処理へ送信します。\n\n利用規約（EULA）\nhttps://www.apple.com/legal/internet-services/itunes/dev/stdeula/"
+      }
     }
   ]
 }
