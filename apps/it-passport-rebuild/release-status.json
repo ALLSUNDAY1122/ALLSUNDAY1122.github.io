@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
-  "updated_at_jst": "2026-11-24T09:40:00+09:00",
+  "updated_at_jst": "2026-11-24T09:50:00+09:00",
   "project": "新ITパスポート｜ゼロベース開発",
   "release_decision": "BLOCKED",
-  "release_stage": "HIGH_SIMILARITY_REMAINDER_PARTIAL_AUDIT_20_OF_285_VERBATIM_BANK_42",
+  "release_stage": "HIGH95_REMAINING265_PARTIAL_VISUAL_PASS_13_VERBATIM_BANK55",
   "app_review_submitted": false,
   "requirements": {
     "official_question_verbatim": true,
@@ -24,10 +24,10 @@
       "reason": "origin_type=original; cannot substitute for verbatim IPA past questions"
     },
     "official_past_exam": {
-      "canonical": 42,
+      "canonical": 55,
       "target": 500,
       "verified_rounds": 0,
-      "source_verbatim_audit": "PASS_42_HOLD_458",
+      "source_verbatim_audit": "PASS_55_HOLD_445",
       "pdf_stage_attempt": {
         "result": "RESOLVED_BY_USER_UPLOADED_ORIGINALS",
         "source": "10 attached original PDFs",
@@ -45,9 +45,9 @@
         "original_ocr_drafts": "LOCAL_AUDIT_ARCHIVE",
         "source_page_identified": 500,
         "question_candidates": 500,
-        "question_verbatim_pass": 42,
+        "question_verbatim_pass": 55,
         "answer_audit_pass": 500,
-        "unverified_text": 458,
+        "unverified_text": 445,
         "release_promotion": "ONLY_AFTER_INDEPENDENT_ORIGINAL_IMAGE_VS_TEXT_CHOICES_FIGURE_AUDIT",
         "separate_original_mock_count": 240,
         "ocr_question_head_exact": 455,
@@ -58,12 +58,12 @@
         "text_is_ocr_unverified": true,
         "audit_record": "questions/official-verbatim-audit-12-20261124.json",
         "audit_record_additional": "questions/official-verbatim-audit-high95-20261124.json",
-        "audit_record_latest": "questions/official-verbatim-audit-high95-remaining-20261124.json"
+        "audit_record_latest": "questions/official-verbatim-audit-high95-batch-20261124-02.json"
       },
       "candidate_index_count": 500,
       "source_pdfs_verified": 10,
       "answer_key_verified": 500,
-      "verbatim_promoted": 42,
+      "verbatim_promoted": 55,
       "official_answer_reference": "questions/official-answer-index.json",
       "official_candidate_reference": "questions/official-candidate-index.json",
       "original_scan_uploaded_count": 5,
@@ -90,13 +90,13 @@
         "source_raster_minor_rendering_difference": 98,
         "raster_max_channel_difference": 9,
         "original_pdf_source_images_present_in_local_artifact": true,
-        "independent_word_by_word_checked": 42,
+        "independent_word_by_word_checked": 55,
         "archive_bytes": 47200937,
         "private_drive_staging_id": "1R94-C3Q7hKhWt2Px01z9y6eX8qDN8FqG",
         "github_boundary_repair_manifest": "questions/official-image-boundary-repairs.json",
         "github_500_image_audit_manifest": "questions/official-image-audit-500.json",
         "visual_boundary_manual_checks": 21,
-        "content_lexical_audit_pass": 42,
+        "content_lexical_audit_pass": 55,
         "raster_note": "21 repaired crops are pixel-identical to freshly rendered source image crops; 479 existing crops are pixel-identical for 381 or raster-equivalent with only maximum 2-9 channel-level conversion variance for 98; total 500/500 raster equivalent. This is not independent text/choice audit.",
         "verbatim_ocr_second_pass": "COMPLETED_500_SAME_ENGINE_DISCREPANCY_SCREEN_ONLY",
         "archive_storage": "LOCAL_ATTACHMENT_AND_PRIVATE_GOOGLE_DRIVE_STAGING",
@@ -115,29 +115,43 @@
         "additional_boundary_issue": {
           "question": "itp-2026-q025",
           "status": "HOLD_REFRAME_REQUIRED",
-          "finding": "candidate image includes Q24 and Q26, not only Q25"
+          "finding": "Crop includes Q24 and Q26"
+        },
+        "additional_figure_issue": {
+          "question": "itp-2023-q037",
+          "status": "HOLD_FIGURE_LAYOUT_REVIEW_REQUIRED",
+          "finding": "Blank slots and table require diagram-fidelity review"
         }
       },
       "verified_question_ids": [
         "itp-2022-q002",
+        "itp-2022-q038",
         "itp-2022-q042",
         "itp-2022-q056",
         "itp-2022-q058",
+        "itp-2022-q061",
+        "itp-2022-q062",
         "itp-2022-q075",
         "itp-2022-q081",
         "itp-2022-q083",
         "itp-2022-q085",
+        "itp-2022-q086",
         "itp-2022-q093",
         "itp-2023-q007",
+        "itp-2023-q010",
+        "itp-2023-q016",
         "itp-2023-q019",
         "itp-2023-q020",
+        "itp-2023-q023",
         "itp-2023-q026",
+        "itp-2023-q030",
         "itp-2023-q031",
         "itp-2023-q036",
         "itp-2023-q061",
         "itp-2023-q069",
         "itp-2023-q088",
         "itp-2023-q089",
+        "itp-2024-q010",
         "itp-2024-q015",
         "itp-2024-q021",
         "itp-2024-q056",
@@ -152,28 +166,32 @@
         "itp-2025-q079",
         "itp-2025-q081",
         "itp-2025-q082",
+        "itp-2026-q013",
+        "itp-2026-q020",
         "itp-2026-q024",
         "itp-2026-q038",
+        "itp-2026-q049",
         "itp-2026-q061",
         "itp-2026-q063",
         "itp-2026-q065",
         "itp-2026-q066",
         "itp-2026-q075",
         "itp-2026-q081",
-        "itp-2026-q098"
+        "itp-2026-q098",
+        "itp-2026-q100"
       ],
       "visual_audit_breakdown": [
         {
           "year": 2022,
-          "pass": 9
+          "pass": 13
         },
         {
           "year": 2023,
-          "pass": 10
+          "pass": 14
         },
         {
           "year": 2024,
-          "pass": 5
+          "pass": 6
         },
         {
           "year": 2025,
@@ -181,7 +199,7 @@
         },
         {
           "year": 2026,
-          "pass": 9
+          "pass": 13
         }
       ],
       "high_similarity_audit": {
@@ -191,17 +209,19 @@
         "still_hold": 285,
         "visual_evidence": "questions/official-verbatim-audit-high95-20261124.json",
         "not_in_scope_exact_prior_pass": 12,
-        "visual_pass_total": 42,
-        "total_questions_holding": 458,
+        "visual_pass_total": 55,
+        "total_questions_holding": 445,
         "media_in_github": false,
         "ci_run": 45299054400,
         "prior_new_pass": 10,
-        "current_scope_remaining_start": 285,
-        "current_scope_new_pass": 20,
-        "current_scope_hold": 265,
+        "current_scope_remaining_start": 265,
+        "current_scope_new_pass": 13,
+        "current_scope_hold": 252,
         "overall_new_pass": 30,
-        "overall_scope_hold": 265,
-        "visual_evidence_latest": "questions/official-verbatim-audit-high95-remaining-20261124.json"
+        "overall_scope_hold": 252,
+        "visual_evidence_latest": "questions/official-verbatim-audit-high95-batch-20261124-02.json",
+        "prior_audited_from_high_group": 30,
+        "overall_high_pass": 43
       }
     },
     "ios": {
@@ -242,11 +262,11 @@
       "github_canonical_quality_run": 45299054400,
       "github_canonical_quality_conclusion": "SUCCESS",
       "official_candidate_index_integrity": "PASS_500_WITH_42_PROMOTED",
-      "official_verbatim_release_gate": "EXPECTED_BLOCK_42_OF_500",
+      "official_verbatim_release_gate": "EXPECTED_BLOCK_55_OF_500",
       "original_mock_excluded_from_official_pool": true,
       "original_image_crop_fallback_repair": "PASS_21_OF_21",
       "original_raster_equivalence": "PASS_500_OF_500",
-      "official_text_verbatim": "PARTIAL_PASS_42_HOLD_458",
+      "official_text_verbatim": "PARTIAL_PASS_55_HOLD_445",
       "binary_assets_in_github": "NOT_COMMITTED",
       "app_release_gate": "BLOCKED",
       "github_image_evidence_ci_run": 45288368053,
@@ -258,10 +278,12 @@
       "ocr_discrepancy_screen": "COMPLETE_500_NOT_VERBATIM_PASS",
       "partial_verified_source_12": "PASS",
       "visual_audit_evidence": "questions/official-verbatim-audit-12-20261124.json",
-      "high_similarity_manual_review": "PASS_30_OF_295_HOLD_265",
+      "high_similarity_manual_review": "PASS_43_OF_295_HOLD_252",
       "partial_verified_source_22": "PASS",
       "new_source_image_boundary_issue": "2026_Q25_HOLD_REFRAME_REQUIRED",
-      "partial_verified_source_42": "PASS"
+      "partial_verified_source_42": "PASS",
+      "source_image_boundary_issue": "2026_Q25_HOLD_REFRAME_REQUIRED",
+      "source_figure_issue": "2023_Q37_HOLD_FIGURE_LAYOUT_REQUIRED"
     }
   },
   "ipa_rights": {
@@ -283,7 +305,7 @@
     {
       "code": "IP-OFF-500",
       "severity": "P0",
-      "detail": "42/500 IPA questions independently visually verified. 20 of remaining 285 high OCR similarity candidates were corrected and promoted, 265 in high group HOLD, plus 193 other HOLD. 2026 Q25 image candidate contains neighboring questions 24/26 and must be recropped. GitHub media binaries remain uncommitted."
+      "detail": "Independently original-image verified 55 of 500 (including 13 of the remaining high OCR similarity group), 445 total HOLD. 252 high-similarity and 193 other remain, with Q2026-25 wrong crop and Q2023-37 source table/blank layout unresolved. GitHub source binary images absent; App Store publishable 0."
     },
     {
       "code": "IP-SOURCE-FIDELITY",
@@ -307,10 +329,10 @@
     }
   ],
   "next_machine_actions": [
-    "Correct 2026 Q25 image boundary and re-verify it independently",
-    "Independently review remaining 265 high OCR-similarity source-image text and 4 options; only promote actual visual PASS",
-    "Independently review remaining 193 other OCR candidates, including diagrams/tables",
-    "Commit original source image binaries to GitHub and validate matching SHA-256, then integrate only verified items into mobile iOS UI"
+    "Independently image-review the remaining 252 high-similarity questions and correct full four option text; never grant PASS on OCR score alone",
+    "Recrop 2026-Q25 single-question source image and review table/blank layout of 2023-Q37",
+    "Review other OCR classes: 175 mid and 18 low, maintaining original answers and source per question",
+    "Commit source image binaries to GitHub and verify SHA256 per record before enabling publishable/production flags"
   ],
   "human_gates": [
     "Apple 2FA",
