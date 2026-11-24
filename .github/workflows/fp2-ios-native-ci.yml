@@ -79,7 +79,7 @@ jobs:
           p=plistlib.loads((app/'Info.plist').read_bytes())
           assert p['CFBundleIdentifier']=='com.allsunday1122.fp2manabisprint'
           assert p['CFBundleShortVersionString']=='1.0.0'
-          assert p['CFBundleVersion']=='1'
+          assert p['CFBundleVersion']=='2'
           assert (app/'Web/index.html').exists(), 'Bundled web HTML missing'
           assert (app/'Web/bundle-evidence.json').exists(), 'Bundled evidence missing'
           e=json.loads((app/'Web/bundle-evidence.json').read_text())
