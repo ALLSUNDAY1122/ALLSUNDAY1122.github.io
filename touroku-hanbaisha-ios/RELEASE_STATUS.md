@@ -1480,3 +1480,8 @@ Apple固定識別子: Bundle `com.allsunday1122.tourokuhanbaisha`、ASC `6802119
 - Simulatorの証跡をRun 45310905655の実測ログから復旧し、IOS_SIMULATOR_Q6_20261124.jsonに保存。元CIのGit競合FAILは履歴として維持。
 - Q5初回Run 45310905792はログ上 sourceAudit FAIL（旧remote HTTPSメタデータ検査を含む）、証跡保存も競合。修正済み監査Run 45310938525実行中。ASC質問票未確認。
 - オフラインRun 45311443007はブラウザ準備中。Q4未確定、新規IPA未開始。
+
+
+## Q5 再監査証跡復旧（2026-11-24 11:22 JST）
+- Run 45310938525 / job 138169160169 の実測ログ：sourceAudit=PASS、gate=NOT_VERIFIED、3 requests、host 127.0.0.1のみ。監査コードの全条件（保存キー・cookieなし、ポリシー、manifest、メタデータ、page errorなし）合格。ASC質問票未確認。ローカルHTTP再現であり同梱WKWebView実測とは区別。
+- Git rebase競合でCI全体FAIL。Artifact 14883487757は保存済み。ログ要約を PRIVACY_Q5_RECOVERED_45310938525.json に復旧保存。ZIP全内容は未読。Q5はBLOCKED、Q4 Run 45311443007はブラウザ準備中、12/14維持、新IPA未開始。
