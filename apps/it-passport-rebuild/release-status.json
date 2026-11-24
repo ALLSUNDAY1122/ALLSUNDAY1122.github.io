@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
-  "updated_at_jst": "2026-11-24T08:58:00+09:00",
+  "updated_at_jst": "2026-11-24T09:06:00+09:00",
   "project": "新ITパスポート｜ゼロベース開発",
   "release_decision": "BLOCKED",
-  "release_stage": "CROP_REPAIRED_500_OCR_SCREENED_INDEPENDENT_AUDIT_PENDING",
+  "release_stage": "OFFICIAL_VERBATIM_PARTIAL_PASS_12_OF_500_MEDIA_NOT_COMMITTED",
   "app_review_submitted": false,
   "requirements": {
     "official_question_verbatim": true,
@@ -24,10 +24,10 @@
       "reason": "origin_type=original; cannot substitute for verbatim IPA past questions"
     },
     "official_past_exam": {
-      "canonical": 0,
+      "canonical": 12,
       "target": 500,
       "verified_rounds": 0,
-      "source_verbatim_audit": "OCR_CANDIDATES_EXTRACTED_NOT_INDEPENDENTLY_VISUALLY_VERIFIED",
+      "source_verbatim_audit": "PASS_12_HOLD_488",
       "pdf_stage_attempt": {
         "result": "RESOLVED_BY_USER_UPLOADED_ORIGINALS",
         "source": "10 attached original PDFs",
@@ -45,9 +45,9 @@
         "original_ocr_drafts": "LOCAL_AUDIT_ARCHIVE",
         "source_page_identified": 500,
         "question_candidates": 500,
-        "question_verbatim_pass": 0,
+        "question_verbatim_pass": 12,
         "answer_audit_pass": 500,
-        "unverified_text": 500,
+        "unverified_text": 488,
         "release_promotion": "ONLY_AFTER_INDEPENDENT_ORIGINAL_IMAGE_VS_TEXT_CHOICES_FIGURE_AUDIT",
         "separate_original_mock_count": 240,
         "ocr_question_head_exact": 455,
@@ -55,12 +55,13 @@
         "ocr_candidate_count": 500,
         "local_self_contained_audit_package": "itp_official_500_audit_with_sources.zip",
         "github_index": "questions/official-candidate-index.json",
-        "text_is_ocr_unverified": true
+        "text_is_ocr_unverified": true,
+        "audit_record": "questions/official-verbatim-audit-12-20261124.json"
       },
       "candidate_index_count": 500,
       "source_pdfs_verified": 10,
       "answer_key_verified": 500,
-      "verbatim_promoted": 0,
+      "verbatim_promoted": 12,
       "official_answer_reference": "questions/official-answer-index.json",
       "official_candidate_reference": "questions/official-candidate-index.json",
       "original_scan_uploaded_count": 5,
@@ -87,13 +88,13 @@
         "source_raster_minor_rendering_difference": 98,
         "raster_max_channel_difference": 9,
         "original_pdf_source_images_present_in_local_artifact": true,
-        "independent_word_by_word_checked": 0,
+        "independent_word_by_word_checked": 12,
         "archive_bytes": 47200937,
         "private_drive_staging_id": "1R94-C3Q7hKhWt2Px01z9y6eX8qDN8FqG",
         "github_boundary_repair_manifest": "questions/official-image-boundary-repairs.json",
         "github_500_image_audit_manifest": "questions/official-image-audit-500.json",
         "visual_boundary_manual_checks": 21,
-        "content_lexical_audit_pass": 0,
+        "content_lexical_audit_pass": 12,
         "raster_note": "21 repaired crops are pixel-identical to freshly rendered source image crops; 479 existing crops are pixel-identical for 381 or raster-equivalent with only maximum 2-9 channel-level conversion variance for 98; total 500/500 raster equivalent. This is not independent text/choice audit.",
         "verbatim_ocr_second_pass": "COMPLETED_500_SAME_ENGINE_DISCREPANCY_SCREEN_ONLY",
         "archive_storage": "LOCAL_ATTACHMENT_AND_PRIVATE_GOOGLE_DRIVE_STAGING",
@@ -107,8 +108,45 @@
           "independent_engine": false,
           "reference": "questions/official-ocr-screening-summary.json"
         },
-        "archive_zip_integrity": "PASS"
-      }
+        "archive_zip_integrity": "PASS",
+        "source_image_checked_for_12": true
+      },
+      "verified_question_ids": [
+        "itp-2022-q056",
+        "itp-2022-q085",
+        "itp-2023-q019",
+        "itp-2023-q031",
+        "itp-2023-q036",
+        "itp-2023-q069",
+        "itp-2025-q067",
+        "itp-2025-q081",
+        "itp-2025-q082",
+        "itp-2026-q024",
+        "itp-2026-q061",
+        "itp-2026-q098"
+      ],
+      "visual_audit_breakdown": [
+        {
+          "year": 2022,
+          "pass": 2
+        },
+        {
+          "year": 2023,
+          "pass": 4
+        },
+        {
+          "year": 2024,
+          "pass": 0
+        },
+        {
+          "year": 2025,
+          "pass": 3
+        },
+        {
+          "year": 2026,
+          "pass": 3
+        }
+      ]
     },
     "ios": {
       "project_exists_on_feature_branch": true,
@@ -152,7 +190,7 @@
       "original_mock_excluded_from_official_pool": true,
       "original_image_crop_fallback_repair": "PASS_21_OF_21",
       "original_raster_equivalence": "PASS_500_OF_500",
-      "official_text_verbatim": "HOLD_500_OF_500",
+      "official_text_verbatim": "PARTIAL_PASS_12_HOLD_488",
       "binary_assets_in_github": "NOT_COMMITTED",
       "app_release_gate": "BLOCKED",
       "github_image_evidence_ci_run": 45288368053,
@@ -183,7 +221,7 @@
     {
       "code": "IP-OFF-500",
       "severity": "P0",
-      "detail": "Original source image crop boundary repair completed 21/21; 500 raster comparisons pass. No independent character-by-character OCR transcription and four choices verification yet, zero questions in official-verbatim.json; source image binaries not committed to GitHub."
+      "detail": "12/500 independent source-image/choices/answer audited and promoted to official-verbatim.json. Remaining 488 HOLD. GitHub image binaries still missing, so published release count remains zero."
     },
     {
       "code": "IP-SOURCE-FIDELITY",
@@ -207,10 +245,10 @@
     }
   ],
   "next_machine_actions": [
-    "Commit the 500 original source image binary files to GitHub (asset archive is preserved privately in Drive and attached in this conversation; GitHub image manifests committed, binary transfer route not available from connected GitHub content API)",
-    "Independently compare OCR prose/choices/figures and original scans question by question; certify only exact matches, preserving official year, question number and correct answer",
-    "Promote independently audited official questions to official-verbatim.json while linking committed image assets; update manifest count and CI locks",
-    "Connect only officially audited questions to iOS and pass build/simulator/App Store prep gates"
+    "Transfer 12 audited source-image binaries to GitHub and verify their SHA-256 before making records app-publishable",
+    "Continue independent visual source scan vs question/choice transcription audit for 488 remaining",
+    "Synchronize GitHub image asset references and verify every promoted record's original scan/official answer",
+    "Integrate certified official records into mobile-first iOS after release scope and 500-question gate are satisfied"
   ],
   "human_gates": [
     "Apple 2FA",
