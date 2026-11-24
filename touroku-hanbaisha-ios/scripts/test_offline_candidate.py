@@ -21,7 +21,8 @@ with sync_playwright() as pw:
         page.on('request',lambda r:report['externalRequests'].append(r.url) if r.url.startswith(('http:','https:')) else None)
         page.on('pageerror',lambda e:report['pageErrors'].append(str(e)))
         page.goto((OUT/'official-practice.html').as_uri())
-        page.locator('#available').get_by_text('599問',exact=False).wait_for()
+        expect(page.locator('#available')).to_contain_text('599問')
+        expect(page.locator('#homeProgress')).to_have_text('0 / 599')
         assert page.evaluate("JSON.parse(document.getElementById('offlineBank').textContent)") == bank
         expect(page.locator('#home')).to_be_visible()
         page.locator('#homeStart').click()

@@ -21,8 +21,7 @@ struct TouhanWebView: UIViewRepresentable {
         let configuration = WKWebViewConfiguration()
         configuration.websiteDataStore = .nonPersistent()
         configuration.defaultWebpagePreferences.allowsContentJavaScript = true
-        let saved = StudyStore.load()
-        configuration.userContentController.addUserScript(WKUserScript(source: "window.__touhanStudyState = " + saved + ";", injectionTime: .atDocumentStart, forMainFrameOnly: true))
+        StudyStore.installSnapshot(in: configuration.userContentController)
         configuration.userContentController.add(context.coordinator, name: "studyRecord")
         let webView = WKWebView(frame: .zero, configuration: configuration)
         webView.navigationDelegate = context.coordinator
@@ -47,7 +46,11 @@ struct TouhanWebView: UIViewRepresentable {
                   let url = message.frameInfo.request.url, isLocal(url),
                   url.lastPathComponent == "official-practice.html",
                   let raw = message.body as? String else { return }
-            if !StudyStore.save(raw) { message.webView?.evaluateJavaScript("window.studySaveFailed?.()") }
+            if StudyStore.save(raw) {
+                StudyStore.installSnapshot(in: userContentController)
+            } else {
+                message.webView?.evaluateJavaScript("window.studySaveFailed?.()")
+            }
         }
 
         private func isLocal(_ url: URL) -> Bool {
@@ -79,6 +82,60 @@ struct TouhanWebView: UIViewRepresentable {
             return nil
         }
 
+
+#if DEBUG
+        private var smokeStarted = false
+        func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+            guard !smokeStarted, webView.url?.lastPathComponent == "official-practice.html" else { return }
+            let args = ProcessInfo.processInfo.arguments
+            let write = args.contains("--touhan-ui-smoke-write")
+            let read = args.contains("--touhan-ui-smoke-read")
+            guard write || read else { return }
+            smokeStarted = true
+            let script: String
+            if write {
+                script = """
+                (()=>{const check=(v,m)=>{if(!v)throw Error(m)};
+                check(records.length===599,'bank');check(!document.getElementById('home').classList.contains('hidden'),'home');
+                document.getElementById('homeStart').click();document.getElementById('year').value='2024';document.getElementById('chapter').value=records.find(q=>q.year===2024&&q.questionNo===81).chapter;updateCount();
+                document.getElementById('start').click();check(subset.every(q=>q.year===2024),'scope');
+                const first=subset[0];document.querySelectorAll('#choices button')[first.answer].click();
+                check(document.querySelector('#feedback .result').textContent==='正解','answer');
+                document.getElementById('next').click();check(position===1,'next');
+                document.getElementById('navRecords').click();check(document.getElementById('yearRecords').children.length===5,'years');
+                check(document.getElementById('chapterRecords').children.length===5,'chapters');
+                check(document.getElementById('answerHistory').children.length===1,'history');
+                return JSON.stringify({phase:'write',status:'PASS',question:first.id,position:1,progress:statsFor(records).done,accuracy:rate(statsFor(records))})})()
+                """
+            } else {
+                script = """
+                (()=>{const check=(v,m)=>{if(!v)throw Error(m)};
+                check(records.length===599,'bank');check(!document.getElementById('home').classList.contains('hidden'),'home');
+                check(statsFor(records).done===1,'persisted progress');check(rate(statsFor(records))==='100%','persisted accuracy');
+                check(!document.getElementById('resume').disabled,'resume');document.getElementById('resume').click();
+                check(position===1,'resumed position');check(correct===1&&denominator===1,'resumed score');
+                document.getElementById('unknown').click();document.getElementById('navHome').click();
+                document.getElementById('resume').click();check(selected&&denominator===2,'resume after answer');
+                check(statsFor(records).n===2,'no duplicate attempt');document.getElementById('navRecords').click();
+                check(document.getElementById('answerHistory').children.length===2,'restored history');
+                check(rate(statsFor(records))==='50%','updated accuracy');
+                return JSON.stringify({phase:'read',status:'PASS',progress:statsFor(records).done,accuracy:rate(statsFor(records)),position,attempts:statsFor(records).n})})()
+                """
+            }
+            webView.evaluateJavaScript(script) { result, error in
+                let output: Data
+                if let result = result as? String, error == nil {
+                    output = Data(result.utf8)
+                } else {
+                    output = (try? JSONSerialization.data(withJSONObject: ["status": "FAIL", "error": error?.localizedDescription ?? "No result"])) ?? Data()
+                }
+                if let folder = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+                    try? output.write(to: folder.appendingPathComponent(write ? "touhan-smoke-write.json" : "touhan-smoke-read.json"), options: .atomic)
+                }
+            }
+        }
+#endif
+
         func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
             if (error as NSError).code != NSURLErrorCancelled { showFailure(in: webView) }
         }
@@ -94,6 +151,11 @@ struct TouhanWebView: UIViewRepresentable {
 
 private enum StudyStore {
     static let key = "touhan.study.v1"
+    static func installSnapshot(in controller: WKUserContentController) {
+        controller.removeAllUserScripts()
+        let source = "if(location.protocol==='file:' && location.pathname.endsWith('/official-practice.html')) window.__touhanStudyState = " + load() + ";"
+        controller.addUserScript(WKUserScript(source: source, injectionTime: .atDocumentStart, forMainFrameOnly: true))
+    }
     static func load() -> String {
         guard let raw = UserDefaults.standard.string(forKey: key), valid(raw) else { return "null" }
         return raw
