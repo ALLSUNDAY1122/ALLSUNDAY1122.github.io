@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
-  "updated_at_jst": "2026-11-24T09:17:00+09:00",
+  "updated_at_jst": "2026-11-24T09:28:00+09:00",
   "project": "新ITパスポート｜ゼロベース開発",
   "release_decision": "BLOCKED",
-  "release_stage": "OFFICIAL_VERBATIM_PARTIAL_PASS_12_OF_500_MEDIA_NOT_COMMITTED",
+  "release_stage": "HIGH_SIMILARITY_VISUAL_PARTIAL_PASS_10_OF_295_OFFICIAL_BANK_22",
   "app_review_submitted": false,
   "requirements": {
     "official_question_verbatim": true,
@@ -24,10 +24,10 @@
       "reason": "origin_type=original; cannot substitute for verbatim IPA past questions"
     },
     "official_past_exam": {
-      "canonical": 12,
+      "canonical": 22,
       "target": 500,
       "verified_rounds": 0,
-      "source_verbatim_audit": "PASS_12_HOLD_488",
+      "source_verbatim_audit": "PASS_22_HOLD_478",
       "pdf_stage_attempt": {
         "result": "RESOLVED_BY_USER_UPLOADED_ORIGINALS",
         "source": "10 attached original PDFs",
@@ -45,9 +45,9 @@
         "original_ocr_drafts": "LOCAL_AUDIT_ARCHIVE",
         "source_page_identified": 500,
         "question_candidates": 500,
-        "question_verbatim_pass": 12,
+        "question_verbatim_pass": 22,
         "answer_audit_pass": 500,
-        "unverified_text": 488,
+        "unverified_text": 478,
         "release_promotion": "ONLY_AFTER_INDEPENDENT_ORIGINAL_IMAGE_VS_TEXT_CHOICES_FIGURE_AUDIT",
         "separate_original_mock_count": 240,
         "ocr_question_head_exact": 455,
@@ -56,12 +56,13 @@
         "local_self_contained_audit_package": "itp_official_500_audit_with_sources.zip",
         "github_index": "questions/official-candidate-index.json",
         "text_is_ocr_unverified": true,
-        "audit_record": "questions/official-verbatim-audit-12-20261124.json"
+        "audit_record": "questions/official-verbatim-audit-12-20261124.json",
+        "audit_record_additional": "questions/official-verbatim-audit-high95-20261124.json"
       },
       "candidate_index_count": 500,
       "source_pdfs_verified": 10,
       "answer_key_verified": 500,
-      "verbatim_promoted": 12,
+      "verbatim_promoted": 22,
       "official_answer_reference": "questions/official-answer-index.json",
       "official_candidate_reference": "questions/official-candidate-index.json",
       "original_scan_uploaded_count": 5,
@@ -88,13 +89,13 @@
         "source_raster_minor_rendering_difference": 98,
         "raster_max_channel_difference": 9,
         "original_pdf_source_images_present_in_local_artifact": true,
-        "independent_word_by_word_checked": 12,
+        "independent_word_by_word_checked": 22,
         "archive_bytes": 47200937,
         "private_drive_staging_id": "1R94-C3Q7hKhWt2Px01z9y6eX8qDN8FqG",
         "github_boundary_repair_manifest": "questions/official-image-boundary-repairs.json",
         "github_500_image_audit_manifest": "questions/official-image-audit-500.json",
         "visual_boundary_manual_checks": 21,
-        "content_lexical_audit_pass": 12,
+        "content_lexical_audit_pass": 22,
         "raster_note": "21 repaired crops are pixel-identical to freshly rendered source image crops; 479 existing crops are pixel-identical for 381 or raster-equivalent with only maximum 2-9 channel-level conversion variance for 98; total 500/500 raster equivalent. This is not independent text/choice audit.",
         "verbatim_ocr_second_pass": "COMPLETED_500_SAME_ENGINE_DISCREPANCY_SCREEN_ONLY",
         "archive_storage": "LOCAL_ATTACHMENT_AND_PRIVATE_GOOGLE_DRIVE_STAGING",
@@ -112,41 +113,62 @@
         "source_image_checked_for_12": true
       },
       "verified_question_ids": [
+        "itp-2022-q002",
         "itp-2022-q056",
+        "itp-2022-q075",
+        "itp-2022-q081",
+        "itp-2022-q083",
         "itp-2022-q085",
         "itp-2023-q019",
+        "itp-2023-q026",
         "itp-2023-q031",
         "itp-2023-q036",
         "itp-2023-q069",
+        "itp-2024-q061",
+        "itp-2025-q061",
         "itp-2025-q067",
+        "itp-2025-q074",
         "itp-2025-q081",
         "itp-2025-q082",
         "itp-2026-q024",
         "itp-2026-q061",
+        "itp-2026-q065",
+        "itp-2026-q075",
         "itp-2026-q098"
       ],
       "visual_audit_breakdown": [
         {
           "year": 2022,
-          "pass": 2
+          "pass": 6
         },
         {
           "year": 2023,
-          "pass": 4
+          "pass": 5
         },
         {
           "year": 2024,
-          "pass": 0
+          "pass": 1
         },
         {
           "year": 2025,
-          "pass": 3
+          "pass": 5
         },
         {
           "year": 2026,
-          "pass": 3
+          "pass": 5
         }
-      ]
+      ],
+      "high_similarity_audit": {
+        "scope": 295,
+        "ocr_normalized_similarity": "95% <= score < 100%",
+        "new_pass": 10,
+        "still_hold": 285,
+        "visual_evidence": "questions/official-verbatim-audit-high95-20261124.json",
+        "not_in_scope_exact_prior_pass": 12,
+        "visual_pass_total": 22,
+        "total_questions_holding": 478,
+        "media_in_github": false
+      }
     },
     "ios": {
       "project_exists_on_feature_branch": true,
@@ -186,11 +208,11 @@
       "github_canonical_quality_run": 45295669965,
       "github_canonical_quality_conclusion": "SUCCESS",
       "official_candidate_index_integrity": "PASS_500_OF_500_WITH_12_PROMOTED",
-      "official_verbatim_release_gate": "EXPECTED_BLOCK_12_OF_500",
+      "official_verbatim_release_gate": "EXPECTED_BLOCK_22_OF_500",
       "original_mock_excluded_from_official_pool": true,
       "original_image_crop_fallback_repair": "PASS_21_OF_21",
       "original_raster_equivalence": "PASS_500_OF_500",
-      "official_text_verbatim": "PARTIAL_PASS_12_HOLD_488",
+      "official_text_verbatim": "PARTIAL_PASS_22_HOLD_478",
       "binary_assets_in_github": "NOT_COMMITTED",
       "app_release_gate": "BLOCKED",
       "github_image_evidence_ci_run": 45288368053,
@@ -201,7 +223,8 @@
       "github_asset_binary": "MISSING",
       "ocr_discrepancy_screen": "COMPLETE_500_NOT_VERBATIM_PASS",
       "partial_verified_source_12": "PASS",
-      "visual_audit_evidence": "questions/official-verbatim-audit-12-20261124.json"
+      "visual_audit_evidence": "questions/official-verbatim-audit-12-20261124.json",
+      "high_similarity_manual_review": "PASS_10_HOLD_285"
     }
   },
   "ipa_rights": {
@@ -223,7 +246,7 @@
     {
       "code": "IP-OFF-500",
       "severity": "P0",
-      "detail": "12/500 independent source-image/choices/answer audited and promoted to official-verbatim.json. Remaining 488 HOLD. GitHub image binaries still missing, so published release count remains zero."
+      "detail": "Independent source-image/word/four-choice/official-answer checks 22/500 PASS: prior 12 exact OCR matched + 10 of high-similarity 295. Remaining 285 within high-similarity group and other 193 remain HOLD (478 total). Original image binaries still not in GitHub; published app release count remains zero."
     },
     {
       "code": "IP-SOURCE-FIDELITY",
@@ -247,10 +270,10 @@
     }
   ],
   "next_machine_actions": [
-    "Transfer 12 audited source-image binaries to GitHub and verify their SHA-256 before making records app-publishable",
-    "Continue independent visual source scan vs question/choice transcription audit for 488 remaining",
-    "Synchronize GitHub image asset references and verify every promoted record's original scan/official answer",
-    "Integrate certified official records into mobile-first iOS after release scope and 500-question gate are satisfied"
+    "Continue original scanned image vs OCR discrepancy review for remaining 285 high-similarity items (not automatic PASS)",
+    "Then review 175 mid-similarity and 18 low-similarity items; promote only independently verified source verbatim records",
+    "Commit scanned-source image assets to GitHub with verified SHA256 and validate app presentation before publishable flags",
+    "Synchronize canonical manifest and release gates as independently verified question count advances"
   ],
   "human_gates": [
     "Apple 2FA",
