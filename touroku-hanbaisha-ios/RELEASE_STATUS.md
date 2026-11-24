@@ -1559,3 +1559,8 @@ Apple固定識別子: Bundle `com.allsunday1122.tourokuhanbaisha`、ASC `6802119
 
 ## 学習ホーム版 Build16受付（2026-11-24 14:47 JST）
 - Gateway 45335693547 SUCCESS、Codemagic Build 16 ID 6b0524d46161e077c03ebbb7、14:47:00 JST受付、初回 initializing。署名IPA/ASC upload/VALID/IN_BETA_TESTING未確定。読取専用照会要求済み。本審査未送信。
+
+
+## 学習ホーム版 Build16署名・アップロード成功（2026-11-24 14:50 JST）
+- Codemagic Run 45336005847 SUCCESS、Build16 (1.0.0) 6b0524d46161e077c03ebbb7、commit 64bfdbe37cd0a5276ffa368bdb32e19b8be143e2、publishing、12/14工程成功（署名IPA生成・ASC uploadを含む）、最終成果物一覧・完了時刻未確定。
+- ASC Run 45336005776 SUCCESS、Build16未掲載、Build15 VALID/IN_BETA_TESTING継続。sum全ビルドアクセス、1テスター。Build16のVALID/配信は未確認。読取専用再照会r2要求。本審査未送信。
