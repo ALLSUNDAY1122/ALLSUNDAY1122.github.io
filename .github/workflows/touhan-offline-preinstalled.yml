@@ -1,0 +1,26 @@
+name: Touhan Offline Preinstalled Browser Verification
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/touhan-offline-preinstalled.yml'
+jobs:
+  offline:
+    runs-on: ubuntu-24.04
+    container: mcr.microsoft.com/playwright/python:v1.56.0-noble
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - run: python -m pip install playwright==1.56.0
+      - run: python touroku-hanbaisha-ios/scripts/prepare_offline_web.py
+      - name: Verify every question with offline Chromium and WebKit
+        shell: bash
+        run: |
+          set -euo pipefail
+          python touroku-hanbaisha-ios/scripts/test_offline_candidate.py | tee offline-result.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: touhan-offline-preinstalled-evidence
+          path: offline-result.json
+          if-no-files-found: error

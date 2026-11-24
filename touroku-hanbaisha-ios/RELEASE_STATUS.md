@@ -1485,3 +1485,8 @@ Apple固定識別子: Bundle `com.allsunday1122.tourokuhanbaisha`、ASC `6802119
 ## Q5 再監査証跡復旧（2026-11-24 11:22 JST）
 - Run 45310938525 / job 138169160169 の実測ログ：sourceAudit=PASS、gate=NOT_VERIFIED、3 requests、host 127.0.0.1のみ。監査コードの全条件（保存キー・cookieなし、ポリシー、manifest、メタデータ、page errorなし）合格。ASC質問票未確認。ローカルHTTP再現であり同梱WKWebView実測とは区別。
 - Git rebase競合でCI全体FAIL。Artifact 14883487757は保存済み。ログ要約を PRIVACY_Q5_RECOVERED_45310938525.json に復旧保存。ZIP全内容は未読。Q5はBLOCKED、Q4 Run 45311443007はブラウザ準備中、12/14維持、新IPA未開始。
+
+
+## Q4 代替検証（2026-11-24 11:27 JST）
+- Run 45311443007 は約9分経過してもブラウザ導入中。実行中ログ取得は404 BlobNotFoundで原因未確定。既存試験は維持し、Playwright公式 v1.56.0-noble コンテナで依存導入を省く代替CIを追加。同じChromium/WebKit両方の599問完走、画像decode、採点、外部通信ゼロ、ページエラーゼロの合格条件を維持。
+- Simulator実測PASS、Q5ソース監査PASS、ASC質問票未確認。Q4未確定、12/14、新IPA未開始。本審査未送信。
