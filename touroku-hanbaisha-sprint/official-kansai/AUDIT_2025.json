@@ -1,10 +1,10 @@
 {
   "year": 2025,
   "targetCount": 120,
-  "auditedCount": 20,
-  "auditPassedCount": 19,
-  "holdCount": 1,
-  "unauditedCount": 100,
+  "auditedCount": 30,
+  "auditPassedCount": 30,
+  "holdCount": 0,
+  "unauditedCount": 90,
   "auditDate": "2026-11-24",
   "sourceExplanationBlobSha": "9d864bd1b27508c4df00f4c98e63e7276665c667",
   "sourceBank": "ユーザー添付 APPROVED_OFFICIAL_BANK(4).json",
@@ -383,7 +383,7 @@
     },
     {
       "questionId": "KSAI-2025-009",
-      "verdict": "HOLD",
+      "verdict": "PASS",
       "answerNumberOfficial": 4,
       "evidence": [
         {
@@ -394,15 +394,38 @@
           "pdfIndex": 17,
           "printedLines": "260–266",
           "finding": "a=代謝されやすく、b=薬効が十分に得られなくなる、c=副作用が現れやすくなる（有害代謝産物の場合）"
+        },
+        {
+          "source": "吉田製薬 アセトアミノフェン「ヨシダ」添付文書 2023年10月改訂第2版",
+          "url": "https://www.yoshida-pharm.co.jp/files/attached/1243.pdf",
+          "pmdaOldUrl": "https://www.pmda.go.jp/PmdaSearch/iyakuDetail/ResultDataSetPDF/830039_1141001X1045_1_12",
+          "pmdaRecord": "https://www.pmda.go.jp/PmdaSearch/rdDetail/iyaku/1141001X1045_1?user=1",
+          "pdfPages": [
+            1,
+            2
+          ],
+          "sections": [
+            "9.1.1",
+            "10.2",
+            "11.1.4"
+          ],
+          "finding": "多量常飲者の肝障害リスク、CYP2E1誘導に伴う肝毒性代謝産物への代謝促進、重大な肝障害を原典画像で確認。試験前の版。PMDA旧版直接URLはエラーのため製造販売元公開PDFを採用。"
         }
       ],
-      "notes": "正答番号と選択肢1:a,c、2:a,b、3:b,c、5:cの不適は一致。ただし原稿の有害代謝産物増加という機序は手引きに直接明記されず独立根拠不足。誤りと断定せず修正依頼推奨。",
+      "notes": "旧HOLDの根拠不足を解消。手引きp9と2023年10月添文10.2から、有害代謝産物の生成促進が起こり得るとの限定的説明を支持。全医薬品に一般化しない。公式正答4も直接PDFで再確認。",
       "criteria": {
         "officialAnswerMatch": true,
-        "allReasonsSupported": false,
+        "allReasonsSupported": true,
         "noUnsupportedNumericalOrInstitutionalClaims": true,
         "originalImage": "NOT_APPLICABLE"
-      }
+      },
+      "reauditHistory": [
+        {
+          "date": "2026-11-24",
+          "previousVerdict": "HOLD",
+          "previousNotes": "正答番号と選択肢1:a,c、2:a,b、3:b,c、5:cの不適は一致。ただし原稿の有害代謝産物増加という機序は手引きに直接明記されず独立根拠不足。誤りと断定せず修正依頼推奨。"
+        }
+      ]
     },
     {
       "questionId": "KSAI-2025-010",
@@ -955,6 +978,564 @@
         "pdfPage": 18,
         "pdfIndex": 17,
         "method": "公式PDF原典画像を独立目視"
+      }
+    },
+    {
+      "questionId": "KSAI-2025-021",
+      "verdict": "PASS",
+      "answerNumberOfficial": 3,
+      "evidence": [
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 57,
+          "pdfPage": 66,
+          "pdfIndex": 65,
+          "printedLines": "1779–1794",
+          "finding": "a誤：単一疾患でない、b正：喘息・肺結核等、c誤：ウイルス"
+        },
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 58,
+          "pdfPage": 67,
+          "pdfIndex": 66,
+          "printedLines": "1796–1803",
+          "finding": "d誤：症状別選択"
+        }
+      ],
+      "notes": "誤正誤誤。誤答1:a、2:a,b,c,d、4:a,b,c、5:b,c,d",
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allReasonsSupported": true,
+        "noUnsupportedNumericalOrInstitutionalClaims": true,
+        "originalImage": "PASS"
+      },
+      "originalImageEvidence": {
+        "url": "https://www.kouiki-kansai.jp/material/files/group/12/R7tourokuhannbaisyashiken_zennhan.pdf",
+        "printedPage": 18,
+        "pdfPage": 19,
+        "pdfIndex": 18,
+        "method": "公式原典画像独立目視"
+      },
+      "officialAnswerEvidence": {
+        "url": "https://www.kouiki-kansai.jp/material/files/group/12/R7touhan_kaitou.pdf",
+        "pdfPage": 1,
+        "bankMatch": true,
+        "method": "添付正規バンク・公式正答画像・解説三者一致"
+      }
+    },
+    {
+      "questionId": "KSAI-2025-022",
+      "verdict": "PASS",
+      "answerNumberOfficial": 3,
+      "evidence": [
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 61,
+          "pdfPage": 70,
+          "pdfIndex": 69,
+          "printedLines": "1893–1897",
+          "finding": "a誤：葛根湯は体力中等度以上・無汗"
+        },
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 62,
+          "pdfPage": 71,
+          "pdfIndex": 70,
+          "printedLines": "1928–1931",
+          "finding": "aの記述は香蘇散"
+        },
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 61,
+          "pdfPage": 70,
+          "pdfIndex": 69,
+          "printedLines": "1912–1913,1921–1923",
+          "finding": "b正：柴胡桂枝湯、c正：小青竜湯"
+        },
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 61,
+          "pdfPage": 70,
+          "pdfIndex": 69,
+          "printedLines": "1907–1911",
+          "finding": "dの記述は小柴胡湯"
+        },
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 89,
+          "pdfPage": 98,
+          "pdfIndex": 97,
+          "printedLines": "2825–2828",
+          "finding": "d誤：半夏厚朴湯は咽喉異物感等"
+        }
+      ],
+      "notes": "正しい組合せb,c。1,2はa、4,5はdを含む",
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allReasonsSupported": true,
+        "noUnsupportedNumericalOrInstitutionalClaims": true,
+        "originalImage": "PASS"
+      },
+      "originalImageEvidence": {
+        "url": "https://www.kouiki-kansai.jp/material/files/group/12/R7tourokuhannbaisyashiken_zennhan.pdf",
+        "printedPage": 18,
+        "pdfPage": 19,
+        "pdfIndex": 18,
+        "method": "公式原典画像独立目視"
+      },
+      "officialAnswerEvidence": {
+        "url": "https://www.kouiki-kansai.jp/material/files/group/12/R7touhan_kaitou.pdf",
+        "pdfPage": 1,
+        "bankMatch": true,
+        "method": "添付正規バンク・公式正答画像・解説三者一致"
+      }
+    },
+    {
+      "questionId": "KSAI-2025-023",
+      "verdict": "PASS",
+      "answerNumberOfficial": 5,
+      "evidence": [
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 58,
+          "pdfPage": 67,
+          "pdfIndex": 66,
+          "printedLines": "1823–1826",
+          "finding": "クロルフェニラミンは抗ヒスタミン成分"
+        },
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 62,
+          "pdfPage": 71,
+          "pdfIndex": 70,
+          "printedLines": "1940–1954",
+          "finding": "a誤：制酸成分なし、アスコルビン酸カルシウムはビタミンC、リボフラビンはB2"
+        },
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 63,
+          "pdfPage": 72,
+          "pdfIndex": 71,
+          "printedLines": "1968–1970,1976–1978",
+          "finding": "b正：抗ヒスタミン成分の口渇（注66）、d正：飲酒回避"
+        },
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 97,
+          "pdfPage": 106,
+          "pdfIndex": 105,
+          "printedLines": "3057–3065",
+          "finding": "制酸成分の分類"
+        },
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 179,
+          "pdfPage": 188,
+          "pdfIndex": 187,
+          "printedLines": "5749–5758",
+          "finding": "c誤：B2による黄色尿"
+        }
+      ],
+      "notes": "誤正誤正。誤答1:a,d、2:a,b,c,d、3:c、4:a,b。原典成分表確認。口渇の抗コリン機序は手引きp39–40の副交感神経と唾液分泌、p113の抗コリン副作用とも整合。",
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allReasonsSupported": true,
+        "noUnsupportedNumericalOrInstitutionalClaims": true,
+        "originalImage": "PASS"
+      },
+      "originalImageEvidence": {
+        "url": "https://www.kouiki-kansai.jp/material/files/group/12/R7tourokuhannbaisyashiken_zennhan.pdf",
+        "printedPage": 19,
+        "pdfPage": 20,
+        "pdfIndex": 19,
+        "method": "公式原典画像独立目視"
+      },
+      "officialAnswerEvidence": {
+        "url": "https://www.kouiki-kansai.jp/material/files/group/12/R7touhan_kaitou.pdf",
+        "pdfPage": 1,
+        "bankMatch": true,
+        "method": "添付正規バンク・公式正答画像・解説三者一致"
+      }
+    },
+    {
+      "questionId": "KSAI-2025-024",
+      "verdict": "PASS",
+      "answerNumberOfficial": 1,
+      "evidence": [
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 65,
+          "pdfPage": 74,
+          "pdfIndex": 73,
+          "printedLines": "2027–2033",
+          "finding": "a抑制、b増加、c減少。心腎障害悪化リスク"
+        }
+      ],
+      "notes": "2:c、3:b,c、4:a,b,c、5:aが不適。原典表一致",
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allReasonsSupported": true,
+        "noUnsupportedNumericalOrInstitutionalClaims": true,
+        "originalImage": "PASS"
+      },
+      "originalImageEvidence": {
+        "url": "https://www.kouiki-kansai.jp/material/files/group/12/R7tourokuhannbaisyashiken_zennhan.pdf",
+        "printedPage": 20,
+        "pdfPage": 21,
+        "pdfIndex": 20,
+        "method": "公式原典画像独立目視"
+      },
+      "officialAnswerEvidence": {
+        "url": "https://www.kouiki-kansai.jp/material/files/group/12/R7touhan_kaitou.pdf",
+        "pdfPage": 1,
+        "bankMatch": true,
+        "method": "添付正規バンク・公式正答画像・解説三者一致"
+      }
+    },
+    {
+      "questionId": "KSAI-2025-025",
+      "verdict": "PASS",
+      "answerNumberOfficial": 2,
+      "evidence": [
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 60,
+          "pdfPage": 69,
+          "pdfIndex": 68,
+          "printedLines": "1883–1889",
+          "finding": "a,cマオウ含有、b,d非含有"
+        }
+      ],
+      "notes": "正しい組合せa,c。1,3はb、4はb,d、5はdを含む",
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allReasonsSupported": true,
+        "noUnsupportedNumericalOrInstitutionalClaims": true,
+        "originalImage": "PASS"
+      },
+      "originalImageEvidence": {
+        "url": "https://www.kouiki-kansai.jp/material/files/group/12/R7tourokuhannbaisyashiken_zennhan.pdf",
+        "printedPage": 20,
+        "pdfPage": 21,
+        "pdfIndex": 20,
+        "method": "公式原典画像独立目視"
+      },
+      "officialAnswerEvidence": {
+        "url": "https://www.kouiki-kansai.jp/material/files/group/12/R7touhan_kaitou.pdf",
+        "pdfPage": 1,
+        "bankMatch": true,
+        "method": "添付正規バンク・公式正答画像・解説三者一致"
+      }
+    },
+    {
+      "questionId": "KSAI-2025-026",
+      "verdict": "PASS",
+      "answerNumberOfficial": 4,
+      "evidence": [
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 71,
+          "pdfPage": 80,
+          "pdfIndex": 79,
+          "printedLines": "2213–2219",
+          "finding": "4釣藤散が該当、1呉茱萸湯は冷え・頭痛に伴う吐き気等"
+        },
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 62,
+          "pdfPage": 71,
+          "pdfIndex": 70,
+          "printedLines": "1930–1931",
+          "finding": "2香蘇散は虚弱・胃腸が弱い人のかぜ初期"
+        },
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 61,
+          "pdfPage": 70,
+          "pdfIndex": 69,
+          "printedLines": "1900–1906",
+          "finding": "3麻黄湯は体力充実・無汗のかぜ初期"
+        },
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 70,
+          "pdfPage": 79,
+          "pdfIndex": 78,
+          "printedLines": "2184–2189",
+          "finding": "5芍薬甘草湯は急な筋痙攣痛等"
+        }
+      ],
+      "notes": "選択肢全5件の漢方名と適応を原典画像で確認。正規バンクのchoicesには次行のルビが混入しているが解説の漢方名・順序は原典一致。表示品質は別途確認推奨。",
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allReasonsSupported": true,
+        "noUnsupportedNumericalOrInstitutionalClaims": true,
+        "originalImage": "PASS"
+      },
+      "originalImageEvidence": {
+        "url": "https://www.kouiki-kansai.jp/material/files/group/12/R7tourokuhannbaisyashiken_zennhan.pdf",
+        "printedPage": 21,
+        "pdfPage": 22,
+        "pdfIndex": 21,
+        "method": "公式原典画像独立目視"
+      },
+      "officialAnswerEvidence": {
+        "url": "https://www.kouiki-kansai.jp/material/files/group/12/R7touhan_kaitou.pdf",
+        "pdfPage": 1,
+        "bankMatch": true,
+        "method": "添付正規バンク・公式正答画像・解説三者一致"
+      }
+    },
+    {
+      "questionId": "KSAI-2025-027",
+      "verdict": "PASS",
+      "answerNumberOfficial": 5,
+      "evidence": [
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 73,
+          "pdfPage": 82,
+          "pdfIndex": 81,
+          "printedLines": "2280–2288",
+          "finding": "a誤：慢性・診断済み不眠対象外、b誤：妊娠中対象外、d正：小児若年者で逆説的興奮"
+        },
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 73,
+          "pdfPage": 82,
+          "pdfIndex": 81,
+          "printedLines": "2298–2299",
+          "finding": "c正：中枢興奮抑制・痛覚鈍化"
+        }
+      ],
+      "notes": "誤誤正正。1:a、2:a,b,d、3:a,b,c,d、4:b,cが不適",
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allReasonsSupported": true,
+        "noUnsupportedNumericalOrInstitutionalClaims": true,
+        "originalImage": "PASS"
+      },
+      "originalImageEvidence": {
+        "url": "https://www.kouiki-kansai.jp/material/files/group/12/R7tourokuhannbaisyashiken_zennhan.pdf",
+        "printedPage": 21,
+        "pdfPage": 22,
+        "pdfIndex": 21,
+        "method": "公式原典画像独立目視"
+      },
+      "officialAnswerEvidence": {
+        "url": "https://www.kouiki-kansai.jp/material/files/group/12/R7touhan_kaitou.pdf",
+        "pdfPage": 1,
+        "bankMatch": true,
+        "method": "添付正規バンク・公式正答画像・解説三者一致"
+      }
+    },
+    {
+      "questionId": "KSAI-2025-028",
+      "verdict": "PASS",
+      "answerNumberOfficial": 3,
+      "evidence": [
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 75,
+          "pdfPage": 84,
+          "pdfIndex": 83,
+          "printedLines": "2339–2351",
+          "finding": "a正：酸棗仁湯、b誤：加味帰脾湯と抑肝散の相違"
+        },
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 75,
+          "pdfPage": 84,
+          "pdfIndex": 83,
+          "printedLines": "2356–2361",
+          "finding": "c正：柴胡加竜骨牡蛎湯"
+        },
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 83,
+          "pdfPage": 92,
+          "pdfIndex": 91,
+          "printedLines": "2616–2618",
+          "finding": "d正：小建中湯"
+        }
+      ],
+      "notes": "正誤正正。1:b,d、2:b,c、4:a,b、5:bが不適",
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allReasonsSupported": true,
+        "noUnsupportedNumericalOrInstitutionalClaims": true,
+        "originalImage": "PASS"
+      },
+      "originalImageEvidence": {
+        "url": "https://www.kouiki-kansai.jp/material/files/group/12/R7tourokuhannbaisyashiken_zennhan.pdf",
+        "printedPage": 22,
+        "pdfPage": 23,
+        "pdfIndex": 22,
+        "method": "公式原典画像独立目視"
+      },
+      "officialAnswerEvidence": {
+        "url": "https://www.kouiki-kansai.jp/material/files/group/12/R7touhan_kaitou.pdf",
+        "pdfPage": 1,
+        "bankMatch": true,
+        "method": "添付正規バンク・公式正答画像・解説三者一致"
+      }
+    },
+    {
+      "questionId": "KSAI-2025-029",
+      "verdict": "PASS",
+      "answerNumberOfficial": 3,
+      "evidence": [
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 81,
+          "pdfPage": 90,
+          "pdfIndex": 89,
+          "printedLines": "2537–2541,2549–2553",
+          "finding": "a正：併用回避、c正：反復めまいは受診"
+        },
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 80,
+          "pdfPage": 89,
+          "pdfIndex": 88,
+          "printedLines": "2516–2523",
+          "finding": "b誤：カフェインはめまい軽減・頭痛緩和、眠気解消を保証しない"
+        },
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 79,
+          "pdfPage": 88,
+          "pdfIndex": 87,
+          "printedLines": "2473–2486",
+          "finding": "d正：ジフェニドール、緑内障相談、運転注意"
+        },
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 80,
+          "pdfPage": 89,
+          "pdfIndex": 88,
+          "printedLines": "2501–2507",
+          "finding": "スコポラミンは抗コリン成分"
+        },
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 113,
+          "pdfPage": 122,
+          "pdfIndex": 121,
+          "printedLines": "3579–3585",
+          "finding": "抗コリン成分の緑内障悪化リスク"
+        }
+      ],
+      "notes": "正誤正正。1:b,d、2:b,c、4:a,b、5:bが不適。原典配合表確認",
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allReasonsSupported": true,
+        "noUnsupportedNumericalOrInstitutionalClaims": true,
+        "originalImage": "PASS"
+      },
+      "originalImageEvidence": {
+        "url": "https://www.kouiki-kansai.jp/material/files/group/12/R7tourokuhannbaisyashiken_zennhan.pdf",
+        "printedPage": 23,
+        "pdfPage": 24,
+        "pdfIndex": 23,
+        "method": "公式原典画像独立目視"
+      },
+      "officialAnswerEvidence": {
+        "url": "https://www.kouiki-kansai.jp/material/files/group/12/R7touhan_kaitou.pdf",
+        "pdfPage": 1,
+        "bankMatch": true,
+        "method": "添付正規バンク・公式正答画像・解説三者一致"
+      }
+    },
+    {
+      "questionId": "KSAI-2025-030",
+      "verdict": "PASS",
+      "answerNumberOfficial": 2,
+      "evidence": [
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 85,
+          "pdfPage": 94,
+          "pdfIndex": 93,
+          "printedLines": "2678–2695",
+          "finding": "a正：12歳未満使用禁忌、b正：ノスカピンは非麻薬性鎮咳"
+        },
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 86,
+          "pdfPage": 95,
+          "pdfIndex": 94,
+          "printedLines": "2700–2704",
+          "finding": "気管支拡張成分"
+        },
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 87,
+          "pdfPage": 96,
+          "pdfIndex": 95,
+          "printedLines": "2730–2735",
+          "finding": "c誤：ブロムヘキシンは去痰"
+        },
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 88,
+          "pdfPage": 97,
+          "pdfIndex": 96,
+          "printedLines": "2765–2768",
+          "finding": "d正：カルビノキサミンは抗ヒスタミン"
+        }
+      ],
+      "notes": "正正誤正。1:a,c,d、3:b,c,d、4:a、5:b,cが不適。原典配合表と12歳の数値一致",
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allReasonsSupported": true,
+        "noUnsupportedNumericalOrInstitutionalClaims": true,
+        "originalImage": "PASS"
+      },
+      "originalImageEvidence": {
+        "url": "https://www.kouiki-kansai.jp/material/files/group/12/R7tourokuhannbaisyashiken_zennhan.pdf",
+        "printedPage": 24,
+        "pdfPage": 25,
+        "pdfIndex": 24,
+        "method": "公式原典画像独立目視"
+      },
+      "officialAnswerEvidence": {
+        "url": "https://www.kouiki-kansai.jp/material/files/group/12/R7touhan_kaitou.pdf",
+        "pdfPage": 1,
+        "bankMatch": true,
+        "method": "添付正規バンク・公式正答画像・解説三者一致"
       }
     }
   ]
