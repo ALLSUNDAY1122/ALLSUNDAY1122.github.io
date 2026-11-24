@@ -255,9 +255,9 @@
             "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月一部改訂）",
             "chapter": "第1章",
             "section": "Ⅱ-1",
-            "pages": "4–6",
+            "pages": "5",
             "url": "https://www.mhlw.go.jp/content/001692425.pdf",
-            "pageRangeVerified": false,
+            "pageRangeVerified": true,
             "pageRangeBasis": "公式目次で確認した関連節の範囲。個別記述の掲載ページ未照合。"
           }
         ]
@@ -266,13 +266,14 @@
         "status": "PENDING",
         "officialAnswerChecked": false,
         "bankAnswerChecked": true,
-        "sourceChecked": false,
+        "sourceChecked": true,
         "imageChecked": null,
         "holdReason": "公式正答PDFの独立取得および手引き該当ページ全記述の再照合待ち",
         "guideEvidence": {
-          "pages": "4–5",
-          "scope": "a–d（アレルギー、添加物、体調、外用薬）",
+          "pages": "5",
+          "scope": "a–d",
           "status": "CONTENT_CHECKED",
+          "pdfPage": 13,
           "url": "https://www.mhlw.go.jp/content/001692425.pdf",
           "edition": "2026-04",
           "independentReview": false
@@ -346,7 +347,16 @@
         "bankAnswerChecked": true,
         "sourceChecked": false,
         "imageChecked": true,
-        "holdReason": "公式正答PDFの独立取得および手引き該当ページ全記述の再照合待ち"
+        "holdReason": "公式正答PDFの独立取得および手引き該当ページ全記述の再照合待ち",
+        "guideEvidence": {
+          "pages": "8",
+          "scope": "相互作用の増強・減弱、成分重複、必要成分の選択",
+          "status": "PARTIAL",
+          "pdfPage": 16,
+          "url": "https://www.mhlw.go.jp/content/001692425.pdf",
+          "edition": "2026-04",
+          "independentReview": false
+        }
       }
     },
     {
@@ -2369,7 +2379,16 @@
         "officialAnswerChecked": false,
         "sourceChecked": false,
         "imageChecked": null,
-        "holdReason": "手引き個別記述・ページおよび独立監査未完了"
+        "holdReason": "手引き個別記述・ページおよび独立監査未完了",
+        "guideEvidence": {
+          "pages": "32",
+          "scope": "c・d（女性の尿道、高齢者の尿失禁）",
+          "status": "PARTIAL",
+          "pdfPage": 40,
+          "url": "https://www.mhlw.go.jp/content/001692425.pdf",
+          "edition": "2026-04",
+          "independentReview": false
+        }
       }
     },
     {
@@ -3097,7 +3116,7 @@
             "chapter": "第4章",
             "section": "指定濫用防止医薬品",
             "pages": "216",
-            "pageRangeVerified": false,
+            "pageRangeVerified": true,
             "url": "https://www.mhlw.go.jp/content/001692425.pdf"
           }
         ]
@@ -3106,9 +3125,18 @@
         "status": "PENDING",
         "bankAnswerChecked": true,
         "officialAnswerChecked": false,
-        "sourceChecked": false,
+        "sourceChecked": true,
         "imageChecked": null,
-        "holdReason": "個別根拠ページ・独立監査未完了"
+        "holdReason": "個別根拠ページ・独立監査未完了",
+        "guideEvidence": {
+          "pages": "216",
+          "scope": "a–d（指定成分一覧との照合）",
+          "status": "CONTENT_CHECKED",
+          "pdfPage": 224,
+          "url": "https://www.mhlw.go.jp/content/001692425.pdf",
+          "edition": "2026-04",
+          "independentReview": false
+        }
       }
     },
     {
@@ -3571,17 +3599,24 @@
     }
   ],
   "auditProgress": {
-    "scope": "Q1–60",
+    "scope": "Q1–80",
     "guideEdition": "2026-04",
     "guidePdf": "https://www.mhlw.go.jp/content/001692425.pdf",
     "tocChecked": true,
     "officialAnswerPdfDirect": "unavailable",
     "independentReview": "not completed",
-    "exactPagesConfirmed": 0,
+    "exactPagesConfirmed": 1,
     "partialEvidenceQuestions": [
       3,
       4,
+      9,
+      66
+    ],
+    "contentCheckedQuestions": [
       7
+    ],
+    "additionalContentCheckedQuestions": [
+      87
     ]
   }
 }
