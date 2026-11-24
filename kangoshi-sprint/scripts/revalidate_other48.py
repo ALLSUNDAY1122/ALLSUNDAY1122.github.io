@@ -11,7 +11,7 @@ L=A/"ocr-other48-visual-review-20261124.json"; H=A/"dual-engine-hold-20261124.js
 l,h,v,m,p=map(load,(L,H,V,M,P))
 idx={x["id"]:x for x in load(A/"residual-geometric-source-index-20261124.json")["items"]}
 active={x["id"]:x for x in h["hold"]}; seen={x["id"] for x in v["questions"]}
-assert len(active)+len(seen)==480 and not active&seen
+assert len(active)+len(seen)==480 and not (set(active)&seen)
 assert len(l["targetIds"])==len(set(l["targetIds"]))==48
 out=A/"runs/other48-revalidation";out.mkdir(parents=True,exist_ok=True)
 cases={x["id"]:x for x in l["cases"]}; results=[]; new=[]
