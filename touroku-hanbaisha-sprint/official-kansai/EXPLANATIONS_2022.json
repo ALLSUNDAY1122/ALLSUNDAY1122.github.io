@@ -1,15 +1,10 @@
 {
   "year": 2022,
   "targetCount": 120,
-  "createdCount": 50,
+  "createdCount": 60,
   "auditPassedCount": 0,
-  "sourceCheckedCount": 49,
-  "hold": [
-    {
-      "id": "KSAI-2022-050",
-      "reason": "cの剤形選択の直接根拠の追加確認。公式正答と他の記述は照合済み。"
-    }
-  ],
+  "sourceCheckedCount": 60,
+  "hold": [],
   "pendingIndependentAudit": [
     "KSAI-2022-001",
     "KSAI-2022-002",
@@ -60,7 +55,17 @@
     "KSAI-2022-047",
     "KSAI-2022-048",
     "KSAI-2022-049",
-    "KSAI-2022-050"
+    "KSAI-2022-050",
+    "KSAI-2022-051",
+    "KSAI-2022-052",
+    "KSAI-2022-053",
+    "KSAI-2022-054",
+    "KSAI-2022-055",
+    "KSAI-2022-056",
+    "KSAI-2022-057",
+    "KSAI-2022-058",
+    "KSAI-2022-059",
+    "KSAI-2022-060"
   ],
   "sourceBankBlob": "8741e2675af6f41f7fba2afdc89566f48b8258e7",
   "explanations": [
@@ -1106,24 +1111,241 @@
       "questionNo": 50,
       "answer": 3,
       "answerNumberOfficial": 4,
-      "explanation": "正答の理由：貼付剤や噴霧剤の取り扱いは局所の刺激や熱傷を防ぐために重要である。\na：正。同一箇所に繰り返し貼ると皮膚への負担が蓄積し、かぶれやすくなる。\nb：誤。至近距離からの噴霧は凍傷の原因になり得る。製品の指示に従って患部から距離を取る。\nc：誤。湿潤した患部に浸透性だけを理由として液剤を選ぶのは不適切で、刺激や痛みを生じる製品もある。患部と製品の注意事項に応じて剤形を選択する。\nd：正。温感刺激成分を含む貼付剤の上から暖房器具で加温すると痛みが強まり、低温やけどの危険もある。\n覚えるべきポイント：噴霧距離、貼付部位の変更、温感貼付剤の加温回避を覚える。\n参照資料：厚生労働省『試験問題の作成に関する手引き』令和4年3月版、第3章Ⅹ 剤形による取扱い・2(f)、第五章別表5-1、p.156・163・388。",
+      "explanation": "正答の理由：貼付剤や噴霧剤の取り扱いは局所の刺激や熱傷を防ぐために重要である。\na：正。同一箇所に繰り返し貼ると皮膚への負担が蓄積し、かぶれやすくなる。\nb：誤。至近距離からの噴霧は凍傷の原因になり得る。製品の指示に従って患部から距離を取る。\nc：誤。軟膏は刺激が比較的弱く、湿った患部にも使える。一方、液剤は患部を乾燥させやすく、刺激を感じることがある。患部の状態に応じて剤形を選ぶ。\nd：正。温感刺激成分を含む貼付剤の上から暖房器具で加温すると痛みが強まり、低温やけどの危険もある。\n覚えるべきポイント：噴霧距離、貼付部位の変更、温感貼付剤の加温回避を覚える。\n参照資料：厚生労働省『試験問題の作成に関する手引き』令和4年3月版、第2章Ⅱ-3(f) p.46、第3章Ⅹ p.156・163、第5章別表5-1 p.388。",
       "reference": {
         "url": "https://www.mhlw.go.jp/content/001087177.pdf",
         "edition": "2022-03",
         "pages": [
+          46,
           156,
           163,
           388
         ]
       },
       "audit": {
-        "sourceChecked": false,
+        "sourceChecked": true,
         "officialBankAnswerChecked": true,
         "status": "PENDING_INDEPENDENT_REVIEW",
-        "sourceEvidence": "pp.156,163 image checked; p.388 text checked; direct general dosage-form statement still to locate"
+        "sourceEvidence": "Printed p.46, section II-3(f), directly confirmed from PDF page image (zero-based index 53); pp.156,163,388 rechecked."
+      }
+    },
+    {
+      "id": "KSAI-2022-051",
+      "questionNo": 51,
+      "answer": 0,
+      "answerNumberOfficial": 1,
+      "explanation": "正答の理由：カルプロニウムと女性ホルモン成分の説明が適切である。\na：正。カルプロニウムはコリン作用により頭皮の血管を広げ、毛根への血流を増やす目的で配合される。\nb：正。エストラジオール安息香酸エステルは女性ホルモンとして脱毛抑制を期待する成分。\nc：誤。ヒノキチオールは抗菌・抗炎症目的。皮脂除去を期待する生薬はカシュウ。\nd：誤。カシュウは頭皮の脂質代謝に関わる。血行促進と抗炎症を期待する生薬はチクセツニンジン。\n覚えるべきポイント：カシュウは皮脂、ヒノキチオールは抗菌、チクセツニンジンは血行促進と区別する。\n参照資料：厚生労働省『試験問題の作成に関する手引き』令和4年3月版、第3章Ⅹ-6、p.169・170。",
+      "reference": {
+        "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+        "edition": "2022-03",
+        "pages": [
+          169,
+          170
+        ]
+      },
+      "audit": {
+        "sourceChecked": true,
+        "officialBankAnswerChecked": true,
+        "status": "PENDING_INDEPENDENT_REVIEW",
+        "sourceEvidence": "Handbook printed page images inspected; PDF zero-based index = printed page + 7"
+      }
+    },
+    {
+      "id": "KSAI-2022-052",
+      "questionNo": 52,
+      "answer": 4,
+      "answerNumberOfficial": 5,
+      "explanation": "正答の理由：殺菌、止血、抗炎症、粘膜修復の区別が問われている。\na：正。セチルピリジニウムは歯肉溝などの細菌増殖を抑える目的で使われる。\nb：誤。イソプロピルメチルフェノールは殺菌成分であり、止血成分の代表はカルバゾクロム。\nc：正。グリチルレチン酸は歯周組織や口内の炎症を軽減するために配合される。\nd：正。水溶性アズレンは口腔粘膜の回復を助ける目的でも配合される。\n覚えるべきポイント：殺菌成分と止血成分は別物。口内炎用薬では水溶性アズレンの修復作用も覚える。\n参照資料：厚生労働省『試験問題の作成に関する手引き』令和4年3月版、第3章Ⅺ-1・2、p.171・173。",
+      "reference": {
+        "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+        "edition": "2022-03",
+        "pages": [
+          171,
+          173
+        ]
+      },
+      "audit": {
+        "sourceChecked": true,
+        "officialBankAnswerChecked": true,
+        "status": "PENDING_INDEPENDENT_REVIEW",
+        "sourceEvidence": "Handbook printed page images inspected; PDF zero-based index = printed page + 7"
+      }
+    },
+    {
+      "id": "KSAI-2022-053",
+      "questionNo": 53,
+      "answer": 1,
+      "answerNumberOfficial": 2,
+      "explanation": "正答の理由：正しい記述はaとc。ニコチンの吸収経路と交感神経への作用がポイントである。\na：正。ニコチンは交感神経を刺激するので、アドレナリン作動成分と作用が重なる可能性がある。\nb：誤。ガムタイプの薬は口腔粘膜を介して血液に吸収される。腸管からの吸収を主目的としない。\nc：正。酸性の口腔環境ではニコチンが吸収されにくくなるため、酸性飲料の直後は使用を避ける。\nd：誤。離脱症状はニコチン濃度が下がることに伴って起きる。濃度上昇が原因ではない。\n覚えるべきポイント：ガムはゆっくり断続的に噛み、喫煙や他のニコチン製剤との併用を避ける。\n参照資料：厚生労働省『試験問題の作成に関する手引き』令和4年3月版、第3章Ⅻ-1・2、p.175・176。",
+      "reference": {
+        "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+        "edition": "2022-03",
+        "pages": [
+          175,
+          176
+        ]
+      },
+      "audit": {
+        "sourceChecked": true,
+        "officialBankAnswerChecked": true,
+        "status": "PENDING_INDEPENDENT_REVIEW",
+        "sourceEvidence": "Handbook printed page images inspected; PDF zero-based index = printed page + 7"
+      }
+    },
+    {
+      "id": "KSAI-2022-054",
+      "questionNo": 54,
+      "answer": 1,
+      "answerNumberOfficial": 2,
+      "explanation": "正答の理由：糖質をエネルギーに変える代謝や脚気との関係からビタミンB1を選ぶ。\n1：誤。ビタミンAは暗所での視覚や皮膚・粘膜の維持に重要。\n2：正。ビタミンB1は糖質代謝、神経機能、腸の運動に関係し、設問の効能に一致する。\n3：誤。ビタミンB2は脂質代謝や皮膚・粘膜の維持に関係する。\n4：誤。ビタミンB6は主にタンパク質代謝や神経機能の維持に関係する。\n5：誤。ビタミンB12は赤血球形成や神経の正常な働きに重要だが、設問の主薬製剤の説明はB1。\n覚えるべきポイント：B1は糖質代謝と脚気、B2は脂質代謝、B6はタンパク質代謝、B12は造血。\n参照資料：厚生労働省『試験問題の作成に関する手引き』令和4年3月版、第3章ⅩⅢ-2(a)、p.177・178・179。",
+      "reference": {
+        "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+        "edition": "2022-03",
+        "pages": [
+          177,
+          178,
+          179
+        ]
+      },
+      "audit": {
+        "sourceChecked": true,
+        "officialBankAnswerChecked": true,
+        "status": "PENDING_INDEPENDENT_REVIEW",
+        "sourceEvidence": "Handbook printed page images inspected; PDF zero-based index = printed page + 7"
+      }
+    },
+    {
+      "id": "KSAI-2022-055",
+      "questionNo": 55,
+      "answer": 1,
+      "answerNumberOfficial": 2,
+      "explanation": "正答の理由：ハンピとグルクロノラクトンについての説明が正しい。\na：誤。乳酸の分解促進を期待するのはアスパラギン酸ナトリウム。ヘスペリジンはビタミンCの吸収を助けるとされる。\nb：正。ハンピはマムシなどを基原とする生薬で、強壮や血行促進などを期待して使われる。\nc：正。グルクロノラクトンは肝機能の補助や肝臓の血流改善を期待して配合される。\nd：誤。タウリンは筋肉だけでなく心臓や脳、目など広範な組織に存在する。\n覚えるべきポイント：ビタミン様物質、アミノ酸関連成分、生薬の作用を混同しない。\n参照資料：厚生労働省『試験問題の作成に関する手引き』令和4年3月版、第3章ⅩⅢ-2(c)(d)・3、p.180・181。",
+      "reference": {
+        "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+        "edition": "2022-03",
+        "pages": [
+          180,
+          181
+        ]
+      },
+      "audit": {
+        "sourceChecked": true,
+        "officialBankAnswerChecked": true,
+        "status": "PENDING_INDEPENDENT_REVIEW",
+        "sourceEvidence": "Handbook printed page images inspected; PDF zero-based index = printed page + 7"
+      }
+    },
+    {
+      "id": "KSAI-2022-056",
+      "questionNo": 56,
+      "answer": 1,
+      "answerNumberOfficial": 2,
+      "explanation": "正答の理由：漢方は中国伝来の医学が日本で独自に発展したものであり、証に基づく処方選択が重要である。\na：誤。中国で発展した伝統医学の薬すべてを漢方薬とは呼ばない。中医学に基づく中薬とは区別される。\nb：誤。乾燥エキス製剤だけでなく、軟エキス、煎じ薬用の生薬混合物、丸剤なども存在する。\nc：正。証は体質や症状などを踏まえた漢方の判断枠組みで、処方の適否を考えるうえで重要である。\nd：正。虚実、陰陽、気血水、五臓はいずれも漢方の病態認識に関わる概念である。\n覚えるべきポイント：漢方薬は日本で発展した医学に基づく薬で、体質と症状の両方で処方を選ぶ。\n参照資料：厚生労働省『試験問題の作成に関する手引き』令和4年3月版、第3章ⅩⅣ-1(1)、p.183・184。",
+      "reference": {
+        "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+        "edition": "2022-03",
+        "pages": [
+          183,
+          184
+        ]
+      },
+      "audit": {
+        "sourceChecked": true,
+        "officialBankAnswerChecked": true,
+        "status": "PENDING_INDEPENDENT_REVIEW",
+        "sourceEvidence": "Handbook printed page images inspected; PDF zero-based index = printed page + 7"
+      }
+    },
+    {
+      "id": "KSAI-2022-057",
+      "questionNo": 57,
+      "answer": 4,
+      "answerNumberOfficial": 5,
+      "explanation": "正答の理由：疲れやすく汗をかきやすい、むくみを伴う水ぶとりの特徴は防已黄耆湯に合う。\n1：誤。黄連解毒湯は比較的体力があり、赤ら顔やのぼせ、いらだちなどが目安。\n2：誤。清上防風湯は比較的体力があり、赤ら顔でにきびなどがある場合に使われる。\n3：誤。防風通聖散は体力が充実し腹部の皮下脂肪が多く、便秘がちな人が対象となる。\n4：誤。大柴胡湯は体力が充実し、脇腹からみぞおちの苦しさや便秘傾向がある場合に用いる。\n5：正。防已黄耆湯は体力中等度以下で、むくみや多汗、関節痛を伴う水ぶとりに適する。甘草を含む。\n覚えるべきポイント：肥満症に使う漢方は体力・便秘・発汗・むくみで区別する。\n参照資料：厚生労働省『試験問題の作成に関する手引き』令和4年3月版、第3章ⅩⅣ-1(2)、p.186・187。",
+      "reference": {
+        "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+        "edition": "2022-03",
+        "pages": [
+          186,
+          187
+        ]
+      },
+      "audit": {
+        "sourceChecked": true,
+        "officialBankAnswerChecked": true,
+        "status": "PENDING_INDEPENDENT_REVIEW",
+        "sourceEvidence": "Handbook printed page images inspected; PDF zero-based index = printed page + 7"
+      }
+    },
+    {
+      "id": "KSAI-2022-058",
+      "questionNo": 58,
+      "answer": 2,
+      "answerNumberOfficial": 3,
+      "explanation": "正答の理由：エタノールの殺菌消毒作用だけが正しく述べられている。\na：誤。酸やアルカリを中和すると発熱によって障害が悪化するおそれがある。直ちに十分な流水で洗い、速やかに医療機関を受診する。\nb：誤。塩素系成分は細菌や真菌に加えウイルスにも作用する。製品の濃度や使用条件を守る必要がある。\nc：正。エタノールは微生物のタンパク質を変性させ、結核菌を含む細菌や真菌にも消毒作用を示す。\nd：誤。クレゾール石ケン液は大部分のウイルスには有効ではない。原液は刺激が強いため規定どおり希釈する。\n覚えるべきポイント：消毒薬の有効範囲は成分によって異なる。目に入った酸・アルカリは中和せず水洗する。\n参照資料：厚生労働省『試験問題の作成に関する手引き』令和4年3月版、第3章ⅩⅤ-1(2)、p.191・192・193。",
+      "reference": {
+        "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+        "edition": "2022-03",
+        "pages": [
+          191,
+          192,
+          193
+        ]
+      },
+      "audit": {
+        "sourceChecked": true,
+        "officialBankAnswerChecked": true,
+        "status": "PENDING_INDEPENDENT_REVIEW",
+        "sourceEvidence": "Handbook printed page images inspected; PDF zero-based index = printed page + 7"
+      }
+    },
+    {
+      "id": "KSAI-2022-059",
+      "questionNo": 59,
+      "answer": 3,
+      "answerNumberOfficial": 4,
+      "explanation": "正答の理由：忌避剤は虫の吸血などを防ぐ予防目的の薬であり、年齢や塗布方法の制限がある。\na：誤。虫を寄せ付けないことで吸血や病原体の媒介を防ぐが、すでに生じたかゆみや腫れを治す薬ではない。\nb：正。屋外など殺虫剤の効果が期待しにくい場所では、忌避剤による吸血防止が有用である。\nc：誤。ディート配合忌避剤は生後6か月未満には使用しない。1日1回という制限は生後6か月以上2歳未満に該当する。\nd：正。顔への直接噴霧を避け、手に取って必要箇所に塗る。目や口の周囲には付着させない。\n覚えるべきポイント：ディートの年齢制限と顔面への直接噴霧禁止を覚える。\n参照資料：厚生労働省『試験問題の作成に関する手引き』令和4年3月版、第3章ⅩⅤ-2、p.193・194・199。",
+      "reference": {
+        "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+        "edition": "2022-03",
+        "pages": [
+          193,
+          194,
+          199
+        ]
+      },
+      "originalImageChecked": true,
+      "originalPdfPage": 40,
+      "originalPdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R4touhanmondaimae.pdf",
+      "audit": {
+        "sourceChecked": true,
+        "officialBankAnswerChecked": true,
+        "status": "PENDING_INDEPENDENT_REVIEW",
+        "sourceEvidence": "Handbook printed page images inspected; PDF zero-based index = printed page + 7"
+      }
+    },
+    {
+      "id": "KSAI-2022-060",
+      "questionNo": 60,
+      "answer": 1,
+      "answerNumberOfficial": 2,
+      "explanation": "正答の理由：尿中hCGの検出感度と、検査結果を左右する条件を理解する問題である。\na：正。試験当時の手引きでは、妊娠成立から約4週間後の尿中hCG濃度を一般的な検出感度の目安としている。\nb：正。一般的な製品は月経予定日から約1週間後以降の検査を推奨する。製品ごとの説明に従う。\nc：誤。抗体等による反応は温度の影響を受けるため、高温だけでなく低温でも正確な結果を得られないことがある。\nd：正。令和4年版手引きは一部のホルモン剤使用者で妊娠していなくても陽性となる場合を挙げている。実際の影響は薬剤や検査製品により異なるため添付文書を確認する。\n覚えるべきポイント：妊娠検査薬は診断の補助であり、陽性でも正常妊娠かどうかは判定できない。医療機関で確認する。\n参照資料：厚生労働省『試験問題の作成に関する手引き』令和4年3月版、第3章ⅩⅥ-3(2)、p.202・203。",
+      "reference": {
+        "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+        "edition": "2022-03",
+        "pages": [
+          202,
+          203
+        ]
+      },
+      "audit": {
+        "sourceChecked": true,
+        "officialBankAnswerChecked": true,
+        "status": "PENDING_INDEPENDENT_REVIEW",
+        "sourceEvidence": "Handbook printed page images inspected; PDF zero-based index = printed page + 7"
       }
     }
   ],
-  "savedCount": 50,
-  "nextQuestionNo": 51
+  "savedCount": 60,
+  "nextQuestionNo": 61
 }
