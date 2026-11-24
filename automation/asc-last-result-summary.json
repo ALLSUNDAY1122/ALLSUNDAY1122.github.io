@@ -1,59 +1,59 @@
 {
-  "request_id": "hm2-b24-review-postattempt-readback-20261122-r1",
-  "completed_at": "2026-11-22T07:26:07.449301+00:00",
+  "request_id": "toru-tango-eula-readback-20261124-r1",
+  "completed_at": "2026-11-24T10:00:10.729650+00:00",
   "results": [
     {
       "label": "version",
       "http_status": 200,
       "data": [
         {
-          "id": "c0372f0c-c99a-4e4f-a8a3-28d13969091a",
+          "id": "c19fe956-165f-474c-af0b-bbfa86a138df",
           "type": "appStoreVersions",
           "attributes": {
             "versionString": "1.0",
             "platform": "IOS",
-            "appStoreState": "PREPARE_FOR_SUBMISSION",
-            "appVersionState": "PREPARE_FOR_SUBMISSION",
-            "copyright": "2026 ALLSUNDAY1122"
+            "appStoreState": "REJECTED",
+            "appVersionState": "REJECTED",
+            "copyright": "2026 KOHEI MORITA"
           }
         }
       ]
     },
     {
-      "label": "selected-build",
+      "label": "build",
       "http_status": 200,
       "data": [
         {
-          "id": "193141f5-4144-4843-a71c-05419d4aa735",
+          "id": "d7b51ea9-dc1d-4eaa-a49e-cf5633a79ed3",
           "type": "builds",
-          "attributes": {}
-        }
-      ]
-    },
-    {
-      "label": "submission",
-      "http_status": 200,
-      "data": [
-        {
-          "id": "ce607087-bf41-4f0c-b155-f6bfb0ad5ce0",
-          "type": "reviewSubmissions",
           "attributes": {
-            "platform": "IOS",
-            "state": "READY_FOR_REVIEW"
+            "version": "20",
+            "uploadedDate": "2026-11-22T04:37:50-08:00",
+            "processingState": "VALID",
+            "expired": false,
+            "expirationDate": "2027-02-20T04:37:50-08:00",
+            "minOsVersion": "16.4",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
           }
         }
       ]
     },
     {
-      "label": "submissions",
+      "label": "localizations",
       "http_status": 200,
       "data": [
         {
-          "id": "ce607087-bf41-4f0c-b155-f6bfb0ad5ce0",
-          "type": "reviewSubmissions",
+          "id": "5e089062-31d4-4b43-b707-e50d6bafb74b",
+          "type": "appStoreVersionLocalizations",
           "attributes": {
-            "platform": "IOS",
-            "state": "READY_FOR_REVIEW"
+            "locale": "ja",
+            "description": "撮る単語帳は、教材を撮影・取り込みして、自分だけの単語カードを作成・学習できるアプリです。\n\n主な機能\n・教材写真をOCRで文字認識\n・iPhone内AIまたは端末内の簡易作問でカード作成\n・必要に応じてGemini AIによる作問/OCRも選択可能\n・フォルダごとのカード整理\n・表/裏の読み上げと自動送り\n・苦手/未学習カードの絞り込み\n・連続学習や正答率の記録\n・JSONバックアップ/復元\n\nカードと学習履歴は原則として端末内に保存されます。外部AI機能を選択した場合のみ、対象の教材本文または画像を外部処理へ送信します。\n\n利用規約（EULA）\nhttps://www.apple.com/legal/internet-services/itunes/dev/stdeula/",
+            "keywords": "単語帳,暗記,学習,勉強,OCR,AI,フラッシュカード,読み上げ,資格,受験",
+            "promotionalText": null,
+            "supportUrl": "https://allsunday1122.github.io/toru-tango/support.html",
+            "marketingUrl": null,
+            "whatsNew": null
           }
         }
       ]

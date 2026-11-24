@@ -1,25 +1,17 @@
 {
-  "request_id": "hm2-b24-review-postattempt-readback-20261122-r1",
+  "request_id": "toru-tango-eula-readback-20261124-r1",
   "requests": [
     {
       "label": "version",
-      "method": "GET",
-      "path": "/v1/appStoreVersions/c0372f0c-c99a-4e4f-a8a3-28d13969091a"
+      "path": "/v1/appStoreVersions/c19fe956-165f-474c-af0b-bbfa86a138df"
     },
     {
-      "label": "selected-build",
-      "method": "GET",
-      "path": "/v1/appStoreVersions/c0372f0c-c99a-4e4f-a8a3-28d13969091a/relationships/build"
+      "label": "build",
+      "path": "/v1/appStoreVersions/c19fe956-165f-474c-af0b-bbfa86a138df/build"
     },
     {
-      "label": "submission",
-      "method": "GET",
-      "path": "/v1/reviewSubmissions/ce607087-bf41-4f0c-b155-f6bfb0ad5ce0"
-    },
-    {
-      "label": "submissions",
-      "method": "GET",
-      "path": "/v1/apps/6799751657/reviewSubmissions?limit=20"
+      "label": "localizations",
+      "path": "/v1/appStoreVersions/c19fe956-165f-474c-af0b-bbfa86a138df/appStoreVersionLocalizations?limit=200"
     }
   ]
 }

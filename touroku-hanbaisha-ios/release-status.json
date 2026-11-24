@@ -758,8 +758,8 @@
     "official_source_import": "PARTIAL_APPROVED_599_OF_600",
     "verbatim_and_answer_audit": "AUTO_88_GEOMETRY_215_RUBY_51_ORDERED_5_LAYOUT_13_VISUAL_14_REMAINING_214",
     "mobile_ui": "PENDING",
-    "ios_build": "PASS_SIMULATOR_AND_CODEMAGIC_SIGNED_IPA_BUILD_15",
-    "internal_testflight": "PASS_BUILD_15_VALID_IN_BETA_TESTING",
+    "ios_build": "PASS_SIMULATOR_AND_CODEMAGIC_SIGNED_IPA_BUILD_16",
+    "internal_testflight": "PASS_BUILD_16_VALID_IN_BETA_TESTING",
     "screenshots": "PENDING",
     "privacy_and_metadata": "ASC_PENDING",
     "device_check": "USER_REQUIRED",
@@ -812,9 +812,9 @@
     "v3_original_pdf_image_8": "PASS_8_SCOPE_RIGHTS_CHROMIUM_16",
     "v3_ruby_visual_10": "PASS_DIRECT_IMAGE_10_CHROMIUM_20",
     "v2_ruby_78_visual_followup": "HOLD_78_MAPPING_WARNINGS_CONTACT_SHEETS_15_VIEWED",
-    "ai_preflight_acceptance": "BLOCKED",
-    "ios_offline_runtime": "BLOCKED_REMOTE_ONLY",
-    "native_simulator": "NOT_TESTED",
+    "ai_preflight_acceptance": "BLOCKED_13_OF_14_Q5",
+    "ios_offline_runtime": "PASS_599_CHROMIUM_WEBKIT_AND_SIMULATOR",
+    "native_simulator": "PASS_HOME_RECORDS_RESTART_RESUME",
     "app_privacy": "NOT_VERIFIED_QUESTIONNAIRE",
     "asc_metadata_599": "PASS"
   },
@@ -1487,7 +1487,14 @@
     "report": "touroku-hanbaisha-ios/AI_PREFLIGHT_ACCEPTANCE_20261124.json",
     "run_id": 45326744723,
     "native_ios_simulator_tested": false,
-    "testflight_uploaded": false
+    "testflight_uploaded": false,
+    "current_pass": 13,
+    "current_blocking": [
+      "Q5_PRIVACY_AND_NETWORK_DISCLOSURE"
+    ],
+    "q7_later_evidence": "automation/asc-results/touhan-build16-testflight-readback-20261124-r2.json",
+    "q7_later_result": "PASS",
+    "reassessment_note": "13/14; Q4 prior dual-engine 599/599 and Build15 user airplane-mode PASS; home/records candidate dual-engine regression and native WKWebView restart/resume PASS; signed Build16 uploaded and ASC VALID/IN_BETA_TESTING, effective internal group access. Build16 physical device and Q5 questionnaire final reconciliation pending."
   },
   "q5_privacy_audit_20261124": {
     "sourceAndBrowserAudit": "PASS",
@@ -1766,7 +1773,7 @@
     "directBuildGroupRelationship": "NOT_QUERIED"
   },
   "learning_home_records_20261124": {
-    "status": "BROWSER_PASS_NATIVE_SMOKE_PENDING",
+    "status": "NATIVE_SMOKE_PASS_BUILD16_TESTFLIGHT_PASS_Q5_PENDING",
     "previousBuild15DeviceReport": {
       "source": "user report",
       "airplaneMode": "PASS",
@@ -1776,9 +1783,9 @@
       "missingHomeAndRecords": true
     },
     "scope": "Native-only home, start/resume, year/chapter unique progress and attempt accuracy, recent history, app-local UserDefaults CA92.1",
-    "newTestFlight": "PENDING_NATIVE_SMOKE",
+    "newTestFlight": "PASS_VALID_IN_BETA_TESTING",
     "appReviewSubmitted": false,
-    "nativeSmoke": "PENDING",
+    "nativeSmoke": "PASS",
     "browserRegression": "PASS_CHROMIUM_WEBKIT_599_HOME_RECORDS_RESUME_NO_DUPLICATE",
     "browserRun": 45326744724,
     "browserArtifact": 14889673638,
@@ -1790,8 +1797,93 @@
       "externalRequests": 0,
       "pageErrors": 0
     },
-    "releaseValidationRun": 45326744709,
+    "releaseValidationRun": 45334990413,
     "releaseValidation": "PASS",
-    "nativeSmokeRun": 45326744802
+    "nativeSmokeRun": 45334990399,
+    "nativeFailedRun": 45326744802,
+    "nativeFailedArtifact": 14890805697,
+    "nativeCompileErrors": 3,
+    "nativeCompileCause": "Swift 6 actor isolation: installSnapshot calls three MainActor WebKit APIs from nonisolated context; compiler explicitly recommends @MainActor at line 154",
+    "nativeCompileFix": "Annotate StudyStore.installSnapshot with @MainActor",
+    "nativeCompileRetest": "PASS",
+    "nativeRetestHead": "c930d1273a6cab481bbdd0b13047bfe836f66e5d",
+    "overallRetestRun": 45334990367,
+    "overallRetest": "IN_PROGRESS",
+    "nativeEvidence": {
+      "run": 45334990399,
+      "job": 138244859501,
+      "head": "c930d1273a6cab481bbdd0b13047bfe836f66e5d",
+      "artifact": 14893742623,
+      "status": "PASS",
+      "write": {
+        "phase": "write",
+        "status": "PASS",
+        "question": "KSAI-2024-081",
+        "position": 1,
+        "progress": 1,
+        "accuracy": "100%"
+      },
+      "read": {
+        "phase": "read",
+        "status": "PASS",
+        "progress": 2,
+        "accuracy": "50%",
+        "position": 1,
+        "attempts": 2
+      },
+      "screenshots": "CAPTURED_NOT_INDEPENDENTLY_VISUALLY_INSPECTED",
+      "physicalDevice": "PENDING_NEW_BUILD"
+    },
+    "newBuildRequest": "touhan-home-records-20261124-1444",
+    "newBuildId": "6b0524d46161e077c03ebbb7",
+    "newBuildNumber": 16,
+    "gatewayRun": 45335693547,
+    "buildCreatedAt": "2026-11-24T05:47:00.315Z",
+    "newBuildSignedIPA": "PASS",
+    "newBuildASCUpload": "PASS",
+    "newBuildCodemagicStatus": "finished",
+    "newBuildSuccessfulActions": 14,
+    "newBuildInspectRun": 45336339172,
+    "newBuildAscReadbackRun": 45336339212,
+    "newBuildCommit": "64bfdbe37cd0a5276ffa368bdb32e19b8be143e2",
+    "nextBuildInspectRequest": "touhan-home-build16-inspect-20261124-r2",
+    "nextAscRequest": "touhan-build16-testflight-readback-20261124-r2",
+    "newBuildASCProcessing": "VALID",
+    "newBuildPhysicalDevice": "PENDING_USER",
+    "newBuildEvidence": "automation/asc-results/touhan-build16-testflight-readback-20261124-r2.json"
+  },
+  "learning_build16_20261124": {
+    "buildId": "6b0524d46161e077c03ebbb7",
+    "buildNumber": 16,
+    "version": "1.0.0",
+    "status": "FINISHED",
+    "startedAt": "2026-11-24T05:47:04.144000+00:00",
+    "finishedAt": "2026-11-24T05:49:47.446000+00:00",
+    "commit": "64bfdbe37cd0a5276ffa368bdb32e19b8be143e2",
+    "signedIPA": "PASS",
+    "ipaFile": "TouhanSprint.ipa",
+    "ipaBytes": 5530134,
+    "successfulActions": 14,
+    "ascUpload": "PASS",
+    "ascProcessing": "VALID",
+    "internalTestFlight": "IN_BETA_TESTING",
+    "ascBuildId": "ecd2e80f-b729-4be3-ab69-3d85bbcc8ab0",
+    "ascUploadedDate": "2026-11-23T21:50:22-08:00",
+    "expirationDate": "2027-02-21T21:50:22-08:00",
+    "expired": false,
+    "buildAudienceType": "APP_STORE_ELIGIBLE",
+    "externalBuildState": "READY_FOR_BETA_SUBMISSION",
+    "ascGroup": {
+      "name": "sum",
+      "hasAccessToAllBuilds": true,
+      "testerCount": 1
+    },
+    "delivery": "PASS_EFFECTIVE_INTERNAL_GROUP_ACCESS",
+    "physicalDeviceInstallation": "NOT_VERIFIED",
+    "directBuildGroupRelationship": "NOT_QUERIED",
+    "codemagicRun": 45336339172,
+    "ascReadbackRun": 45336339212,
+    "codemagicEvidence": "automation/codemagic-results/touhan-home-build16-inspect-20261124-r2.json",
+    "ascEvidence": "automation/asc-results/touhan-build16-testflight-readback-20261124-r2.json"
   }
 }

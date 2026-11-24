@@ -1540,3 +1540,34 @@ Apple固定識別子: Bundle `com.allsunday1122.tourokuhanbaisha`、ASC `6802119
 - 合否: **BLOCKED**。PASS 8/14。
 - 未通過: Q2_NATIVE_WEBVIEW_INTEGRATION, Q3_METADATA_DISCLOSURE, Q4_OFFLINE_RESILIENCE, Q5_PRIVACY_AND_NETWORK_DISCLOSURE, Q6_IOS_BUILD_AND_LAUNCH, Q7_TESTFLIGHT_READY。
 - 詳細：touroku-hanbaisha-ios/AI_PREFLIGHT_ACCEPTANCE_20261124.json。実機・Simulator未確認、TestFlight送信なし、本審査未提出。
+
+
+## 学習ホーム版 Simulatorコンパイル修正（2026-11-24）
+- Run 45326744802 FAIL、13:37 JST。環境準備PASS、Swift 6 compile 3 errors、起動・記録復元・重複防止未実施。artifact 14890805697。
+- コンパイラ診断: TouhanSprintApp.swift:154:17 note: add '@MainActor' to make static method 'installSnapshot(in:)' part of global actor 'MainActor'。155/157行のWebKit API 3件。指示どおりメソッドに@MainActorを追加。Swift 6設定と問題・集計ロジック変更なし。Simulator再検証待ち。新IPA未開始、Build15維持。本審査未送信。
+
+
+## 学習ホーム版 MainActor修正後の再検証
+- Simulator 45334990399: Xcode環境・iOSコンパイルSUCCESS、インストール/起動工程実行中、保存復元・重複防止未確定。旧コンパイル失敗解消。
+- 整合性45334990413 SUCCESS。総合品質45334990367実行中。新IPAはSimulator実測PASSまで保留。Build15配信維持、本審査未送信。
+
+
+## 学習ホーム・記録版 Simulator実測PASS（2026-11-24 14:44 JST）
+- Run 45334990399 SUCCESS、artifact 14893742623。コンパイル・起動・撮影・実WKWebView記録保存/プロセス終了再起動/再開重複防止PASS。write: KSAI-2024-081, position=1, progress=1, accuracy=100%。read: progress=2, accuracy=50%, position=1, attempts=2。画像独立目視・新ビルド実機未確認。
+- ブラウザ両エンジン599問・整合性PASS、総合品質45334990367実行中。新署名ビルド要求 touhan-home-records-20261124-1444。Q5未確認、13/14、Build15配信維持。本審査未送信。
+
+
+## 学習ホーム版 Build16受付（2026-11-24 14:47 JST）
+- Gateway 45335693547 SUCCESS、Codemagic Build 16 ID 6b0524d46161e077c03ebbb7、14:47:00 JST受付、初回 initializing。署名IPA/ASC upload/VALID/IN_BETA_TESTING未確定。読取専用照会要求済み。本審査未送信。
+
+
+## 学習ホーム版 Build16署名・アップロード成功（2026-11-24 14:50 JST）
+- Codemagic Run 45336005847 SUCCESS、Build16 (1.0.0) 6b0524d46161e077c03ebbb7、commit 64bfdbe37cd0a5276ffa368bdb32e19b8be143e2、publishing、12/14工程成功（署名IPA生成・ASC uploadを含む）、最終成果物一覧・完了時刻未確定。
+- ASC Run 45336005776 SUCCESS、Build16未掲載、Build15 VALID/IN_BETA_TESTING継続。sum全ビルドアクセス、1テスター。Build16のVALID/配信は未確認。読取専用再照会r2要求。本審査未送信。
+
+
+## 学習ホーム・記録版 Build16 Internal TestFlight配信確定（2026-11-24）
+- Codemagic 45336339172 SUCCESS、Build16 (1.0.0) 6b0524d46161e077c03ebbb7、14/14工程成功、TouhanSprint.ipa 5,530,134 bytes、14:49:47 JST完了。
+- ASC 45336339212 SUCCESS、UUID ecd2e80f-b729-4be3-ab69-3d85bbcc8ab0、VALID / IN_BETA_TESTING / APP_STORE_ELIGIBLE、expired=false、アップロード2026-11-24 14:50:22 JST、有効期限2027-02-22 14:50:22 JST。
+- sum全ビルドアクセス、testerCount=1、実効内部アクセス確認。個別build-group relationship・Build16実機インストール未確認。Q7 PASS_BUILD_16_VALID_IN_BETA_TESTING。証跡 automation/asc-results/touhan-build16-testflight-readback-20261124-r2.json。
+- 現行品質Gate 13/14、Q5質問票最終照合とBuild16実機確認未完了。release_gate=BLOCKED、本審査未送信、一般公開なし。
