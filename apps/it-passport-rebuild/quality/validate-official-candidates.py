@@ -24,7 +24,7 @@ for x in published:
     assert x["source_answer_pdf_sha256"]==year["answer_sha256"]
 assert answers["answer_records_verified"]==500 and answers["sha256_match_to_user"]==10
 assert len(bank["items"])==bank["candidate_count"]==500
-assert bank["answer_audit_pass"]==500 and bank["question_verbatim_pass"]==0
+assert bank["answer_audit_pass"]==500 and bank["question_verbatim_pass"]==len(published)
 assert all(not x["publishable"] for x in bank["items"]), "Unverified question incorrectly publishable"
 assert [x["year"] for x in answers["years"]]==list(range(2022,2027))
 assert len(ledger["years"])==5
@@ -44,7 +44,7 @@ for a,source in zip(answers["years"],ledger["years"]):
         assert item["question_pdf_sha256"]==a["question_sha256"]
         assert item["answer_pdf_sha256"]==a["answer_sha256"]
         assert 1<=item["source_pdf_page"]<=60
-        assert item["question_body_status"]=="OCR_CANDIDATE_VISUAL_AUDIT_REQUIRED"
-        assert item["choices_status"]=="OCR_CANDIDATE_VISUAL_AUDIT_REQUIRED"
+        assert item["question_body_status"] in {"OCR_CANDIDATE_VISUAL_AUDIT_REQUIRED","PASS_INDEPENDENT_VISUAL"}
+        assert item["choices_status"] in {"OCR_CANDIDATE_VISUAL_AUDIT_REQUIRED","PASS_INDEPENDENT_VISUAL"}
         assert item["origin_type"]=="ipa_published_exam_candidate"
 print("PASS: 500 IPA source-question candidates / 500 official answers / 10 source hashes; no unverified question published")
