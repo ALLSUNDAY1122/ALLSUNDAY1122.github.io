@@ -1571,3 +1571,11 @@ Apple固定識別子: Bundle `com.allsunday1122.tourokuhanbaisha`、ASC `6802119
 - ASC 45336339212 SUCCESS、UUID ecd2e80f-b729-4be3-ab69-3d85bbcc8ab0、VALID / IN_BETA_TESTING / APP_STORE_ELIGIBLE、expired=false、アップロード2026-11-24 14:50:22 JST、有効期限2027-02-22 14:50:22 JST。
 - sum全ビルドアクセス、testerCount=1、実効内部アクセス確認。個別build-group relationship・Build16実機インストール未確認。Q7 PASS_BUILD_16_VALID_IN_BETA_TESTING。証跡 automation/asc-results/touhan-build16-testflight-readback-20261124-r2.json。
 - 現行品質Gate 13/14、Q5質問票最終照合とBuild16実機確認未完了。release_gate=BLOCKED、本審査未送信、一般公開なし。
+
+
+## AI Preflight Acceptance｜599問のiOSアプリ統合（2026-11-24）
+- ネイティブSwift / Expo WebView起動先を公式599問のofficial-practice.htmlに変更。旧360問の学習基盤は別画面として保持。
+- Run: https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45372775122
+- 合否: **BLOCKED**。PASS 8/14。
+- 未通過: Q2_NATIVE_WEBVIEW_INTEGRATION, Q3_METADATA_DISCLOSURE, Q4_OFFLINE_RESILIENCE, Q5_PRIVACY_AND_NETWORK_DISCLOSURE, Q6_IOS_BUILD_AND_LAUNCH, Q7_TESTFLIGHT_READY。
+- 詳細：touroku-hanbaisha-ios/AI_PREFLIGHT_ACCEPTANCE_20261124.json。実機・Simulator未確認、TestFlight送信なし、本審査未提出。
