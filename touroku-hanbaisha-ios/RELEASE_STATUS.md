@@ -1579,3 +1579,8 @@ Apple固定識別子: Bundle `com.allsunday1122.tourokuhanbaisha`、ASC `6802119
 - 合否: **BLOCKED**。PASS 8/14。
 - 未通過: Q2_NATIVE_WEBVIEW_INTEGRATION, Q3_METADATA_DISCLOSURE, Q4_OFFLINE_RESILIENCE, Q5_PRIVACY_AND_NETWORK_DISCLOSURE, Q6_IOS_BUILD_AND_LAUNCH, Q7_TESTFLIGHT_READY。
 - 詳細：touroku-hanbaisha-ios/AI_PREFLIGHT_ACCEPTANCE_20261124.json。実機・Simulator未確認、TestFlight送信なし、本審査未提出。
+
+
+## 解説全599問作成開始（2026-11-24）
+- ユーザー承認済み書式。逐語バンク不変。解説台帳599件、実本文19件、一次資料完全照合0件、独立PASS0件、画像HOLD52件、未作成テキスト528件。参照先は候補であり個別照合未完。公開不可。
+- 課金無料範囲未決定につき課金実装停止。本審査未送信。
