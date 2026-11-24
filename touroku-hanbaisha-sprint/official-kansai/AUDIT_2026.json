@@ -1,10 +1,10 @@
 {
   "year": 2026,
   "targetCount": 120,
-  "auditedCount": 110,
-  "auditPassedCount": 109,
-  "holdCount": 1,
-  "pendingCount": 10,
+  "auditedCount": 120,
+  "auditPassedCount": 120,
+  "holdCount": 0,
+  "pendingCount": 0,
   "sourceExplanationPath": "touroku-hanbaisha-sprint/official-kansai/EXPLANATIONS_2026.json",
   "sourceExplanationBlobSha": "ed5e24ed3310cc99ceb2bf92aa29379a145c6ce0",
   "auditDate": "2026-11-24",
@@ -6036,7 +6036,7 @@
     },
     {
       "questionId": "KSAI-2026-096",
-      "verdict": "HOLD",
+      "verdict": "PASS",
       "evidence": {
         "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
         "guideEdition": "令和8年4月一部改訂",
@@ -6069,8 +6069,8 @@
               255
             ],
             "truth": "誤",
-            "topic": "指定第二類7m以内、施錠又は陳列設備から1.2m以内進入防止。現行解説の直接触れられない設備という表現は第一類の例外と混同のおそれ",
-            "result": "EXPLANATION_SOURCE_MISMATCH"
+            "topic": "指定第二類医薬品は情報提供設備から7m以内。例外は施錠陳列設備又は陳列設備から1.2m以内への購入者等の進入を防止する措置。修正版と手引きp.247が一致。",
+            "result": "MATCH"
           },
           {
             "item": "d",
@@ -6094,7 +6094,78 @@
           "reason": "全問追加原典画像照合"
         }
       },
-      "notes": "添付APPROVED_OFFICIAL_BANK(3).jsonの1-based正答と一致。手引き原典画像及び公式試験PDF後半原典画像で逐項照合。公式正答PDFは直接再取得せず、ユーザー了承済み正規バンクを使用。HOLD：cの例外規定の説明が不正確。施錠設備又は指定第二類医薬品の陳列設備から1.2メートル以内の範囲に購入者等が進入できない措置、と訂正するよう作成側へ修正依頼推奨。正答番号変更不要。"
+      "notes": "添付APPROVED_OFFICIAL_BANK(3).jsonの1-based正答と一致。手引き原典画像及び公式試験PDF後半原典画像で逐項照合。公式正答PDFは直接再取得せず、ユーザー了承済み正規バンクを使用。HOLD：cの例外規定の説明が不正確。施錠設備又は指定第二類医薬品の陳列設備から1.2メートル以内の範囲に購入者等が進入できない措置、と訂正するよう作成側へ修正依頼推奨。正答番号変更不要。 再監査PASS：修正版のcは7m原則及び二つの例外（施錠設備／1.2m以内への購入者等進入防止）を具体的に明記。厚労省手引き印刷p.247・公式試験PDF後半p.27を照合。旧Blob ed5e24→新Blob 40e7faの全120問比較で変更は問96のみ。",
+      "reauditHistory": [
+        {
+          "date": "2026-11-25",
+          "previousVerdict": "HOLD",
+          "previousNotes": "添付APPROVED_OFFICIAL_BANK(3).jsonの1-based正答と一致。手引き原典画像及び公式試験PDF後半原典画像で逐項照合。公式正答PDFは直接再取得せず、ユーザー了承済み正規バンクを使用。HOLD：cの例外規定の説明が不正確。施錠設備又は指定第二類医薬品の陳列設備から1.2メートル以内の範囲に購入者等が進入できない措置、と訂正するよう作成側へ修正依頼推奨。正答番号変更不要。",
+          "previousEvidence": {
+            "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+            "guideEdition": "令和8年4月一部改訂",
+            "guidePageCount": 426,
+            "items": [
+              {
+                "item": "a",
+                "printedPage": "246",
+                "pdfPages": [
+                  254
+                ],
+                "truth": "正",
+                "topic": "要指導と一般用の区別",
+                "result": "MATCH"
+              },
+              {
+                "item": "b",
+                "printedPage": "247",
+                "pdfPages": [
+                  255
+                ],
+                "truth": "正",
+                "topic": "第一類区画の例外",
+                "result": "MATCH"
+              },
+              {
+                "item": "c",
+                "printedPage": "247",
+                "pdfPages": [
+                  255
+                ],
+                "truth": "誤",
+                "topic": "指定第二類7m以内、施錠又は陳列設備から1.2m以内進入防止。現行解説の直接触れられない設備という表現は第一類の例外と混同のおそれ",
+                "result": "EXPLANATION_SOURCE_MISMATCH"
+              },
+              {
+                "item": "d",
+                "printedPage": "247",
+                "pdfPages": [
+                  255
+                ],
+                "truth": "誤",
+                "topic": "医薬部外品との区別",
+                "result": "MATCH"
+              }
+            ],
+            "officialAnswerNumber": 1,
+            "bankAnswerNumber": 1,
+            "answerMatch": true,
+            "questionImage": {
+              "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
+              "pdfPage": 28,
+              "printedPage": 26,
+              "checked": true,
+              "reason": "全問追加原典画像照合"
+            }
+          },
+          "sourceOldBlobSha": "ed5e24ed3310cc99ceb2bf92aa29379a145c6ce0",
+          "sourceNewBlobSha": "40e7fab214327810cec00917b062c1f0331f3be8",
+          "diffScope": "全120問JSONを項目比較し問96のみ変更。共通メタデータ不変。",
+          "printedPage": 247,
+          "pdfPage": 255,
+          "questionPdfPage": 27,
+          "verdict": "PASS"
+        }
+      ]
     },
     {
       "questionId": "KSAI-2026-097",
@@ -6929,6 +7000,636 @@
         "questionImage": null
       },
       "notes": "添付正規バンクの正答番号・設問と現行解説を照合。手引き該当ページの原典画像を確認。公式正答PDFは直接再取得せず了承済み正規バンクを使用。テキスト形式につき基準(4)適用外。"
+    },
+    {
+      "questionId": "KSAI-2026-111",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "a",
+            "printedPage": "399",
+            "pdfPages": [
+              407
+            ],
+            "truth": "正",
+            "topic": "小柴胡湯・IF併用による間質性肺炎報告、1994年1月併用禁忌改訂",
+            "result": "MATCH"
+          },
+          {
+            "item": "b",
+            "printedPage": "400",
+            "pdfPages": [
+              408
+            ],
+            "truth": "正",
+            "topic": "1996年3月緊急安全性情報配布指示",
+            "result": "MATCH"
+          },
+          {
+            "item": "c",
+            "printedPage": "400",
+            "pdfPages": [
+              408
+            ],
+            "truth": "正",
+            "topic": "PPA脳出血症例・2003年8月までの報告とPSE等への切替え",
+            "result": "MATCH"
+          },
+          {
+            "item": "d",
+            "printedPage": "400",
+            "pdfPages": [
+              408
+            ],
+            "truth": "正",
+            "topic": "かぜ薬全般の間質性肺炎・悪化時中止受診",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 5,
+        "bankAnswerNumber": 5,
+        "answerMatch": true,
+        "questionImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
+          "pdfPage": 41,
+          "printedPage": 41,
+          "checked": true,
+          "reason": "公式試験PDF原典ページ画像を確認。表形式問題は表全体・選択肢・組合せを確認。"
+        }
+      },
+      "notes": "添付正規バンクの公式正答（1始まり）と解説の正答番号が一致。厚労省手引き令和8年4月一部改訂版の原典本文・印刷ページを逐項照合。公式試験PDF後半の該当ページ画像を直接確認。数値・制度に合否を左右する誤りなし。"
+    },
+    {
+      "questionId": "KSAI-2026-112",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "a",
+            "printedPage": "400",
+            "pdfPages": [
+              408
+            ],
+            "truth": "正",
+            "topic": "薬と健康の週間10月17～23日",
+            "result": "MATCH"
+          },
+          {
+            "item": "b",
+            "printedPage": "400",
+            "pdfPages": [
+              408
+            ],
+            "truth": "誤",
+            "topic": "一般用医薬品でも薬物依存が生じ得る",
+            "result": "MATCH"
+          },
+          {
+            "item": "c",
+            "printedPage": "400",
+            "pdfPages": [
+              408
+            ],
+            "truth": "正",
+            "topic": "小中学生期からの啓発",
+            "result": "MATCH"
+          },
+          {
+            "item": "d",
+            "printedPage": "400",
+            "pdfPages": [
+              408
+            ],
+            "truth": "正",
+            "topic": "登録販売者の啓発活動協力",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 2,
+        "bankAnswerNumber": 2,
+        "answerMatch": true,
+        "questionImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
+          "pdfPage": 42,
+          "printedPage": 42,
+          "checked": true,
+          "reason": "公式試験PDF原典ページ画像を確認。表形式問題は表全体・選択肢・組合せを確認。"
+        }
+      },
+      "notes": "添付正規バンクの公式正答（1始まり）と解説の正答番号が一致。厚労省手引き令和8年4月一部改訂版の原典本文・印刷ページを逐項照合。公式試験PDF後半の該当ページ画像を直接確認。数値・制度に合否を左右する誤りなし。"
+    },
+    {
+      "questionId": "KSAI-2026-113",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "a",
+            "printedPage": "403",
+            "pdfPages": [
+              411
+            ],
+            "truth": "誤",
+            "topic": "緑内障はアスピリン固有の使用禁止対象ではない",
+            "result": "MATCH"
+          },
+          {
+            "item": "b",
+            "printedPage": "403",
+            "pdfPages": [
+              411
+            ],
+            "truth": "正",
+            "topic": "出産予定日12週以内",
+            "result": "MATCH"
+          },
+          {
+            "item": "c",
+            "printedPage": "403",
+            "pdfPages": [
+              411
+            ],
+            "truth": "正",
+            "topic": "かぜ薬・解熱鎮痛薬で喘息歴",
+            "result": "MATCH"
+          },
+          {
+            "item": "d",
+            "printedPage": "403",
+            "pdfPages": [
+              411
+            ],
+            "truth": "誤",
+            "topic": "年齢制限は15歳未満で18歳未満ではない",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 3,
+        "bankAnswerNumber": 3,
+        "answerMatch": true,
+        "questionImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
+          "pdfPage": 43,
+          "printedPage": 43,
+          "checked": true,
+          "reason": "公式試験PDF原典ページ画像を確認。表形式問題は表全体・選択肢・組合せを確認。"
+        }
+      },
+      "notes": "添付正規バンクの公式正答（1始まり）と解説の正答番号が一致。厚労省手引き令和8年4月一部改訂版の原典本文・印刷ページを逐項照合。公式試験PDF後半の該当ページ画像を直接確認。数値・制度に合否を左右する誤りなし。"
+    },
+    {
+      "questionId": "KSAI-2026-114",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "a",
+            "printedPage": "403",
+            "pdfPages": [
+              411
+            ],
+            "truth": "正",
+            "topic": "ジフェンヒドラミン塩酸塩",
+            "result": "MATCH"
+          },
+          {
+            "item": "b",
+            "printedPage": "404",
+            "pdfPages": [
+              412
+            ],
+            "truth": "正",
+            "topic": "ロペラミド塩酸塩",
+            "result": "MATCH"
+          },
+          {
+            "item": "c",
+            "printedPage": "404",
+            "pdfPages": [
+              412
+            ],
+            "truth": "誤",
+            "topic": "イブプロフェン単独は本表の運転禁止対象でない",
+            "result": "MATCH"
+          },
+          {
+            "item": "d",
+            "printedPage": "404",
+            "pdfPages": [
+              412
+            ],
+            "truth": "正",
+            "topic": "ジヒドロコデインリン酸塩",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 5,
+        "bankAnswerNumber": 5,
+        "answerMatch": true,
+        "questionImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
+          "pdfPage": 44,
+          "printedPage": 44,
+          "checked": true,
+          "reason": "公式試験PDF原典ページ画像を確認。表形式問題は表全体・選択肢・組合せを確認。"
+        }
+      },
+      "notes": "添付正規バンクの公式正答（1始まり）と解説の正答番号が一致。厚労省手引き令和8年4月一部改訂版の原典本文・印刷ページを逐項照合。公式試験PDF後半の該当ページ画像を直接確認。数値・制度に合否を左右する誤りなし。"
+    },
+    {
+      "questionId": "KSAI-2026-115",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "a",
+            "printedPage": "410",
+            "pdfPages": [
+              418
+            ],
+            "truth": "正",
+            "topic": "アルジオキサはAl含有",
+            "result": "MATCH"
+          },
+          {
+            "item": "b",
+            "printedPage": "410",
+            "pdfPages": [
+              418
+            ],
+            "truth": "誤",
+            "topic": "テプレノンはAl非含有",
+            "result": "MATCH"
+          },
+          {
+            "item": "c",
+            "printedPage": "410",
+            "pdfPages": [
+              418
+            ],
+            "truth": "正",
+            "topic": "合成ヒドロタルサイトはAl含有",
+            "result": "MATCH"
+          },
+          {
+            "item": "d",
+            "printedPage": "410",
+            "pdfPages": [
+              418
+            ],
+            "truth": "正",
+            "topic": "スクラルファートはAl含有",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 2,
+        "bankAnswerNumber": 2,
+        "answerMatch": true,
+        "questionImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
+          "pdfPage": 45,
+          "printedPage": 45,
+          "checked": true,
+          "reason": "公式試験PDF原典ページ画像を確認。表形式問題は表全体・選択肢・組合せを確認。"
+        }
+      },
+      "notes": "添付正規バンクの公式正答（1始まり）と解説の正答番号が一致。厚労省手引き令和8年4月一部改訂版の原典本文・印刷ページを逐項照合。公式試験PDF後半の該当ページ画像を直接確認。数値・制度に合否を左右する誤りなし。"
+    },
+    {
+      "questionId": "KSAI-2026-116",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "a",
+            "printedPage": "403",
+            "pdfPages": [
+              411
+            ],
+            "truth": "誤",
+            "topic": "前立腺肥大による排尿困難はフェルビナク外用薬の禁止対象でない",
+            "result": "MATCH"
+          },
+          {
+            "item": "b",
+            "printedPage": "403",
+            "pdfPages": [
+              411
+            ],
+            "truth": "正",
+            "topic": "喘息既往は使用禁止",
+            "result": "MATCH"
+          },
+          {
+            "item": "c",
+            "printedPage": "403",
+            "pdfPages": [
+              411
+            ],
+            "truth": "誤",
+            "topic": "透析は本成分の禁止理由に該当しない",
+            "result": "MATCH"
+          },
+          {
+            "item": "d",
+            "printedPage": "403",
+            "pdfPages": [
+              411
+            ],
+            "truth": "正",
+            "topic": "フェルビナク外用薬は長期連用しない",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 4,
+        "bankAnswerNumber": 4,
+        "answerMatch": true,
+        "questionImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
+          "pdfPage": 46,
+          "printedPage": 46,
+          "checked": true,
+          "reason": "公式試験PDF原典ページ画像を確認。表形式問題は表全体・選択肢・組合せを確認。"
+        }
+      },
+      "notes": "添付正規バンクの公式正答（1始まり）と解説の正答番号が一致。厚労省手引き令和8年4月一部改訂版の原典本文・印刷ページを逐項照合。公式試験PDF後半の該当ページ画像を直接確認。数値・制度に合否を左右する誤りなし。"
+    },
+    {
+      "questionId": "KSAI-2026-117",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "a",
+            "printedPage": "410",
+            "pdfPages": [
+              418
+            ],
+            "truth": "正",
+            "topic": "抗コリン作用",
+            "result": "MATCH"
+          },
+          {
+            "item": "b",
+            "printedPage": "410",
+            "pdfPages": [
+              418
+            ],
+            "truth": "正",
+            "topic": "房水流出路は狭くなる",
+            "result": "MATCH"
+          },
+          {
+            "item": "c",
+            "printedPage": "410",
+            "pdfPages": [
+              418
+            ],
+            "truth": "正",
+            "topic": "眼圧上昇",
+            "result": "MATCH"
+          },
+          {
+            "item": "d",
+            "printedPage": "410",
+            "pdfPages": [
+              418
+            ],
+            "truth": "正",
+            "topic": "緑内障悪化のおそれ",
+            "result": "MATCH"
+          },
+          {
+            "item": "e",
+            "printedPage": "410",
+            "pdfPages": [
+              418
+            ],
+            "truth": "正",
+            "topic": "相談することの対象",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 1,
+        "bankAnswerNumber": 1,
+        "answerMatch": true,
+        "questionImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
+          "pdfPage": 47,
+          "printedPage": 47,
+          "checked": true,
+          "reason": "公式試験PDF原典ページ画像を確認。表形式問題は表全体・選択肢・組合せを確認。"
+        }
+      },
+      "notes": "添付正規バンクの公式正答（1始まり）と解説の正答番号が一致。厚労省手引き令和8年4月一部改訂版の原典本文・印刷ページを逐項照合。公式試験PDF後半の該当ページ画像を直接確認。数値・制度に合否を左右する誤りなし。"
+    },
+    {
+      "questionId": "KSAI-2026-118",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "a",
+            "printedPage": "403",
+            "pdfPages": [
+              411
+            ],
+            "truth": "誤",
+            "topic": "アセトアミノフェンと糖尿病は本表の禁止組合せでない",
+            "result": "MATCH"
+          },
+          {
+            "item": "b",
+            "printedPage": "403",
+            "pdfPages": [
+              411
+            ],
+            "truth": "誤",
+            "topic": "透析とロートエキスは本表の禁止組合せでない",
+            "result": "MATCH"
+          },
+          {
+            "item": "c",
+            "printedPage": "403",
+            "pdfPages": [
+              411
+            ],
+            "truth": "正",
+            "topic": "プソイドエフェドリンは高血圧を悪化させ得る",
+            "result": "MATCH"
+          },
+          {
+            "item": "d",
+            "printedPage": "403",
+            "pdfPages": [
+              411
+            ],
+            "truth": "正",
+            "topic": "オキセサゼインは15歳未満に使用しない",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 5,
+        "bankAnswerNumber": 5,
+        "answerMatch": true,
+        "questionImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
+          "pdfPage": 48,
+          "printedPage": 48,
+          "checked": true,
+          "reason": "公式試験PDF原典ページ画像を確認。表形式問題は表全体・選択肢・組合せを確認。"
+        }
+      },
+      "notes": "添付正規バンクの公式正答（1始まり）と解説の正答番号が一致。厚労省手引き令和8年4月一部改訂版の原典本文・印刷ページを逐項照合。公式試験PDF後半の該当ページ画像を直接確認。問118：アセトアミノフェン・糖尿病及びロートエキス・透析の組合せは不一致、PSE・高血圧及びオキセサゼイン・15歳未満は一致。"
+    },
+    {
+      "questionId": "KSAI-2026-119",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "a",
+            "printedPage": "410",
+            "pdfPages": [
+              418
+            ],
+            "truth": "正",
+            "topic": "ジプロフィリンは中枢興奮によりてんかん悪化のおそれ",
+            "result": "MATCH"
+          },
+          {
+            "item": "b",
+            "printedPage": "410",
+            "pdfPages": [
+              418
+            ],
+            "truth": "誤",
+            "topic": "酸化Mgと心臓病の組合せは不適切（腎臓病・腎排泄が根拠）",
+            "result": "MATCH"
+          },
+          {
+            "item": "c",
+            "printedPage": "410",
+            "pdfPages": [
+              418
+            ],
+            "truth": "正",
+            "topic": "エテンザミドは胃・十二指腸潰瘍歴に注意",
+            "result": "MATCH"
+          },
+          {
+            "item": "d",
+            "printedPage": "410",
+            "pdfPages": [
+              418
+            ],
+            "truth": "正",
+            "topic": "メチルエフェドリンは甲状腺機能亢進症を悪化させ得る",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 1,
+        "bankAnswerNumber": 1,
+        "answerMatch": true,
+        "questionImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
+          "pdfPage": 49,
+          "printedPage": 49,
+          "checked": true,
+          "reason": "公式試験PDF原典ページ画像を確認。表形式問題は表全体・選択肢・組合せを確認。"
+        }
+      },
+      "notes": "添付正規バンクの公式正答（1始まり）と解説の正答番号が一致。厚労省手引き令和8年4月一部改訂版の原典本文・印刷ページを逐項照合。公式試験PDF後半の該当ページ画像を直接確認。問119：酸化マグネシウムは心臓病ではなく腎臓病の表に関連するためb誤。"
+    },
+    {
+      "questionId": "KSAI-2026-120",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "a",
+            "printedPage": "402",
+            "pdfPages": [
+              410
+            ],
+            "truth": "正",
+            "topic": "カフェイン主薬眠気防止薬は胃酸過多に注意",
+            "result": "MATCH"
+          },
+          {
+            "item": "b",
+            "printedPage": "402",
+            "pdfPages": [
+              410
+            ],
+            "truth": "誤",
+            "topic": "水酸化Alゲル胃腸薬は該当しない",
+            "result": "MATCH"
+          },
+          {
+            "item": "c",
+            "printedPage": "402",
+            "pdfPages": [
+              410
+            ],
+            "truth": "誤",
+            "topic": "大黄甘草湯は該当しない",
+            "result": "MATCH"
+          },
+          {
+            "item": "d",
+            "printedPage": "402",
+            "pdfPages": [
+              410
+            ],
+            "truth": "誤",
+            "topic": "オキセサゼイン胃腸薬は該当しない",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 5,
+        "bankAnswerNumber": 5,
+        "answerMatch": true,
+        "questionImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
+          "pdfPage": 50,
+          "printedPage": 50,
+          "checked": true,
+          "reason": "公式試験PDF原典ページ画像を確認。表形式問題は表全体・選択肢・組合せを確認。"
+        }
+      },
+      "notes": "添付正規バンクの公式正答（1始まり）と解説の正答番号が一致。厚労省手引き令和8年4月一部改訂版の原典本文・印刷ページを逐項照合。公式試験PDF後半の該当ページ画像を直接確認。数値・制度に合否を左右する誤りなし。"
     }
   ],
   "sourceDiffHistory": [
@@ -6948,8 +7649,16 @@
   ],
   "latestAuditRun": {
     "date": "2026-11-25",
-    "scope": "101–110",
-    "sourceExplanationBlobSha": "40e7fab214327810cec00917b062c1f0331f3be8",
-    "previousAcquisitionIssue": "前回未取得、原因未特定。今回GitHub・手引き・公式問題PDF取得成功。問96は再監査対象外でHOLD維持。全ファイル差分検証は今回未実施。"
+    "scope": "Q96 re-audit and Q111–120",
+    "explanationOldBlobSha": "ed5e24ed3310cc99ceb2bf92aa29379a145c6ce0",
+    "explanationNewBlobSha": "40e7fab214327810cec00917b062c1f0331f3be8",
+    "explanationDiffQuestionIds": [
+      "KSAI-2026-096"
+    ],
+    "explanationDiffCount": 1,
+    "explanationMetadataUnchanged": true,
+    "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+    "officialExamPdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
+    "notes": "問96の差分が唯一であることを120問JSON全体で比較。問111-120は原典本文・原典PDF画像を確認。正答は添付正規バンクに基づき照合。"
   }
 }
