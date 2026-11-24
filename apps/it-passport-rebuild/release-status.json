@@ -3,7 +3,7 @@
   "updated_at_jst": "2026-11-24T10:03:00+09:00",
   "project": "新ITパスポート｜ゼロベース開発",
   "release_decision": "BLOCKED",
-  "release_stage": "RECALCULATED_HIGH95_BATCH05_PASS_3_BANK_111",
+  "release_stage": "RECALCULATED_HIGH95_BATCH06_PASS_2_BANK_113",
   "app_review_submitted": false,
   "requirements": {
     "official_question_verbatim": true,
@@ -24,10 +24,10 @@
       "reason": "origin_type=original; cannot substitute for verbatim IPA past questions"
     },
     "official_past_exam": {
-      "canonical": 111,
+      "canonical": 113,
       "target": 500,
       "verified_rounds": 0,
-      "source_verbatim_audit": "PASS_111_HOLD_389",
+      "source_verbatim_audit": "PASS_113_HOLD_387",
       "pdf_stage_attempt": {
         "result": "RESOLVED_BY_USER_UPLOADED_ORIGINALS",
         "source": "10 attached original PDFs",
@@ -45,9 +45,9 @@
         "original_ocr_drafts": "LOCAL_AUDIT_ARCHIVE",
         "source_page_identified": 500,
         "question_candidates": 500,
-        "question_verbatim_pass": 111,
+        "question_verbatim_pass": 113,
         "answer_audit_pass": 500,
-        "unverified_text": 389,
+        "unverified_text": 387,
         "release_promotion": "ONLY_AFTER_INDEPENDENT_ORIGINAL_IMAGE_VS_TEXT_CHOICES_FIGURE_AUDIT",
         "separate_original_mock_count": 240,
         "ocr_question_head_exact": 455,
@@ -58,12 +58,12 @@
         "text_is_ocr_unverified": true,
         "audit_record": "questions/official-verbatim-audit-12-20261124.json",
         "audit_record_additional": "questions/official-verbatim-audit-high95-20261124.json",
-        "audit_record_latest": "questions/official-verbatim-audit-high95-recalculated-b05-20261124.json"
+        "audit_record_latest": "questions/official-verbatim-audit-high95-recalculated-b06-20261124.json"
       },
       "candidate_index_count": 500,
       "source_pdfs_verified": 10,
       "answer_key_verified": 500,
-      "verbatim_promoted": 111,
+      "verbatim_promoted": 113,
       "official_answer_reference": "questions/official-answer-index.json",
       "official_candidate_reference": "questions/official-candidate-index.json",
       "original_scan_uploaded_count": 5,
@@ -90,13 +90,13 @@
         "source_raster_minor_rendering_difference": 98,
         "raster_max_channel_difference": 9,
         "original_pdf_source_images_present_in_local_artifact": true,
-        "independent_word_by_word_checked": 111,
+        "independent_word_by_word_checked": 113,
         "archive_bytes": 47200937,
         "private_drive_staging_id": "1R94-C3Q7hKhWt2Px01z9y6eX8qDN8FqG",
         "github_boundary_repair_manifest": "questions/official-image-boundary-repairs.json",
         "github_500_image_audit_manifest": "questions/official-image-audit-500.json",
         "visual_boundary_manual_checks": 21,
-        "content_lexical_audit_pass": 111,
+        "content_lexical_audit_pass": 113,
         "raster_note": "21 repaired crops are pixel-identical to freshly rendered source image crops; 479 existing crops are pixel-identical for 381 or raster-equivalent with only maximum 2-9 channel-level conversion variance for 98; total 500/500 raster equivalent. This is not independent text/choice audit.",
         "verbatim_ocr_second_pass": "COMPLETED_500_SAME_ENGINE_DISCREPANCY_SCREEN_ONLY",
         "archive_storage": "LOCAL_ATTACHMENT_AND_PRIVATE_GOOGLE_DRIVE_STAGING",
@@ -143,7 +143,9 @@
         "itp-2022-q024",
         "itp-2022-q033",
         "itp-2022-q034",
+        "itp-2022-q035",
         "itp-2022-q036",
+        "itp-2022-q037",
         "itp-2022-q038",
         "itp-2022-q042",
         "itp-2022-q045",
@@ -239,7 +241,7 @@
       "visual_audit_breakdown": [
         {
           "year": 2022,
-          "pass": 38
+          "pass": 40
         },
         {
           "year": 2023,
@@ -285,11 +287,11 @@
       "recalculated_high_similarity_audit": {
         "reference": "questions/official-ocr-screening-recalculated-20261124.json",
         "high_including_exact": 309,
-        "promoted_high": 108,
-        "unpromoted_high": 201,
+        "promoted_high": 110,
+        "unpromoted_high": 199,
         "repair_hold": 2,
-        "actionable_remaining": 199,
-        "new_pass": 3
+        "actionable_remaining": 197,
+        "new_pass": 2
       }
     },
     "ios": {
@@ -326,15 +328,15 @@
       "answer_pdf_dual_engine": "PASS_500_OF_500",
       "pdf_sha256": "PASS_10_OF_10",
       "candidate_source_id_and_page": "REGISTERED_500_OF_500",
-      "verbatim_question_content": "PARTIAL_PASS_111_HOLD_389",
+      "verbatim_question_content": "PARTIAL_PASS_113_HOLD_387",
       "github_canonical_quality_run": 45301854554,
       "github_canonical_quality_conclusion": "NEW_CI_PENDING",
-      "official_candidate_index_integrity": "PASS_500_WITH_111_PROMOTED_STRUCTURAL_CHECK",
-      "official_verbatim_release_gate": "EXPECTED_BLOCK_111_OF_500",
+      "official_candidate_index_integrity": "PASS_500_WITH_113_PROMOTED_STRUCTURAL_CHECK",
+      "official_verbatim_release_gate": "EXPECTED_BLOCK_113_OF_500",
       "original_mock_excluded_from_official_pool": true,
       "original_image_crop_fallback_repair": "PASS_21_OF_21",
       "original_raster_equivalence": "PASS_500_OF_500",
-      "official_text_verbatim": "PARTIAL_PASS_111_HOLD_389",
+      "official_text_verbatim": "PARTIAL_PASS_113_HOLD_387",
       "binary_assets_in_github": "NOT_COMMITTED",
       "app_release_gate": "BLOCKED",
       "github_image_evidence_ci_run": 45288368053,
@@ -346,7 +348,7 @@
       "ocr_discrepancy_screen": "COMPLETE_500_NOT_VERBATIM_PASS",
       "partial_verified_source_12": "PASS",
       "visual_audit_evidence": "questions/official-verbatim-audit-12-20261124.json",
-      "high_similarity_manual_review": "RECALCULATED_HIGH_95_PASS_108_HOLD_201",
+      "high_similarity_manual_review": "RECALCULATED_HIGH_95_PASS_110_HOLD_199",
       "partial_verified_source_22": "PASS",
       "new_source_image_boundary_issue": "2026_Q25_HOLD_REFRAME_REQUIRED",
       "partial_verified_source_42": "PASS",
@@ -358,7 +360,8 @@
       "partial_verified_source_102": "PASS_VISUAL",
       "partial_verified_source_105": "PASS_VISUAL",
       "partial_verified_source_108": "PASS_VISUAL",
-      "partial_verified_source_111": "PASS_VISUAL"
+      "partial_verified_source_111": "PASS_VISUAL",
+      "partial_verified_source_113": "PASS_VISUAL"
     }
   },
   "ipa_rights": {
@@ -380,7 +383,7 @@
     {
       "code": "IP-OFF-500",
       "severity": "P0",
-      "detail": "111 verified; 389 HOLD; recalculated high group 201 HOLD including 2 repair cases; 199 actionable. Images uncommitted; publishable 0."
+      "detail": "113 verified; 387 HOLD; 197 actionable, 2 repair cases, 188 other; images uncommitted."
     },
     {
       "code": "IP-SOURCE-FIDELITY",
@@ -404,7 +407,7 @@
     }
   ],
   "next_machine_actions": [
-    "Continue individual original-scan visual comparison for 199 actionable recalculated high OCR similarity questions; do not convert OCR similarity into PASS",
+    "Continue individual original-scan visual comparison for 197 actionable recalculated high OCR similarity questions; do not convert OCR similarity into PASS",
     "Recrop Q2026-25 and reproduce Q2023-37 table/blank original figure, then independently recheck",
     "Independently audit remaining 188 outside recalculated high group.",
     "Store original lossless image assets in GitHub, verify SHA256, then wire audited official records into iOS without original-mock contamination"

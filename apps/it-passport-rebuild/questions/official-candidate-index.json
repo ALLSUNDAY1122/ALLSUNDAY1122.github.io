@@ -3,9 +3,9 @@
   "source": "IPA question/answer PDFs uploaded by user; 10 SHA verified",
   "candidate_count": 500,
   "answer_audit_pass": 500,
-  "question_verbatim_pass": 111,
+  "question_verbatim_pass": 113,
   "release_eligible": false,
-  "note": "111 original-source manually visually verified; 389 HOLD; Q2026-25 and Q2023-37 remain HOLD; images uncommitted.",
+  "note": "113 manually visually verified; 387 HOLD; 2026 Q25 and 2023 Q37 remain HOLD; images uncommitted.",
   "items": [
     {
       "id": "itp-2022-q001",
@@ -761,11 +761,16 @@
       "correct_label": "イ",
       "correct_index": 1,
       "answer_audit": "PASS_TWO_PDF_TEXT_ENGINES",
-      "question_body_status": "OCR_CANDIDATE_VISUAL_AUDIT_REQUIRED",
-      "choices_status": "OCR_CANDIDATE_VISUAL_AUDIT_REQUIRED",
+      "question_body_status": "PASS_INDEPENDENT_VISUAL",
+      "choices_status": "PASS_INDEPENDENT_VISUAL",
       "diagram_status": "IMAGE_CROP_PENDING",
       "origin_type": "ipa_published_exam_candidate",
-      "publishable": false
+      "publishable": false,
+      "figure_status": "NOT_REQUIRED",
+      "audit_evidence": "official-verbatim-audit-high95-recalculated-b06-20261124.json",
+      "official_bank": "official-verbatim.json",
+      "source_image_sha256": "e7272443dd512b78535cf0d21364508952f3a7ad1d3e1a52507c010545317165",
+      "source_image_committed": false
     },
     {
       "id": "itp-2022-q036",
@@ -804,11 +809,16 @@
       "correct_label": "イ",
       "correct_index": 1,
       "answer_audit": "PASS_TWO_PDF_TEXT_ENGINES",
-      "question_body_status": "OCR_CANDIDATE_VISUAL_AUDIT_REQUIRED",
-      "choices_status": "OCR_CANDIDATE_VISUAL_AUDIT_REQUIRED",
+      "question_body_status": "PASS_INDEPENDENT_VISUAL",
+      "choices_status": "PASS_INDEPENDENT_VISUAL",
       "diagram_status": "IMAGE_CROP_PENDING",
       "origin_type": "ipa_published_exam_candidate",
-      "publishable": false
+      "publishable": false,
+      "figure_status": "NOT_REQUIRED",
+      "audit_evidence": "official-verbatim-audit-high95-recalculated-b06-20261124.json",
+      "official_bank": "official-verbatim.json",
+      "source_image_sha256": "fcc883b18f8136ba401e7a8f7f9d9d74221611720a5b40311a23cefd06c39349",
+      "source_image_committed": false
     },
     {
       "id": "itp-2022-q038",
@@ -10063,5 +10073,5 @@
       "source_image_committed": false
     }
   ],
-  "question_verbatim_hold": 389
+  "question_verbatim_hold": 387
 }
