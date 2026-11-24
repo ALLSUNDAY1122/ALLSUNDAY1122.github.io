@@ -555,3 +555,7 @@
 ## EasyOCR Run 45300514755 recovery
 
 - OCR success, non-fast-forward push failure. Artifact 14879813122 SHA-256 verified. 29 reviewed: 5 PASS, 24 HOLD; duplicate exclusions K111-AM065 and K111-PM003; 3 new source-only promotions K112-AM009, K112-AM016, K112-AM026. Canonical 1031/1200, held 169. All 48 candidate records assembled; remaining 19 independent OCR pending. Publication and submission blocked.
+
+## EasyOCR Run 45305514002 recovery
+
+- OCR success, non-fast-forward push failure. Artifact 14881253692 SHA-256 verified against downloaded ZIP; run-result.json confirms 19 results: PASS K112-AM085, HOLD 18 (gloss geometry 5, strict OCR mismatch 13). Source-only promotion 1, canonical 1032/1200, held 168. All 48 OCR candidates attempted; 6 promoted, 42 held. Publication and submission blocked.

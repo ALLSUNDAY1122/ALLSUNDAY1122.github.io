@@ -3,7 +3,7 @@
   "updatedAt": "2026-11-24",
   "qualification": "看護師国家試験",
   "policy": "Verified 112/111 canonical SOURCE bank; new questions pass two independent PDF text extraction and official answer token tests, but still require explanation, app tests, rights checks. Never auto-publish.",
-  "count": 311,
+  "count": 312,
   "sourceExams": [
     112,
     111
@@ -5328,6 +5328,70 @@
           "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
         },
         "scenarioContextEvidence": null
+      }
+    },
+    {
+      "id": "K112-AM085",
+      "sourceExam": 112,
+      "session": "AM",
+      "questionNo": 85,
+      "question": "定期予防接種について正しいのはどれか。",
+      "choices": [
+        "BCG接種前にツベルクリン反応を実施する。",
+        "ロタウイルスワクチンは不活化ワクチンである。",
+        "ポリオウイルスワクチンの定期接種は廃止された。",
+        "麻疹ウイルスワクチンは就学までに4回接種する。",
+        "ヒトパピローマウイルス〈HPV〉ワクチンは筋肉内注射する。"
+      ],
+      "answer": 4,
+      "sourcePage": 31,
+      "sourceRefs": [
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp230524-05a_01.pdf",
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp230524-05seitou.pdf"
+      ],
+      "sourceAttribution": "出典：厚生労働省『第112回看護師国家試験』を学習用データとして加工",
+      "requiresMedia": false,
+      "rightsStatus": "mhlw-pdl1.0-text",
+      "reviewStatus": "VISUAL_AND_INDEPENDENT_OCR_SOURCE_ONLY_EXPLANATION_PENDING",
+      "extractionValid": true,
+      "textFidelity": "VERIFIED_SOURCE_ONLY",
+      "answerSourceChecked": true,
+      "officialKeyPdfSha256": "c42b7b61fe9b7fd39265b0e4fef5f0a4d277db077618a98db16e9717047a9502",
+      "officialScoringNotice": null,
+      "officialScoringStatus": "normal",
+      "sourceAnswerTokens": [
+        "5"
+      ],
+      "officialKeyRaw": "5",
+      "officialAcceptedAnswers": [
+        4
+      ],
+      "answerKeyVerification": "MATCH_SINGLE_DIGIT_KEY_NOT_VERBATIM_CERTIFIED",
+      "publishable": false,
+      "releaseEligible": false,
+      "mediaAuditStatus": "not_required",
+      "canonicalStatus": "source_verified_extension",
+      "printedOptionCount": 5,
+      "answerType": "singleChoice",
+      "category": "一般",
+      "majorSubject": null,
+      "point": null,
+      "detail": null,
+      "audit": {
+        "sourcePageVisualReviewed": true,
+        "allPrintedChoicesVisualReviewed": true,
+        "officialKeyMatched": true,
+        "independentOcrFieldMatch": true,
+        "explanationIndependentlyReviewed": false,
+        "runtimeIntegrationChecked": false
+      },
+      "evidence": {
+        "sourcePdfPage": 31,
+        "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
+        "sourceImageSha256": "890f234ce82bf419873e2b40364a8ecd44dd9e07fec7f58dda00b4e6d904a39e",
+        "auditLedger": "kangoshi-sprint/audit/ocr-other48-visual-review-20261124.json",
+        "runId": 45305514002,
+        "artifactId": 14881253692
       }
     },
     {
