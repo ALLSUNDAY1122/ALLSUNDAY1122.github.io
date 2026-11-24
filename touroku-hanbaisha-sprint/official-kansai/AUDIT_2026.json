@@ -1,10 +1,10 @@
 {
   "year": 2026,
   "targetCount": 120,
-  "auditedCount": 20,
-  "auditPassedCount": 20,
+  "auditedCount": 30,
+  "auditPassedCount": 30,
   "holdCount": 0,
-  "pendingCount": 100,
+  "pendingCount": 90,
   "sourceExplanationPath": "touroku-hanbaisha-sprint/official-kansai/EXPLANATIONS_2026.json",
   "sourceExplanationBlobSha": "691c867a0522c5220b4b5139253bbdd060b0cb85",
   "auditDate": "2026-11-24",
@@ -1177,6 +1177,608 @@
         "questionImage": null
       },
       "notes": "添付正規バンクと正答番号一致。手引き原典ページ画像から正答理由・全記述または全選択肢を独立照合。数値・制度の不整合なし。画像掲載形式ではないため基準(4)適用外。公式正答PDFの直接再取得は前回失敗、今回は指定正規バンクで照合（ユーザー了承）。"
+    },
+    {
+      "questionId": "KSAI-2026-021",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "a",
+            "printedPage": "57",
+            "pdfPages": [
+              65
+            ],
+            "truth": "誤",
+            "topic": "ウイルス約8割",
+            "result": "MATCH"
+          },
+          {
+            "item": "b",
+            "printedPage": "57",
+            "pdfPages": [
+              65
+            ],
+            "truth": "誤",
+            "topic": "上気道",
+            "result": "MATCH"
+          },
+          {
+            "item": "c",
+            "printedPage": "57–58",
+            "pdfPages": [
+              65,
+              66
+            ],
+            "truth": "正",
+            "topic": "対症療法",
+            "result": "MATCH"
+          },
+          {
+            "item": "d",
+            "printedPage": "58",
+            "pdfPages": [
+              66
+            ],
+            "truth": "正",
+            "topic": "必要成分選択",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 5,
+        "bankAnswerNumber": 5,
+        "answerMatch": true,
+        "questionImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
+          "pdfPage": 20,
+          "printedPage": 18,
+          "checked": true
+        }
+      },
+      "notes": "添付正規バンクの正答番号と一致。手引き原典ページ画像で正答理由・全記述または全選択肢を独立照合。数値・制度・作用に不整合なし。公式試験PDFの原典画像で設問・組合せを目視確認。公式正答PDFの直接再取得は前回失敗、今回は指定正規バンクで照合（ユーザー了承）。"
+    },
+    {
+      "questionId": "KSAI-2026-022",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "1",
+            "printedPage": "62",
+            "pdfPages": [
+              70
+            ],
+            "truth": "誤",
+            "topic": "香蘇散・かぜ初期",
+            "result": "MATCH"
+          },
+          {
+            "item": "2",
+            "printedPage": "89",
+            "pdfPages": [
+              97
+            ],
+            "truth": "誤",
+            "topic": "半夏厚朴湯・異物感",
+            "result": "MATCH"
+          },
+          {
+            "item": "3",
+            "printedPage": "101",
+            "pdfPages": [
+              109
+            ],
+            "truth": "誤",
+            "topic": "安中散・胃痛",
+            "result": "MATCH"
+          },
+          {
+            "item": "4",
+            "printedPage": "61",
+            "pdfPages": [
+              69
+            ],
+            "truth": "正",
+            "topic": "小柴胡湯・口苦白苔",
+            "result": "MATCH"
+          },
+          {
+            "item": "5",
+            "printedPage": "110",
+            "pdfPages": [
+              118
+            ],
+            "truth": "誤",
+            "topic": "桂枝加芍薬湯・腹痛",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 4,
+        "bankAnswerNumber": 4,
+        "answerMatch": true,
+        "questionImage": null
+      },
+      "notes": "添付正規バンクの正答番号と一致。手引き原典ページ画像で正答理由・全記述または全選択肢を独立照合。数値・制度・作用に不整合なし。画像掲載形式ではないため基準(4)適用外。公式正答PDFの直接再取得は前回失敗、今回は指定正規バンクで照合（ユーザー了承）。"
+    },
+    {
+      "questionId": "KSAI-2026-023",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "a",
+            "printedPage": "61",
+            "pdfPages": [
+              69
+            ],
+            "truth": "誤",
+            "topic": "麻黄湯と葛根湯",
+            "result": "MATCH"
+          },
+          {
+            "item": "b",
+            "printedPage": "61,90",
+            "pdfPages": [
+              69,
+              98
+            ],
+            "truth": "誤",
+            "topic": "麦門冬湯と柴胡桂枝湯",
+            "result": "MATCH"
+          },
+          {
+            "item": "c",
+            "printedPage": "61",
+            "pdfPages": [
+              69
+            ],
+            "truth": "正",
+            "topic": "小青竜湯",
+            "result": "MATCH"
+          },
+          {
+            "item": "d",
+            "printedPage": "62",
+            "pdfPages": [
+              70
+            ],
+            "truth": "正",
+            "topic": "桂枝湯",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 4,
+        "bankAnswerNumber": 4,
+        "answerMatch": true,
+        "questionImage": null
+      },
+      "notes": "添付正規バンクの正答番号と一致。手引き原典ページ画像で正答理由・全記述または全選択肢を独立照合。数値・制度・作用に不整合なし。画像掲載形式ではないため基準(4)適用外。公式正答PDFの直接再取得は前回失敗、今回は指定正規バンクで照合（ユーザー了承）。"
+    },
+    {
+      "questionId": "KSAI-2026-024",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "a",
+            "printedPage": "59",
+            "pdfPages": [
+              67
+            ],
+            "truth": "正",
+            "topic": "トラネキサム酸と血栓",
+            "result": "MATCH"
+          },
+          {
+            "item": "b",
+            "printedPage": "63",
+            "pdfPages": [
+              71
+            ],
+            "truth": "正",
+            "topic": "ジヒドロコデイン便秘・脚注67",
+            "result": "MATCH"
+          },
+          {
+            "item": "c",
+            "printedPage": "58,63,73",
+            "pdfPages": [
+              66,
+              71,
+              81
+            ],
+            "truth": "正",
+            "topic": "クレマスチン・眠気・運転禁止",
+            "result": "MATCH"
+          },
+          {
+            "item": "d",
+            "printedPage": "67",
+            "pdfPages": [
+              75
+            ],
+            "truth": "誤",
+            "topic": "イブプロフェン15歳未満禁止",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 1,
+        "bankAnswerNumber": 1,
+        "answerMatch": true,
+        "questionImage": null
+      },
+      "notes": "添付正規バンクの正答番号と一致。手引き原典ページ画像で正答理由・全記述または全選択肢を独立照合。数値・制度・作用に不整合なし。画像掲載形式ではないため基準(4)適用外。公式正答PDFの直接再取得は前回失敗、今回は指定正規バンクで照合（ユーザー了承）。"
+    },
+    {
+      "questionId": "KSAI-2026-025",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "a",
+            "printedPage": "66",
+            "pdfPages": [
+              74
+            ],
+            "truth": "正",
+            "topic": "アスピリン喘息",
+            "result": "MATCH"
+          },
+          {
+            "item": "b",
+            "printedPage": "67",
+            "pdfPages": [
+              75
+            ],
+            "truth": "正",
+            "topic": "ピリン系",
+            "result": "MATCH"
+          },
+          {
+            "item": "c",
+            "printedPage": "67",
+            "pdfPages": [
+              75
+            ],
+            "truth": "誤",
+            "topic": "粘膜防御低下",
+            "result": "MATCH"
+          },
+          {
+            "item": "d",
+            "printedPage": "69",
+            "pdfPages": [
+              77
+            ],
+            "truth": "正",
+            "topic": "鎮痛増強",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 1,
+        "bankAnswerNumber": 1,
+        "answerMatch": true,
+        "questionImage": null
+      },
+      "notes": "添付正規バンクの正答番号と一致。手引き原典ページ画像で正答理由・全記述または全選択肢を独立照合。数値・制度・作用に不整合なし。画像掲載形式ではないため基準(4)適用外。公式正答PDFの直接再取得は前回失敗、今回は指定正規バンクで照合（ユーザー了承）。"
+    },
+    {
+      "questionId": "KSAI-2026-026",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "1",
+            "printedPage": "71",
+            "pdfPages": [
+              79
+            ],
+            "truth": "誤",
+            "topic": "釣藤散・慢性頭痛",
+            "result": "MATCH"
+          },
+          {
+            "item": "2",
+            "printedPage": "70",
+            "pdfPages": [
+              78
+            ],
+            "truth": "誤",
+            "topic": "疎経活血湯・関節痛",
+            "result": "MATCH"
+          },
+          {
+            "item": "3",
+            "printedPage": "70",
+            "pdfPages": [
+              78
+            ],
+            "truth": "誤",
+            "topic": "麻杏薏甘湯・関節筋肉痛",
+            "result": "MATCH"
+          },
+          {
+            "item": "4",
+            "printedPage": "70",
+            "pdfPages": [
+              78
+            ],
+            "truth": "誤",
+            "topic": "桂枝加朮附湯・冷え関節痛",
+            "result": "MATCH"
+          },
+          {
+            "item": "5",
+            "printedPage": "70",
+            "pdfPages": [
+              78
+            ],
+            "truth": "正",
+            "topic": "芍薬甘草湯・急激な痙攣・連用回避",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 5,
+        "bankAnswerNumber": 5,
+        "answerMatch": true,
+        "questionImage": null
+      },
+      "notes": "添付正規バンクの正答番号と一致。手引き原典ページ画像で正答理由・全記述または全選択肢を独立照合。数値・制度・作用に不整合なし。画像掲載形式ではないため基準(4)適用外。公式正答PDFの直接再取得は前回失敗、今回は指定正規バンクで照合（ユーザー了承）。"
+    },
+    {
+      "questionId": "KSAI-2026-027",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "a",
+            "printedPage": "77",
+            "pdfPages": [
+              85
+            ],
+            "truth": "誤",
+            "topic": "再吸収抑制",
+            "result": "MATCH"
+          },
+          {
+            "item": "b",
+            "printedPage": "77",
+            "pdfPages": [
+              85
+            ],
+            "truth": "誤",
+            "topic": "胃液分泌促進",
+            "result": "MATCH"
+          },
+          {
+            "item": "c",
+            "printedPage": "77",
+            "pdfPages": [
+              85
+            ],
+            "truth": "正",
+            "topic": "乳汁移行",
+            "result": "MATCH"
+          },
+          {
+            "item": "d",
+            "printedPage": "77",
+            "pdfPages": [
+              85
+            ],
+            "truth": "正",
+            "topic": "中枢刺激",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 2,
+        "bankAnswerNumber": 2,
+        "answerMatch": true,
+        "questionImage": null
+      },
+      "notes": "添付正規バンクの正答番号と一致。手引き原典ページ画像で正答理由・全記述または全選択肢を独立照合。数値・制度・作用に不整合なし。画像掲載形式ではないため基準(4)適用外。公式正答PDFの直接再取得は前回失敗、今回は指定正規バンクで照合（ユーザー了承）。"
+    },
+    {
+      "questionId": "KSAI-2026-028",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "a",
+            "printedPage": "66–67",
+            "pdfPages": [
+              74,
+              75
+            ],
+            "truth": "誤",
+            "topic": "小児用アセトアミノフェン",
+            "result": "MATCH"
+          },
+          {
+            "item": "b",
+            "printedPage": "67",
+            "pdfPages": [
+              75
+            ],
+            "truth": "誤",
+            "topic": "クローン病再発はイブプロフェン",
+            "result": "MATCH"
+          },
+          {
+            "item": "c",
+            "printedPage": "67",
+            "pdfPages": [
+              75
+            ],
+            "truth": "正",
+            "topic": "SLE無菌性髄膜炎",
+            "result": "MATCH"
+          },
+          {
+            "item": "d",
+            "printedPage": "79",
+            "pdfPages": [
+              87
+            ],
+            "truth": "正",
+            "topic": "ジフェニドール緑内障",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 2,
+        "bankAnswerNumber": 2,
+        "answerMatch": true,
+        "questionImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
+          "pdfPage": 25,
+          "printedPage": 23,
+          "checked": true
+        }
+      },
+      "notes": "添付正規バンクの正答番号と一致。手引き原典ページ画像で正答理由・全記述または全選択肢を独立照合。数値・制度・作用に不整合なし。公式試験PDFの原典画像で設問・組合せを目視確認。公式正答PDFの直接再取得は前回失敗、今回は指定正規バンクで照合（ユーザー了承）。"
+    },
+    {
+      "questionId": "KSAI-2026-029",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "a",
+            "printedPage": "74–75",
+            "pdfPages": [
+              82,
+              83
+            ],
+            "truth": "誤",
+            "topic": "酸棗仁湯",
+            "result": "MATCH"
+          },
+          {
+            "item": "b",
+            "printedPage": "75",
+            "pdfPages": [
+              83
+            ],
+            "truth": "正",
+            "topic": "桂枝加竜骨牡蛎湯・夜泣き",
+            "result": "MATCH"
+          },
+          {
+            "item": "c",
+            "printedPage": "75",
+            "pdfPages": [
+              83
+            ],
+            "truth": "誤",
+            "topic": "加味帰脾湯",
+            "result": "MATCH"
+          },
+          {
+            "item": "d",
+            "printedPage": "75",
+            "pdfPages": [
+              83
+            ],
+            "truth": "正",
+            "topic": "抑肝散・夜泣き",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 4,
+        "bankAnswerNumber": 4,
+        "answerMatch": true,
+        "questionImage": null
+      },
+      "notes": "添付正規バンクの正答番号と一致。手引き原典ページ画像で正答理由・全記述または全選択肢を独立照合。数値・制度・作用に不整合なし。画像掲載形式ではないため基準(4)適用外。公式正答PDFの直接再取得は前回失敗、今回は指定正規バンクで照合（ユーザー了承）。"
+    },
+    {
+      "questionId": "KSAI-2026-030",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "a",
+            "printedPage": "80",
+            "pdfPages": [
+              88
+            ],
+            "truth": "誤",
+            "topic": "アミノ安息香酸エチル局所麻酔",
+            "result": "MATCH"
+          },
+          {
+            "item": "b",
+            "printedPage": "79",
+            "pdfPages": [
+              87
+            ],
+            "truth": "正",
+            "topic": "クロルフェニラミン抗ヒスタミン",
+            "result": "MATCH"
+          },
+          {
+            "item": "c",
+            "printedPage": "79–80",
+            "pdfPages": [
+              87,
+              88
+            ],
+            "truth": "正",
+            "topic": "スコポラミン抗コリン",
+            "result": "MATCH"
+          },
+          {
+            "item": "d",
+            "printedPage": "80",
+            "pdfPages": [
+              88
+            ],
+            "truth": "誤",
+            "topic": "ジプロフィリン中枢刺激",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 3,
+        "bankAnswerNumber": 3,
+        "answerMatch": true,
+        "questionImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
+          "pdfPage": 26,
+          "printedPage": 24,
+          "checked": true
+        }
+      },
+      "notes": "添付正規バンクの正答番号と一致。手引き原典ページ画像で正答理由・全記述または全選択肢を独立照合。数値・制度・作用に不整合なし。公式試験PDFの原典画像で設問・組合せを目視確認。公式正答PDFの直接再取得は前回失敗、今回は指定正規バンクで照合（ユーザー了承）。"
     }
   ]
 }
