@@ -1507,23 +1507,22 @@
     "githubRunId": 45287794947
   },
   "q6_ios_simulator_20261124": {
-    "result": "PASS",
-    "xcodebuild": "PASS",
-    "simulatorBoot": "PASS",
-    "install": "PASS",
-    "launch": "PASS",
-    "screenshot": "PASS",
-    "appProcessPid": 5055,
-    "simulator": "iPhone 16 Pro",
-    "simulatorUDID": "DA1C9012-81EC-4C70-B52A-068AEAFBA1DE",
-    "runId": 45287450236,
-    "jobId": 138087341791,
-    "evidence": "touroku-hanbaisha-ios/IOS_SIMULATOR_Q6_20261124.json",
-    "artifactId": 14872941877,
-    "workflowOverall": "FAIL_DUE_TO_GIT_RELEASE_STATUS_REBASE_CONFLICT",
-    "actualNativeAppScreenVisuallyVerified": false,
-    "physicalDeviceTested": false,
-    "testflightUploaded": false
+    "schema": "touhan-q6-ios-simulator-v1",
+    "timestampJST": "2026-11-24T11:19:22.854837+09:00",
+    "status": "PASS",
+    "environment": "success",
+    "build": "success",
+    "installAndLaunch": "success",
+    "githubRunId": "45310905655",
+    "headSHA": "379b6806c233562cca877d546b2c491e0c5a33b0",
+    "artifactId": 14882794380,
+    "recoveredFrom": "GitHub Actions job 138166092282 log and uploaded artifact",
+    "persistence": "Original workflow failed on rebase; recovered record does not change CI conclusion",
+    "limits": [
+      "No physical iPhone test",
+      "No TestFlight installation",
+      "Screenshot not independently visually certified"
+    ]
   },
   "q5_asc_privacy_metadata_readback_20261124": {
     "result": "PASS_URL_ONLY",
@@ -1694,13 +1693,16 @@
     "simulatorBuild": "PASS",
     "simulatorLaunch": "PASS",
     "privacyRun": 45310938525,
-    "privacyStatus": "PENDING",
+    "privacyStatus": "IN_PROGRESS_CORRECTED_METADATA_AUDIT",
     "releaseValidationRun": 45311442822,
     "releaseValidation": "PASS",
     "offlineThirdRun": 45311443007,
     "offlineThirdStatus": "IN_PROGRESS_BROWSER_INSTALL",
-    "simulatorEvidencePersistence": "FAIL_GIT_REBASE_CONFLICT",
+    "simulatorEvidencePersistence": "RECOVERED_FROM_JOB_LOG_AND_ARTIFACT_IN_MAIN",
     "simulatorArtifactId": 14882794380,
-    "simulatorHead": "379b6806c233562cca877d546b2c491e0c5a33b0"
+    "simulatorHead": "379b6806c233562cca877d546b2c491e0c5a33b0",
+    "privacyFirstRun": 45310905792,
+    "privacyFirstResult": "FAIL_SOURCE_AUDIT_AND_GIT_CONFLICT",
+    "privacyFirstArtifact": 14882149897
   }
 }

@@ -1474,3 +1474,9 @@ Apple固定識別子: Bundle `com.allsunday1122.tourokuhanbaisha`、ASC `6802119
 ## Q4/Q5 実測追記（2026-11-24 11:19 JST）
 - Simulator Run 45310905655: 環境・Xcode build・install/launch/screenshot 全てPASS。CI全体FAILは証跡保存時のrebase競合。ログのPASS判定を再記録、artifact 14882794380保存済み。
 - 第3回オフライン検証 Run 45311443007: ブラウザ準備中。Q5 Run 45310938525待機中。整合性 Run 45311442822 SUCCESS。Q4未確定、新IPA未開始、Build 14のQ7 PASS維持。
+
+
+## Q6 証跡復旧・Q5再確認
+- Simulatorの証跡をRun 45310905655の実測ログから復旧し、IOS_SIMULATOR_Q6_20261124.jsonに保存。元CIのGit競合FAILは履歴として維持。
+- Q5初回Run 45310905792はログ上 sourceAudit FAIL（旧remote HTTPSメタデータ検査を含む）、証跡保存も競合。修正済み監査Run 45310938525実行中。ASC質問票未確認。
+- オフラインRun 45311443007はブラウザ準備中。Q4未確定、新規IPA未開始。
