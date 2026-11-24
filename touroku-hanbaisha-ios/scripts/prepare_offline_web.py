@@ -48,7 +48,8 @@ logic+=Path(__file__).with_name('offline_premium.js').read_text()
 html=html.replace("return records.filter(q=>($('year')","return records.filter(q=>canStudy(q)&&($('year')")
 html=html.replace("if(selected)return;selected=true;const q=subset[position]","if(selected)return;if(!canStudy(subset[position])){beginSetup();return}selected=true;const q=subset[position]")
 html=html.replace("selected=false;const q=subset[position];","selected=false;const q=subset[position];if(!canStudy(q)){beginSetup();return;}")
-html=html.replace("+'（採点対象）'","+'（セッション正解数 / 回答数）'")
+assert html.count("correct+' / '+denominator+'（採点対象）'")==2
+html=html.replace("correct+' / '+denominator+'（採点対象）'","'正解 '+correct+'問 / 回答 '+denominator+'問'")
 
 html=html.replace('</style>',Path(__file__).with_name('offline_learning.css').read_text()+'</style>',1)
 html=html.replace('<section class="card" id="setup">',shell+'<p id="saveWarning" class="saveWarning" role="alert"></p><section class="card hidden" id="setup">',1)

@@ -26,6 +26,24 @@ with sync_playwright() as pw:
         assert page.evaluate("JSON.parse(document.getElementById('offlineBank').textContent)") == bank
         expect(page.locator('#home')).to_be_visible()
         page.locator('#homeStart').click()
+        assert page.evaluate('eligible().length')==50
+        assert page.evaluate("Object.values(eligible().reduce((a,q)=>(a[q.chapter]=(a[q.chapter]||0)+1,a),{})).every(n=>n===10)")
+        page.locator('#start').click()
+        assert page.evaluate('subset.length')==50
+        page.locator('#unknown').click()
+        expect(page.locator('#score')).to_have_text('正解 0問 / 回答 1問')
+        page.locator('#navHome').click()
+        page.locator('#resume').click()
+        assert page.evaluate('statsFor(records).n')==1
+        page.evaluate("study=blankState(); showHome(); window.setPremiumEntitlement(true)")
+        page.locator('#homeStart').click()
+        assert page.evaluate('eligible().length')==599
+        page.locator('#start').click()
+        page.evaluate("window.setPremiumEntitlement(false)")
+        expect(page.locator('#setup')).to_be_visible()
+        assert page.evaluate('eligible().length')==50
+        assert page.evaluate('validSession(study.session)')==False
+        page.evaluate("window.setPremiumEntitlement(true)")
         page.locator('#start').click()
         for q in bank['questions']:
             assert page.locator('#question').inner_text().strip()
