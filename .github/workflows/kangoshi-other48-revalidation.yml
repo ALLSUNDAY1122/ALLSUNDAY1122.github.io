@@ -11,6 +11,8 @@ jobs:
   verify:
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    env:
+      OMP_THREAD_LIMIT: '1'
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
