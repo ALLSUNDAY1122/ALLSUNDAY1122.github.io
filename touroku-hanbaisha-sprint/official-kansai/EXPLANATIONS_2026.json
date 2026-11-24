@@ -4922,7 +4922,7 @@
         "choiceReasons": [
           "a：正。要指導医薬品と一般用医薬品は混在させない。",
           "b：正。第一類医薬品は原則として専用陳列区画内に陳列するが、施錠設備等には例外がある。",
-          "c：誤。指定第二類医薬品の情報提供設備からの距離は原則7メートル以内であり10メートルではない。直接触れられない設備等の例外もある。",
+          "c：誤。指定第二類医薬品は、情報提供設備から7m以内に陳列するのが原則であり、10m以内ではない。ただし、施錠された陳列設備に陳列する場合又は購入者が陳列設備から1.2m以内に入ることを防止する措置を講じた場合には、この限りでない。",
           "d：誤。第三類医薬品と医薬部外品も混在させてはならない。"
         ],
         "keyPoint": "医薬品は区分別に陳列し、指定第二類の距離基準は7メートル。",
@@ -4943,12 +4943,29 @@
         "officialAnswerChecked": true,
         "sourceChecked": false,
         "imageChecked": null,
-        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "holdReason": "独立監査HOLD指摘箇所を修正済み。独立再監査待ち",
         "officialAnswerEvidence": {
           "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
           "page": 1,
           "answer": 1,
           "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        },
+        "correctionRecord": {
+          "date": "2026-11-24",
+          "trigger": "独立監査HOLDの修正依頼（ユーザー提示）",
+          "choice": "c",
+          "before": "c：誤。指定第二類医薬品の情報提供設備からの距離は原則7メートル以内であり10メートルではない。直接触れられない設備等の例外もある。",
+          "after": "c：誤。指定第二類医薬品は、情報提供設備から7m以内に陳列するのが原則であり、10m以内ではない。ただし、施錠された陳列設備に陳列する場合又は購入者が陳列設備から1.2m以内に入ることを防止する措置を講じた場合には、この限りでない。",
+          "evidence": {
+            "title": "試験問題の作成に関する手引き（令和8年4月一部改訂）",
+            "printedPage": 247,
+            "pdfPageOrder": 255,
+            "pdfPageIndex": 254,
+            "url": "https://www.mhlw.go.jp/content/001692425.pdf",
+            "verification": "ユーザー提示の独立監査根拠に基づく修正。今回の原典再取得・独立再監査は未実施"
+          },
+          "status": "CORRECTED_PENDING_INDEPENDENT_REAUDIT",
+          "officialAnswerUnchanged": 1
         }
       }
     },
