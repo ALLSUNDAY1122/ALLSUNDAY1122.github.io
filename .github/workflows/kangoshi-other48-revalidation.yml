@@ -1,0 +1,37 @@
+name: Kangoshi residual 48 independent OCR revalidation
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/kangoshi-other48-revalidation.yml'
+permissions:
+  contents: write
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq poppler-utils tesseract-ocr tesseract-ocr-jpn tesseract-ocr-eng
+          python -m pip install 'pymupdf>=1.24,<3' pillow cairosvg
+      - name: Fetch official MHLW PDF sources using existing successful runner
+        run: python kangoshi-sprint/scripts/run_official_pdf_audit.py
+      - name: Revalidate reviewed candidates and prepare individual evidence for remaining cases
+        run: python kangoshi-sprint/scripts/revalidate_other48.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: kangoshi-other48-independent-ocr
+          path: kangoshi-sprint/audit/runs/other48-revalidation/
+      - name: Save source-only verified records and evidence
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add kangoshi-sprint/audit/ocr-other48-visual-review-20261124.json kangoshi-sprint/audit/dual-engine-hold-20261124.json kangoshi-sprint/audit/dual-engine-promotion-ledger-20261124.json kangoshi-sprint/product-content/verified-additions-20261124.json kangoshi-sprint/product-content/manifest.json kangoshi-sprint/release-status.json kangoshi-sprint/RELEASE_STATUS.md
+          git diff --cached --quiet || git commit -m 'audit(kangoshi): persist independent OCR results and source-only promotions'
+          git push origin HEAD:main
