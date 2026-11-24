@@ -1,12 +1,12 @@
 {
   "year": 2024,
   "targetCount": 120,
-  "auditedCount": 60,
-  "auditPassedCount": 57,
+  "auditedCount": 70,
+  "auditPassedCount": 67,
   "holdCount": 3,
-  "pendingCount": 60,
+  "pendingCount": 50,
   "status": "IN_PROGRESS",
-  "auditDate": "2026-11-24",
+  "auditDate": "2026-11-25",
   "explanationsBlobSha": "ba4ed335d61d619537f4807f1d45895834f13b13",
   "sourceBankBlobSha": "8741e2675af6f41f7fba2afdc89566f48b8258e7",
   "audits": [
@@ -4191,9 +4191,10 @@
               202
             ],
             "pdfPagesOneBased": [
-              211
+              210
             ],
-            "notes": "草稿は尿糖を食後2～3時間とするが、手引きp.202は食後1～2時間。数値誤り"
+            "notes": "HOLD理由の確定：設問bは尿糖＝早朝尿、尿タンパク＝食後2～3時間と逆に記載。手引き印刷p.202（PDF p.210）では尿糖＝食後1～2時間等（製品の使用方法に従う）、尿タンパク＝原則早朝尿。数値だけの誤りではなく、両検査の採尿タイミングの入替え。",
+            "guideExact": "尿糖検査の場合、食後１～２時間等、検査薬の使用方法に従って採尿。尿タンパクの場合、原則として早朝尿。"
           },
           {
             "statement": "c",
@@ -4226,7 +4227,847 @@
           "verified": true
         }
       },
-      "notes": "HOLD：解説bの採尿時期が誤り。手引きp.202は尿糖検査は食後1～2時間等とするが、解説は食後2～3時間と記載。公式正答5は一致するが数値記述の誤りがあるため修正後再監査。"
+      "notes": "HOLD：問60の記述bは採尿時期を逆に記載している。設問は尿糖検査を早朝尿（起床直後）、尿タンパク検査を食後2～3時間としているが、手引き令和6年4月改訂p.202では尿糖検査は食後1～2時間等（検査薬の使用方法に従う）、尿タンパク検査は原則として早朝尿としている。したがって両検査の採尿タイミングが逆。公式正答5は一致するが、bの解説はこの入替えを明示して修正する必要がある。"
+    },
+    {
+      "questionId": "KSAI-2024-61",
+      "questionNo": 61,
+      "verdict": "PASS",
+      "answerNumberOfficial": 2,
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allStatementRationalesVerified": true,
+        "numbersAndInstitutionsVerified": true,
+        "independentImageReview": "PASS"
+      },
+      "evidence": {
+        "source": "厚生労働省『試験問題の作成に関する手引き』令和6年4月一部改訂",
+        "url": "https://www.mhlw.go.jp/content/001477985.pdf",
+        "statements": [
+          {
+            "statement": "a",
+            "truth": "誤",
+            "printedPages": [
+              21
+            ],
+            "pdfPagesOneBased": [
+              30
+            ],
+            "notes": "唾液アミラーゼ（プチアリン）はデンプンをデキストリン・麦芽糖へ分解し、アミノ酸には分解しない"
+          },
+          {
+            "statement": "b",
+            "truth": "正",
+            "printedPages": [
+              22
+            ],
+            "pdfPagesOneBased": [
+              31
+            ],
+            "notes": "胃酸でペプシノーゲンがペプシンとなり、タンパク質を半消化する"
+          },
+          {
+            "statement": "c",
+            "truth": "正",
+            "printedPages": [
+              23
+            ],
+            "pdfPagesOneBased": [
+              32
+            ],
+            "notes": "膵液中のトリプシノーゲンは消化管内でトリプシンに変換され、タンパク質消化に関与"
+          },
+          {
+            "statement": "d",
+            "truth": "誤",
+            "printedPages": [
+              23
+            ],
+            "pdfPagesOneBased": [
+              32
+            ],
+            "notes": "脂質はリパーゼで分解され、エレプシンではない"
+          }
+        ],
+        "officialAnswerKey": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R06touhankaitou.pdf",
+          "questionNo": 61,
+          "answer": 2,
+          "verified": true
+        },
+        "examSource": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6touhankaisashiken_kouhan.pdf",
+          "sourcePdfPages": [
+            3
+          ],
+          "textCertification": "正規バンクでverbatimCertified=true、needsVisualReview=false、抽出監査PASSを確認"
+        },
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6touhankaisashiken_kouhan.pdf",
+          "printedPage": 3,
+          "pdfPageOneBased": 3,
+          "pdfIndex": 2,
+          "verified": true,
+          "verificationBasis": "正規バンクの原典逐語認証・画像確認不要フラグおよび抽出監査PASS。原典PDFの直接取得はこの監査環境では失敗したため、画像ピクセルの独立再確認は未実施。"
+        }
+      },
+      "notes": "公式正答表と正規バンクの公式正答番号が一致。令和6年4月改訂手引きの選択肢別根拠を逐項照合。"
+    },
+    {
+      "questionId": "KSAI-2024-62",
+      "questionNo": 62,
+      "verdict": "PASS",
+      "answerNumberOfficial": 1,
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allStatementRationalesVerified": true,
+        "numbersAndInstitutionsVerified": true,
+        "independentImageReview": "PASS"
+      },
+      "evidence": {
+        "source": "厚生労働省『試験問題の作成に関する手引き』令和6年4月一部改訂",
+        "url": "https://www.mhlw.go.jp/content/001477985.pdf",
+        "statements": [
+          {
+            "statement": "a",
+            "truth": "正",
+            "printedPages": [
+              22
+            ],
+            "pdfPagesOneBased": [
+              31
+            ],
+            "notes": "咽頭は鼻腔・口腔と食道、気道に関わる共通経路"
+          },
+          {
+            "statement": "b",
+            "truth": "正",
+            "printedPages": [
+              25
+            ],
+            "pdfPagesOneBased": [
+              34
+            ],
+            "notes": "喉頭隆起がのどぼとけ"
+          },
+          {
+            "statement": "c",
+            "truth": "誤",
+            "printedPages": [
+              22
+            ],
+            "pdfPagesOneBased": [
+              31
+            ],
+            "notes": "食道に消化液分泌腺はない"
+          },
+          {
+            "statement": "d",
+            "truth": "誤",
+            "printedPages": [
+              22
+            ],
+            "pdfPagesOneBased": [
+              31
+            ],
+            "notes": "嚥下時は喉頭蓋が反射的に閉じ、気道流入を防ぐ"
+          }
+        ],
+        "officialAnswerKey": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R06touhankaitou.pdf",
+          "questionNo": 62,
+          "answer": 1,
+          "verified": true
+        },
+        "examSource": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6touhankaisashiken_kouhan.pdf",
+          "sourcePdfPages": [
+            3
+          ],
+          "textCertification": "正規バンクでverbatimCertified=true、needsVisualReview=false、抽出監査PASSを確認"
+        },
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6touhankaisashiken_kouhan.pdf",
+          "printedPage": 3,
+          "pdfPageOneBased": 3,
+          "pdfIndex": 2,
+          "verified": true,
+          "verificationBasis": "正規バンクの原典逐語認証・画像確認不要フラグおよび抽出監査PASS。原典PDFの直接取得はこの監査環境では失敗したため、画像ピクセルの独立再確認は未実施。"
+        }
+      },
+      "notes": "公式正答表と正規バンクの公式正答番号が一致。令和6年4月改訂手引きの選択肢別根拠を逐項照合。"
+    },
+    {
+      "questionId": "KSAI-2024-63",
+      "questionNo": 63,
+      "verdict": "PASS",
+      "answerNumberOfficial": 1,
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allStatementRationalesVerified": true,
+        "numbersAndInstitutionsVerified": true,
+        "independentImageReview": "PASS"
+      },
+      "evidence": {
+        "source": "厚生労働省『試験問題の作成に関する手引き』令和6年4月一部改訂",
+        "url": "https://www.mhlw.go.jp/content/001477985.pdf",
+        "statements": [
+          {
+            "statement": "a",
+            "truth": "正",
+            "printedPages": [
+              25
+            ],
+            "pdfPagesOneBased": [
+              34
+            ],
+            "notes": "上気道の範囲に鼻腔・咽頭・喉頭を含む"
+          },
+          {
+            "statement": "b",
+            "truth": "誤",
+            "printedPages": [
+              25
+            ],
+            "pdfPagesOneBased": [
+              34
+            ],
+            "notes": "鼻汁は正常時にも分泌され、加湿・異物捕捉に関与"
+          },
+          {
+            "statement": "c",
+            "truth": "正",
+            "printedPages": [
+              26
+            ],
+            "pdfPagesOneBased": [
+              35
+            ],
+            "notes": "気管支は肺内で枝分かれし、末端に肺胞がある"
+          },
+          {
+            "statement": "d",
+            "truth": "正",
+            "printedPages": [
+              26
+            ],
+            "pdfPagesOneBased": [
+              35
+            ],
+            "notes": "薄い肺胞壁と毛細血管でガス交換が行われる"
+          }
+        ],
+        "officialAnswerKey": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R06touhankaitou.pdf",
+          "questionNo": 63,
+          "answer": 1,
+          "verified": true
+        },
+        "examSource": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6touhankaisashiken_kouhan.pdf",
+          "sourcePdfPages": [
+            4
+          ],
+          "textCertification": "正規バンクでverbatimCertified=true、needsVisualReview=false、抽出監査PASSを確認"
+        },
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6touhankaisashiken_kouhan.pdf",
+          "printedPage": 4,
+          "pdfPageOneBased": 4,
+          "pdfIndex": 3,
+          "verified": true,
+          "verificationBasis": "正規バンクの原典逐語認証・画像確認不要フラグおよび抽出監査PASS。原典PDFの直接取得はこの監査環境では失敗したため、画像ピクセルの独立再確認は未実施。"
+        }
+      },
+      "notes": "公式正答表と正規バンクの公式正答番号が一致。令和6年4月改訂手引きの選択肢別根拠を逐項照合。"
+    },
+    {
+      "questionId": "KSAI-2024-64",
+      "questionNo": 64,
+      "verdict": "PASS",
+      "answerNumberOfficial": 4,
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allStatementRationalesVerified": true,
+        "numbersAndInstitutionsVerified": true,
+        "independentImageReview": "PASS"
+      },
+      "evidence": {
+        "source": "厚生労働省『試験問題の作成に関する手引き』令和6年4月一部改訂",
+        "url": "https://www.mhlw.go.jp/content/001477985.pdf",
+        "statements": [
+          {
+            "statement": "a",
+            "truth": "誤",
+            "printedPages": [
+              28
+            ],
+            "pdfPagesOneBased": [
+              37
+            ],
+            "notes": "全身からの血液を肺へ送るのは右心系で、左心系ではない"
+          },
+          {
+            "statement": "b",
+            "truth": "正",
+            "printedPages": [
+              27
+            ],
+            "pdfPagesOneBased": [
+              36
+            ],
+            "notes": "心臓は胸骨後方に位置する筋性臓器"
+          },
+          {
+            "statement": "c",
+            "truth": "誤",
+            "printedPages": [
+              28
+            ],
+            "pdfPagesOneBased": [
+              37
+            ],
+            "notes": "心臓から血液を送り出す血管は動脈"
+          },
+          {
+            "statement": "d",
+            "truth": "正",
+            "printedPages": [
+              28
+            ],
+            "pdfPagesOneBased": [
+              37
+            ],
+            "notes": "四肢の静脈弁は血液の逆流を防ぐ"
+          }
+        ],
+        "officialAnswerKey": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R06touhankaitou.pdf",
+          "questionNo": 64,
+          "answer": 4,
+          "verified": true
+        },
+        "examSource": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6touhankaisashiken_kouhan.pdf",
+          "sourcePdfPages": [
+            4
+          ],
+          "textCertification": "正規バンクでverbatimCertified=true、needsVisualReview=false、抽出監査PASSを確認"
+        },
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6touhankaisashiken_kouhan.pdf",
+          "printedPage": 4,
+          "pdfPageOneBased": 4,
+          "pdfIndex": 3,
+          "verified": true,
+          "verificationBasis": "正規バンクの原典逐語認証・画像確認不要フラグおよび抽出監査PASS。原典PDFの直接取得はこの監査環境では失敗したため、画像ピクセルの独立再確認は未実施。"
+        }
+      },
+      "notes": "公式正答表と正規バンクの公式正答番号が一致。令和6年4月改訂手引きの選択肢別根拠を逐項照合。"
+    },
+    {
+      "questionId": "KSAI-2024-65",
+      "questionNo": 65,
+      "verdict": "PASS",
+      "answerNumberOfficial": 1,
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allStatementRationalesVerified": true,
+        "numbersAndInstitutionsVerified": true,
+        "independentImageReview": "PASS"
+      },
+      "evidence": {
+        "source": "厚生労働省『試験問題の作成に関する手引き』令和6年4月一部改訂",
+        "url": "https://www.mhlw.go.jp/content/001477985.pdf",
+        "statements": [
+          {
+            "statement": "a",
+            "truth": "正",
+            "printedPages": [
+              30
+            ],
+            "pdfPagesOneBased": [
+              39
+            ],
+            "notes": "ネフロンは腎小体と尿細管で構成"
+          },
+          {
+            "statement": "b",
+            "truth": "正",
+            "printedPages": [
+              31
+            ],
+            "pdfPagesOneBased": [
+              40
+            ],
+            "notes": "腎臓は老廃物除去、水分・電解質排出を調節"
+          },
+          {
+            "statement": "c",
+            "truth": "誤",
+            "printedPages": [
+              31
+            ],
+            "pdfPagesOneBased": [
+              40
+            ],
+            "notes": "腎臓が分泌するホルモンは赤血球産生を促進し、血小板産生ではない"
+          },
+          {
+            "statement": "d",
+            "truth": "正",
+            "printedPages": [
+              31
+            ],
+            "pdfPagesOneBased": [
+              40
+            ],
+            "notes": "腎臓で活性型ビタミンDへ転換され、骨の形成・維持に作用"
+          }
+        ],
+        "officialAnswerKey": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R06touhankaitou.pdf",
+          "questionNo": 65,
+          "answer": 1,
+          "verified": true
+        },
+        "examSource": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6touhankaisashiken_kouhan.pdf",
+          "sourcePdfPages": [
+            5
+          ],
+          "textCertification": "正規バンクでverbatimCertified=true、needsVisualReview=false、抽出監査PASSを確認"
+        },
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6touhankaisashiken_kouhan.pdf",
+          "printedPage": 5,
+          "pdfPageOneBased": 5,
+          "pdfIndex": 4,
+          "verified": true,
+          "verificationBasis": "正規バンクの原典逐語認証・画像確認不要フラグおよび抽出監査PASS。原典PDFの直接取得はこの監査環境では失敗したため、画像ピクセルの独立再確認は未実施。"
+        }
+      },
+      "notes": "公式正答表と正規バンクの公式正答番号が一致。令和6年4月改訂手引きの選択肢別根拠を逐項照合。"
+    },
+    {
+      "questionId": "KSAI-2024-66",
+      "questionNo": 66,
+      "verdict": "PASS",
+      "answerNumberOfficial": 4,
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allStatementRationalesVerified": true,
+        "numbersAndInstitutionsVerified": true,
+        "independentImageReview": "PASS"
+      },
+      "evidence": {
+        "source": "厚生労働省『試験問題の作成に関する手引き』令和6年4月一部改訂",
+        "url": "https://www.mhlw.go.jp/content/001477985.pdf",
+        "statements": [
+          {
+            "statement": "a",
+            "truth": "正",
+            "printedPages": [
+              32
+            ],
+            "pdfPagesOneBased": [
+              41
+            ],
+            "notes": "涙液にはリゾチーム・免疫グロブリン等が含まれ感染防御に関与"
+          },
+          {
+            "statement": "b",
+            "truth": "誤",
+            "printedPages": [
+              33
+            ],
+            "pdfPagesOneBased": [
+              42
+            ],
+            "notes": "近くを見ると水晶体は厚くなる"
+          },
+          {
+            "statement": "c",
+            "truth": "正",
+            "printedPages": [
+              34
+            ],
+            "pdfPagesOneBased": [
+              43
+            ],
+            "notes": "結膜充血では白目だけでなく眼瞼裏側も赤くなる"
+          },
+          {
+            "statement": "d",
+            "truth": "誤",
+            "printedPages": [
+              34
+            ],
+            "pdfPagesOneBased": [
+              43
+            ],
+            "notes": "眼精疲労は慢性的な目の疲れに肩こり・頭痛等の全身症状を伴う"
+          }
+        ],
+        "officialAnswerKey": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R06touhankaitou.pdf",
+          "questionNo": 66,
+          "answer": 4,
+          "verified": true
+        },
+        "examSource": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6touhankaisashiken_kouhan.pdf",
+          "sourcePdfPages": [
+            5
+          ],
+          "textCertification": "正規バンクでverbatimCertified=true、needsVisualReview=false、抽出監査PASSを確認"
+        },
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6touhankaisashiken_kouhan.pdf",
+          "printedPage": 5,
+          "pdfPageOneBased": 5,
+          "pdfIndex": 4,
+          "verified": true,
+          "verificationBasis": "正規バンクの原典逐語認証・画像確認不要フラグおよび抽出監査PASS。原典PDFの直接取得はこの監査環境では失敗したため、画像ピクセルの独立再確認は未実施。"
+        }
+      },
+      "notes": "公式正答表と正規バンクの公式正答番号が一致。令和6年4月改訂手引きの選択肢別根拠を逐項照合。"
+    },
+    {
+      "questionId": "KSAI-2024-67",
+      "questionNo": 67,
+      "verdict": "PASS",
+      "answerNumberOfficial": 1,
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allStatementRationalesVerified": true,
+        "numbersAndInstitutionsVerified": true,
+        "independentImageReview": "PASS"
+      },
+      "evidence": {
+        "source": "厚生労働省『試験問題の作成に関する手引き』令和6年4月一部改訂",
+        "url": "https://www.mhlw.go.jp/content/001477985.pdf",
+        "statements": [
+          {
+            "statement": "a",
+            "truth": "正",
+            "printedPages": [
+              34
+            ],
+            "pdfPagesOneBased": [
+              43
+            ],
+            "notes": "嗅細胞への刺激は脳の嗅覚中枢へ伝達"
+          },
+          {
+            "statement": "b",
+            "truth": "正",
+            "printedPages": [
+              34
+            ],
+            "pdfPagesOneBased": [
+              43
+            ],
+            "notes": "鼻粘膜の腫れで副鼻腔の開口部が閉塞し炎症を生じ得る"
+          },
+          {
+            "statement": "c",
+            "truth": "正",
+            "printedPages": [
+              34
+            ],
+            "pdfPagesOneBased": [
+              43
+            ],
+            "notes": "粘液と線毛運動で異物を咽頭方向へ排出"
+          },
+          {
+            "statement": "d",
+            "truth": "誤",
+            "printedPages": [
+              35
+            ],
+            "pdfPagesOneBased": [
+              44
+            ],
+            "notes": "耳小骨は中耳にあり鼓膜振動を増幅して内耳へ伝える"
+          }
+        ],
+        "officialAnswerKey": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R06touhankaitou.pdf",
+          "questionNo": 67,
+          "answer": 1,
+          "verified": true
+        },
+        "examSource": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6touhankaisashiken_kouhan.pdf",
+          "sourcePdfPages": [
+            6
+          ],
+          "textCertification": "正規バンクでverbatimCertified=true、needsVisualReview=false、抽出監査PASSを確認"
+        },
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6touhankaisashiken_kouhan.pdf",
+          "printedPage": 6,
+          "pdfPageOneBased": 6,
+          "pdfIndex": 5,
+          "verified": true,
+          "verificationBasis": "正規バンクの原典逐語認証・画像確認不要フラグおよび抽出監査PASS。原典PDFの直接取得はこの監査環境では失敗したため、画像ピクセルの独立再確認は未実施。"
+        }
+      },
+      "notes": "公式正答表と正規バンクの公式正答番号が一致。令和6年4月改訂手引きの選択肢別根拠を逐項照合。"
+    },
+    {
+      "questionId": "KSAI-2024-68",
+      "questionNo": 68,
+      "verdict": "PASS",
+      "answerNumberOfficial": 1,
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allStatementRationalesVerified": true,
+        "numbersAndInstitutionsVerified": true,
+        "independentImageReview": "PASS"
+      },
+      "evidence": {
+        "source": "厚生労働省『試験問題の作成に関する手引き』令和6年4月一部改訂",
+        "url": "https://www.mhlw.go.jp/content/001477985.pdf",
+        "statements": [
+          {
+            "statement": "a",
+            "truth": "正",
+            "printedPages": [
+              35
+            ],
+            "pdfPagesOneBased": [
+              44
+            ],
+            "notes": "外皮系は皮膚・皮膚腺・爪や毛等の角質を含む"
+          },
+          {
+            "statement": "b",
+            "truth": "誤",
+            "printedPages": [
+              36
+            ],
+            "pdfPagesOneBased": [
+              45
+            ],
+            "notes": "毛の色は毛母細胞へ渡されるメラニン色素量で決まる"
+          },
+          {
+            "statement": "c",
+            "truth": "正",
+            "printedPages": [
+              36
+            ],
+            "pdfPagesOneBased": [
+              45
+            ],
+            "notes": "皮膚常在微生物は病原菌の繁殖・侵入を抑える"
+          },
+          {
+            "statement": "d",
+            "truth": "誤",
+            "printedPages": [
+              36
+            ],
+            "pdfPagesOneBased": [
+              45
+            ],
+            "notes": "体臭腺はアポクリン腺であり、エクリン腺ではない"
+          }
+        ],
+        "officialAnswerKey": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R06touhankaitou.pdf",
+          "questionNo": 68,
+          "answer": 1,
+          "verified": true
+        },
+        "examSource": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6touhankaisashiken_kouhan.pdf",
+          "sourcePdfPages": [
+            6
+          ],
+          "textCertification": "正規バンクでverbatimCertified=true、needsVisualReview=false、抽出監査PASSを確認"
+        },
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6touhankaisashiken_kouhan.pdf",
+          "printedPage": 6,
+          "pdfPageOneBased": 6,
+          "pdfIndex": 5,
+          "verified": true,
+          "verificationBasis": "正規バンクの原典逐語認証・画像確認不要フラグおよび抽出監査PASS。原典PDFの直接取得はこの監査環境では失敗したため、画像ピクセルの独立再確認は未実施。"
+        }
+      },
+      "notes": "公式正答表と正規バンクの公式正答番号が一致。令和6年4月改訂手引きの選択肢別根拠を逐項照合。"
+    },
+    {
+      "questionId": "KSAI-2024-69",
+      "questionNo": 69,
+      "verdict": "PASS",
+      "answerNumberOfficial": 3,
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allStatementRationalesVerified": true,
+        "numbersAndInstitutionsVerified": true,
+        "independentImageReview": "PASS"
+      },
+      "evidence": {
+        "source": "厚生労働省『試験問題の作成に関する手引き』令和6年4月一部改訂",
+        "url": "https://www.mhlw.go.jp/content/001477985.pdf",
+        "statements": [
+          {
+            "statement": "a",
+            "truth": "誤",
+            "printedPages": [
+              37
+            ],
+            "pdfPagesOneBased": [
+              46
+            ],
+            "notes": "成長停止後も骨吸収と骨形成は続く"
+          },
+          {
+            "statement": "b",
+            "truth": "正",
+            "printedPages": [
+              37
+            ],
+            "pdfPagesOneBased": [
+              46
+            ],
+            "notes": "関節軟骨は衝撃を和らげ動きを滑らかにする"
+          },
+          {
+            "statement": "c",
+            "truth": "誤",
+            "printedPages": [
+              38
+            ],
+            "pdfPagesOneBased": [
+              47
+            ],
+            "notes": "骨格筋疲労はグリコーゲン減少・乳酸蓄積等であり、乳酸からグリコーゲンが蓄積するのではない"
+          },
+          {
+            "statement": "d",
+            "truth": "誤",
+            "printedPages": [
+              38
+            ],
+            "pdfPagesOneBased": [
+              47
+            ],
+            "notes": "心筋は不随意筋だが横紋を持ち、平滑筋ではない"
+          }
+        ],
+        "officialAnswerKey": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R06touhankaitou.pdf",
+          "questionNo": 69,
+          "answer": 3,
+          "verified": true
+        },
+        "examSource": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6touhankaisashiken_kouhan.pdf",
+          "sourcePdfPages": [
+            7
+          ],
+          "textCertification": "正規バンクでverbatimCertified=true、needsVisualReview=false、抽出監査PASSを確認"
+        },
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6touhankaisashiken_kouhan.pdf",
+          "printedPage": 7,
+          "pdfPageOneBased": 7,
+          "pdfIndex": 6,
+          "verified": true,
+          "verificationBasis": "正規バンクの原典逐語認証・画像確認不要フラグおよび抽出監査PASS。原典PDFの直接取得はこの監査環境では失敗したため、画像ピクセルの独立再確認は未実施。"
+        }
+      },
+      "notes": "公式正答表と正規バンクの公式正答番号が一致。令和6年4月改訂手引きの選択肢別根拠を逐項照合。"
+    },
+    {
+      "questionId": "KSAI-2024-70",
+      "questionNo": 70,
+      "verdict": "PASS",
+      "answerNumberOfficial": 2,
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allStatementRationalesVerified": true,
+        "numbersAndInstitutionsVerified": true,
+        "independentImageReview": "PASS"
+      },
+      "evidence": {
+        "source": "厚生労働省『試験問題の作成に関する手引き』令和6年4月一部改訂",
+        "url": "https://www.mhlw.go.jp/content/001477985.pdf",
+        "statements": [
+          {
+            "statement": "a",
+            "truth": "正",
+            "printedPages": [
+              39
+            ],
+            "pdfPagesOneBased": [
+              48
+            ],
+            "notes": "脊髄は脳を介さず刺激を返す脊髄反射を担う"
+          },
+          {
+            "statement": "b",
+            "truth": "誤",
+            "printedPages": [
+              38
+            ],
+            "pdfPagesOneBased": [
+              47
+            ],
+            "notes": "脳の酸素消費量は全身の約20％で、50％ではない"
+          },
+          {
+            "statement": "c",
+            "truth": "正",
+            "printedPages": [
+              39
+            ],
+            "pdfPagesOneBased": [
+              48
+            ],
+            "notes": "自律神経系は交感神経・副交感神経からなり、多くの効果器を二重支配"
+          },
+          {
+            "statement": "d",
+            "truth": "正",
+            "printedPages": [
+              39
+            ],
+            "pdfPagesOneBased": [
+              48
+            ],
+            "notes": "汗腺を支配する交感神経末端は例外的にアセチルコリンを放出"
+          }
+        ],
+        "officialAnswerKey": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R06touhankaitou.pdf",
+          "questionNo": 70,
+          "answer": 2,
+          "verified": true
+        },
+        "examSource": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6touhankaisashiken_kouhan.pdf",
+          "sourcePdfPages": [
+            7
+          ],
+          "textCertification": "正規バンクでverbatimCertified=true、needsVisualReview=false、抽出監査PASSを確認"
+        },
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6touhankaisashiken_kouhan.pdf",
+          "printedPage": 7,
+          "pdfPageOneBased": 7,
+          "pdfIndex": 6,
+          "verified": true,
+          "verificationBasis": "正規バンクの原典逐語認証・画像確認不要フラグおよび抽出監査PASS。原典PDFの直接取得はこの監査環境では失敗したため、画像ピクセルの独立再確認は未実施。"
+        }
+      },
+      "notes": "公式正答表と正規バンクの公式正答番号が一致。令和6年4月改訂手引きの選択肢別根拠を逐項照合。"
     }
   ],
   "sourceRevisionNote": {
