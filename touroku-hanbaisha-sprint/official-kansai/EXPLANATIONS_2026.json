@@ -3,10 +3,10 @@
   "sourceBankBlobSha": "8741e2675af6f41f7fba2afdc89566f48b8258e7",
   "progress": {
     "target": 120,
-    "created": 80,
+    "created": 120,
     "auditPassed": 0,
-    "pendingAudit": 80,
-    "notCreated": 40,
+    "pendingAudit": 120,
+    "notCreated": 0,
     "hold": []
   },
   "questions": [
@@ -16,14 +16,14 @@
       "questionNo": 1,
       "answerNumberOfficial": 2,
       "explanation": {
-        "correctReason": "正答は2（正・正・誤・正）。品質不良品の販売禁止に健康被害の発生は不要。",
+        "correctReason": "正答は2（正・正・誤・正）。医薬品は人体に作用する生命関連製品であり、品質確保と最新情報の把握が求められる。cのように販売禁止を健康被害のおそれがある場合に限定するのは誤り。",
         "choiceReasons": [
           "a：正。治療や予防だけでなく身体機能への作用も医薬品の目的に含まれる。",
           "b：正。体内で作用する製品が多い。",
           "c：誤。健康被害の可能性の有無にかかわらず、異物混入や変質のある医薬品は販売できない。",
           "d：正。安全性情報は更新されるため継続的な情報収集が必要。"
         ],
-        "keyPoint": "品質不良品の販売禁止に健康被害の発生は不要。",
+        "keyPoint": "異物混入や変質のある医薬品は健康被害のおそれの有無にかかわらず販売禁止。",
         "references": [
           {
             "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月一部改訂）",
@@ -31,19 +31,44 @@
             "section": "Ⅰ-1",
             "pages": "1–2",
             "url": "https://www.mhlw.go.jp/content/001692425.pdf",
-            "pageRangeVerified": false,
-            "pageRangeBasis": "公式目次で確認した関連節の範囲。個別記述の掲載ページ未照合。"
+            "pageRangeVerified": true,
+            "pageRangeBasis": "本文原典画像の個別記述と照合"
           }
         ]
       },
       "audit": {
         "status": "PENDING",
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "bankAnswerChecked": true,
-        "sourceChecked": false,
+        "sourceChecked": true,
         "imageChecked": null,
-        "holdReason": "公式正答PDFの独立取得および手引き該当ページ全記述の再照合待ち"
-      }
+        "holdReason": "別の監査主体による独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 2,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        },
+        "guideEvidence": {
+          "pages": "1–2",
+          "pdfPages": [
+            9,
+            10
+          ],
+          "items": [
+            "a:p.1",
+            "b:p.1",
+            "c:p.2",
+            "d:p.2"
+          ],
+          "status": "CONTENT_CHECKED",
+          "url": "https://www.mhlw.go.jp/content/001692425.pdf",
+          "edition": "2026-04",
+          "independentReview": false,
+          "method": "既存草稿と原典ページ画像の再照合"
+        }
+      },
+      "chapter": "第1章"
     },
     {
       "id": "KSAI-2026-002",
@@ -51,10 +76,10 @@
       "questionNo": 2,
       "answerNumberOfficial": 2,
       "explanation": {
-        "correctReason": "正答は2（正・正・正・誤）。市販薬もPL法の対象。",
+        "correctReason": "正答は2（正・正・正・誤）。市販薬も科学的根拠に基づく使用と均一な品質の保証が必要であり、専門家の情報提供が重要である。PL法の対象外という記述は誤り。",
         "choiceReasons": [
           "a：正。市販薬にも科学的根拠に基づく判断が必要。",
-          "b：正。品質のばらつきは安全性や効果を損なう。",
+          "b：正。生命・健康に関わる医薬品では高水準で均一な品質が保証される必要がある。",
           "c：正。専門家には理解しやすい説明が求められる。",
           "d：誤。一般用医薬品も製造物責任法の対象となる。"
         ],
@@ -64,21 +89,46 @@
             "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月一部改訂）",
             "chapter": "第1章",
             "section": "Ⅰ-1",
-            "pages": "1–2",
+            "pages": "1, 2",
             "url": "https://www.mhlw.go.jp/content/001692425.pdf",
-            "pageRangeVerified": false,
-            "pageRangeBasis": "公式目次で確認した関連節の範囲。個別記述の掲載ページ未照合。"
+            "pageRangeVerified": true,
+            "pageRangeBasis": "原典画像の個別記述を確認"
           }
         ]
       },
       "audit": {
         "status": "PENDING",
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "bankAnswerChecked": true,
-        "sourceChecked": false,
+        "sourceChecked": true,
         "imageChecked": true,
-        "holdReason": "公式正答PDFの独立取得および手引き該当ページ全記述の再照合待ち"
-      }
+        "holdReason": "独立品質監査未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 2,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        },
+        "guideEvidence": {
+          "pages": "1, 2",
+          "pdfPages": [
+            9,
+            10
+          ],
+          "items": [
+            "a:p.1",
+            "b:p.2",
+            "c:p.1",
+            "d:p.2"
+          ],
+          "status": "CONTENT_CHECKED",
+          "edition": "2026-04",
+          "url": "https://www.mhlw.go.jp/content/001692425.pdf",
+          "method": "原典ページ画像による自己点検",
+          "independentReview": false
+        }
+      },
+      "chapter": "第1章"
     },
     {
       "id": "KSAI-2026-003",
@@ -86,7 +136,7 @@
       "questionNo": 3,
       "answerNumberOfficial": 2,
       "explanation": {
-        "correctReason": "正答は2（正・誤・誤・正）。GLP＝非臨床、GCP＝臨床、GVP＝市販後安全管理。",
+        "correctReason": "正答は2（正・誤・誤・正）。用量と反応の関係に基づく評価と臨床試験基準GCPは正しい。少量でも長期投与による毒性はあり得る。非臨床安全性試験の基準はGLPで、GVPとは異なる。",
         "choiceReasons": [
           "a：正。用量が増すと無作用域から有効域へ移る。",
           "b：誤。少量でも長期使用で毒性が生じ得る。",
@@ -101,27 +151,44 @@
             "section": "Ⅰ-2",
             "pages": "2–3",
             "url": "https://www.mhlw.go.jp/content/001692425.pdf",
-            "pageRangeVerified": false,
-            "pageRangeBasis": "公式目次で確認した関連節の範囲。個別記述の掲載ページ未照合。"
+            "pageRangeVerified": true,
+            "pageRangeBasis": "本文原典画像の個別記述と照合"
           }
         ]
       },
       "audit": {
         "status": "PENDING",
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "bankAnswerChecked": true,
-        "sourceChecked": false,
+        "sourceChecked": true,
         "imageChecked": null,
-        "holdReason": "公式正答PDFの独立取得および手引き該当ページ全記述の再照合待ち",
+        "holdReason": "別の監査主体による独立レビュー未実施",
         "guideEvidence": {
-          "pages": "3",
-          "scope": "c・d（GVP・GCP）",
-          "status": "PARTIAL",
+          "pages": "2–3",
+          "pdfPages": [
+            10,
+            11
+          ],
+          "items": [
+            "a:p.2",
+            "b:p.2",
+            "c:p.2–3",
+            "d:p.3"
+          ],
+          "status": "CONTENT_CHECKED",
           "url": "https://www.mhlw.go.jp/content/001692425.pdf",
           "edition": "2026-04",
-          "independentReview": false
+          "independentReview": false,
+          "method": "既存草稿と原典ページ画像の再照合"
+        },
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 2,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
         }
-      }
+      },
+      "chapter": "第1章"
     },
     {
       "id": "KSAI-2026-004",
@@ -129,12 +196,12 @@
       "questionNo": 4,
       "answerNumberOfficial": 5,
       "explanation": {
-        "correctReason": "正答は5（正・正・誤・正）。特保は許可、機能性表示食品は届出。",
+        "correctReason": "正答は5（正・正・誤・正）。健康食品は食品であり、特保と機能性表示食品では国の関与が異なる。販売時には健康食品の摂取状況を確認し必要に応じて助言する。",
         "choiceReasons": [
           "a：正。健康食品は食品として扱われる。",
           "b：正。特保は国の審査・許可を経る。",
           "c：誤。機能性表示食品は事業者責任による届出であり個別許可ではない。",
-          "d：正。食品と薬の併用による影響も確認する。"
+          "d：正。健康食品の摂取状況を確認し、本人の健康意識を尊重しながら必要に応じて摂取について助言する。"
         ],
         "keyPoint": "特保は許可、機能性表示食品は届出。",
         "references": [
@@ -144,27 +211,44 @@
             "section": "Ⅰ-3",
             "pages": "3–4",
             "url": "https://www.mhlw.go.jp/content/001692425.pdf",
-            "pageRangeVerified": false,
-            "pageRangeBasis": "公式目次で確認した関連節の範囲。個別記述の掲載ページ未照合。"
+            "pageRangeVerified": true,
+            "pageRangeBasis": "本文原典画像の個別記述と照合"
           }
         ]
       },
       "audit": {
         "status": "PENDING",
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "bankAnswerChecked": true,
-        "sourceChecked": false,
+        "sourceChecked": true,
         "imageChecked": null,
-        "holdReason": "公式正答PDFの独立取得および手引き該当ページ全記述の再照合待ち",
+        "holdReason": "別の監査主体による独立レビュー未実施",
         "guideEvidence": {
-          "pages": "3",
-          "scope": "a・b・c（健康食品、特保、機能性表示食品）",
-          "status": "PARTIAL",
+          "pages": "3–4",
+          "pdfPages": [
+            11,
+            12
+          ],
+          "items": [
+            "a:p.3",
+            "b:p.3",
+            "c:p.3",
+            "d:p.4"
+          ],
+          "status": "CONTENT_CHECKED",
           "url": "https://www.mhlw.go.jp/content/001692425.pdf",
           "edition": "2026-04",
-          "independentReview": false
+          "independentReview": false,
+          "method": "既存草稿と原典ページ画像の再照合"
+        },
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 5,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
         }
-      }
+      },
+      "chapter": "第1章"
     },
     {
       "id": "KSAI-2026-005",
@@ -172,7 +256,7 @@
       "questionNo": 5,
       "answerNumberOfficial": 2,
       "explanation": {
-        "correctReason": "正答は2（正・誤・正・正）。主役は生活者、登録販売者は支援者。",
+        "correctReason": "正答は2（正・誤・正・正）。セルフメディケーションを行う主体は生活者で、登録販売者は相談・受診勧奨・地域連携を通じて支援する。",
         "choiceReasons": [
           "a：正。軽い不調への自己対処を含む健康管理の考え方である。",
           "b：誤。主体は生活者自身で、専門家は支援する立場。",
@@ -187,19 +271,43 @@
             "section": "Ⅰ-4",
             "pages": "4",
             "url": "https://www.mhlw.go.jp/content/001692425.pdf",
-            "pageRangeVerified": false,
-            "pageRangeBasis": "公式目次で確認した関連節の範囲。個別記述の掲載ページ未照合。"
+            "pageRangeVerified": true,
+            "pageRangeBasis": "本文原典画像の個別記述と照合"
           }
         ]
       },
       "audit": {
         "status": "PENDING",
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "bankAnswerChecked": true,
-        "sourceChecked": false,
+        "sourceChecked": true,
         "imageChecked": null,
-        "holdReason": "公式正答PDFの独立取得および手引き該当ページ全記述の再照合待ち"
-      }
+        "holdReason": "別の監査主体による独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 2,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        },
+        "guideEvidence": {
+          "pages": "4",
+          "pdfPages": [
+            12
+          ],
+          "items": [
+            "a:p.4脚注2",
+            "b:p.4脚注2及び本文",
+            "c:p.4",
+            "d:p.4"
+          ],
+          "status": "CONTENT_CHECKED",
+          "url": "https://www.mhlw.go.jp/content/001692425.pdf",
+          "edition": "2026-04",
+          "independentReview": false,
+          "method": "既存草稿と原典ページ画像の再照合"
+        }
+      },
+      "chapter": "第1章"
     },
     {
       "id": "KSAI-2026-006",
@@ -207,7 +315,7 @@
       "questionNo": 6,
       "answerNumberOfficial": 1,
       "explanation": {
-        "correctReason": "正答は1（正・正・誤・誤）。適正使用でも副作用リスクはゼロにならない。",
+        "correctReason": "正答は1（正・正・誤・誤）。薬理作用やアレルギーによる副作用があり、持病を悪化させる場合もある。適正使用でも発生し、自覚症状がない場合もある。",
         "choiceReasons": [
           "a：正。薬理作用と免疫反応による副作用に大別できる。",
           "b：正。別の持病に悪影響を及ぼすことがある。",
@@ -222,19 +330,45 @@
             "section": "Ⅱ-1",
             "pages": "4–6",
             "url": "https://www.mhlw.go.jp/content/001692425.pdf",
-            "pageRangeVerified": false,
-            "pageRangeBasis": "公式目次で確認した関連節の範囲。個別記述の掲載ページ未照合。"
+            "pageRangeVerified": true,
+            "pageRangeBasis": "本文原典画像の個別記述と照合"
           }
         ]
       },
       "audit": {
         "status": "PENDING",
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "bankAnswerChecked": true,
-        "sourceChecked": false,
+        "sourceChecked": true,
         "imageChecked": null,
-        "holdReason": "公式正答PDFの独立取得および手引き該当ページ全記述の再照合待ち"
-      }
+        "holdReason": "別の監査主体による独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 1,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        },
+        "guideEvidence": {
+          "pages": "4–6",
+          "pdfPages": [
+            12,
+            13,
+            14
+          ],
+          "items": [
+            "a:p.4–5",
+            "b:p.5",
+            "c:p.6",
+            "d:p.6"
+          ],
+          "status": "CONTENT_CHECKED",
+          "url": "https://www.mhlw.go.jp/content/001692425.pdf",
+          "edition": "2026-04",
+          "independentReview": false,
+          "method": "既存草稿と原典ページ画像の再照合"
+        }
+      },
+      "chapter": "第1章"
     },
     {
       "id": "KSAI-2026-007",
@@ -242,7 +376,7 @@
       "questionNo": 7,
       "answerNumberOfficial": 4,
       "explanation": {
-        "correctReason": "正答は4（正・誤・正・誤）。添加物・外用薬でもアレルギーに注意。",
+        "correctReason": "正答は4（正・誤・正・誤）。過敏な免疫反応は体調によっても生じ得る。添加物や外用薬を原因から除外することはできない。",
         "choiceReasons": [
           "a：正。免疫反応が過剰に働いて症状を生じる。",
           "b：誤。有効成分だけでなく添加物も原因になり得る。",
@@ -255,29 +389,45 @@
             "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月一部改訂）",
             "chapter": "第1章",
             "section": "Ⅱ-1",
-            "pages": "4–6",
+            "pages": "5",
             "url": "https://www.mhlw.go.jp/content/001692425.pdf",
-            "pageRangeVerified": false,
-            "pageRangeBasis": "公式目次で確認した関連節の範囲。個別記述の掲載ページ未照合。"
+            "pageRangeVerified": true,
+            "pageRangeBasis": "本文原典画像の個別記述と照合"
           }
         ]
       },
       "audit": {
         "status": "PENDING",
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "bankAnswerChecked": true,
-        "sourceChecked": false,
+        "sourceChecked": true,
         "imageChecked": null,
-        "holdReason": "公式正答PDFの独立取得および手引き該当ページ全記述の再照合待ち",
+        "holdReason": "別の監査主体による独立レビュー未実施",
         "guideEvidence": {
-          "pages": "4–5",
-          "scope": "a–d（アレルギー、添加物、体調、外用薬）",
+          "pages": "5",
+          "pdfPages": [
+            13
+          ],
+          "items": [
+            "a:p.5",
+            "b:p.5",
+            "c:p.5",
+            "d:p.5"
+          ],
           "status": "CONTENT_CHECKED",
           "url": "https://www.mhlw.go.jp/content/001692425.pdf",
           "edition": "2026-04",
-          "independentReview": false
+          "independentReview": false,
+          "method": "既存草稿と原典ページ画像の再照合"
+        },
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 4,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
         }
-      }
+      },
+      "chapter": "第1章"
     },
     {
       "id": "KSAI-2026-008",
@@ -285,7 +435,7 @@
       "questionNo": 8,
       "answerNumberOfficial": 3,
       "explanation": {
-        "correctReason": "正答は3（b・c）。市販薬でも乱用・依存・急性中毒が起こる。",
+        "correctReason": "正答は3（b・c）。短期間の過量服用でも急性中毒のおそれがあり、酒類や他の薬との無計画な併用も危険である。依存性のある成分が含まれる場合があり、依存形成後の離脱は容易ではない。",
         "choiceReasons": [
           "a：誤。短期間でも目的外使用や過量服用には危険がある。",
           "b：正。無計画な併用は中毒リスクを高める。",
@@ -298,21 +448,47 @@
             "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月一部改訂）",
             "chapter": "第1章",
             "section": "Ⅱ-2",
-            "pages": "6–8",
+            "pages": "7–8",
             "url": "https://www.mhlw.go.jp/content/001692425.pdf",
-            "pageRangeVerified": false,
-            "pageRangeBasis": "公式目次で確認した関連節の範囲。個別記述の掲載ページ未照合。"
+            "pageRangeVerified": true,
+            "pageRangeBasis": "手引き本文原典画像と個別記述を照合"
           }
         ]
       },
       "audit": {
         "status": "PENDING",
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "bankAnswerChecked": true,
-        "sourceChecked": false,
+        "sourceChecked": true,
         "imageChecked": true,
-        "holdReason": "公式正答PDFの独立取得および手引き該当ページ全記述の再照合待ち"
-      }
+        "holdReason": "別の監査主体による独立品質監査未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 3,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        },
+        "guideEvidence": {
+          "pages": "7–8",
+          "pdfPages": [
+            15,
+            16
+          ],
+          "items": [
+            "a:p.7",
+            "b:p.7",
+            "c:p.7",
+            "d:p.8"
+          ],
+          "itemScope": "記述a–d",
+          "status": "CONTENT_CHECKED",
+          "edition": "2026-04",
+          "url": "https://www.mhlw.go.jp/content/001692425.pdf",
+          "method": "原典画像と既存解説の自己点検",
+          "independentReview": false
+        }
+      },
+      "chapter": "第1章"
     },
     {
       "id": "KSAI-2026-009",
@@ -320,7 +496,7 @@
       "questionNo": 9,
       "answerNumberOfficial": 5,
       "explanation": {
-        "correctReason": "正答は5（正・誤・正・正）。相互作用は増強だけでなく減弱もある。",
+        "correctReason": "正答は5（正・誤・正・正）。異なる疾病の治療薬同士でも相互作用が起こり、作用の増強・減弱が生じ得る。症状に必要な成分を選ぶことは重複による副作用の低減につながる。",
         "choiceReasons": [
           "a：正。配合成分の重複などで作用や副作用が強まることがある。",
           "b：誤。異なる病気の治療薬同士でも相互作用は起こる。",
@@ -333,21 +509,46 @@
             "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月一部改訂）",
             "chapter": "第1章",
             "section": "Ⅱ-3",
-            "pages": "8–9",
+            "pages": "8",
             "url": "https://www.mhlw.go.jp/content/001692425.pdf",
-            "pageRangeVerified": false,
-            "pageRangeBasis": "公式目次で確認した関連節の範囲。個別記述の掲載ページ未照合。"
+            "pageRangeVerified": true,
+            "pageRangeBasis": "手引き本文原典画像と個別記述を照合"
           }
         ]
       },
       "audit": {
         "status": "PENDING",
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "bankAnswerChecked": true,
-        "sourceChecked": false,
+        "sourceChecked": true,
         "imageChecked": true,
-        "holdReason": "公式正答PDFの独立取得および手引き該当ページ全記述の再照合待ち"
-      }
+        "holdReason": "別の監査主体による独立品質監査未実施",
+        "guideEvidence": {
+          "pages": "8",
+          "pdfPages": [
+            16
+          ],
+          "items": [
+            "a:p.8",
+            "b:p.8",
+            "c:p.8",
+            "d:p.8"
+          ],
+          "itemScope": "記述a–d",
+          "status": "CONTENT_CHECKED",
+          "edition": "2026-04",
+          "url": "https://www.mhlw.go.jp/content/001692425.pdf",
+          "method": "原典画像と既存解説の自己点検",
+          "independentReview": false
+        },
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 5,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
+      },
+      "chapter": "第1章"
     },
     {
       "id": "KSAI-2026-010",
@@ -355,7 +556,7 @@
       "questionNo": 10,
       "answerNumberOfficial": 3,
       "explanation": {
-        "correctReason": "正答は3（b・c）。食品や飲料も併用確認の対象。",
+        "correctReason": "正答は3（b・c）。アルコールは吸収にも代謝にも影響し、食品と薬の成分重複やハーブとの併用にも注意が必要である。外用薬でも食品による影響を否定できない。",
         "choiceReasons": [
           "a：誤。アルコールは代謝だけでなく吸収にも影響し得る。",
           "b：正。飲料などと薬のカフェインが重複すると過量になることがある。",
@@ -368,21 +569,46 @@
             "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月一部改訂）",
             "chapter": "第1章",
             "section": "Ⅱ-3",
-            "pages": "8–9",
+            "pages": "9",
             "url": "https://www.mhlw.go.jp/content/001692425.pdf",
-            "pageRangeVerified": false,
-            "pageRangeBasis": "公式目次で確認した関連節の範囲。個別記述の掲載ページ未照合。"
+            "pageRangeVerified": true,
+            "pageRangeBasis": "手引き本文原典画像と個別記述を照合"
           }
         ]
       },
       "audit": {
         "status": "PENDING",
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "bankAnswerChecked": true,
-        "sourceChecked": false,
+        "sourceChecked": true,
         "imageChecked": null,
-        "holdReason": "公式正答PDFの独立取得および手引き該当ページ全記述の再照合待ち"
-      }
+        "holdReason": "別の監査主体による独立品質監査未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 3,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        },
+        "guideEvidence": {
+          "pages": "9",
+          "pdfPages": [
+            17
+          ],
+          "items": [
+            "a:p.9",
+            "b:p.9",
+            "c:p.9",
+            "d:p.9"
+          ],
+          "itemScope": "記述a–d",
+          "status": "CONTENT_CHECKED",
+          "edition": "2026-04",
+          "url": "https://www.mhlw.go.jp/content/001692425.pdf",
+          "method": "原典画像と既存解説の自己点検",
+          "independentReview": false
+        }
+      },
+      "chapter": "第1章"
     },
     {
       "id": "KSAI-2026-011",
@@ -390,10 +616,10 @@
       "questionNo": 11,
       "answerNumberOfficial": 4,
       "explanation": {
-        "correctReason": "正答は4（誤・正・正・正）。新生児は4週未満。幼児の服薬後は観察する。",
+        "correctReason": "正答は4（誤・正・正・正）。新生児は生後4週未満であり、5歳未満の幼児向け錠剤・カプセル剤では喉につかえる危険への注意が必要となる。服薬後の保護者による観察も重要である。",
         "choiceReasons": [
           "a：誤。新生児は生後4週未満。乳児は生後4週以上1歳未満。",
-          "b：正。幼児では固形製剤が喉につかえる危険に注意する。",
+          "b：正。5歳未満の幼児向け錠剤・カプセル剤では喉につかえやすい旨が添付文書に記載される。",
           "c：正。苦しい服用経験が以後の服薬拒否につながる場合がある。",
           "d：正。幼い子は症状を説明しにくいため保護者の観察が重要。"
         ],
@@ -403,21 +629,46 @@
             "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月一部改訂）",
             "chapter": "第1章",
             "section": "Ⅱ-4(a)",
-            "pages": "9–11",
+            "pages": "10",
             "url": "https://www.mhlw.go.jp/content/001692425.pdf",
-            "pageRangeVerified": false,
-            "pageRangeBasis": "公式目次で確認した関連節の範囲。個別記述の掲載ページ未照合。"
+            "pageRangeVerified": true,
+            "pageRangeBasis": "手引き本文原典画像と個別記述を照合"
           }
         ]
       },
       "audit": {
         "status": "PENDING",
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "bankAnswerChecked": true,
-        "sourceChecked": false,
+        "sourceChecked": true,
         "imageChecked": null,
-        "holdReason": "公式正答PDFの独立取得および手引き該当ページ全記述の再照合待ち"
-      }
+        "holdReason": "別の監査主体による独立品質監査未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 4,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        },
+        "guideEvidence": {
+          "pages": "10",
+          "pdfPages": [
+            18
+          ],
+          "items": [
+            "a:p.10",
+            "b:p.10",
+            "c:p.10",
+            "d:p.10"
+          ],
+          "itemScope": "記述a–d",
+          "status": "CONTENT_CHECKED",
+          "edition": "2026-04",
+          "url": "https://www.mhlw.go.jp/content/001692425.pdf",
+          "method": "原典画像と既存解説の自己点検",
+          "independentReview": false
+        }
+      },
+      "chapter": "第1章"
     },
     {
       "id": "KSAI-2026-012",
@@ -425,7 +676,7 @@
       "questionNo": 12,
       "answerNumberOfficial": 3,
       "explanation": {
-        "correctReason": "正答は3（誤・誤・正・正）。65歳以上が目安だが個人差を重視する。",
+        "correctReason": "正答は3（誤・誤・正・正）。高齢者の目安は65歳以上で、生理機能の低下には個人差がある。口渇による誤嚥や服薬管理の困難にも配慮する。",
         "choiceReasons": [
           "a：誤。手引き上の高齢者の目安は65歳以上。",
           "b：誤。生理機能の低下には個人差が大きく年齢だけでは判断できない。",
@@ -438,21 +689,46 @@
             "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月一部改訂）",
             "chapter": "第1章",
             "section": "Ⅱ-4(b)",
-            "pages": "9–13",
+            "pages": "11",
             "url": "https://www.mhlw.go.jp/content/001692425.pdf",
-            "pageRangeVerified": false,
-            "pageRangeBasis": "公式目次で確認した関連節の範囲。個別記述の掲載ページ未照合。"
+            "pageRangeVerified": true,
+            "pageRangeBasis": "手引き本文原典画像と個別記述を照合"
           }
         ]
       },
       "audit": {
         "status": "PENDING",
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "bankAnswerChecked": true,
-        "sourceChecked": false,
+        "sourceChecked": true,
         "imageChecked": null,
-        "holdReason": "公式正答PDFの独立取得および手引き該当ページ全記述の再照合待ち"
-      }
+        "holdReason": "別の監査主体による独立品質監査未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 3,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        },
+        "guideEvidence": {
+          "pages": "11",
+          "pdfPages": [
+            19
+          ],
+          "items": [
+            "a:p.11",
+            "b:p.11",
+            "c:p.11",
+            "d:p.11"
+          ],
+          "itemScope": "記述a–d",
+          "status": "CONTENT_CHECKED",
+          "edition": "2026-04",
+          "url": "https://www.mhlw.go.jp/content/001692425.pdf",
+          "method": "原典画像と既存解説の自己点検",
+          "independentReview": false
+        }
+      },
+      "chapter": "第1章"
     },
     {
       "id": "KSAI-2026-013",
@@ -460,7 +736,7 @@
       "questionNo": 13,
       "answerNumberOfficial": 5,
       "explanation": {
-        "correctReason": "正答は5（誤・正・誤・正）。妊娠・授乳中は成分別の注意事項を確認する。",
+        "correctReason": "正答は5（誤・正・誤・正）。妊婦での安全性評価が難しい薬は多く、便秘薬には成分・用量により流産や早産を誘発するおそれがあるものもある。妊娠の確認にはプライバシーに配慮し、授乳中も成分ごとに判断する。",
         "choiceReasons": [
           "a：誤。妊婦での安全性評価が十分でない市販薬は多い。",
           "b：正。妊娠に関する確認はプライバシーに配慮する。",
@@ -472,22 +748,47 @@
           {
             "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月一部改訂）",
             "chapter": "第1章",
-            "section": "Ⅱ-4(c)",
-            "pages": "9–13",
+            "section": "Ⅱ-4(c)(d)",
+            "pages": "12",
             "url": "https://www.mhlw.go.jp/content/001692425.pdf",
-            "pageRangeVerified": false,
-            "pageRangeBasis": "公式目次で確認した関連節の範囲。個別記述の掲載ページ未照合。"
+            "pageRangeVerified": true,
+            "pageRangeBasis": "手引き本文原典画像と個別記述を照合"
           }
         ]
       },
       "audit": {
         "status": "PENDING",
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "bankAnswerChecked": true,
-        "sourceChecked": false,
+        "sourceChecked": true,
         "imageChecked": null,
-        "holdReason": "公式正答PDFの独立取得および手引き該当ページ全記述の再照合待ち"
-      }
+        "holdReason": "別の監査主体による独立品質監査未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 5,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        },
+        "guideEvidence": {
+          "pages": "12",
+          "pdfPages": [
+            20
+          ],
+          "items": [
+            "a:p.12",
+            "b:p.12",
+            "c:p.12",
+            "d:p.12"
+          ],
+          "itemScope": "記述a–d",
+          "status": "CONTENT_CHECKED",
+          "edition": "2026-04",
+          "url": "https://www.mhlw.go.jp/content/001692425.pdf",
+          "method": "原典画像と既存解説の自己点検",
+          "independentReview": false
+        }
+      },
+      "chapter": "第1章"
     },
     {
       "id": "KSAI-2026-014",
@@ -495,7 +796,7 @@
       "questionNo": 14,
       "answerNumberOfficial": 4,
       "explanation": {
-        "correctReason": "正答は4（正・誤・誤・誤）。プラセボ効果を目的に薬を使わない。",
+        "correctReason": "正答は4（正・誤・誤・誤）。薬理作用以外の反応には自然緩解なども関与し、不都合な変化も起こり得る。客観的な変化があっても不確実なため、それ自体を目的に薬を使うべきではない。",
         "choiceReasons": [
           "a：正。薬そのものの作用以外の反応も含まれる。",
           "b：誤。不快な反応も生じ得る。",
@@ -510,19 +811,44 @@
             "section": "Ⅱ-5",
             "pages": "13",
             "url": "https://www.mhlw.go.jp/content/001692425.pdf",
-            "pageRangeVerified": false,
-            "pageRangeBasis": "公式目次で確認した関連節の範囲。個別記述の掲載ページ未照合。"
+            "pageRangeVerified": true,
+            "pageRangeBasis": "手引き本文原典画像と個別記述を照合"
           }
         ]
       },
       "audit": {
         "status": "PENDING",
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "bankAnswerChecked": true,
-        "sourceChecked": false,
+        "sourceChecked": true,
         "imageChecked": null,
-        "holdReason": "公式正答PDFの独立取得および手引き該当ページ全記述の再照合待ち"
-      }
+        "holdReason": "別の監査主体による独立品質監査未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 4,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        },
+        "guideEvidence": {
+          "pages": "13",
+          "pdfPages": [
+            21
+          ],
+          "items": [
+            "a:p.13",
+            "b:p.13",
+            "c:p.13",
+            "d:p.13"
+          ],
+          "itemScope": "記述a–d",
+          "status": "CONTENT_CHECKED",
+          "edition": "2026-04",
+          "url": "https://www.mhlw.go.jp/content/001692425.pdf",
+          "method": "原典画像と既存解説の自己点検",
+          "independentReview": false
+        }
+      },
+      "chapter": "第1章"
     },
     {
       "id": "KSAI-2026-015",
@@ -530,7 +856,7 @@
       "questionNo": 15,
       "answerNumberOfficial": 3,
       "explanation": {
-        "correctReason": "正答は3（誤・正・誤・正）。使用期限は開封後の品質保証ではない。",
+        "correctReason": "正答は3（誤・正・誤・正）。高温・多湿・光は品質劣化の原因となる。表示された使用期限は未開封で適切に保存した場合のものであり、販売時の期限の余裕と保管環境にも配慮する。",
         "choiceReasons": [
           "a：誤。光だけでなく温度や湿度も劣化の要因。",
           "b：正。購入後すぐ使うとは限らないため期限に余裕を持たせる。",
@@ -545,19 +871,45 @@
             "section": "Ⅱ-6",
             "pages": "13–14",
             "url": "https://www.mhlw.go.jp/content/001692425.pdf",
-            "pageRangeVerified": false,
-            "pageRangeBasis": "公式目次で確認した関連節の範囲。個別記述の掲載ページ未照合。"
+            "pageRangeVerified": true,
+            "pageRangeBasis": "手引き本文原典画像と個別記述を照合"
           }
         ]
       },
       "audit": {
         "status": "PENDING",
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "bankAnswerChecked": true,
-        "sourceChecked": false,
+        "sourceChecked": true,
         "imageChecked": null,
-        "holdReason": "公式正答PDFの独立取得および手引き該当ページ全記述の再照合待ち"
-      }
+        "holdReason": "別の監査主体による独立品質監査未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 3,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        },
+        "guideEvidence": {
+          "pages": "13–14",
+          "pdfPages": [
+            21,
+            22
+          ],
+          "items": [
+            "a:p.13",
+            "b:p.14",
+            "c:p.14",
+            "d:p.13"
+          ],
+          "itemScope": "記述a–d",
+          "status": "CONTENT_CHECKED",
+          "edition": "2026-04",
+          "url": "https://www.mhlw.go.jp/content/001692425.pdf",
+          "method": "原典画像と既存解説の自己点検",
+          "independentReview": false
+        }
+      },
+      "chapter": "第1章"
     },
     {
       "id": "KSAI-2026-016",
@@ -565,7 +917,7 @@
       "questionNo": 16,
       "answerNumberOfficial": 1,
       "explanation": {
-        "correctReason": "正答は1（正・正・誤・正）。言語・非言語情報の双方を活用する。",
+        "correctReason": "正答は1（正・正・誤・正）。生活者の適切な選択と使用を支えるには個別状況を把握する必要がある。言葉以外の情報も利用し、必要量の販売などにより継続して相談できる機会を確保する。",
         "choiceReasons": [
           "a：正。生活者が自ら適切に選択・使用できるよう支援する。",
           "b：正。使用者ごとの事情を確認することが安全な選択につながる。",
@@ -580,19 +932,45 @@
             "section": "Ⅲ-2",
             "pages": "15–16",
             "url": "https://www.mhlw.go.jp/content/001692425.pdf",
-            "pageRangeVerified": false,
-            "pageRangeBasis": "公式目次で確認した関連節の範囲。個別記述の掲載ページ未照合。"
+            "pageRangeVerified": true,
+            "pageRangeBasis": "手引き本文原典画像と個別記述を照合"
           }
         ]
       },
       "audit": {
         "status": "PENDING",
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "bankAnswerChecked": true,
-        "sourceChecked": false,
+        "sourceChecked": true,
         "imageChecked": null,
-        "holdReason": "公式正答PDFの独立取得および手引き該当ページ全記述の再照合待ち"
-      }
+        "holdReason": "別の監査主体による独立品質監査未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 1,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        },
+        "guideEvidence": {
+          "pages": "15–16",
+          "pdfPages": [
+            23,
+            24
+          ],
+          "items": [
+            "a:p.15",
+            "b:p.15",
+            "c:p.16",
+            "d:p.16"
+          ],
+          "itemScope": "記述a–d",
+          "status": "CONTENT_CHECKED",
+          "edition": "2026-04",
+          "url": "https://www.mhlw.go.jp/content/001692425.pdf",
+          "method": "原典画像と既存解説の自己点検",
+          "independentReview": false
+        }
+      },
+      "chapter": "第1章"
     },
     {
       "id": "KSAI-2026-017",
@@ -600,12 +978,12 @@
       "questionNo": 17,
       "answerNumberOfficial": 2,
       "explanation": {
-        "correctReason": "正答は2（血液－胎盤・先天・市販後）。サリドマイド薬害と市販後安全対策を結びつける。",
+        "correctReason": "正答は2（血液－胎盤・先天・市販後）。サリドマイドは血液－胎盤関門を通って胎児へ移行し、血管新生を妨げることで先天異常を引き起こした。この薬害を契機に市販後の副作用情報収集が重視された。",
         "choiceReasons": [
           "1：誤。薬害を契機に重視されたのは市販後の情報収集。",
-          "2：正。胎盤を通じ胎児に移行し、出生前の器官形成を妨げた。",
+          "2：正。血液－胎盤関門を通過し、胎児の血管新生が阻害され先天異常が生じた。薬害後は市販後の情報収集が重視された。",
           "3：誤。出生前の形成障害なので後天異常ではない。",
-          "4：誤。胎盤関門・先天異常・市販後が正しい。",
+          "4：誤。血液－脳関門、後天、市販前の三語すべてが不適切。",
           "5：誤。胎児への移行に関わるのは血液－胎盤関門。"
         ],
         "keyPoint": "サリドマイド薬害と市販後安全対策を結びつける。",
@@ -614,21 +992,46 @@
             "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月一部改訂）",
             "chapter": "第1章",
             "section": "Ⅳ-2(a)",
-            "pages": "17–20",
+            "pages": "17–18",
             "url": "https://www.mhlw.go.jp/content/001692425.pdf",
-            "pageRangeVerified": false,
-            "pageRangeBasis": "公式目次で確認した関連節の範囲。個別記述の掲載ページ未照合。"
+            "pageRangeVerified": true,
+            "pageRangeBasis": "手引き本文原典画像と個別記述を照合"
           }
         ]
       },
       "audit": {
         "status": "PENDING",
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "bankAnswerChecked": true,
-        "sourceChecked": false,
+        "sourceChecked": true,
         "imageChecked": true,
-        "holdReason": "公式正答PDFの独立取得および手引き該当ページ全記述の再照合待ち"
-      }
+        "holdReason": "別の監査主体による独立品質監査未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 2,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        },
+        "guideEvidence": {
+          "pages": "17–18",
+          "pdfPages": [
+            25,
+            26
+          ],
+          "items": [
+            "a:p.17",
+            "b:p.17",
+            "c:p.18"
+          ],
+          "itemScope": "空欄a–c",
+          "status": "CONTENT_CHECKED",
+          "edition": "2026-04",
+          "url": "https://www.mhlw.go.jp/content/001692425.pdf",
+          "method": "原典画像と既存解説の自己点検",
+          "independentReview": false
+        }
+      },
+      "chapter": "第1章"
     },
     {
       "id": "KSAI-2026-018",
@@ -636,11 +1039,11 @@
       "questionNo": 18,
       "answerNumberOfficial": 5,
       "explanation": {
-        "correctReason": "正答は5（正・正・誤・正）。キノホルム＝スモン、副作用被害救済制度。",
+        "correctReason": "正答は5（正・正・誤・正）。整腸剤キノホルムによるスモンでは消化器症状に続いて神経障害が起こる。サリドマイド・スモン訴訟を契機に1980年に副作用被害救済制度が創設された。緊急輸入制度はHIV訴訟後の対策である。",
         "choiceReasons": [
           "a：正。キノホルムによる神経障害が訴訟の原因。",
           "b：正。消化器症状に続いて下肢の感覚・運動障害が生じる。",
-          "c：誤。スモン訴訟を契機とした制度は副作用被害救済制度であり緊急輸入制度ではない。",
+          "c：誤。緊急輸入制度はHIV訴訟後の1996年改正薬事法による。スモン訴訟等を契機に創設されたのは医薬品副作用被害救済制度。",
           "d：正。サリドマイド・スモン訴訟を背景に救済制度が創設された。"
         ],
         "keyPoint": "キノホルム＝スモン、副作用被害救済制度。",
@@ -649,21 +1052,47 @@
             "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月一部改訂）",
             "chapter": "第1章",
             "section": "Ⅳ-2(b)",
-            "pages": "17–20",
+            "pages": "18–19",
             "url": "https://www.mhlw.go.jp/content/001692425.pdf",
-            "pageRangeVerified": false,
-            "pageRangeBasis": "公式目次で確認した関連節の範囲。個別記述の掲載ページ未照合。"
+            "pageRangeVerified": true,
+            "pageRangeBasis": "手引き本文原典画像と個別記述を照合"
           }
         ]
       },
       "audit": {
         "status": "PENDING",
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "bankAnswerChecked": true,
-        "sourceChecked": false,
+        "sourceChecked": true,
         "imageChecked": true,
-        "holdReason": "公式正答PDFの独立取得および手引き該当ページ全記述の再照合待ち"
-      }
+        "holdReason": "別の監査主体による独立品質監査未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 5,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        },
+        "guideEvidence": {
+          "pages": "18–19",
+          "pdfPages": [
+            26,
+            27
+          ],
+          "items": [
+            "a:p.18",
+            "b:p.18",
+            "c:p.19",
+            "d:p.18"
+          ],
+          "itemScope": "記述a–d",
+          "status": "CONTENT_CHECKED",
+          "edition": "2026-04",
+          "url": "https://www.mhlw.go.jp/content/001692425.pdf",
+          "method": "原典画像と既存解説の自己点検",
+          "independentReview": false
+        }
+      },
+      "chapter": "第1章"
     },
     {
       "id": "KSAI-2026-019",
@@ -671,13 +1100,13 @@
       "questionNo": 19,
       "answerNumberOfficial": 1,
       "explanation": {
-        "correctReason": "正答は1（血漿・エイズ治療／研究開発センターの整備・感染症報告）。HIV薬害＝血漿由来凝固因子製剤、感染症報告。",
+        "correctReason": "正答は1（血漿・エイズ治療／研究開発センターの整備・感染症報告）。HIVが混入した血漿由来の血液凝固因子製剤による感染被害を受け、治療拠点の整備と企業への感染症報告義務などが進められた。",
         "choiceReasons": [
           "1：正。汚染血漿由来の製剤による感染を受け、治療体制の整備と感染症報告義務が進められた。",
           "2：誤。空欄b・cに該当するのは治療拠点の整備と感染症報告。",
           "3：誤。血液製剤の全面禁止ではない。",
           "4：誤。製剤の原料は血球ではなく血漿。",
-          "5：誤。原料・恒久対策・報告の組合せが異なる。"
+          "5：誤。血球ではなく血漿、救済制度拡充ではなくエイズ治療・研究開発センターの整備、製造販売後調査ではなく感染症報告が該当する。"
         ],
         "keyPoint": "HIV薬害＝血漿由来凝固因子製剤、感染症報告。",
         "references": [
@@ -685,21 +1114,46 @@
             "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月一部改訂）",
             "chapter": "第1章",
             "section": "Ⅳ-2(c)",
-            "pages": "17–20",
+            "pages": "18–19",
             "url": "https://www.mhlw.go.jp/content/001692425.pdf",
-            "pageRangeVerified": false,
-            "pageRangeBasis": "公式目次で確認した関連節の範囲。個別記述の掲載ページ未照合。"
+            "pageRangeVerified": true,
+            "pageRangeBasis": "手引き本文原典画像と個別記述を照合"
           }
         ]
       },
       "audit": {
         "status": "PENDING",
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "bankAnswerChecked": true,
-        "sourceChecked": false,
+        "sourceChecked": true,
         "imageChecked": null,
-        "holdReason": "公式正答PDFの独立取得および手引き該当ページ全記述の再照合待ち"
-      }
+        "holdReason": "別の監査主体による独立品質監査未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 1,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        },
+        "guideEvidence": {
+          "pages": "18–19",
+          "pdfPages": [
+            26,
+            27
+          ],
+          "items": [
+            "a:p.18",
+            "b:p.19",
+            "c:p.19"
+          ],
+          "itemScope": "空欄a–c",
+          "status": "CONTENT_CHECKED",
+          "edition": "2026-04",
+          "url": "https://www.mhlw.go.jp/content/001692425.pdf",
+          "method": "原典画像と既存解説の自己点検",
+          "independentReview": false
+        }
+      },
+      "chapter": "第1章"
     },
     {
       "id": "KSAI-2026-020",
@@ -707,7 +1161,7 @@
       "questionNo": 20,
       "answerNumberOfficial": 3,
       "explanation": {
-        "correctReason": "正答は3（誤・正・正・正）。CJD＝プリオン、生物由来製品感染等被害救済制度。",
+        "correctReason": "正答は3（誤・正・正・正）。CJDの原因はプリオンという異常タンパク質で、真菌ではない。ヒト乾燥硬膜を介した感染被害の訴訟後、生物由来製品による感染等被害救済制度が創設された。",
         "choiceReasons": [
           "a：誤。プリオンは真菌ではなく異常なタンパク質。",
           "b：正。進行性の重篤な神経疾患である。",
@@ -720,21 +1174,47 @@
             "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月一部改訂）",
             "chapter": "第1章",
             "section": "Ⅳ-2(d)",
-            "pages": "17–20",
+            "pages": "19–20",
             "url": "https://www.mhlw.go.jp/content/001692425.pdf",
-            "pageRangeVerified": false,
-            "pageRangeBasis": "公式目次で確認した関連節の範囲。個別記述の掲載ページ未照合。"
+            "pageRangeVerified": true,
+            "pageRangeBasis": "手引き本文原典画像と個別記述を照合"
           }
         ]
       },
       "audit": {
         "status": "PENDING",
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "bankAnswerChecked": true,
-        "sourceChecked": false,
+        "sourceChecked": true,
         "imageChecked": null,
-        "holdReason": "公式正答PDFの独立取得および手引き該当ページ全記述の再照合待ち"
-      }
+        "holdReason": "別の監査主体による独立品質監査未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 3,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        },
+        "guideEvidence": {
+          "pages": "19–20",
+          "pdfPages": [
+            27,
+            28
+          ],
+          "items": [
+            "a:p.19",
+            "b:p.19",
+            "c:p.19",
+            "d:p.20"
+          ],
+          "itemScope": "記述a–d",
+          "status": "CONTENT_CHECKED",
+          "edition": "2026-04",
+          "url": "https://www.mhlw.go.jp/content/001692425.pdf",
+          "method": "原典画像と既存解説の自己点検",
+          "independentReview": false
+        }
+      },
+      "chapter": "第1章"
     },
     {
       "id": "KSAI-2026-021",
@@ -743,9 +1223,9 @@
       "chapter": "第3章",
       "answerNumberOfficial": 5,
       "explanation": {
-        "correctReason": "正答は5（誤・誤・正・正）。総合感冒薬が常に最適とは限らない。",
+        "correctReason": "正答は5（誤・誤・正・正）。かぜの約8割はウイルス感染によるもので、上気道の急性炎症が中心。かぜ薬は原因を除去する薬ではなく、症状に応じて選択する。",
         "choiceReasons": [
-          "a：誤。主因はウイルス感染である。",
+          "a：誤。かぜの約8割の原因は細菌ではなくウイルス感染である。",
           "b：誤。主に上気道の急性炎症を指す。",
           "c：正。症状を軽減する薬である。",
           "d：正。症状に合わせて必要な成分を選ぶ。"
@@ -756,20 +1236,44 @@
             "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月）",
             "chapter": "第3章",
             "section": "Ⅰ-1",
-            "pages": "57–58",
+            "pages": "57, 58",
             "url": "https://www.mhlw.go.jp/content/001692425.pdf",
-            "pageRangeVerified": false,
-            "pageRangeBasis": "公式目次で確認した関連節の範囲。個別記述の掲載ページ未照合。"
+            "pageRangeVerified": true,
+            "pageRangeBasis": "原典画像の個別記述を確認"
           }
         ]
       },
       "audit": {
         "status": "PENDING",
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "bankAnswerChecked": true,
-        "sourceChecked": false,
+        "sourceChecked": true,
         "imageChecked": true,
-        "holdReason": "手引きの該当ページと公式正答PDFの独立照合待ち"
+        "holdReason": "独立品質監査未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 5,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        },
+        "guideEvidence": {
+          "pages": "57, 58",
+          "pdfPages": [
+            65,
+            66
+          ],
+          "items": [
+            "a:p.57",
+            "b:p.57",
+            "c:p.58",
+            "d:p.58"
+          ],
+          "status": "CONTENT_CHECKED",
+          "edition": "2026-04",
+          "url": "https://www.mhlw.go.jp/content/001692425.pdf",
+          "method": "原典ページ画像による自己点検",
+          "independentReview": false
+        }
       }
     },
     {
@@ -802,11 +1306,34 @@
       },
       "audit": {
         "status": "PENDING",
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "bankAnswerChecked": true,
         "sourceChecked": false,
         "imageChecked": null,
-        "holdReason": "手引きの該当ページと公式正答PDFの独立照合待ち"
+        "holdReason": "安中散・桂枝加芍薬湯の個別根拠および独立品質監査未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 4,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        },
+        "guideEvidence": {
+          "pages": [
+            61,
+            62,
+            89
+          ],
+          "items": [
+            "1:p.62",
+            "2:p.89",
+            "4:p.61"
+          ],
+          "missing": "安中散・桂枝加芍薬湯の個別根拠",
+          "status": "PARTIAL",
+          "edition": "2026-04",
+          "url": "https://www.mhlw.go.jp/content/001692425.pdf",
+          "independentReview": false
+        }
       }
     },
     {
@@ -829,20 +1356,45 @@
             "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月）",
             "chapter": "第3章",
             "section": "Ⅰ-1",
-            "pages": "58–63",
+            "pages": "61, 62, 90",
             "url": "https://www.mhlw.go.jp/content/001692425.pdf",
-            "pageRangeVerified": false,
-            "pageRangeBasis": "公式目次で確認した関連節の範囲。個別記述の掲載ページ未照合。"
+            "pageRangeVerified": true,
+            "pageRangeBasis": "原典画像の個別記述を確認"
           }
         ]
       },
       "audit": {
         "status": "PENDING",
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "bankAnswerChecked": true,
-        "sourceChecked": false,
+        "sourceChecked": true,
         "imageChecked": null,
-        "holdReason": "手引きの該当ページと公式正答PDFの独立照合待ち"
+        "holdReason": "独立品質監査未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 4,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        },
+        "guideEvidence": {
+          "pages": "61, 62, 90",
+          "pdfPages": [
+            69,
+            70,
+            98
+          ],
+          "items": [
+            "a:p.61",
+            "b:p.90",
+            "c:p.61",
+            "d:p.62"
+          ],
+          "status": "CONTENT_CHECKED",
+          "edition": "2026-04",
+          "url": "https://www.mhlw.go.jp/content/001692425.pdf",
+          "method": "原典ページ画像による自己点検",
+          "independentReview": false
+        }
       }
     },
     {
@@ -852,7 +1404,7 @@
       "chapter": "第3章",
       "answerNumberOfficial": 1,
       "explanation": {
-        "correctReason": "正答は1（正・正・正・誤）。成分ごとに年齢制限・運転禁止・相談事項を確認。",
+        "correctReason": "正答は1（正・正・正・誤）。トラネキサム酸は血栓症への配慮が必要で、ジヒドロコデインは便秘、抗ヒスタミン成分は眠気に注意する。イブプロフェンを含む一般用医薬品は15歳未満には使用しない。",
         "choiceReasons": [
           "a：正。トラネキサム酸配合薬では血栓症の治療中などに相談が必要。",
           "b：正。ジヒドロコデインは便秘を起こし得る。",
@@ -865,20 +1417,46 @@
             "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月）",
             "chapter": "第3章",
             "section": "Ⅰ-1",
-            "pages": "58–63",
+            "pages": "59, 63, 67, 73",
             "url": "https://www.mhlw.go.jp/content/001692425.pdf",
-            "pageRangeVerified": false,
-            "pageRangeBasis": "公式目次で確認した関連節の範囲。個別記述の掲載ページ未照合。"
+            "pageRangeVerified": true,
+            "pageRangeBasis": "原典画像の個別記述を確認"
           }
         ]
       },
       "audit": {
         "status": "PENDING",
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "bankAnswerChecked": true,
-        "sourceChecked": false,
+        "sourceChecked": true,
         "imageChecked": null,
-        "holdReason": "手引きの該当ページと公式正答PDFの独立照合待ち"
+        "holdReason": "独立品質監査未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 1,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        },
+        "guideEvidence": {
+          "pages": "59, 63, 67, 73",
+          "pdfPages": [
+            67,
+            71,
+            75,
+            81
+          ],
+          "items": [
+            "a:p.59",
+            "b:p.63",
+            "c:p.73",
+            "d:p.67"
+          ],
+          "status": "CONTENT_CHECKED",
+          "edition": "2026-04",
+          "url": "https://www.mhlw.go.jp/content/001692425.pdf",
+          "method": "原典ページ画像による自己点検",
+          "independentReview": false
+        }
       }
     },
     {
@@ -901,20 +1479,45 @@
             "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月）",
             "chapter": "第3章",
             "section": "Ⅰ-2",
-            "pages": "64–71",
+            "pages": "66, 67, 69",
             "url": "https://www.mhlw.go.jp/content/001692425.pdf",
-            "pageRangeVerified": false,
-            "pageRangeBasis": "公式目次で確認した関連節の範囲。個別記述の掲載ページ未照合。"
+            "pageRangeVerified": true,
+            "pageRangeBasis": "原典画像の個別記述を確認"
           }
         ]
       },
       "audit": {
         "status": "PENDING",
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "bankAnswerChecked": true,
-        "sourceChecked": false,
+        "sourceChecked": true,
         "imageChecked": null,
-        "holdReason": "手引きの該当ページと公式正答PDFの独立照合待ち"
+        "holdReason": "独立品質監査未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 1,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        },
+        "guideEvidence": {
+          "pages": "66, 67, 69",
+          "pdfPages": [
+            74,
+            75,
+            77
+          ],
+          "items": [
+            "a:p.66",
+            "b:p.67",
+            "c:p.67",
+            "d:p.69"
+          ],
+          "status": "CONTENT_CHECKED",
+          "edition": "2026-04",
+          "url": "https://www.mhlw.go.jp/content/001692425.pdf",
+          "method": "原典ページ画像による自己点検",
+          "independentReview": false
+        }
       }
     },
     {
@@ -938,20 +1541,45 @@
             "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月）",
             "chapter": "第3章",
             "section": "Ⅰ-2",
-            "pages": "65–71",
+            "pages": "70, 71",
             "url": "https://www.mhlw.go.jp/content/001692425.pdf",
-            "pageRangeVerified": false,
-            "pageRangeBasis": "公式目次で確認した関連節の範囲。個別記述の掲載ページ未照合。"
+            "pageRangeVerified": true,
+            "pageRangeBasis": "原典画像の個別記述を確認"
           }
         ]
       },
       "audit": {
         "status": "PENDING",
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "bankAnswerChecked": true,
-        "sourceChecked": false,
+        "sourceChecked": true,
         "imageChecked": null,
-        "holdReason": "手引きの該当ページと公式正答PDFの独立照合待ち"
+        "holdReason": "独立品質監査未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 5,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        },
+        "guideEvidence": {
+          "pages": "70, 71",
+          "pdfPages": [
+            78,
+            79
+          ],
+          "items": [
+            "1:p.71",
+            "2:p.70",
+            "3:p.70",
+            "4:p.70",
+            "5:p.70"
+          ],
+          "status": "CONTENT_CHECKED",
+          "edition": "2026-04",
+          "url": "https://www.mhlw.go.jp/content/001692425.pdf",
+          "method": "原典ページ画像による自己点検",
+          "independentReview": false
+        }
       }
     },
     {
@@ -974,20 +1602,43 @@
             "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月）",
             "chapter": "第3章",
             "section": "Ⅰ-4",
-            "pages": "76–78",
+            "pages": "77",
             "url": "https://www.mhlw.go.jp/content/001692425.pdf",
-            "pageRangeVerified": false,
-            "pageRangeBasis": "公式目次で確認した関連節の範囲。個別記述の掲載ページ未照合。"
+            "pageRangeVerified": true,
+            "pageRangeBasis": "原典画像の個別記述を確認"
           }
         ]
       },
       "audit": {
         "status": "PENDING",
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "bankAnswerChecked": true,
-        "sourceChecked": false,
+        "sourceChecked": true,
         "imageChecked": null,
-        "holdReason": "手引きの該当ページと公式正答PDFの独立照合待ち"
+        "holdReason": "独立品質監査未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 2,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        },
+        "guideEvidence": {
+          "pages": "77",
+          "pdfPages": [
+            85
+          ],
+          "items": [
+            "a:p.77",
+            "b:p.77",
+            "c:p.77",
+            "d:p.77"
+          ],
+          "status": "CONTENT_CHECKED",
+          "edition": "2026-04",
+          "url": "https://www.mhlw.go.jp/content/001692425.pdf",
+          "method": "原典ページ画像による自己点検",
+          "independentReview": false
+        }
       }
     },
     {
@@ -997,7 +1648,7 @@
       "chapter": "第3章",
       "answerNumberOfficial": 2,
       "explanation": {
-        "correctReason": "正答は2（誤・誤・正・正）。成分と基礎疾患の組合せを覚える。",
+        "correctReason": "正答は2（誤・誤・正・正）。小児向けアセトアミノフェン製剤は存在する。クローン病の再発と全身性エリテマトーデスでの無菌性髄膜炎はイブプロフェンに関する注意であり、ジフェニドールは緑内障を悪化させ得る。",
         "choiceReasons": [
           "a：誤。小児にも使用できるアセトアミノフェン製剤がある。",
           "b：誤。クローン病再発への注意はイブプロフェンなどであり、ブロモバレリル尿素ではない。",
@@ -1010,20 +1661,44 @@
             "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月）",
             "chapter": "第3章",
             "section": "Ⅰ-2・Ⅰ-3・Ⅰ-5",
-            "pages": "65–80",
+            "pages": "67, 79",
             "url": "https://www.mhlw.go.jp/content/001692425.pdf",
-            "pageRangeVerified": false,
-            "pageRangeBasis": "公式目次で確認した関連節の範囲。個別記述の掲載ページ未照合。"
+            "pageRangeVerified": true,
+            "pageRangeBasis": "原典画像の個別記述を確認"
           }
         ]
       },
       "audit": {
         "status": "PENDING",
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "bankAnswerChecked": true,
-        "sourceChecked": false,
+        "sourceChecked": true,
         "imageChecked": true,
-        "holdReason": "手引きの該当ページと公式正答PDFの独立照合待ち"
+        "holdReason": "独立品質監査未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 2,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        },
+        "guideEvidence": {
+          "pages": "67, 79",
+          "pdfPages": [
+            75,
+            87
+          ],
+          "items": [
+            "a:p.67",
+            "b:p.67",
+            "c:p.67",
+            "d:p.79"
+          ],
+          "status": "CONTENT_CHECKED",
+          "edition": "2026-04",
+          "url": "https://www.mhlw.go.jp/content/001692425.pdf",
+          "method": "原典ページ画像による自己点検",
+          "independentReview": false
+        }
       }
     },
     {
@@ -1046,20 +1721,43 @@
             "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月）",
             "chapter": "第3章",
             "section": "Ⅰ-3",
-            "pages": "72–75",
+            "pages": "75",
             "url": "https://www.mhlw.go.jp/content/001692425.pdf",
-            "pageRangeVerified": false,
-            "pageRangeBasis": "公式目次で確認した関連節の範囲。個別記述の掲載ページ未照合。"
+            "pageRangeVerified": true,
+            "pageRangeBasis": "原典画像の個別記述を確認"
           }
         ]
       },
       "audit": {
         "status": "PENDING",
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "bankAnswerChecked": true,
-        "sourceChecked": false,
+        "sourceChecked": true,
         "imageChecked": null,
-        "holdReason": "手引きの該当ページと公式正答PDFの独立照合待ち"
+        "holdReason": "独立品質監査未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 4,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        },
+        "guideEvidence": {
+          "pages": "75",
+          "pdfPages": [
+            83
+          ],
+          "items": [
+            "a:p.75",
+            "b:p.75",
+            "c:p.75",
+            "d:p.75"
+          ],
+          "status": "CONTENT_CHECKED",
+          "edition": "2026-04",
+          "url": "https://www.mhlw.go.jp/content/001692425.pdf",
+          "method": "原典ページ画像による自己点検",
+          "independentReview": false
+        }
       }
     },
     {
@@ -1069,11 +1767,11 @@
       "chapter": "第3章",
       "answerNumberOfficial": 3,
       "explanation": {
-        "correctReason": "正答は3（b・c）。局所麻酔成分と中枢刺激成分の作用を区別。",
+        "correctReason": "正答は3（b・c）。抗ヒスタミン成分は嘔吐中枢への刺激等を抑え、抗コリン成分は中枢の自律神経系の混乱と末梢の消化管緊張を軽減する。aとdは作用の説明が入れ替わっている。",
         "choiceReasons": [
           "a：誤。アミノ安息香酸エチルは胃粘膜の局所麻酔作用を期待する。",
           "b：正。クロルフェニラミンは嘔吐中枢への刺激等を抑える抗ヒスタミン成分。",
-          "c：正。スコポラミンは抗コリン作用で自律神経系の混乱等を抑える。",
+          "c：正。スコポラミンは中枢で自律神経系の混乱を軽減し、末梢で消化管の緊張を低下させる。",
           "d：誤。ジプロフィリンは中枢刺激によるめまい軽減を期待する。"
         ],
         "keyPoint": "局所麻酔成分と中枢刺激成分の作用を区別。",
@@ -1082,20 +1780,44 @@
             "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月）",
             "chapter": "第3章",
             "section": "Ⅰ-5",
-            "pages": "78–80",
+            "pages": "79, 80",
             "url": "https://www.mhlw.go.jp/content/001692425.pdf",
-            "pageRangeVerified": false,
-            "pageRangeBasis": "公式目次で確認した関連節の範囲。個別記述の掲載ページ未照合。"
+            "pageRangeVerified": true,
+            "pageRangeBasis": "原典画像の個別記述を確認"
           }
         ]
       },
       "audit": {
         "status": "PENDING",
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "bankAnswerChecked": true,
-        "sourceChecked": false,
+        "sourceChecked": true,
         "imageChecked": true,
-        "holdReason": "手引きの該当ページと公式正答PDFの独立照合待ち"
+        "holdReason": "独立品質監査未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 3,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        },
+        "guideEvidence": {
+          "pages": "79, 80",
+          "pdfPages": [
+            87,
+            88
+          ],
+          "items": [
+            "a:p.80",
+            "b:p.79",
+            "c:p.79",
+            "d:p.80"
+          ],
+          "status": "CONTENT_CHECKED",
+          "edition": "2026-04",
+          "url": "https://www.mhlw.go.jp/content/001692425.pdf",
+          "method": "原典ページ画像による自己点検",
+          "independentReview": false
+        }
       }
     },
     {
@@ -1127,11 +1849,34 @@
       },
       "audit": {
         "status": "PENDING",
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "bankAnswerChecked": true,
         "sourceChecked": false,
         "imageChecked": null,
-        "holdReason": "手引きの該当ページと公式正答PDFの独立照合待ち"
+        "holdReason": "センキュウの個別根拠および独立品質監査未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 2,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        },
+        "guideEvidence": {
+          "pages": [
+            88,
+            89,
+            98
+          ],
+          "items": [
+            "a:p.89",
+            "b:p.98",
+            "c:p.88"
+          ],
+          "missing": "センキュウの個別根拠",
+          "status": "PARTIAL",
+          "edition": "2026-04",
+          "url": "https://www.mhlw.go.jp/content/001692425.pdf",
+          "independentReview": false
+        }
       }
     },
     {
@@ -1163,11 +1908,33 @@
       },
       "audit": {
         "status": "PENDING",
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "bankAnswerChecked": true,
         "sourceChecked": false,
         "imageChecked": null,
-        "holdReason": "手引きの該当ページと公式正答PDFの独立照合待ち"
+        "holdReason": "麦門冬湯の構成生薬の直接確認および独立品質監査未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 5,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        },
+        "guideEvidence": {
+          "pages": [
+            87,
+            90
+          ],
+          "items": [
+            "b:p.87",
+            "c:p.90",
+            "d:p.90"
+          ],
+          "missing": "麦門冬湯の構成生薬の直接確認",
+          "status": "PARTIAL",
+          "edition": "2026-04",
+          "url": "https://www.mhlw.go.jp/content/001692425.pdf",
+          "independentReview": false
+        }
       }
     },
     {
@@ -1177,9 +1944,9 @@
       "chapter": "第3章",
       "answerNumberOfficial": 1,
       "explanation": {
-        "correctReason": "正答は1（正・正・誤・誤）。鎮咳・去痰・気管支拡張の作用を区別。",
+        "correctReason": "正答は1（正・正・誤・誤）。鎮咳去痰薬には解熱成分は配合されず、併用による成分重複に注意する。チペピジンは非麻薬性鎮咳成分で、メチルエフェドリンは気管支拡張成分である。",
         "choiceReasons": [
-          "a：正。鎮咳去痰薬は発熱を抑える目的の薬ではない。",
+          "a：正。鎮咳去痰薬には解熱成分が配合されていないため、発熱を鎮める効果は期待できない。",
           "b：正。成分や作用の重複で副作用が増え得る。",
           "c：誤。チペピジンは非麻薬性鎮咳成分。",
           "d：誤。メチルエフェドリンは気管支拡張成分。粘液組成の調整はカルボシステインなどの作用。"
@@ -1190,20 +1957,45 @@
             "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月）",
             "chapter": "第3章",
             "section": "Ⅱ-1",
-            "pages": "84–91",
+            "pages": "85, 86, 90",
             "url": "https://www.mhlw.go.jp/content/001692425.pdf",
-            "pageRangeVerified": false,
-            "pageRangeBasis": "公式目次で確認した関連節の範囲。個別記述の掲載ページ未照合。"
+            "pageRangeVerified": true,
+            "pageRangeBasis": "原典画像の個別記述を確認"
           }
         ]
       },
       "audit": {
         "status": "PENDING",
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "bankAnswerChecked": true,
-        "sourceChecked": false,
+        "sourceChecked": true,
         "imageChecked": null,
-        "holdReason": "手引きの該当ページと公式正答PDFの独立照合待ち"
+        "holdReason": "独立品質監査未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 1,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        },
+        "guideEvidence": {
+          "pages": "85, 86, 90",
+          "pdfPages": [
+            93,
+            94,
+            98
+          ],
+          "items": [
+            "a:p.90",
+            "b:p.90",
+            "c:p.85",
+            "d:p.86"
+          ],
+          "status": "CONTENT_CHECKED",
+          "edition": "2026-04",
+          "url": "https://www.mhlw.go.jp/content/001692425.pdf",
+          "method": "原典ページ画像による自己点検",
+          "independentReview": false
+        }
       }
     },
     {
@@ -1235,11 +2027,17 @@
       },
       "audit": {
         "status": "PENDING",
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "bankAnswerChecked": true,
         "sourceChecked": false,
         "imageChecked": null,
-        "holdReason": "手引きの該当ページと公式正答PDFの独立照合待ち"
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 3,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
       }
     },
     {
@@ -1271,11 +2069,17 @@
       },
       "audit": {
         "status": "PENDING",
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "bankAnswerChecked": true,
         "sourceChecked": false,
         "imageChecked": null,
-        "holdReason": "手引きの該当ページと公式正答PDFの独立照合待ち"
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 4,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
       }
     },
     {
@@ -1307,11 +2111,17 @@
       },
       "audit": {
         "status": "PENDING",
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "bankAnswerChecked": true,
         "sourceChecked": false,
         "imageChecked": true,
-        "holdReason": "手引きの該当ページと公式正答PDFの独立照合待ち"
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 4,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
       }
     },
     {
@@ -1343,11 +2153,17 @@
       },
       "audit": {
         "status": "PENDING",
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "bankAnswerChecked": true,
         "sourceChecked": false,
         "imageChecked": null,
-        "holdReason": "手引きの該当ページと公式正答PDFの独立照合待ち"
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 1,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
       }
     },
     {
@@ -1379,11 +2195,17 @@
       },
       "audit": {
         "status": "PENDING",
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "bankAnswerChecked": true,
         "sourceChecked": false,
         "imageChecked": null,
-        "holdReason": "手引きの該当ページと公式正答PDFの独立照合待ち"
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 5,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
       }
     },
     {
@@ -1415,11 +2237,17 @@
       },
       "audit": {
         "status": "PENDING",
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "bankAnswerChecked": true,
         "sourceChecked": false,
         "imageChecked": null,
-        "holdReason": "手引きの該当ページと公式正答PDFの独立照合待ち"
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 1,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
       }
     },
     {
@@ -1451,11 +2279,17 @@
       },
       "audit": {
         "status": "PENDING",
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "bankAnswerChecked": true,
         "sourceChecked": false,
         "imageChecked": null,
-        "holdReason": "手引きの該当ページと公式正答PDFの独立照合待ち"
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 4,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
       }
     },
     {
@@ -1487,10 +2321,16 @@
       "audit": {
         "status": "PENDING",
         "bankAnswerChecked": true,
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "sourceChecked": false,
         "imageChecked": null,
-        "holdReason": "一次資料の該当ページと独立監査未完了"
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 4,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
       }
     },
     {
@@ -1523,10 +2363,16 @@
       "audit": {
         "status": "PENDING",
         "bankAnswerChecked": true,
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "sourceChecked": false,
         "imageChecked": null,
-        "holdReason": "一次資料の該当ページと独立監査未完了"
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 2,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
       }
     },
     {
@@ -1559,10 +2405,16 @@
       "audit": {
         "status": "PENDING",
         "bankAnswerChecked": true,
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "sourceChecked": false,
         "imageChecked": null,
-        "holdReason": "一次資料の該当ページと独立監査未完了"
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 3,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
       }
     },
     {
@@ -1594,10 +2446,16 @@
       "audit": {
         "status": "PENDING",
         "bankAnswerChecked": true,
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "sourceChecked": false,
         "imageChecked": null,
-        "holdReason": "一次資料の該当ページと独立監査未完了"
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 2,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
       }
     },
     {
@@ -1629,10 +2487,16 @@
       "audit": {
         "status": "PENDING",
         "bankAnswerChecked": true,
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "sourceChecked": false,
         "imageChecked": null,
-        "holdReason": "一次資料の該当ページと独立監査未完了"
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 3,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
       }
     },
     {
@@ -1664,10 +2528,16 @@
       "audit": {
         "status": "PENDING",
         "bankAnswerChecked": true,
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "sourceChecked": false,
         "imageChecked": null,
-        "holdReason": "一次資料の該当ページと独立監査未完了"
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 4,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
       }
     },
     {
@@ -1699,11 +2569,17 @@
       "audit": {
         "status": "PENDING",
         "bankAnswerChecked": true,
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "sourceChecked": false,
         "imageChecked": true,
         "imageEvidence": "公式前半PDF 39ページ目（印刷37ページ）",
-        "holdReason": "手引き該当ページ・独立監査未完了"
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 3,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
       }
     },
     {
@@ -1735,10 +2611,16 @@
       "audit": {
         "status": "PENDING",
         "bankAnswerChecked": true,
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "sourceChecked": false,
         "imageChecked": null,
-        "holdReason": "一次資料の該当ページと独立監査未完了"
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 2,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
       }
     },
     {
@@ -1770,10 +2652,16 @@
       "audit": {
         "status": "PENDING",
         "bankAnswerChecked": true,
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "sourceChecked": false,
         "imageChecked": null,
-        "holdReason": "一次資料の該当ページと独立監査未完了"
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 1,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
       }
     },
     {
@@ -1805,10 +2693,16 @@
       "audit": {
         "status": "PENDING",
         "bankAnswerChecked": true,
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "sourceChecked": false,
         "imageChecked": null,
-        "holdReason": "一次資料の該当ページと独立監査未完了"
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 3,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
       }
     },
     {
@@ -1840,10 +2734,16 @@
       "audit": {
         "status": "PENDING",
         "bankAnswerChecked": true,
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "sourceChecked": false,
         "imageChecked": null,
-        "holdReason": "手引き該当ページ・独立監査未完了"
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 1,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
       }
     },
     {
@@ -1875,10 +2775,16 @@
       "audit": {
         "status": "PENDING",
         "bankAnswerChecked": true,
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "sourceChecked": false,
         "imageChecked": null,
-        "holdReason": "手引き該当ページ・独立監査未完了"
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 1,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
       }
     },
     {
@@ -1910,10 +2816,16 @@
       "audit": {
         "status": "PENDING",
         "bankAnswerChecked": true,
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "sourceChecked": false,
         "imageChecked": null,
-        "holdReason": "手引き該当ページ・独立監査未完了"
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 1,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
       }
     },
     {
@@ -1945,10 +2857,16 @@
       "audit": {
         "status": "PENDING",
         "bankAnswerChecked": true,
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "sourceChecked": false,
         "imageChecked": null,
-        "holdReason": "手引き該当ページ・独立監査未完了"
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 1,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
       }
     },
     {
@@ -1981,10 +2899,16 @@
       "audit": {
         "status": "PENDING",
         "bankAnswerChecked": true,
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "sourceChecked": false,
         "imageChecked": null,
-        "holdReason": "手引き該当ページ・独立監査未完了"
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 1,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
       }
     },
     {
@@ -2016,10 +2940,16 @@
       "audit": {
         "status": "PENDING",
         "bankAnswerChecked": true,
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "sourceChecked": false,
         "imageChecked": null,
-        "holdReason": "手引き該当ページ・独立監査未完了"
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 3,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
       }
     },
     {
@@ -2051,10 +2981,16 @@
       "audit": {
         "status": "PENDING",
         "bankAnswerChecked": true,
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "sourceChecked": false,
         "imageChecked": null,
-        "holdReason": "手引き該当ページ・独立監査未完了"
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 5,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
       }
     },
     {
@@ -2086,10 +3022,16 @@
       "audit": {
         "status": "PENDING",
         "bankAnswerChecked": true,
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "sourceChecked": false,
         "imageChecked": null,
-        "holdReason": "手引き該当ページ・独立監査未完了"
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 2,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
       }
     },
     {
@@ -2121,10 +3063,16 @@
       "audit": {
         "status": "PENDING",
         "bankAnswerChecked": true,
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "sourceChecked": false,
         "imageChecked": null,
-        "holdReason": "手引き該当ページ・独立監査未完了"
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 2,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
       }
     },
     {
@@ -2156,10 +3104,16 @@
       "audit": {
         "status": "PENDING",
         "bankAnswerChecked": true,
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "sourceChecked": false,
         "imageChecked": null,
-        "holdReason": "手引き該当ページ・独立監査未完了"
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 3,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
       }
     },
     {
@@ -2191,10 +3145,16 @@
       "audit": {
         "status": "PENDING",
         "bankAnswerChecked": true,
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "sourceChecked": false,
         "imageChecked": null,
-        "holdReason": "手引き個別記述・ページおよび独立監査未完了"
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 3,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
       }
     },
     {
@@ -2226,10 +3186,16 @@
       "audit": {
         "status": "PENDING",
         "bankAnswerChecked": true,
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "sourceChecked": false,
         "imageChecked": null,
-        "holdReason": "手引き個別記述・ページおよび独立監査未完了"
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 4,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
       }
     },
     {
@@ -2261,10 +3227,16 @@
       "audit": {
         "status": "PENDING",
         "bankAnswerChecked": true,
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "sourceChecked": false,
         "imageChecked": null,
-        "holdReason": "手引き個別記述・ページおよび独立監査未完了"
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 1,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
       }
     },
     {
@@ -2296,10 +3268,16 @@
       "audit": {
         "status": "PENDING",
         "bankAnswerChecked": true,
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "sourceChecked": false,
         "imageChecked": null,
-        "holdReason": "手引き個別記述・ページおよび独立監査未完了"
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 5,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
       }
     },
     {
@@ -2331,10 +3309,16 @@
       "audit": {
         "status": "PENDING",
         "bankAnswerChecked": true,
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "sourceChecked": false,
         "imageChecked": null,
-        "holdReason": "手引き個別記述・ページおよび独立監査未完了"
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 3,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
       }
     },
     {
@@ -2366,10 +3350,25 @@
       "audit": {
         "status": "PENDING",
         "bankAnswerChecked": true,
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "sourceChecked": false,
         "imageChecked": null,
-        "holdReason": "手引き個別記述・ページおよび独立監査未完了"
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "guideEvidence": {
+          "pages": "32",
+          "scope": "c・d（女性の尿道、高齢者の尿失禁）",
+          "status": "PARTIAL",
+          "pdfPage": 40,
+          "url": "https://www.mhlw.go.jp/content/001692425.pdf",
+          "edition": "2026-04",
+          "independentReview": false
+        },
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 4,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
       }
     },
     {
@@ -2401,10 +3400,16 @@
       "audit": {
         "status": "PENDING",
         "bankAnswerChecked": true,
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "sourceChecked": false,
         "imageChecked": null,
-        "holdReason": "手引き個別記述・ページおよび独立監査未完了"
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 5,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
       }
     },
     {
@@ -2436,10 +3441,16 @@
       "audit": {
         "status": "PENDING",
         "bankAnswerChecked": true,
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "sourceChecked": false,
         "imageChecked": null,
-        "holdReason": "手引き個別記述・ページおよび独立監査未完了"
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 4,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
       }
     },
     {
@@ -2472,10 +3483,16 @@
       "audit": {
         "status": "PENDING",
         "bankAnswerChecked": true,
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "sourceChecked": false,
         "imageChecked": null,
-        "holdReason": "手引き個別記述・ページおよび独立監査未完了"
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 4,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
       }
     },
     {
@@ -2507,10 +3524,16 @@
       "audit": {
         "status": "PENDING",
         "bankAnswerChecked": true,
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "sourceChecked": false,
         "imageChecked": null,
-        "holdReason": "手引き個別記述・ページおよび独立監査未完了"
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 1,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
       }
     },
     {
@@ -2542,10 +3565,16 @@
       "audit": {
         "status": "PENDING",
         "bankAnswerChecked": true,
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "sourceChecked": false,
         "imageChecked": null,
-        "holdReason": "手引き個別記述・ページおよび独立監査未完了"
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 3,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
       }
     },
     {
@@ -2577,10 +3606,16 @@
       "audit": {
         "status": "PENDING",
         "bankAnswerChecked": true,
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "sourceChecked": false,
         "imageChecked": null,
-        "holdReason": "手引き個別記述・ページおよび独立監査未完了"
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 5,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
       }
     },
     {
@@ -2612,10 +3647,16 @@
       "audit": {
         "status": "PENDING",
         "bankAnswerChecked": true,
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "sourceChecked": false,
         "imageChecked": null,
-        "holdReason": "手引き個別記述・ページおよび独立監査未完了"
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 1,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
       }
     },
     {
@@ -2647,10 +3688,16 @@
       "audit": {
         "status": "PENDING",
         "bankAnswerChecked": true,
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "sourceChecked": false,
         "imageChecked": null,
-        "holdReason": "手引き個別記述・ページおよび独立監査未完了"
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 5,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
       }
     },
     {
@@ -2682,10 +3729,16 @@
       "audit": {
         "status": "PENDING",
         "bankAnswerChecked": true,
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "sourceChecked": false,
         "imageChecked": null,
-        "holdReason": "手引き個別記述・ページおよび独立監査未完了"
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 3,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
       }
     },
     {
@@ -2717,10 +3770,16 @@
       "audit": {
         "status": "PENDING",
         "bankAnswerChecked": true,
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "sourceChecked": false,
         "imageChecked": null,
-        "holdReason": "手引き個別記述・ページおよび独立監査未完了"
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 2,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
       }
     },
     {
@@ -2752,10 +3811,16 @@
       "audit": {
         "status": "PENDING",
         "bankAnswerChecked": true,
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "sourceChecked": false,
         "imageChecked": null,
-        "holdReason": "手引き個別記述・ページおよび独立監査未完了"
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 2,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
       }
     },
     {
@@ -2787,10 +3852,16 @@
       "audit": {
         "status": "PENDING",
         "bankAnswerChecked": true,
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "sourceChecked": false,
         "imageChecked": null,
-        "holdReason": "手引き個別記述・ページおよび独立監査未完了"
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 5,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
       }
     },
     {
@@ -2822,10 +3893,16 @@
       "audit": {
         "status": "PENDING",
         "bankAnswerChecked": true,
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "sourceChecked": false,
         "imageChecked": null,
-        "holdReason": "手引き個別記述・ページおよび独立監査未完了"
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 3,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
       }
     },
     {
@@ -2857,25 +3934,1776 @@
       "audit": {
         "status": "PENDING",
         "bankAnswerChecked": true,
-        "officialAnswerChecked": false,
+        "officialAnswerChecked": true,
         "sourceChecked": false,
         "imageChecked": null,
-        "holdReason": "手引き個別記述・ページおよび独立監査未完了"
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 5,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
+      }
+    },
+    {
+      "id": "KSAI-2026-081",
+      "year": 2026,
+      "questionNo": 81,
+      "chapter": "第4章",
+      "answerNumberOfficial": 2,
+      "explanation": {
+        "correctReason": "正答は2（保健衛生・指定薬物・研究開発）。薬機法第1条の三語を区別する。",
+        "choiceReasons": [
+          "1：誤。医療上必要性の高い製品について促進するのは研究開発。",
+          "2：正。薬機法第1条は保健衛生の向上を目的とし、指定薬物の規制と研究開発の促進も規定する。",
+          "3：誤。空欄bは麻薬及び向精神薬ではなく指定薬物。",
+          "4：誤。空欄aは保健衛生、cは研究開発。",
+          "5：誤。三つの空欄がいずれも条文と異なる。"
+        ],
+        "keyPoint": "薬機法第1条の三語を区別する。",
+        "references": [
+          {
+            "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月一部改訂）",
+            "chapter": "第4章",
+            "section": "薬機法の目的・第1条",
+            "pages": null,
+            "pageRangeVerified": false,
+            "url": "https://www.mhlw.go.jp/content/001692425.pdf"
+          }
+        ]
+      },
+      "audit": {
+        "status": "PENDING",
+        "bankAnswerChecked": true,
+        "officialAnswerChecked": true,
+        "sourceChecked": false,
+        "imageChecked": true,
+        "imageEvidence": "公式後半PDF 16ページ目（印刷14ページ）",
+        "imageSource": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 2,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
+      }
+    },
+    {
+      "id": "KSAI-2026-082",
+      "year": 2026,
+      "questionNo": 82,
+      "chapter": "第4章",
+      "answerNumberOfficial": 3,
+      "explanation": {
+        "correctReason": "正答は3（誤・正・誤・誤）。登録申請先、消除期限30日、研修実施機関の届出先を区別する。",
+        "choiceReasons": [
+          "a：誤。販売従事登録は従事する店舗等の所在地を管轄する都道府県知事に申請する。",
+          "b：正。登録を行った都道府県知事は登録証を交付する。",
+          "c：誤。販売等に従事しなくなった場合の消除申請期限は30日以内。",
+          "d：誤。研修実施機関の届出先は厚生労働大臣であり都道府県知事ではない。毎年度受講させる義務自体はある。"
+        ],
+        "keyPoint": "登録申請先、消除期限30日、研修実施機関の届出先を区別する。",
+        "references": [
+          {
+            "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月一部改訂）",
+            "chapter": "第4章",
+            "section": "登録販売者・販売従事登録",
+            "pages": null,
+            "pageRangeVerified": false,
+            "url": "https://www.mhlw.go.jp/content/001692425.pdf"
+          }
+        ]
+      },
+      "audit": {
+        "status": "PENDING",
+        "bankAnswerChecked": true,
+        "officialAnswerChecked": true,
+        "sourceChecked": false,
+        "imageChecked": null,
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 3,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
+      }
+    },
+    {
+      "id": "KSAI-2026-083",
+      "year": 2026,
+      "questionNo": 83,
+      "chapter": "第4章",
+      "answerNumberOfficial": 4,
+      "explanation": {
+        "correctReason": "正答は4（誤・誤・誤・正）。製造業・製造販売業・品目承認を混同しない。",
+        "choiceReasons": [
+          "a：誤。製造販売には製造販売業の許可が必要で、製造業の許可とは別である。",
+          "b：誤。原則として品目ごとの製造販売承認が必要で、届出だけで足りるとは限らない。",
+          "c：誤。日本薬局方を定めるのは厚生労働大臣。",
+          "d：正。不正表示医薬品や不良医薬品は販売目的での陳列も禁止される。"
+        ],
+        "keyPoint": "製造業・製造販売業・品目承認を混同しない。",
+        "references": [
+          {
+            "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月一部改訂）",
+            "chapter": "第4章",
+            "section": "医薬品の定義と規制",
+            "pages": null,
+            "pageRangeVerified": false,
+            "url": "https://www.mhlw.go.jp/content/001692425.pdf"
+          }
+        ]
+      },
+      "audit": {
+        "status": "PENDING",
+        "bankAnswerChecked": true,
+        "officialAnswerChecked": true,
+        "sourceChecked": false,
+        "imageChecked": null,
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 4,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
+      }
+    },
+    {
+      "id": "KSAI-2026-084",
+      "year": 2026,
+      "questionNo": 84,
+      "chapter": "第4章",
+      "answerNumberOfficial": 1,
+      "explanation": {
+        "correctReason": "正答は1（正・正・誤・正）。要指導医薬品と特定要指導医薬品の区分を理解する。",
+        "choiceReasons": [
+          "a：正。専門家からの情報を踏まえて需要者が選択することを想定している。",
+          "b：正。採血など検体採取自体が身体への直接の危険を伴う検査薬は対象外。",
+          "c：誤。要指導医薬品の効能効果も原則として生活者が判断できる症状等で示される。",
+          "d：正。対面販売が特に必要なものとして大臣が指定する区分が特定要指導医薬品である。"
+        ],
+        "keyPoint": "要指導医薬品と特定要指導医薬品の区分を理解する。",
+        "references": [
+          {
+            "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月一部改訂）",
+            "chapter": "第4章",
+            "section": "一般用医薬品・要指導医薬品",
+            "pages": null,
+            "pageRangeVerified": false,
+            "url": "https://www.mhlw.go.jp/content/001692425.pdf"
+          }
+        ]
+      },
+      "audit": {
+        "status": "PENDING",
+        "bankAnswerChecked": true,
+        "officialAnswerChecked": true,
+        "sourceChecked": false,
+        "imageChecked": null,
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 1,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
+      }
+    },
+    {
+      "id": "KSAI-2026-085",
+      "year": 2026,
+      "questionNo": 85,
+      "chapter": "第4章",
+      "answerNumberOfficial": 4,
+      "explanation": {
+        "correctReason": "正答は4（正・誤・誤・誤）。毒薬の施錠、14歳未満への交付禁止、譲受文書の職業欄。",
+        "choiceReasons": [
+          "a：正。有効量と中毒量の差が小さい医薬品も厳格な取扱いの対象となる。",
+          "b：誤。施錠義務は毒薬の貯蔵・陳列場所に課される。劇薬も他の物と区別する必要がある。",
+          "c：誤。交付禁止の年齢基準は14歳未満であり18歳未満ではない。",
+          "d：誤。一般の譲受人から受け取る文書には職業も記載する必要がある。"
+        ],
+        "keyPoint": "毒薬の施錠、14歳未満への交付禁止、譲受文書の職業欄。",
+        "references": [
+          {
+            "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月一部改訂）",
+            "chapter": "第4章",
+            "section": "毒薬・劇薬",
+            "pages": null,
+            "pageRangeVerified": false,
+            "url": "https://www.mhlw.go.jp/content/001692425.pdf"
+          }
+        ]
+      },
+      "audit": {
+        "status": "PENDING",
+        "bankAnswerChecked": true,
+        "officialAnswerChecked": true,
+        "sourceChecked": false,
+        "imageChecked": null,
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 4,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
+      }
+    },
+    {
+      "id": "KSAI-2026-086",
+      "year": 2026,
+      "questionNo": 86,
+      "chapter": "第4章",
+      "answerNumberOfficial": 3,
+      "explanation": {
+        "correctReason": "正答は3（誤・正・誤・誤）。生物由来製品は感染リスクを基準とし、植物由来のみのものは除外される。",
+        "choiceReasons": [
+          "a：誤。生物由来製品の指定対象には医療機器も含まれ得る。",
+          "b：正。生物由来の原料等による感染症リスクに着目した指定である。",
+          "c：誤。植物のみを由来とする原料・材料はこの定義から除かれる。",
+          "d：誤。一般用漢方処方製剤に生物由来製品として指定されたものはない。"
+        ],
+        "keyPoint": "生物由来製品は感染リスクを基準とし、植物由来のみのものは除外される。",
+        "references": [
+          {
+            "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月一部改訂）",
+            "chapter": "第4章",
+            "section": "生物由来製品",
+            "pages": null,
+            "pageRangeVerified": false,
+            "url": "https://www.mhlw.go.jp/content/001692425.pdf"
+          }
+        ]
+      },
+      "audit": {
+        "status": "PENDING",
+        "bankAnswerChecked": true,
+        "officialAnswerChecked": true,
+        "sourceChecked": false,
+        "imageChecked": null,
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 3,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
+      }
+    },
+    {
+      "id": "KSAI-2026-087",
+      "year": 2026,
+      "questionNo": 87,
+      "chapter": "第4章",
+      "answerNumberOfficial": 1,
+      "explanation": {
+        "correctReason": "正答は1（a・b）。2026年5月施行の指定成分を旧制度と区別する。",
+        "choiceReasons": [
+          "a：正。ジフェンヒドラミンは指定成分に含まれる。",
+          "b：正。ジヒドロコデインも指定成分である。",
+          "c：誤。アスピリンはこの指定成分に含まれない。",
+          "d：誤。アセトアミノフェンも指定成分ではない。"
+        ],
+        "keyPoint": "2026年5月施行の指定成分を旧制度と区別する。",
+        "references": [
+          {
+            "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月一部改訂）",
+            "chapter": "第4章",
+            "section": "指定濫用防止医薬品",
+            "pages": "216",
+            "pageRangeVerified": true,
+            "url": "https://www.mhlw.go.jp/content/001692425.pdf"
+          }
+        ]
+      },
+      "audit": {
+        "status": "PENDING",
+        "bankAnswerChecked": true,
+        "officialAnswerChecked": true,
+        "sourceChecked": true,
+        "imageChecked": null,
+        "holdReason": "別の監査主体による独立レビュー未実施",
+        "guideEvidence": {
+          "pages": "216",
+          "scope": "a–d（指定成分一覧との照合）",
+          "status": "CONTENT_CHECKED",
+          "pdfPage": 224,
+          "url": "https://www.mhlw.go.jp/content/001692425.pdf",
+          "edition": "2026-04",
+          "independentReview": false
+        },
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 1,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
+      }
+    },
+    {
+      "id": "KSAI-2026-088",
+      "year": 2026,
+      "questionNo": 88,
+      "chapter": "第4章",
+      "answerNumberOfficial": 5,
+      "explanation": {
+        "correctReason": "正答は5（選択肢5が誤り）。直接容器の法定表示事項と添付文書等の記載事項を区別する。",
+        "choiceReasons": [
+          "1：正。一般用医薬品のリスク区分は法定表示事項。",
+          "2：正。配置販売品目以外では店舗専用の表示が必要。",
+          "3：正。日本薬局方収載品以外では有効成分名と分量の表示が求められる。",
+          "4：正。製造番号又は製造記号は製品の追跡に必要な法定表示。",
+          "5：誤。効能・効果又は性能は法第50条の直接の容器等に必須の事項として列挙されていない。"
+        ],
+        "keyPoint": "直接容器の法定表示事項と添付文書等の記載事項を区別する。",
+        "references": [
+          {
+            "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月一部改訂）",
+            "chapter": "第4章",
+            "section": "医薬品の法定表示・法第50条",
+            "pages": null,
+            "pageRangeVerified": false,
+            "url": "https://www.mhlw.go.jp/content/001692425.pdf"
+          }
+        ]
+      },
+      "audit": {
+        "status": "PENDING",
+        "bankAnswerChecked": true,
+        "officialAnswerChecked": true,
+        "sourceChecked": false,
+        "imageChecked": null,
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 5,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
+      }
+    },
+    {
+      "id": "KSAI-2026-089",
+      "year": 2026,
+      "questionNo": 89,
+      "chapter": "第4章",
+      "answerNumberOfficial": 2,
+      "explanation": {
+        "correctReason": "正答は2（正・正・誤・正）。防除用医薬部外品と指定医薬部外品の表示を区別する。",
+        "choiceReasons": [
+          "a：正。医薬部外品も原則として品目ごとの承認が必要で、指定された例外がある。",
+          "b：正。直接の容器等に医薬部外品と表示する。",
+          "c：誤。衛生害虫類の防除を目的とする区分の表示は防除用医薬部外品。",
+          "d：正。医薬部外品の小売には医薬品販売業の許可を要しない。"
+        ],
+        "keyPoint": "防除用医薬部外品と指定医薬部外品の表示を区別する。",
+        "references": [
+          {
+            "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月一部改訂）",
+            "chapter": "第4章",
+            "section": "医薬部外品",
+            "pages": null,
+            "pageRangeVerified": false,
+            "url": "https://www.mhlw.go.jp/content/001692425.pdf"
+          }
+        ]
+      },
+      "audit": {
+        "status": "PENDING",
+        "bankAnswerChecked": true,
+        "officialAnswerChecked": true,
+        "sourceChecked": false,
+        "imageChecked": null,
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 2,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
+      }
+    },
+    {
+      "id": "KSAI-2026-090",
+      "year": 2026,
+      "questionNo": 90,
+      "chapter": "第4章",
+      "answerNumberOfficial": 4,
+      "explanation": {
+        "correctReason": "正答は4（b・d）。化粧品は作用が緩和で、医薬品的な効能を標榜できない。",
+        "choiceReasons": [
+          "a：誤。化粧品に医薬品成分がいかなる場合も配合禁止というわけではなく、化粧品基準等による例外がある。",
+          "b：正。医薬品的な治療効果を標榜することは認められない。",
+          "c：誤。身体の構造や機能に影響を及ぼすことを目的とするものは化粧品の定義から除外される。",
+          "d：正。不良品や不正表示品の販売は禁止される。"
+        ],
+        "keyPoint": "化粧品は作用が緩和で、医薬品的な効能を標榜できない。",
+        "references": [
+          {
+            "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月一部改訂）",
+            "chapter": "第4章",
+            "section": "化粧品",
+            "pages": null,
+            "pageRangeVerified": false,
+            "url": "https://www.mhlw.go.jp/content/001692425.pdf"
+          }
+        ]
+      },
+      "audit": {
+        "status": "PENDING",
+        "bankAnswerChecked": true,
+        "officialAnswerChecked": true,
+        "sourceChecked": false,
+        "imageChecked": null,
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 4,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
+      }
+    },
+    {
+      "id": "KSAI-2026-091",
+      "year": 2026,
+      "questionNo": 91,
+      "chapter": "第4章",
+      "answerNumberOfficial": 4,
+      "explanation": {
+        "correctReason": "正答は4（健康の保持・健康増進法・消費者庁）。特別用途食品は健康増進法と消費者庁を結びつける。",
+        "choiceReasons": [
+          "1：誤。疾病の治療を目的とする医薬品とは区別され、根拠法も食品衛生法ではない。",
+          "2：誤。目的・根拠法・担当機関の組合せが異なる。",
+          "3：誤。健康増進法は正しいが、目的は健康の保持、担当は消費者庁。",
+          "4：正。健康増進法に基づく特別用途表示の許可等を受ける食品である。",
+          "5：誤。許可等のマークは消費者庁のもの。"
+        ],
+        "keyPoint": "特別用途食品は健康増進法と消費者庁を結びつける。",
+        "references": [
+          {
+            "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月一部改訂）",
+            "chapter": "第4章",
+            "section": "食品・特別用途食品",
+            "pages": null,
+            "pageRangeVerified": false,
+            "url": "https://www.mhlw.go.jp/content/001692425.pdf"
+          }
+        ]
+      },
+      "audit": {
+        "status": "PENDING",
+        "bankAnswerChecked": true,
+        "officialAnswerChecked": true,
+        "sourceChecked": false,
+        "imageChecked": null,
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 4,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
+      }
+    },
+    {
+      "id": "KSAI-2026-092",
+      "year": 2026,
+      "questionNo": 92,
+      "chapter": "第4章",
+      "answerNumberOfficial": 1,
+      "explanation": {
+        "correctReason": "正答は1（正・誤・正・正）。薬局開設許可と店舗販売業許可は別制度であり、薬局に重複許可は不要。",
+        "choiceReasons": [
+          "a：正。開設許可のない場所では原則として薬局の名称を使用できないが、病院・診療所の調剤所は例外。",
+          "b：誤。薬局開設許可により一般用医薬品を販売でき、別途店舗販売業許可は不要。",
+          "c：正。調剤に従事する薬剤師が薬局外で業務を行うため、やむを得ず一時的に不在となる時間を指す。",
+          "d：正。管理者には従業者の監督義務がある。"
+        ],
+        "keyPoint": "薬局開設許可と店舗販売業許可は別制度であり、薬局に重複許可は不要。",
+        "references": [
+          {
+            "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月一部改訂）",
+            "chapter": "第4章",
+            "section": "医薬品の販売業・薬局",
+            "pages": null,
+            "pageRangeVerified": false,
+            "url": "https://www.mhlw.go.jp/content/001692425.pdf"
+          }
+        ]
+      },
+      "audit": {
+        "status": "PENDING",
+        "bankAnswerChecked": true,
+        "officialAnswerChecked": true,
+        "sourceChecked": false,
+        "imageChecked": null,
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 1,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
+      }
+    },
+    {
+      "id": "KSAI-2026-093",
+      "year": 2026,
+      "questionNo": 93,
+      "chapter": "第4章",
+      "answerNumberOfficial": 4,
+      "explanation": {
+        "correctReason": "正答は4（正・誤・正・誤）。店舗販売業では調剤不可、第一類の販売は薬剤師。",
+        "choiceReasons": [
+          "a：正。販売前にあらかじめ小分けして販売することは認められない。",
+          "b：誤。管理者が薬剤師でも登録販売者が第一類医薬品を販売できるわけではない。",
+          "c：正。管理者は保健衛生上必要な意見を書面で店舗販売業者に伝える。",
+          "d：誤。店舗販売業の許可では調剤できない。"
+        ],
+        "keyPoint": "店舗販売業では調剤不可、第一類の販売は薬剤師。",
+        "references": [
+          {
+            "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月一部改訂）",
+            "chapter": "第4章",
+            "section": "店舗販売業",
+            "pages": null,
+            "pageRangeVerified": false,
+            "url": "https://www.mhlw.go.jp/content/001692425.pdf"
+          }
+        ]
+      },
+      "audit": {
+        "status": "PENDING",
+        "bankAnswerChecked": true,
+        "officialAnswerChecked": true,
+        "sourceChecked": false,
+        "imageChecked": null,
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 4,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
+      }
+    },
+    {
+      "id": "KSAI-2026-094",
+      "year": 2026,
+      "questionNo": 94,
+      "chapter": "第4章",
+      "answerNumberOfficial": 2,
+      "explanation": {
+        "correctReason": "正答は2（a・c）。配置販売は都道府県単位の許可、事前届出、配置による販売に限る。",
+        "choiceReasons": [
+          "a：正。配置する区域を管轄する都道府県ごとに許可を受ける。",
+          "b：誤。配置販売業者による開封・分割販売は認められない。",
+          "c：正。配置販売業の許可に基づく販売は配置による方法に限られる。",
+          "d：誤。配置員等の氏名、区域、期間等は従事後15日以内ではなく、あらかじめ届け出る。"
+        ],
+        "keyPoint": "配置販売は都道府県単位の許可、事前届出、配置による販売に限る。",
+        "references": [
+          {
+            "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月一部改訂）",
+            "chapter": "第4章",
+            "section": "配置販売業",
+            "pages": null,
+            "pageRangeVerified": false,
+            "url": "https://www.mhlw.go.jp/content/001692425.pdf"
+          }
+        ]
+      },
+      "audit": {
+        "status": "PENDING",
+        "bankAnswerChecked": true,
+        "officialAnswerChecked": true,
+        "sourceChecked": false,
+        "imageChecked": null,
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 2,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
+      }
+    },
+    {
+      "id": "KSAI-2026-095",
+      "year": 2026,
+      "questionNo": 95,
+      "chapter": "第4章",
+      "answerNumberOfficial": 3,
+      "explanation": {
+        "correctReason": "正答は3（すべて正）。指定濫用防止医薬品の販売では年齢・氏名・購入状況・数量超過理由を確認する。",
+        "choiceReasons": [
+          "a：正。購入者の年齢を確認する。",
+          "b：正。18歳未満の場合は氏名の確認も必要。",
+          "c：正。他の指定濫用防止医薬品を含む購入・譲受け状況を確認する。",
+          "d：正。本問のかぜ薬では7日分を超える購入を希望する理由の確認が必要である。"
+        ],
+        "keyPoint": "指定濫用防止医薬品の販売では年齢・氏名・購入状況・数量超過理由を確認する。",
+        "references": [
+          {
+            "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月一部改訂）",
+            "chapter": "第4章",
+            "section": "指定濫用防止医薬品・施行規則第159条の18の5",
+            "pages": null,
+            "pageRangeVerified": false,
+            "url": "https://www.mhlw.go.jp/content/001692425.pdf"
+          }
+        ]
+      },
+      "audit": {
+        "status": "PENDING",
+        "bankAnswerChecked": true,
+        "officialAnswerChecked": true,
+        "sourceChecked": false,
+        "imageChecked": null,
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 3,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
+      }
+    },
+    {
+      "id": "KSAI-2026-096",
+      "year": 2026,
+      "questionNo": 96,
+      "chapter": "第4章",
+      "answerNumberOfficial": 1,
+      "explanation": {
+        "correctReason": "正答は1（正・正・誤・誤）。医薬品は区分別に陳列し、指定第二類の距離基準は7メートル。",
+        "choiceReasons": [
+          "a：正。要指導医薬品と一般用医薬品は混在させない。",
+          "b：正。第一類医薬品は原則として専用陳列区画内に陳列するが、施錠設備等には例外がある。",
+          "c：誤。指定第二類医薬品の情報提供設備からの距離は原則7メートル以内であり10メートルではない。直接触れられない設備等の例外もある。",
+          "d：誤。第三類医薬品と医薬部外品も混在させてはならない。"
+        ],
+        "keyPoint": "医薬品は区分別に陳列し、指定第二類の距離基準は7メートル。",
+        "references": [
+          {
+            "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月一部改訂）",
+            "chapter": "第4章",
+            "section": "医薬品の陳列",
+            "pages": null,
+            "pageRangeVerified": false,
+            "url": "https://www.mhlw.go.jp/content/001692425.pdf"
+          }
+        ]
+      },
+      "audit": {
+        "status": "PENDING",
+        "bankAnswerChecked": true,
+        "officialAnswerChecked": true,
+        "sourceChecked": false,
+        "imageChecked": null,
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 1,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
+      }
+    },
+    {
+      "id": "KSAI-2026-097",
+      "year": 2026,
+      "questionNo": 97,
+      "chapter": "第4章",
+      "answerNumberOfficial": 2,
+      "explanation": {
+        "correctReason": "正答は2（a・c）。特定販売は許可店舗の実体と区分別表示が前提。",
+        "choiceReasons": [
+          "a：正。監督行政庁と厚生労働大臣が容易に閲覧できるホームページで広告する必要がある。",
+          "b：誤。表示は薬効群別ではなく、医薬品の区分ごとに行う。",
+          "c：正。インターネット広告では対象医薬品の使用期限を見やすく表示する。",
+          "d：誤。特定販売はその薬局・店舗に貯蔵・陳列する医薬品について行うもので、別店舗からの発送で代替することは認められない。"
+        ],
+        "keyPoint": "特定販売は許可店舗の実体と区分別表示が前提。",
+        "references": [
+          {
+            "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月一部改訂）",
+            "chapter": "第4章",
+            "section": "特定販売",
+            "pages": null,
+            "pageRangeVerified": false,
+            "url": "https://www.mhlw.go.jp/content/001692425.pdf"
+          }
+        ]
+      },
+      "audit": {
+        "status": "PENDING",
+        "bankAnswerChecked": true,
+        "officialAnswerChecked": true,
+        "sourceChecked": false,
+        "imageChecked": null,
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 2,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
+      }
+    },
+    {
+      "id": "KSAI-2026-098",
+      "year": 2026,
+      "questionNo": 98,
+      "chapter": "第4章",
+      "answerNumberOfficial": 2,
+      "explanation": {
+        "correctReason": "正答は2（選択肢2が誤り）。同一紙面掲載の可否と、誤認を招く広告表現の禁止を区別する。",
+        "choiceReasons": [
+          "1：正。漢方処方の効能を構成生薬単独の作用で説明すると処方全体の作用について誤解を招く。",
+          "2：誤。同一紙面への掲載自体は禁止されていない。医薬品と他の商品を明確に区別する必要がある。",
+          "3：正。医師による診断・治療が必要な疾患を自己治療できるかのように広告してはならない。",
+          "4：正。有効性・安全性の保証表現は虚偽・誇大広告に該当し得る。",
+          "5：正。医薬関係者等による推薦・公認をうたう広告は事実であっても原則不適当である。"
+        ],
+        "keyPoint": "同一紙面掲載の可否と、誤認を招く広告表現の禁止を区別する。",
+        "references": [
+          {
+            "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月一部改訂）",
+            "chapter": "第4章",
+            "section": "医薬品等適正広告基準",
+            "pages": null,
+            "pageRangeVerified": false,
+            "url": "https://www.mhlw.go.jp/content/001692425.pdf"
+          }
+        ]
+      },
+      "audit": {
+        "status": "PENDING",
+        "bankAnswerChecked": true,
+        "officialAnswerChecked": true,
+        "sourceChecked": false,
+        "imageChecked": null,
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 2,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
+      }
+    },
+    {
+      "id": "KSAI-2026-099",
+      "year": 2026,
+      "questionNo": 99,
+      "chapter": "第4章",
+      "answerNumberOfficial": 2,
+      "explanation": {
+        "correctReason": "正答は2（a・c）。景品・組合せ販売には制限があり、大量購入には確認が必要。",
+        "choiceReasons": [
+          "a：正。景品提供は景品表示法の制限内で認められる。",
+          "b：誤。大量購入等ではプライバシーに配慮しつつ必要な事情を積極的に確認する。",
+          "c：正。組合せ販売は合理性があり、十分な情報提供が可能な範囲に限る。",
+          "d：誤。先用後利によらない現金売りは配置販売に該当しない。"
+        ],
+        "keyPoint": "景品・組合せ販売には制限があり、大量購入には確認が必要。",
+        "references": [
+          {
+            "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月一部改訂）",
+            "chapter": "第4章",
+            "section": "医薬品の販売方法",
+            "pages": null,
+            "pageRangeVerified": false,
+            "url": "https://www.mhlw.go.jp/content/001692425.pdf"
+          }
+        ]
+      },
+      "audit": {
+        "status": "PENDING",
+        "bankAnswerChecked": true,
+        "officialAnswerChecked": true,
+        "sourceChecked": false,
+        "imageChecked": null,
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 2,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
+      }
+    },
+    {
+      "id": "KSAI-2026-100",
+      "year": 2026,
+      "questionNo": 100,
+      "chapter": "第4章",
+      "answerNumberOfficial": 1,
+      "explanation": {
+        "correctReason": "正答は1（正・正・正・誤）。行政による監視・命令と製造販売業者の自主的な危害防止義務を区別する。",
+        "choiceReasons": [
+          "a：正。都道府県知事等は薬事監視員に立入検査や質問を行わせることができる。",
+          "b：正。設備基準違反や不良医薬品発生のおそれがある場合には改善命令が可能。",
+          "c：正。厚生労働大臣は公衆衛生上の危険防止に必要な廃棄・回収等を命ずることができる。",
+          "d：誤。製造販売業者は危害の発生・拡大のおそれを知った場合、行政命令を待たず必要な措置を講じる義務がある。"
+        ],
+        "keyPoint": "行政による監視・命令と製造販売業者の自主的な危害防止義務を区別する。",
+        "references": [
+          {
+            "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月一部改訂）",
+            "chapter": "第4章",
+            "section": "行政庁の監視指導・処分",
+            "pages": null,
+            "pageRangeVerified": false,
+            "url": "https://www.mhlw.go.jp/content/001692425.pdf"
+          }
+        ]
+      },
+      "audit": {
+        "status": "PENDING",
+        "bankAnswerChecked": true,
+        "officialAnswerChecked": true,
+        "sourceChecked": false,
+        "imageChecked": null,
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 1,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
+      }
+    },
+    {
+      "id": "KSAI-2026-101",
+      "year": 2026,
+      "questionNo": 101,
+      "chapter": "第5章",
+      "answerNumberOfficial": 2,
+      "explanation": {
+        "correctReason": "正答は2（正・誤・正・正）。使用者に応じた説明と最新の安全性情報の確認が重要。",
+        "choiceReasons": [
+          "a：正。適切な用量や注意事項を理解して使用することで薬の有効性と安全性を確保する。",
+          "b：誤。情報提供は使用者の状況に合わせて重要な事項を選び、理解できる形で行う。",
+          "c：正。使用期間中に注意事項を再確認できるよう添付文書の保管を勧める。",
+          "d：正。表示改訂から新しい表示の製品が流通するまでには時間差がある。"
+        ],
+        "keyPoint": "使用者に応じた説明と最新の安全性情報の確認が重要。",
+        "references": [
+          {
+            "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月一部改訂）",
+            "chapter": "第5章",
+            "section": "Ⅰ 医薬品の適正使用情報",
+            "pages": null,
+            "pageRangeVerified": false,
+            "url": "https://www.mhlw.go.jp/content/001692425.pdf"
+          }
+        ]
+      },
+      "audit": {
+        "status": "PENDING",
+        "bankAnswerChecked": true,
+        "officialAnswerChecked": true,
+        "sourceChecked": false,
+        "imageChecked": null,
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 2,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
+      }
+    },
+    {
+      "id": "KSAI-2026-102",
+      "year": 2026,
+      "questionNo": 102,
+      "chapter": "第5章",
+      "answerNumberOfficial": 5,
+      "explanation": {
+        "correctReason": "正答は5（すべて正）。添付文書の改訂情報・用法用量・保管方法を確認する。",
+        "choiceReasons": [
+          "a：正。重要な改訂では改訂年月と変更箇所を確認できるようにする。",
+          "b：正。製品の特徴は利用者が概要を理解するために示される。",
+          "c：正。服用方法の間違いや小児への使用などの注意は用法・用量と区別して記載する。",
+          "d：正。容器の変更は取り違えや品質劣化を招くおそれがある。"
+        ],
+        "keyPoint": "添付文書の改訂情報・用法用量・保管方法を確認する。",
+        "references": [
+          {
+            "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月一部改訂）",
+            "chapter": "第5章",
+            "section": "Ⅰ 添付文書の記載事項",
+            "pages": null,
+            "pageRangeVerified": false,
+            "url": "https://www.mhlw.go.jp/content/001692425.pdf"
+          }
+        ]
+      },
+      "audit": {
+        "status": "PENDING",
+        "bankAnswerChecked": true,
+        "officialAnswerChecked": true,
+        "sourceChecked": false,
+        "imageChecked": null,
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 5,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
+      }
+    },
+    {
+      "id": "KSAI-2026-103",
+      "year": 2026,
+      "questionNo": 103,
+      "chapter": "第5章",
+      "answerNumberOfficial": 4,
+      "explanation": {
+        "correctReason": "正答は4（正・正・誤・誤）。使用禁止と使用前相談は区別する。",
+        "choiceReasons": [
+          "a：正。重要な注意の見出しには識別しやすいマークが使われることが多い。",
+          "b：正。配合成分の薬理作用や副作用から注意事項の背景を理解できる。",
+          "c：誤。医師等の治療中であることは原則として使用前の相談事項であり、処方薬を自己判断で中止しない。",
+          "d：誤。妊娠中の安全性が十分確立していない場合なども相談対象になる。"
+        ],
+        "keyPoint": "使用禁止と使用前相談は区別する。",
+        "references": [
+          {
+            "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月一部改訂）",
+            "chapter": "第5章",
+            "section": "Ⅰ 使用上の注意",
+            "pages": null,
+            "pageRangeVerified": false,
+            "url": "https://www.mhlw.go.jp/content/001692425.pdf"
+          }
+        ]
+      },
+      "audit": {
+        "status": "PENDING",
+        "bankAnswerChecked": true,
+        "officialAnswerChecked": true,
+        "sourceChecked": false,
+        "imageChecked": null,
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 4,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
+      }
+    },
+    {
+      "id": "KSAI-2026-104",
+      "year": 2026,
+      "questionNo": 104,
+      "chapter": "第5章",
+      "answerNumberOfficial": 3,
+      "explanation": {
+        "correctReason": "正答は3（b・c）。使用期限表示の基準は3年。外箱にも保管・相談情報がある。",
+        "choiceReasons": [
+          "a：誤。容器包装には薬機法以外の法令に基づく表示もあり得る。",
+          "b：正。表示面積が小さい場合は相談を促す簡潔な文言で示されることがある。",
+          "c：正。開封前や携帯中にも適切に保管できるよう容器包装にも注意事項が記載される。",
+          "d：誤。使用期限表示に関する基準は製造後3年を超えて安定であることが確認された場合であり、1年ではない。"
+        ],
+        "keyPoint": "使用期限表示の基準は3年。外箱にも保管・相談情報がある。",
+        "references": [
+          {
+            "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月一部改訂）",
+            "chapter": "第5章",
+            "section": "Ⅰ 製品表示",
+            "pages": null,
+            "pageRangeVerified": false,
+            "url": "https://www.mhlw.go.jp/content/001692425.pdf"
+          }
+        ]
+      },
+      "audit": {
+        "status": "PENDING",
+        "bankAnswerChecked": true,
+        "officialAnswerChecked": true,
+        "sourceChecked": false,
+        "imageChecked": null,
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 3,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
+      }
+    },
+    {
+      "id": "KSAI-2026-105",
+      "year": 2026,
+      "questionNo": 105,
+      "chapter": "第5章",
+      "answerNumberOfficial": 3,
+      "explanation": {
+        "correctReason": "正答は3（正・正・誤・誤）。安全性速報＝ブルーレター、緊急安全性情報＝イエローレター。",
+        "choiceReasons": [
+          "a：正。通常の改訂情報より迅速な対応が必要な場合に作成される。",
+          "b：正。行政からの指示等や製造販売業者の自主判断に基づいて作成される。",
+          "c：誤。安全性速報の情報伝達は原則1か月以内で、3か月ではない。",
+          "d：誤。安全性速報はブルーレター、緊急安全性情報はイエローレターである。"
+        ],
+        "keyPoint": "安全性速報＝ブルーレター、緊急安全性情報＝イエローレター。",
+        "references": [
+          {
+            "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月一部改訂）",
+            "chapter": "第5章",
+            "section": "Ⅰ 安全性情報",
+            "pages": "389",
+            "pageRangeVerified": true,
+            "url": "https://www.mhlw.go.jp/content/001692425.pdf"
+          }
+        ]
+      },
+      "audit": {
+        "status": "PENDING",
+        "bankAnswerChecked": true,
+        "officialAnswerChecked": true,
+        "sourceChecked": true,
+        "imageChecked": null,
+        "holdReason": "別の監査主体による独立レビュー未実施",
+        "guideEvidence": {
+          "pages": "389",
+          "pdfPages": [
+            397
+          ],
+          "scope": "a–d 安全性速報の目的、作成主体、伝達期限、名称",
+          "status": "CONTENT_CHECKED",
+          "url": "https://www.mhlw.go.jp/content/001692425.pdf",
+          "edition": "2026-04",
+          "independentReview": false
+        },
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 3,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
+      }
+    },
+    {
+      "id": "KSAI-2026-106",
+      "year": 2026,
+      "questionNo": 106,
+      "chapter": "第5章",
+      "answerNumberOfficial": 3,
+      "explanation": {
+        "correctReason": "正答は3（正・誤・正・正）。PMDAメディナビは一般の利用者も登録可能。",
+        "choiceReasons": [
+          "a：正。PMDAは添付文書に加え回収情報なども公開している。",
+          "b：誤。PMDAメディナビは医薬関係者に限らず登録して利用できる。",
+          "c：正。厚生労働省は重要な副作用や不具合等をまとめた安全性情報を提供する。",
+          "d：正。緊急安全性情報は電子メール等による伝達も可能である。"
+        ],
+        "keyPoint": "PMDAメディナビは一般の利用者も登録可能。",
+        "references": [
+          {
+            "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月一部改訂）",
+            "chapter": "第5章",
+            "section": "Ⅰ 安全性情報の入手",
+            "pages": null,
+            "pageRangeVerified": false,
+            "url": "https://www.mhlw.go.jp/content/001692425.pdf"
+          }
+        ]
+      },
+      "audit": {
+        "status": "PENDING",
+        "bankAnswerChecked": true,
+        "officialAnswerChecked": true,
+        "sourceChecked": false,
+        "imageChecked": null,
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 3,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
+      }
+    },
+    {
+      "id": "KSAI-2026-107",
+      "year": 2026,
+      "questionNo": 107,
+      "chapter": "第5章",
+      "answerNumberOfficial": 1,
+      "explanation": {
+        "correctReason": "正答は1（a・b）。因果関係の確定を待たず必要な副作用報告を行う。",
+        "choiceReasons": [
+          "a：正。医薬品との関連が疑われる健康被害について、危害の防止に必要な報告を行う。",
+          "b：正。登録販売者も医薬関係者として報告の対象となる。",
+          "c：誤。因果関係が確定していなくても報告できる。",
+          "d：誤。医薬関係者の報告には一律の法定期限は設けられていないが、必要と認めれば速やかに報告する。"
+        ],
+        "keyPoint": "因果関係の確定を待たず必要な副作用報告を行う。",
+        "references": [
+          {
+            "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月一部改訂）",
+            "chapter": "第5章",
+            "section": "Ⅱ 医薬関係者からの副作用等報告",
+            "pages": null,
+            "pageRangeVerified": false,
+            "url": "https://www.mhlw.go.jp/content/001692425.pdf"
+          }
+        ]
+      },
+      "audit": {
+        "status": "PENDING",
+        "bankAnswerChecked": true,
+        "officialAnswerChecked": true,
+        "sourceChecked": false,
+        "imageChecked": null,
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 1,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
+      }
+    },
+    {
+      "id": "KSAI-2026-108",
+      "year": 2026,
+      "questionNo": 108,
+      "chapter": "第5章",
+      "answerNumberOfficial": 5,
+      "explanation": {
+        "correctReason": "正答は5（正・誤・誤・正）。企業の市販後安全管理と感染症定期報告を区別する。",
+        "choiceReasons": [
+          "a：正。販売開始後も品質・有効性・安全性の情報を継続収集することは企業の責務である。",
+          "b：誤。未知の非重篤な国内副作用も報告制度の対象となり得る。",
+          "c：誤。本問のような一律に5年を上限とする再審査制度の説明は適切でない。承認後の調査制度と対象・期間を区別する必要がある。",
+          "d：正。生物由来製品について感染症に関する新たな知見を収集・評価し定期的に報告する制度がある。"
+        ],
+        "keyPoint": "企業の市販後安全管理と感染症定期報告を区別する。",
+        "references": [
+          {
+            "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月一部改訂）",
+            "chapter": "第5章",
+            "section": "Ⅱ 企業からの副作用等報告・承認後調査",
+            "pages": null,
+            "pageRangeVerified": false,
+            "url": "https://www.mhlw.go.jp/content/001692425.pdf"
+          }
+        ]
+      },
+      "audit": {
+        "status": "PENDING",
+        "bankAnswerChecked": true,
+        "officialAnswerChecked": true,
+        "sourceChecked": false,
+        "imageChecked": null,
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 5,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
+      }
+    },
+    {
+      "id": "KSAI-2026-109",
+      "year": 2026,
+      "questionNo": 109,
+      "chapter": "第5章",
+      "answerNumberOfficial": 4,
+      "explanation": {
+        "correctReason": "正答は4（誤・正・誤・正）。適正使用による一定程度以上の副作用被害が救済の対象。健康食品や賠償責任が明らかな場合は対象外。",
+        "choiceReasons": [
+          "a：誤。健康食品は医薬品副作用被害救済制度の対象ではない。",
+          "b：正。治療を要さず回復した軽度の被害は給付対象に含まれない。",
+          "c：誤。製造販売業者などの損害賠償責任が明らかな場合は救済給付の対象外である。",
+          "d：正。一般用医薬品等による被害の請求では購入事実を証明する販売証明書等が必要となる。"
+        ],
+        "keyPoint": "適正使用による一定程度以上の副作用被害が救済の対象。健康食品や賠償責任が明らかな場合は対象外。",
+        "references": [
+          {
+            "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月一部改訂）",
+            "chapter": "第5章",
+            "section": "Ⅲ 医薬品副作用被害救済制度",
+            "pages": "397–398",
+            "pageRangeVerified": true,
+            "url": "https://www.mhlw.go.jp/content/001692425.pdf"
+          }
+        ]
+      },
+      "audit": {
+        "status": "PENDING",
+        "bankAnswerChecked": true,
+        "officialAnswerChecked": true,
+        "sourceChecked": true,
+        "imageChecked": true,
+        "imageEvidence": "公式後半PDF 40ページ目（印刷38ページ）",
+        "imageSource": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
+        "holdReason": "別の監査主体による独立レビュー未実施",
+        "guideEvidence": {
+          "pages": "397–398",
+          "pdfPages": [
+            405,
+            406
+          ],
+          "scope": "a–d 対象範囲、軽度被害、賠償責任、販売証明書",
+          "status": "CONTENT_CHECKED",
+          "url": "https://www.mhlw.go.jp/content/001692425.pdf",
+          "edition": "2026-04",
+          "independentReview": false
+        },
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 4,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
+      }
+    },
+    {
+      "id": "KSAI-2026-110",
+      "year": 2026,
+      "questionNo": 110,
+      "chapter": "第5章",
+      "answerNumberOfficial": 3,
+      "explanation": {
+        "correctReason": "正答は3（誤・誤・誤・正）。医療費と医療手当では5年の起算点が異なる。障害児養育年金には請求期限がない。",
+        "choiceReasons": [
+          "a：誤。医療手当は医療が行われた月の翌月初日から5年以内が請求期限であり、費用支払日を起算点としない。",
+          "b：誤。遺族年金は原則死亡時から5年以内。死亡前に医療費等の支給決定があった場合や先順位者の死亡時には2年以内となる場合がある。",
+          "c：誤。医療費の請求期限は費用を支払った時から5年以内である。",
+          "d：正。障害児養育年金には請求期限が設けられていない。"
+        ],
+        "keyPoint": "医療費と医療手当では5年の起算点が異なる。障害児養育年金には請求期限がない。",
+        "references": [
+          {
+            "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月一部改訂）",
+            "chapter": "第5章",
+            "section": "Ⅲ 救済給付の種類と請求期限",
+            "pages": "397",
+            "pageRangeVerified": true,
+            "url": "https://www.mhlw.go.jp/content/001692425.pdf"
+          }
+        ]
+      },
+      "audit": {
+        "status": "PENDING",
+        "bankAnswerChecked": true,
+        "officialAnswerChecked": true,
+        "sourceChecked": true,
+        "imageChecked": null,
+        "holdReason": "別の監査主体による独立レビュー未実施",
+        "guideEvidence": {
+          "pages": "397",
+          "pdfPages": [
+            405
+          ],
+          "scope": "a–d 給付請求期限の表と脚注",
+          "status": "CONTENT_CHECKED",
+          "url": "https://www.mhlw.go.jp/content/001692425.pdf",
+          "edition": "2026-04",
+          "independentReview": false
+        },
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 3,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
+      }
+    },
+    {
+      "id": "KSAI-2026-111",
+      "year": 2026,
+      "questionNo": 111,
+      "chapter": "第5章",
+      "answerNumberOfficial": 5,
+      "explanation": {
+        "correctReason": "正答は5（すべて正）。小柴胡湯・間質性肺炎とフェニルプロパノールアミン・脳出血の安全対策を区別する。",
+        "choiceReasons": [
+          "a：正。小柴胡湯とインターフェロンの併用による間質性肺炎の報告を受け、1994年1月に併用禁忌の注意が追加された。",
+          "b：正。重篤例を受け、1996年3月に緊急安全性情報の配布が指示された。",
+          "c：正。フェニルプロパノールアミン配合薬の脳出血等の報告を背景に、2003年に代替成分への切替えが指示された。",
+          "d：正。間質性肺炎の初期症状はかぜに似るため、悪化時は服用を中止して受診する必要がある。"
+        ],
+        "keyPoint": "小柴胡湯・間質性肺炎とフェニルプロパノールアミン・脳出血の安全対策を区別する。",
+        "references": [
+          {
+            "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月一部改訂）",
+            "chapter": "第5章",
+            "section": "Ⅳ 安全対策の具体例",
+            "pages": null,
+            "pageRangeVerified": false,
+            "url": "https://www.mhlw.go.jp/content/001692425.pdf"
+          }
+        ]
+      },
+      "audit": {
+        "status": "PENDING",
+        "bankAnswerChecked": true,
+        "officialAnswerChecked": true,
+        "sourceChecked": false,
+        "imageChecked": null,
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 5,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
+      }
+    },
+    {
+      "id": "KSAI-2026-112",
+      "year": 2026,
+      "questionNo": 112,
+      "chapter": "第5章",
+      "answerNumberOfficial": 2,
+      "explanation": {
+        "correctReason": "正答は2（正・誤・正・正）。一般用医薬品も依存のリスクがある。薬と健康の週間は10月17～23日。",
+        "choiceReasons": [
+          "a：正。薬と健康の週間は10月17日から23日で、適正使用の普及啓発を目的とする。",
+          "b：誤。一般用医薬品でも乱用によって依存が生じる場合がある。",
+          "c：正。若年期から薬の適正使用について理解を深めることが重要である。",
+          "d：正。登録販売者には適正使用やセルフメディケーションに関する啓発への協力が期待される。"
+        ],
+        "keyPoint": "一般用医薬品も依存のリスクがある。薬と健康の週間は10月17～23日。",
+        "references": [
+          {
+            "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月一部改訂）",
+            "chapter": "第5章",
+            "section": "Ⅳ 適正使用の啓発活動",
+            "pages": null,
+            "pageRangeVerified": false,
+            "url": "https://www.mhlw.go.jp/content/001692425.pdf"
+          }
+        ]
+      },
+      "audit": {
+        "status": "PENDING",
+        "bankAnswerChecked": true,
+        "officialAnswerChecked": true,
+        "sourceChecked": false,
+        "imageChecked": null,
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 2,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
+      }
+    },
+    {
+      "id": "KSAI-2026-113",
+      "year": 2026,
+      "questionNo": 113,
+      "chapter": "第5章",
+      "answerNumberOfficial": 3,
+      "explanation": {
+        "correctReason": "正答は3（b・c）。アスピリンは出産予定日12週以内、解熱鎮痛薬等による喘息既往、15歳未満に注意する。",
+        "choiceReasons": [
+          "a：誤。緑内障はアスピリン固有の使用禁止対象ではない。",
+          "b：正。出産予定日まで12週以内の妊婦は胎児への影響等のおそれがあり服用しない。",
+          "c：正。かぜ薬や解熱鎮痛薬で喘息を起こした既往がある人は再発のおそれから服用しない。",
+          "d：誤。アスピリンの一般用解熱鎮痛薬の年齢制限は原則15歳未満であり、18歳未満ではない。"
+        ],
+        "keyPoint": "アスピリンは出産予定日12週以内、解熱鎮痛薬等による喘息既往、15歳未満に注意する。",
+        "references": [
+          {
+            "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月一部改訂）",
+            "chapter": "第5章",
+            "section": "別表 使用上の注意",
+            "pages": null,
+            "pageRangeVerified": false,
+            "url": "https://www.mhlw.go.jp/content/001692425.pdf"
+          }
+        ]
+      },
+      "audit": {
+        "status": "PENDING",
+        "bankAnswerChecked": true,
+        "officialAnswerChecked": true,
+        "sourceChecked": false,
+        "imageChecked": null,
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 3,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
+      }
+    },
+    {
+      "id": "KSAI-2026-114",
+      "year": 2026,
+      "questionNo": 114,
+      "chapter": "第5章",
+      "answerNumberOfficial": 5,
+      "explanation": {
+        "correctReason": "正答は5（正・正・誤・正）。運転禁止の対象成分は抗ヒスタミン薬だけではない。配合剤全体の注意事項も確認する。",
+        "choiceReasons": [
+          "a：正。ジフェンヒドラミンは中枢神経系への作用による眠気が起こり得る。",
+          "b：正。ロペラミドでも眠気やめまいが生じ得るため運転を避ける。",
+          "c：誤。イブプロフェン単独の成分に基づく一律の運転禁止事項ではない。ただし配合剤の表示には従う。",
+          "d：正。ジヒドロコデインは中枢神経系への作用があり運転操作を避ける必要がある。"
+        ],
+        "keyPoint": "運転禁止の対象成分は抗ヒスタミン薬だけではない。配合剤全体の注意事項も確認する。",
+        "references": [
+          {
+            "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月一部改訂）",
+            "chapter": "第5章",
+            "section": "別表 使用上の注意・運転操作",
+            "pages": null,
+            "pageRangeVerified": false,
+            "url": "https://www.mhlw.go.jp/content/001692425.pdf"
+          }
+        ]
+      },
+      "audit": {
+        "status": "PENDING",
+        "bankAnswerChecked": true,
+        "officialAnswerChecked": true,
+        "sourceChecked": false,
+        "imageChecked": null,
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 5,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
+      }
+    },
+    {
+      "id": "KSAI-2026-115",
+      "year": 2026,
+      "questionNo": 115,
+      "chapter": "第5章",
+      "answerNumberOfficial": 2,
+      "explanation": {
+        "correctReason": "正答は2（正・誤・正・正）。アルミニウム含有胃腸薬の長期連用ではアルミニウム脳症・骨症のリスクに注意する。",
+        "choiceReasons": [
+          "a：正。アルジオキサはアルミニウムを含む成分である。",
+          "b：誤。テプレノンは胃粘膜保護成分で、アルミニウムを含む成分ではない。",
+          "c：正。合成ヒドロタルサイトはアルミニウムを含む制酸成分である。",
+          "d：正。スクラルファートもアルミニウムを含む胃粘膜保護成分である。"
+        ],
+        "keyPoint": "アルミニウム含有胃腸薬の長期連用ではアルミニウム脳症・骨症のリスクに注意する。",
+        "references": [
+          {
+            "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月一部改訂）",
+            "chapter": "第5章",
+            "section": "別表 使用上の注意・長期連用",
+            "pages": null,
+            "pageRangeVerified": false,
+            "url": "https://www.mhlw.go.jp/content/001692425.pdf"
+          }
+        ]
+      },
+      "audit": {
+        "status": "PENDING",
+        "bankAnswerChecked": true,
+        "officialAnswerChecked": true,
+        "sourceChecked": false,
+        "imageChecked": null,
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 2,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
+      }
+    },
+    {
+      "id": "KSAI-2026-116",
+      "year": 2026,
+      "questionNo": 116,
+      "chapter": "第5章",
+      "answerNumberOfficial": 4,
+      "explanation": {
+        "correctReason": "正答は4（b・d）。フェルビナク配合外用薬では喘息既往と長期連用禁止に注意する。",
+        "choiceReasons": [
+          "a：誤。前立腺肥大による排尿困難は、本問のフェルビナク・メントール配合外用薬の使用禁止対象として該当しない。",
+          "b：正。フェルビナク配合外用鎮痛消炎薬は喘息を起こしたことがある人には使用しない。",
+          "c：誤。透析療法を受けていることは本問の配合成分に基づく使用禁止事項ではない。",
+          "d：正。フェルビナク配合外用薬は長期連用を避ける。"
+        ],
+        "keyPoint": "フェルビナク配合外用薬では喘息既往と長期連用禁止に注意する。",
+        "references": [
+          {
+            "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月一部改訂）",
+            "chapter": "第5章",
+            "section": "別表 使用上の注意・外用鎮痛消炎薬",
+            "pages": null,
+            "pageRangeVerified": false,
+            "url": "https://www.mhlw.go.jp/content/001692425.pdf"
+          }
+        ]
+      },
+      "audit": {
+        "status": "PENDING",
+        "bankAnswerChecked": true,
+        "officialAnswerChecked": true,
+        "sourceChecked": false,
+        "imageChecked": true,
+        "imageEvidence": "公式後半PDF 46ページ目（印刷44ページ）",
+        "imageSource": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 4,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
+      }
+    },
+    {
+      "id": "KSAI-2026-117",
+      "year": 2026,
+      "questionNo": 117,
+      "chapter": "第5章",
+      "answerNumberOfficial": 1,
+      "explanation": {
+        "correctReason": "正答は1（抗コリン・狭く・上昇）。抗コリン作用→房水流出障害→眼圧上昇のおそれ。緑内障の人は使用前に相談する。",
+        "choiceReasons": [
+          "1：正。抗コリン作用によって房水の排出が妨げられ、眼圧が上昇するおそれがある。",
+          "2：誤。問題となる眼圧変化は低下ではなく上昇。",
+          "3：誤。房水流出路は広がるのではなく狭くなる。",
+          "4：誤。スコポラミンはコリン作用ではなく抗コリン作用を示す。",
+          "5：誤。作用の種類、流出路の変化、眼圧の変化がいずれも異なる。"
+        ],
+        "keyPoint": "抗コリン作用→房水流出障害→眼圧上昇のおそれ。緑内障の人は使用前に相談する。",
+        "references": [
+          {
+            "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月一部改訂）",
+            "chapter": "第5章",
+            "section": "別表 相談すること・緑内障",
+            "pages": null,
+            "pageRangeVerified": false,
+            "url": "https://www.mhlw.go.jp/content/001692425.pdf"
+          }
+        ]
+      },
+      "audit": {
+        "status": "PENDING",
+        "bankAnswerChecked": true,
+        "officialAnswerChecked": true,
+        "sourceChecked": false,
+        "imageChecked": null,
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 1,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
+      }
+    },
+    {
+      "id": "KSAI-2026-118",
+      "year": 2026,
+      "questionNo": 118,
+      "chapter": "第5章",
+      "answerNumberOfficial": 5,
+      "explanation": {
+        "correctReason": "正答は5（誤・誤・正・正）。プソイドエフェドリンと高血圧、オキセサゼインと15歳未満を結びつける。",
+        "choiceReasons": [
+          "a：誤。糖尿病はアセトアミノフェン固有の使用禁止対象ではない。",
+          "b：誤。透析患者への使用禁止で問題となるのは主としてアルミニウム含有胃腸薬であり、ロートエキスではない。",
+          "c：正。プソイドエフェドリンは血圧を上昇させるおそれがあり、高血圧の診断を受けた人は使用しない。",
+          "d：正。オキセサゼインは15歳未満の小児には使用しない。"
+        ],
+        "keyPoint": "プソイドエフェドリンと高血圧、オキセサゼインと15歳未満を結びつける。",
+        "references": [
+          {
+            "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月一部改訂）",
+            "chapter": "第5章",
+            "section": "別表 使用上の注意・使用禁止対象",
+            "pages": null,
+            "pageRangeVerified": false,
+            "url": "https://www.mhlw.go.jp/content/001692425.pdf"
+          }
+        ]
+      },
+      "audit": {
+        "status": "PENDING",
+        "bankAnswerChecked": true,
+        "officialAnswerChecked": true,
+        "sourceChecked": false,
+        "imageChecked": null,
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 5,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
+      }
+    },
+    {
+      "id": "KSAI-2026-119",
+      "year": 2026,
+      "questionNo": 119,
+      "chapter": "第5章",
+      "answerNumberOfficial": 1,
+      "explanation": {
+        "correctReason": "正答は1（正・誤・正・正）。基礎疾患と薬理作用から使用前相談の必要性を判断する。",
+        "choiceReasons": [
+          "a：正。ジプロフィリンは中枢刺激作用があり、てんかんの症状を悪化させるおそれがある。",
+          "b：誤。酸化マグネシウムで特に注意する基礎疾患は腎臓病であり、心臓病との組合せは不適切。",
+          "c：正。エテンザミドは胃・十二指腸潰瘍の症状を悪化させるおそれがあるため相談が必要。",
+          "d：正。メチルエフェドリンの交感神経刺激作用は甲状腺機能亢進症の症状を悪化させるおそれがある。"
+        ],
+        "keyPoint": "基礎疾患と薬理作用から使用前相談の必要性を判断する。",
+        "references": [
+          {
+            "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月一部改訂）",
+            "chapter": "第5章",
+            "section": "別表 相談すること・基礎疾患",
+            "pages": null,
+            "pageRangeVerified": false,
+            "url": "https://www.mhlw.go.jp/content/001692425.pdf"
+          }
+        ]
+      },
+      "audit": {
+        "status": "PENDING",
+        "bankAnswerChecked": true,
+        "officialAnswerChecked": true,
+        "sourceChecked": false,
+        "imageChecked": null,
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 1,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
+      }
+    },
+    {
+      "id": "KSAI-2026-120",
+      "year": 2026,
+      "questionNo": 120,
+      "chapter": "第5章",
+      "answerNumberOfficial": 5,
+      "explanation": {
+        "correctReason": "正答は5（正・誤・誤・誤）。カフェイン主薬の眠気防止薬は胃酸過多の人には使用しない。",
+        "choiceReasons": [
+          "a：正。カフェインは胃液分泌を促すため、胃酸過多の症状がある人はカフェイン主薬の眠気防止薬を使用しない。",
+          "b：誤。水酸化アルミニウムゲルは胃酸を中和する制酸成分であり、胃酸過多は本問の使用禁止対象ではない。",
+          "c：誤。大黄甘草湯は便秘等に用いられる処方であり、胃酸過多を理由とする使用禁止対象には該当しない。",
+          "d：誤。オキセサゼインは胃粘膜への局所麻酔作用等を期待する成分であり、胃酸過多は本問の使用禁止対象ではない。"
+        ],
+        "keyPoint": "カフェイン主薬の眠気防止薬は胃酸過多の人には使用しない。",
+        "references": [
+          {
+            "title": "厚生労働省 試験問題の作成に関する手引き（令和8年4月一部改訂）",
+            "chapter": "第5章",
+            "section": "別表 使用上の注意・胃酸過多",
+            "pages": null,
+            "pageRangeVerified": false,
+            "url": "https://www.mhlw.go.jp/content/001692425.pdf"
+          }
+        ]
+      },
+      "audit": {
+        "status": "PENDING",
+        "bankAnswerChecked": true,
+        "officialAnswerChecked": true,
+        "sourceChecked": false,
+        "imageChecked": null,
+        "holdReason": "手引き個別記述・ページの照合および独立レビュー未実施",
+        "officialAnswerEvidence": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+          "page": 1,
+          "answer": 5,
+          "method": "公式掲載ページのリンク経由で取得したPDFのテキストと原典画像の照合"
+        }
       }
     }
   ],
   "auditProgress": {
-    "scope": "Q1–60",
+    "scope": "Q1–120",
     "guideEdition": "2026-04",
     "guidePdf": "https://www.mhlw.go.jp/content/001692425.pdf",
     "tocChecked": true,
-    "officialAnswerPdfDirect": "unavailable",
-    "independentReview": "not completed",
-    "exactPagesConfirmed": 0,
+    "officialAnswerPdfDirect": "verified via official index link",
+    "independentReview": "not completed; no separate reviewer",
+    "exactPagesConfirmed": 34,
     "partialEvidenceQuestions": [
+      66,
+      22,
+      31,
+      32
+    ],
+    "contentCheckedQuestions": [
+      1,
+      2,
       3,
       4,
-      7
-    ]
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      33,
+      87,
+      105,
+      109,
+      110
+    ],
+    "additionalContentCheckedQuestions": [
+      87
+    ],
+    "officialAnswerChecked": 120,
+    "officialAnswerMismatch": 0,
+    "latestContentRevisions": [
+      2,
+      21,
+      24,
+      28,
+      30,
+      33
+    ],
+    "latestSelfReviewScope": "Q2,Q21–33"
   }
 }
