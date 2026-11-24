@@ -17,11 +17,14 @@ with sync_playwright() as pw:
         before=report['count']
         print('START engine='+engine.name,flush=True)
         page=ctx.new_page()
+        page.add_init_script("""window.__touhanStudyState=null; window.webkit={messageHandlers:{studyRecord:{postMessage:s=>{window.__savedStudy=JSON.parse(s)}}}};""")
         page.on('request',lambda r:report['externalRequests'].append(r.url) if r.url.startswith(('http:','https:')) else None)
         page.on('pageerror',lambda e:report['pageErrors'].append(str(e)))
         page.goto((OUT/'official-practice.html').as_uri())
         page.locator('#available').get_by_text('599問',exact=False).wait_for()
         assert page.evaluate("JSON.parse(document.getElementById('offlineBank').textContent)") == bank
+        expect(page.locator('#home')).to_be_visible()
+        page.locator('#homeStart').click()
         page.locator('#start').click()
         for q in bank['questions']:
             assert page.locator('#question').inner_text().strip()
@@ -38,7 +41,24 @@ with sync_playwright() as pw:
             page.locator('#next').click()
             report['count']+=1
         expect(page.locator('#summary')).to_contain_text('599 / 599')
-        page.locator('#restart').click()
+        assert page.evaluate('Object.keys(window.__savedStudy.stats).length')==599
+        assert page.evaluate('window.__savedStudy.session') is None
+        page.locator('#navRecords').click()
+        expect(page.locator('#recordTotal')).to_contain_text('599 / 599')
+        expect(page.locator('#recordTotal')).to_contain_text('100%')
+        assert page.locator('#yearRecords .recordRow').count()==5
+        assert page.locator('#chapterRecords .recordRow').count()==5
+        assert page.locator('#answerHistory .recordRow').count()==100
+        page.locator('#navStudy').click()
+        page.locator('#start').click()
+        page.locator('#unknown').click()
+        page.locator('#navHome').click()
+        page.locator('#resume').click()
+        expect(page.locator('#next')).to_be_visible()
+        assert page.evaluate('window.__savedStudy.stats[window.__savedStudy.session.ids[0]].attempts')==2
+        page.locator('#next').click()
+        expect(page.locator('#counter')).to_contain_text('2 / 599')
+        page.locator('#navHome').click()
         page.locator('a[href="./privacy.html"]').click()
         assert 'プライバシーポリシー' in page.locator('body').inner_text()
         page.go_back()

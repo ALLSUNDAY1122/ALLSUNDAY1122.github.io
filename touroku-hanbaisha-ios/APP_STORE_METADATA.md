@@ -18,6 +18,7 @@
 ・関西広域連合の公式過去問599問（2022〜2026年度）
 ・2023年度問90は公式不適切問題のため除外
 ・年度・分野別の選択、問題回答と採点
+・ホーム、途中再開、端末内の年度別・分野別進捗・正答率と回答履歴
 ・問題ごとに実施年度・問番号・公式問題PDF・公式正答PDFを表示
 ・漢字へのルビ対応を確定できない設問は読みを原典出現順に独立表示
 ・旧版の独自問題360問はWeb上で別途利用可能
@@ -33,7 +34,7 @@
 - マーケティングURL: https://allsunday1122.github.io/touroku-hanbaisha-sprint/
 
 ## App Review Notes
-This educational app loads a bundled offline practice page inside WKWebView and contains 599 official past examination questions published by the Kansai Regional Union (2022–2026). The officially invalid 2023 question 90 is excluded. Each question links to official source/answer PDFs. Unattached ruby readings are displayed in original PDF order, with no inferred Kanji mapping. Normal practice requires no internet; external source and support links open in the external browser. The app is not an official government app. No medical advice, user login, or in-app purchase is provided. Store privacy declarations require final verification in App Store Connect.
+This educational app loads a bundled offline practice page inside WKWebView and contains 599 official past examination questions published by the Kansai Regional Union (2022–2026). The officially invalid 2023 question 90 is excluded. Each question links to official source/answer PDFs. Unattached ruby readings are displayed in original PDF order, with no inferred Kanji mapping. Learning progress, answer history and resume state are saved locally using app-only UserDefaults; none is sent to the developer. Normal practice requires no internet; external source and support links open in the external browser. The app is not an official government app. No medical advice, user login, or in-app purchase is provided. Store privacy declarations require final verification in App Store Connect.
 
 ## 提出前にApp Store Connectで最終確認する項目
 - Seller Name / Copyright はApple Developer登録名に合わせる
