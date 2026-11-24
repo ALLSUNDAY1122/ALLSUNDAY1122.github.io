@@ -1450,3 +1450,11 @@ Apple固定識別子: Bundle `com.allsunday1122.tourokuhanbaisha`、ASC `6802119
 - Build 6b04cf7092306a39e3981ca4 は finished / SIGNED_IPA_VERIFIED。署名・プロファイル・Bundle ID検証成功。証跡 Q7_SIGNED_IPA_VERIFIED_20261124.json、Actions run 45291377374。以前のbuilding記録を更新する確定結果。
 - ビルド元 74a9adc73404cfcda0ebd12950b859d05e9813b6 と main の正式バンク Git blob は一致（8741e2675af6f41f7fba2afdc89566f48b8258e7、2241943 bytes）。Swift起動ソースも一致（c5f3b2855f2f91fbe20321b5dc2eea0a4be63f18）。ネイティブは公式 official-practice.html を遠隔取得するWebViewであり、599問JSONのIPA内蔵を意味しない。IPA実物の再展開・公開URL実測は未実施。
 - 既存本番 workflow touhan-ios は新規IPAをビルドしてASCへアップロードする構成。現セッションではCodemagic起動・IPA取得手段がなく、ASCアップロード/TestFlight配信は未実施。Q7は署名PASS、配信PENDING。2FA・契約・実機確認・本審査最終送信はユーザー操作として留保。本審査未送信。
+
+
+## Q7 Internal TestFlight 配信確定・品質Gate再評価（2026-11-24 09:25 JST）
+- 正式バンク599/600問（2023年問90公式無効除外）。品質Gate **12/14 PASS**、Q7_TESTFLIGHT_READY **PASS**。残るブロッカーはQ4_OFFLINE_RESILIENCE、Q5_PRIVACY_AND_NETWORK_DISCLOSURE。全体release_gate=BLOCKED、本審査未送信。
+- Codemagic本番 workflow `touhan-ios`、Build ID `6b04d34baf7a62b566bb3490`、バージョン1.0.0、Build 14。09:02:16 JSTにfinished、14工程SUCCESS、署名付きTouhanSprint.ipa生成・ASCアップロード成功。起動Run 45293353252、照会Run 45295103103。
+- ASC App ID `6802119268`、ASC Build ID `f33140d7-988c-460c-9b90-9c20e85a07f3`、processingState=`VALID`、internalBuildState=`IN_BETA_TESTING`、buildAudienceType=`APP_STORE_ELIGIBLE`、expired=false。アップロード2026-11-24 09:03:06 JST、有効期限 **2027-02-22 09:03:06 JST**（API原値2027-02-21T16:03:06-08:00）。
+- 内部グループ `sum`、hasAccessToAllBuilds=true、testerCount=1。全ビルドアクセスと内部配信状態により配信可能と判定（個別build-group relationshipは未照会）。iPhone実機インストール・599問実動作はユーザー確認待ち。外部ベータ審査・本審査最終送信・一般公開は実施しない。
+- 証跡：`automation/codemagic-results/touhan-599-inspect-20261124-0910.json`、`automation/asc-results/touhan-build14-testflight-readback-20261124-0920.json`。過去の署名のみ・11/14記録は履歴として保持し、本節を最新判定とする。`release-status.json` の現行判定と同期。
