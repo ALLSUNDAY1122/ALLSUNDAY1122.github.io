@@ -1,10 +1,10 @@
 {
   "year": 2026,
   "targetCount": 120,
-  "auditedCount": 30,
-  "auditPassedCount": 30,
+  "auditedCount": 40,
+  "auditPassedCount": 40,
   "holdCount": 0,
-  "pendingCount": 90,
+  "pendingCount": 80,
   "sourceExplanationPath": "touroku-hanbaisha-sprint/official-kansai/EXPLANATIONS_2026.json",
   "sourceExplanationBlobSha": "691c867a0522c5220b4b5139253bbdd060b0cb85",
   "auditDate": "2026-11-24",
@@ -1779,6 +1779,590 @@
         }
       },
       "notes": "添付正規バンクの正答番号と一致。手引き原典ページ画像で正答理由・全記述または全選択肢を独立照合。数値・制度・作用に不整合なし。公式試験PDFの原典画像で設問・組合せを目視確認。公式正答PDFの直接再取得は前回失敗、今回は指定正規バンクで照合（ユーザー了承）。"
+    },
+    {
+      "questionId": "KSAI-2026-031",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "a",
+            "printedPage": "89",
+            "pdfPages": [
+              97
+            ],
+            "truth": "正",
+            "topic": "キキョウ去痰",
+            "result": "MATCH"
+          },
+          {
+            "item": "b",
+            "printedPage": "98",
+            "pdfPages": [
+              106
+            ],
+            "truth": "誤",
+            "topic": "センブリ健胃",
+            "result": "MATCH"
+          },
+          {
+            "item": "c",
+            "printedPage": "88",
+            "pdfPages": [
+              96
+            ],
+            "truth": "正",
+            "topic": "キョウニン鎮咳",
+            "result": "MATCH"
+          },
+          {
+            "item": "d",
+            "printedPage": "137",
+            "pdfPages": [
+              145
+            ],
+            "truth": "誤",
+            "topic": "センキュウ血行",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 2,
+        "bankAnswerNumber": 2,
+        "answerMatch": true,
+        "questionImage": null
+      },
+      "notes": "添付正規バンク正答一致。手引き原典画像で逐項照合、数値・制度・作用の不整合なし。画像掲載形式ではないため基準(4)適用外。公式正答PDFは今回も直接取得不可、ユーザー了承済み添付正規バンクで照合。"
+    },
+    {
+      "questionId": "KSAI-2026-032",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "a",
+            "printedPage": "90",
+            "pdfPages": [
+              98
+            ],
+            "truth": "誤",
+            "topic": "麦門冬湯：PMDA製品表示成分表でマオウなし",
+            "result": "MATCH",
+            "supplementalSource": {
+              "url": "https://www.pmda.go.jp/PmdaSearch/otcDetail/ResultDataSetPDF/300052_J1501000225_03_01/A",
+              "pdfPage": 1,
+              "section": "成分・分量",
+              "checked": true,
+              "documentType": "製品外箱表示"
+            }
+          },
+          {
+            "item": "b",
+            "printedPage": "87",
+            "pdfPages": [
+              95
+            ],
+            "truth": "誤",
+            "topic": "甘草湯はカンゾウのみ",
+            "result": "MATCH"
+          },
+          {
+            "item": "c",
+            "printedPage": "90",
+            "pdfPages": [
+              98
+            ],
+            "truth": "正",
+            "topic": "五虎湯マオウ",
+            "result": "MATCH"
+          },
+          {
+            "item": "d",
+            "printedPage": "90",
+            "pdfPages": [
+              98
+            ],
+            "truth": "正",
+            "topic": "麻杏甘石湯マオウ",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 5,
+        "bankAnswerNumber": 5,
+        "answerMatch": true,
+        "questionImage": null
+      },
+      "notes": "添付正規バンク正答一致。手引き原典画像で逐項照合、数値・制度・作用の不整合なし。麦門冬湯はPMDA掲載の製品外箱表示成分表で補完。公式正答PDFは今回も直接取得不可、ユーザー了承済み添付正規バンクで照合。"
+    },
+    {
+      "questionId": "KSAI-2026-033",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "a",
+            "printedPage": "90",
+            "pdfPages": [
+              98
+            ],
+            "truth": "正",
+            "topic": "解熱成分なし",
+            "result": "MATCH"
+          },
+          {
+            "item": "b",
+            "printedPage": "90",
+            "pdfPages": [
+              98
+            ],
+            "truth": "正",
+            "topic": "併用重複",
+            "result": "MATCH"
+          },
+          {
+            "item": "c",
+            "printedPage": "85",
+            "pdfPages": [
+              93
+            ],
+            "truth": "誤",
+            "topic": "チペピジン非麻薬性",
+            "result": "MATCH"
+          },
+          {
+            "item": "d",
+            "printedPage": "86",
+            "pdfPages": [
+              94
+            ],
+            "truth": "誤",
+            "topic": "メチルエフェドリン気管支拡張・カルボシステイン粘液調整",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 1,
+        "bankAnswerNumber": 1,
+        "answerMatch": true,
+        "questionImage": null
+      },
+      "notes": "添付正規バンク正答一致。手引き原典画像で逐項照合、数値・制度・作用の不整合なし。画像掲載形式ではないため基準(4)適用外。公式正答PDFは今回も直接取得不可、ユーザー了承済み添付正規バンクで照合。"
+    },
+    {
+      "questionId": "KSAI-2026-034",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "a",
+            "printedPage": "99",
+            "pdfPages": [
+              107
+            ],
+            "truth": "正",
+            "topic": "アルジオキサ透析",
+            "result": "MATCH"
+          },
+          {
+            "item": "b",
+            "printedPage": "99",
+            "pdfPages": [
+              107
+            ],
+            "truth": "正",
+            "topic": "テプレノン粘膜修復",
+            "result": "MATCH"
+          },
+          {
+            "item": "c",
+            "printedPage": "100",
+            "pdfPages": [
+              108
+            ],
+            "truth": "正",
+            "topic": "ピレンゼピン抗コリン",
+            "result": "MATCH"
+          },
+          {
+            "item": "d",
+            "printedPage": "99",
+            "pdfPages": [
+              107
+            ],
+            "truth": "正",
+            "topic": "ウルソデオキシコール酸利胆",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 3,
+        "bankAnswerNumber": 3,
+        "answerMatch": true,
+        "questionImage": null
+      },
+      "notes": "添付正規バンク正答一致。手引き原典画像で逐項照合、数値・制度・作用の不整合なし。画像掲載形式ではないため基準(4)適用外。公式正答PDFは今回も直接取得不可、ユーザー了承済み添付正規バンクで照合。"
+    },
+    {
+      "questionId": "KSAI-2026-035",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "a",
+            "printedPage": "105",
+            "pdfPages": [
+              113
+            ],
+            "truth": "正",
+            "topic": "乳由来カゼイン",
+            "result": "MATCH"
+          },
+          {
+            "item": "b",
+            "printedPage": "104,106",
+            "pdfPages": [
+              112,
+              114
+            ],
+            "truth": "誤",
+            "topic": "ベルベリン抗菌抗炎症",
+            "result": "MATCH"
+          },
+          {
+            "item": "c",
+            "printedPage": "104,106",
+            "pdfPages": [
+              112,
+              114
+            ],
+            "truth": "誤",
+            "topic": "ビスマス収斂・有毒物質分解",
+            "result": "MATCH"
+          },
+          {
+            "item": "d",
+            "printedPage": "105",
+            "pdfPages": [
+              113
+            ],
+            "truth": "誤",
+            "topic": "ロペラミド食水あたり対象外",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 4,
+        "bankAnswerNumber": 4,
+        "answerMatch": true,
+        "questionImage": null
+      },
+      "notes": "添付正規バンク正答一致。手引き原典画像で逐項照合、数値・制度・作用の不整合なし。画像掲載形式ではないため基準(4)適用外。公式正答PDFは今回も直接取得不可、ユーザー了承済み添付正規バンクで照合。"
+    },
+    {
+      "questionId": "KSAI-2026-036",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "a",
+            "printedPage": "107",
+            "pdfPages": [
+              115
+            ],
+            "truth": "誤",
+            "topic": "センノシド乳汁移行・授乳回避",
+            "result": "MATCH"
+          },
+          {
+            "item": "b",
+            "printedPage": "108",
+            "pdfPages": [
+              116
+            ],
+            "truth": "誤",
+            "topic": "整腸成分並行使用",
+            "result": "MATCH"
+          },
+          {
+            "item": "c",
+            "printedPage": "108",
+            "pdfPages": [
+              116
+            ],
+            "truth": "誤",
+            "topic": "連用回避",
+            "result": "MATCH"
+          },
+          {
+            "item": "d",
+            "printedPage": "108",
+            "pdfPages": [
+              116
+            ],
+            "truth": "正",
+            "topic": "腸溶性ビサコジル服用前後1時間牛乳回避",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 4,
+        "bankAnswerNumber": 4,
+        "answerMatch": true,
+        "questionImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
+          "pdfPage": 29,
+          "printedPage": 27,
+          "checked": true,
+          "reason": "画像掲載問題"
+        }
+      },
+      "notes": "添付正規バンク正答一致。手引き原典画像で逐項照合、数値・制度・作用の不整合なし。公式問題原典画像確認完了。設問の3錠中ビサコジル15mg、センノシド40mg、選択肢4を確認。公式正答PDFは今回も直接取得不可、ユーザー了承済み添付正規バンクで照合。作成側参照ページ未確定は独立監査で107–108に確定。"
+    },
+    {
+      "questionId": "KSAI-2026-037",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "a",
+            "printedPage": "115",
+            "pdfPages": [
+              123
+            ],
+            "truth": "正",
+            "topic": "妊娠時回避",
+            "result": "MATCH"
+          },
+          {
+            "item": "b",
+            "printedPage": "115–116",
+            "pdfPages": [
+              123,
+              124
+            ],
+            "truth": "正",
+            "topic": "注入法",
+            "result": "MATCH"
+          },
+          {
+            "item": "c",
+            "printedPage": "116",
+            "pdfPages": [
+              124
+            ],
+            "truth": "正",
+            "topic": "グリセリン浸透圧",
+            "result": "MATCH"
+          },
+          {
+            "item": "d",
+            "printedPage": "116",
+            "pdfPages": [
+              124
+            ],
+            "truth": "誤",
+            "topic": "溶血はグリセリン",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 1,
+        "bankAnswerNumber": 1,
+        "answerMatch": true,
+        "questionImage": null
+      },
+      "notes": "添付正規バンク正答一致。手引き原典画像で逐項照合、数値・制度・作用の不整合なし。画像掲載形式ではないため基準(4)適用外。公式正答PDFは今回も直接取得不可、ユーザー了承済み添付正規バンクで照合。"
+    },
+    {
+      "questionId": "KSAI-2026-038",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "a",
+            "printedPage": "119",
+            "pdfPages": [
+              127
+            ],
+            "truth": "正",
+            "topic": "センソ噛まない",
+            "result": "MATCH"
+          },
+          {
+            "item": "b",
+            "printedPage": "119–120",
+            "pdfPages": [
+              127,
+              128
+            ],
+            "truth": "正",
+            "topic": "強心・鎮静・強壮",
+            "result": "MATCH"
+          },
+          {
+            "item": "c",
+            "printedPage": "121",
+            "pdfPages": [
+              129
+            ],
+            "truth": "正",
+            "topic": "治療中相談",
+            "result": "MATCH"
+          },
+          {
+            "item": "d",
+            "printedPage": "121",
+            "pdfPages": [
+              129
+            ],
+            "truth": "正",
+            "topic": "5～6日受診",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 5,
+        "bankAnswerNumber": 5,
+        "answerMatch": true,
+        "questionImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
+          "pdfPage": 31,
+          "printedPage": 29,
+          "checked": true,
+          "reason": "成分表追加確認"
+        }
+      },
+      "notes": "添付正規バンク正答一致。手引き原典画像で逐項照合、数値・制度・作用の不整合なし。成分表9項目を原典画像と照合、6粒中センソ5mg等の表記一致。公式正答PDFは今回も直接取得不可、ユーザー了承済み添付正規バンクで照合。"
+    },
+    {
+      "questionId": "KSAI-2026-039",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "a",
+            "printedPage": "122",
+            "pdfPages": [
+              130
+            ],
+            "truth": "正",
+            "topic": "LDL輸送方向",
+            "result": "MATCH"
+          },
+          {
+            "item": "b",
+            "printedPage": "122",
+            "pdfPages": [
+              130
+            ],
+            "truth": "誤",
+            "topic": "LDL高値HDL低値",
+            "result": "MATCH"
+          },
+          {
+            "item": "c",
+            "printedPage": "122",
+            "pdfPages": [
+              130
+            ],
+            "truth": "正",
+            "topic": "ソイステロール吸収抑制",
+            "result": "MATCH"
+          },
+          {
+            "item": "d",
+            "printedPage": "123",
+            "pdfPages": [
+              131
+            ],
+            "truth": "誤",
+            "topic": "痩身目的外",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 1,
+        "bankAnswerNumber": 1,
+        "answerMatch": true,
+        "questionImage": null
+      },
+      "notes": "添付正規バンク正答一致。手引き原典画像で逐項照合、数値・制度・作用の不整合なし。画像掲載形式ではないため基準(4)適用外。公式正答PDFは今回も直接取得不可、ユーザー了承済み添付正規バンクで照合。"
+    },
+    {
+      "questionId": "KSAI-2026-040",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "a",
+            "printedPage": "125",
+            "pdfPages": [
+              133
+            ],
+            "truth": "正",
+            "topic": "コバルトB12",
+            "result": "MATCH"
+          },
+          {
+            "item": "b",
+            "printedPage": "124",
+            "pdfPages": [
+              132
+            ],
+            "truth": "誤",
+            "topic": "黒色便",
+            "result": "MATCH"
+          },
+          {
+            "item": "c",
+            "printedPage": "125",
+            "pdfPages": [
+              133
+            ],
+            "truth": "誤",
+            "topic": "食後服用",
+            "result": "MATCH"
+          },
+          {
+            "item": "d",
+            "printedPage": "125–126",
+            "pdfPages": [
+              133,
+              134
+            ],
+            "truth": "誤",
+            "topic": "予防使用不適",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 4,
+        "bankAnswerNumber": 4,
+        "answerMatch": true,
+        "questionImage": null
+      },
+      "notes": "添付正規バンク正答一致。手引き原典画像で逐項照合、数値・制度・作用の不整合なし。画像掲載形式ではないため基準(4)適用外。公式正答PDFは今回も直接取得不可、ユーザー了承済み添付正規バンクで照合。"
     }
   ]
 }
