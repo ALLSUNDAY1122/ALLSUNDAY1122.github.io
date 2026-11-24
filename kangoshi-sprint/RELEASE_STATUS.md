@@ -551,3 +551,7 @@
 ## EasyOCR先行Runの正式復旧
 
 - Run 45298987801: OCR成功、pushのみnon-fast-forward。実行ログPASS 2問（K111-AM065、K111-PM003）を起動時と最新mainの候補一致を確認して正式昇格。Artifact 14879295233。個別生OCR未回収。正規1028/1200、残172、公開禁止。目視32/48。追加Run 45300514755は実行中。
+
+## EasyOCR Run 45300514755 recovery
+
+- OCR success, non-fast-forward push failure. Artifact 14879813122 SHA-256 verified. 29 reviewed: 5 PASS, 24 HOLD; duplicate exclusions K111-AM065 and K111-PM003; 3 new source-only promotions K112-AM009, K112-AM016, K112-AM026. Canonical 1031/1200, held 169. All 48 candidate records assembled; remaining 19 independent OCR pending. Publication and submission blocked.
