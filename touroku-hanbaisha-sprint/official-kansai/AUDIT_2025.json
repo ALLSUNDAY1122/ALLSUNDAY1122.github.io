@@ -1,0 +1,458 @@
+{
+  "year": 2025,
+  "targetCount": 120,
+  "auditedCount": 10,
+  "auditPassedCount": 9,
+  "holdCount": 1,
+  "unauditedCount": 110,
+  "auditDate": "2026-11-24",
+  "sourceExplanationBlobSha": "9d864bd1b27508c4df00f4c98e63e7276665c667",
+  "sourceBank": "ユーザー添付 APPROVED_OFFICIAL_BANK(4).json",
+  "method": "独立担当者が添付正規バンクとGitHub原稿および厚労省公式PDFページ画像を逐項照合。作成元の監査証拠は不使用。",
+  "audits": [
+    {
+      "questionId": "KSAI-2025-001",
+      "verdict": "PASS",
+      "answerNumberOfficial": 3,
+      "evidence": [
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 1,
+          "pdfPage": 10,
+          "pdfIndex": 9,
+          "printedLines": "22–27",
+          "finding": "a誤：表示だけでは誤認を防げない"
+        },
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 2,
+          "pdfPage": 11,
+          "pdfIndex": 10,
+          "printedLines": "32–35",
+          "finding": "b正：新情報把握"
+        },
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 2,
+          "pdfPage": 11,
+          "pdfIndex": 10,
+          "printedLines": "36–42",
+          "finding": "c正：均一品質保証"
+        },
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 2,
+          "pdfPage": 11,
+          "pdfIndex": 10,
+          "printedLines": "43–47",
+          "finding": "d誤：PL法対象"
+        }
+      ],
+      "notes": "選択肢1:a、2:a、4:d、5:dが不適。",
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allReasonsSupported": true,
+        "noUnsupportedNumericalOrInstitutionalClaims": true,
+        "originalImage": "NOT_APPLICABLE"
+      }
+    },
+    {
+      "questionId": "KSAI-2025-002",
+      "verdict": "PASS",
+      "answerNumberOfficial": 1,
+      "evidence": [
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 2,
+          "pdfPage": 11,
+          "pdfIndex": 10,
+          "printedLines": "59–61",
+          "finding": "a=GLP"
+        },
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 3,
+          "pdfPage": 12,
+          "pdfIndex": 11,
+          "printedLines": "65–68",
+          "finding": "b=GCP"
+        },
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 3,
+          "pdfPage": 12,
+          "pdfIndex": 11,
+          "printedLines": "69–71",
+          "finding": "c=GPSP、GVPは安全管理"
+        }
+      ],
+      "notes": "2:c、3:a,b,c、4:a,b、5:aが不適。",
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allReasonsSupported": true,
+        "noUnsupportedNumericalOrInstitutionalClaims": true,
+        "originalImage": "NOT_APPLICABLE"
+      }
+    },
+    {
+      "questionId": "KSAI-2025-003",
+      "verdict": "PASS",
+      "answerNumberOfficial": 5,
+      "evidence": [
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 3,
+          "pdfPage": 12,
+          "pdfIndex": 11,
+          "printedLines": "91–93",
+          "finding": "a誤：相互作用あり、b誤：錠剤等の形状あり"
+        },
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 3,
+          "pdfPage": 12,
+          "pdfIndex": 11,
+          "printedLines": "88–90",
+          "finding": "c誤：届出であり個別許可ではない"
+        },
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 3,
+          "pdfPage": 12,
+          "pdfIndex": 11,
+          "printedLines": "82–84",
+          "finding": "d正：審査・許可"
+        }
+      ],
+      "notes": "正誤=誤誤誤正。選択肢1:a,c,d、2:a、3:c,d、4:a,b,dが不適。",
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allReasonsSupported": true,
+        "noUnsupportedNumericalOrInstitutionalClaims": true,
+        "originalImage": "NOT_APPLICABLE"
+      }
+    },
+    {
+      "questionId": "KSAI-2025-004",
+      "verdict": "PASS",
+      "answerNumberOfficial": 3,
+      "evidence": [
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 4,
+          "pdfPage": 13,
+          "pdfIndex": 12,
+          "printedLines": "100–103",
+          "finding": "a,b正：医療費負担と相談・受診勧奨"
+        },
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 4,
+          "pdfPage": 13,
+          "pdfIndex": 12,
+          "printedLines": "112–116",
+          "finding": "c正：2017年1月導入、d誤：2022年1月対象拡大は全OTCではない"
+        }
+      ],
+      "notes": "選択肢1:c,d、2:a,b、4:b、5:a,c,dが不適。年次一致。",
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allReasonsSupported": true,
+        "noUnsupportedNumericalOrInstitutionalClaims": true,
+        "originalImage": "NOT_APPLICABLE"
+      }
+    },
+    {
+      "questionId": "KSAI-2025-005",
+      "verdict": "PASS",
+      "answerNumberOfficial": 5,
+      "evidence": [
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 5,
+          "pdfPage": 14,
+          "pdfIndex": 13,
+          "printedLines": "136–140",
+          "finding": "a正：免疫防御"
+        },
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 5,
+          "pdfPage": 14,
+          "pdfIndex": 13,
+          "printedLines": "144–147",
+          "finding": "b正：多様な原因物質"
+        },
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 5,
+          "pdfPage": 14,
+          "pdfIndex": 13,
+          "printedLines": "141–143",
+          "finding": "c正：結膜・鼻・皮膚・浮腫"
+        },
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 5,
+          "pdfPage": 14,
+          "pdfIndex": 13,
+          "printedLines": "150–153",
+          "finding": "d正：体質・遺伝"
+        }
+      ],
+      "notes": "選択肢1:d、2:c、3:b、4:aが不適。",
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allReasonsSupported": true,
+        "noUnsupportedNumericalOrInstitutionalClaims": true,
+        "originalImage": "NOT_APPLICABLE"
+      }
+    },
+    {
+      "questionId": "KSAI-2025-006",
+      "verdict": "PASS",
+      "answerNumberOfficial": 2,
+      "evidence": [
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 6,
+          "pdfPage": 15,
+          "pdfIndex": 14,
+          "printedLines": "159–162",
+          "finding": "a誤：眠気・口渇も副作用"
+        },
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 6,
+          "pdfPage": 15,
+          "pdfIndex": 14,
+          "printedLines": "167–170",
+          "finding": "b誤：重大な副作用回避優先"
+        },
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 6,
+          "pdfPage": 15,
+          "pdfIndex": 14,
+          "printedLines": "174–177",
+          "finding": "c正：血液・内臓機能への影響等は無自覚の場合あり"
+        },
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 6,
+          "pdfPage": 15,
+          "pdfIndex": 14,
+          "printedLines": "171–173",
+          "finding": "d正：経過聴取・受診勧奨"
+        }
+      ],
+      "notes": "選択肢1:a,b、3:c、4:a,b,c,d、5:a,dが不適。検査で判明する場合があるとの説明は血液・内臓機能への影響から合理的。",
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allReasonsSupported": true,
+        "noUnsupportedNumericalOrInstitutionalClaims": true,
+        "originalImage": "NOT_APPLICABLE"
+      }
+    },
+    {
+      "questionId": "KSAI-2025-007",
+      "verdict": "PASS",
+      "answerNumberOfficial": 1,
+      "evidence": [
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 7,
+          "pdfPage": 16,
+          "pdfIndex": 15,
+          "printedLines": "206–210",
+          "finding": "a正：理解力・使用状況に合わせた説明"
+        },
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 7,
+          "pdfPage": 16,
+          "pdfIndex": 15,
+          "printedLines": "212–213",
+          "finding": "b正：効果に対して副作用リスク最小化"
+        },
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 7,
+          "pdfPage": 16,
+          "pdfIndex": 15,
+          "printedLines": "190–194",
+          "finding": "c誤：漫然使用で治療機会喪失のおそれ"
+        },
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 8,
+          "pdfPage": 17,
+          "pdfIndex": 16,
+          "printedLines": "224–226",
+          "finding": "d誤：不審な過量・頻回購入は事情確認し状況により販売を控える"
+        }
+      ],
+      "notes": "公式前半PDF印刷p6（PDF順7、index6）画像を独立目視。正正誤誤、選択肢2:a,c、3:a,b,c,d、4:a,b,d、5:bが不適。販売拒否は状況による。",
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allReasonsSupported": true,
+        "noUnsupportedNumericalOrInstitutionalClaims": true,
+        "originalImage": "PASS"
+      },
+      "originalImageEvidence": {
+        "url": "https://www.kouiki-kansai.jp/material/files/group/12/R7tourokuhannbaisyashiken_zennhan.pdf",
+        "printedPage": 6,
+        "pdfPage": 7,
+        "pdfIndex": 6,
+        "method": "独立目視"
+      }
+    },
+    {
+      "questionId": "KSAI-2025-008",
+      "verdict": "PASS",
+      "answerNumberOfficial": 1,
+      "evidence": [
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 8,
+          "pdfPage": 17,
+          "pdfIndex": 16,
+          "printedLines": "234–235",
+          "finding": "a誤：薬理作用部位でも相互作用"
+        },
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 8,
+          "pdfPage": 17,
+          "pdfIndex": 16,
+          "printedLines": "235–237",
+          "finding": "b正：使用期間と前後は相互作用のおそれがある薬・食品を控える"
+        },
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 9,
+          "pdfPage": 18,
+          "pdfIndex": 17,
+          "printedLines": "273–274",
+          "finding": "c正：外用薬も影響あり"
+        },
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 9,
+          "pdfPage": 18,
+          "pdfIndex": 17,
+          "printedLines": "252–256",
+          "finding": "d誤：診療医・歯科医又は調剤薬剤師へ相談"
+        }
+      ],
+      "notes": "選択肢2:a,b,d、3:a,d、4:a,b、5:c,dが不適。bの原稿表現は簡略だが矛盾なし。",
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allReasonsSupported": true,
+        "noUnsupportedNumericalOrInstitutionalClaims": true,
+        "originalImage": "NOT_APPLICABLE"
+      }
+    },
+    {
+      "questionId": "KSAI-2025-009",
+      "verdict": "HOLD",
+      "answerNumberOfficial": 4,
+      "evidence": [
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 9,
+          "pdfPage": 18,
+          "pdfIndex": 17,
+          "printedLines": "260–266",
+          "finding": "a=代謝されやすく、b=薬効が十分に得られなくなる、c=副作用が現れやすくなる（有害代謝産物の場合）"
+        }
+      ],
+      "notes": "正答番号と選択肢1:a,c、2:a,b、3:b,c、5:cの不適は一致。ただし原稿の有害代謝産物増加という機序は手引きに直接明記されず独立根拠不足。誤りと断定せず修正依頼推奨。",
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allReasonsSupported": false,
+        "noUnsupportedNumericalOrInstitutionalClaims": true,
+        "originalImage": "NOT_APPLICABLE"
+      }
+    },
+    {
+      "questionId": "KSAI-2025-010",
+      "verdict": "PASS",
+      "answerNumberOfficial": 5,
+      "evidence": [
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 10,
+          "pdfPage": 19,
+          "pdfIndex": 18,
+          "printedLines": "283–287",
+          "finding": "a正：幼児1歳以上7歳未満"
+        },
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 10,
+          "pdfPage": 19,
+          "pdfIndex": 18,
+          "printedLines": "290–292",
+          "finding": "b正：相対的腸長と吸収率"
+        },
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 10,
+          "pdfPage": 19,
+          "pdfIndex": 18,
+          "printedLines": "292–294",
+          "finding": "c誤：血液脳関門未発達"
+        },
+        {
+          "source": "MHLW 令和7年4月一部改訂（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 10,
+          "pdfPage": 19,
+          "pdfIndex": 18,
+          "printedLines": "308–314",
+          "finding": "d正：乳児は急変しやすく診療優先"
+        }
+      ],
+      "notes": "選択肢1:a,c,d、2:b,c、3:a、4:b,c,dが不適。年齢数値一致。",
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allReasonsSupported": true,
+        "noUnsupportedNumericalOrInstitutionalClaims": true,
+        "originalImage": "NOT_APPLICABLE"
+      }
+    }
+  ]
+}
