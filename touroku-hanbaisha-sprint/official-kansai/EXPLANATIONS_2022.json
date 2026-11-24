@@ -1,10 +1,15 @@
 {
   "year": 2022,
   "targetCount": 120,
-  "createdCount": 90,
+  "createdCount": 100,
   "auditPassedCount": 0,
-  "sourceCheckedCount": 90,
-  "hold": [],
+  "sourceCheckedCount": 99,
+  "hold": [
+    {
+      "id": "KSAI-2022-091",
+      "reason": "bの店舗販売業における分割販売の直接根拠を追加確認する必要あり。"
+    }
+  ],
   "pendingIndependentAudit": [
     "KSAI-2022-001",
     "KSAI-2022-002",
@@ -95,7 +100,17 @@
     "KSAI-2022-087",
     "KSAI-2022-088",
     "KSAI-2022-089",
-    "KSAI-2022-090"
+    "KSAI-2022-090",
+    "KSAI-2022-091",
+    "KSAI-2022-092",
+    "KSAI-2022-093",
+    "KSAI-2022-094",
+    "KSAI-2022-095",
+    "KSAI-2022-096",
+    "KSAI-2022-097",
+    "KSAI-2022-098",
+    "KSAI-2022-099",
+    "KSAI-2022-100"
   ],
   "sourceBankBlob": "8741e2675af6f41f7fba2afdc89566f48b8258e7",
   "explanations": [
@@ -2008,8 +2023,223 @@
         "status": "PENDING_INDEPENDENT_REVIEW",
         "sourceEvidence": "2022-03 handbook printed page images actually inspected; zero-based PDF indices: 230,231,232,233"
       }
+    },
+    {
+      "id": "KSAI-2022-091",
+      "questionNo": 91,
+      "answer": 2,
+      "answerNumberOfficial": 3,
+      "explanation": "正答の理由：店舗管理者の職務と店舗販売のルールを区別する。\na：正。管理者は原則として他の場所で薬事実務を兼務できず、例外には所管行政庁の許可が必要。\nb：正。特定の購入者の注文に応じた分割販売は店舗販売業では可能である。配置販売業の開封分割禁止と区別する。\nc：正。管理者は衛生上必要な意見を書面で販売業者に伝える義務がある。\nd：誤。7m以内の陳列原則の例外となる立入防止範囲は1.2mであり、1mでは足りない。\n覚えるべきポイント：指定第二類の陳列は7m、立入防止の例外は1.2m。\n参照資料：厚生労働省『試験問題の作成に関する手引き』令和4年3月版、第4章、p.228・230・240。試験当時の制度に基づく。",
+      "reference": {
+        "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+        "edition": "2022-03",
+        "pages": [
+          228,
+          230,
+          240
+        ]
+      },
+      "audit": {
+        "sourceChecked": false,
+        "officialBankAnswerChecked": true,
+        "status": "PENDING_INDEPENDENT_REVIEW",
+        "sourceEvidence": "pp.228,230,240 inspected; direct positive basis for split sales (b) pending"
+      }
+    },
+    {
+      "id": "KSAI-2022-092",
+      "questionNo": 92,
+      "answer": 1,
+      "answerNumberOfficial": 2,
+      "explanation": "正答の理由：配置販売には品目と販売方法の制約がある。\na：正。販売区域を管轄する知事へ、従事者等の情報と期間を事前に届け出る。\nb：誤。薬剤師がいても配置販売品目基準に合う一般用医薬品に限られる。\nc：誤。配置販売では開封して小分けに売ることは禁止される。\nd：正。身分証明書は住所地の知事から交付を受け、販売時に携帯する。\n覚えるべきポイント：届出先は販売区域、身分証明書は住所地。\n参照資料：厚生労働省『試験問題の作成に関する手引き』令和4年3月版、第4章、p.229・230。試験当時の制度に基づく。",
+      "reference": {
+        "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+        "edition": "2022-03",
+        "pages": [
+          229,
+          230
+        ]
+      },
+      "audit": {
+        "sourceChecked": true,
+        "officialBankAnswerChecked": true,
+        "status": "PENDING_INDEPENDENT_REVIEW",
+        "sourceEvidence": "Printed pages inspected in current session; PDF indices 236,237"
+      }
+    },
+    {
+      "id": "KSAI-2022-093",
+      "questionNo": 93,
+      "answer": 1,
+      "answerNumberOfficial": 2,
+      "explanation": "正答の理由：リスク区分により積極的情報提供の義務が異なる。\na：正。要指導医薬品では手帳の所持を勧め、持っていれば必要に応じて活用する。\nb：誤。説明不要の意思表示があり、薬剤師が適正使用可能と判断した場合には例外が認められる。\nc：正。指定第二類では禁忌の確認と専門家への相談を勧める旨を認識できる措置が必要。\nd：正。第三類の自発的情報提供は望ましいが法定義務ではない。ただし相談への応答は義務。\n覚えるべきポイント：第一類の例外と第三類の相談対応を混同しない。\n参照資料：厚生労働省『試験問題の作成に関する手引き』令和4年3月版、第4章、p.233・237・238・239。試験当時の制度に基づく。",
+      "reference": {
+        "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+        "edition": "2022-03",
+        "pages": [
+          233,
+          237,
+          238,
+          239
+        ]
+      },
+      "audit": {
+        "sourceChecked": true,
+        "officialBankAnswerChecked": true,
+        "status": "PENDING_INDEPENDENT_REVIEW",
+        "sourceEvidence": "Printed pages inspected in current session; PDF indices 240,244,245,246"
+      }
+    },
+    {
+      "id": "KSAI-2022-094",
+      "questionNo": 94,
+      "answer": 3,
+      "answerNumberOfficial": 4,
+      "explanation": "正答の理由：特定販売は許可施設の在庫を用いる遠隔販売である。\na：誤。2022年当時、要指導医薬品は対象外。一般用と毒薬・劇薬を除く薬局製造販売医薬品が対象。\nb：誤。販売する薬は当該店舗で貯蔵・陳列している必要があり、他店から直接発送する方式は認められない。\nc：正。ネット広告では対象商品の使用期限を見やすく示す。\nd：正。実店舗の主要な外観写真も表示する。\n覚えるべきポイント：特定販売は実店舗を基盤とする。試験当時の制度として覚える。\n参照資料：厚生労働省『試験問題の作成に関する手引き』令和4年3月版、第4章、p.242・243。試験当時の制度に基づく。",
+      "reference": {
+        "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+        "edition": "2022-03",
+        "pages": [
+          242,
+          243
+        ]
+      },
+      "audit": {
+        "sourceChecked": true,
+        "officialBankAnswerChecked": true,
+        "status": "PENDING_INDEPENDENT_REVIEW",
+        "sourceEvidence": "Printed pages inspected in current session; PDF indices 249,250"
+      }
+    },
+    {
+      "id": "KSAI-2022-095",
+      "questionNo": 95,
+      "answer": 3,
+      "answerNumberOfficial": 4,
+      "explanation": "正答の理由：誤りを選ぶ問題。仕入記録の法定項目にリスク区分は含まれない。\n1：正。品名は取引対象を特定するため記録する。\n2：正。数量を記録する。\n3：正。取引年月日を記録する。\n4：誤。リスク区分は規則146条の当該記載項目に含まれない。\n5：正。初回取引では相手方の名称、所在地、連絡先などを記録する必要がある。\n覚えるべきポイント：仕入記録と消費者への販売記録を区別する。\n参照資料：厚生労働省『試験問題の作成に関する手引き』令和4年3月版、第4章、p.245。試験当時の制度に基づく。",
+      "reference": {
+        "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+        "edition": "2022-03",
+        "pages": [
+          245
+        ]
+      },
+      "audit": {
+        "sourceChecked": true,
+        "officialBankAnswerChecked": true,
+        "status": "PENDING_INDEPENDENT_REVIEW",
+        "sourceEvidence": "Printed pages inspected in current session; PDF indices 252"
+      }
+    },
+    {
+      "id": "KSAI-2022-096",
+      "questionNo": 96,
+      "answer": 0,
+      "answerNumberOfficial": 1,
+      "explanation": "正答の理由：令和4年当時の指定範囲と販売時確認事項に基づく。\na：正。必要数量を超える購入希望では理由を確認する。\nb：正。若年者について氏名と年齢を確認する。\nc：誤。ブロモバレリル尿素は薬効群による限定がない指定成分であり、解熱鎮痛剤も対象となる。\nd：誤。当時のメチルエフェドリンの指定は鎮咳去痰薬の内用液剤に限定され、散剤のかぜ薬はこの成分を理由には対象とならない。\n覚えるべきポイント：指定範囲は改正され得るため、2022年の正答を現行販売ルールとして使わない。\n参照資料：厚生労働省『試験問題の作成に関する手引き』令和4年3月版、第4章、p.248。試験当時の制度に基づく。",
+      "reference": {
+        "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+        "edition": "2022-03",
+        "pages": [
+          248
+        ]
+      },
+      "audit": {
+        "sourceChecked": true,
+        "officialBankAnswerChecked": true,
+        "status": "PENDING_INDEPENDENT_REVIEW",
+        "sourceEvidence": "Printed pages inspected in current session; PDF indices 255"
+      }
+    },
+    {
+      "id": "KSAI-2022-097",
+      "questionNo": 97,
+      "answer": 2,
+      "answerNumberOfficial": 3,
+      "explanation": "正答の理由：正しい記述はbとd。広告規制は発信者の資格にかかわらず適用される。\na：誤。医師も未承認医薬品の名称等の広告禁止の対象となる。\nb：正。販売促進用のチラシや電子メールも広告に含まれ得る。\nc：誤。虚偽・誇大広告は暗示的な表現でも規制対象であり、承認外の効果をほのめかせば問題となる。\nd：正。購入を誘う意図、商品名の特定、一般人が認知できる状態という三条件で広告該当性を判断する。\n覚えるべきポイント：広告の三要件と明示・暗示を問わない規制を覚える。\n参照資料：厚生労働省『試験問題の作成に関する手引き』令和4年3月版、第4章、p.249・250。試験当時の制度に基づく。",
+      "reference": {
+        "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+        "edition": "2022-03",
+        "pages": [
+          249,
+          250
+        ]
+      },
+      "originalImageChecked": true,
+      "originalPdfPage": 23,
+      "originalPdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R4touhanmondaiato.pdf",
+      "audit": {
+        "sourceChecked": true,
+        "officialBankAnswerChecked": true,
+        "status": "PENDING_INDEPENDENT_REVIEW",
+        "sourceEvidence": "Printed pages inspected in current session; PDF indices 256,257"
+      }
+    },
+    {
+      "id": "KSAI-2022-098",
+      "questionNo": 98,
+      "answer": 0,
+      "answerNumberOfficial": 1,
+      "explanation": "正答の理由：広告は当該製品の承認内容を正確に伝える必要がある。\na：正。同一成分でも医療用製品と一般用製品の承認効能が同じとは限らない。\nb：誤。食品等との同一紙面掲載自体は禁止されない。ただし医薬品的効果があると誤認させてはならない。\nc：正。医療機関の推薦は生活者への影響が大きいため、事実でも原則不適当とされる。\nd：正。過度の消費を促さず、生命に関わる製品として適切な表現を用いる必要がある。\n覚えるべきポイント：同じ紙面への掲載と誤認を招く表示は区別する。\n参照資料：厚生労働省『試験問題の作成に関する手引き』令和4年3月版、第4章、p.251・252。試験当時の制度に基づく。",
+      "reference": {
+        "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+        "edition": "2022-03",
+        "pages": [
+          251,
+          252
+        ]
+      },
+      "audit": {
+        "sourceChecked": true,
+        "officialBankAnswerChecked": true,
+        "status": "PENDING_INDEPENDENT_REVIEW",
+        "sourceEvidence": "Printed pages inspected in current session; PDF indices 258,259"
+      }
+    },
+    {
+      "id": "KSAI-2022-099",
+      "questionNo": 99,
+      "answer": 4,
+      "answerNumberOfficial": 5,
+      "explanation": "正答の理由：販売方法も適正使用を妨げないように規制される。\na：正。過剰購入や乱用を促す販売方法は監視指導の対象となる。\nb：正。医薬品の用途を補助する物品との合理的な組合せに限られ、十分な情報提供も必要。\nc：誤。許可施設外を貯蔵・販売拠点にすることは認められない。\nd：正。大量購入では使用目的等を確認し、不適正使用が疑われれば販売を見合わせる。\n覚えるべきポイント：セット販売は購入者の利便性と合理性が必要。在庫処分目的は不可。\n参照資料：厚生労働省『試験問題の作成に関する手引き』令和4年3月版、第4章、p.252・253。試験当時の制度に基づく。",
+      "reference": {
+        "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+        "edition": "2022-03",
+        "pages": [
+          252,
+          253
+        ]
+      },
+      "audit": {
+        "sourceChecked": true,
+        "officialBankAnswerChecked": true,
+        "status": "PENDING_INDEPENDENT_REVIEW",
+        "sourceEvidence": "Printed pages inspected in current session; PDF indices 259,260"
+      }
+    },
+    {
+      "id": "KSAI-2022-100",
+      "questionNo": 100,
+      "answer": 4,
+      "answerNumberOfficial": 5,
+      "explanation": "正答の理由：行政の立入検査・処分権限と従業者の責任を区別する。\na：正。薬事監視員は試験に必要な最小量の疑わしい物品を収去できる。\nb：誤。正当な理由のない答弁拒否などの罰則は資格のない従業員にも及ぶ。\nc：正。管理者が不適当と判断されれば、販売業者に管理者変更を命じられる。\nd：正。緊急時には薬事監視員に違反医薬品の廃棄や回収などを実施させられる。\n覚えるべきポイント：収去は試験用の最小量。管理者変更と廃棄・回収命令は別の行政措置。\n参照資料：厚生労働省『試験問題の作成に関する手引き』令和4年3月版、第4章、p.253・254・255。試験当時の制度に基づく。",
+      "reference": {
+        "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+        "edition": "2022-03",
+        "pages": [
+          253,
+          254,
+          255
+        ]
+      },
+      "audit": {
+        "sourceChecked": true,
+        "officialBankAnswerChecked": true,
+        "status": "PENDING_INDEPENDENT_REVIEW",
+        "sourceEvidence": "Printed pages inspected in current session; PDF indices 260,261,262"
+      }
     }
   ],
-  "savedCount": 90,
-  "nextQuestionNo": 91
+  "savedCount": 100,
+  "nextQuestionNo": 101
 }
