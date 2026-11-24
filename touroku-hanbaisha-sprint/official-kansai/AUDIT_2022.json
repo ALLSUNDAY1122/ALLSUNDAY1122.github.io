@@ -1,8 +1,8 @@
 {
   "year": 2022,
   "targetCount": 120,
-  "auditedCount": 90,
-  "auditPassedCount": 90,
+  "auditedCount": 100,
+  "auditPassedCount": 100,
   "holdCount": 0,
   "sourceExplanationBlob": "149761e7ae675567ed501fa4a72249603b116edd",
   "sourceBank": "APPROVED_OFFICIAL_BANK(5).json",
@@ -6499,6 +6499,596 @@
         "numericAndRegulatoryCheck": "PASS"
       },
       "notes": "令和4年3月版手引き掲載の当時の法令・脚注と公式後半PDF画像、添付正規バンクを逐項照合。現行法の判定ではない。"
+    },
+    {
+      "questionId": "KSAI-2022-091",
+      "questionNo": 91,
+      "verdict": "PASS",
+      "evidence": {
+        "explanationAnswerNumberOfficial": 3,
+        "bankAnswerNumberOfficial": 3,
+        "answerMatch": true,
+        "truthPattern": "正正正誤",
+        "handbook": {
+          "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+          "edition": "2022-03",
+          "statements": [
+            {
+              "statement": "a",
+              "judgment": "正",
+              "printedPages": [
+                223
+              ],
+              "basis": "店舗管理者の兼務制限と所管行政庁の許可例外"
+            },
+            {
+              "statement": "b",
+              "judgment": "正",
+              "printedPages": [
+                228
+              ],
+              "basis": "店舗販売業の求めに応じた分割販売は可能"
+            },
+            {
+              "statement": "c",
+              "judgment": "正",
+              "printedPages": [
+                230
+              ],
+              "basis": "管理者から販売業者への書面による意見陳述義務"
+            },
+            {
+              "statement": "d",
+              "judgment": "誤",
+              "printedPages": [
+                240
+              ],
+              "basis": "指定第二類の例外は1.2mであり1mではない"
+            }
+          ],
+          "pageTextChecked": true,
+          "pageImagesChecked": false
+        },
+        "officialQuestion": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R4touhanmondaiato.pdf",
+          "printedPage": 18,
+          "pdfPageIndex": 17,
+          "imageChecked": true
+        },
+        "numericAndRegulatoryCheck": "PASS"
+      },
+      "notes": "dの距離は1mでなく1.2mであるため誤り。公式後半試験PDFの原典ページ画像、正規バンクのanswerNumberOfficial、令和4年3月版手引きの該当ページ本文を照合。"
+    },
+    {
+      "questionId": "KSAI-2022-092",
+      "questionNo": 92,
+      "verdict": "PASS",
+      "evidence": {
+        "explanationAnswerNumberOfficial": 2,
+        "bankAnswerNumberOfficial": 2,
+        "answerMatch": true,
+        "truthPattern": "正誤誤正",
+        "handbook": {
+          "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+          "edition": "2022-03",
+          "statements": [
+            {
+              "statement": "a",
+              "judgment": "正",
+              "printedPages": [
+                229
+              ],
+              "basis": "配置区域を管轄する都道府県への事前届出"
+            },
+            {
+              "statement": "b",
+              "judgment": "誤",
+              "printedPages": [
+                230
+              ],
+              "basis": "薬剤師が区域管理者でも配置販売品目基準に適合する一般用医薬品に限定"
+            },
+            {
+              "statement": "c",
+              "judgment": "誤",
+              "printedPages": [
+                null
+              ],
+              "basis": "配置販売での開封・分割販売は禁止"
+            },
+            {
+              "statement": "d",
+              "judgment": "正",
+              "printedPages": [
+                null
+              ],
+              "basis": "身分証明書は住所地知事が交付し携帯"
+            }
+          ],
+          "pageTextChecked": true,
+          "pageImagesChecked": false
+        },
+        "officialQuestion": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R4touhanmondaiato.pdf",
+          "printedPage": 19,
+          "pdfPageIndex": 18,
+          "imageChecked": true
+        },
+        "numericAndRegulatoryCheck": "PASS"
+      },
+      "notes": "公式後半試験PDFの原典ページ画像、正規バンクのanswerNumberOfficial、令和4年3月版手引きの該当ページ本文を照合。"
+    },
+    {
+      "questionId": "KSAI-2022-093",
+      "questionNo": 93,
+      "verdict": "PASS",
+      "evidence": {
+        "explanationAnswerNumberOfficial": 2,
+        "bankAnswerNumberOfficial": 2,
+        "answerMatch": true,
+        "truthPattern": "正誤正正",
+        "handbook": {
+          "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+          "edition": "2022-03",
+          "statements": [
+            {
+              "statement": "a",
+              "judgment": "正",
+              "printedPages": [
+                233
+              ],
+              "basis": "要指導薬のお薬手帳の所持勧奨・必要に応じ活用"
+            },
+            {
+              "statement": "b",
+              "judgment": "誤",
+              "printedPages": [
+                237
+              ],
+              "basis": "第一類の情報提供省略は購入者の不要意思と薬剤師の適正使用判断の双方が必要"
+            },
+            {
+              "statement": "c",
+              "judgment": "正",
+              "printedPages": [
+                238
+              ],
+              "basis": "指定第二類は禁忌確認と専門家相談を勧める措置"
+            },
+            {
+              "statement": "d",
+              "judgment": "正",
+              "printedPages": [
+                239
+              ],
+              "basis": "第三類の積極的情報提供は努力義務で相談応答は義務"
+            }
+          ],
+          "pageTextChecked": true,
+          "pageImagesChecked": false
+        },
+        "officialQuestion": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R4touhanmondaiato.pdf",
+          "printedPage": 20,
+          "pdfPageIndex": 19,
+          "imageChecked": true
+        },
+        "numericAndRegulatoryCheck": "PASS"
+      },
+      "notes": "公式後半試験PDFの原典ページ画像、正規バンクのanswerNumberOfficial、令和4年3月版手引きの該当ページ本文を照合。"
+    },
+    {
+      "questionId": "KSAI-2022-094",
+      "questionNo": 94,
+      "verdict": "PASS",
+      "evidence": {
+        "explanationAnswerNumberOfficial": 4,
+        "bankAnswerNumberOfficial": 4,
+        "answerMatch": true,
+        "truthPattern": "誤誤正正",
+        "handbook": {
+          "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+          "edition": "2022-03",
+          "statements": [
+            {
+              "statement": "a",
+              "judgment": "誤",
+              "printedPages": [
+                242
+              ],
+              "basis": "2022年当時の特定販売対象から要指導薬は除外"
+            },
+            {
+              "statement": "b",
+              "judgment": "誤",
+              "printedPages": [
+                243
+              ],
+              "basis": "当該店舗に貯蔵・陳列する医薬品を販売し他店からの直接発送は不可"
+            },
+            {
+              "statement": "c",
+              "judgment": "正",
+              "printedPages": [
+                null
+              ],
+              "basis": "ネット広告では使用期限を見やすく表示"
+            },
+            {
+              "statement": "d",
+              "judgment": "正",
+              "printedPages": [
+                null
+              ],
+              "basis": "薬局・店舗の主要な外観写真を表示"
+            }
+          ],
+          "pageTextChecked": true,
+          "pageImagesChecked": false
+        },
+        "officialQuestion": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R4touhanmondaiato.pdf",
+          "printedPage": 21,
+          "pdfPageIndex": 20,
+          "imageChecked": true
+        },
+        "numericAndRegulatoryCheck": "PASS"
+      },
+      "notes": "2022年当時の規則・手引きに基づく。現行の特定販売制度に読み替えない。公式後半試験PDFの原典ページ画像、正規バンクのanswerNumberOfficial、令和4年3月版手引きの該当ページ本文を照合。"
+    },
+    {
+      "questionId": "KSAI-2022-095",
+      "questionNo": 95,
+      "verdict": "PASS",
+      "evidence": {
+        "explanationAnswerNumberOfficial": 4,
+        "bankAnswerNumberOfficial": 4,
+        "answerMatch": true,
+        "truthPattern": "正正正誤",
+        "handbook": {
+          "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+          "edition": "2022-03",
+          "statements": [
+            {
+              "statement": "a",
+              "judgment": "正",
+              "printedPages": [
+                245
+              ],
+              "basis": "仕入記録の品名"
+            },
+            {
+              "statement": "b",
+              "judgment": "正",
+              "printedPages": [
+                null
+              ],
+              "basis": "数量"
+            },
+            {
+              "statement": "c",
+              "judgment": "正",
+              "printedPages": [
+                null
+              ],
+              "basis": "購入年月日"
+            },
+            {
+              "statement": "d",
+              "judgment": "誤",
+              "printedPages": [
+                null
+              ],
+              "basis": "医薬品のリスク区分は法定記録事項ではない"
+            }
+          ],
+          "pageTextChecked": true,
+          "pageImagesChecked": false
+        },
+        "officialQuestion": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R4touhanmondaiato.pdf",
+          "printedPage": 21,
+          "pdfPageIndex": 20,
+          "imageChecked": true
+        },
+        "numericAndRegulatoryCheck": "PASS"
+      },
+      "notes": "公式後半試験PDFの原典ページ画像、正規バンクのanswerNumberOfficial、令和4年3月版手引きの該当ページ本文を照合。"
+    },
+    {
+      "questionId": "KSAI-2022-096",
+      "questionNo": 96,
+      "verdict": "PASS",
+      "evidence": {
+        "explanationAnswerNumberOfficial": 1,
+        "bankAnswerNumberOfficial": 1,
+        "answerMatch": true,
+        "truthPattern": "正正誤誤",
+        "handbook": {
+          "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+          "edition": "2022-03",
+          "statements": [
+            {
+              "statement": "a",
+              "judgment": "正",
+              "printedPages": [
+                248
+              ],
+              "basis": "必要数量超過時は理由確認"
+            },
+            {
+              "statement": "b",
+              "judgment": "正",
+              "printedPages": [
+                null
+              ],
+              "basis": "若年者の氏名・年齢確認"
+            },
+            {
+              "statement": "c",
+              "judgment": "誤",
+              "printedPages": [
+                null
+              ],
+              "basis": "ブロモバレリル尿素を含む解熱鎮痛薬も指定対象"
+            },
+            {
+              "statement": "d",
+              "judgment": "誤",
+              "printedPages": [
+                null
+              ],
+              "basis": "メチルエフェドリンの当時の指定は鎮咳去痰薬の内用液剤に限定し散剤かぜ薬は対象外"
+            }
+          ],
+          "pageTextChecked": true,
+          "pageImagesChecked": false
+        },
+        "officialQuestion": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R4touhanmondaiato.pdf",
+          "printedPage": 22,
+          "pdfPageIndex": 21,
+          "imageChecked": true
+        },
+        "numericAndRegulatoryCheck": "PASS"
+      },
+      "notes": "指定対象は試験当時の告示・手引きに限定して判定。現在の指定範囲と混同しない。公式後半試験PDFの原典ページ画像、正規バンクのanswerNumberOfficial、令和4年3月版手引きの該当ページ本文を照合。"
+    },
+    {
+      "questionId": "KSAI-2022-097",
+      "questionNo": 97,
+      "verdict": "PASS",
+      "evidence": {
+        "explanationAnswerNumberOfficial": 3,
+        "bankAnswerNumberOfficial": 3,
+        "answerMatch": true,
+        "truthPattern": "誤正誤正",
+        "handbook": {
+          "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+          "edition": "2022-03",
+          "statements": [
+            {
+              "statement": "a",
+              "judgment": "誤",
+              "printedPages": [
+                249
+              ],
+              "basis": "医師にも未承認医薬品広告禁止が適用"
+            },
+            {
+              "statement": "b",
+              "judgment": "正",
+              "printedPages": [
+                250
+              ],
+              "basis": "販促チラシ・電子メールも広告に含まれ得る"
+            },
+            {
+              "statement": "c",
+              "judgment": "誤",
+              "printedPages": [
+                null
+              ],
+              "basis": "暗示的な承認外効果表示も規制対象"
+            },
+            {
+              "statement": "d",
+              "judgment": "正",
+              "printedPages": [
+                null
+              ],
+              "basis": "広告該当性の三要件"
+            }
+          ],
+          "pageTextChecked": true,
+          "pageImagesChecked": false
+        },
+        "officialQuestion": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R4touhanmondaiato.pdf",
+          "printedPage": 22,
+          "pdfPageIndex": 21,
+          "imageChecked": true
+        },
+        "numericAndRegulatoryCheck": "PASS"
+      },
+      "notes": "公式後半試験PDFの原典ページ画像、正規バンクのanswerNumberOfficial、令和4年3月版手引きの該当ページ本文を照合。"
+    },
+    {
+      "questionId": "KSAI-2022-098",
+      "questionNo": 98,
+      "verdict": "PASS",
+      "evidence": {
+        "explanationAnswerNumberOfficial": 1,
+        "bankAnswerNumberOfficial": 1,
+        "answerMatch": true,
+        "truthPattern": "正誤正正",
+        "handbook": {
+          "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+          "edition": "2022-03",
+          "statements": [
+            {
+              "statement": "a",
+              "judgment": "正",
+              "printedPages": [
+                251
+              ],
+              "basis": "同一成分の医療用効能を一般用へそのまま標榜できない"
+            },
+            {
+              "statement": "b",
+              "judgment": "誤",
+              "printedPages": [
+                252
+              ],
+              "basis": "食品等との同一紙面掲載自体は禁止されないが医薬品的誤認は不可"
+            },
+            {
+              "statement": "c",
+              "judgment": "正",
+              "printedPages": [
+                null
+              ],
+              "basis": "医療機関の推薦広告は事実でも原則不適当"
+            },
+            {
+              "statement": "d",
+              "judgment": "正",
+              "printedPages": [
+                null
+              ],
+              "basis": "生命関連製品として節度ある表現"
+            }
+          ],
+          "pageTextChecked": true,
+          "pageImagesChecked": false
+        },
+        "officialQuestion": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R4touhanmondaiato.pdf",
+          "printedPage": 23,
+          "pdfPageIndex": 22,
+          "imageChecked": true
+        },
+        "numericAndRegulatoryCheck": "PASS"
+      },
+      "notes": "公式後半試験PDFの原典ページ画像、正規バンクのanswerNumberOfficial、令和4年3月版手引きの該当ページ本文を照合。"
+    },
+    {
+      "questionId": "KSAI-2022-099",
+      "questionNo": 99,
+      "verdict": "PASS",
+      "evidence": {
+        "explanationAnswerNumberOfficial": 5,
+        "bankAnswerNumberOfficial": 5,
+        "answerMatch": true,
+        "truthPattern": "正正誤正",
+        "handbook": {
+          "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+          "edition": "2022-03",
+          "statements": [
+            {
+              "statement": "a",
+              "judgment": "正",
+              "printedPages": [
+                252
+              ],
+              "basis": "過剰消費・乱用を助長する販売方法は監視指導対象"
+            },
+            {
+              "statement": "b",
+              "judgment": "正",
+              "printedPages": [
+                253
+              ],
+              "basis": "セット販売は医薬品用途を補助する合理的目的の範囲"
+            },
+            {
+              "statement": "c",
+              "judgment": "誤",
+              "printedPages": [
+                null
+              ],
+              "basis": "許可施設外を貯蔵・販売拠点とすることは不可"
+            },
+            {
+              "statement": "d",
+              "judgment": "正",
+              "printedPages": [
+                null
+              ],
+              "basis": "大量購入時は使用目的等を確認し不適正使用が疑われれば販売を差し控える"
+            }
+          ],
+          "pageTextChecked": true,
+          "pageImagesChecked": false
+        },
+        "officialQuestion": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R4touhanmondaiato.pdf",
+          "printedPage": 23,
+          "pdfPageIndex": 22,
+          "imageChecked": true
+        },
+        "numericAndRegulatoryCheck": "PASS"
+      },
+      "notes": "公式後半試験PDFの原典ページ画像、正規バンクのanswerNumberOfficial、令和4年3月版手引きの該当ページ本文を照合。"
+    },
+    {
+      "questionId": "KSAI-2022-100",
+      "questionNo": 100,
+      "verdict": "PASS",
+      "evidence": {
+        "explanationAnswerNumberOfficial": 5,
+        "bankAnswerNumberOfficial": 5,
+        "answerMatch": true,
+        "truthPattern": "正誤正正",
+        "handbook": {
+          "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+          "edition": "2022-03",
+          "statements": [
+            {
+              "statement": "a",
+              "judgment": "正",
+              "printedPages": [
+                253
+              ],
+              "basis": "薬事監視員による試験に必要な最少量の収去"
+            },
+            {
+              "statement": "b",
+              "judgment": "誤",
+              "printedPages": [
+                254
+              ],
+              "basis": "薬剤師・登録販売者以外の従業員にも薬事監視員への不答弁等の罰則が及ぶ"
+            },
+            {
+              "statement": "c",
+              "judgment": "正",
+              "printedPages": [
+                255
+              ],
+              "basis": "不適当な店舗管理者の変更命令"
+            },
+            {
+              "statement": "d",
+              "judgment": "正",
+              "printedPages": [
+                null
+              ],
+              "basis": "緊急時に薬事監視員による廃棄・回収等の実施が可能"
+            }
+          ],
+          "pageTextChecked": true,
+          "pageImagesChecked": false
+        },
+        "officialQuestion": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R4touhanmondaiato.pdf",
+          "printedPage": 24,
+          "pdfPageIndex": 23,
+          "imageChecked": true
+        },
+        "numericAndRegulatoryCheck": "PASS"
+      },
+      "notes": "罰則は薬剤師・登録販売者だけでなく薬局・店舗の従業員にも適用される。公式後半試験PDFの原典ページ画像、正規バンクのanswerNumberOfficial、令和4年3月版手引きの該当ページ本文を照合。"
     }
   ]
 }
