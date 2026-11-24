@@ -1858,7 +1858,7 @@ workflows:
         submit_to_app_store: false
 
   fp2-internal-testflight-build8:
-    name: FP2 1.0.0 Build 9 Internal TestFlight
+    name: FP2 1.0.0 Build 10 App Store Distribution
     max_build_duration: 40
     instance_type: mac_mini_m2
     integrations:
@@ -1881,7 +1881,7 @@ workflows:
           set -euo pipefail
           cd "$CM_BUILD_DIR"
           python3 fp2-manabi-sprint/ios/prepare-ios.py
-          test "$(git rev-parse HEAD:fp2-manabi-sprint)" = 'df39be86ce7ef7682363934b96c477602b2b64ce'
+          test "$(git rev-parse HEAD:fp2-manabi-sprint)" = '3557e07e2a670012bb09ec3852c8d1e924a90ce8'
           diagram_dir=questions/verbatim/assets
           mkdir -p "fp2-manabi-sprint/ios/Web/$diagram_dir"
           for diagram in fp2-202405-q53-family-diagram.png fp2-202605-q55-family-diagram.png; do
@@ -1894,7 +1894,7 @@ workflows:
 
           path = Path('Web/bundle-evidence.json')
           evidence = json.loads(path.read_bytes())
-          assert evidence['version'] == '1.0.0' and evidence['build'] == '9'
+          assert evidence['version'] == '1.0.0' and evidence['build'] == '10'
 
           team = 'MN3D2ZM44N'
           bundle = 'com.allsunday1122.fp2manabisprint'
@@ -1919,7 +1919,7 @@ workflows:
           options = {'method': 'app-store-connect', 'destination': 'export', 'teamID': team,
                      'signingStyle': 'manual', 'signingCertificate': certificate,
                      'provisioningProfiles': {bundle: profile['UUID']},
-                     'testFlightInternalTestingOnly': True, 'manageAppVersionAndBuildNumber': False}
+                     'testFlightInternalTestingOnly': False, 'manageAppVersionAndBuildNumber': False}
           (Path(os.environ['TMPDIR']) / 'fp2-export.plist').write_bytes(plistlib.dumps(options))
           (Path(os.environ['TMPDIR']) / 'fp2-certificate.txt').write_text(certificate, encoding='ascii')
           PY
@@ -1930,7 +1930,7 @@ workflows:
             DEVELOPMENT_TEAM=MN3D2ZM44N TARGETED_DEVICE_FAMILY=1 CODE_SIGN_STYLE=Manual \
             "CODE_SIGN_IDENTITY=$(cat "$TMPDIR/fp2-certificate.txt")" \
             'PROVISIONING_PROFILE_SPECIFIER=FP2 App Store Codemagic' archive
-      - name: Export for internal TestFlight with the FP2 profile
+      - name: Export for App Store distribution with the FP2 profile
         script: |
           set -euo pipefail
           cd "$CM_BUILD_DIR"
@@ -1945,7 +1945,7 @@ workflows:
           assert options['teamID'] == 'MN3D2ZM44N'
           assert options['signingStyle'] == 'manual'
           assert set(options['provisioningProfiles']) == {'com.allsunday1122.fp2manabisprint'}
-          assert options['testFlightInternalTestingOnly'] is True
+          assert options['testFlightInternalTestingOnly'] is False
           assert options['manageAppVersionAndBuildNumber'] is False
           PY
           xcodebuild -exportArchive -archivePath "$CM_BUILD_DIR/build/FP2ManabiSprint.xcarchive" \
@@ -1975,7 +1975,7 @@ workflows:
           assert not profile['Entitlements'].get('get-task-allow')
           info = plistlib.loads((app / 'Info.plist').read_bytes())
           assert info['CFBundleIdentifier'] == 'com.allsunday1122.fp2manabisprint'
-          assert info['CFBundleShortVersionString'] == '1.0.0' and info['CFBundleVersion'] == '9'
+          assert info['CFBundleShortVersionString'] == '1.0.0' and info['CFBundleVersion'] == '10'
           assert info['UIDeviceFamily'] == [1], info['UIDeviceFamily']
           assert info['UISupportedInterfaceOrientations'] == ['UIInterfaceOrientationPortrait']
           assert info['ITSAppUsesNonExemptEncryption'] is False
@@ -1987,7 +1987,7 @@ workflows:
           for name in ('fp2-202405-q53-family-diagram.png', 'fp2-202605-q55-family-diagram.png'):
               asset = Path('questions/verbatim/assets') / name
               assert (app / 'Web' / asset).read_bytes() == (source / asset).read_bytes()
-          print('Signed 1.0.0 (9) IPA verified: 298 official questions and 2 original PNGs')
+          print('Signed 1.0.0 (10) IPA verified: 298 official questions and 2 original PNGs')
           PY
     artifacts:
       - build/fp2-internal/*.ipa
