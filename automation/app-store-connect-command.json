@@ -1,17 +1,21 @@
 {
-  "request_id": "toru-tango-eula-preflight-20261124-r1",
+  "request_id": "toru-tango-eula-localizations-20261124-r1",
   "requests": [
     {
       "label": "app",
       "path": "/v1/apps/6795968222"
     },
     {
-      "label": "versions",
-      "path": "/v1/apps/6795968222/appStoreVersions?limit=100"
+      "label": "version",
+      "path": "/v1/appStoreVersions/c19fe956-165f-474c-af0b-bbfa86a138df"
     },
     {
-      "label": "builds",
-      "path": "/v1/apps/6795968222/builds?filter[version]=20&limit=10"
+      "label": "build",
+      "path": "/v1/appStoreVersions/c19fe956-165f-474c-af0b-bbfa86a138df/build"
+    },
+    {
+      "label": "localizations",
+      "path": "/v1/appStoreVersions/c19fe956-165f-474c-af0b-bbfa86a138df/appStoreVersionLocalizations?limit=200"
     }
   ]
 }
