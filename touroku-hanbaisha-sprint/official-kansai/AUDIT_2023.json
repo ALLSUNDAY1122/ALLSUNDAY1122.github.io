@@ -9,10 +9,10 @@
     "url": "https://www.mhlw.go.jp/content/001149203.pdf",
     "pageMapping": "PDF page = printed page + 8; zero-based index = printed page + 7"
   },
-  "auditedCount": 40,
-  "auditPassedCount": 39,
-  "holdCount": 1,
-  "remainingCount": 79,
+  "auditedCount": 50,
+  "auditPassedCount": 50,
+  "holdCount": 0,
+  "remainingCount": 69,
   "audits": [
     {
       "questionId": "KSAI-2023-001",
@@ -1330,12 +1330,13 @@
     {
       "questionId": "KSAI-2023-025",
       "questionNo": 25,
-      "verdict": "HOLD",
+      "verdict": "PASS",
       "evidence": {
+        "sourceExplanationBlob": "e0b350518c6a4f85ea9464d145021d266c28555c",
         "answerNumberOfficial": 5,
         "explanationAnswerNumber": 5,
         "officialAnswerMatched": true,
-        "officialAnswerSource": "conversation upload APPROVED_OFFICIAL_BANK(7).json; year=2023, questionNo, answerNumberOfficial; separately extracted",
+        "officialAnswerSource": "uploaded APPROVED_OFFICIAL_BANK(7).json independently extracted with Python: year=2023, questionNo, answerNumberOfficial",
         "statementVerdicts": [
           "誤",
           "正",
@@ -1348,7 +1349,7 @@
             "pdfPage": 76,
             "pdfIndex": 75,
             "lines": "362–364",
-            "topic": "a ケイヒは発汗促進・解熱補助。鎮痛作用までの説明は直接支持されない"
+            "topic": "a 発汗・解熱補助"
           },
           {
             "printedPage": 69,
@@ -1361,8 +1362,8 @@
             "printedPage": 69,
             "pdfPage": 77,
             "pdfIndex": 76,
-            "lines": "378–384",
-            "topic": "c 筋緊張緩和"
+            "lines": "378–386",
+            "topic": "a,c 筋緊張緩和"
           },
           {
             "printedPage": 69,
@@ -1388,10 +1389,83 @@
           "printedPage": 15,
           "pdfPage": 17,
           "pdfIndex": 16,
-          "checked": "本文・全選択肢と組合せを原典画像で目視照合"
+          "checked": "原典画像で問題本文・全選択肢・組合せ確認"
         }
       },
-      "notes": "aの誤答理由の『解熱鎮痛作用』はp.68 362–364の配合目的（発汗促進による解熱補助）より広い。根拠のない鎮痛作用まで一般化しないよう修正依頼。公式正答・正誤組合せは一致。"
+      "notes": "修正版を全記述再照合し、aの過度な一般化解消。HOLD→PASS。",
+      "reauditHistory": [
+        {
+          "previousRecord": {
+            "questionId": "KSAI-2023-025",
+            "questionNo": 25,
+            "verdict": "HOLD",
+            "evidence": {
+              "answerNumberOfficial": 5,
+              "explanationAnswerNumber": 5,
+              "officialAnswerMatched": true,
+              "officialAnswerSource": "conversation upload APPROVED_OFFICIAL_BANK(7).json; year=2023, questionNo, answerNumberOfficial; separately extracted",
+              "statementVerdicts": [
+                "誤",
+                "正",
+                "誤",
+                "正"
+              ],
+              "guide": [
+                {
+                  "printedPage": 68,
+                  "pdfPage": 76,
+                  "pdfIndex": 75,
+                  "lines": "362–364",
+                  "topic": "a ケイヒは発汗促進・解熱補助。鎮痛作用までの説明は直接支持されない"
+                },
+                {
+                  "printedPage": 69,
+                  "pdfPage": 77,
+                  "pdfIndex": 76,
+                  "lines": "372–377",
+                  "topic": "b 制酸"
+                },
+                {
+                  "printedPage": 69,
+                  "pdfPage": 77,
+                  "pdfIndex": 76,
+                  "lines": "378–384",
+                  "topic": "c 筋緊張緩和"
+                },
+                {
+                  "printedPage": 69,
+                  "pdfPage": 77,
+                  "pdfIndex": 76,
+                  "lines": "387–391",
+                  "topic": "c 中枢刺激はカフェイン"
+                },
+                {
+                  "printedPage": 69,
+                  "pdfPage": 77,
+                  "pdfIndex": 76,
+                  "lines": "394–400",
+                  "topic": "d ビタミン補給"
+                }
+              ],
+              "allStatementsChecked": true,
+              "correctReasonChecked": true,
+              "unsupportedNumbersOrSystems": false,
+              "sourceImageChecked": true,
+              "examImage": {
+                "url": "https://www.kouiki-kansai.jp/material/files/group/12/R5touhanmondaimae.pdf",
+                "printedPage": 15,
+                "pdfPage": 17,
+                "pdfIndex": 16,
+                "checked": "本文・全選択肢と組合せを原典画像で目視照合"
+              }
+            },
+            "notes": "aの誤答理由の『解熱鎮痛作用』はp.68 362–364の配合目的（発汗促進による解熱補助）より広い。根拠のない鎮痛作用まで一般化しないよう修正依頼。公式正答・正誤組合せは一致。"
+          },
+          "decision": "PASS",
+          "sourceExplanationBlob": "e0b350518c6a4f85ea9464d145021d266c28555c",
+          "reason": "指摘箇所修正済み、手引きp.68–69と試験原典を再確認"
+        }
+      ]
     },
     {
       "questionId": "KSAI-2023-026",
@@ -2340,6 +2414,616 @@
         }
       },
       "notes": "各記述・正答理由・学習ポイントに実質的矛盾なし。"
+    },
+    {
+      "questionId": "KSAI-2023-041",
+      "questionNo": 41,
+      "verdict": "PASS",
+      "evidence": {
+        "sourceExplanationBlob": "e0b350518c6a4f85ea9464d145021d266c28555c",
+        "answerNumberOfficial": 3,
+        "explanationAnswerNumber": 3,
+        "officialAnswerMatched": true,
+        "officialAnswerSource": "uploaded APPROVED_OFFICIAL_BANK(7).json independently extracted with Python: year=2023, questionNo, answerNumberOfficial",
+        "statementVerdicts": [
+          "誤",
+          "正",
+          "誤",
+          "誤"
+        ],
+        "guide": [
+          {
+            "printedPage": 125,
+            "pdfPage": 133,
+            "pdfIndex": 132,
+            "lines": "2188–2192",
+            "topic": "a 銅とコバルト"
+          },
+          {
+            "printedPage": 125,
+            "pdfPage": 133,
+            "pdfIndex": 132,
+            "lines": "2198–2199",
+            "topic": "b 鉄吸収"
+          },
+          {
+            "printedPage": 124,
+            "pdfPage": 132,
+            "pdfIndex": 131,
+            "lines": "2185–2187",
+            "topic": "c 黒色便と出血"
+          },
+          {
+            "printedPage": 125,
+            "pdfPage": 133,
+            "pdfIndex": 132,
+            "lines": "2219",
+            "topic": "d 予防使用否定"
+          },
+          {
+            "printedPage": 126,
+            "pdfPage": 134,
+            "pdfIndex": 133,
+            "lines": "2220",
+            "topic": "d 文末"
+          }
+        ],
+        "allStatementsChecked": true,
+        "correctReasonChecked": true,
+        "unsupportedNumbersOrSystems": false,
+        "sourceImageChecked": true,
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R5touhanmondaimae.pdf",
+          "printedPage": 25,
+          "pdfPage": 27,
+          "pdfIndex": 26,
+          "checked": "原典画像で問題本文・全選択肢・組合せ確認"
+        }
+      },
+      "notes": "dの文末はp.126。追加根拠記録。"
+    },
+    {
+      "questionId": "KSAI-2023-042",
+      "questionNo": 42,
+      "verdict": "PASS",
+      "evidence": {
+        "sourceExplanationBlob": "e0b350518c6a4f85ea9464d145021d266c28555c",
+        "answerNumberOfficial": 1,
+        "explanationAnswerNumber": 1,
+        "officialAnswerMatched": true,
+        "officialAnswerSource": "uploaded APPROVED_OFFICIAL_BANK(7).json independently extracted with Python: year=2023, questionNo, answerNumberOfficial",
+        "statementVerdicts": [
+          "正",
+          "正",
+          "誤",
+          "誤"
+        ],
+        "guide": [
+          {
+            "printedPage": 129,
+            "pdfPage": 137,
+            "pdfIndex": 136,
+            "lines": "2344–2351",
+            "topic": "a 局所麻酔・アナフィラキシー"
+          },
+          {
+            "printedPage": 130,
+            "pdfPage": 138,
+            "pdfIndex": 137,
+            "lines": "2373–2376",
+            "topic": "b 抗炎症"
+          },
+          {
+            "printedPage": 130,
+            "pdfPage": 138,
+            "pdfIndex": 137,
+            "lines": "2379–2381",
+            "topic": "c 組織修復"
+          },
+          {
+            "printedPage": 131,
+            "pdfPage": 139,
+            "pdfIndex": 138,
+            "lines": "2417–2419",
+            "topic": "d 血行改善"
+          }
+        ],
+        "allStatementsChecked": true,
+        "correctReasonChecked": true,
+        "unsupportedNumbersOrSystems": false,
+        "sourceImageChecked": true,
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R5touhanmondaimae.pdf",
+          "printedPage": 26,
+          "pdfPage": 28,
+          "pdfIndex": 27,
+          "checked": "原典画像で問題本文・全選択肢・組合せ確認",
+          "tableVerified": "坐剤1個1.75g中 リドカイン60mg、グリチルレチン酸30mg、アラントイン20mg、トコフェロール酢酸エステル50mg"
+        }
+      },
+      "notes": "各記述・正答理由・学習ポイントに実質的矛盾なし。"
+    },
+    {
+      "questionId": "KSAI-2023-043",
+      "questionNo": 43,
+      "verdict": "PASS",
+      "evidence": {
+        "sourceExplanationBlob": "e0b350518c6a4f85ea9464d145021d266c28555c",
+        "answerNumberOfficial": 4,
+        "explanationAnswerNumber": 4,
+        "officialAnswerMatched": true,
+        "officialAnswerSource": "uploaded APPROVED_OFFICIAL_BANK(7).json independently extracted with Python: year=2023, questionNo, answerNumberOfficial",
+        "statementVerdicts": [
+          "誤",
+          "正",
+          "誤",
+          "正"
+        ],
+        "guide": [
+          {
+            "printedPage": 138,
+            "pdfPage": 146,
+            "pdfIndex": 145,
+            "lines": "2632–2638",
+            "topic": "a–d カンゾウ含有処方の限定"
+          }
+        ],
+        "allStatementsChecked": true,
+        "correctReasonChecked": true,
+        "unsupportedNumbersOrSystems": false,
+        "sourceImageChecked": true,
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R5touhanmondaimae.pdf",
+          "printedPage": 26,
+          "pdfPage": 28,
+          "pdfIndex": 27,
+          "checked": "原典画像で問題本文・全選択肢・組合せ確認"
+        }
+      },
+      "notes": "各記述・正答理由・学習ポイントに実質的矛盾なし。"
+    },
+    {
+      "questionId": "KSAI-2023-044",
+      "questionNo": 44,
+      "verdict": "PASS",
+      "evidence": {
+        "sourceExplanationBlob": "e0b350518c6a4f85ea9464d145021d266c28555c",
+        "answerNumberOfficial": 1,
+        "explanationAnswerNumber": 1,
+        "officialAnswerMatched": true,
+        "officialAnswerSource": "uploaded APPROVED_OFFICIAL_BANK(7).json independently extracted with Python: year=2023, questionNo, answerNumberOfficial",
+        "statementVerdicts": [
+          "正",
+          "誤",
+          "誤",
+          "誤",
+          "誤"
+        ],
+        "guide": [
+          {
+            "printedPage": 139,
+            "pdfPage": 147,
+            "pdfIndex": 146,
+            "lines": "2657–2662",
+            "topic": "1 桂枝茯苓丸"
+          },
+          {
+            "printedPage": 138,
+            "pdfPage": 146,
+            "pdfIndex": 145,
+            "lines": "2646–2650",
+            "topic": "2 温清飲"
+          },
+          {
+            "printedPage": 139,
+            "pdfPage": 147,
+            "pdfIndex": 146,
+            "lines": "2679–2686",
+            "topic": "3 桃核承気湯"
+          },
+          {
+            "printedPage": 140,
+            "pdfPage": 148,
+            "pdfIndex": 147,
+            "lines": "2687–2692",
+            "topic": "4 当帰芍薬散"
+          },
+          {
+            "printedPage": 139,
+            "pdfPage": 147,
+            "pdfIndex": 146,
+            "lines": "2674–2678",
+            "topic": "5 四物湯"
+          }
+        ],
+        "allStatementsChecked": true,
+        "correctReasonChecked": true,
+        "unsupportedNumbersOrSystems": false,
+        "sourceImageChecked": true,
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R5touhanmondaimae.pdf",
+          "printedPage": 27,
+          "pdfPage": 29,
+          "pdfIndex": 28,
+          "checked": "原典画像で問題本文・全選択肢・組合せ確認"
+        }
+      },
+      "notes": "各記述・正答理由・学習ポイントに実質的矛盾なし。"
+    },
+    {
+      "questionId": "KSAI-2023-045",
+      "questionNo": 45,
+      "verdict": "PASS",
+      "evidence": {
+        "sourceExplanationBlob": "e0b350518c6a4f85ea9464d145021d266c28555c",
+        "answerNumberOfficial": 4,
+        "explanationAnswerNumber": 4,
+        "officialAnswerMatched": true,
+        "officialAnswerSource": "uploaded APPROVED_OFFICIAL_BANK(7).json independently extracted with Python: year=2023, questionNo, answerNumberOfficial",
+        "statementVerdicts": [
+          "誤",
+          "正",
+          "正",
+          "正"
+        ],
+        "guide": [
+          {
+            "printedPage": 143,
+            "pdfPage": 151,
+            "pdfIndex": 150,
+            "lines": "2789–2794,2812–2815",
+            "topic": "a アドレナリン作動・依存性"
+          },
+          {
+            "printedPage": 142,
+            "pdfPage": 150,
+            "pdfIndex": 149,
+            "lines": "2760–2766",
+            "topic": "b ロラタジン"
+          },
+          {
+            "printedPage": 142,
+            "pdfPage": 150,
+            "pdfIndex": 149,
+            "lines": "2783–2784",
+            "topic": "c 抗炎症"
+          },
+          {
+            "printedPage": 143,
+            "pdfPage": 151,
+            "pdfIndex": 150,
+            "lines": "2785–2788",
+            "topic": "c トラネキサム酸"
+          },
+          {
+            "printedPage": 142,
+            "pdfPage": 150,
+            "pdfIndex": 149,
+            "lines": "2763,2769–2774",
+            "topic": "d クレマスチン・運転回避"
+          }
+        ],
+        "allStatementsChecked": true,
+        "correctReasonChecked": true,
+        "unsupportedNumbersOrSystems": false,
+        "sourceImageChecked": true,
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R5touhanmondaimae.pdf",
+          "printedPage": 27,
+          "pdfPage": 29,
+          "pdfIndex": 28,
+          "checked": "原典画像で問題本文・全選択肢・組合せ確認"
+        }
+      },
+      "notes": "各記述・正答理由・学習ポイントに実質的矛盾なし。"
+    },
+    {
+      "questionId": "KSAI-2023-046",
+      "questionNo": 46,
+      "verdict": "PASS",
+      "evidence": {
+        "sourceExplanationBlob": "e0b350518c6a4f85ea9464d145021d266c28555c",
+        "answerNumberOfficial": 4,
+        "explanationAnswerNumber": 4,
+        "officialAnswerMatched": true,
+        "officialAnswerSource": "uploaded APPROVED_OFFICIAL_BANK(7).json independently extracted with Python: year=2023, questionNo, answerNumberOfficial",
+        "statementVerdicts": [
+          "誤",
+          "正",
+          "誤",
+          "正"
+        ],
+        "guide": [
+          {
+            "printedPage": 148,
+            "pdfPage": 156,
+            "pdfIndex": 155,
+            "lines": "2955–2960",
+            "topic": "a 血管収縮"
+          },
+          {
+            "printedPage": 148,
+            "pdfPage": 156,
+            "pdfIndex": 155,
+            "lines": "2965–2971",
+            "topic": "b 抗ヒスタミン"
+          },
+          {
+            "printedPage": 148,
+            "pdfPage": 156,
+            "pdfIndex": 155,
+            "lines": "2974–2980",
+            "topic": "c 非アレルギー性鼻炎等無効"
+          },
+          {
+            "printedPage": 149,
+            "pdfPage": 157,
+            "pdfIndex": 156,
+            "lines": "2991–2994",
+            "topic": "d 局所麻酔"
+          }
+        ],
+        "allStatementsChecked": true,
+        "correctReasonChecked": true,
+        "unsupportedNumbersOrSystems": false,
+        "sourceImageChecked": true,
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R5touhanmondaimae.pdf",
+          "printedPage": 28,
+          "pdfPage": 30,
+          "pdfIndex": 29,
+          "checked": "原典画像で問題本文・全選択肢・組合せ確認"
+        }
+      },
+      "notes": "各記述・正答理由・学習ポイントに実質的矛盾なし。"
+    },
+    {
+      "questionId": "KSAI-2023-047",
+      "questionNo": 47,
+      "verdict": "PASS",
+      "evidence": {
+        "sourceExplanationBlob": "e0b350518c6a4f85ea9464d145021d266c28555c",
+        "answerNumberOfficial": 2,
+        "explanationAnswerNumber": 2,
+        "officialAnswerMatched": true,
+        "officialAnswerSource": "uploaded APPROVED_OFFICIAL_BANK(7).json independently extracted with Python: year=2023, questionNo, answerNumberOfficial",
+        "statementVerdicts": [
+          "正",
+          "正",
+          "誤",
+          "誤"
+        ],
+        "guide": [
+          {
+            "printedPage": 150,
+            "pdfPage": 158,
+            "pdfIndex": 157,
+            "lines": "3033–3036",
+            "topic": "a 人工涙液"
+          },
+          {
+            "printedPage": 153,
+            "pdfPage": 161,
+            "pdfIndex": 160,
+            "lines": "3125–3127",
+            "topic": "b プラノプロフェン"
+          },
+          {
+            "printedPage": 153,
+            "pdfPage": 161,
+            "pdfIndex": 160,
+            "lines": "3136–3139",
+            "topic": "c 角膜乾燥防止成分"
+          },
+          {
+            "printedPage": 154,
+            "pdfPage": 162,
+            "pdfIndex": 161,
+            "lines": "3175–3177",
+            "topic": "c ホウ酸"
+          },
+          {
+            "printedPage": 154,
+            "pdfPage": 162,
+            "pdfIndex": 161,
+            "lines": "3167–3174",
+            "topic": "d サルファ剤"
+          }
+        ],
+        "allStatementsChecked": true,
+        "correctReasonChecked": true,
+        "unsupportedNumbersOrSystems": false,
+        "sourceImageChecked": true,
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R5touhanmondaimae.pdf",
+          "printedPage": 28,
+          "pdfPage": 30,
+          "pdfIndex": 29,
+          "checked": "原典画像で問題本文・全選択肢・組合せ確認"
+        }
+      },
+      "notes": "各記述・正答理由・学習ポイントに実質的矛盾なし。"
+    },
+    {
+      "questionId": "KSAI-2023-048",
+      "questionNo": 48,
+      "verdict": "PASS",
+      "evidence": {
+        "sourceExplanationBlob": "e0b350518c6a4f85ea9464d145021d266c28555c",
+        "answerNumberOfficial": 2,
+        "explanationAnswerNumber": 2,
+        "officialAnswerMatched": true,
+        "officialAnswerSource": "uploaded APPROVED_OFFICIAL_BANK(7).json independently extracted with Python: year=2023, questionNo, answerNumberOfficial",
+        "statementVerdicts": [
+          "正",
+          "正",
+          "正",
+          "誤"
+        ],
+        "guide": [
+          {
+            "printedPage": 152,
+            "pdfPage": 160,
+            "pdfIndex": 159,
+            "lines": "3104–3108",
+            "topic": "a 血管収縮"
+          },
+          {
+            "printedPage": 155,
+            "pdfPage": 163,
+            "pdfIndex": 162,
+            "lines": "3203–3205",
+            "topic": "b アミノ酸"
+          },
+          {
+            "printedPage": 151,
+            "pdfPage": 159,
+            "pdfIndex": 158,
+            "lines": "3047–3049",
+            "topic": "c 汚染防止"
+          },
+          {
+            "printedPage": 151,
+            "pdfPage": 159,
+            "pdfIndex": 158,
+            "lines": "3060–3067",
+            "topic": "d レンズと防腐剤"
+          }
+        ],
+        "allStatementsChecked": true,
+        "correctReasonChecked": true,
+        "unsupportedNumbersOrSystems": false,
+        "sourceImageChecked": true,
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R5touhanmondaimae.pdf",
+          "printedPage": 29,
+          "pdfPage": 31,
+          "pdfIndex": 30,
+          "checked": "原典画像で問題本文・全選択肢・組合せ確認",
+          "tableVerified": "100mL中 テトラヒドロゾリン塩酸塩0.05g、グリチルリチン酸二カリウム0.25g、クロルフェニラミンマレイン酸塩0.03g、パンテノール0.1g、アスパラギン酸カリウム1.0g。添加物ベンザルコニウム塩化物、pH調整剤等"
+        }
+      },
+      "notes": "手引きは添付文書に使用可能の記載がある場合を例外とする。設問の処方についての否定は妥当。"
+    },
+    {
+      "questionId": "KSAI-2023-049",
+      "questionNo": 49,
+      "verdict": "PASS",
+      "evidence": {
+        "sourceExplanationBlob": "e0b350518c6a4f85ea9464d145021d266c28555c",
+        "answerNumberOfficial": 5,
+        "explanationAnswerNumber": 5,
+        "officialAnswerMatched": true,
+        "officialAnswerSource": "uploaded APPROVED_OFFICIAL_BANK(7).json independently extracted with Python: year=2023, questionNo, answerNumberOfficial",
+        "statementVerdicts": [
+          "誤",
+          "誤",
+          "誤",
+          "誤"
+        ],
+        "guide": [
+          {
+            "printedPage": 158,
+            "pdfPage": 166,
+            "pdfIndex": 165,
+            "lines": "3279–3283",
+            "topic": "a 石けんで低下"
+          },
+          {
+            "printedPage": 157,
+            "pdfPage": 165,
+            "pdfIndex": 164,
+            "lines": "3270–3278",
+            "topic": "b ヨウ素製剤"
+          },
+          {
+            "printedPage": 158,
+            "pdfPage": 166,
+            "pdfIndex": 165,
+            "lines": "3284–3286",
+            "topic": "c 結核菌・ウイルス"
+          },
+          {
+            "printedPage": 158,
+            "pdfPage": 166,
+            "pdfIndex": 165,
+            "lines": "3287–3291",
+            "topic": "d エタノール刺激"
+          }
+        ],
+        "allStatementsChecked": true,
+        "correctReasonChecked": true,
+        "unsupportedNumbersOrSystems": false,
+        "sourceImageChecked": true,
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R5touhanmondaimae.pdf",
+          "printedPage": 30,
+          "pdfPage": 32,
+          "pdfIndex": 31,
+          "checked": "原典画像で問題本文・全選択肢・組合せ確認"
+        }
+      },
+      "notes": "各記述・正答理由・学習ポイントに実質的矛盾なし。"
+    },
+    {
+      "questionId": "KSAI-2023-050",
+      "questionNo": 50,
+      "verdict": "PASS",
+      "evidence": {
+        "sourceExplanationBlob": "e0b350518c6a4f85ea9464d145021d266c28555c",
+        "answerNumberOfficial": 3,
+        "explanationAnswerNumber": 3,
+        "officialAnswerMatched": true,
+        "officialAnswerSource": "uploaded APPROVED_OFFICIAL_BANK(7).json independently extracted with Python: year=2023, questionNo, answerNumberOfficial",
+        "statementVerdicts": [
+          "誤",
+          "正",
+          "正",
+          "誤"
+        ],
+        "guide": [
+          {
+            "printedPage": 159,
+            "pdfPage": 167,
+            "pdfIndex": 166,
+            "lines": "3326–3333",
+            "topic": "a ステロイド"
+          },
+          {
+            "printedPage": 161,
+            "pdfPage": 169,
+            "pdfIndex": 168,
+            "lines": "3380–3391",
+            "topic": "b 光線過敏"
+          },
+          {
+            "printedPage": 160,
+            "pdfPage": 168,
+            "pdfIndex": 167,
+            "lines": "3357–3360,3366–3368",
+            "topic": "c 感染不顕性化"
+          },
+          {
+            "printedPage": 160,
+            "pdfPage": 168,
+            "pdfIndex": 167,
+            "lines": "3369–3372",
+            "topic": "d 妊娠中使用回避"
+          }
+        ],
+        "allStatementsChecked": true,
+        "correctReasonChecked": true,
+        "unsupportedNumbersOrSystems": false,
+        "sourceImageChecked": true,
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R5touhanmondaimae.pdf",
+          "printedPage": 30,
+          "pdfPage": 32,
+          "pdfIndex": 31,
+          "checked": "原典画像で問題本文・全選択肢・組合せ確認"
+        }
+      },
+      "notes": "dは手引きの使用回避より弱い表現だが推奨不可と製品注意に従う旨があり、設問の否定として整合。使用回避の明記を推奨。"
     }
   ],
   "sourceExplanationBlobHistory": [
