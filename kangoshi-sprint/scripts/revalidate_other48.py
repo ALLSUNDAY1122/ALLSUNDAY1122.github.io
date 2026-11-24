@@ -19,7 +19,9 @@ assert len(l["targetIds"])==len(set(l["targetIds"]))==48
 out=A/"runs/other48-revalidation";out.mkdir(parents=True,exist_ok=True)
 cases={x["id"]:x for x in l["cases"]}; results=[]; new=[]
 keys={e:official_key(e) for e in (111,112)}
-for qid in l["targetIds"]:
+scope=l["targetIds"][29:]
+assert len(scope)==19
+for qid in scope:
  if qid not in active: continue
  g=idx[qid]; row=active[qid]; exam=row["exam"]; sess=row["session"]; num=row["number"]
  rec={"id":qid,"status":"HOLD","fields":[]}
@@ -154,6 +156,7 @@ s["staging"].update(verifiedExtensionCount=v["count"],remainingNotCanonicalVerif
 s["automation"]["bulkHoldCount"]=h["count"];s["textAudit"]["notImported"]=h["count"]
 s["holdRemediation"].update(finalHold=h["count"],netReleasedFromHold=413-h["count"],reasonCountsNow=dict(collections.Counter(reason for row in h["hold"] for reason in row["reasons"])))
 s["latestOther48VisualReview"].update(independentOcrBlocker="See current per-field preprocessing trials; no character substitution allowed",runId=os.environ["GITHUB_RUN_ID"],ocrAttempted=len(results),fullyRevalidated=sum(c["status"]=="PASS_SOURCE_ONLY" for c in cases.values()),newPromoted=len(new),remainingInScope=len(set(l["targetIds"])&{x["id"] for x in h["hold"]}),canonical=total,totalHeld=h["count"],status="SOURCE_ONLY_RELEASE_BLOCKED")
+s["latestOther48VisualReview"].update(nextOcrStatus="ADDITIONAL_19_COMPLETED_RUNNER",pendingAdditionalRunScope=0)
 save(R/"release-status.json",s)
 with (R/"RELEASE_STATUS.md").open("a") as f:f.write(f"\n## OCRその他48問 独立OCR Run {os.environ['GITHUB_RUN_ID']}\n\n- OCR試行 {len(results)}問、昇格 {len(new)}問、正規 {total}/1200、保留 {h['count']}。目視未確認の候補は昇格禁止。公開・本審査禁止。\n")
 save(out/"run-result.json",{"runId":os.environ["GITHUB_RUN_ID"],"results":results,"promotedCandidates":new,"canonicalTotal":total,"held":h["count"]})
