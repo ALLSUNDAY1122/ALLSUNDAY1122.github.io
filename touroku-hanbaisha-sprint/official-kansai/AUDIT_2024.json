@@ -1,13 +1,13 @@
 {
   "year": 2024,
   "targetCount": 120,
-  "auditedCount": 50,
-  "auditPassedCount": 47,
+  "auditedCount": 60,
+  "auditPassedCount": 57,
   "holdCount": 3,
-  "pendingCount": 70,
+  "pendingCount": 60,
   "status": "IN_PROGRESS",
   "auditDate": "2026-11-24",
-  "explanationsBlobSha": "affaef3bb972dd57d2d0d5490a63df269316b08a",
+  "explanationsBlobSha": "ba4ed335d61d619537f4807f1d45895834f13b13",
   "sourceBankBlobSha": "8741e2675af6f41f7fba2afdc89566f48b8258e7",
   "audits": [
     {
@@ -2458,11 +2458,11 @@
     {
       "questionId": "KSAI-2024-036",
       "questionNo": 36,
-      "verdict": "HOLD",
+      "verdict": "PASS",
       "answerNumberOfficial": 5,
       "criteria": {
         "officialAnswerMatch": true,
-        "allStatementRationalesVerified": false,
+        "allStatementRationalesVerified": true,
         "numbersAndInstitutionsVerified": true,
         "independentImageReview": "PASS"
       },
@@ -2487,14 +2487,12 @@
             "statement": "b",
             "truth": "誤",
             "printedPages": [
-              101,
               110
             ],
             "pdfPagesOneBased": [
-              110,
               119
             ],
-            "notes": "桃核承気湯（大黄牡丹皮湯ではない）と六君子湯の区別：要追加確認"
+            "notes": "公式試験問36のbは六君子湯の適応として下腹部痛・便秘傾向・月経関連症状を記載。手引きp.110③大黄牡丹皮湯の適応と一致。修正後解説の大黄牡丹皮湯への帰属は正しい。"
           },
           {
             "statement": "c",
@@ -2521,13 +2519,20 @@
         ],
         "examImage": {
           "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_zennhan.pdf",
-          "printedPage": 23,
-          "pdfPageOneBased": 25,
-          "pdfIndex": 24,
+          "printedPage": 24,
+          "pdfPageOneBased": 24,
+          "pdfIndex": 23,
           "verified": true
         }
       },
-      "notes": "bの草稿は桃核承気湯と断定するが、指定年度手引きp.110は同じ適応を大黄牡丹皮湯として記載。桃核承気湯との適応重複の可能性があり追加一次資料確認までHOLD。正答は一致。"
+      "notes": "再監査PASS。問36bの誤った処方帰属は解消。",
+      "reaudit": {
+        "date": "2026-11-25",
+        "previousVerdict": "HOLD",
+        "verdict": "PASS",
+        "sourceBlobSha": "ba4ed335d61d619537f4807f1d45895834f13b13",
+        "evidence": "令和6年4月手引きp.110③大黄牡丹皮湯と公式試験問36原典画像を照合。公式正答5一致。"
+      }
     },
     {
       "questionId": "KSAI-2024-037",
@@ -3522,16 +3527,718 @@
         }
       },
       "notes": "指定年度手引きと公式試験画像、添付正規バンクの公式正答を照合。個別製品添付文書の追加照合なし。"
+    },
+    {
+      "questionId": "KSAI-2024-051",
+      "questionNo": 51,
+      "verdict": "PASS",
+      "answerNumberOfficial": 1,
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allStatementRationalesVerified": true,
+        "numbersAndInstitutionsVerified": true,
+        "independentImageReview": "PASS"
+      },
+      "evidence": {
+        "source": "厚生労働省 試験問題の作成に関する手引き 令和6年4月一部改訂",
+        "url": "https://www.mhlw.go.jp/content/001477985.pdf",
+        "statements": [
+          {
+            "statement": "a",
+            "truth": "正",
+            "printedPages": [
+              170
+            ],
+            "pdfPagesOneBased": [
+              179
+            ],
+            "notes": "カルプロニウム塩化物のコリン作用による発汗・寒気・震え・吐き気"
+          },
+          {
+            "statement": "b",
+            "truth": "正",
+            "printedPages": [
+              170
+            ],
+            "pdfPagesOneBased": [
+              179
+            ],
+            "notes": "カシュウの頭皮脂質代謝・余分な皮脂除去"
+          },
+          {
+            "statement": "c",
+            "truth": "誤",
+            "printedPages": [
+              170
+            ],
+            "pdfPagesOneBased": [
+              179
+            ],
+            "notes": "ヒノキチオールは抗菌・抗炎症。アセチルコリン類似作用はカルプロニウム"
+          },
+          {
+            "statement": "d",
+            "truth": "誤",
+            "printedPages": [
+              170
+            ],
+            "pdfPagesOneBased": [
+              179
+            ],
+            "notes": "設問の成分表にエストラジオール等の女性ホルモン成分なし"
+          }
+        ],
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_zennhan.pdf",
+          "printedPage": 33,
+          "pdfPageOneBased": 33,
+          "pdfIndex": 32,
+          "verified": true
+        }
+      },
+      "notes": "正規バンクanswerNumberOfficialと一致。指定年度手引きの各選択肢根拠および公式試験PDF原典画像を照合。"
+    },
+    {
+      "questionId": "KSAI-2024-052",
+      "questionNo": 52,
+      "verdict": "PASS",
+      "answerNumberOfficial": 4,
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allStatementRationalesVerified": true,
+        "numbersAndInstitutionsVerified": true,
+        "independentImageReview": "PASS"
+      },
+      "evidence": {
+        "source": "厚生労働省 試験問題の作成に関する手引き 令和6年4月一部改訂",
+        "url": "https://www.mhlw.go.jp/content/001477985.pdf",
+        "statements": [
+          {
+            "statement": "a",
+            "truth": "正",
+            "printedPages": [
+              171
+            ],
+            "pdfPagesOneBased": [
+              180
+            ],
+            "notes": "歯肉炎から歯周組織全体へ広がる歯槽膿漏"
+          },
+          {
+            "statement": "b",
+            "truth": "誤",
+            "printedPages": [
+              171
+            ],
+            "pdfPagesOneBased": [
+              180
+            ],
+            "notes": "外用歯痛薬は応急鎮痛で齲蝕修復はしない"
+          },
+          {
+            "statement": "c",
+            "truth": "正",
+            "printedPages": [
+              172
+            ],
+            "pdfPagesOneBased": [
+              181
+            ],
+            "notes": "銅クロロフィリンNaの組織修復・口臭抑制"
+          },
+          {
+            "statement": "d",
+            "truth": "誤",
+            "printedPages": [
+              172
+            ],
+            "pdfPagesOneBased": [
+              181
+            ],
+            "notes": "ジブカインは局所麻酔成分"
+          }
+        ],
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_zennhan.pdf",
+          "printedPage": 34,
+          "pdfPageOneBased": 34,
+          "pdfIndex": 33,
+          "verified": true
+        }
+      },
+      "notes": "正規バンクanswerNumberOfficialと一致。指定年度手引きの各選択肢根拠および公式試験PDF原典画像を照合。"
+    },
+    {
+      "questionId": "KSAI-2024-053",
+      "questionNo": 53,
+      "verdict": "PASS",
+      "answerNumberOfficial": 2,
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allStatementRationalesVerified": true,
+        "numbersAndInstitutionsVerified": true,
+        "independentImageReview": "PASS"
+      },
+      "evidence": {
+        "source": "厚生労働省 試験問題の作成に関する手引き 令和6年4月一部改訂",
+        "url": "https://www.mhlw.go.jp/content/001477985.pdf",
+        "statements": [
+          {
+            "statement": "a",
+            "truth": "誤",
+            "printedPages": [
+              176
+            ],
+            "pdfPagesOneBased": [
+              185
+            ],
+            "notes": "ニコチン製剤併用で過剰摂取"
+          },
+          {
+            "statement": "b",
+            "truth": "誤",
+            "printedPages": [
+              176
+            ],
+            "pdfPagesOneBased": [
+              185
+            ],
+            "notes": "口腔内酸性化でニコチン吸収低下"
+          },
+          {
+            "statement": "c",
+            "truth": "正",
+            "printedPages": [
+              176
+            ],
+            "pdfPagesOneBased": [
+              185
+            ],
+            "notes": "喫煙完全中止後に使用"
+          },
+          {
+            "statement": "d",
+            "truth": "正",
+            "printedPages": [
+              176
+            ],
+            "pdfPagesOneBased": [
+              185
+            ],
+            "notes": "重い狭心症・不整脈では使用回避"
+          }
+        ],
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_zennhan.pdf",
+          "printedPage": 35,
+          "pdfPageOneBased": 35,
+          "pdfIndex": 34,
+          "verified": true
+        }
+      },
+      "notes": "正規バンクanswerNumberOfficialと一致。指定年度手引きの各選択肢根拠および公式試験PDF原典画像を照合。"
+    },
+    {
+      "questionId": "KSAI-2024-054",
+      "questionNo": 54,
+      "verdict": "PASS",
+      "answerNumberOfficial": 1,
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allStatementRationalesVerified": true,
+        "numbersAndInstitutionsVerified": true,
+        "independentImageReview": "PASS"
+      },
+      "evidence": {
+        "source": "厚生労働省 試験問題の作成に関する手引き 令和6年4月一部改訂",
+        "url": "https://www.mhlw.go.jp/content/001477985.pdf",
+        "statements": [
+          {
+            "statement": "a",
+            "truth": "正",
+            "printedPages": [
+              177
+            ],
+            "pdfPagesOneBased": [
+              186
+            ],
+            "notes": "滋養強壮保健薬の配合目的"
+          },
+          {
+            "statement": "b",
+            "truth": "正",
+            "printedPages": [
+              177
+            ],
+            "pdfPagesOneBased": [
+              186
+            ],
+            "notes": "ゴオウ・ロクジョウは医薬部外品保健薬では認められず医薬品のみ"
+          },
+          {
+            "statement": "c",
+            "truth": "誤",
+            "printedPages": [
+              183
+            ],
+            "pdfPagesOneBased": [
+              192
+            ],
+            "notes": "多量摂取で改善が早まるわけではない"
+          },
+          {
+            "statement": "d",
+            "truth": "誤",
+            "printedPages": [
+              181
+            ],
+            "pdfPagesOneBased": [
+              190
+            ],
+            "notes": "薬用酒は術後・出産直後等出血しやすい人は避ける"
+          }
+        ],
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_zennhan.pdf",
+          "printedPage": 35,
+          "pdfPageOneBased": 35,
+          "pdfIndex": 34,
+          "verified": true
+        }
+      },
+      "notes": "正規バンクanswerNumberOfficialと一致。指定年度手引きの各選択肢根拠および公式試験PDF原典画像を照合。"
+    },
+    {
+      "questionId": "KSAI-2024-055",
+      "questionNo": 55,
+      "verdict": "PASS",
+      "answerNumberOfficial": 4,
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allStatementRationalesVerified": true,
+        "numbersAndInstitutionsVerified": true,
+        "independentImageReview": "PASS"
+      },
+      "evidence": {
+        "source": "厚生労働省 試験問題の作成に関する手引き 令和6年4月一部改訂",
+        "url": "https://www.mhlw.go.jp/content/001477985.pdf",
+        "statements": [
+          {
+            "statement": "a",
+            "truth": "正",
+            "printedPages": [
+              179
+            ],
+            "pdfPagesOneBased": [
+              188
+            ],
+            "notes": "ビタミンB2は脂質代謝・皮膚粘膜機能"
+          },
+          {
+            "statement": "b",
+            "truth": "誤",
+            "printedPages": [
+              181
+            ],
+            "pdfPagesOneBased": [
+              190
+            ],
+            "notes": "タウリンは細胞機能・肝機能、乳酸分解はアスパラギン酸"
+          },
+          {
+            "statement": "c",
+            "truth": "正",
+            "printedPages": [
+              180
+            ],
+            "pdfPagesOneBased": [
+              189
+            ],
+            "notes": "システインはメラニン生成抑制・排出促進"
+          },
+          {
+            "statement": "d",
+            "truth": "誤",
+            "printedPages": [
+              179
+            ],
+            "pdfPagesOneBased": [
+              188
+            ],
+            "notes": "脂質酸化防止・血流改善はビタミンEでB6ではない"
+          }
+        ],
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_zennhan.pdf",
+          "printedPage": 36,
+          "pdfPageOneBased": 36,
+          "pdfIndex": 35,
+          "verified": true
+        }
+      },
+      "notes": "正規バンクanswerNumberOfficialと一致。指定年度手引きの各選択肢根拠および公式試験PDF原典画像を照合。"
+    },
+    {
+      "questionId": "KSAI-2024-056",
+      "questionNo": 56,
+      "verdict": "PASS",
+      "answerNumberOfficial": 2,
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allStatementRationalesVerified": true,
+        "numbersAndInstitutionsVerified": true,
+        "independentImageReview": "PASS"
+      },
+      "evidence": {
+        "source": "厚生労働省 試験問題の作成に関する手引き 令和6年4月一部改訂",
+        "url": "https://www.mhlw.go.jp/content/001477985.pdf",
+        "statements": [
+          {
+            "statement": "a",
+            "truth": "正",
+            "printedPages": [
+              186
+            ],
+            "pdfPagesOneBased": [
+              195
+            ],
+            "notes": "黄連解毒湯ののぼせ・顔面紅潮"
+          },
+          {
+            "statement": "b",
+            "truth": "正",
+            "printedPages": [
+              187
+            ],
+            "pdfPagesOneBased": [
+              196
+            ],
+            "notes": "防已黄耆湯は疲れやすく発汗しやすい水太り・むくみ"
+          },
+          {
+            "statement": "c",
+            "truth": "正",
+            "printedPages": [
+              187
+            ],
+            "pdfPagesOneBased": [
+              196
+            ],
+            "notes": "防風通聖散は体力充実・腹部脂肪・便秘傾向"
+          },
+          {
+            "statement": "d",
+            "truth": "正",
+            "printedPages": [
+              187
+            ],
+            "pdfPagesOneBased": [
+              196
+            ],
+            "notes": "大柴胡湯は体力充実・胸脇苦満・便秘傾向、清上防風湯は顔面のにきび"
+          }
+        ],
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_zennhan.pdf",
+          "printedPage": 36,
+          "pdfPageOneBased": 36,
+          "pdfIndex": 35,
+          "verified": true
+        }
+      },
+      "notes": "正規バンクanswerNumberOfficialと一致。指定年度手引きの各選択肢根拠および公式試験PDF原典画像を照合。"
+    },
+    {
+      "questionId": "KSAI-2024-057",
+      "questionNo": 57,
+      "verdict": "PASS",
+      "answerNumberOfficial": 3,
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allStatementRationalesVerified": true,
+        "numbersAndInstitutionsVerified": true,
+        "independentImageReview": "PASS"
+      },
+      "evidence": {
+        "source": "厚生労働省 試験問題の作成に関する手引き 令和6年4月一部改訂",
+        "url": "https://www.mhlw.go.jp/content/001477985.pdf",
+        "statements": [
+          {
+            "statement": "a",
+            "truth": "正",
+            "printedPages": [
+              185
+            ],
+            "pdfPagesOneBased": [
+              194
+            ],
+            "notes": "漢方は証に基づく"
+          },
+          {
+            "statement": "b",
+            "truth": "誤",
+            "printedPages": [
+              185
+            ],
+            "pdfPagesOneBased": [
+              194
+            ],
+            "notes": "皮膚色つや不良は血虚であり水毒ではない"
+          },
+          {
+            "statement": "c",
+            "truth": "誤",
+            "printedPages": [
+              188
+            ],
+            "pdfPagesOneBased": [
+              197
+            ],
+            "notes": "全ての生薬が食品流通可能ではない"
+          },
+          {
+            "statement": "d",
+            "truth": "誤",
+            "printedPages": [
+              185
+            ],
+            "pdfPagesOneBased": [
+              194
+            ],
+            "notes": "漢方製剤は生後3か月未満には使用しない"
+          }
+        ],
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_zennhan.pdf",
+          "printedPage": 37,
+          "pdfPageOneBased": 37,
+          "pdfIndex": 36,
+          "verified": true
+        }
+      },
+      "notes": "正規バンクanswerNumberOfficialと一致。指定年度手引きの各選択肢根拠および公式試験PDF原典画像を照合。"
+    },
+    {
+      "questionId": "KSAI-2024-058",
+      "questionNo": 58,
+      "verdict": "PASS",
+      "answerNumberOfficial": 4,
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allStatementRationalesVerified": true,
+        "numbersAndInstitutionsVerified": true,
+        "independentImageReview": "PASS"
+      },
+      "evidence": {
+        "source": "厚生労働省 試験問題の作成に関する手引き 令和6年4月一部改訂",
+        "url": "https://www.mhlw.go.jp/content/001477985.pdf",
+        "statements": [
+          {
+            "statement": "a",
+            "truth": "誤",
+            "printedPages": [
+              191
+            ],
+            "pdfPagesOneBased": [
+              200
+            ],
+            "notes": "滅菌は特定ではなく全ての微生物を殺滅・除去"
+          },
+          {
+            "statement": "b",
+            "truth": "誤",
+            "printedPages": [
+              192
+            ],
+            "pdfPagesOneBased": [
+              201
+            ],
+            "notes": "次亜塩素酸Naは金属腐食性があり金属機器に不適"
+          },
+          {
+            "statement": "c",
+            "truth": "正",
+            "printedPages": [
+              192
+            ],
+            "pdfPagesOneBased": [
+              201
+            ],
+            "notes": "エタノールのタンパク変性・結核菌を含む一般細菌真菌への作用"
+          },
+          {
+            "statement": "d",
+            "truth": "正",
+            "printedPages": [
+              191
+            ],
+            "pdfPagesOneBased": [
+              200
+            ],
+            "notes": "消毒薬溶液中でも条件次第で生存・増殖する微生物"
+          }
+        ],
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_zennhan.pdf",
+          "printedPage": 37,
+          "pdfPageOneBased": 37,
+          "pdfIndex": 36,
+          "verified": true
+        }
+      },
+      "notes": "正規バンクanswerNumberOfficialと一致。指定年度手引きの各選択肢根拠および公式試験PDF原典画像を照合。"
+    },
+    {
+      "questionId": "KSAI-2024-059",
+      "questionNo": 59,
+      "verdict": "PASS",
+      "answerNumberOfficial": 5,
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allStatementRationalesVerified": true,
+        "numbersAndInstitutionsVerified": true,
+        "independentImageReview": "PASS"
+      },
+      "evidence": {
+        "source": "厚生労働省 試験問題の作成に関する手引き 令和6年4月一部改訂",
+        "url": "https://www.mhlw.go.jp/content/001477985.pdf",
+        "statements": [
+          {
+            "statement": "a",
+            "truth": "誤",
+            "printedPages": [
+              194
+            ],
+            "pdfPagesOneBased": [
+              203
+            ],
+            "notes": "列挙病原体の主な媒介者は蚊、ツツガムシはつつが虫病リケッチア"
+          },
+          {
+            "statement": "b",
+            "truth": "誤",
+            "printedPages": [
+              195
+            ],
+            "pdfPagesOneBased": [
+              204
+            ],
+            "notes": "動物寄生シラミはヒトに直接害を及ぼさない"
+          },
+          {
+            "statement": "c",
+            "truth": "正",
+            "printedPages": [
+              195
+            ],
+            "pdfPagesOneBased": [
+              204
+            ],
+            "notes": "ゴキブリ卵に薬剤が浸透せず約3週間後再燻蒸"
+          },
+          {
+            "statement": "d",
+            "truth": "正",
+            "printedPages": [
+              195
+            ],
+            "pdfPagesOneBased": [
+              204
+            ],
+            "notes": "トコジラミ刺咬による発熱・睡眠不足・神経性消化不良"
+          }
+        ],
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_zennhan.pdf",
+          "printedPage": 38,
+          "pdfPageOneBased": 38,
+          "pdfIndex": 37,
+          "verified": true
+        }
+      },
+      "notes": "正規バンクanswerNumberOfficialと一致。指定年度手引きの各選択肢根拠および公式試験PDF原典画像を照合。"
+    },
+    {
+      "questionId": "KSAI-2024-060",
+      "questionNo": 60,
+      "verdict": "HOLD",
+      "answerNumberOfficial": 5,
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allStatementRationalesVerified": false,
+        "numbersAndInstitutionsVerified": false,
+        "independentImageReview": "PASS"
+      },
+      "evidence": {
+        "source": "厚生労働省 試験問題の作成に関する手引き 令和6年4月一部改訂",
+        "url": "https://www.mhlw.go.jp/content/001477985.pdf",
+        "statements": [
+          {
+            "statement": "a",
+            "truth": "正",
+            "printedPages": [
+              201
+            ],
+            "pdfPagesOneBased": [
+              210
+            ],
+            "notes": "非特異的反応による偽陽性"
+          },
+          {
+            "statement": "b",
+            "truth": "誤",
+            "printedPages": [
+              202
+            ],
+            "pdfPagesOneBased": [
+              211
+            ],
+            "notes": "草稿は尿糖を食後2～3時間とするが、手引きp.202は食後1～2時間。数値誤り"
+          },
+          {
+            "statement": "c",
+            "truth": "正",
+            "printedPages": [
+              201
+            ],
+            "pdfPagesOneBased": [
+              210
+            ],
+            "notes": "妊娠検査薬は尿中hCGを検出"
+          },
+          {
+            "statement": "d",
+            "truth": "誤",
+            "printedPages": [
+              201
+            ],
+            "pdfPagesOneBased": [
+              210
+            ],
+            "notes": "悪性腫瘍・心筋梗塞診断関連は一般用検査薬の対象外"
+          }
+        ],
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_zennhan.pdf",
+          "printedPage": 38,
+          "pdfPageOneBased": 38,
+          "pdfIndex": 37,
+          "verified": true
+        }
+      },
+      "notes": "HOLD：解説bの採尿時期が誤り。手引きp.202は尿糖検査は食後1～2時間等とするが、解説は食後2～3時間と記載。公式正答5は一致するが数値記述の誤りがあるため修正後再監査。"
     }
   ],
   "sourceRevisionNote": {
-    "previousBlobSha": "3b99a48650336d73b6ce1bf4f913d9051b5bd63c",
-    "currentBlobSha": "affaef3bb972dd57d2d0d5490a63df269316b08a",
+    "previousBlobSha": "affaef3bb972dd57d2d0d5490a63df269316b08a",
+    "currentBlobSha": "ba4ed335d61d619537f4807f1d45895834f13b13",
     "changedQuestions": [
-      36
+      36,
+      45,
+      47
     ],
     "otherQuestionsUnchanged": true,
     "topLevelUnchanged": true,
-    "notes": "全120問の差分比較で問36のみ変更。問36は今回の対象外のためHOLD維持。"
+    "notes": "旧版（監査ファイルに固定されたBlob）と最新版の全120問比較。問36に加えて問45・47にも差分あり。今回の問36再監査では問36の内容のみ判定し、問45・47の改訂は本監査範囲外。"
   }
 }
