@@ -9,10 +9,10 @@
     "url": "https://www.mhlw.go.jp/content/001149203.pdf",
     "pageMapping": "PDF page = printed page + 8; zero-based index = printed page + 7"
   },
-  "auditedCount": 118,
-  "auditPassedCount": 118,
+  "auditedCount": 119,
+  "auditPassedCount": 119,
   "holdCount": 0,
-  "remainingCount": 1,
+  "remainingCount": 0,
   "audits": [
     {
       "questionId": "KSAI-2023-001",
@@ -7147,6 +7147,60 @@
         }
       },
       "notes": "a肝臓病＋アセトアミノフェン、c甲状腺機能障害＋メトキシフェナミン、d腎臓病＋酸化Mgは正しい。bスクラルファートは腎臓病対象であり高血圧は誤り。"
+    },
+    {
+      "questionId": "KSAI-2023-120",
+      "questionNo": 120,
+      "verdict": "PASS",
+      "evidence": {
+        "sourceExplanationBlob": "0200983bfa1df488ff0f0ecc22dff1ea6fb90acb",
+        "answerNumberOfficial": 1,
+        "explanationAnswerNumber": 1,
+        "officialAnswerMatched": true,
+        "officialAnswerSource": "APPROVED_OFFICIAL_BANK(7).json exact attached file directly materialized and parsed; year=2023 questionNo=120 answerNumberOfficial=1",
+        "statementVerdicts": [
+          "正",
+          "誤",
+          "誤",
+          "誤",
+          "誤"
+        ],
+        "allStatementsChecked": true,
+        "correctReasonChecked": true,
+        "unsupportedNumbersOrSystems": false,
+        "sourceImageChecked": true,
+        "guide": [
+          {
+            "printedPage": 387,
+            "pdfPage": 395,
+            "pdfIndex": 394,
+            "lines": "21156–21190",
+            "topic": "『服用後、乗物又は機械類の運転操作をしないこと』の表。スコポラミン臭化水素酸塩水和物は胃腸鎮痛鎮痙薬・乗物酔い防止薬の成分として掲載され、眠気・目のかすみ・異常なまぶしさを生じることがある。"
+          },
+          {
+            "printedPage": 388,
+            "pdfPage": 396,
+            "pdfIndex": 395,
+            "lines": "21201–21356",
+            "topic": "誤答選択肢の混同を確認。芍薬甘草湯は症状があるときのみ服用・連用注意、ビサコジルは刺激性瀉下薬の大量使用注意として掲載され、運転禁止表とは別項目。"
+          }
+        ],
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R5touhanmondaiato.pdf",
+          "printedPage": 34,
+          "pdfPage": 36,
+          "pdfIndex": 35,
+          "checked": "公式PDFの原典画像を目視。問120の問題文、5選択肢を確認。正答候補1。"
+        },
+        "choiceReasonReview": {
+          "1": "スコポラミン臭化水素酸塩水和物は手引きp.387の運転禁止表に明記。",
+          "2": "イブプロフェンは当該運転禁止表の該当成分ではない。",
+          "3": "メチルエフェドリン塩酸塩は当該運転禁止表の該当成分ではない。",
+          "4": "芍薬甘草湯の手引き上の注意はp.388の連用注意であり、本問の運転禁止理由ではない。",
+          "5": "ビサコジルはp.388の刺激性瀉下薬の大量使用注意であり、本問の運転禁止理由ではない。"
+        }
+      },
+      "notes": "問90は解説原本・正規バンク双方に存在しないため対象外。問120は解説原本に存在し、正規バンクの公式正答1と一致。運転禁止表と誤答成分の別項目を照合しPASS。"
     }
   ],
   "sourceExplanationBlobHistory": [
