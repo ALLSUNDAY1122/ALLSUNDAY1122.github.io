@@ -1,10 +1,10 @@
 {
   "year": 2025,
   "targetCount": 120,
-  "auditedCount": 80,
-  "auditPassedCount": 80,
+  "auditedCount": 90,
+  "auditPassedCount": 90,
   "holdCount": 0,
-  "unauditedCount": 40,
+  "unauditedCount": 30,
   "auditDate": "2026-11-24",
   "sourceExplanationBlobSha": "9d864bd1b27508c4df00f4c98e63e7276665c667",
   "sourceBank": "ユーザー添付 APPROVED_OFFICIAL_BANK(4).json",
@@ -4479,6 +4479,576 @@
           15
         ],
         "method": "公式PDF本文と設問・全選択肢・正誤表を直接照合。正規バンクでsourceFiguresなし・画像設問なしを確認"
+      }
+    },
+    {
+      "questionId": "KSAI-2025-081",
+      "verdict": "PASS",
+      "answerNumberOfficial": 1,
+      "evidence": [
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版",
+          "url": "https://www.mhlw.go.jp/content/001478036.pdf",
+          "printedPage": "207",
+          "finding": "登録販売者試験合格後、従事するには販売従事登録が必要"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版",
+          "url": "https://www.mhlw.go.jp/content/001478036.pdf",
+          "printedPage": "207–208",
+          "finding": "登録事項変更は30日以内に登録を受けた都道府県知事へ届出。居住地知事ではない"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版",
+          "url": "https://www.mhlw.go.jp/content/001478036.pdf",
+          "printedPage": "208",
+          "finding": "不正手段による登録は都道府県知事が消除"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版",
+          "url": "https://www.mhlw.go.jp/content/001478036.pdf",
+          "printedPage": "207–208",
+          "finding": "複数都道府県で重複登録できず、いずれか一知事の登録のみ"
+        }
+      ],
+      "notes": "正誤正誤。公式選択肢1。",
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allReasonsAndDistractorsSupported": true,
+        "noUnsupportedNumericalOrInstitutionalClaims": true,
+        "originalImage": "NOT_APPLICABLE_TEXT_ONLY"
+      },
+      "officialAnswerEvidence": {
+        "source": "APPROVED_OFFICIAL_BANK.json（添付正規バンク）",
+        "questionNo": 81,
+        "answerNumberOfficial": 1,
+        "sourcePdfPages": [
+          15
+        ],
+        "match": true,
+        "officialAnswerPdf": "https://www.kouiki-kansai.jp/material/files/group/12/R7touhan_kaitou.pdf",
+        "officialAnswerPdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R7touhan_kaitou.pdf",
+        "officialPdfAnswer": 1
+      },
+      "originalQuestionEvidence": {
+        "source": "関西広域連合 令和7年度登録販売者試験問題（後半）",
+        "url": "https://www.kouiki-kansai.jp/material/files/group/12/R7tourokuhannbaisyashiken_kouhan.pdf",
+        "printedPage": 15,
+        "pdfPage": 14,
+        "method": "正規バンクの設問・全選択肢を公式PDF本文と逐項照合。sourceFiguresなし。画像問題に該当しない"
+      }
+    },
+    {
+      "questionId": "KSAI-2025-082",
+      "verdict": "PASS",
+      "answerNumberOfficial": 1,
+      "evidence": [
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版",
+          "url": "https://www.mhlw.go.jp/content/001478036.pdf",
+          "printedPage": "208",
+          "finding": "日本薬局方収載品は法上の医薬品"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版",
+          "url": "https://www.mhlw.go.jp/content/001478036.pdf",
+          "printedPage": "208",
+          "finding": "日局収載品の中にも一般用医薬品として販売・配合されるものが少なくない"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版",
+          "url": "https://www.mhlw.go.jp/content/001478036.pdf",
+          "printedPage": "208",
+          "finding": "検査薬・殺虫剤・器具用消毒薬等、人体に直接使わない医薬品も含む"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版",
+          "url": "https://www.mhlw.go.jp/content/001478036.pdf",
+          "printedPage": "208",
+          "finding": "やせ薬を標榜する無承認無許可医薬品も該当"
+        }
+      ],
+      "notes": "正誤正正。公式選択肢1。",
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allReasonsAndDistractorsSupported": true,
+        "noUnsupportedNumericalOrInstitutionalClaims": true,
+        "originalImage": "NOT_APPLICABLE_TEXT_ONLY"
+      },
+      "officialAnswerEvidence": {
+        "source": "APPROVED_OFFICIAL_BANK.json（添付正規バンク）",
+        "questionNo": 82,
+        "answerNumberOfficial": 1,
+        "sourcePdfPages": [
+          16
+        ],
+        "match": true,
+        "officialAnswerPdf": "https://www.kouiki-kansai.jp/material/files/group/12/R7touhan_kaitou.pdf",
+        "officialAnswerPdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R7touhan_kaitou.pdf",
+        "officialPdfAnswer": 1
+      },
+      "originalQuestionEvidence": {
+        "source": "関西広域連合 令和7年度登録販売者試験問題（後半）",
+        "url": "https://www.kouiki-kansai.jp/material/files/group/12/R7tourokuhannbaisyashiken_kouhan.pdf",
+        "printedPage": 16,
+        "pdfPage": 15,
+        "method": "正規バンクの設問・全選択肢を公式PDF本文と逐項照合。sourceFiguresなし。画像問題に該当しない"
+      }
+    },
+    {
+      "questionId": "KSAI-2025-083",
+      "verdict": "PASS",
+      "answerNumberOfficial": 4,
+      "evidence": [
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版",
+          "url": "https://www.mhlw.go.jp/content/001478036.pdf",
+          "printedPage": "210",
+          "finding": "要指導医薬品の定義に毒薬・劇薬を含む"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版",
+          "url": "https://www.mhlw.go.jp/content/001478036.pdf",
+          "printedPage": "210–211",
+          "finding": "検体採取に身体への直接リスクを伴う検査薬は要指導医薬品として認められない"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版",
+          "url": "https://www.mhlw.go.jp/content/001478036.pdf",
+          "printedPage": "211",
+          "finding": "心臓病等、診療によらなければ治癒が期待できない疾患への効能効果は認められない"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版",
+          "url": "https://www.mhlw.go.jp/content/001478036.pdf",
+          "printedPage": "211",
+          "finding": "所定期間経過後、薬事審議会で一般用が適切と認められれば一般用へ移行"
+        }
+      ],
+      "notes": "誤正正正。公式選択肢4。",
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allReasonsAndDistractorsSupported": true,
+        "noUnsupportedNumericalOrInstitutionalClaims": true,
+        "originalImage": "NOT_APPLICABLE_TEXT_ONLY"
+      },
+      "officialAnswerEvidence": {
+        "source": "APPROVED_OFFICIAL_BANK.json（添付正規バンク）",
+        "questionNo": 83,
+        "answerNumberOfficial": 4,
+        "sourcePdfPages": [
+          16
+        ],
+        "match": true,
+        "officialAnswerPdf": "https://www.kouiki-kansai.jp/material/files/group/12/R7touhan_kaitou.pdf",
+        "officialAnswerPdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R7touhan_kaitou.pdf",
+        "officialPdfAnswer": 4
+      },
+      "originalQuestionEvidence": {
+        "source": "関西広域連合 令和7年度登録販売者試験問題（後半）",
+        "url": "https://www.kouiki-kansai.jp/material/files/group/12/R7tourokuhannbaisyashiken_kouhan.pdf",
+        "printedPage": 16,
+        "pdfPage": 15,
+        "method": "正規バンクの設問・全選択肢を公式PDF本文と逐項照合。sourceFiguresなし。画像問題に該当しない"
+      }
+    },
+    {
+      "questionId": "KSAI-2025-084",
+      "verdict": "PASS",
+      "answerNumberOfficial": 3,
+      "evidence": [
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版",
+          "url": "https://www.mhlw.go.jp/content/001478036.pdf",
+          "printedPage": "211",
+          "finding": "毒薬・劇薬は厚生労働大臣が薬事審議会の意見を聴いて指定。都道府県知事ではない"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版",
+          "url": "https://www.mhlw.go.jp/content/001478036.pdf",
+          "printedPage": "283",
+          "finding": "14歳未満その他安全な取扱いに不安のある者への交付は禁止"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版",
+          "url": "https://www.mhlw.go.jp/content/001478036.pdf",
+          "printedPage": "283",
+          "finding": "劇薬容器表示は白地・赤枠・赤字で品名と「劇」。品名不要との記述は誤り"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版",
+          "url": "https://www.mhlw.go.jp/content/001478036.pdf",
+          "printedPage": "283",
+          "finding": "店舗管理者が薬剤師でない店舗販売業者は封を開いて毒薬・劇薬を販売できない"
+        }
+      ],
+      "notes": "誤正誤誤。公式選択肢3。",
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allReasonsAndDistractorsSupported": true,
+        "noUnsupportedNumericalOrInstitutionalClaims": true,
+        "originalImage": "NOT_APPLICABLE_TEXT_ONLY"
+      },
+      "officialAnswerEvidence": {
+        "source": "APPROVED_OFFICIAL_BANK.json（添付正規バンク）",
+        "questionNo": 84,
+        "answerNumberOfficial": 3,
+        "sourcePdfPages": [
+          17
+        ],
+        "match": true,
+        "officialAnswerPdf": "https://www.kouiki-kansai.jp/material/files/group/12/R7touhan_kaitou.pdf",
+        "officialAnswerPdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R7touhan_kaitou.pdf",
+        "officialPdfAnswer": 3
+      },
+      "originalQuestionEvidence": {
+        "source": "関西広域連合 令和7年度登録販売者試験問題（後半）",
+        "url": "https://www.kouiki-kansai.jp/material/files/group/12/R7tourokuhannbaisyashiken_kouhan.pdf",
+        "printedPage": 17,
+        "pdfPage": 16,
+        "method": "正規バンクの設問・全選択肢を公式PDF本文と逐項照合。sourceFiguresなし。画像問題に該当しない"
+      }
+    },
+    {
+      "questionId": "KSAI-2025-085",
+      "verdict": "PASS",
+      "answerNumberOfficial": 3,
+      "evidence": [
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版",
+          "url": "https://www.mhlw.go.jp/content/001478036.pdf",
+          "printedPage": "213",
+          "finding": "第三類は第一類・第二類以外。問題文の健康被害リスク定義は第二類の説明"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版",
+          "url": "https://www.mhlw.go.jp/content/001478036.pdf",
+          "printedPage": "213",
+          "finding": "第二類のうち特別の注意を要するものが指定第二類"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版",
+          "url": "https://www.mhlw.go.jp/content/001478036.pdf",
+          "printedPage": "214",
+          "finding": "安全性情報等に応じて区分見直し。第三類から第一類・第二類へ変更され得る"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版",
+          "url": "https://www.mhlw.go.jp/content/001478036.pdf",
+          "printedPage": "213–214",
+          "finding": "ダイレクトOTC等は一定期間、第三類ではなく第一類に分類"
+        }
+      ],
+      "notes": "a誤、b正、c正、d誤。正しい組合せb,c＝3。",
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allReasonsAndDistractorsSupported": true,
+        "noUnsupportedNumericalOrInstitutionalClaims": true,
+        "originalImage": "NOT_APPLICABLE_TEXT_ONLY"
+      },
+      "officialAnswerEvidence": {
+        "source": "APPROVED_OFFICIAL_BANK.json（添付正規バンク）",
+        "questionNo": 85,
+        "answerNumberOfficial": 3,
+        "sourcePdfPages": [
+          18
+        ],
+        "match": true,
+        "officialAnswerPdf": "https://www.kouiki-kansai.jp/material/files/group/12/R7touhan_kaitou.pdf",
+        "officialAnswerPdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R7touhan_kaitou.pdf",
+        "officialPdfAnswer": 3
+      },
+      "originalQuestionEvidence": {
+        "source": "関西広域連合 令和7年度登録販売者試験問題（後半）",
+        "url": "https://www.kouiki-kansai.jp/material/files/group/12/R7tourokuhannbaisyashiken_kouhan.pdf",
+        "printedPage": 18,
+        "pdfPage": 17,
+        "method": "正規バンクの設問・全選択肢を公式PDF本文と逐項照合。sourceFiguresなし。画像問題に該当しない"
+      }
+    },
+    {
+      "questionId": "KSAI-2025-086",
+      "verdict": "PASS",
+      "answerNumberOfficial": 4,
+      "evidence": [
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版",
+          "url": "https://www.mhlw.go.jp/content/001478036.pdf",
+          "printedPage": "215–216",
+          "finding": "法定表示は製造販売業者の氏名・名称及び住所。製造業者という記載は誤り"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版",
+          "url": "https://www.mhlw.go.jp/content/001478036.pdf",
+          "printedPage": "215",
+          "finding": "日本薬局方収載品には「日本薬局方」の文字を表示"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版",
+          "url": "https://www.mhlw.go.jp/content/001478036.pdf",
+          "printedPage": "216",
+          "finding": "指定第二類は「2」の数字を枠内に表示。下線ではない"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版",
+          "url": "https://www.mhlw.go.jp/content/001478036.pdf",
+          "printedPage": "216",
+          "finding": "配置販売品目以外の一般用医薬品は「店舗専用」と表示"
+        }
+      ],
+      "notes": "b,dが正。公式選択肢4。",
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allReasonsAndDistractorsSupported": true,
+        "noUnsupportedNumericalOrInstitutionalClaims": true,
+        "originalImage": "NOT_APPLICABLE_TEXT_ONLY"
+      },
+      "officialAnswerEvidence": {
+        "source": "APPROVED_OFFICIAL_BANK.json（添付正規バンク）",
+        "questionNo": 86,
+        "answerNumberOfficial": 4,
+        "sourcePdfPages": [
+          18
+        ],
+        "match": true,
+        "officialAnswerPdf": "https://www.kouiki-kansai.jp/material/files/group/12/R7touhan_kaitou.pdf",
+        "officialAnswerPdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R7touhan_kaitou.pdf",
+        "officialPdfAnswer": 4
+      },
+      "originalQuestionEvidence": {
+        "source": "関西広域連合 令和7年度登録販売者試験問題（後半）",
+        "url": "https://www.kouiki-kansai.jp/material/files/group/12/R7tourokuhannbaisyashiken_kouhan.pdf",
+        "printedPage": 18,
+        "pdfPage": 17,
+        "method": "正規バンクの設問・全選択肢を公式PDF本文と逐項照合。sourceFiguresなし。画像問題に該当しない"
+      }
+    },
+    {
+      "questionId": "KSAI-2025-087",
+      "verdict": "PASS",
+      "answerNumberOfficial": 4,
+      "evidence": [
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版",
+          "url": "https://www.mhlw.go.jp/content/001478036.pdf",
+          "printedPage": "217–218",
+          "finding": "医薬部外品の販売は医薬品のような販売業許可不要"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版",
+          "url": "https://www.mhlw.go.jp/content/001478036.pdf",
+          "printedPage": "218",
+          "finding": "基準指定品を除き品目ごとの承認が必要"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版",
+          "url": "https://www.mhlw.go.jp/content/001478036.pdf",
+          "printedPage": "217",
+          "finding": "医薬部外品は所定範囲内で医薬品的効能効果を表示・標榜できるため、全面禁止は誤り"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版",
+          "url": "https://www.mhlw.go.jp/content/001478036.pdf",
+          "printedPage": "218",
+          "finding": "指定医薬部外品には識別表示が必要"
+        }
+      ],
+      "notes": "誤正誤正。公式選択肢4。",
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allReasonsAndDistractorsSupported": true,
+        "noUnsupportedNumericalOrInstitutionalClaims": true,
+        "originalImage": "NOT_APPLICABLE_TEXT_ONLY"
+      },
+      "officialAnswerEvidence": {
+        "source": "APPROVED_OFFICIAL_BANK.json（添付正規バンク）",
+        "questionNo": 87,
+        "answerNumberOfficial": 4,
+        "sourcePdfPages": [
+          19
+        ],
+        "match": true,
+        "officialAnswerPdf": "https://www.kouiki-kansai.jp/material/files/group/12/R7touhan_kaitou.pdf",
+        "officialAnswerPdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R7touhan_kaitou.pdf",
+        "officialPdfAnswer": 4
+      },
+      "originalQuestionEvidence": {
+        "source": "関西広域連合 令和7年度登録販売者試験問題（後半）",
+        "url": "https://www.kouiki-kansai.jp/material/files/group/12/R7tourokuhannbaisyashiken_kouhan.pdf",
+        "printedPage": 19,
+        "pdfPage": 18,
+        "method": "正規バンクの設問・全選択肢を公式PDF本文と逐項照合。sourceFiguresなし。画像問題に該当しない"
+      }
+    },
+    {
+      "questionId": "KSAI-2025-088",
+      "verdict": "PASS",
+      "answerNumberOfficial": 2,
+      "evidence": [
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版",
+          "url": "https://www.mhlw.go.jp/content/001478036.pdf",
+          "printedPage": "218–219",
+          "finding": "化粧品効能は法定目的の範囲内に限定"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版",
+          "url": "https://www.mhlw.go.jp/content/001478036.pdf",
+          "printedPage": "218",
+          "finding": "医薬部外品にも薬用化粧品等、化粧品的効能を標榜できるものがある"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版",
+          "url": "https://www.mhlw.go.jp/content/001478036.pdf",
+          "printedPage": "219",
+          "finding": "製造販売業許可に加え、品目ごとの届出又は指定成分含有時の承認"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版",
+          "url": "https://www.mhlw.go.jp/content/001478036.pdf",
+          "printedPage": "219",
+          "finding": "医薬品成分は原則配合不可だが、添加物等として薬理作用が期待できない量以下なら認められる場合がある"
+        }
+      ],
+      "notes": "a,cが正。公式選択肢2。",
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allReasonsAndDistractorsSupported": true,
+        "noUnsupportedNumericalOrInstitutionalClaims": true,
+        "originalImage": "NOT_APPLICABLE_TEXT_ONLY"
+      },
+      "officialAnswerEvidence": {
+        "source": "APPROVED_OFFICIAL_BANK.json（添付正規バンク）",
+        "questionNo": 88,
+        "answerNumberOfficial": 2,
+        "sourcePdfPages": [
+          19
+        ],
+        "match": true,
+        "officialAnswerPdf": "https://www.kouiki-kansai.jp/material/files/group/12/R7touhan_kaitou.pdf",
+        "officialAnswerPdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R7touhan_kaitou.pdf",
+        "officialPdfAnswer": 2
+      },
+      "originalQuestionEvidence": {
+        "source": "関西広域連合 令和7年度登録販売者試験問題（後半）",
+        "url": "https://www.kouiki-kansai.jp/material/files/group/12/R7tourokuhannbaisyashiken_kouhan.pdf",
+        "printedPage": 19,
+        "pdfPage": 18,
+        "method": "正規バンクの設問・全選択肢を公式PDF本文と逐項照合。sourceFiguresなし。画像問題に該当しない"
+      }
+    },
+    {
+      "questionId": "KSAI-2025-089",
+      "verdict": "PASS",
+      "answerNumberOfficial": 3,
+      "evidence": [
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版",
+          "url": "https://www.mhlw.go.jp/content/001478036.pdf",
+          "printedPage": "220",
+          "finding": "保健機能食品は特保・栄養機能食品・機能性表示食品の総称"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版",
+          "url": "https://www.mhlw.go.jp/content/001478036.pdf",
+          "printedPage": "220",
+          "finding": "特保は個別審査を経て許可等を受ける"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版",
+          "url": "https://www.mhlw.go.jp/content/001478036.pdf",
+          "printedPage": "220–221",
+          "finding": "栄養機能食品は基準適合型で個別審査・許可不要。選択肢3が誤り"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版",
+          "url": "https://www.mhlw.go.jp/content/001478036.pdf",
+          "printedPage": "220",
+          "finding": "機能性表示食品は事業者責任で販売前に消費者庁長官へ届出"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版",
+          "url": "https://www.mhlw.go.jp/content/001478036.pdf",
+          "printedPage": "220–221",
+          "finding": "医薬品成分を含む健康食品等は無承認無許可医薬品として取締対象"
+        }
+      ],
+      "notes": "誤っている選択肢3。",
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allReasonsAndDistractorsSupported": true,
+        "noUnsupportedNumericalOrInstitutionalClaims": true,
+        "originalImage": "NOT_APPLICABLE_TEXT_ONLY"
+      },
+      "officialAnswerEvidence": {
+        "source": "APPROVED_OFFICIAL_BANK.json（添付正規バンク）",
+        "questionNo": 89,
+        "answerNumberOfficial": 3,
+        "sourcePdfPages": [
+          20
+        ],
+        "match": true,
+        "officialAnswerPdf": "https://www.kouiki-kansai.jp/material/files/group/12/R7touhan_kaitou.pdf",
+        "officialAnswerPdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R7touhan_kaitou.pdf",
+        "officialPdfAnswer": 3
+      },
+      "originalQuestionEvidence": {
+        "source": "関西広域連合 令和7年度登録販売者試験問題（後半）",
+        "url": "https://www.kouiki-kansai.jp/material/files/group/12/R7tourokuhannbaisyashiken_kouhan.pdf",
+        "printedPage": 20,
+        "pdfPage": 19,
+        "method": "正規バンクの設問・全選択肢を公式PDF本文と逐項照合。sourceFiguresなし。画像問題に該当しない"
+      }
+    },
+    {
+      "questionId": "KSAI-2025-090",
+      "verdict": "PASS",
+      "answerNumberOfficial": 2,
+      "evidence": [
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版",
+          "url": "https://www.mhlw.go.jp/content/001478036.pdf",
+          "printedPage": "223–224",
+          "finding": "医薬品販売業の許可は店舗販売業・配置販売業・卸売販売業の3種類"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版",
+          "url": "https://www.mhlw.go.jp/content/001478036.pdf",
+          "printedPage": "224",
+          "finding": "一般生活者へ販売できるのは店舗販売業・配置販売業。卸売販売業は不可"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版",
+          "url": "https://www.mhlw.go.jp/content/001478036.pdf",
+          "printedPage": "224",
+          "finding": "許可は6年ごとの更新が必要"
+        }
+      ],
+      "notes": "a卸売販売業、b店舗販売業及び配置販売業、c6年。公式選択肢2。",
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allReasonsAndDistractorsSupported": true,
+        "noUnsupportedNumericalOrInstitutionalClaims": true,
+        "originalImage": "NOT_APPLICABLE_TEXT_ONLY"
+      },
+      "officialAnswerEvidence": {
+        "source": "APPROVED_OFFICIAL_BANK.json（添付正規バンク）",
+        "questionNo": 90,
+        "answerNumberOfficial": 2,
+        "sourcePdfPages": [
+          21
+        ],
+        "match": true,
+        "officialAnswerPdf": "https://www.kouiki-kansai.jp/material/files/group/12/R7touhan_kaitou.pdf",
+        "officialAnswerPdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R7touhan_kaitou.pdf",
+        "officialPdfAnswer": 2
+      },
+      "originalQuestionEvidence": {
+        "source": "関西広域連合 令和7年度登録販売者試験問題（後半）",
+        "url": "https://www.kouiki-kansai.jp/material/files/group/12/R7tourokuhannbaisyashiken_kouhan.pdf",
+        "printedPage": 21,
+        "pdfPage": 20,
+        "method": "正規バンクの設問・全選択肢を公式PDF本文と逐項照合。sourceFiguresなし。画像問題に該当しない"
       }
     }
   ]
