@@ -1500,3 +1500,7 @@ Apple固定識別子: Bundle `com.allsunday1122.tourokuhanbaisha`、ASC `6802119
 ## Q4 エンジン別実測（2026-11-24 11:31 JST）
 - Run 45312864891: Chromium 599/599、外部要求0、page error 0、完走PASS（artifact 14884121611）。WebKit file navigation成功、feedback inner_text完全一致assertでFAIL。表示タイミング/空白差を切り分けるため結果要素の待機付き完全テキスト検証と正答class検証を追加して再実行要求。両エンジンPASSまでQ4保留、12/14、新IPA未開始。
 - 整合性 Run 45312865201 PASS。Q5質問票はユーザー確認中。
+
+
+## Q4 再検証状況（2026-11-24 11:33 JST）
+- 公式コンテナ45313106222、通常環境45313106230ともブラウザ準備・同梱成功、599問完走試験実行中。実行中ログ未取得。整合性45313106132 SUCCESS。WebKit完走未確定のためQ4保留、12/14維持、新IPA未開始。
