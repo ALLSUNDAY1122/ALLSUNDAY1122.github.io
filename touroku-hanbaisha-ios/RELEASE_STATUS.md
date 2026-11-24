@@ -1514,3 +1514,9 @@ Apple固定識別子: Bundle `com.allsunday1122.tourokuhanbaisha`、ASC `6802119
 ## Build 15 オフライン版署名・アップロード実測（2026-11-24 11:39 JST）
 - Codemagic 6b04f82b6e64a3b7788bf84a / version 1.0.0 / index 15 / commit da5999219b0d616171185ff54e2ce4d3cce7c520。11:36:35開始、11:39:33完了。14工程SUCCESS、TouhanSprint.ipa 5,522,714 bytes、ASC upload PASS。
 - ASC初回読戻しではBuild 15未掲載。Build 14 VALID/IN_BETA_TESTING、sum全ビルドアクセス・1テスター。Build 15配信未確認、再照会要求 touhan-build15-testflight-readback-20261124-r2。Q4 PASS、現行13/14、Q5質問票未確認。本審査未送信。
+
+
+## Build 15 Internal TestFlight 配信確定（2026-11-24）
+- ASC Run 45314260392 SUCCESS、Build 15 (1.0.0) UUID 600d012a-0e49-4b79-b77e-0a6bbb93ebbd、VALID / IN_BETA_TESTING / APP_STORE_ELIGIBLE、expired=false。アップロード 2026-11-24 11:39:59 JST、有効期限 2027-02-22 11:39:59 JST。
+- 内部グループ sum は全ビルドアクセス、testerCount=1。実効アクセス確認済み、個別build-group relationshipと実機インストールは未確認。Q7 PASS_BUILD_15_VALID_IN_BETA_TESTING。証跡 automation/asc-results/touhan-build15-testflight-readback-20261124-r2.json。
+- Q4 PASS、現行品質Gate 13/14。残りQ5 ASC質問票。release_gate=BLOCKED、本審査未送信・一般公開なし。
