@@ -1469,3 +1469,8 @@ Apple固定識別子: Bundle `com.allsunday1122.tourokuhanbaisha`、ASC `6802119
 - 45310938568: Ubuntu 26.04 非対応で試験未実施。45311195568: 修正YAMLのブロックインデント不備でジョブ未起動。Ubuntu 24.04固定・インデント修正・pipefailを適用して再実行要求。
 - 45310905655: Xcode build成功、Simulator起動検証中。45310938525: Q5待機。45310938575: リリース整合性PASS。
 - Q4/Q5未確定、Build 14のQ7証跡維持。新規署名・配信はQ4実測合格後。本審査未送信。
+
+
+## Q4/Q5 実測追記（2026-11-24 11:19 JST）
+- Simulator Run 45310905655: 環境・Xcode build・install/launch/screenshot 全てPASS。CI全体FAILは証跡保存時のrebase競合。ログのPASS判定を再記録、artifact 14882794380保存済み。
+- 第3回オフライン検証 Run 45311443007: ブラウザ準備中。Q5 Run 45310938525待機中。整合性 Run 45311442822 SUCCESS。Q4未確定、新IPA未開始、Build 14のQ7 PASS維持。
