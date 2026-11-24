@@ -1564,3 +1564,10 @@ Apple固定識別子: Bundle `com.allsunday1122.tourokuhanbaisha`、ASC `6802119
 ## 学習ホーム版 Build16署名・アップロード成功（2026-11-24 14:50 JST）
 - Codemagic Run 45336005847 SUCCESS、Build16 (1.0.0) 6b0524d46161e077c03ebbb7、commit 64bfdbe37cd0a5276ffa368bdb32e19b8be143e2、publishing、12/14工程成功（署名IPA生成・ASC uploadを含む）、最終成果物一覧・完了時刻未確定。
 - ASC Run 45336005776 SUCCESS、Build16未掲載、Build15 VALID/IN_BETA_TESTING継続。sum全ビルドアクセス、1テスター。Build16のVALID/配信は未確認。読取専用再照会r2要求。本審査未送信。
+
+
+## 学習ホーム・記録版 Build16 Internal TestFlight配信確定（2026-11-24）
+- Codemagic 45336339172 SUCCESS、Build16 (1.0.0) 6b0524d46161e077c03ebbb7、14/14工程成功、TouhanSprint.ipa 5,530,134 bytes、14:49:47 JST完了。
+- ASC 45336339212 SUCCESS、UUID ecd2e80f-b729-4be3-ab69-3d85bbcc8ab0、VALID / IN_BETA_TESTING / APP_STORE_ELIGIBLE、expired=false、アップロード2026-11-24 14:50:22 JST、有効期限2027-02-22 14:50:22 JST。
+- sum全ビルドアクセス、testerCount=1、実効内部アクセス確認。個別build-group relationship・Build16実機インストール未確認。Q7 PASS_BUILD_16_VALID_IN_BETA_TESTING。証跡 automation/asc-results/touhan-build16-testflight-readback-20261124-r2.json。
+- 現行品質Gate 13/14、Q5質問票最終照合とBuild16実機確認未完了。release_gate=BLOCKED、本審査未送信、一般公開なし。
