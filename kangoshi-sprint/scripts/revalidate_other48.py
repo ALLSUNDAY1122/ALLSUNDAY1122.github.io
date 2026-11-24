@@ -1,6 +1,8 @@
 import json, pathlib, hashlib, subprocess, re, unicodedata, os, sys, collections
 import fitz
-from PIL import Image, ImageOps, ImageFilter
+from PIL import Image, ImageOps, ImageFilter, ImageDraw
+import easyocr
+reader=easyocr.Reader(['ja','en'],gpu=False,verbose=False)
 R=pathlib.Path("kangoshi-sprint"); A=R/"audit"; B=R/"product-content"
 sys.path.insert(0,str(R/"scripts"))
 from official_answer_key_audit import parse as official_key
@@ -49,11 +51,42 @@ for qid in l["targetIds"]:
   assert all(len(anchors.get(i,[]))==1 for i in range(1,n+1)),f"option anchors {anchors}"
   ys=[anchors[i][0]-4 for i in range(1,n+1)]
   assert ys==sorted(ys) and len(set(ys))==n
-  bounds=[rect.y0]+ys+[rect.y1]
+  # Exclude page footer by its actual PDF word coordinates, never by truncating OCR text.
+  footer=[w[1] for w in words if 'DKIX-' in w[4] and w[1]>ys[-1]]
+  end=min([rect.y1]+[y-5 for y in footer])
+  assert end>ys[-1]+10
+  bounds=[rect.y0]+ys+[end]
+  rec["footerBoundary"]={"originalEnd":rect.y1,"adjustedEnd":end,"footerY":footer}
   expected=[q["question"]]+q["choices"]
   for i,want in enumerate(expected):
    clip=fitz.Rect(rect.x0,bounds[i],rect.x1,bounds[i+1]); f=out/f"{qid}-field{i}.png"
    page.get_pixmap(matrix=fitz.Matrix(4,4),clip=clip,alpha=False).save(f)
+   # Separate explicitly registered English gloss by unique exact PDF span geometry.
+   glosses=[g for g in q.get("sourceEnglishGloss",[]) if isinstance(g,dict) and g.get("field")==("question" if i==0 else f"choice{i}")]
+   masked=[]
+   for gloss in glosses:
+    candidates=[]
+    for block in page.get_text("dict",clip=clip)["blocks"]:
+     for line in block.get("lines",[]):
+      for span in line["spans"]:
+       if norm(span["text"])==norm(gloss["text"]):candidates.append(span)
+    assert len(candidates)==1,"Gloss geometry not uniquely verified"
+    b=fitz.Rect(candidates[0]["bbox"])
+    # A gloss must be an independent smaller-font span, not inline body text.
+    assert candidates[0]["size"]<10,"Gloss font not independently distinguishable"
+    gf=out/f"{qid}-field{i}-gloss{len(masked)}.png"
+    page.get_pixmap(matrix=fitz.Matrix(5,5),clip=b,alpha=False).save(gf)
+    gt=" ".join(reader.readtext(str(gf),detail=0,paragraph=False))
+    tt=subprocess.run(["tesseract",str(gf),"stdout","-l","eng","--psm","7"],capture_output=True,text=True,check=True,timeout=90).stdout
+    assert norm(gt)==norm(gloss["text"]) or norm(tt)==norm(gloss["text"]),"Gloss OCR not confirmed"
+    masked.append({"bbox":list(b),"text":gloss["text"],"easyocr":gt,"tesseract":tt,"sha256":sha(gf)})
+   def mask_gloss(fn,region,scale):
+    if not masked:return
+    im=Image.open(fn).convert("RGB");draw=ImageDraw.Draw(im)
+    for item in masked:
+     b=item["bbox"];draw.rectangle(((b[0]-region.x0)*scale,(b[1]-region.y0)*scale,(b[2]-region.x0)*scale,(b[3]-region.y0)*scale),fill="white")
+    im.save(fn)
+   mask_gloss(f,clip,4)
    reads={}; matches=[]; variants=[]
    for mode in (3,6,7,11):
     t=subprocess.run(["tesseract",str(f),"stdout","-l","jpn+eng","--psm",str(mode)],capture_output=True,text=True,timeout=90,check=True).stdout
@@ -66,9 +99,10 @@ for qid in l["targetIds"]:
    if len(matches)<2:
     for scale in (5,7):
      for pad in (0,2):
-      region=fitz.Rect(max(0,clip.x0-pad),max(rect.y0,clip.y0-pad),min(page.rect.width,clip.x1+pad),min(rect.y1,clip.y1+pad))
+      region=fitz.Rect(max(0,clip.x0-pad),max(rect.y0,clip.y0-pad),min(page.rect.width,clip.x1+pad),min(end,clip.y1+pad))
       raw=out/f"{qid}-field{i}-s{scale}-p{pad}.png"
       page.get_pixmap(matrix=fitz.Matrix(scale,scale),clip=region,alpha=False).save(raw)
+      mask_gloss(raw,region,scale)
       gray=ImageOps.autocontrast(Image.open(raw).convert("L"))
       for threshold in (None,160,200):
        im=gray if threshold is None else gray.point(lambda v:255 if v>=threshold else 0)
@@ -85,13 +119,19 @@ for qid in l["targetIds"]:
        if len(matches)>=2:break
       if len(matches)>=2:break
      if len(matches)>=2:break
-   rec["fields"].append({"index":i,"expected":want,"ocr":reads,"matchingModes":matches,"imageSha256":sha(f),"preprocessingTrials":variants})
+   # Independent recognition model: EasyOCR Japanese + English.
+   easy=[]
+   for fn in [f]+[out/t["image"] for t in variants if t["psm"]==6][:4]:
+    t=" ".join(reader.readtext(str(fn),detail=0,paragraph=False))
+    z=re.sub(r"^"+label+r"[.、)]?","",norm(t),count=1)
+    easy.append({"image":fn.name,"sha256":sha(fn),"ocr":t,"match":z==norm(want)})
+   rec["fields"].append({"index":i,"expected":want,"ocr":reads,"matchingModes":matches,"imageSha256":sha(f),"preprocessingTrials":variants,"easyocrTrials":easy,"glossEvidence":masked})
   official,keysha=keys[exam]; key=official[qid]
   assert key["status"]=="KEY_SINGLE" and key["rawValue"]==str(q["answer"]+1) and keysha==q["officialKeyPdfSha256"]
   assert q["officialScoringStatus"]=="normal"
   rec["officialKeyMatched"]=True
-  if not all(len(f["matchingModes"])>=2 for f in rec["fields"]):
-   rec["reason"]="STRICT_FIELD_OCR_NOT_MATCHED_IN_TWO_MODES";continue
+  if not all(len(f["matchingModes"])>=2 or (len(f["matchingModes"])>=1 and any(t["match"] for t in f["easyocrTrials"])) for f in rec["fields"]):
+   rec["reason"]="STRICT_FIELD_OCR_NOT_MATCHED_IN_TWO_MODES_OR_ENGINES";continue
   q=dict(q);q.update(publishable=False,releaseEligible=False,requiresMedia=False,mediaAuditStatus="not_required",rightsStatus="mhlw-pdl1.0-text",canonicalStatus="source_verified_extension",reviewStatus="VISUAL_AND_INDEPENDENT_OCR_SOURCE_ONLY_EXPLANATION_PENDING",textFidelity="VERIFIED_SOURCE_ONLY",answerSourceChecked=True,printedOptionCount=n,answerType="singleChoice",category="必修" if num<=25 else "一般",majorSubject=None,point=None,detail=None)
   q["audit"]={"sourcePageVisualReviewed":True,"allPrintedChoicesVisualReviewed":True,"officialKeyMatched":True,"independentOcrFieldMatch":True,"explanationIndependentlyReviewed":False,"runtimeIntegrationChecked":False}
   q["evidence"]={"sourcePdfPage":g["renderedPage"],"sourcePdfSha256":sha(pdf),"sourceImageSha256":g["imageSha256"],"auditLedger":str(L)}
