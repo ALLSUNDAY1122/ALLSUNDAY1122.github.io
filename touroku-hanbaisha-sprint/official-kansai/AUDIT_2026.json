@@ -1,12 +1,12 @@
 {
   "year": 2026,
   "targetCount": 120,
-  "auditedCount": 70,
-  "auditPassedCount": 67,
-  "holdCount": 3,
-  "pendingCount": 50,
+  "auditedCount": 80,
+  "auditPassedCount": 79,
+  "holdCount": 1,
+  "pendingCount": 40,
   "sourceExplanationPath": "touroku-hanbaisha-sprint/official-kansai/EXPLANATIONS_2026.json",
-  "sourceExplanationBlobSha": "691c867a0522c5220b4b5139253bbdd060b0cb85",
+  "sourceExplanationBlobSha": "ed5e24ed3310cc99ceb2bf92aa29379a145c6ce0",
   "auditDate": "2026-11-24",
   "method": "独立監査。作成側audit記録を証拠として流用せず、添付正規バンクと手引き本文・原典ページ画像、画像掲載問題の公式PDFを照合。公式正答PDFの直接再取得は失敗したが、基準(1)の指定比較対象である添付正規バンクで全件一致確認。",
   "questions": [
@@ -2970,7 +2970,7 @@
     },
     {
       "questionId": "KSAI-2026-051",
-      "verdict": "HOLD",
+      "verdict": "PASS",
       "evidence": {
         "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
         "guideEdition": "令和8年4月一部改訂",
@@ -2988,14 +2988,13 @@
           },
           {
             "item": "b",
-            "printedPage": "162–163",
+            "printedPage": "162",
             "pdfPages": [
-              170,
-              171
+              170
             ],
             "truth": "誤",
-            "topic": "ユーカリ油は手引きでは冷感刺激成分、止血は血管収縮成分。現行の殺菌作用等という説明は根拠不一致",
-            "result": "EXPLANATION_SOURCE_MISMATCH"
+            "topic": "ユーカリ油：冷感刺激、血行促進・鎮痛・鎮痒",
+            "result": "MATCH"
           },
           {
             "item": "c",
@@ -3029,7 +3028,76 @@
           "reason": "全問追加原典画像照合"
         }
       },
-      "notes": "添付正規バンクと正答番号一致。手引き原典ページ画像および公式問題PDFの原典画像を直接照合。公式正答PDFの直接再取得は今回も不可、ユーザー了承済みの正規バンクを使用。作成側の未確定ページを独立確定。HOLD：bのユーカリ油の作用分類を冷感刺激成分（血行促進・鎮痛・鎮痒）に訂正し、止血は血管収縮成分と説明するよう作成側へ修正推奨。"
+      "notes": "添付正規バンクと正答番号一致。手引き原典ページ画像および公式問題PDFの原典画像を直接照合。公式正答PDFの直接再取得は今回も不可、ユーザー了承済みの正規バンクを使用。作成側の未確定ページを独立確定。HOLD：bのユーカリ油の作用分類を冷感刺激成分（血行促進・鎮痛・鎮痒）に訂正し、止血は血管収縮成分と説明するよう作成側へ修正推奨。 再監査：修正版を手引き原典画像で確認し不整合解消。正答・他記述は旧版と同一。PASSに更新。",
+      "reauditHistory": [
+        {
+          "previousVerdict": "HOLD",
+          "previousNotes": "添付正規バンクと正答番号一致。手引き原典ページ画像および公式問題PDFの原典画像を直接照合。公式正答PDFの直接再取得は今回も不可、ユーザー了承済みの正規バンクを使用。作成側の未確定ページを独立確定。HOLD：bのユーカリ油の作用分類を冷感刺激成分（血行促進・鎮痛・鎮痒）に訂正し、止血は血管収縮成分と説明するよう作成側へ修正推奨。",
+          "previousEvidence": {
+            "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+            "guideEdition": "令和8年4月一部改訂",
+            "guidePageCount": 426,
+            "items": [
+              {
+                "item": "a",
+                "printedPage": "155",
+                "pdfPages": [
+                  163
+                ],
+                "truth": "正",
+                "topic": "外皮用薬の定義",
+                "result": "MATCH"
+              },
+              {
+                "item": "b",
+                "printedPage": "162–163",
+                "pdfPages": [
+                  170,
+                  171
+                ],
+                "truth": "誤",
+                "topic": "ユーカリ油は手引きでは冷感刺激成分、止血は血管収縮成分。現行の殺菌作用等という説明は根拠不一致",
+                "result": "EXPLANATION_SOURCE_MISMATCH"
+              },
+              {
+                "item": "c",
+                "printedPage": "163",
+                "pdfPages": [
+                  171
+                ],
+                "truth": "正",
+                "topic": "ヘパリン類似物質",
+                "result": "MATCH"
+              },
+              {
+                "item": "d",
+                "printedPage": "163",
+                "pdfPages": [
+                  171
+                ],
+                "truth": "正",
+                "topic": "クロタミトン",
+                "result": "MATCH"
+              }
+            ],
+            "officialAnswerNumber": 1,
+            "bankAnswerNumber": 1,
+            "answerMatch": true,
+            "questionImage": {
+              "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
+              "pdfPage": 43,
+              "printedPage": 41,
+              "checked": true,
+              "reason": "全問追加原典画像照合"
+            }
+          },
+          "date": "2026-11-24",
+          "sourceExplanationBlobSha": "ed5e24ed3310cc99ceb2bf92aa29379a145c6ce0",
+          "verdict": "PASS",
+          "printedPage": 162,
+          "pdfPage": 170
+        }
+      ]
     },
     {
       "questionId": "KSAI-2026-052",
@@ -3095,7 +3163,7 @@
     },
     {
       "questionId": "KSAI-2026-053",
-      "verdict": "HOLD",
+      "verdict": "PASS",
       "evidence": {
         "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
         "guideEdition": "令和8年4月一部改訂",
@@ -3139,8 +3207,8 @@
               178
             ],
             "truth": "誤",
-            "topic": "オイゲノールは手引きでは殺菌消毒成分。現行の局所麻酔作用等という説明は根拠不一致",
-            "result": "EXPLANATION_SOURCE_MISMATCH"
+            "topic": "オイゲノール：歯痛薬の殺菌消毒、齲蝕部細菌繁殖抑制",
+            "result": "MATCH"
           }
         ],
         "officialAnswerNumber": 1,
@@ -3154,7 +3222,76 @@
           "reason": "全問追加原典画像照合"
         }
       },
-      "notes": "添付正規バンクと正答番号一致。手引き原典ページ画像および公式問題PDFの原典画像を直接照合。公式正答PDFの直接再取得は今回も不可、ユーザー了承済みの正規バンクを使用。作成側の未確定ページを独立確定。HOLD：dのオイゲノールの作用分類を歯痛薬の殺菌消毒成分（齲蝕部の細菌繁殖抑制）に訂正するよう作成側へ修正推奨。"
+      "notes": "添付正規バンクと正答番号一致。手引き原典ページ画像および公式問題PDFの原典画像を直接照合。公式正答PDFの直接再取得は今回も不可、ユーザー了承済みの正規バンクを使用。作成側の未確定ページを独立確定。HOLD：dのオイゲノールの作用分類を歯痛薬の殺菌消毒成分（齲蝕部の細菌繁殖抑制）に訂正するよう作成側へ修正推奨。 再監査：修正版を手引き原典画像で確認し不整合解消。正答・他記述は旧版と同一。PASSに更新。",
+      "reauditHistory": [
+        {
+          "previousVerdict": "HOLD",
+          "previousNotes": "添付正規バンクと正答番号一致。手引き原典ページ画像および公式問題PDFの原典画像を直接照合。公式正答PDFの直接再取得は今回も不可、ユーザー了承済みの正規バンクを使用。作成側の未確定ページを独立確定。HOLD：dのオイゲノールの作用分類を歯痛薬の殺菌消毒成分（齲蝕部の細菌繁殖抑制）に訂正するよう作成側へ修正推奨。",
+          "previousEvidence": {
+            "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+            "guideEdition": "令和8年4月一部改訂",
+            "guidePageCount": 426,
+            "items": [
+              {
+                "item": "a",
+                "printedPage": "171–172",
+                "pdfPages": [
+                  179,
+                  180
+                ],
+                "truth": "正",
+                "topic": "カルバゾクロム",
+                "result": "MATCH"
+              },
+              {
+                "item": "b",
+                "printedPage": "170",
+                "pdfPages": [
+                  178
+                ],
+                "truth": "正",
+                "topic": "ジブカイン",
+                "result": "MATCH"
+              },
+              {
+                "item": "c",
+                "printedPage": "172",
+                "pdfPages": [
+                  180
+                ],
+                "truth": "誤",
+                "topic": "カミツレ抗炎症・抗菌",
+                "result": "MATCH"
+              },
+              {
+                "item": "d",
+                "printedPage": "170",
+                "pdfPages": [
+                  178
+                ],
+                "truth": "誤",
+                "topic": "オイゲノールは手引きでは殺菌消毒成分。現行の局所麻酔作用等という説明は根拠不一致",
+                "result": "EXPLANATION_SOURCE_MISMATCH"
+              }
+            ],
+            "officialAnswerNumber": 1,
+            "bankAnswerNumber": 1,
+            "answerMatch": true,
+            "questionImage": {
+              "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
+              "pdfPage": 44,
+              "printedPage": 42,
+              "checked": true,
+              "reason": "全問追加原典画像照合"
+            }
+          },
+          "date": "2026-11-24",
+          "sourceExplanationBlobSha": "ed5e24ed3310cc99ceb2bf92aa29379a145c6ce0",
+          "verdict": "PASS",
+          "printedPage": 170,
+          "pdfPage": 178
+        }
+      ]
     },
     {
       "questionId": "KSAI-2026-054",
@@ -4251,6 +4388,633 @@
         }
       },
       "notes": "添付APPROVED_OFFICIAL_BANK(3).jsonの正答番号・設問・選択肢、手引き原典画像、公式試験PDF後半原典画像を直接照合。作成側の未確定ページを独立確定。公式正答PDFは今回直接再取得せず、ユーザー了承済み正規バンクで照合。HOLD：aの解説は骨の基本構造から関節軟骨を欠落させている。骨質・骨膜・骨髄・関節軟骨の四組織と訂正するよう作成側へ修正依頼推奨。正答番号は変更不要。"
+    },
+    {
+      "questionId": "KSAI-2026-071",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "a",
+            "printedPage": "38",
+            "pdfPages": [
+              46
+            ],
+            "truth": "誤",
+            "topic": "糖25%酸素20%",
+            "result": "MATCH"
+          },
+          {
+            "item": "b",
+            "printedPage": "38",
+            "pdfPages": [
+              46
+            ],
+            "truth": "正",
+            "topic": "血液脳関門",
+            "result": "MATCH"
+          },
+          {
+            "item": "c",
+            "printedPage": "39",
+            "pdfPages": [
+              47
+            ],
+            "truth": "正",
+            "topic": "末梢神経分類",
+            "result": "MATCH"
+          },
+          {
+            "item": "d",
+            "printedPage": "39",
+            "pdfPages": [
+              47
+            ],
+            "truth": "誤",
+            "topic": "副交感節後アセチルコリン",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 3,
+        "bankAnswerNumber": 3,
+        "answerMatch": true,
+        "questionImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
+          "pdfPage": 8,
+          "printedPage": 6,
+          "checked": true
+        }
+      },
+      "notes": "添付正規バンクと正答一致。手引き原典画像と公式試験問題PDF原典画像で全記述を逐項確認。公式正答PDFは直接再取得せず了承済み正規バンクを使用。"
+    },
+    {
+      "questionId": "KSAI-2026-072",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "a",
+            "printedPage": "41",
+            "pdfPages": [
+              49
+            ],
+            "truth": "正",
+            "topic": "食事と服用",
+            "result": "MATCH"
+          },
+          {
+            "item": "b",
+            "printedPage": "41",
+            "pdfPages": [
+              49
+            ],
+            "truth": "正",
+            "topic": "受動拡散",
+            "result": "MATCH"
+          },
+          {
+            "item": "c",
+            "printedPage": "42",
+            "pdfPages": [
+              50
+            ],
+            "truth": "誤",
+            "topic": "皮膚外のアレルギー",
+            "result": "MATCH"
+          },
+          {
+            "item": "d",
+            "printedPage": "41",
+            "pdfPages": [
+              49
+            ],
+            "truth": "正",
+            "topic": "坐剤吸収",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 5,
+        "bankAnswerNumber": 5,
+        "answerMatch": true,
+        "questionImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
+          "pdfPage": 9,
+          "printedPage": 7,
+          "checked": true
+        }
+      },
+      "notes": "添付正規バンクと正答一致。手引き原典画像と公式試験問題PDF原典画像で全記述を逐項確認。公式正答PDFは直接再取得せず了承済み正規バンクを使用。"
+    },
+    {
+      "questionId": "KSAI-2026-073",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "a",
+            "printedPage": "43",
+            "pdfPages": [
+              51
+            ],
+            "truth": "正",
+            "topic": "門脈",
+            "result": "MATCH"
+          },
+          {
+            "item": "b",
+            "printedPage": "43",
+            "pdfPages": [
+              51
+            ],
+            "truth": "正",
+            "topic": "初回通過",
+            "result": "MATCH"
+          },
+          {
+            "item": "c",
+            "printedPage": "42",
+            "pdfPages": [
+              50
+            ],
+            "truth": "誤",
+            "topic": "水溶性",
+            "result": "MATCH"
+          },
+          {
+            "item": "d",
+            "printedPage": "43",
+            "pdfPages": [
+              51
+            ],
+            "truth": "誤",
+            "topic": "腎機能低下と排泄",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 1,
+        "bankAnswerNumber": 1,
+        "answerMatch": true,
+        "questionImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
+          "pdfPage": 9,
+          "printedPage": 7,
+          "checked": true
+        }
+      },
+      "notes": "添付正規バンクと正答一致。手引き原典画像と公式試験問題PDF原典画像で全記述を逐項確認。公式正答PDFは直接再取得せず了承済み正規バンクを使用。"
+    },
+    {
+      "questionId": "KSAI-2026-074",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "a",
+            "printedPage": "43",
+            "pdfPages": [
+              51
+            ],
+            "truth": "正",
+            "topic": "作用部位濃度",
+            "result": "MATCH"
+          },
+          {
+            "item": "b",
+            "printedPage": "44",
+            "pdfPages": [
+              52
+            ],
+            "truth": "正",
+            "topic": "有効域",
+            "result": "MATCH"
+          },
+          {
+            "item": "c",
+            "printedPage": "44",
+            "pdfPages": [
+              52
+            ],
+            "truth": "正",
+            "topic": "血中濃度低下",
+            "result": "MATCH"
+          },
+          {
+            "item": "d",
+            "printedPage": "44",
+            "pdfPages": [
+              52
+            ],
+            "truth": "正",
+            "topic": "薬効上限",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 5,
+        "bankAnswerNumber": 5,
+        "answerMatch": true,
+        "questionImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
+          "pdfPage": 10,
+          "printedPage": 8,
+          "checked": true
+        }
+      },
+      "notes": "添付正規バンクと正答一致。手引き原典画像と公式試験問題PDF原典画像で全記述を逐項確認。公式正答PDFは直接再取得せず了承済み正規バンクを使用。"
+    },
+    {
+      "questionId": "KSAI-2026-075",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "a",
+            "printedPage": "46",
+            "pdfPages": [
+              54
+            ],
+            "truth": "正",
+            "topic": "クリーム刺激",
+            "result": "MATCH"
+          },
+          {
+            "item": "b",
+            "printedPage": "46",
+            "pdfPages": [
+              54
+            ],
+            "truth": "誤",
+            "topic": "液剤乾燥",
+            "result": "MATCH"
+          },
+          {
+            "item": "c",
+            "printedPage": "46",
+            "pdfPages": [
+              54
+            ],
+            "truth": "正",
+            "topic": "貼付持続",
+            "result": "MATCH"
+          },
+          {
+            "item": "d",
+            "printedPage": "46",
+            "pdfPages": [
+              54
+            ],
+            "truth": "正",
+            "topic": "スプレー",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 3,
+        "bankAnswerNumber": 3,
+        "answerMatch": true,
+        "questionImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
+          "pdfPage": 11,
+          "printedPage": 9,
+          "checked": true
+        }
+      },
+      "notes": "添付正規バンクと正答一致。手引き原典画像と公式試験問題PDF原典画像で全記述を逐項確認。公式正答PDFは直接再取得せず了承済み正規バンクを使用。"
+    },
+    {
+      "questionId": "KSAI-2026-076",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "a",
+            "printedPage": "46–47",
+            "pdfPages": [
+              54,
+              55
+            ],
+            "truth": "誤",
+            "topic": "重篤副作用まれ",
+            "result": "MATCH"
+          },
+          {
+            "item": "b",
+            "printedPage": "47",
+            "pdfPages": [
+              55
+            ],
+            "truth": "誤",
+            "topic": "マニュアル対象",
+            "result": "MATCH"
+          },
+          {
+            "item": "c",
+            "printedPage": "47",
+            "pdfPages": [
+              55
+            ],
+            "truth": "正",
+            "topic": "添付文書",
+            "result": "MATCH"
+          },
+          {
+            "item": "d",
+            "printedPage": "47",
+            "pdfPages": [
+              55
+            ],
+            "truth": "正",
+            "topic": "飲酒",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 2,
+        "bankAnswerNumber": 2,
+        "answerMatch": true,
+        "questionImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
+          "pdfPage": 12,
+          "printedPage": 10,
+          "checked": true
+        }
+      },
+      "notes": "添付正規バンクと正答一致。手引き原典画像と公式試験問題PDF原典画像で全記述を逐項確認。公式正答PDFは直接再取得せず了承済み正規バンクを使用。"
+    },
+    {
+      "questionId": "KSAI-2026-077",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "a",
+            "printedPage": "47",
+            "pdfPages": [
+              55
+            ],
+            "truth": "正",
+            "topic": "アナフィラキシー",
+            "result": "MATCH"
+          },
+          {
+            "item": "b",
+            "printedPage": "49",
+            "pdfPages": [
+              57
+            ],
+            "truth": "正",
+            "topic": "肝不全",
+            "result": "MATCH"
+          },
+          {
+            "item": "c",
+            "printedPage": "47–48",
+            "pdfPages": [
+              55,
+              56
+            ],
+            "truth": "誤",
+            "topic": "SJSとTEN",
+            "result": "MATCH"
+          },
+          {
+            "item": "d",
+            "printedPage": "48",
+            "pdfPages": [
+              56
+            ],
+            "truth": "正",
+            "topic": "多臓器障害",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 2,
+        "bankAnswerNumber": 2,
+        "answerMatch": true,
+        "questionImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
+          "pdfPage": 13,
+          "printedPage": 11,
+          "checked": true
+        }
+      },
+      "notes": "添付正規バンクと正答一致。手引き原典画像と公式試験問題PDF原典画像で全記述を逐項確認。公式正答PDFは直接再取得せず了承済み正規バンクを使用。"
+    },
+    {
+      "questionId": "KSAI-2026-078",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "a",
+            "printedPage": "50",
+            "pdfPages": [
+              58
+            ],
+            "truth": "誤",
+            "topic": "通常量でも発症",
+            "result": "MATCH"
+          },
+          {
+            "item": "b",
+            "printedPage": "50",
+            "pdfPages": [
+              58
+            ],
+            "truth": "誤",
+            "topic": "原因薬中止",
+            "result": "MATCH"
+          },
+          {
+            "item": "c",
+            "printedPage": "50",
+            "pdfPages": [
+              58
+            ],
+            "truth": "正",
+            "topic": "無菌性髄膜炎",
+            "result": "MATCH"
+          },
+          {
+            "item": "d",
+            "printedPage": "51",
+            "pdfPages": [
+              59
+            ],
+            "truth": "正",
+            "topic": "倦怠感と虚脱",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 5,
+        "bankAnswerNumber": 5,
+        "answerMatch": true,
+        "questionImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
+          "pdfPage": 14,
+          "printedPage": 12,
+          "checked": true
+        }
+      },
+      "notes": "添付正規バンクと正答一致。手引き原典画像と公式試験問題PDF原典画像で全記述を逐項確認。公式正答PDFは直接再取得せず了承済み正規バンクを使用。"
+    },
+    {
+      "questionId": "KSAI-2026-079",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "a",
+            "printedPage": "52",
+            "pdfPages": [
+              60
+            ],
+            "truth": "誤",
+            "topic": "間質炎症",
+            "result": "MATCH"
+          },
+          {
+            "item": "b",
+            "printedPage": "52",
+            "pdfPages": [
+              60
+            ],
+            "truth": "誤",
+            "topic": "1～2週間",
+            "result": "MATCH"
+          },
+          {
+            "item": "c",
+            "printedPage": "52",
+            "pdfPages": [
+              60
+            ],
+            "truth": "正",
+            "topic": "低酸素・空咳",
+            "result": "MATCH"
+          },
+          {
+            "item": "d",
+            "printedPage": "52",
+            "pdfPages": [
+              60
+            ],
+            "truth": "正",
+            "topic": "肺線維症",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 3,
+        "bankAnswerNumber": 3,
+        "answerMatch": true,
+        "questionImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
+          "pdfPage": 15,
+          "printedPage": 13,
+          "checked": true
+        }
+      },
+      "notes": "添付正規バンクと正答一致。手引き原典画像と公式試験問題PDF原典画像で全記述を逐項確認。公式正答PDFは直接再取得せず了承済み正規バンクを使用。"
+    },
+    {
+      "questionId": "KSAI-2026-080",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "a",
+            "printedPage": "54",
+            "pdfPages": [
+              62
+            ],
+            "truth": "誤",
+            "topic": "副交感抑制",
+            "result": "MATCH"
+          },
+          {
+            "item": "b",
+            "printedPage": "54",
+            "pdfPages": [
+              62
+            ],
+            "truth": "誤",
+            "topic": "男女・基礎疾患なしでも",
+            "result": "MATCH"
+          },
+          {
+            "item": "c",
+            "printedPage": "54",
+            "pdfPages": [
+              62
+            ],
+            "truth": "正",
+            "topic": "原因薬中止",
+            "result": "MATCH"
+          },
+          {
+            "item": "d",
+            "printedPage": "54",
+            "pdfPages": [
+              62
+            ],
+            "truth": "正",
+            "topic": "尿勢低下",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 5,
+        "bankAnswerNumber": 5,
+        "answerMatch": true,
+        "questionImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
+          "pdfPage": 15,
+          "printedPage": 13,
+          "checked": true
+        }
+      },
+      "notes": "添付正規バンクと正答一致。手引き原典画像と公式試験問題PDF原典画像で全記述を逐項確認。公式正答PDFは直接再取得せず了承済み正規バンクを使用。原典画像では問80全文はPDF15ページ目に収まる（バンクは15・16を記録）。"
+    }
+  ],
+  "sourceDiffHistory": [
+    {
+      "oldBlobSha": "691c867a0522c5220b4b5139253bbdd060b0cb85",
+      "newBlobSha": "ed5e24ed3310cc99ceb2bf92aa29379a145c6ce0",
+      "changedQuestionIds": [
+        "KSAI-2026-051",
+        "KSAI-2026-053",
+        "KSAI-2026-070"
+      ],
+      "unchangedCount": 117,
+      "metadataUnchanged": true,
+      "officialAnswersUnchanged": true,
+      "notes": "問70も修正済みだが指定再監査範囲外につきHOLD維持。"
     }
   ]
 }
