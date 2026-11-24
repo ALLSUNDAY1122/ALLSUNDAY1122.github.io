@@ -1,10 +1,10 @@
 {
   "year": 2024,
   "targetCount": 120,
-  "auditedCount": 70,
-  "auditPassedCount": 67,
-  "holdCount": 3,
-  "pendingCount": 50,
+  "auditedCount": 80,
+  "auditPassedCount": 78,
+  "holdCount": 2,
+  "pendingCount": 40,
   "status": "IN_PROGRESS",
   "auditDate": "2026-11-25",
   "explanationsBlobSha": "ba4ed335d61d619537f4807f1d45895834f13b13",
@@ -3165,7 +3165,7 @@
               156,
               159
             ],
-            "notes": "急性・アレルギー性鼻炎と随伴副鼻腔炎は症状緩和対象、蓄膿症等慢性は対象外。草稿は原因治療でない点のみで慢性除外を明示せず"
+            "notes": "再監査：公式設問dは「アレルギー性鼻炎及びそれに伴う副鼻腔炎、蓄膿症等」を対応範囲とする。手引きp.147は鼻炎用点鼻薬の対象を「急性鼻炎、アレルギー性鼻炎又は副鼻腔炎による諸症状」と明記し、慢性副鼻腔炎を蓄膿症と定義するが、慢性副鼻腔炎を除外する文言は見当たらない。修正版の慢性除外説明をこの箇所からは導けず、根拠不十分。"
           }
         ],
         "examImage": {
@@ -3174,9 +3174,16 @@
           "pdfPageOneBased": 31,
           "pdfIndex": 30,
           "verified": true
-        }
+        },
+        "guideExact": "鼻炎用点鼻薬は、急性鼻炎、アレルギー性鼻炎又は副鼻腔炎による諸症状のうち、鼻づまり、鼻みず、くしゃみ、頭重の緩和を目的とする。副鼻腔炎の慢性のものは一般に蓄膿症と呼ばれる。",
+        "guidePrintedPages": [
+          147
+        ],
+        "guidePdfPagesOneBased": [
+          156
+        ]
       },
-      "notes": "dの誤りの核心である蓄膿症等の慢性副鼻腔炎の対象外が明示されず、急性副鼻腔炎の症状緩和も対象である点が不明確。修正推奨。"
+      "notes": "再監査HOLD維持。修正版は急性鼻炎・アレルギー性鼻炎及びそれらに伴う副鼻腔炎の症状緩和を対象とし、蓄膿症など慢性副鼻腔炎を対象外と説明する。しかし手引きp.147は鼻炎用点鼻薬を「急性鼻炎、アレルギー性鼻炎又は副鼻腔炎」による症状緩和に用いると記載し、直前に慢性副鼻腔炎を蓄膿症と定義するが、慢性副鼻腔炎を対象外とする限定は記載していない。むしろ副鼻腔炎を対象に含む記載との整合が未解決。修正版の「慢性は対象外」は現行手引きの当該記述だけでは裏付けられず、dの誤りの根拠として確定できない。公式正答5は一致するが、独立監査PASSには昇格しない。"
     },
     {
       "questionId": "KSAI-2024-046",
@@ -3251,11 +3258,11 @@
     {
       "questionId": "KSAI-2024-047",
       "questionNo": 47,
-      "verdict": "HOLD",
+      "verdict": "PASS",
       "answerNumberOfficial": 4,
       "criteria": {
         "officialAnswerMatch": true,
-        "allStatementRationalesVerified": false,
+        "allStatementRationalesVerified": true,
         "numbersAndInstitutionsVerified": true,
         "independentImageReview": "PASS"
       },
@@ -3283,7 +3290,8 @@
             "pdfPagesOneBased": [
               162
             ],
-            "notes": "眼科用薬の分類ではアズレンスルホン酸Naは組織修復成分。草稿は抗炎症成分と分類"
+            "notes": "手引きp.153（PDF p.161）Ⅸ-2(c)はアズレンスルホン酸Naを炎症を生じた眼粘膜の組織修復成分と明記。血管収縮成分は同節(a)のナファゾリン等であり、bの主張は誤り。",
+            "guideExact": "炎症を生じた眼粘膜の組織修復を促す作用を期待して、アズレンスルホン酸ナトリウム（水溶性アズレン）やアラントインが配合されている場合がある。"
           },
           {
             "statement": "c",
@@ -3316,7 +3324,7 @@
           "verified": true
         }
       },
-      "notes": "bのアズレンスルホン酸ナトリウムは眼科用薬の手引きp.153では組織修復成分。抗炎症成分とする草稿は指定分類と不一致。修正後再監査。"
+      "notes": "再監査PASS。修正版はbのアズレンスルホン酸ナトリウムを抗炎症成分ではなく眼粘膜の組織修復成分と正しく分類。設問bの主張する血管収縮による充血除去成分ではないため誤り。aのパンテノールは調節機能、cのイプシロン-アミノカプロン酸は抗炎症、dのアスパラギン酸カリウムはビタミン・アミノ酸等のその他成分の作用説明と整合。公式正答4と一致。"
     },
     {
       "questionId": "KSAI-2024-048",
@@ -5068,6 +5076,703 @@
         }
       },
       "notes": "公式正答表と正規バンクの公式正答番号が一致。令和6年4月改訂手引きの選択肢別根拠を逐項照合。"
+    },
+    {
+      "questionId": "KSAI-2024-071",
+      "questionNo": 71,
+      "verdict": "PASS",
+      "answerNumberOfficial": 2,
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allStatementRationalesVerified": true,
+        "numbersAndInstitutionsVerified": true,
+        "independentImageReview": "SOURCE_BANK_VERBATIM_CERTIFICATION"
+      },
+      "evidence": {
+        "source": "厚生労働省『試験問題の作成に関する手引き』令和6年4月一部改訂",
+        "url": "https://www.mhlw.go.jp/content/001477985.pdf",
+        "statements": [
+          {
+            "statement": "a",
+            "truth": "誤",
+            "printedPages": [
+              41
+            ],
+            "notes": "内服薬の吸収の中心は胃ではなく小腸"
+          },
+          {
+            "statement": "b",
+            "truth": "正",
+            "printedPages": [
+              42
+            ],
+            "notes": "鼻粘膜下には血管が豊富で点鼻薬成分は吸収されやすい"
+          },
+          {
+            "statement": "c",
+            "truth": "誤",
+            "printedPages": [
+              41
+            ],
+            "notes": "直腸下部から吸収された成分は肝初回通過を回避する"
+          },
+          {
+            "statement": "d",
+            "truth": "正",
+            "printedPages": [
+              42
+            ],
+            "notes": "皮膚から血液に移行した成分は肝臓で代謝される前に全身循環へ"
+          }
+        ],
+        "officialAnswerKey": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R06touhankaitou.pdf",
+          "questionNo": 71,
+          "answer": 2,
+          "verified": true
+        },
+        "examSource": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "sourcePdfPages": [
+            8
+          ],
+          "textCertification": "正規バンクの原典逐語認証・既存監査記録を使用"
+        },
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "printedPage": 8,
+          "verified": false,
+          "verificationBasis": "正規バンクでverbatimCertified=true、needsVisualReview=false、既存抽出監査PASSを確認。画像ピクセルの独立再確認は今回未実施。"
+        }
+      },
+      "notes": "手引きの選択肢別根拠と公式正答を照合。問80は既存の画像確認記録を採用。"
+    },
+    {
+      "questionId": "KSAI-2024-072",
+      "questionNo": 72,
+      "verdict": "PASS",
+      "answerNumberOfficial": 4,
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allStatementRationalesVerified": true,
+        "numbersAndInstitutionsVerified": true,
+        "independentImageReview": "SOURCE_BANK_VERBATIM_CERTIFICATION"
+      },
+      "evidence": {
+        "source": "厚生労働省『試験問題の作成に関する手引き』令和6年4月一部改訂",
+        "url": "https://www.mhlw.go.jp/content/001477985.pdf",
+        "statements": [
+          {
+            "statement": "a",
+            "truth": "正",
+            "printedPages": [
+              42
+            ],
+            "notes": "代謝により不活性化・活性化・排泄されやすい形への変化があり得る"
+          },
+          {
+            "statement": "b",
+            "truth": "誤",
+            "printedPages": [
+              42
+            ],
+            "notes": "母乳移行は微量でも乳児への影響上重要"
+          },
+          {
+            "statement": "c",
+            "truth": "誤",
+            "printedPages": [
+              43
+            ],
+            "notes": "門脈は肝臓へ流入し腎臓ではない"
+          },
+          {
+            "statement": "d",
+            "truth": "誤",
+            "printedPages": [
+              43
+            ],
+            "notes": "腎機能低下では尿中排泄が遅れ血中濃度が低下しにくい"
+          }
+        ],
+        "officialAnswerKey": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R06touhankaitou.pdf",
+          "questionNo": 72,
+          "answer": 4,
+          "verified": true
+        },
+        "examSource": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "sourcePdfPages": [
+            8
+          ],
+          "textCertification": "正規バンクの原典逐語認証・既存監査記録を使用"
+        },
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "printedPage": 8,
+          "verified": false,
+          "verificationBasis": "正規バンクでverbatimCertified=true、needsVisualReview=false、既存抽出監査PASSを確認。画像ピクセルの独立再確認は今回未実施。"
+        }
+      },
+      "notes": "手引きの選択肢別根拠と公式正答を照合。問80は既存の画像確認記録を採用。"
+    },
+    {
+      "questionId": "KSAI-2024-073",
+      "questionNo": 73,
+      "verdict": "PASS",
+      "answerNumberOfficial": 3,
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allStatementRationalesVerified": true,
+        "numbersAndInstitutionsVerified": true,
+        "independentImageReview": "SOURCE_BANK_VERBATIM_CERTIFICATION"
+      },
+      "evidence": {
+        "source": "厚生労働省『試験問題の作成に関する手引き』令和6年4月一部改訂",
+        "url": "https://www.mhlw.go.jp/content/001477985.pdf",
+        "statements": [
+          {
+            "statement": "a",
+            "truth": "正",
+            "printedPages": [
+              43
+            ],
+            "notes": "標的細胞の受容体・酵素・トランスポーター等のタンパク質との結合で作用"
+          },
+          {
+            "statement": "b",
+            "truth": "正",
+            "printedPages": [
+              44
+            ],
+            "notes": "代謝・排泄が吸収・分布を上回ると血中濃度は低下"
+          },
+          {
+            "statement": "c",
+            "truth": "誤",
+            "printedPages": [
+              44
+            ],
+            "notes": "一定の有効濃度に達しなければ薬効は現れない"
+          },
+          {
+            "statement": "d",
+            "truth": "誤",
+            "printedPages": [
+              44
+            ],
+            "notes": "有効濃度以上では薬効が頭打ちでも副作用・毒性は現れ得る"
+          }
+        ],
+        "officialAnswerKey": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R06touhankaitou.pdf",
+          "questionNo": 73,
+          "answer": 3,
+          "verified": true
+        },
+        "examSource": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "sourcePdfPages": [
+            9
+          ],
+          "textCertification": "正規バンクの原典逐語認証・既存監査記録を使用"
+        },
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "printedPage": 9,
+          "verified": false,
+          "verificationBasis": "正規バンクでverbatimCertified=true、needsVisualReview=false、既存抽出監査PASSを確認。画像ピクセルの独立再確認は今回未実施。"
+        }
+      },
+      "notes": "手引きの選択肢別根拠と公式正答を照合。問80は既存の画像確認記録を採用。"
+    },
+    {
+      "questionId": "KSAI-2024-074",
+      "questionNo": 74,
+      "verdict": "PASS",
+      "answerNumberOfficial": 5,
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allStatementRationalesVerified": true,
+        "numbersAndInstitutionsVerified": true,
+        "independentImageReview": "SOURCE_BANK_VERBATIM_CERTIFICATION"
+      },
+      "evidence": {
+        "source": "厚生労働省『試験問題の作成に関する手引き』令和6年4月一部改訂",
+        "url": "https://www.mhlw.go.jp/content/001477985.pdf",
+        "statements": [
+          {
+            "statement": "a",
+            "truth": "正",
+            "printedPages": [
+              45
+            ],
+            "notes": "錠剤は消化管で崩壊し有効成分が溶出する"
+          },
+          {
+            "statement": "b",
+            "truth": "正",
+            "printedPages": [
+              45
+            ],
+            "notes": "口腔内崩壊錠は唾液とともに服用可能。ただし年齢・製品の用法に従う"
+          },
+          {
+            "statement": "c",
+            "truth": "正",
+            "printedPages": [
+              45
+            ],
+            "notes": "コーティング顆粒は噛まずに服用"
+          },
+          {
+            "statement": "d",
+            "truth": "正",
+            "printedPages": [
+              46
+            ],
+            "notes": "カプセルは十分な水等で服用し食道付着を避ける"
+          }
+        ],
+        "officialAnswerKey": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R06touhankaitou.pdf",
+          "questionNo": 74,
+          "answer": 5,
+          "verified": true
+        },
+        "examSource": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "sourcePdfPages": [
+            10
+          ],
+          "textCertification": "正規バンクの原典逐語認証・既存監査記録を使用"
+        },
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "printedPage": 10,
+          "verified": false,
+          "verificationBasis": "正規バンクでverbatimCertified=true、needsVisualReview=false、既存抽出監査PASSを確認。画像ピクセルの独立再確認は今回未実施。"
+        }
+      },
+      "notes": "手引きの選択肢別根拠と公式正答を照合。問80は既存の画像確認記録を採用。"
+    },
+    {
+      "questionId": "KSAI-2024-075",
+      "questionNo": 75,
+      "verdict": "PASS",
+      "answerNumberOfficial": 3,
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allStatementRationalesVerified": true,
+        "numbersAndInstitutionsVerified": true,
+        "independentImageReview": "SOURCE_BANK_VERBATIM_CERTIFICATION"
+      },
+      "evidence": {
+        "source": "厚生労働省『試験問題の作成に関する手引き』令和6年4月一部改訂",
+        "url": "https://www.mhlw.go.jp/content/001477985.pdf",
+        "statements": [
+          {
+            "statement": "a",
+            "truth": "正",
+            "printedPages": [
+              48
+            ],
+            "notes": "肝機能障害の症状には倦怠感・黄疸・発熱・発疹・掻痒・吐き気等"
+          },
+          {
+            "statement": "b",
+            "truth": "誤",
+            "printedPages": [
+              48
+            ],
+            "notes": "黄疸はグロブリンではなくビリルビンの滞留"
+          },
+          {
+            "statement": "c",
+            "truth": "誤",
+            "printedPages": [
+              49
+            ],
+            "notes": "偽アルドステロン症はNa・水貯留とK喪失"
+          },
+          {
+            "statement": "d",
+            "truth": "正",
+            "printedPages": [
+              49
+            ],
+            "notes": "小柄な人・高齢者、長期服用後にも発症し得る"
+          }
+        ],
+        "officialAnswerKey": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R06touhankaitou.pdf",
+          "questionNo": 75,
+          "answer": 3,
+          "verified": true
+        },
+        "examSource": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "sourcePdfPages": [
+            10
+          ],
+          "textCertification": "正規バンクの原典逐語認証・既存監査記録を使用"
+        },
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "printedPage": 10,
+          "verified": false,
+          "verificationBasis": "正規バンクでverbatimCertified=true、needsVisualReview=false、既存抽出監査PASSを確認。画像ピクセルの独立再確認は今回未実施。"
+        }
+      },
+      "notes": "手引きの選択肢別根拠と公式正答を照合。問80は既存の画像確認記録を採用。"
+    },
+    {
+      "questionId": "KSAI-2024-076",
+      "questionNo": 76,
+      "verdict": "PASS",
+      "answerNumberOfficial": 2,
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allStatementRationalesVerified": true,
+        "numbersAndInstitutionsVerified": true,
+        "independentImageReview": "SOURCE_BANK_VERBATIM_CERTIFICATION"
+      },
+      "evidence": {
+        "source": "厚生労働省『試験問題の作成に関する手引き』令和6年4月一部改訂",
+        "url": "https://www.mhlw.go.jp/content/001477985.pdf",
+        "statements": [
+          {
+            "statement": "a",
+            "truth": "正",
+            "printedPages": [
+              50
+            ],
+            "notes": "精神神経症状は不眠・不安・振戦・興奮・眠気・うつ等"
+          },
+          {
+            "statement": "b",
+            "truth": "誤",
+            "printedPages": [
+              50
+            ],
+            "notes": "通常用法用量でも発生することがある"
+          },
+          {
+            "statement": "c",
+            "truth": "正",
+            "printedPages": [
+              50
+            ],
+            "notes": "基礎疾患（SLE・関節リウマチ等）で無菌性髄膜炎リスクが高い"
+          },
+          {
+            "statement": "d",
+            "truth": "誤",
+            "printedPages": [
+              50
+            ],
+            "notes": "同一薬再使用で再発・急速悪化し得る"
+          }
+        ],
+        "officialAnswerKey": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R06touhankaitou.pdf",
+          "questionNo": 76,
+          "answer": 2,
+          "verified": true
+        },
+        "examSource": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "sourcePdfPages": [
+            11
+          ],
+          "textCertification": "正規バンクの原典逐語認証・既存監査記録を使用"
+        },
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "printedPage": 11,
+          "verified": false,
+          "verificationBasis": "正規バンクでverbatimCertified=true、needsVisualReview=false、既存抽出監査PASSを確認。画像ピクセルの独立再確認は今回未実施。"
+        }
+      },
+      "notes": "手引きの選択肢別根拠と公式正答を照合。問80は既存の画像確認記録を採用。"
+    },
+    {
+      "questionId": "KSAI-2024-077",
+      "questionNo": 77,
+      "verdict": "PASS",
+      "answerNumberOfficial": 4,
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allStatementRationalesVerified": true,
+        "numbersAndInstitutionsVerified": true,
+        "independentImageReview": "SOURCE_BANK_VERBATIM_CERTIFICATION"
+      },
+      "evidence": {
+        "source": "厚生労働省『試験問題の作成に関する手引き』令和6年4月一部改訂",
+        "url": "https://www.mhlw.go.jp/content/001477985.pdf",
+        "statements": [
+          {
+            "statement": "a",
+            "truth": "誤",
+            "printedPages": [
+              51
+            ],
+            "notes": "消化性潰瘍は粘膜筋板を超える欠損を伴う"
+          },
+          {
+            "statement": "b",
+            "truth": "正",
+            "printedPages": [
+              51
+            ],
+            "notes": "自覚症状が乏しく吐血・下血で発見されることがある"
+          },
+          {
+            "statement": "c",
+            "truth": "正",
+            "printedPages": [
+              51
+            ],
+            "notes": "イレウス様症状で嘔吐がなくても摂取低下から脱水し得る"
+          },
+          {
+            "statement": "d",
+            "truth": "正",
+            "printedPages": [
+              51
+            ],
+            "notes": "小児・高齢者・便秘傾向者はリスクが高い"
+          }
+        ],
+        "officialAnswerKey": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R06touhankaitou.pdf",
+          "questionNo": 77,
+          "answer": 4,
+          "verified": true
+        },
+        "examSource": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "sourcePdfPages": [
+            12
+          ],
+          "textCertification": "正規バンクの原典逐語認証・既存監査記録を使用"
+        },
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "printedPage": 12,
+          "verified": false,
+          "verificationBasis": "正規バンクでverbatimCertified=true、needsVisualReview=false、既存抽出監査PASSを確認。画像ピクセルの独立再確認は今回未実施。"
+        }
+      },
+      "notes": "手引きの選択肢別根拠と公式正答を照合。問80は既存の画像確認記録を採用。"
+    },
+    {
+      "questionId": "KSAI-2024-078",
+      "questionNo": 78,
+      "verdict": "PASS",
+      "answerNumberOfficial": 4,
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allStatementRationalesVerified": true,
+        "numbersAndInstitutionsVerified": true,
+        "independentImageReview": "SOURCE_BANK_VERBATIM_CERTIFICATION"
+      },
+      "evidence": {
+        "source": "厚生労働省『試験問題の作成に関する手引き』令和6年4月一部改訂",
+        "url": "https://www.mhlw.go.jp/content/001477985.pdf",
+        "statements": [
+          {
+            "statement": "a",
+            "truth": "誤",
+            "printedPages": [
+              52
+            ],
+            "notes": "間質性肺炎は気管支・肺胞の細菌感染ではなく間質の炎症"
+          },
+          {
+            "statement": "b",
+            "truth": "正",
+            "printedPages": [
+              52
+            ],
+            "notes": "低酸素・呼吸困難・空咳・発熱等を呈し得る"
+          },
+          {
+            "statement": "c",
+            "truth": "誤",
+            "printedPages": [
+              52
+            ],
+            "notes": "薬剤性喘息は内服薬だけでなく坐薬・外用薬でも起こり得る"
+          },
+          {
+            "statement": "d",
+            "truth": "正",
+            "printedPages": [
+              52
+            ],
+            "notes": "原因成分が消失すれば合併症がない限り軽快し得る"
+          }
+        ],
+        "officialAnswerKey": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R06touhankaitou.pdf",
+          "questionNo": 78,
+          "answer": 4,
+          "verified": true
+        },
+        "examSource": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "sourcePdfPages": [
+            12
+          ],
+          "textCertification": "正規バンクの原典逐語認証・既存監査記録を使用"
+        },
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "printedPage": 12,
+          "verified": false,
+          "verificationBasis": "正規バンクでverbatimCertified=true、needsVisualReview=false、既存抽出監査PASSを確認。画像ピクセルの独立再確認は今回未実施。"
+        }
+      },
+      "notes": "手引きの選択肢別根拠と公式正答を照合。問80は既存の画像確認記録を採用。"
+    },
+    {
+      "questionId": "KSAI-2024-079",
+      "questionNo": 79,
+      "verdict": "PASS",
+      "answerNumberOfficial": 3,
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allStatementRationalesVerified": true,
+        "numbersAndInstitutionsVerified": true,
+        "independentImageReview": "SOURCE_BANK_VERBATIM_CERTIFICATION"
+      },
+      "evidence": {
+        "source": "厚生労働省『試験問題の作成に関する手引き』令和6年4月一部改訂",
+        "url": "https://www.mhlw.go.jp/content/001477985.pdf",
+        "statements": [
+          {
+            "statement": "a",
+            "truth": "誤",
+            "printedPages": [
+              53
+            ],
+            "notes": "うっ血性心不全は拍動リズム異常ではなく心臓の送血不全"
+          },
+          {
+            "statement": "b",
+            "truth": "正",
+            "printedPages": [
+              53
+            ],
+            "notes": "息切れ・浮腫・急な体重増加・咳・ピンク色痰は疑う徴候"
+          },
+          {
+            "statement": "c",
+            "truth": "正",
+            "printedPages": [
+              53
+            ],
+            "notes": "肝腎機能低下や相互作用は薬剤性不整脈リスクに関係"
+          },
+          {
+            "statement": "d",
+            "truth": "正",
+            "printedPages": [
+              53
+            ],
+            "notes": "適正使用でも動悸・一過性血圧上昇・顔面紅潮等が起こり得る"
+          }
+        ],
+        "officialAnswerKey": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R06touhankaitou.pdf",
+          "questionNo": 79,
+          "answer": 3,
+          "verified": true
+        },
+        "examSource": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "sourcePdfPages": [
+            13
+          ],
+          "textCertification": "正規バンクの原典逐語認証・既存監査記録を使用"
+        },
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "printedPage": 13,
+          "verified": false,
+          "verificationBasis": "正規バンクでverbatimCertified=true、needsVisualReview=false、既存抽出監査PASSを確認。画像ピクセルの独立再確認は今回未実施。"
+        }
+      },
+      "notes": "手引きの選択肢別根拠と公式正答を照合。問80は既存の画像確認記録を採用。"
+    },
+    {
+      "questionId": "KSAI-2024-080",
+      "questionNo": 80,
+      "verdict": "PASS",
+      "answerNumberOfficial": 4,
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allStatementRationalesVerified": true,
+        "numbersAndInstitutionsVerified": true,
+        "independentImageReview": "PRIOR_IMAGE_REVIEW_RECORD_CONFIRMED"
+      },
+      "evidence": {
+        "source": "厚生労働省『試験問題の作成に関する手引き』令和6年4月一部改訂",
+        "url": "https://www.mhlw.go.jp/content/001477985.pdf",
+        "statements": [
+          {
+            "statement": "a",
+            "truth": "誤",
+            "printedPages": [
+              54
+            ],
+            "notes": "画像による設問。解説・既存の画像監査記録ではa,bが誤り、c,dが正しいと確認。原典画像の再取得はこの実行では未実施"
+          },
+          {
+            "statement": "b",
+            "truth": "誤",
+            "printedPages": [
+              54
+            ]
+          },
+          {
+            "statement": "c",
+            "truth": "正",
+            "printedPages": [
+              54
+            ]
+          },
+          {
+            "statement": "d",
+            "truth": "正",
+            "printedPages": [
+              54
+            ]
+          }
+        ],
+        "officialAnswerKey": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R06touhankaitou.pdf",
+          "questionNo": 80,
+          "answer": 4,
+          "verified": true
+        },
+        "examSource": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "sourcePdfPages": [
+            14
+          ],
+          "textCertification": "正規バンクの原典逐語認証・既存監査記録を使用"
+        },
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "printedPage": 14,
+          "verified": true,
+          "verificationBasis": "正規バンクの既存imageReviewed=trueおよびsourcePdfPage=14。今回の直接再取得なし。"
+        }
+      },
+      "notes": "手引きの選択肢別根拠と公式正答を照合。問80は既存の画像確認記録を採用。"
     }
   ],
   "sourceRevisionNote": {
