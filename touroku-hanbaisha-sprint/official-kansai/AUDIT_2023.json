@@ -9,10 +9,10 @@
     "url": "https://www.mhlw.go.jp/content/001149203.pdf",
     "pageMapping": "PDF page = printed page + 8; zero-based index = printed page + 7"
   },
-  "auditedCount": 89,
-  "auditPassedCount": 88,
-  "holdCount": 1,
-  "remainingCount": 30,
+  "auditedCount": 99,
+  "auditPassedCount": 99,
+  "holdCount": 0,
+  "remainingCount": 20,
   "audits": [
     {
       "questionId": "KSAI-2023-001",
@@ -4487,13 +4487,13 @@
     {
       "questionId": "KSAI-2023-074",
       "questionNo": 74,
-      "verdict": "HOLD",
+      "verdict": "PASS",
       "evidence": {
-        "sourceExplanationBlob": "e0b350518c6a4f85ea9464d145021d266c28555c",
+        "sourceExplanationBlob": "0200983bfa1df488ff0f0ecc22dff1ea6fb90acb",
         "answerNumberOfficial": 4,
         "explanationAnswerNumber": 4,
         "officialAnswerMatched": true,
-        "officialAnswerSource": "uploaded APPROVED_OFFICIAL_BANK(7).json; Python independently extracted year=2023, questionNo, answerNumberOfficial",
+        "officialAnswerSource": "attached APPROVED_OFFICIAL_BANK(7).json; Python extraction of year=2023, questionNo, answerNumberOfficial in current turn",
         "statementVerdicts": [
           "誤",
           "誤",
@@ -4513,14 +4513,7 @@
             "pdfPage": 54,
             "pdfIndex": 53,
             "lines": "800–802",
-            "topic": "c 外用液剤は乾きやすい"
-          },
-          {
-            "printedPage": 46,
-            "pdfPage": 54,
-            "pdfIndex": 53,
-            "lines": "807–809",
-            "topic": "c 広範囲適用はスプレー剤の項目"
+            "topic": "c 外用液剤の乾きやすさ"
           },
           {
             "printedPage": 46,
@@ -4528,6 +4521,13 @@
             "pdfIndex": 53,
             "lines": "803–806",
             "topic": "d 貼付剤"
+          },
+          {
+            "printedPage": 46,
+            "pdfPage": 54,
+            "pdfIndex": 53,
+            "lines": "807–809",
+            "topic": "旧指摘：広範囲はスプレー剤"
           }
         ],
         "allStatementsChecked": true,
@@ -4539,10 +4539,77 @@
           "printedPage": 7,
           "pdfPage": 9,
           "pdfIndex": 8,
-          "checked": "公式PDF画像で問題文・全記述・組合せを目視照合"
+          "checked": "公式試験PDF原典画像で設問・全記述・組合せを確認"
         }
       },
-      "notes": "cの『広範囲に塗布しやすい』は外用液剤一般について一次資料で支持できず、手引きではスプレー剤の項目に記載。削除し乾きやすさに限定するよう修正依頼。正答番号4は一致。"
+      "notes": "修正版のa〜dと正答理由を再照合。cの過度な一般化を削除し、p.46に一致。",
+      "reauditHistory": [
+        {
+          "previousRecord": {
+            "questionId": "KSAI-2023-074",
+            "questionNo": 74,
+            "verdict": "HOLD",
+            "evidence": {
+              "sourceExplanationBlob": "e0b350518c6a4f85ea9464d145021d266c28555c",
+              "answerNumberOfficial": 4,
+              "explanationAnswerNumber": 4,
+              "officialAnswerMatched": true,
+              "officialAnswerSource": "uploaded APPROVED_OFFICIAL_BANK(7).json; Python independently extracted year=2023, questionNo, answerNumberOfficial",
+              "statementVerdicts": [
+                "誤",
+                "誤",
+                "誤",
+                "正"
+              ],
+              "guide": [
+                {
+                  "printedPage": 46,
+                  "pdfPage": 54,
+                  "pdfIndex": 53,
+                  "lines": "794–799",
+                  "topic": "a,b 軟膏・クリーム"
+                },
+                {
+                  "printedPage": 46,
+                  "pdfPage": 54,
+                  "pdfIndex": 53,
+                  "lines": "800–802",
+                  "topic": "c 外用液剤は乾きやすい"
+                },
+                {
+                  "printedPage": 46,
+                  "pdfPage": 54,
+                  "pdfIndex": 53,
+                  "lines": "807–809",
+                  "topic": "c 広範囲適用はスプレー剤の項目"
+                },
+                {
+                  "printedPage": 46,
+                  "pdfPage": 54,
+                  "pdfIndex": 53,
+                  "lines": "803–806",
+                  "topic": "d 貼付剤"
+                }
+              ],
+              "allStatementsChecked": true,
+              "correctReasonChecked": true,
+              "unsupportedNumbersOrSystems": false,
+              "sourceImageChecked": true,
+              "examImage": {
+                "url": "https://www.kouiki-kansai.jp/material/files/group/12/R5touhanmondaiato.pdf",
+                "printedPage": 7,
+                "pdfPage": 9,
+                "pdfIndex": 8,
+                "checked": "公式PDF画像で問題文・全記述・組合せを目視照合"
+              }
+            },
+            "notes": "cの『広範囲に塗布しやすい』は外用液剤一般について一次資料で支持できず、手引きではスプレー剤の項目に記載。削除し乾きやすさに限定するよう修正依頼。正答番号4は一致。"
+          },
+          "decision": "PASS",
+          "sourceExplanationBlob": "0200983bfa1df488ff0f0ecc22dff1ea6fb90acb",
+          "reason": "p.46原典画像と試験PDF p.7再照合。新旧119問の比較では問74のみ変更。"
+        }
+      ]
     },
     {
       "questionId": "KSAI-2023-075",
@@ -5439,6 +5506,620 @@
         }
       },
       "notes": "特定保健用食品は両制度に属することを分類表で確認。"
+    },
+    {
+      "questionId": "KSAI-2023-091",
+      "questionNo": 91,
+      "verdict": "PASS",
+      "evidence": {
+        "sourceExplanationBlob": "0200983bfa1df488ff0f0ecc22dff1ea6fb90acb",
+        "answerNumberOfficial": 1,
+        "explanationAnswerNumber": 1,
+        "officialAnswerMatched": true,
+        "officialAnswerSource": "attached APPROVED_OFFICIAL_BANK(7).json; Python extraction of year=2023, questionNo, answerNumberOfficial in current turn",
+        "statementVerdicts": [
+          "正",
+          "正",
+          "誤",
+          "誤"
+        ],
+        "guide": [
+          {
+            "printedPage": 224,
+            "pdfPage": 232,
+            "pdfIndex": 231,
+            "lines": "602–604",
+            "topic": "a 医療提供施設"
+          },
+          {
+            "printedPage": 223,
+            "pdfPage": 231,
+            "pdfIndex": 230,
+            "lines": "589–592",
+            "topic": "b 分割販売"
+          },
+          {
+            "printedPage": 224,
+            "pdfPage": 232,
+            "pdfIndex": 231,
+            "lines": "593–597",
+            "topic": "b 事前小分け禁止"
+          },
+          {
+            "printedPage": 224,
+            "pdfPage": 232,
+            "pdfIndex": 231,
+            "lines": "623–624",
+            "topic": "c 管理者"
+          },
+          {
+            "printedPage": 225,
+            "pdfPage": 233,
+            "pdfIndex": 232,
+            "lines": "625–627",
+            "topic": "c 薬剤師"
+          },
+          {
+            "printedPage": 225,
+            "pdfPage": 233,
+            "pdfIndex": 232,
+            "lines": "648–658",
+            "topic": "d 連携薬局区別"
+          }
+        ],
+        "allStatementsChecked": true,
+        "correctReasonChecked": true,
+        "unsupportedNumbersOrSystems": false,
+        "sourceImageChecked": true,
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R5touhanmondaiato.pdf",
+          "printedPage": 17,
+          "pdfPage": 19,
+          "pdfIndex": 18,
+          "checked": "公式試験PDF原典画像で設問・全記述・組合せを確認"
+        }
+      },
+      "notes": "全記述・正答理由・学習ポイントに実質的矛盾なし。"
+    },
+    {
+      "questionId": "KSAI-2023-092",
+      "questionNo": 92,
+      "verdict": "PASS",
+      "evidence": {
+        "sourceExplanationBlob": "0200983bfa1df488ff0f0ecc22dff1ea6fb90acb",
+        "answerNumberOfficial": 1,
+        "explanationAnswerNumber": 1,
+        "officialAnswerMatched": true,
+        "officialAnswerSource": "attached APPROVED_OFFICIAL_BANK(7).json; Python extraction of year=2023, questionNo, answerNumberOfficial in current turn",
+        "statementVerdicts": [
+          "正",
+          "誤",
+          "正",
+          "正"
+        ],
+        "guide": [
+          {
+            "printedPage": 232,
+            "pdfPage": 240,
+            "pdfIndex": 239,
+            "lines": "860–862",
+            "topic": "a 販売薬剤師氏名・店舗名称・連絡先"
+          },
+          {
+            "printedPage": 235,
+            "pdfPage": 243,
+            "pdfIndex": 242,
+            "lines": "表⑧",
+            "topic": "a 情報提供薬剤師氏名"
+          },
+          {
+            "printedPage": 236,
+            "pdfPage": 244,
+            "pdfIndex": 243,
+            "lines": "955–958",
+            "topic": "b 第一類薬剤師書面"
+          },
+          {
+            "printedPage": 238,
+            "pdfPage": 246,
+            "pdfIndex": 245,
+            "lines": "992–995",
+            "topic": "c 第二類努力義務"
+          },
+          {
+            "printedPage": 238,
+            "pdfPage": 246,
+            "pdfIndex": 245,
+            "lines": "1018–1021",
+            "topic": "d 相談"
+          },
+          {
+            "printedPage": 239,
+            "pdfPage": 247,
+            "pdfIndex": 246,
+            "lines": "1022–1023",
+            "topic": "d 義務"
+          }
+        ],
+        "allStatementsChecked": true,
+        "correctReasonChecked": true,
+        "unsupportedNumbersOrSystems": false,
+        "sourceImageChecked": true,
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R5touhanmondaiato.pdf",
+          "printedPage": 17,
+          "pdfPage": 19,
+          "pdfIndex": 18,
+          "checked": "公式試験PDF原典画像で設問・全記述・組合せを確認"
+        }
+      },
+      "notes": "aの情報提供者氏名はp.235表⑧、店舗名称と連絡先はp.232。販売者氏名と情報提供者氏名の規定は区別。草稿参照範囲外のp.236–239を追加。"
+    },
+    {
+      "questionId": "KSAI-2023-093",
+      "questionNo": 93,
+      "verdict": "PASS",
+      "evidence": {
+        "sourceExplanationBlob": "0200983bfa1df488ff0f0ecc22dff1ea6fb90acb",
+        "answerNumberOfficial": 2,
+        "explanationAnswerNumber": 2,
+        "officialAnswerMatched": true,
+        "officialAnswerSource": "attached APPROVED_OFFICIAL_BANK(7).json; Python extraction of year=2023, questionNo, answerNumberOfficial in current turn",
+        "statementVerdicts": [
+          "正",
+          "正",
+          "誤",
+          "正"
+        ],
+        "guide": [
+          {
+            "printedPage": 239,
+            "pdfPage": 247,
+            "pdfIndex": 246,
+            "lines": "1036–1039",
+            "topic": "a 他物と区別"
+          },
+          {
+            "printedPage": 240,
+            "pdfPage": 248,
+            "pdfIndex": 247,
+            "lines": "1045–1046",
+            "topic": "b 混在禁止"
+          },
+          {
+            "printedPage": 240,
+            "pdfPage": 248,
+            "pdfIndex": 247,
+            "lines": "1055–1057,1069–1070",
+            "topic": "c リスク区分"
+          },
+          {
+            "printedPage": 240,
+            "pdfPage": 248,
+            "pdfIndex": 247,
+            "lines": "1063–1068",
+            "topic": "d 7mと施錠例外"
+          }
+        ],
+        "allStatementsChecked": true,
+        "correctReasonChecked": true,
+        "unsupportedNumbersOrSystems": false,
+        "sourceImageChecked": true,
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R5touhanmondaiato.pdf",
+          "printedPage": 18,
+          "pdfPage": 20,
+          "pdfIndex": 19,
+          "checked": "公式試験PDF原典画像で設問・全記述・組合せを確認"
+        }
+      },
+      "notes": "草稿範囲外p.240を追加。"
+    },
+    {
+      "questionId": "KSAI-2023-094",
+      "questionNo": 94,
+      "verdict": "PASS",
+      "evidence": {
+        "sourceExplanationBlob": "0200983bfa1df488ff0f0ecc22dff1ea6fb90acb",
+        "answerNumberOfficial": 3,
+        "explanationAnswerNumber": 3,
+        "officialAnswerMatched": true,
+        "officialAnswerSource": "attached APPROVED_OFFICIAL_BANK(7).json; Python extraction of year=2023, questionNo, answerNumberOfficial in current turn",
+        "statementVerdicts": [
+          "誤",
+          "正",
+          "正",
+          "正"
+        ],
+        "guide": [
+          {
+            "printedPage": 241,
+            "pdfPage": 249,
+            "pdfIndex": 248,
+            "lines": "1086–1090,掲示表左④⑦",
+            "topic": "a,b 氏名・区分・営業時間"
+          },
+          {
+            "printedPage": 242,
+            "pdfPage": 250,
+            "pdfIndex": 249,
+            "lines": "掲示表右⑦⑨",
+            "topic": "c,d 禁忌相談・救済制度"
+          }
+        ],
+        "allStatementsChecked": true,
+        "correctReasonChecked": true,
+        "unsupportedNumbersOrSystems": false,
+        "sourceImageChecked": true,
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R5touhanmondaiato.pdf",
+          "printedPage": 18,
+          "pdfPage": 20,
+          "pdfIndex": 19,
+          "checked": "公式試験PDF原典画像で設問・全記述・組合せを確認"
+        }
+      },
+      "notes": "全記述・正答理由・学習ポイントに実質的矛盾なし。"
+    },
+    {
+      "questionId": "KSAI-2023-095",
+      "questionNo": 95,
+      "verdict": "PASS",
+      "evidence": {
+        "sourceExplanationBlob": "0200983bfa1df488ff0f0ecc22dff1ea6fb90acb",
+        "answerNumberOfficial": 5,
+        "explanationAnswerNumber": 5,
+        "officialAnswerMatched": true,
+        "officialAnswerSource": "attached APPROVED_OFFICIAL_BANK(7).json; Python extraction of year=2023, questionNo, answerNumberOfficial in current turn",
+        "statementVerdicts": [
+          "誤",
+          "正",
+          "誤",
+          "正"
+        ],
+        "guide": [
+          {
+            "printedPage": 243,
+            "pdfPage": 251,
+            "pdfIndex": 250,
+            "lines": "1098–1100",
+            "topic": "a 劇薬除外"
+          },
+          {
+            "printedPage": 243,
+            "pdfPage": 251,
+            "pdfIndex": 250,
+            "lines": "1106–1108,表右②",
+            "topic": "b 写真"
+          },
+          {
+            "printedPage": 243,
+            "pdfPage": 251,
+            "pdfIndex": 250,
+            "lines": "1104–1105",
+            "topic": "c 当該店舗在庫"
+          },
+          {
+            "printedPage": 244,
+            "pdfPage": 252,
+            "pdfIndex": 251,
+            "lines": "1115–1116",
+            "topic": "d 対面電話"
+          },
+          {
+            "printedPage": 245,
+            "pdfPage": 253,
+            "pdfIndex": 252,
+            "lines": "1117–1118",
+            "topic": "d 当該資格者"
+          }
+        ],
+        "allStatementsChecked": true,
+        "correctReasonChecked": true,
+        "unsupportedNumbersOrSystems": false,
+        "sourceImageChecked": true,
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R5touhanmondaiato.pdf",
+          "printedPage": 19,
+          "pdfPage": 21,
+          "pdfIndex": 20,
+          "checked": "公式試験PDF原典画像で設問・全記述・組合せを確認"
+        }
+      },
+      "notes": "草稿範囲外p.243を追加。"
+    },
+    {
+      "questionId": "KSAI-2023-096",
+      "questionNo": 96,
+      "verdict": "PASS",
+      "evidence": {
+        "sourceExplanationBlob": "0200983bfa1df488ff0f0ecc22dff1ea6fb90acb",
+        "answerNumberOfficial": 4,
+        "explanationAnswerNumber": 4,
+        "officialAnswerMatched": true,
+        "officialAnswerSource": "attached APPROVED_OFFICIAL_BANK(7).json; Python extraction of year=2023, questionNo, answerNumberOfficial in current turn",
+        "statementVerdicts": [
+          "正",
+          "誤",
+          "正",
+          "誤"
+        ],
+        "guide": [
+          {
+            "printedPage": 250,
+            "pdfPage": 258,
+            "pdfIndex": 257,
+            "lines": "1291–1295",
+            "topic": "a 法66条"
+          },
+          {
+            "printedPage": 250,
+            "pdfPage": 258,
+            "pdfIndex": 257,
+            "lines": "1317",
+            "topic": "b 三要件"
+          },
+          {
+            "printedPage": 251,
+            "pdfPage": 259,
+            "pdfIndex": 258,
+            "lines": "1318–1320",
+            "topic": "b 全要件"
+          },
+          {
+            "printedPage": 251,
+            "pdfPage": 259,
+            "pdfIndex": 258,
+            "lines": "1327–1330",
+            "topic": "c 4.5％"
+          },
+          {
+            "printedPage": 250,
+            "pdfPage": 258,
+            "pdfIndex": 257,
+            "lines": "1298–1304,1307–1308",
+            "topic": "d 法68条"
+          }
+        ],
+        "allStatementsChecked": true,
+        "correctReasonChecked": true,
+        "unsupportedNumbersOrSystems": false,
+        "sourceImageChecked": true,
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R5touhanmondaiato.pdf",
+          "printedPage": 20,
+          "pdfPage": 22,
+          "pdfIndex": 21,
+          "checked": "公式試験PDF原典画像で設問・全記述・組合せを確認"
+        }
+      },
+      "notes": "全記述・正答理由・学習ポイントに実質的矛盾なし。"
+    },
+    {
+      "questionId": "KSAI-2023-097",
+      "questionNo": 97,
+      "verdict": "PASS",
+      "evidence": {
+        "sourceExplanationBlob": "0200983bfa1df488ff0f0ecc22dff1ea6fb90acb",
+        "answerNumberOfficial": 4,
+        "explanationAnswerNumber": 4,
+        "officialAnswerMatched": true,
+        "officialAnswerSource": "attached APPROVED_OFFICIAL_BANK(7).json; Python extraction of year=2023, questionNo, answerNumberOfficial in current turn",
+        "statementVerdicts": [
+          "正",
+          "誤",
+          "誤",
+          "誤"
+        ],
+        "guide": [
+          {
+            "printedPage": 251,
+            "pdfPage": 259,
+            "pdfIndex": 258,
+            "lines": "1333–1338",
+            "topic": "a 誤認・乱用"
+          },
+          {
+            "printedPage": 252,
+            "pdfPage": 260,
+            "pdfIndex": 259,
+            "lines": "1357–1361",
+            "topic": "b 保証表現"
+          },
+          {
+            "printedPage": 251,
+            "pdfPage": 259,
+            "pdfIndex": 258,
+            "lines": "1349–1351",
+            "topic": "c 構成生薬"
+          },
+          {
+            "printedPage": 252,
+            "pdfPage": 260,
+            "pdfIndex": 259,
+            "lines": "1352–1356",
+            "topic": "d 承認効能"
+          }
+        ],
+        "allStatementsChecked": true,
+        "correctReasonChecked": true,
+        "unsupportedNumbersOrSystems": false,
+        "sourceImageChecked": true,
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R5touhanmondaiato.pdf",
+          "printedPage": 21,
+          "pdfPage": 23,
+          "pdfIndex": 22,
+          "checked": "公式試験PDF原典画像で設問・全記述・組合せを確認"
+        }
+      },
+      "notes": "全記述・正答理由・学習ポイントに実質的矛盾なし。"
+    },
+    {
+      "questionId": "KSAI-2023-098",
+      "questionNo": 98,
+      "verdict": "PASS",
+      "evidence": {
+        "sourceExplanationBlob": "0200983bfa1df488ff0f0ecc22dff1ea6fb90acb",
+        "answerNumberOfficial": 3,
+        "explanationAnswerNumber": 3,
+        "officialAnswerMatched": true,
+        "officialAnswerSource": "attached APPROVED_OFFICIAL_BANK(7).json; Python extraction of year=2023, questionNo, answerNumberOfficial in current turn",
+        "statementVerdicts": [
+          "正",
+          "正",
+          "誤",
+          "誤"
+        ],
+        "guide": [
+          {
+            "printedPage": 253,
+            "pdfPage": 261,
+            "pdfIndex": 260,
+            "lines": "1393–1396",
+            "topic": "a,b 景品"
+          },
+          {
+            "printedPage": 253,
+            "pdfPage": 261,
+            "pdfIndex": 260,
+            "lines": "1404–1408",
+            "topic": "c 現金売り禁止"
+          },
+          {
+            "printedPage": 253,
+            "pdfPage": 261,
+            "pdfIndex": 260,
+            "lines": "1397–1401,脚注ccxviii",
+            "topic": "d 重複・在庫処分"
+          }
+        ],
+        "allStatementsChecked": true,
+        "correctReasonChecked": true,
+        "unsupportedNumbersOrSystems": false,
+        "sourceImageChecked": true,
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R5touhanmondaiato.pdf",
+          "printedPage": 21,
+          "pdfPage": 23,
+          "pdfIndex": 22,
+          "checked": "公式試験PDF原典画像で設問・全記述・組合せを確認"
+        }
+      },
+      "notes": "全記述・正答理由・学習ポイントに実質的矛盾なし。"
+    },
+    {
+      "questionId": "KSAI-2023-099",
+      "questionNo": 99,
+      "verdict": "PASS",
+      "evidence": {
+        "sourceExplanationBlob": "0200983bfa1df488ff0f0ecc22dff1ea6fb90acb",
+        "answerNumberOfficial": 5,
+        "explanationAnswerNumber": 5,
+        "officialAnswerMatched": true,
+        "officialAnswerSource": "attached APPROVED_OFFICIAL_BANK(7).json; Python extraction of year=2023, questionNo, answerNumberOfficial in current turn",
+        "statementVerdicts": [
+          "正",
+          "誤",
+          "誤",
+          "誤"
+        ],
+        "guide": [
+          {
+            "printedPage": 254,
+            "pdfPage": 262,
+            "pdfIndex": 261,
+            "lines": "1438–1442",
+            "topic": "a 罰則"
+          },
+          {
+            "printedPage": 255,
+            "pdfPage": 263,
+            "pdfIndex": 262,
+            "lines": "1454–1458",
+            "topic": "b 命令対象"
+          },
+          {
+            "printedPage": 254,
+            "pdfPage": 262,
+            "pdfIndex": 261,
+            "lines": "1429–1436",
+            "topic": "c 検査と収去"
+          },
+          {
+            "printedPage": 255,
+            "pdfPage": 263,
+            "pdfIndex": 262,
+            "lines": "1477–1481",
+            "topic": "d 知事"
+          }
+        ],
+        "allStatementsChecked": true,
+        "correctReasonChecked": true,
+        "unsupportedNumbersOrSystems": false,
+        "sourceImageChecked": true,
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R5touhanmondaiato.pdf",
+          "printedPage": 22,
+          "pdfPage": 24,
+          "pdfIndex": 23,
+          "checked": "公式試験PDF原典画像で設問・全記述・組合せを確認"
+        }
+      },
+      "notes": "草稿範囲外p.254を追加。"
+    },
+    {
+      "questionId": "KSAI-2023-100",
+      "questionNo": 100,
+      "verdict": "PASS",
+      "evidence": {
+        "sourceExplanationBlob": "0200983bfa1df488ff0f0ecc22dff1ea6fb90acb",
+        "answerNumberOfficial": 2,
+        "explanationAnswerNumber": 2,
+        "officialAnswerMatched": true,
+        "officialAnswerSource": "attached APPROVED_OFFICIAL_BANK(7).json; Python extraction of year=2023, questionNo, answerNumberOfficial in current turn",
+        "statementVerdicts": [
+          "正",
+          "誤",
+          "誤",
+          "正"
+        ],
+        "guide": [
+          {
+            "printedPage": 257,
+            "pdfPage": 265,
+            "pdfIndex": 264,
+            "lines": "1524–1526",
+            "topic": "a 業界団体"
+          },
+          {
+            "printedPage": 257,
+            "pdfPage": 265,
+            "pdfIndex": 264,
+            "lines": "1516–1520",
+            "topic": "b 行政庁"
+          },
+          {
+            "printedPage": 257,
+            "pdfPage": 265,
+            "pdfIndex": 264,
+            "lines": "1521–1523",
+            "topic": "c,d 助言・通報"
+          }
+        ],
+        "allStatementsChecked": true,
+        "correctReasonChecked": true,
+        "unsupportedNumbersOrSystems": false,
+        "sourceImageChecked": true,
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R5touhanmondaiato.pdf",
+          "printedPage": 23,
+          "pdfPage": 25,
+          "pdfIndex": 24,
+          "checked": "公式試験PDF原典画像で設問・全記述・組合せを確認"
+        }
+      },
+      "notes": "草稿p.259–260ではなく直接根拠p.257。本文内容は一致するが参照表示の修正を推奨。"
     }
   ],
   "sourceExplanationBlobHistory": [
