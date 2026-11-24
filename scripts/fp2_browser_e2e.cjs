@@ -57,6 +57,25 @@ const URL='http://127.0.0.1:8765/';
   const first=await page.evaluate(()=>session[0].id);
   await page.locator('#unknown').click();
   assert.match(await page.locator('#feedback').innerText(),/出典|改変/);
+  // No one-line field exists in the 298 selected canonical records: never duplicate full explanation.
+  assert.equal(await page.locator('#memory').isVisible(),false,'full explanation must not populate one-line summary');
+  assert.equal(await page.locator('#detail').locator('xpath=..').isVisible(),false,'duplicate details panel hidden');
+  assert.ok((await page.locator('#reason').innerText()).length>0,'explanation remains readable');
+  const explanationAudit=await page.evaluate(()=>{
+    const labels=/^【(?:独自解説[^】]*|独立最終監査[^】]*|2026-04-01基準・独立最終監査済み)】/u;
+    return {total:QUESTIONS.length,rawPrefixed:QUESTIONS.filter(q=>labels.test(q.r)).length,
+      visiblePrefixed:QUESTIONS.filter(q=>labels.test(displayExplanation(q.r))).length,
+      duplicateRaw:QUESTIONS.filter(q=>q.m===q.r&&q.r===q.d).length,
+      originalUnchanged:QUESTIONS.every(q=>typeof q.r==='string'&&q.r.length>0),
+      sourceLabels:[...document.querySelectorAll('#sourceInfo strong')].map(el=>el.textContent)};
+  });
+  assert.equal(explanationAudit.total,298);
+  assert.equal(explanationAudit.rawPrefixed,180,'expected internal label-bearing explanation records');
+  assert.equal(explanationAudit.visiblePrefixed,0);
+  assert.equal(explanationAudit.duplicateRaw,298,'all 298 have same full explanation in three adapter fields');
+  assert.ok(['出典：','出典箇所：','法令基準日：','改変：'].every(k=>explanationAudit.sourceLabels.includes(k)));
+  console.log('Muse explanation DOM PASS '+JSON.stringify(explanationAudit));
+
   assert.equal(await page.locator('#sourceInfo a').count(),1);
   await page.locator('#next').click();
   for(let i=1;i<4;i++){
