@@ -21,12 +21,13 @@ def main(release=False):
     assert len(evidence["items"])==len(candidates)==500
     assert evidence["source_raster_equivalent_count"]==500
     assert evidence["repaired_boundary_count"]==21
-    assert evidence["independent_verbatim_content_pass_count"]==0
-    assert evidence["publishable_count"]==len(published)==0
+    assert evidence["independent_verbatim_content_pass_count"]==len(published)
+    assert evidence["publishable_count"]==0 and len(published)<500
     ids={x["id"] for x in candidates}
     assert len(ids)==500
     rep={(x["year"],x["number"]):x for x in repairs["items"]}
     assert len(rep)==21
+    verified_ids={x["id"] for x in published}
     seen=set()
     for x in evidence["items"]:
         ident=(x["year"],x["question_number"])
@@ -34,10 +35,17 @@ def main(release=False):
         seen.add(ident)
         assert x["official_answer_audit"]=="PASS_TWO_ENGINES"
         assert x["source_raster_equivalence"]=="PASS"
-        assert x["verbatim_text_audit"]=="PENDING"
-        assert x["choices_verbatim_audit"]=="PENDING"
-        assert x["figures_visual_audit"]=="PENDING"
-        assert x["promoted"] is False
+        if x["id"] in verified_ids:
+            assert x["verbatim_text_audit"]=="PASS"
+            assert x["choices_verbatim_audit"]=="PASS"
+            assert x["figures_visual_audit"]=="NOT_REQUIRED"
+            assert x["promoted"] is True
+            assert len(x["source_image_sha256"])==64
+        else:
+            assert x["verbatim_text_audit"]=="PENDING"
+            assert x["choices_verbatim_audit"]=="PENDING"
+            assert x["figures_visual_audit"]=="PENDING"
+            assert x["promoted"] is False
         assert x["git_binary_committed"] is False
         if ident in rep:
             fix=rep[ident]
@@ -52,7 +60,7 @@ def main(release=False):
         assert all(x["git_binary_committed"] for x in evidence["items"]), "500 image asset bytes missing from GitHub"
         assert all(x["verbatim_text_audit"]=="PASS" for x in evidence["items"]), "Question wording not independently verified"
         assert len(published)==500, "500 release questions not yet promoted"
-    print("PASS: 21 source-image crop repairs; 500 raster-equivalent source crop candidates; 0 false release approvals")
+    print(f"PASS: 21 repaired; 500 source image crops; {len(published)} individually audited; 0 premature app release approvals")
 
 if __name__=="__main__":
     try:main("--release" in sys.argv)
