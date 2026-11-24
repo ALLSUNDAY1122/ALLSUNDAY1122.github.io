@@ -19,8 +19,8 @@ jobs:
       - run: python -m playwright install --with-deps chromium webkit
       - run: python touroku-hanbaisha-ios/scripts/prepare_offline_web.py
       - run: |
-        set -o pipefail
-        python touroku-hanbaisha-ios/scripts/test_offline_candidate.py | tee offline-result.json
+          set -o pipefail
+          python touroku-hanbaisha-ios/scripts/test_offline_candidate.py | tee offline-result.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:
