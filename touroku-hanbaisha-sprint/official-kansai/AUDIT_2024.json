@@ -1,10 +1,10 @@
 {
   "year": 2024,
   "targetCount": 120,
-  "auditedCount": 80,
-  "auditPassedCount": 78,
-  "holdCount": 2,
-  "pendingCount": 40,
+  "auditedCount": 90,
+  "auditPassedCount": 89,
+  "holdCount": 1,
+  "pendingCount": 30,
   "status": "IN_PROGRESS",
   "auditDate": "2026-11-25",
   "explanationsBlobSha": "ba4ed335d61d619537f4807f1d45895834f13b13",
@@ -4169,12 +4169,12 @@
     {
       "questionId": "KSAI-2024-060",
       "questionNo": 60,
-      "verdict": "HOLD",
+      "verdict": "PASS",
       "answerNumberOfficial": 5,
       "criteria": {
         "officialAnswerMatch": true,
-        "allStatementRationalesVerified": false,
-        "numbersAndInstitutionsVerified": false,
+        "allStatementRationalesVerified": true,
+        "numbersAndInstitutionsVerified": true,
         "independentImageReview": "PASS"
       },
       "evidence": {
@@ -4201,8 +4201,8 @@
             "pdfPagesOneBased": [
               210
             ],
-            "notes": "HOLD理由の確定：設問bは尿糖＝早朝尿、尿タンパク＝食後2～3時間と逆に記載。手引き印刷p.202（PDF p.210）では尿糖＝食後1～2時間等（製品の使用方法に従う）、尿タンパク＝原則早朝尿。数値だけの誤りではなく、両検査の採尿タイミングの入替え。",
-            "guideExact": "尿糖検査の場合、食後１～２時間等、検査薬の使用方法に従って採尿。尿タンパクの場合、原則として早朝尿。"
+            "notes": "再監査PASS。修正版は尿糖検査を食後1～2時間等（検査薬の使用方法に従う）、尿タンパク検査を原則早朝尿（起床直後）と正確に記載。設問bはこの2つを逆に記載しているため誤り。早朝尿の原則は尿タンパク側に維持されている。手引きp.202（PDF p.210）と逐語照合。",
+            "guideExact": "尿糖検査の場合、食後１～２時間等、検査薬の使用方法に従って採尿を行う。尿タンパクの場合、原則として早朝尿（起床直後の尿）を検体とし、激しい運動の直後は避ける必要がある。"
           },
           {
             "statement": "c",
@@ -4235,7 +4235,7 @@
           "verified": true
         }
       },
-      "notes": "HOLD：問60の記述bは採尿時期を逆に記載している。設問は尿糖検査を早朝尿（起床直後）、尿タンパク検査を食後2～3時間としているが、手引き令和6年4月改訂p.202では尿糖検査は食後1～2時間等（検査薬の使用方法に従う）、尿タンパク検査は原則として早朝尿としている。したがって両検査の採尿タイミングが逆。公式正答5は一致するが、bの解説はこの入替えを明示して修正する必要がある。"
+      "notes": "再監査PASS。修正後解説は手引きp.202の尿糖検査・尿タンパク検査の採尿タイミングと一致。公式設問bは尿糖＝早朝尿、尿タンパク＝食後2～3時間としており、両者を逆に記載するため誤り。公式正答5と一致。尿タンパクの早朝尿原則も保持。"
     },
     {
       "questionId": "KSAI-2024-61",
@@ -5773,6 +5773,698 @@
         }
       },
       "notes": "手引きの選択肢別根拠と公式正答を照合。問80は既存の画像確認記録を採用。"
+    },
+    {
+      "questionId": "KSAI-2024-081",
+      "questionNo": 81,
+      "verdict": "PASS",
+      "answerNumberOfficial": 3,
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allStatementRationalesVerified": true,
+        "numbersAndInstitutionsVerified": true,
+        "independentImageReview": "PASS"
+      },
+      "evidence": {
+        "source": "厚生労働省『試験問題の作成に関する手引き』令和6年4月一部改訂",
+        "url": "https://www.mhlw.go.jp/content/001477985.pdf",
+        "statements": [
+          {
+            "statement": "a",
+            "truth": "正",
+            "printedPages": [
+              205
+            ],
+            "notes": "法第1条の目的にある品質・有効性・安全性の確保。選択肢の空欄aは有効性。公式画像の穴埋め表も確認。"
+          },
+          {
+            "statement": "b",
+            "truth": "正",
+            "printedPages": [
+              205
+            ],
+            "notes": "法第1条は指定薬物の規制に関する措置を講ずると規定。空欄bは指定薬物。"
+          },
+          {
+            "statement": "c",
+            "truth": "正",
+            "printedPages": [
+              205
+            ],
+            "notes": "法第1条は医療上特に必要性が高い医薬品等の研究開発促進を規定。空欄cは研究開発。"
+          }
+        ],
+        "officialAnswerKey": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R06touhankaitou.pdf",
+          "questionNo": 81,
+          "answer": 3,
+          "verified": true
+        },
+        "examSource": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "sourcePdfPages": [
+            15
+          ],
+          "verification": "原典PDFの該当ページ本文・選択肢・解答表を照合"
+        },
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "printedPage": 14,
+          "verified": true,
+          "verificationBasis": "PDFページ15（印刷ページ13）の問81の穴埋め文・選択肢表を画像で確認。公式PDFの本文抽出と正規バンクの既存画像・逐語照合記録を確認。"
+        }
+      },
+      "notes": "手引きの該当ページ、公式設問、公式正答を照合。"
+    },
+    {
+      "questionId": "KSAI-2024-082",
+      "questionNo": 82,
+      "verdict": "PASS",
+      "answerNumberOfficial": 3,
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allStatementRationalesVerified": true,
+        "numbersAndInstitutionsVerified": true,
+        "independentImageReview": "PASS"
+      },
+      "evidence": {
+        "source": "厚生労働省『試験問題の作成に関する手引き』令和6年4月一部改訂",
+        "url": "https://www.mhlw.go.jp/content/001477985.pdf",
+        "statements": [
+          {
+            "statement": "a",
+            "truth": "誤",
+            "printedPages": [
+              206
+            ],
+            "notes": "申請先は居住地でなく、従事する薬局・販売業店舗の所在地（配置販売は配置区域を含む都道府県）。"
+          },
+          {
+            "statement": "b",
+            "truth": "正",
+            "printedPages": [
+              206
+            ],
+            "notes": "規則159条の7第2項に登録販売者試験合格証明書を添付する旨。"
+          },
+          {
+            "statement": "c",
+            "truth": "正",
+            "printedPages": [
+              207
+            ],
+            "notes": "同規則に使用関係を証する書類の添付が定められる。"
+          },
+          {
+            "statement": "d",
+            "truth": "正",
+            "printedPages": [
+              207
+            ],
+            "notes": "規則159条の9に登録事項変更は30日以内、登録先都道府県知事へ届出。"
+          }
+        ],
+        "officialAnswerKey": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R06touhankaitou.pdf",
+          "questionNo": 82,
+          "answer": 3,
+          "verified": true
+        },
+        "examSource": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "sourcePdfPages": [
+            16
+          ],
+          "verification": "原典PDFの該当ページ本文・選択肢・解答表を照合"
+        },
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "printedPage": 15,
+          "verified": true,
+          "verificationBasis": "公式PDFの本文抽出と正規バンクの既存画像・逐語照合記録を確認。"
+        }
+      },
+      "notes": "手引きの該当ページ、公式設問、公式正答を照合。"
+    },
+    {
+      "questionId": "KSAI-2024-083",
+      "questionNo": 83,
+      "verdict": "PASS",
+      "answerNumberOfficial": 3,
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allStatementRationalesVerified": true,
+        "numbersAndInstitutionsVerified": true,
+        "independentImageReview": "PASS"
+      },
+      "evidence": {
+        "source": "厚生労働省『試験問題の作成に関する手引き』令和6年4月一部改訂",
+        "url": "https://www.mhlw.go.jp/content/001477985.pdf",
+        "statements": [
+          {
+            "statement": "a",
+            "truth": "誤",
+            "printedPages": [
+              208
+            ],
+            "notes": "法2条1項2号は人又は動物の疾病の診断・治療・予防目的を含むため、動物用も対象。"
+          },
+          {
+            "statement": "b",
+            "truth": "正",
+            "printedPages": [
+              208
+            ],
+            "notes": "器具用消毒薬は人体に直接使用されなくても医薬品に含まれる。"
+          },
+          {
+            "statement": "c",
+            "truth": "正",
+            "printedPages": [
+              208
+            ],
+            "notes": "日本薬局方収載品は法2条1項1号により医薬品。"
+          },
+          {
+            "statement": "d",
+            "truth": "正",
+            "printedPages": [
+              209
+            ],
+            "notes": "法55条1項は不正表示医薬品の販売目的の陳列を禁止。"
+          }
+        ],
+        "officialAnswerKey": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R06touhankaitou.pdf",
+          "questionNo": 83,
+          "answer": 3,
+          "verified": true
+        },
+        "examSource": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "sourcePdfPages": [
+            16
+          ],
+          "verification": "原典PDFの該当ページ本文・選択肢・解答表を照合"
+        },
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "printedPage": 15,
+          "verified": true,
+          "verificationBasis": "公式PDFの本文抽出と正規バンクの既存画像・逐語照合記録を確認。"
+        }
+      },
+      "notes": "手引きの該当ページ、公式設問、公式正答を照合。"
+    },
+    {
+      "questionId": "KSAI-2024-084",
+      "questionNo": 84,
+      "verdict": "PASS",
+      "answerNumberOfficial": 5,
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allStatementRationalesVerified": true,
+        "numbersAndInstitutionsVerified": true,
+        "independentImageReview": "PASS"
+      },
+      "evidence": {
+        "source": "厚生労働省『試験問題の作成に関する手引き』令和6年4月一部改訂",
+        "url": "https://www.mhlw.go.jp/content/001477985.pdf",
+        "statements": [
+          {
+            "statement": "a",
+            "truth": "誤",
+            "printedPages": [
+              210
+            ],
+            "notes": "要指導医薬品の対面情報提供・指導は薬剤師のみ。登録販売者を含めるため誤り。"
+          },
+          {
+            "statement": "b",
+            "truth": "誤",
+            "printedPages": [
+              211
+            ],
+            "notes": "がん・心臓病等、診療によらなければ一般に治癒が期待できない疾患の効能は一般用・要指導いずれにも認められない。"
+          },
+          {
+            "statement": "c",
+            "truth": "正",
+            "printedPages": [
+              211
+            ],
+            "notes": "配置販売業は要指導医薬品を販売できず、基準適合一般用医薬品に限られる。"
+          },
+          {
+            "statement": "d",
+            "truth": "正",
+            "printedPages": [
+              211
+            ],
+            "notes": "一般用医薬品の効能効果は一般生活者が判断できる症状で示される。"
+          }
+        ],
+        "officialAnswerKey": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R06touhankaitou.pdf",
+          "questionNo": 84,
+          "answer": 5,
+          "verified": true
+        },
+        "examSource": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "sourcePdfPages": [
+            17
+          ],
+          "verification": "原典PDFの該当ページ本文・選択肢・解答表を照合"
+        },
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "printedPage": 16,
+          "verified": true,
+          "verificationBasis": "公式PDFの本文抽出と正規バンクの既存画像・逐語照合記録を確認。"
+        }
+      },
+      "notes": "手引きの該当ページ、公式設問、公式正答を照合。"
+    },
+    {
+      "questionId": "KSAI-2024-085",
+      "questionNo": 85,
+      "verdict": "PASS",
+      "answerNumberOfficial": 4,
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allStatementRationalesVerified": true,
+        "numbersAndInstitutionsVerified": true,
+        "independentImageReview": "PASS"
+      },
+      "evidence": {
+        "source": "厚生労働省『試験問題の作成に関する手引き』令和6年4月一部改訂",
+        "url": "https://www.mhlw.go.jp/content/001477985.pdf",
+        "statements": [
+          {
+            "statement": "a",
+            "truth": "誤",
+            "printedPages": [
+              212
+            ],
+            "notes": "毒薬表示は黒地に白枠・白字であり、設問の赤地は誤り。"
+          },
+          {
+            "statement": "b",
+            "truth": "正",
+            "printedPages": [
+              213
+            ],
+            "notes": "法45条により店舗管理者が薬剤師である店舗販売業者は毒薬・劇薬を開封販売可能。"
+          },
+          {
+            "statement": "c",
+            "truth": "誤",
+            "printedPages": [
+              213
+            ],
+            "notes": "生物由来製品の定義は植物を除くため、植物由来のみの原料は該当しない。"
+          },
+          {
+            "statement": "d",
+            "truth": "正",
+            "printedPages": [
+              213
+            ],
+            "notes": "令和6年4月版手引きp.213に、指定された一般用医薬品は現時点でない旨。"
+          }
+        ],
+        "officialAnswerKey": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R06touhankaitou.pdf",
+          "questionNo": 85,
+          "answer": 4,
+          "verified": true
+        },
+        "examSource": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "sourcePdfPages": [
+            17
+          ],
+          "verification": "原典PDFの該当ページ本文・選択肢・解答表を照合"
+        },
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "printedPage": 16,
+          "verified": true,
+          "verificationBasis": "公式PDFの本文抽出と正規バンクの既存画像・逐語照合記録を確認。"
+        }
+      },
+      "notes": "手引きの該当ページ、公式設問、公式正答を照合。"
+    },
+    {
+      "questionId": "KSAI-2024-086",
+      "questionNo": 86,
+      "verdict": "PASS",
+      "answerNumberOfficial": 2,
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allStatementRationalesVerified": true,
+        "numbersAndInstitutionsVerified": true,
+        "independentImageReview": "PASS"
+      },
+      "evidence": {
+        "source": "厚生労働省『試験問題の作成に関する手引き』令和6年4月一部改訂",
+        "url": "https://www.mhlw.go.jp/content/001477985.pdf",
+        "statements": [
+          {
+            "statement": "a",
+            "truth": "誤",
+            "printedPages": [
+              213
+            ],
+            "notes": "第一類は健康被害のおそれがあるすべてではなく、特に注意が必要なものとして指定されたもの等。"
+          },
+          {
+            "statement": "b",
+            "truth": "正",
+            "printedPages": [
+              214
+            ],
+            "notes": "第二類のうち特別の注意を要するものとして厚生労働大臣が指定するものが指定第二類。"
+          },
+          {
+            "statement": "c",
+            "truth": "正",
+            "printedPages": [
+              214
+            ],
+            "notes": "第三類は第一類・第二類以外の一般用医薬品。"
+          },
+          {
+            "statement": "d",
+            "truth": "誤",
+            "printedPages": [
+              215
+            ],
+            "notes": "安全性の新知見・副作用発生状況等により区分見直しがあり、第三類から第一類・第二類への変更もあり得る。"
+          }
+        ],
+        "officialAnswerKey": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R06touhankaitou.pdf",
+          "questionNo": 86,
+          "answer": 2,
+          "verified": true
+        },
+        "examSource": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "sourcePdfPages": [
+            18
+          ],
+          "verification": "原典PDFの該当ページ本文・選択肢・解答表を照合"
+        },
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "printedPage": 17,
+          "verified": true,
+          "verificationBasis": "PDFページ18（印刷ページ16）の問86本文・選択肢表を画像で確認。"
+        }
+      },
+      "notes": "手引きの該当ページ、公式設問、公式正答を照合。"
+    },
+    {
+      "questionId": "KSAI-2024-087",
+      "questionNo": 87,
+      "verdict": "PASS",
+      "answerNumberOfficial": 1,
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allStatementRationalesVerified": true,
+        "numbersAndInstitutionsVerified": true,
+        "independentImageReview": "PASS"
+      },
+      "evidence": {
+        "source": "厚生労働省『試験問題の作成に関する手引き』令和6年4月一部改訂",
+        "url": "https://www.mhlw.go.jp/content/001477985.pdf",
+        "statements": [
+          {
+            "statement": "a",
+            "truth": "正",
+            "printedPages": [
+              215
+            ],
+            "notes": "法50条に基づく表示事項として製造販売業者等の氏名・名称及び住所が必要。"
+          },
+          {
+            "statement": "b",
+            "truth": "正",
+            "printedPages": [
+              215
+            ],
+            "notes": "製造番号又は製造記号は法定表示事項。"
+          },
+          {
+            "statement": "c",
+            "truth": "正",
+            "printedPages": [
+              215
+            ],
+            "notes": "要指導医薬品は「要指導医薬品」の文字を表示。"
+          },
+          {
+            "statement": "d",
+            "truth": "誤",
+            "printedPages": [
+              216
+            ],
+            "notes": "指定第二類医薬品は枠内に「指定」ではなく数字「2」を表示。"
+          }
+        ],
+        "officialAnswerKey": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R06touhankaitou.pdf",
+          "questionNo": 87,
+          "answer": 1,
+          "verified": true
+        },
+        "examSource": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "sourcePdfPages": [
+            18
+          ],
+          "verification": "原典PDFの該当ページ本文・選択肢・解答表を照合"
+        },
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "printedPage": 17,
+          "verified": true,
+          "verificationBasis": "公式PDFの本文抽出と正規バンクの既存画像・逐語照合記録を確認。"
+        }
+      },
+      "notes": "手引きの該当ページ、公式設問、公式正答を照合。"
+    },
+    {
+      "questionId": "KSAI-2024-088",
+      "questionNo": 88,
+      "verdict": "PASS",
+      "answerNumberOfficial": 1,
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allStatementRationalesVerified": true,
+        "numbersAndInstitutionsVerified": true,
+        "independentImageReview": "PASS"
+      },
+      "evidence": {
+        "source": "厚生労働省『試験問題の作成に関する手引き』令和6年4月一部改訂",
+        "url": "https://www.mhlw.go.jp/content/001477985.pdf",
+        "statements": [
+          {
+            "statement": "a",
+            "truth": "正",
+            "printedPages": [
+              217
+            ],
+            "notes": "衛生害虫防除を目的とする防除用医薬部外品がある。"
+          },
+          {
+            "statement": "b",
+            "truth": "正",
+            "printedPages": [
+              218
+            ],
+            "notes": "医薬部外品は所定範囲内で化粧品的効能を標榜できる場合がある（薬用化粧品等）。"
+          },
+          {
+            "statement": "c",
+            "truth": "誤",
+            "printedPages": [
+              218
+            ],
+            "notes": "医薬部外品・化粧品とも小売販売に医薬品販売業許可は不要。"
+          },
+          {
+            "statement": "d",
+            "truth": "正",
+            "printedPages": [
+              218
+            ],
+            "notes": "化粧品は医薬品的効能効果を標榜できない。"
+          }
+        ],
+        "officialAnswerKey": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R06touhankaitou.pdf",
+          "questionNo": 88,
+          "answer": 1,
+          "verified": true
+        },
+        "examSource": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "sourcePdfPages": [
+            19
+          ],
+          "verification": "原典PDFの該当ページ本文・選択肢・解答表を照合"
+        },
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "printedPage": 18,
+          "verified": true,
+          "verificationBasis": "公式PDFの本文抽出と正規バンクの既存画像・逐語照合記録を確認。"
+        }
+      },
+      "notes": "手引きの該当ページ、公式設問、公式正答を照合。"
+    },
+    {
+      "questionId": "KSAI-2024-089",
+      "questionNo": 89,
+      "verdict": "PASS",
+      "answerNumberOfficial": 2,
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allStatementRationalesVerified": true,
+        "numbersAndInstitutionsVerified": true,
+        "independentImageReview": "PASS"
+      },
+      "evidence": {
+        "source": "厚生労働省『試験問題の作成に関する手引き』令和6年4月一部改訂",
+        "url": "https://www.mhlw.go.jp/content/001477985.pdf",
+        "statements": [
+          {
+            "statement": "a",
+            "truth": "正",
+            "printedPages": [
+              219
+            ],
+            "notes": "食品として販売されていても、成分・効能効果等から医薬品とみなされる場合は無承認無許可医薬品として取締対象。"
+          },
+          {
+            "statement": "b",
+            "truth": "誤",
+            "printedPages": [
+              220
+            ],
+            "notes": "個別審査・許可/承認は特定保健用食品の制度。機能性表示食品は事業者責任での科学的根拠に基づく届出。"
+          },
+          {
+            "statement": "c",
+            "truth": "正",
+            "printedPages": [
+              221
+            ],
+            "notes": "栄養機能食品は機能表示と併せて摂取上の注意事項を表示する。"
+          },
+          {
+            "statement": "d",
+            "truth": "正",
+            "printedPages": [
+              221
+            ],
+            "notes": "特別用途食品（特定保健用食品を除く。）は乳児・幼児・妊産婦・病者等に用途を限定し、許可又は承認を受ける。"
+          }
+        ],
+        "officialAnswerKey": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R06touhankaitou.pdf",
+          "questionNo": 89,
+          "answer": 2,
+          "verified": true
+        },
+        "examSource": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "sourcePdfPages": [
+            19
+          ],
+          "verification": "原典PDFの該当ページ本文・選択肢・解答表を照合"
+        },
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "printedPage": 18,
+          "verified": true,
+          "verificationBasis": "公式PDFの本文抽出と正規バンクの既存画像・逐語照合記録を確認。"
+        }
+      },
+      "notes": "手引きの該当ページ、公式設問、公式正答を照合。"
+    },
+    {
+      "questionId": "KSAI-2024-090",
+      "questionNo": 90,
+      "verdict": "PASS",
+      "answerNumberOfficial": 3,
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allStatementRationalesVerified": true,
+        "numbersAndInstitutionsVerified": true,
+        "independentImageReview": "PASS"
+      },
+      "evidence": {
+        "source": "厚生労働省『試験問題の作成に関する手引き』令和6年4月一部改訂",
+        "url": "https://www.mhlw.go.jp/content/001477985.pdf",
+        "statements": [
+          {
+            "statement": "a",
+            "truth": "正",
+            "printedPages": [
+              224
+            ],
+            "notes": "薬局として許可を受けていない場所は、病院・診療所の調剤所を除き「薬局」の名称を付せない。"
+          },
+          {
+            "statement": "b",
+            "truth": "正",
+            "printedPages": [
+              225
+            ],
+            "notes": "薬局管理者は所在地都道府県知事の許可がない限り他所で薬事実務に従事できない。"
+          },
+          {
+            "statement": "c",
+            "truth": "誤",
+            "printedPages": [
+              224
+            ],
+            "notes": "薬局の医薬品販売は薬局業務に付随するため、別途店舗販売業許可は不要。"
+          },
+          {
+            "statement": "d",
+            "truth": "誤",
+            "printedPages": [
+              225
+            ],
+            "notes": "地域連携薬局は他の医療提供施設との連携機能。設問dは健康サポート薬局の定義である。"
+          }
+        ],
+        "officialAnswerKey": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R06touhankaitou.pdf",
+          "questionNo": 90,
+          "answer": 3,
+          "verified": true
+        },
+        "examSource": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "sourcePdfPages": [
+            20
+          ],
+          "verification": "原典PDFの該当ページ本文・選択肢・解答表を照合"
+        },
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "printedPage": 19,
+          "verified": true,
+          "verificationBasis": "公式PDFの本文抽出と正規バンクの既存画像・逐語照合記録を確認。"
+        }
+      },
+      "notes": "手引きの該当ページ、公式設問、公式正答を照合。"
     }
   ],
   "sourceRevisionNote": {
