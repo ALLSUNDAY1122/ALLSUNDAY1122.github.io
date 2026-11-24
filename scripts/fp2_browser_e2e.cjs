@@ -17,6 +17,36 @@ const URL='http://127.0.0.1:8765/';
   assert.equal(await page.locator('.chapter').count(),6,'six subject chapters');
   const loaded=await page.evaluate(()=>({n:QUESTIONS.length,domains:[...new Set(QUESTIONS.map(x=>x.domain))].length,meta:QUESTIONS.filter(x=>x.source_url&&x.source_section&&x.modification_note&&x.legal_cutoff).length}));
   assert.deepEqual(loaded,{n:298,domains:6,meta:298});
+  // Muse frame review regression: computed styles and DOM/text checks, no question-data edits.
+  const muse=await page.evaluate(()=>{
+    const cards=[...document.querySelectorAll('#home .action')];
+    const checks=cards.map(card=>{
+      const icon=card.querySelector('.icon');
+      const r=icon.getBoundingClientRect(),style=getComputedStyle(icon);
+      const title=card.querySelector('strong'),subtitle=card.querySelector('span:last-child > span');
+      return {glyph:icon.textContent.trim(),display:style.display,placeItems:style.placeItems,
+        center:style.textAlign,iconColor:style.color,
+        titleColor:getComputedStyle(title).color,subtitleColor:getComputedStyle(subtitle).color,
+        square:Math.abs(r.width-r.height)<1,width:r.width};
+    });
+    return {checks,badge:document.querySelector('#bankStatus').textContent,
+      subtitle:document.querySelector('#startMeta').textContent,
+      mockSubtitle:cards[2].innerText,
+      explanation:displayExplanation('【独自解説・回収バンク移管初稿（未再監査）】重要な解説'),
+      raw:typeof QUESTIONS[0].r==='string'?QUESTIONS[0].r:null};
+  });
+  assert.deepEqual(muse.checks.map(x=>x.glyph),['学','復','模']);
+  for(const c of muse.checks){
+    assert.equal(c.display,'grid');assert.equal(c.placeItems,'center');assert.equal(c.center,'center');
+    assert.equal(c.titleColor,'rgb(255, 255, 255)');
+    assert.equal(c.subtitleColor,'rgb(255, 255, 255)');
+    assert.ok(c.square&&c.width>=44);
+  }
+  assert.doesNotMatch(muse.badge,/内容監査PASS|公開審査/);
+  assert.doesNotMatch(muse.subtitle,/内容監査PASS|公開未承認/);
+  assert.doesNotMatch(muse.mockSubtitle,/内容監査PASS|公開未承認/);
+  assert.equal(muse.explanation,'重要な解説');
+  console.log('Muse UI CSS/DOM PASS '+JSON.stringify({cards:muse.checks,badge:muse.badge,subtitle:muse.subtitle,explanationPrefixRemoved:true}));
   console.log('E2E checkpoint loaded selected 298');
   // Daily goal and guided sprint: wrong answer, source provenance, rest of session.
   await page.locator('[data-screen="settings"]').click();
