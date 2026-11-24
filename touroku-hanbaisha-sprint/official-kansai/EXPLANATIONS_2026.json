@@ -3,16 +3,11 @@
   "sourceBankBlobSha": "8741e2675af6f41f7fba2afdc89566f48b8258e7",
   "progress": {
     "target": 120,
-    "created": 49,
+    "created": 50,
     "auditPassed": 0,
-    "pendingAudit": 49,
-    "notCreated": 71,
-    "hold": [
-      {
-        "questionNo": 47,
-        "reason": "原典画像未確認"
-      }
-    ]
+    "pendingAudit": 50,
+    "notCreated": 70,
+    "hold": []
   },
   "questions": [
     {
@@ -1609,6 +1604,42 @@
         "sourceChecked": false,
         "imageChecked": null,
         "holdReason": "一次資料の該当ページと独立監査未完了"
+      }
+    },
+    {
+      "id": "KSAI-2026-047",
+      "year": 2026,
+      "questionNo": 47,
+      "chapter": "第3章",
+      "answerNumberOfficial": 3,
+      "explanation": {
+        "correctReason": "正答は3（誤・誤・誤・正）。点鼻薬は症状を軽減するもので、慢性副鼻腔炎や鼻茸には受診が必要である。",
+        "choiceReasons": [
+          "a：誤。原因を除去するのではなく症状を緩和する。",
+          "b：誤。慢性副鼻腔炎は一般用点鼻薬だけで対処するのではなく受診を勧める。",
+          "c：誤。鼻茸がある場合は医療機関での診療が必要。",
+          "d：正。アドレナリン作動成分は全身にも作用し得るため長期連用を避ける。"
+        ],
+        "keyPoint": "点鼻薬は対症療法。慢性副鼻腔炎・鼻茸は受診。血管収縮成分は長期連用しない。",
+        "references": [
+          {
+            "title": "厚生労働省 試験問題の作成に関する手引き",
+            "chapter": "第3章",
+            "section": "Ⅷ 鼻に用いる薬",
+            "pages": null,
+            "pageRangeVerified": false,
+            "url": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000082537.html"
+          }
+        ]
+      },
+      "audit": {
+        "status": "PENDING",
+        "bankAnswerChecked": true,
+        "officialAnswerChecked": false,
+        "sourceChecked": false,
+        "imageChecked": true,
+        "imageEvidence": "公式前半PDF 39ページ目（印刷37ページ）",
+        "holdReason": "手引き該当ページ・独立監査未完了"
       }
     },
     {
