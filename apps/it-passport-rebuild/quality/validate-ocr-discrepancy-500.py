@@ -10,9 +10,9 @@ assert hashlib.sha256(data.encode()).hexdigest()==a["codes_sha256"]
 assert set(data)<=set("EHML")
 assert dict(collections.Counter(data))==a["counts"]
 assert a["textual_source_independent_visual_pass"]==a["promoted_to_release"]==0
-assert len(json.loads((p/"official-verbatim.json").read_text(encoding="utf-8")))==12 # later independent visual audit, distinct from historical OCR snapshot
+assert len(json.loads((p/"official-verbatim.json").read_text(encoding="utf-8")))==json.loads((p/"manifest.json").read_text(encoding="utf-8"))["canonical"]["official"]["current"] # audit count is dynamic
 for offset,year in enumerate(range(2022,2027)):
     codes=data[offset*100:(offset+1)*100]
     assert len(codes)==100
     print(year,dict(collections.Counter(codes)),"low-priority-IDs",[i+1 for i,c in enumerate(codes) if c=="L"])
-print("PASS: historical 500 OCR classification and 12 exact text-extraction agreements; later independent visual audit 12 PASS, 488 HOLD")
+print("PASS: historical 500 OCR classification and 12 exact text-extraction agreements; historical 12 OCR exact agreements are distinct from later independent visual-audit promotions")
