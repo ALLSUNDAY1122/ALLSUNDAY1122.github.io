@@ -72,7 +72,7 @@ if 'id="fp2-offline-bank"' not in html or "FP2ApprovedBank" not in html:
 shutil.copy2(web / "manifest.webmanifest", dst / "manifest.webmanifest")
 manifest = {
     "app_id": "6797228406", "bundle_id": "com.allsunday1122.fp2manabisprint",
-    "version": "1.0.0", "build": "8", "iap_product_ids": ["com.allsunday1122.fp2manabisprint.premium.lifetime","com.allsunday1122.fp2manabisprint.premium.monthly"],
+    "version": "1.0.0", "build": "9", "iap_product_ids": ["com.allsunday1122.fp2manabisprint.premium.lifetime","com.allsunday1122.fp2manabisprint.premium.monthly"],
     "canonical_path": str(source.relative_to(root)),
     "canonical_sha256": hashlib.sha256(bank_bytes).hexdigest(),
     "content_approved_questions": len(questions),
