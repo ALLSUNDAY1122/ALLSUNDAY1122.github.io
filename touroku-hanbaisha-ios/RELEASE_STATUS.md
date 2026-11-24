@@ -1527,3 +1527,8 @@ Apple固定識別子: Bundle `com.allsunday1122.tourokuhanbaisha`、ASC `6802119
 - ネイティブ同梱版にホーム、開始/続き/記録導線、年度・分野別の異なる回答済み問題数と全回答正答率、直近100履歴、中断時の再開、端末内UserDefaults保存を追加。Privacy Manifest CA92.1、ポリシー・メタデータ案更新。新候補はCI未確定、Build 15配信実績は維持。本審査未送信。
 
 - 追加検証：Simulator実WKWebViewで初回回答・記録表示・プロセス終了後の復元・回答済み再開で二重加算なしを検査、画面画像とJSONをartifactへ保存。状態ファイル自動書込を廃止し競合を回避。ブラウザ599問回帰試験も維持。
+
+
+## 学習ホーム・記録版ブラウザ実測（2026-11-24 13:31 JST）
+- Run 45326744724 SUCCESS、Chromium/WebKit各599問、図版延べ104、外部通信0、page error 0。ホーム、年度/分野集計、履歴、途中再開・重複防止のブラウザassert成功。Artifact 14889673638。
+- 整合性45326744709 SUCCESS。Simulator実WKWebView保存・終了再起動復元 Run 45326744802待機。新IPA未開始、Build15配信維持、本審査未送信。

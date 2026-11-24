@@ -1777,7 +1777,7 @@
     "directBuildGroupRelationship": "NOT_QUERIED"
   },
   "learning_home_records_20261124": {
-    "status": "IMPLEMENTED_PENDING_CI",
+    "status": "BROWSER_PASS_NATIVE_SMOKE_PENDING",
     "previousBuild15DeviceReport": {
       "source": "user report",
       "airplaneMode": "PASS",
@@ -1787,9 +1787,22 @@
       "missingHomeAndRecords": true
     },
     "scope": "Native-only home, start/resume, year/chapter unique progress and attempt accuracy, recent history, app-local UserDefaults CA92.1",
-    "newTestFlight": "PENDING_CI",
+    "newTestFlight": "PENDING_NATIVE_SMOKE",
     "appReviewSubmitted": false,
-    "nativeSmoke": "PENDING_REAL_WKWEBVIEW_WRITE_RESTART_READ",
-    "browserRegression": "PENDING_DUAL_ENGINE_599_PLUS_RECORDS"
+    "nativeSmoke": "PENDING",
+    "browserRegression": "PASS_CHROMIUM_WEBKIT_599_HOME_RECORDS_RESUME_NO_DUPLICATE",
+    "browserRun": 45326744724,
+    "browserArtifact": 14889673638,
+    "verifiedHead": "4c048215f4e02a598a2ba1874bd246580214567d",
+    "browserCounts": {
+      "chromium": 599,
+      "webkit": 599,
+      "figures": 104,
+      "externalRequests": 0,
+      "pageErrors": 0
+    },
+    "releaseValidationRun": 45326744709,
+    "releaseValidation": "PASS",
+    "nativeSmokeRun": 45326744802
   }
 }
