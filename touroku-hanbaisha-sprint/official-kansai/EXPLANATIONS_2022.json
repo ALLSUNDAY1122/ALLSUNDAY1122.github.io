@@ -1,10 +1,15 @@
 {
   "year": 2022,
   "targetCount": 120,
-  "createdCount": 80,
+  "createdCount": 90,
   "auditPassedCount": 0,
-  "sourceCheckedCount": 80,
-  "hold": [],
+  "sourceCheckedCount": 89,
+  "hold": [
+    {
+      "id": "KSAI-2022-087",
+      "reason": "cの法第61条の直接条文の照合未完了。"
+    }
+  ],
   "pendingIndependentAudit": [
     "KSAI-2022-001",
     "KSAI-2022-002",
@@ -85,7 +90,17 @@
     "KSAI-2022-077",
     "KSAI-2022-078",
     "KSAI-2022-079",
-    "KSAI-2022-080"
+    "KSAI-2022-080",
+    "KSAI-2022-081",
+    "KSAI-2022-082",
+    "KSAI-2022-083",
+    "KSAI-2022-084",
+    "KSAI-2022-085",
+    "KSAI-2022-086",
+    "KSAI-2022-087",
+    "KSAI-2022-088",
+    "KSAI-2022-089",
+    "KSAI-2022-090"
   ],
   "sourceBankBlob": "8741e2675af6f41f7fba2afdc89566f48b8258e7",
   "explanations": [
@@ -1784,8 +1799,221 @@
         "status": "PENDING_INDEPENDENT_REVIEW",
         "sourceEvidence": "Printed page images inspected in current session; zero-based PDF indices: 61,62"
       }
+    },
+    {
+      "id": "KSAI-2022-081",
+      "questionNo": 81,
+      "answer": 0,
+      "answerNumberOfficial": 1,
+      "explanation": "正答の理由：薬機法第1条の目的規定に対応する組合せは、保健衛生・指定薬物・必要性である。\n1：正。三つの空欄がすべて条文に合う。\n2：誤。cは新規性ではなく必要性。新しいこと自体が研究開発促進の要件ではない。\n3：誤。bは麻薬ではなく指定薬物。\n4：誤。aは国民生活ではなく保健衛生、bとcも一致しない。\n5：誤。aは保健衛生、bは指定薬物、cは必要性であり、三つとも違う。\n覚えるべきポイント：法律の目的は保健衛生の向上。指定薬物の規制と医療上必要な研究開発の促進も含む。\n参照資料：厚生労働省『試験問題の作成に関する手引き』令和4年3月版、第4章Ⅰ、p.205。試験当時の制度に基づく。",
+      "reference": {
+        "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+        "edition": "2022-03",
+        "pages": [
+          205
+        ]
+      },
+      "originalImageChecked": true,
+      "originalPdfPage": 12,
+      "originalPdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R4touhanmondaiato.pdf",
+      "audit": {
+        "sourceChecked": true,
+        "officialBankAnswerChecked": true,
+        "status": "PENDING_INDEPENDENT_REVIEW",
+        "sourceEvidence": "2022-03 handbook printed page images actually inspected; zero-based PDF indices: 212"
+      }
+    },
+    {
+      "id": "KSAI-2022-082",
+      "questionNo": 82,
+      "answer": 1,
+      "answerNumberOfficial": 2,
+      "explanation": "正答の理由：誤りは2。販売従事登録の申請先は住所地ではなく勤務先等の所在地に基づく。\n1：正。2022年4月施行の規則では、店舗販売業者が届出済み研修機関による研修を毎年度受講させる。\n2：誤。申請先は販売等に従事する薬局・店舗の所在地の都道府県知事。配置販売では配置区域に基づく。\n3：正。医薬品関係者には適正使用に関する正確で適切な情報提供に努める責務がある。\n4：正。登録事項が変わったときは30日以内に登録を受けた都道府県知事へ届け出る。\n5：正。不正な手段で登録されたことが判明した場合、知事は登録を消除する。\n覚えるべきポイント：申請先は勤務先等、変更届は登録先、期限は30日。\n参照資料：厚生労働省『試験問題の作成に関する手引き』令和4年3月版、第4章Ⅰ 登録販売者、p.205・206・207・208。試験当時の制度に基づく。",
+      "reference": {
+        "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+        "edition": "2022-03",
+        "pages": [
+          205,
+          206,
+          207,
+          208
+        ]
+      },
+      "audit": {
+        "sourceChecked": true,
+        "officialBankAnswerChecked": true,
+        "status": "PENDING_INDEPENDENT_REVIEW",
+        "sourceEvidence": "2022-03 handbook printed page images actually inspected; zero-based PDF indices: 212,213,214,215"
+      }
+    },
+    {
+      "id": "KSAI-2022-083",
+      "questionNo": 83,
+      "answer": 2,
+      "answerNumberOfficial": 3,
+      "explanation": "正答の理由：医薬品への該当性と承認・許可の有無は別の問題である。\na：誤。身体の機能に作用する目的などから医薬品と判断される無承認無許可品も、規制上の医薬品に含まれる。\nb：正。疾病の診断を目的とする検査薬は、法の除外対象に該当しなければ医薬品に含まれる。\nc：正。日本薬局方に収載された物は法第2条第1項第1号により医薬品に該当する。\nd：正。医薬品の製造には法第13条に基づく製造業許可が必要である。\n覚えるべきポイント：承認のない医薬品も医薬品規制の対象。製造業許可と製造販売業許可を区別する。\n参照資料：厚生労働省『試験問題の作成に関する手引き』令和4年3月版、第4章Ⅱ-1、p.208。試験当時の制度に基づく。",
+      "reference": {
+        "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+        "edition": "2022-03",
+        "pages": [
+          208
+        ]
+      },
+      "audit": {
+        "sourceChecked": true,
+        "officialBankAnswerChecked": true,
+        "status": "PENDING_INDEPENDENT_REVIEW",
+        "sourceEvidence": "2022-03 handbook printed page images actually inspected; zero-based PDF indices: 215"
+      }
+    },
+    {
+      "id": "KSAI-2022-084",
+      "questionNo": 84,
+      "answer": 1,
+      "answerNumberOfficial": 2,
+      "explanation": "正答の理由：正しい記述はaとd。毒性の強さだけでなく安全域の狭さも指定の理由となる。\na：正。有効量と中毒を起こす量が近い薬も慎重な管理が必要なので指定の対象になり得る。\nb：誤。令和4年3月版では一般用医薬品に毒薬・劇薬はいずれも存在しないとされている。要指導医薬品とは区別する。\nc：誤。黒地に白枠・白字は毒薬。劇薬は白地に赤枠・赤字で品名と劇の文字を表示する。\nd：正。法第47条により14歳未満や安全に取り扱えるか不安のある人への交付は禁止される。\n覚えるべきポイント：毒は黒地白字、劇は白地赤字。14歳未満への交付禁止。\n参照資料：厚生労働省『試験問題の作成に関する手引き』令和4年3月版、第4章Ⅱ-1 毒薬・劇薬、p.212。試験当時の制度に基づく。",
+      "reference": {
+        "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+        "edition": "2022-03",
+        "pages": [
+          212
+        ]
+      },
+      "audit": {
+        "sourceChecked": true,
+        "officialBankAnswerChecked": true,
+        "status": "PENDING_INDEPENDENT_REVIEW",
+        "sourceEvidence": "2022-03 handbook printed page images actually inspected; zero-based PDF indices: 219"
+      }
+    },
+    {
+      "id": "KSAI-2022-085",
+      "questionNo": 85,
+      "answer": 4,
+      "answerNumberOfficial": 5,
+      "explanation": "正答の理由：表示特例を考慮しない設問条件では四つとも法定表示事項に該当する。\na：正。要指導医薬品であることを示す文字が必要。\nb：正。製造販売業者を特定できる名称等と住所を記載する。\nc：正。日本薬局方に収載されている製品には日本薬局方の文字等を表示する。\nd：正。製造番号または記号を記載し、製造単位を追跡できるようにする。\n覚えるべきポイント：法第50条の直接容器・被包の表示事項と、第51条の外箱表示を区別する。\n参照資料：厚生労働省『試験問題の作成に関する手引き』令和4年3月版、第4章Ⅱ-2 容器・外箱等への記載事項、p.215。試験当時の制度に基づく。",
+      "reference": {
+        "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+        "edition": "2022-03",
+        "pages": [
+          215
+        ]
+      },
+      "audit": {
+        "sourceChecked": true,
+        "officialBankAnswerChecked": true,
+        "status": "PENDING_INDEPENDENT_REVIEW",
+        "sourceEvidence": "2022-03 handbook printed page images actually inspected; zero-based PDF indices: 222"
+      }
+    },
+    {
+      "id": "KSAI-2022-086",
+      "questionNo": 86,
+      "answer": 2,
+      "answerNumberOfficial": 3,
+      "explanation": "正答の理由：医薬部外品には製造販売の規制があるが、小売販売には医薬品と同じ許可は不要である。\na：誤。薬用化粧品や薬用歯みがきなど、化粧品的な使用目的の医薬部外品もある。\nb：正。製造販売業許可に加え、基準を定めて指定されたものを除き品目ごとの承認が必要。\nc：誤。一般小売店での販売に医薬品販売業の許可は不要である。\nd：誤。衛生害虫の防除目的の製品は防除用医薬部外品と表示する。指定医薬部外品とは別区分である。\n覚えるべきポイント：防除用と指定医薬部外品の表示を混同しない。\n参照資料：厚生労働省『試験問題の作成に関する手引き』令和4年3月版、第4章Ⅱ-3 医薬部外品、p.217・218。試験当時の制度に基づく。",
+      "reference": {
+        "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+        "edition": "2022-03",
+        "pages": [
+          217,
+          218
+        ]
+      },
+      "audit": {
+        "sourceChecked": true,
+        "officialBankAnswerChecked": true,
+        "status": "PENDING_INDEPENDENT_REVIEW",
+        "sourceEvidence": "2022-03 handbook printed page images actually inspected; zero-based PDF indices: 224,225"
+      }
+    },
+    {
+      "id": "KSAI-2022-087",
+      "questionNo": 87,
+      "answer": 1,
+      "answerNumberOfficial": 2,
+      "explanation": "正答の理由：化粧品は人体への作用が緩和なもので、医薬品のような効能を自由に表示できない。\na：正。身体の構造や機能への作用を目的とする物は化粧品の定義から外れる。\nb：正。清潔、美化、皮膚や毛髪の健康維持など認められた範囲に限って効能を表示できる。\nc：誤。法第61条は製造販売業者の名称等、製品名、製造番号等の表示を求めるが、化粧品という文字そのものを一律の必須事項としていない。\nd：正。手引きでは医薬品成分の配合は原則不可とされ、認められる場合も薬理作用を期待できない量以下に制限される。\n覚えるべきポイント：医薬部外品と異なり、化粧品という文字の一律の表示義務はない。\n参照資料：厚生労働省『試験問題の作成に関する手引き』令和4年3月版、第4章Ⅱ-3 化粧品・関係法令 法第61条、p.218・219。試験当時の制度に基づく。",
+      "reference": {
+        "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+        "edition": "2022-03",
+        "pages": [
+          218,
+          219
+        ]
+      },
+      "audit": {
+        "sourceChecked": false,
+        "officialBankAnswerChecked": true,
+        "status": "PENDING_INDEPENDENT_REVIEW",
+        "sourceEvidence": "2022-03 handbook printed page images actually inspected; zero-based PDF indices: 225,226; Q87(c) direct text of Art.61 pending"
+      }
+    },
+    {
+      "id": "KSAI-2022-088",
+      "questionNo": 88,
+      "answer": 4,
+      "answerNumberOfficial": 5,
+      "explanation": "正答の理由：食品として販売されていても、成分や表示などにより医薬品に該当する場合がある。\na：正。食品安全基本法等では医薬品、医薬部外品、再生医療等製品を飲食物の定義から除外している。\nb：正。食品を名乗っても医薬品に該当し、必要な承認や許可がなければ取締りの対象になる。\nc：正。調理方法の指定を除き、薬のような服用時期・間隔・量の指示は医薬品該当性の判断要素となる。\nd：正。食品と明示された錠剤やカプセルなどは、その形状だけでは医薬品と判断されない。ただし他の判断要素は残る。\n覚えるべきポイント：成分・効能表示・形状・用法用量を総合して判断する。\n参照資料：厚生労働省『試験問題の作成に関する手引き』令和4年3月版、第4章Ⅱ-3 保健機能食品等の食品、p.219・220。試験当時の制度に基づく。",
+      "reference": {
+        "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+        "edition": "2022-03",
+        "pages": [
+          219,
+          220
+        ]
+      },
+      "audit": {
+        "sourceChecked": true,
+        "officialBankAnswerChecked": true,
+        "status": "PENDING_INDEPENDENT_REVIEW",
+        "sourceEvidence": "2022-03 handbook printed page images actually inspected; zero-based PDF indices: 226,227"
+      }
+    },
+    {
+      "id": "KSAI-2022-089",
+      "questionNo": 89,
+      "answer": 0,
+      "answerNumberOfficial": 1,
+      "explanation": "正答の理由：機能性表示食品の届出先を厚生労働大臣としたbが誤りである。\na：正。栄養機能食品には機能表示に加え、摂取に際する注意事項の表示も求められる。\nb：誤。届出先は消費者庁長官。事業者責任で科学的根拠を示す制度であり、個別許可とは異なる。\nc：正。特別用途食品は乳幼児、妊産婦、病者等のための特別な用途を表示する食品である。\nd：正。保健機能食品は食生活による健康維持・増進を目的とし、虚偽や誇大な健康効果の表示は禁止される。\n覚えるべきポイント：機能性表示食品は消費者庁長官への届出。トクホは個別の許可等が必要。\n参照資料：厚生労働省『試験問題の作成に関する手引き』令和4年3月版、第4章Ⅱ-3 保健機能食品等の食品、p.220・221。試験当時の制度に基づく。",
+      "reference": {
+        "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+        "edition": "2022-03",
+        "pages": [
+          220,
+          221
+        ]
+      },
+      "audit": {
+        "sourceChecked": true,
+        "officialBankAnswerChecked": true,
+        "status": "PENDING_INDEPENDENT_REVIEW",
+        "sourceEvidence": "2022-03 handbook printed page images actually inspected; zero-based PDF indices: 227,228"
+      }
+    },
+    {
+      "id": "KSAI-2022-090",
+      "questionNo": 90,
+      "answer": 3,
+      "answerNumberOfficial": 4,
+      "explanation": "正答の理由：薬局の開設許可と店舗販売業許可は別制度で、薬局の管理者は薬剤師でなければならない。\na：誤。薬局の医薬品販売は薬局業務に付随するため、別途店舗販売業許可は不要。\nb：誤。薬局の管理者は薬剤師である必要があり、登録販売者で代替できない。\nc：正。管理者は従業者の監督などを行い、保健衛生上の支障が生じないよう業務を管理する。\nd：正。継続利用に必要な機能と、生活者自身の健康維持・増進を積極的に支援する機能を持つ薬局が健康サポート薬局である。\n覚えるべきポイント：薬局の管理者は薬剤師。店舗販売業の管理者要件とは区別する。\n参照資料：厚生労働省『試験問題の作成に関する手引き』令和4年3月版、第4章Ⅲ-1(a) 薬局、p.223・224・225・226。試験当時の制度に基づく。",
+      "reference": {
+        "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+        "edition": "2022-03",
+        "pages": [
+          223,
+          224,
+          225,
+          226
+        ]
+      },
+      "audit": {
+        "sourceChecked": true,
+        "officialBankAnswerChecked": true,
+        "status": "PENDING_INDEPENDENT_REVIEW",
+        "sourceEvidence": "2022-03 handbook printed page images actually inspected; zero-based PDF indices: 230,231,232,233"
+      }
     }
   ],
-  "savedCount": 80,
-  "nextQuestionNo": 81
+  "savedCount": 90,
+  "nextQuestionNo": 91
 }
