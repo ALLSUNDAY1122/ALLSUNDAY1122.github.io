@@ -1,0 +1,26 @@
+name: Touhan Offline Candidate Verification
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/touhan-offline-candidate.yml'
+      - 'touroku-hanbaisha-ios/scripts/test_offline_candidate.py'
+      - 'touroku-hanbaisha-ios/scripts/prepare_offline_web.py'
+jobs:
+  offline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install playwright==1.56.0
+      - run: python -m playwright install --with-deps chromium webkit
+      - run: python touroku-hanbaisha-ios/scripts/prepare_offline_web.py
+      - run: python touroku-hanbaisha-ios/scripts/test_offline_candidate.py | tee offline-result.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: touhan-offline-test
+          path: offline-result.json
