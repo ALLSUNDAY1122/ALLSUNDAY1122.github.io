@@ -1,10 +1,10 @@
 {
   "year": 2024,
   "targetCount": 120,
-  "auditedCount": 100,
-  "auditPassedCount": 99,
-  "holdCount": 1,
-  "pendingCount": 20,
+  "auditedCount": 110,
+  "auditPassedCount": 110,
+  "holdCount": 0,
+  "pendingCount": 10,
   "status": "IN_PROGRESS",
   "auditDate": "2026-11-25",
   "explanationsBlobSha": "d4cae81ba433ae7a6b44fd997c8d362281321c34",
@@ -3109,16 +3109,16 @@
     {
       "questionId": "KSAI-2024-045",
       "questionNo": 45,
-      "verdict": "HOLD",
+      "verdict": "PASS",
       "answerNumberOfficial": 5,
       "criteria": {
         "officialAnswerMatch": true,
-        "allStatementRationalesVerified": false,
+        "allStatementRationalesVerified": true,
         "numbersAndInstitutionsVerified": true,
         "independentImageReview": "PASS"
       },
       "evidence": {
-        "source": "厚生労働省 試験問題の作成に関する手引き 令和6年4月一部改訂",
+        "source": "厚生労働省『試験問題の作成に関する手引き』令和6年4月一部改訂",
         "url": "https://www.mhlw.go.jp/content/001477985.pdf",
         "statements": [
           {
@@ -3127,10 +3127,7 @@
             "printedPages": [
               147
             ],
-            "pdfPagesOneBased": [
-              156
-            ],
-            "notes": "急性鼻炎とアレルギー性鼻炎の区別"
+            "notes": "p.147で急性鼻炎はウイルス・細菌、アレルギー性鼻炎はアレルゲンへの過敏反応と区別。"
           },
           {
             "statement": "b",
@@ -3138,10 +3135,7 @@
             "printedPages": [
               149
             ],
-            "pdfPagesOneBased": [
-              158
-            ],
-            "notes": "結核菌に無効"
+            "notes": "p.149でベンザルコニウム塩化物等は結核菌・ウイルスには効果がないと説明。"
           },
           {
             "statement": "c",
@@ -3149,41 +3143,40 @@
             "printedPages": [
               148
             ],
-            "pdfPagesOneBased": [
-              157
-            ],
-            "notes": "血管収縮"
+            "notes": "p.148でテトラヒドロゾリン塩酸塩等は血管収縮成分と説明。"
           },
           {
             "statement": "d",
             "truth": "誤",
             "printedPages": [
-              147,
-              150
+              149
             ],
-            "pdfPagesOneBased": [
-              156,
-              159
-            ],
-            "notes": "再監査：公式設問dは「アレルギー性鼻炎及びそれに伴う副鼻腔炎、蓄膿症等」を対応範囲とする。手引きp.147は鼻炎用点鼻薬の対象を「急性鼻炎、アレルギー性鼻炎又は副鼻腔炎による諸症状」と明記し、慢性副鼻腔炎を蓄膿症と定義するが、慢性副鼻腔炎を除外する文言は見当たらない。修正版の慢性除外説明をこの箇所からは導けず、根拠不十分。"
+            "notes": "p.149本文が蓄膿症など慢性のものを点鼻薬の対応範囲外と明記。p.150脚注140は出題範囲案内で、対象外の直接根拠ではない。"
           }
         ],
+        "officialAnswerKey": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R06touhankaitou.pdf",
+          "questionNo": 45,
+          "answer": 5,
+          "verified": true
+        },
+        "examSource": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_zennhan.pdf",
+          "sourcePdfPages": [
+            31
+          ],
+          "verification": "公式前半PDF問45の設問・選択肢・正誤表を画像で照合。"
+        },
         "examImage": {
           "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_zennhan.pdf",
           "printedPage": 29,
           "pdfPageOneBased": 31,
           "pdfIndex": 30,
-          "verified": true
-        },
-        "guideExact": "鼻炎用点鼻薬は、急性鼻炎、アレルギー性鼻炎又は副鼻腔炎による諸症状のうち、鼻づまり、鼻みず、くしゃみ、頭重の緩和を目的とする。副鼻腔炎の慢性のものは一般に蓄膿症と呼ばれる。",
-        "guidePrintedPages": [
-          147
-        ],
-        "guidePdfPagesOneBased": [
-          156
-        ]
+          "verified": true,
+          "verificationBasis": "公式PDF画像で問45本文・選択肢・解答表を確認。"
+        }
       },
-      "notes": "HOLD継続・最新改訂の独立再監査待ち。今回の問91〜100監査と並行してEXPLANATIONS_2024.jsonの問45のみが再更新された。現行Blob d4cae81ba433ae7a6b44fd997c8d362281321c34では、手引きp.149の本文に「急性又はアレルギー性の鼻炎及びそれに伴う副鼻腔炎」と続けて「蓄膿症などの慢性のものは対象となっていない」と明記されている旨を引用し、慢性蓄膿症の対象外の直接根拠をp.149と特定している。p.150脚注140は出題範囲案内であり、対象外の直接根拠ではないと整理された。ただし今回の監査範囲は問91〜100であり、この最新問45改訂の独立逐項再監査は実施していない。判定はHOLDを維持し、別途再監査が必要。"
+      "notes": "最新版Blob d4cae81ba433ae7a6b44fd997c8d362281321c34を独立再監査。旧版と最新版の解説差分は問45のみ。手引きp.147〜149、公式前半PDF問45画像、公式正答5を照合。dの直接根拠はp.149本文。p.150脚注140は出題範囲案内であり対象外の直接根拠ではない。全記述の根拠を確認したためHOLD解消。"
     },
     {
       "questionId": "KSAI-2024-046",
@@ -7165,6 +7158,716 @@
         }
       },
       "notes": "公式正答、公式試験PDF及び手引きの各選択肢の根拠を照合。法規の解説は2024年度の出題基準として評価し、現行制度への一般化はしていない。"
+    },
+    {
+      "questionId": "KSAI-2024-101",
+      "questionNo": 101,
+      "verdict": "PASS",
+      "answerNumberOfficial": 5,
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allStatementRationalesVerified": true,
+        "numbersAndInstitutionsVerified": true,
+        "independentImageReview": "PASS"
+      },
+      "evidence": {
+        "source": "厚生労働省『試験問題の作成に関する手引き』令和6年4月一部改訂",
+        "url": "https://www.mhlw.go.jp/content/001477985.pdf",
+        "statements": [
+          {
+            "statement": "a",
+            "truth": "誤",
+            "printedPages": [
+              363
+            ],
+            "notes": "添付文書は新知見等に応じ必要に応じ随時改訂され、年1回の改訂義務ではない。"
+          },
+          {
+            "statement": "b",
+            "truth": "誤",
+            "printedPages": [
+              364
+            ],
+            "notes": "添付文書は必要時に読めるよう保管する必要がある。"
+          },
+          {
+            "statement": "c",
+            "truth": "正",
+            "printedPages": [
+              364
+            ],
+            "notes": "受診時に添付文書を持参し医師・薬剤師に見せて相談することが重要。"
+          },
+          {
+            "statement": "d",
+            "truth": "正",
+            "printedPages": [
+              364
+            ],
+            "notes": "販売を他社に委託する場合、販社等の名称・所在地も併記されることがある。"
+          }
+        ],
+        "officialAnswerKey": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R06touhankaitou.pdf",
+          "questionNo": 101,
+          "answer": 5,
+          "verified": true
+        },
+        "examSource": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "sourcePdfPages": [
+            27
+          ],
+          "verification": "公式後半PDFの設問本文・選択肢・正誤表を照合。図版を用いない文章問題。"
+        },
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "printedPage": 25,
+          "pdfPageOneBased": 27,
+          "verified": true,
+          "verificationBasis": "公式PDF本文・選択肢・回答表を照合。画像・図表主体の設問ではない。"
+        }
+      },
+      "notes": "公式問題問101、公式正答表、手引き第5章の該当記載を逐項照合。既存解説の参照箇所：363（a）。正答番号・解説内容に不整合なし."
+    },
+    {
+      "questionId": "KSAI-2024-102",
+      "questionNo": 102,
+      "verdict": "PASS",
+      "answerNumberOfficial": 5,
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allStatementRationalesVerified": true,
+        "numbersAndInstitutionsVerified": true,
+        "independentImageReview": "PASS"
+      },
+      "evidence": {
+        "source": "厚生労働省『試験問題の作成に関する手引き』令和6年4月一部改訂",
+        "url": "https://www.mhlw.go.jp/content/001477985.pdf",
+        "statements": [
+          {
+            "statement": "a",
+            "truth": "正",
+            "printedPages": [
+              201
+            ],
+            "notes": "尿糖・尿蛋白検査薬及び妊娠検査薬は検査結果のみで確定診断できず、陽性時は医師の診断が必要。黄体形成ホルモンキットは設問の除外対象。"
+          },
+          {
+            "statement": "b",
+            "truth": "正",
+            "printedPages": [
+              374
+            ],
+            "notes": "乳汁移行で乳児に悪影響のおそれがある成分を含む場合、この禁止表示を記載。"
+          },
+          {
+            "statement": "c",
+            "truth": "正",
+            "printedPages": [
+              374
+            ],
+            "notes": "アルコールによる作用増強・副作用リスクが予測される場合に飲酒禁止表示を記載。"
+          },
+          {
+            "statement": "d",
+            "truth": "正",
+            "printedPages": [
+              374
+            ],
+            "notes": "連用で副作用が現れやすい、効果が減弱し依存しやすくなる成分等に連用制限を記載。"
+          }
+        ],
+        "officialAnswerKey": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R06touhankaitou.pdf",
+          "questionNo": 102,
+          "answer": 5,
+          "verified": true
+        },
+        "examSource": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "sourcePdfPages": [
+            28
+          ],
+          "verification": "公式後半PDFの設問本文・選択肢・正誤表を照合。図版を用いない文章問題。"
+        },
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "printedPage": 26,
+          "pdfPageOneBased": 28,
+          "verified": true,
+          "verificationBasis": "公式PDF本文・選択肢・回答表を照合。画像・図表主体の設問ではない。"
+        }
+      },
+      "notes": "公式問題問102、公式正答表、手引き第5章の該当記載を逐項照合。既存解説に参照ページ未記載の箇所は、手引きの該当ページを特定。正答番号・解説内容に不整合なし."
+    },
+    {
+      "questionId": "KSAI-2024-103",
+      "questionNo": 103,
+      "verdict": "PASS",
+      "answerNumberOfficial": 5,
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allStatementRationalesVerified": true,
+        "numbersAndInstitutionsVerified": true,
+        "independentImageReview": "PASS"
+      },
+      "evidence": {
+        "source": "厚生労働省『試験問題の作成に関する手引き』令和6年4月一部改訂",
+        "url": "https://www.mhlw.go.jp/content/001477985.pdf",
+        "statements": [
+          {
+            "statement": "a",
+            "truth": "誤",
+            "printedPages": [
+              367
+            ],
+            "notes": "高齢者の目安は65歳以上であり、75歳以上ではない。"
+          },
+          {
+            "statement": "b",
+            "truth": "誤",
+            "printedPages": [
+              367
+            ],
+            "notes": "当該薬でアレルギー症状を起こしていなくても、他薬での既往歴等がある人も相談対象。"
+          },
+          {
+            "statement": "c",
+            "truth": "正",
+            "printedPages": [
+              368
+            ],
+            "notes": "現に治療中か否かによらず、状態悪化や副作用を招きやすい基礎疾患を記載。"
+          },
+          {
+            "statement": "d",
+            "truth": "正",
+            "printedPages": [
+              368
+            ],
+            "notes": "軽率な使用で悪化・副作用を招きやすい症状や、受診が適当な場合を記載。"
+          }
+        ],
+        "officialAnswerKey": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R06touhankaitou.pdf",
+          "questionNo": 103,
+          "answer": 5,
+          "verified": true
+        },
+        "examSource": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "sourcePdfPages": [
+            29
+          ],
+          "verification": "公式後半PDFの設問本文・選択肢・正誤表を照合。図版を用いない文章問題。"
+        },
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "printedPage": 27,
+          "pdfPageOneBased": 29,
+          "verified": true,
+          "verificationBasis": "公式PDF本文・選択肢・回答表を照合。画像・図表主体の設問ではない。"
+        }
+      },
+      "notes": "公式問題問103、公式正答表、手引き第5章の該当記載を逐項照合。既存解説に参照ページ未記載の箇所は、手引きの該当ページを特定。正答番号・解説内容に不整合なし."
+    },
+    {
+      "questionId": "KSAI-2024-104",
+      "questionNo": 104,
+      "verdict": "PASS",
+      "answerNumberOfficial": 1,
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allStatementRationalesVerified": true,
+        "numbersAndInstitutionsVerified": true,
+        "independentImageReview": "PASS"
+      },
+      "evidence": {
+        "source": "厚生労働省『試験問題の作成に関する手引き』令和6年4月一部改訂",
+        "url": "https://www.mhlw.go.jp/content/001477985.pdf",
+        "statements": [
+          {
+            "statement": "a",
+            "truth": "誤",
+            "printedPages": [
+              370
+            ],
+            "notes": "シロップ剤は変質しやすく、開封後は冷蔵庫内保管が望ましい。"
+          },
+          {
+            "statement": "b",
+            "truth": "誤",
+            "printedPages": [
+              371
+            ],
+            "notes": "高圧ガス保安法に基づく注意事項は容器への表示が義務。"
+          },
+          {
+            "statement": "c",
+            "truth": "誤",
+            "printedPages": [
+              371
+            ],
+            "notes": "点眼薬の使い回しは細菌汚染・感染のおそれがある。"
+          },
+          {
+            "statement": "d",
+            "truth": "正",
+            "printedPages": [
+              370
+            ],
+            "notes": "散剤等は温度差で湿気を帯びるおそれがあり、冷蔵庫内保管は不適当。"
+          }
+        ],
+        "officialAnswerKey": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R06touhankaitou.pdf",
+          "questionNo": 104,
+          "answer": 1,
+          "verified": true
+        },
+        "examSource": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "sourcePdfPages": [
+            29
+          ],
+          "verification": "公式後半PDFの設問本文・選択肢・正誤表を照合。図版を用いない文章問題。"
+        },
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "printedPage": 27,
+          "pdfPageOneBased": 29,
+          "verified": true,
+          "verificationBasis": "公式PDF本文・選択肢・回答表を照合。画像・図表主体の設問ではない。"
+        }
+      },
+      "notes": "公式問題問104、公式正答表、手引き第5章の該当記載を逐項照合。既存解説の参照箇所：372（bの一部）。正答番号・解説内容に不整合なし."
+    },
+    {
+      "questionId": "KSAI-2024-105",
+      "questionNo": 105,
+      "verdict": "PASS",
+      "answerNumberOfficial": 3,
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allStatementRationalesVerified": true,
+        "numbersAndInstitutionsVerified": true,
+        "independentImageReview": "PASS"
+      },
+      "evidence": {
+        "source": "厚生労働省『試験問題の作成に関する手引き』令和6年4月一部改訂",
+        "url": "https://www.mhlw.go.jp/content/001477985.pdf",
+        "statements": [
+          {
+            "statement": "a",
+            "truth": "正",
+            "printedPages": [
+              373
+            ],
+            "notes": "緊急安全性情報は厚労省の命令・指示又は企業の自主決定等に基づき作成。"
+          },
+          {
+            "statement": "b",
+            "truth": "誤",
+            "printedPages": [
+              373
+            ],
+            "notes": "緊急安全性情報はA4黄色地。青色は安全性速報。"
+          },
+          {
+            "statement": "c",
+            "truth": "正",
+            "printedPages": [
+              373
+            ],
+            "notes": "緊急安全性情報は医薬品・医療機器・再生医療等製品が対象。"
+          },
+          {
+            "statement": "d",
+            "truth": "誤",
+            "printedPages": [
+              373
+            ],
+            "notes": "一般用医薬品に関係する例は小柴胡湯による間質性肺炎であり、葛根湯ではない。"
+          }
+        ],
+        "officialAnswerKey": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R06touhankaitou.pdf",
+          "questionNo": 105,
+          "answer": 3,
+          "verified": true
+        },
+        "examSource": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "sourcePdfPages": [
+            30
+          ],
+          "verification": "公式後半PDFの設問本文・選択肢・正誤表を照合。図版を用いない文章問題。"
+        },
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "printedPage": 28,
+          "pdfPageOneBased": 30,
+          "verified": true,
+          "verificationBasis": "公式PDF本文・選択肢・回答表を照合。画像・図表主体の設問ではない。"
+        }
+      },
+      "notes": "公式問題問105、公式正答表、手引き第5章の該当記載を逐項照合。既存解説の参照箇所：373。正答番号・解説内容に不整合なし."
+    },
+    {
+      "questionId": "KSAI-2024-106",
+      "questionNo": 106,
+      "verdict": "PASS",
+      "answerNumberOfficial": 2,
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allStatementRationalesVerified": true,
+        "numbersAndInstitutionsVerified": true,
+        "independentImageReview": "PASS"
+      },
+      "evidence": {
+        "source": "厚生労働省『試験問題の作成に関する手引き』令和6年4月一部改訂",
+        "url": "https://www.mhlw.go.jp/content/001477985.pdf",
+        "statements": [
+          {
+            "statement": "a",
+            "truth": "正",
+            "printedPages": [
+              363
+            ],
+            "notes": "添付文書情報は購入者の相談への対応に有用。"
+          },
+          {
+            "statement": "b",
+            "truth": "誤",
+            "printedPages": [
+              384
+            ],
+            "notes": "改訂内容が反映された製品が流通し購入者の目に触れるまで一定期間を要する。"
+          },
+          {
+            "statement": "c",
+            "truth": "正",
+            "printedPages": [
+              384
+            ],
+            "notes": "生活者の意識・関心の高まりに伴い情報ニーズが多様化・高度化。"
+          },
+          {
+            "statement": "d",
+            "truth": "正",
+            "printedPages": [
+              384
+            ],
+            "notes": "専門家には科学的根拠に基づく助言とセルフメディケーション支援が期待される。"
+          }
+        ],
+        "officialAnswerKey": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R06touhankaitou.pdf",
+          "questionNo": 106,
+          "answer": 2,
+          "verified": true
+        },
+        "examSource": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "sourcePdfPages": [
+            31
+          ],
+          "verification": "公式後半PDFの設問本文・選択肢・正誤表を照合。図版を用いない文章問題。"
+        },
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "printedPage": 29,
+          "pdfPageOneBased": 31,
+          "verified": true,
+          "verificationBasis": "公式PDF本文・選択肢・回答表を照合。画像・図表主体の設問ではない。"
+        }
+      },
+      "notes": "公式問題問106、公式正答表、手引き第5章の該当記載を逐項照合。既存解説に参照ページ未記載の箇所は、手引きの該当ページを特定。正答番号・解説内容に不整合なし."
+    },
+    {
+      "questionId": "KSAI-2024-107",
+      "questionNo": 107,
+      "verdict": "PASS",
+      "answerNumberOfficial": 2,
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allStatementRationalesVerified": true,
+        "numbersAndInstitutionsVerified": true,
+        "independentImageReview": "PASS"
+      },
+      "evidence": {
+        "source": "厚生労働省『試験問題の作成に関する手引き』令和6年4月一部改訂",
+        "url": "https://www.mhlw.go.jp/content/001477985.pdf",
+        "statements": [
+          {
+            "statement": "a",
+            "truth": "正",
+            "printedPages": [
+              376
+            ],
+            "notes": "サリドマイド事件を契機に1968年にWHO国際医薬品モニタリング制度が確立。"
+          },
+          {
+            "statement": "b",
+            "truth": "誤",
+            "printedPages": [
+              377
+            ],
+            "notes": "旧モニター制度は約3,000医療機関から厚生省が直接報告を受けた。"
+          },
+          {
+            "statement": "c",
+            "truth": "誤",
+            "printedPages": [
+              378
+            ],
+            "notes": "法定報告先は厚生労働大臣、実務上の提出先はPMDA。保健所ではない。"
+          },
+          {
+            "statement": "d",
+            "truth": "正",
+            "printedPages": [
+              378
+            ],
+            "notes": "健康危機管理は科学的評価、広範な情報収集・分析、方針見直し、迅速な公表を基本とする。"
+          }
+        ],
+        "officialAnswerKey": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R06touhankaitou.pdf",
+          "questionNo": 107,
+          "answer": 2,
+          "verified": true
+        },
+        "examSource": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "sourcePdfPages": [
+            32
+          ],
+          "verification": "公式後半PDFの設問本文・選択肢・正誤表を照合。図版を用いない文章問題。"
+        },
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "printedPage": 30,
+          "pdfPageOneBased": 32,
+          "verified": true,
+          "verificationBasis": "公式PDF本文・選択肢・回答表を照合。画像・図表主体の設問ではない。"
+        }
+      },
+      "notes": "公式問題問107、公式正答表、手引き第5章の該当記載を逐項照合。既存解説に参照ページ未記載の箇所は、手引きの該当ページを特定。正答番号・解説内容に不整合なし."
+    },
+    {
+      "questionId": "KSAI-2024-108",
+      "questionNo": 108,
+      "verdict": "PASS",
+      "answerNumberOfficial": 4,
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allStatementRationalesVerified": true,
+        "numbersAndInstitutionsVerified": true,
+        "independentImageReview": "PASS"
+      },
+      "evidence": {
+        "source": "厚生労働省『試験問題の作成に関する手引き』令和6年4月一部改訂",
+        "url": "https://www.mhlw.go.jp/content/001477985.pdf",
+        "statements": [
+          {
+            "statement": "a",
+            "truth": "誤",
+            "printedPages": [
+              378
+            ],
+            "notes": "企業の副作用等報告の法定報告先は厚生労働大臣であり、都道府県知事ではない。"
+          },
+          {
+            "statement": "b",
+            "truth": "正",
+            "printedPages": [
+              378
+            ],
+            "notes": "登録販売者を含む医薬関係者は企業の情報収集に協力するよう努める。"
+          },
+          {
+            "statement": "c",
+            "truth": "正",
+            "printedPages": [
+              378
+            ],
+            "notes": "医療用成分を一般用医薬品に初めて配合した場合、概ね3年間の安全性調査・報告が求められる。"
+          },
+          {
+            "statement": "d",
+            "truth": "正",
+            "printedPages": [
+              378
+            ],
+            "notes": "市販後も品質・有効性・安全性情報を収集することは企業責任として重要。"
+          }
+        ],
+        "officialAnswerKey": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R06touhankaitou.pdf",
+          "questionNo": 108,
+          "answer": 4,
+          "verified": true
+        },
+        "examSource": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "sourcePdfPages": [
+            33
+          ],
+          "verification": "公式後半PDFの設問本文・選択肢・正誤表を照合。図版を用いない文章問題。"
+        },
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "printedPage": 31,
+          "pdfPageOneBased": 33,
+          "verified": true,
+          "verificationBasis": "公式PDF本文・選択肢・回答表を照合。画像・図表主体の設問ではない。"
+        }
+      },
+      "notes": "公式問題問108、公式正答表、手引き第5章の該当記載を逐項照合。既存解説に参照ページ未記載の箇所は、手引きの該当ページを特定。正答番号・解説内容に不整合なし."
+    },
+    {
+      "questionId": "KSAI-2024-109",
+      "questionNo": 109,
+      "verdict": "PASS",
+      "answerNumberOfficial": 5,
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allStatementRationalesVerified": true,
+        "numbersAndInstitutionsVerified": true,
+        "independentImageReview": "PASS"
+      },
+      "evidence": {
+        "source": "厚生労働省『試験問題の作成に関する手引き』令和6年4月一部改訂",
+        "url": "https://www.mhlw.go.jp/content/001477985.pdf",
+        "statements": [
+          {
+            "statement": "a",
+            "truth": "正",
+            "printedPages": [
+              380
+            ],
+            "notes": "適正使用にもかかわらず生じた副作用被害者の迅速な救済制度。"
+          },
+          {
+            "statement": "b",
+            "truth": "正",
+            "printedPages": [
+              380
+            ],
+            "notes": "本人又は家族の請求を受け、薬事審議会の諮問・答申を経て厚労大臣が判定。"
+          },
+          {
+            "statement": "c",
+            "truth": "誤",
+            "printedPages": [
+              382
+            ],
+            "notes": "医療機関での治療を要さず寛解した軽度の健康被害は給付対象外。"
+          },
+          {
+            "statement": "d",
+            "truth": "正",
+            "printedPages": [
+              380
+            ],
+            "notes": "健康被害を受けた本人又は家族が給付請求できる。"
+          }
+        ],
+        "officialAnswerKey": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R06touhankaitou.pdf",
+          "questionNo": 109,
+          "answer": 5,
+          "verified": true
+        },
+        "examSource": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "sourcePdfPages": [
+            34
+          ],
+          "verification": "公式後半PDFの設問本文・選択肢・正誤表を照合。図版を用いない文章問題。"
+        },
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "printedPage": 32,
+          "pdfPageOneBased": 34,
+          "verified": true,
+          "verificationBasis": "公式PDF本文・選択肢・回答表を照合。画像・図表主体の設問ではない。"
+        }
+      },
+      "notes": "公式問題問109、公式正答表、手引き第5章の該当記載を逐項照合。既存解説の参照箇所：380–381。正答番号・解説内容に不整合なし."
+    },
+    {
+      "questionId": "KSAI-2024-110",
+      "questionNo": 110,
+      "verdict": "PASS",
+      "answerNumberOfficial": 3,
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allStatementRationalesVerified": true,
+        "numbersAndInstitutionsVerified": true,
+        "independentImageReview": "PASS"
+      },
+      "evidence": {
+        "source": "厚生労働省『試験問題の作成に関する手引き』令和6年4月一部改訂",
+        "url": "https://www.mhlw.go.jp/content/001477985.pdf",
+        "statements": [
+          {
+            "statement": "a",
+            "truth": "対象",
+            "printedPages": [
+              382
+            ],
+            "notes": "漢方処方製剤は対象外一覧に含まれず、一律除外ではない。"
+          },
+          {
+            "statement": "b",
+            "truth": "対象外",
+            "printedPages": [
+              382
+            ],
+            "notes": "一部の日局収載医薬品（精製水、ワセリン等）は対象外。"
+          },
+          {
+            "statement": "c",
+            "truth": "対象外",
+            "printedPages": [
+              382
+            ],
+            "notes": "一般用検査薬は対象外。"
+          },
+          {
+            "statement": "d",
+            "truth": "対象",
+            "printedPages": [
+              382
+            ],
+            "notes": "殺菌消毒剤のうち人体に直接使用するものは対象外ではない。"
+          }
+        ],
+        "officialAnswerKey": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R06touhankaitou.pdf",
+          "questionNo": 110,
+          "answer": 3,
+          "verified": true
+        },
+        "examSource": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "sourcePdfPages": [
+            34
+          ],
+          "verification": "公式後半PDFの設問本文・選択肢・正誤表を照合。図版を用いない文章問題。"
+        },
+        "examImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_kouhan.pdf",
+          "printedPage": 32,
+          "pdfPageOneBased": 34,
+          "verified": true,
+          "verificationBasis": "公式PDF本文・選択肢・回答表を照合。画像・図表主体の設問ではない。"
+        }
+      },
+      "notes": "公式問題問110、公式正答表、手引き第5章の該当記載を逐項照合。既存解説に参照ページ未記載の箇所は、手引きの該当ページを特定。正答番号・解説内容に不整合なし."
     }
   ],
   "sourceRevisionNote": {
