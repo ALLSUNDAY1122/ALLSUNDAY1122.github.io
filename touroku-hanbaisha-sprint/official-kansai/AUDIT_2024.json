@@ -2,12 +2,12 @@
   "year": 2024,
   "targetCount": 120,
   "auditedCount": 30,
-  "auditPassedCount": 29,
-  "holdCount": 1,
+  "auditPassedCount": 30,
+  "holdCount": 0,
   "pendingCount": 90,
   "status": "IN_PROGRESS",
   "auditDate": "2026-11-24",
-  "explanationsBlobSha": "0d3dbfc5af75d858f7d9444c099d1939a7168452",
+  "explanationsBlobSha": "3b99a48650336d73b6ce1bf4f913d9051b5bd63c",
   "sourceBankBlobSha": "8741e2675af6f41f7fba2afdc89566f48b8258e7",
   "audits": [
     {
@@ -923,11 +923,11 @@
     {
       "questionId": "KSAI-2024-015",
       "questionNo": 15,
-      "verdict": "HOLD",
+      "verdict": "PASS",
       "answerNumberOfficial": 3,
       "criteria": {
         "officialAnswerMatch": true,
-        "allStatementRationalesVerified": false,
+        "allStatementRationalesVerified": true,
         "numbersAndInstitutionsVerified": true,
         "independentImageReview": "PASS"
       },
@@ -955,7 +955,7 @@
             "pdfPagesOneBased": [
               23
             ],
-            "notes": "症状発現予防に限定。草稿は疾病の予防と広く表現し、科学的合理性の限定も省略"
+            "notes": "修正後の記述bは印刷p.14（PDF index22）に一致。症状発現予防、科学的合理性の限定を明記。"
           },
           {
             "statement": "c",
@@ -989,7 +989,24 @@
           "notes": "公式PDF画像を直接目視し設問・組合せを確認"
         }
       },
-      "notes": "bの説明が手引きの症状発現予防（科学的・合理的に効果が期待できるもの）を疾病予防へ過度に一般化。作成担当による修正後に再監査。正答番号は一致。"
+      "notes": "再監査PASS。旧HOLD理由解消。",
+      "reaudit": {
+        "date": "2026-11-24",
+        "previousVerdict": "HOLD",
+        "oldBlobSha": "0d3dbfc5af75d858f7d9444c099d1939a7168452",
+        "newBlobSha": "3b99a48650336d73b6ce1bf4f913d9051b5bd63c",
+        "diff": {
+          "changedQuestions": [
+            15
+          ],
+          "changedFields": [
+            "explanation",
+            "revisionNote"
+          ],
+          "unchangedOther119": true
+        },
+        "evidence": "https://www.mhlw.go.jp/content/001477985.pdf#page=23"
+      }
     },
     {
       "questionId": "KSAI-2024-016",
