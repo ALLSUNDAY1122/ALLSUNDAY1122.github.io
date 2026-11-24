@@ -132,6 +132,8 @@ for qid in l["targetIds"]:
   rec["officialKeyMatched"]=True
   if not all(len(f["matchingModes"])>=2 or (len(f["matchingModes"])>=1 and any(t["match"] for t in f["easyocrTrials"])) for f in rec["fields"]):
    rec["reason"]="STRICT_FIELD_OCR_NOT_MATCHED_IN_TWO_MODES_OR_ENGINES";continue
+  if q.get("requiresLayoutReview"):
+   rec["reason"]="INDEPENDENT_LAYOUT_REVIEW_REQUIRED";continue
   q=dict(q);q.update(publishable=False,releaseEligible=False,requiresMedia=False,mediaAuditStatus="not_required",rightsStatus="mhlw-pdl1.0-text",canonicalStatus="source_verified_extension",reviewStatus="VISUAL_AND_INDEPENDENT_OCR_SOURCE_ONLY_EXPLANATION_PENDING",textFidelity="VERIFIED_SOURCE_ONLY",answerSourceChecked=True,printedOptionCount=n,answerType="singleChoice",category="必修" if num<=25 else "一般",majorSubject=None,point=None,detail=None)
   q["audit"]={"sourcePageVisualReviewed":True,"allPrintedChoicesVisualReviewed":True,"officialKeyMatched":True,"independentOcrFieldMatch":True,"explanationIndependentlyReviewed":False,"runtimeIntegrationChecked":False}
   q["evidence"]={"sourcePdfPage":g["renderedPage"],"sourcePdfSha256":sha(pdf),"sourceImageSha256":g["imageSha256"],"auditLedger":str(L)}
@@ -154,4 +156,5 @@ s["holdRemediation"].update(finalHold=h["count"],netReleasedFromHold=413-h["coun
 s["latestOther48VisualReview"].update(independentOcrBlocker="See current per-field preprocessing trials; no character substitution allowed",runId=os.environ["GITHUB_RUN_ID"],ocrAttempted=len(results),fullyRevalidated=sum(c["status"]=="PASS_SOURCE_ONLY" for c in cases.values()),newPromoted=len(new),remainingInScope=len(set(l["targetIds"])&{x["id"] for x in h["hold"]}),canonical=total,totalHeld=h["count"],status="SOURCE_ONLY_RELEASE_BLOCKED")
 save(R/"release-status.json",s)
 with (R/"RELEASE_STATUS.md").open("a") as f:f.write(f"\n## OCRその他48問 独立OCR Run {os.environ['GITHUB_RUN_ID']}\n\n- OCR試行 {len(results)}問、昇格 {len(new)}問、正規 {total}/1200、保留 {h['count']}。目視未確認の候補は昇格禁止。公開・本審査禁止。\n")
+save(out/"run-result.json",{"runId":os.environ["GITHUB_RUN_ID"],"results":results,"promotedCandidates":new,"canonicalTotal":total,"held":h["count"]})
 print(json.dumps({"checked":len(results),"promoted":sorted(newids),"total":total,"held":h["count"]},ensure_ascii=False))
