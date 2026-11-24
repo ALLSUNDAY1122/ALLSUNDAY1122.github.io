@@ -10,7 +10,12 @@ report={'count':0,'figures':0,'externalRequests':[],'pageErrors':[]}
 with sync_playwright() as pw:
     for engine in [pw.chromium,pw.webkit]:
         browser=engine.launch()
-        ctx=browser.new_context(offline=True,viewport={'width':375,'height':812})
+        ctx=browser.new_context(viewport={'width':375,'height':812})
+        # Block every HTTP(S) request, without WebKit's offline mode also blocking file navigation.
+        ctx.route('http://**/*', lambda route: route.abort())
+        ctx.route('https://**/*', lambda route: route.abort())
+        before=report['count']
+        print('START engine='+engine.name,flush=True)
         page=ctx.new_page()
         page.on('request',lambda r:report['externalRequests'].append(r.url) if r.url.startswith(('http:','https:')) else None)
         page.on('pageerror',lambda e:report['pageErrors'].append(str(e)))
@@ -37,6 +42,7 @@ with sync_playwright() as pw:
         page.go_back()
         page.locator('a[href="./support.html"]').click()
         assert '599問' in page.locator('body').inner_text()
+        print(json.dumps({'engine':engine.name,'completed':report['count']-before,'externalRequests':report['externalRequests'],'pageErrors':report['pageErrors']},ensure_ascii=False),flush=True)
         browser.close()
 assert report['count']==1198 and not report['externalRequests'] and not report['pageErrors'],report
 print(json.dumps(report,ensure_ascii=False))

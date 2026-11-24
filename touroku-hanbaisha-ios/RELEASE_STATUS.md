@@ -1490,3 +1490,8 @@ Apple固定識別子: Bundle `com.allsunday1122.tourokuhanbaisha`、ASC `6802119
 ## Q4 代替検証（2026-11-24 11:27 JST）
 - Run 45311443007 は約9分経過してもブラウザ導入中。実行中ログ取得は404 BlobNotFoundで原因未確定。既存試験は維持し、Playwright公式 v1.56.0-noble コンテナで依存導入を省く代替CIを追加。同じChromium/WebKit両方の599問完走、画像decode、採点、外部通信ゼロ、ページエラーゼロの合格条件を維持。
 - Simulator実測PASS、Q5ソース監査PASS、ASC質問票未確認。Q4未確定、12/14、新IPA未開始。本審査未送信。
+
+
+## Q4 代替CI結果（2026-11-24 11:29 JST）
+- Run 45312594314: コンテナ・599問/52図版同梱PASS。Chromium処理後、WebKit file:// navigation internal error。エンジン別完走証跡未出力のためQ4未確定。
+- offline=Trueによるローカルファイルへの影響を切り分けるためHTTP(S)全リクエスト遮断＋外部要求ゼロのassertを維持し、エンジン別件数を即時出力する方式へ修正。再実行要求。既存Run 45311443007は導入中。12/14維持、新IPA未開始。Q5質問票ユーザー確認中。
