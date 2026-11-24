@@ -1,0 +1,68 @@
+name: Kangoshi scenario 118-119 evidence only
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/kangoshi-context-118-119-evidence.yml'
+permissions:
+  contents: read
+jobs:
+  source-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq poppler-utils tesseract-ocr tesseract-ocr-jpn tesseract-ocr-eng
+          python -m pip install 'pymupdf>=1.24,<3' pillow
+      - name: Obtain official PDFs and historic keyed candidates
+        run: |
+          python kangoshi-sprint/scripts/run_official_pdf_audit.py
+          mkdir -p kangoshi-sprint/product-content/keyed-candidates
+          git fetch --no-tags --depth=1 origin feature/kangoshi-keyed-staging-45220877977
+          for exam in 111 112; do
+            for session in AM PM; do
+              git show "FETCH_HEAD:kangoshi-sprint/product-content/keyed-candidates/exam${exam}-${session}-draft.json" > "kangoshi-sprint/product-content/keyed-candidates/exam${exam}-${session}-draft.json"
+            done
+          done
+      - name: Execute existing independent verifier without promotion
+        run: |
+          python -m py_compile kangoshi-sprint/scripts/boundary_context_verify.py
+          python kangoshi-sprint/scripts/bulk_dual_engine_verify.py
+      - name: Render independent source evidence and isolate target rows
+        if: always()
+        run: |
+          mkdir -p evidence
+          python - <<'PY'
+          import fitz, pathlib, json, hashlib, subprocess
+          root=pathlib.Path('kangoshi-sprint')
+          pdf=pathlib.Path('/tmp/kangoshi-official/111-PM.pdf')
+          doc=fitz.open(pdf)
+          out=pathlib.Path('evidence')
+          meta={'pdfSha256':hashlib.sha256(pdf.read_bytes()).hexdigest(),'pages':[]}
+          for n in range(50,min(55,len(doc))+1):
+              p=doc[n-1]
+              img=out/f'page-{n}.png'
+              p.get_pixmap(matrix=fitz.Matrix(3,3)).save(img)
+              a=p.get_text('text',sort=True)
+              b=subprocess.check_output(['pdftotext','-f',str(n),'-l',str(n),'-layout',str(pdf),'-'],text=True)
+              c=subprocess.check_output(['tesseract',str(img),'stdout','-l','jpn+eng','--psm','6'],text=True)
+              meta['pages'].append({'page':n,'imageSha256':hashlib.sha256(img.read_bytes()).hexdigest(),'pymupdf':a,'poppler':b,'ocr':c})
+          (out/'source-pages.json').write_text(json.dumps(meta,ensure_ascii=False,indent=2))
+          for name in ['111-PM-per-question.json','bulk-verified-nonpublishable.json']:
+              p=root/'audit/runs/dual-engine-20261124'/name
+              if not p.exists(): continue
+              j=json.loads(p.read_text())
+              rows=j if isinstance(j,list) else j.get('questions',j.get('rows',[]))
+              (out/name).write_text(json.dumps([x for x in rows if x.get('id') in ('K111-PM118','K111-PM119')],ensure_ascii=False,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: kangoshi-111-pm-118-119-evidence
+          path: evidence/
+          if-no-files-found: error
