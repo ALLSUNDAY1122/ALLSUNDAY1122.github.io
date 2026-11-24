@@ -709,8 +709,8 @@
       "K111-PM028",
       "K111-PM029"
     ],
-    "visualReviewed": 21,
-    "correctedCandidateCount": 21,
+    "visualReviewed": 24,
+    "correctedCandidateCount": 24,
     "fullyRevalidated": 0,
     "newPromoted": 0,
     "remainingInScope": 48,
@@ -720,7 +720,7 @@
     "status": "SOURCE_ONLY_RELEASE_BLOCKED",
     "publishableNew": 0,
     "releaseEligibleNew": 0,
-    "lastReviewedId": "K111-PM068",
+    "lastReviewedId": "K111-PM083",
     "independentOcrBlocker": "See current per-field preprocessing trials; no character substitution allowed",
     "failedRun": {
       "runId": 45295386950,
@@ -737,13 +737,21 @@
     "runConclusion": "success",
     "artifactId": 14877621410,
     "individualHoldCount": 7,
-    "remainingVisualReview": 27,
+    "remainingVisualReview": 24,
     "regionOcrEvidenceGenerated": 48,
     "preprocessingRetryStatus": "COMPLETED_ZERO_PROMOTIONS",
     "preprocessingCommit": "3f2087a97c373438ea3a68569522d1282abbe41d",
     "fieldPassCount": 22,
     "fieldTotal": 36,
     "nextOcrMethod": "EasyOCR Japanese/English plus Tesseract; coordinate footer and separate gloss evidence",
-    "nextOcrStatus": "RUN_NOT_LOCATED_IN_LATEST_LIST"
+    "nextOcrStatus": "IN_PROGRESS_12_AT_CHECKOUT",
+    "easyOcrRunDiscovery": {
+      "runId": 45298987801,
+      "headSha": "4b2a61a10ecfc07ebbd1d24f28e08906b2064689",
+      "status": "in_progress",
+      "reviewedCandidatesAtCheckout": 12,
+      "discovery": "Filter repository actions/runs by head_sha; default first page only 30 entries",
+      "persistenceRisk": "main advanced after checkout; existing workflow uses non-force push; do not overwrite newer audit records"
+    }
   }
 }
