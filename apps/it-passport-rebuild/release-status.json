@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
-  "updated_at_jst": "2026-11-24T13:56:16+09:00",
+  "updated_at_jst": "2026-11-24T14:06:49+09:00",
   "project": "新ITパスポート｜ゼロベース開発",
   "release_decision": "BLOCKED",
-  "release_stage": "RECALCULATED_HIGH95_BATCH09_PASS_3_BANK_122",
+  "release_stage": "RECALCULATED_HIGH95_BATCH10_PASS_20_BANK_142",
   "app_review_submitted": false,
   "requirements": {
     "official_question_verbatim": true,
@@ -24,10 +24,10 @@
       "reason": "origin_type=original; cannot substitute for verbatim IPA past questions"
     },
     "official_past_exam": {
-      "canonical": 122,
+      "canonical": 142,
       "target": 500,
       "verified_rounds": 0,
-      "source_verbatim_audit": "PASS_122_HOLD_378",
+      "source_verbatim_audit": "PASS_142_HOLD_358",
       "pdf_stage_attempt": {
         "result": "RESOLVED_BY_USER_UPLOADED_ORIGINALS",
         "source": "10 attached original PDFs",
@@ -45,9 +45,9 @@
         "original_ocr_drafts": "LOCAL_AUDIT_ARCHIVE",
         "source_page_identified": 500,
         "question_candidates": 500,
-        "question_verbatim_pass": 122,
+        "question_verbatim_pass": 142,
         "answer_audit_pass": 500,
-        "unverified_text": 378,
+        "unverified_text": 358,
         "release_promotion": "ONLY_AFTER_INDEPENDENT_ORIGINAL_IMAGE_VS_TEXT_CHOICES_FIGURE_AUDIT",
         "separate_original_mock_count": 240,
         "ocr_question_head_exact": 455,
@@ -63,7 +63,7 @@
       "candidate_index_count": 500,
       "source_pdfs_verified": 10,
       "answer_key_verified": 500,
-      "verbatim_promoted": 122,
+      "verbatim_promoted": 142,
       "official_answer_reference": "questions/official-answer-index.json",
       "official_candidate_reference": "questions/official-candidate-index.json",
       "original_scan_uploaded_count": 5,
@@ -90,13 +90,13 @@
         "source_raster_minor_rendering_difference": 98,
         "raster_max_channel_difference": 9,
         "original_pdf_source_images_present_in_local_artifact": true,
-        "independent_word_by_word_checked": 122,
+        "independent_word_by_word_checked": 142,
         "archive_bytes": 47200937,
         "private_drive_staging_id": "1R94-C3Q7hKhWt2Px01z9y6eX8qDN8FqG",
         "github_boundary_repair_manifest": "questions/official-image-boundary-repairs.json",
         "github_500_image_audit_manifest": "questions/official-image-audit-500.json",
         "visual_boundary_manual_checks": 21,
-        "content_lexical_audit_pass": 122,
+        "content_lexical_audit_pass": 142,
         "raster_note": "21 repaired crops are pixel-identical to freshly rendered source image crops; 479 existing crops are pixel-identical for 381 or raster-equivalent with only maximum 2-9 channel-level conversion variance for 98; total 500/500 raster equivalent. This is not independent text/choice audit.",
         "verbatim_ocr_second_pass": "COMPLETED_500_SAME_ENGINE_DISCREPANCY_SCREEN_ONLY",
         "archive_storage": "LOCAL_ATTACHMENT_AND_PRIVATE_GOOGLE_DRIVE_STAGING",
@@ -163,16 +163,26 @@
         "itp-2022-q061",
         "itp-2022-q062",
         "itp-2022-q064",
+        "itp-2022-q067",
+        "itp-2022-q068",
+        "itp-2022-q069",
         "itp-2022-q071",
         "itp-2022-q073",
         "itp-2022-q075",
+        "itp-2022-q077",
         "itp-2022-q080",
         "itp-2022-q081",
+        "itp-2022-q082",
         "itp-2022-q083",
         "itp-2022-q085",
         "itp-2022-q086",
+        "itp-2022-q087",
+        "itp-2022-q089",
+        "itp-2022-q091",
         "itp-2022-q093",
         "itp-2022-q094",
+        "itp-2022-q099",
+        "itp-2022-q100",
         "itp-2023-q003",
         "itp-2023-q005",
         "itp-2023-q007",
@@ -188,6 +198,16 @@
         "itp-2023-q031",
         "itp-2023-q036",
         "itp-2023-q039",
+        "itp-2023-q043",
+        "itp-2023-q044",
+        "itp-2023-q045",
+        "itp-2023-q046",
+        "itp-2023-q049",
+        "itp-2023-q051",
+        "itp-2023-q052",
+        "itp-2023-q053",
+        "itp-2023-q054",
+        "itp-2023-q055",
         "itp-2023-q061",
         "itp-2023-q069",
         "itp-2023-q073",
@@ -250,11 +270,11 @@
       "visual_audit_breakdown": [
         {
           "year": 2022,
-          "pass": 49
+          "pass": 59
         },
         {
           "year": 2023,
-          "pass": 23
+          "pass": 33
         },
         {
           "year": 2024,
@@ -296,11 +316,11 @@
       "recalculated_high_similarity_audit": {
         "reference": "questions/official-ocr-screening-recalculated-20261124.json",
         "high_including_exact": 309,
-        "promoted_high": 119,
-        "unpromoted_high": 190,
+        "promoted_high": 139,
+        "unpromoted_high": 170,
         "repair_hold": 2,
-        "actionable_remaining": 188,
-        "new_pass": 3
+        "actionable_remaining": 168,
+        "new_pass": 20
       }
     },
     "ios": {
@@ -394,7 +414,7 @@
     {
       "code": "IP-OFF-500",
       "severity": "P0",
-      "detail": "122 verified; 378 HOLD; 188 actionable, 2 repair cases, 188 other; images uncommitted."
+      "detail": "142 verified; 358 HOLD; 168 actionable, 2 repair cases, 188 other; images uncommitted."
     },
     {
       "code": "IP-SOURCE-FIDELITY",
