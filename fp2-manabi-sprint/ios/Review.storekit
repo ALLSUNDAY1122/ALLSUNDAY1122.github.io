@@ -1,12 +1,75 @@
 {
-  "identifier": "FP2-FREE-RELEASE",
-  "nonRenewingSubscriptions": [],
-  "products": [],
-  "subscriptionGroups": [],
-  "settings": {
-    "_locale": "ja_JP",
-    "_storefront": "JPN"
+  "appPolicies": {
+    "eula": "",
+    "policies": [
+      {
+        "locale": "ja_JP",
+        "policyText": "",
+        "policyURL": ""
+      }
+    ]
   },
+  "identifier": "FP2-REVIEW",
+  "nonRenewingSubscriptions": [],
+  "products": [
+    {
+      "displayPrice": "800",
+      "familyShareable": false,
+      "internalID": "FP2-LIFETIME-800",
+      "localizations": [
+        {
+          "description": "買い切りでFP2級の全298問、年度別・分野別演習、苦手復習を利用できます。",
+          "displayName": "FP2級 Premium 買い切り",
+          "locale": "ja_JP"
+        }
+      ],
+      "productID": "com.allsunday1122.fp2manabisprint.premium.lifetime",
+      "referenceName": "FP2級 Premium 買い切り",
+      "type": "NonConsumable"
+    }
+  ],
+  "settings": {
+    "_failTransactionsEnabled": false,
+    "_locale": "ja_JP",
+    "_storefront": "JPN",
+    "_storeKitErrors": []
+  },
+  "subscriptionGroups": [
+    {
+      "id": "FP2-PREMIUM-GROUP",
+      "localizations": [
+        {
+          "description": "FP2級の全298問を学習できるPremiumプラン",
+          "displayName": "FP2級 Premium",
+          "locale": "ja_JP"
+        }
+      ],
+      "name": "FP2級 Premium",
+      "subscriptions": [
+        {
+          "adHocOffers": [],
+          "codeOffers": [],
+          "displayPrice": "200",
+          "familyShareable": false,
+          "groupNumber": 1,
+          "internalID": "FP2-MONTHLY-200",
+          "introductoryOffer": null,
+          "localizations": [
+            {
+              "description": "FP2級の全298問、年度別・分野別演習、苦手復習を月額で利用できます。",
+              "displayName": "FP2級 Premium 月額",
+              "locale": "ja_JP"
+            }
+          ],
+          "productID": "com.allsunday1122.fp2manabisprint.premium.monthly",
+          "recurringSubscriptionPeriod": "P1M",
+          "referenceName": "FP2級 Premium 月額",
+          "subscriptionGroupID": "FP2-PREMIUM-GROUP",
+          "type": "RecurringSubscription"
+        }
+      ]
+    }
+  ],
   "version": {
     "major": 4,
     "minor": 0

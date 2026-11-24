@@ -198,8 +198,11 @@
       "bundle_id": "com.allsunday1122.fp2manabisprint",
       "version": "1.0.0",
       "build": "8",
-      "iap": false,
-      "iap_product_ids": [],
+      "iap": true,
+      "iap_product_ids": [
+        "com.allsunday1122.fp2manabisprint.premium.lifetime",
+        "com.allsunday1122.fp2manabisprint.premium.monthly"
+      ],
       "app2_task": null,
       "status": "VERBATIM_CANONICAL310_SELECTED298_CI8_SUCCESS_RELEASE_BLOCKED",
       "readback": false,
@@ -212,7 +215,7 @@
       "icon_apple_hash_verified": false,
       "build_validation": "HEAD_0b1dc287_CI8_SUCCESS_UNSIGNED_SIMULATOR",
       "app_store_upload": "NOT_STARTED",
-      "note": "Canonical 310=official verbatim 298 selected plus audited original reserve 12; two legal FAIL isolated, HOLD0. No original backfill. Check runs 8/8 success at fixed 0b1dc287; unsigned simulator only. App Store Connect, signed IPA, real device, Q0/Q5 and final approval remain blocked. Build 2 metadata prepared from PR #5729 merged source; signed IPA/TestFlight upload not yet established. Unsigned simulator is not evidence of App Store signing.",
+      "note": "FP2 StoreKit2 IAP source preparation only: lifetime ¥800 and monthly ¥200 local catalog. App Store Connect products NOT CREATED/VERIFIED; signing, upload and App Review not performed. Canonical 310 / selected 298 unchanged, release gate remains BLOCKED.",
       "ci_run_url": "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45195987237",
       "ci_source_sha": "0b1dc287b5a6f2f8d39c1b4560e30411f730cf0c",
       "ci_verified_steps": [
@@ -272,7 +275,7 @@
       "latest_head_ci_result": "FP2_CHECKS_8_OF_8_SUCCESS",
       "latest_head_ci_checked": "2026-11-24",
       "latest_head_ci_url": "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/commit/0b1dc287b5a6f2f8d39c1b4560e30411f730cf0c/checks",
-      "asc_readback": "NOT_PERFORMED_BUILD2",
+      "asc_readback": "NOT_PERFORMED_IAP_PRODUCTS",
       "submission_state": "NOT_SUBMITTED",
       "final_approval": "PENDING_USER_EXPLICIT_APPROVAL",
       "auto_fix_required": [],

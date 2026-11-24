@@ -123,6 +123,49 @@ const URL='http://127.0.0.1:8765/';
   assert.equal(await page.locator('#counter').innerText(),'1/4');
   await page.locator('#choices .choice').first().click();
   assert.match(await page.locator('#sourceInfo').innerText(),/出典箇所|改変/);
+
+  // StoreKit native bridge simulation: no entitlement from user preferences or button click.
+  await page.locator('#quizHome').click();
+  const paywallSetup=await page.evaluate(()=>{
+    window.__fp2PostedMessages=[];
+    window.webkit={messageHandlers:{storeKit:{postMessage:v=>window.__fp2PostedMessages.push(v)}}};
+    window.__fp2StoreKitUpdate({native:true,premium:false,status:'known',
+      prices:{lifetime:'￥800',monthly:'￥200'}});
+    return {premium:fp2StoreState.premium,free:pickSprint().map(q=>q.exam_session),
+      selected:QUESTIONS.length,prices:fp2StoreState.prices};
+  });
+  assert.equal(paywallSetup.premium,false);
+  assert.equal(paywallSetup.selected,298);
+  assert.ok(paywallSetup.free.length>0&&paywallSetup.free.every(x=>x==='2026-05'));
+  await page.locator('#startWeak').click();
+  assert.equal(await page.locator('#fp2PremiumPaywall').isVisible(),true);
+  await page.locator('#fp2ModalClose').click();
+  await page.locator('.chapter').first().click();
+  assert.equal(await page.locator('#fp2PremiumPaywall').isVisible(),true);
+  await page.locator('#fp2ModalClose').click();
+  await page.locator('[data-screen="mock"]').click();
+  const paidMock=page.locator('#mockSets button[data-fp2-paid="true"]').first();
+  await paidMock.click();
+  assert.equal(await page.locator('#fp2PremiumPaywall').isVisible(),true);
+  await page.locator('[data-fp2-purchase="monthly"]').last().click();
+  const requests=await page.evaluate(()=>window.__fp2PostedMessages);
+  assert.ok(requests.some(x=>x.action==='purchase'&&x.productID==='com.allsunday1122.fp2manabisprint.premium.monthly'));
+  assert.equal(await page.evaluate(()=>fp2StoreState.premium),false,'purchase button alone never unlocks');
+  await page.locator('#fp2ModalRestore').click();
+  assert.ok((await page.evaluate(()=>window.__fp2PostedMessages)).some(x=>x.action==='restore'));
+  await page.evaluate(()=>window.__fp2StoreKitUpdate({native:true,premium:true,status:'known',
+    prices:{lifetime:'￥800',monthly:'￥200'}}));
+  assert.equal(await page.locator('#fp2PremiumPaywall').isVisible(),false);
+  await page.locator('#mockSets button[data-fp2-paid="true"]').first().click();
+  assert.equal(await page.locator('#quiz.screen.active').count(),1,'verified entitlement unlocks old exam');
+  await page.evaluate(()=>window.__fp2StoreKitUpdate({native:true,premium:false,status:'known',
+    prices:{lifetime:'￥800',monthly:'￥200'}}));
+  assert.equal(await page.locator('#home.screen.active').count(),1,'revoked entitlement closes restricted session');
+  await page.locator('#startAll').click();
+  assert.equal(await page.locator('#quiz.screen.active').count(),1,'2026 free sprint stays accessible');
+  assert.ok((await page.evaluate(()=>session.map(q=>q.exam_session))).every(x=>x==='2026-05'));
+  console.log('FP2 native StoreKit UI gate PASS: free 2026, old-year/chapters/weak blocked, buy/restore posted, verified unlock, revoked relock');
+
   if(errors.length)throw Error('Browser JavaScript errors: '+errors.join(' ; '));
   console.log(JSON.stringify({status:'PASS',bank:loaded.n,chapters:loaded.domains,sourceMetadata:loaded.meta,goal:4,backupRoundtrip:true,offlineReload:true,unseenPriority:true,pageErrors:0}));
  }finally{await browser.close();}

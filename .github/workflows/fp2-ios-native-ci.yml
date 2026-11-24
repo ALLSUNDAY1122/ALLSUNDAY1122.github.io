@@ -32,7 +32,17 @@ jobs:
           evidence=json.loads(Path('fp2-manabi-sprint/ios/Web/bundle-evidence.json').read_text())
           for field in ('app_id','bundle_id','version','build'):
               assert str(registry[field])==str(evidence[field]),field
-          assert registry['iap'] is False and evidence['iap_product_ids']==[]
+          assert registry['iap'] is True
+          expected_iap={'com.allsunday1122.fp2manabisprint.premium.lifetime','com.allsunday1122.fp2manabisprint.premium.monthly'}
+          assert set(registry['iap_product_ids'])==expected_iap
+          assert set(evidence['iap_product_ids'])==expected_iap
+          assert 'storeKitConfiguration: Review.storekit' in Path('fp2-manabi-sprint/ios/project.yml').read_text()
+          storekit=json.loads(Path('fp2-manabi-sprint/ios/Review.storekit').read_text())
+          product_ids={p['productID'] for p in storekit['products']}
+          subscriptions=[s for g in storekit['subscriptionGroups'] for s in g['subscriptions']]
+          assert product_ids=={registry['iap_product_ids'][0]}
+          assert {s['productID'] for s in subscriptions}=={registry['iap_product_ids'][1]}
+          assert storekit['products'][0]['displayPrice']=='800' and subscriptions[0]['displayPrice']=='200'
           assert evidence['publication_release_clear']==0
           bank=json.loads(Path('fp2-manabi-sprint/questions/canonical/approved-questions-20261123.json').read_text())
           selection=json.loads(Path('fp2-manabi-sprint/release/release-selection-300-20261123.json').read_text())
