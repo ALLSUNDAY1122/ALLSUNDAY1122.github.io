@@ -1,10 +1,15 @@
 {
   "year": 2022,
   "targetCount": 120,
-  "createdCount": 40,
+  "createdCount": 50,
   "auditPassedCount": 0,
-  "sourceCheckedCount": 40,
-  "hold": [],
+  "sourceCheckedCount": 49,
+  "hold": [
+    {
+      "id": "KSAI-2022-050",
+      "reason": "cの剤形選択の直接根拠の追加確認。公式正答と他の記述は照合済み。"
+    }
+  ],
   "pendingIndependentAudit": [
     "KSAI-2022-001",
     "KSAI-2022-002",
@@ -45,7 +50,17 @@
     "KSAI-2022-037",
     "KSAI-2022-038",
     "KSAI-2022-039",
-    "KSAI-2022-040"
+    "KSAI-2022-040",
+    "KSAI-2022-041",
+    "KSAI-2022-042",
+    "KSAI-2022-043",
+    "KSAI-2022-044",
+    "KSAI-2022-045",
+    "KSAI-2022-046",
+    "KSAI-2022-047",
+    "KSAI-2022-048",
+    "KSAI-2022-049",
+    "KSAI-2022-050"
   ],
   "sourceBankBlob": "8741e2675af6f41f7fba2afdc89566f48b8258e7",
   "explanations": [
@@ -884,8 +899,231 @@
         "status": "PENDING_INDEPENDENT_REVIEW",
         "sourceEvidence": "Printed page screenshots inspected; PDF zero-based index = printed page + 7"
       }
+    },
+    {
+      "id": "KSAI-2022-041",
+      "questionNo": 41,
+      "answer": 4,
+      "answerNumberOfficial": 5,
+      "explanation": "正答の理由：冷えや貧血傾向に加え神経過敏、動悸などがある場合の処方は柴胡桂枝乾姜湯である。\n1：誤。温経湯は手足のほてりと唇の乾燥が特徴。\n2：誤。当帰芍薬散は虚弱で冷えや貧血傾向があり、疲れやすい人などに用いる。\n3：誤。桂枝茯苓丸は比較的体力があり、のぼせや足の冷えなどがある人に用いる。\n4：誤。四物湯は皮膚の乾燥や血色不良を伴う冷え症などが目安。\n5：正。柴胡桂枝乾姜湯は設問の症状に合致し、重篤な副作用として間質性肺炎と肝機能障害にも注意する。\n覚えるべきポイント：漢方の適応は症状の組合せと体力で識別する。\n参照資料：厚生労働省『試験問題の作成に関する手引き』令和4年3月版、第3章Ⅵ 婦人薬、p.138・139・140。",
+      "reference": {
+        "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+        "edition": "2022-03",
+        "pages": [
+          138,
+          139,
+          140
+        ]
+      },
+      "audit": {
+        "sourceChecked": true,
+        "officialBankAnswerChecked": true,
+        "status": "PENDING_INDEPENDENT_REVIEW",
+        "sourceEvidence": "Handbook printed pages checked; PDF zero-based index = printed page + 7"
+      }
+    },
+    {
+      "id": "KSAI-2022-042",
+      "questionNo": 42,
+      "answer": 0,
+      "answerNumberOfficial": 1,
+      "explanation": "正答の理由：この製剤には眠気や呼吸抑制に関係する成分が含まれるため、使用者と生活状況の確認が重要である。\na：正。ジヒドロコデインを含むため12歳未満には使用できない。本人用であることを確認する。\nb：正。ジヒドロコデインは授乳中の使用に制限がある。乳児への影響を避けるため服用しないか授乳を避ける必要がある。\nc：正。ジヒドロコデインは鎮咳、グアイフェネシンは去痰、クロルフェニラミンは抗ヒスタミン成分である。\nd：正。鎮咳成分と抗ヒスタミン成分による眠気などが問題となる。カフェインを含んでいても運転禁止の注意は変わらない。\n覚えるべきポイント：車で通勤する人には服用後の運転禁止を明確に伝え、生活状況に合った代替薬の相談につなげる。\n参照資料：厚生労働省『試験問題の作成に関する手引き』令和4年3月版、第3章Ⅰ-1・Ⅶ、第五章別表5-1、p.59・142・386。",
+      "reference": {
+        "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+        "edition": "2022-03",
+        "pages": [
+          59,
+          142,
+          386
+        ]
+      },
+      "audit": {
+        "sourceChecked": true,
+        "officialBankAnswerChecked": true,
+        "status": "PENDING_INDEPENDENT_REVIEW",
+        "sourceEvidence": "Handbook printed pages checked; PDF zero-based index = printed page + 7"
+      }
+    },
+    {
+      "id": "KSAI-2022-043",
+      "questionNo": 43,
+      "answer": 2,
+      "answerNumberOfficial": 3,
+      "explanation": "正答の理由：正しいのはaとb。抗ヒスタミン、抗コリン、交感神経刺激の各作用を区別する。\na：正。プソイドエフェドリンは依存性があり、漫然とした連用に注意する。\nb：正。ベラドンナ総アルカロイドは副交感神経の伝達を妨げ、鼻汁やくしゃみを軽減する目的で配合される。\nc：誤。クレマスチンで問題となるのはコリン作用ではなく抗コリン作用。口渇や排尿困難などが起こり得る。\nd：誤。フェニレフリンは鼻粘膜の血管を収縮させて腫れや充血を軽減する。\n覚えるべきポイント：鼻づまりには血管収縮、鼻汁には抗コリン作用などを利用する。\n参照資料：厚生労働省『試験問題の作成に関する手引き』令和4年3月版、第3章Ⅶ-2、p.142・143・144。",
+      "reference": {
+        "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+        "edition": "2022-03",
+        "pages": [
+          142,
+          143,
+          144
+        ]
+      },
+      "audit": {
+        "sourceChecked": true,
+        "officialBankAnswerChecked": true,
+        "status": "PENDING_INDEPENDENT_REVIEW",
+        "sourceEvidence": "Handbook printed pages checked; PDF zero-based index = printed page + 7"
+      }
+    },
+    {
+      "id": "KSAI-2022-044",
+      "questionNo": 44,
+      "answer": 2,
+      "answerNumberOfficial": 3,
+      "explanation": "正答の理由：すべての記述が正しい。市販のアレルギー用薬は症状を一時的に軽くするもので、原因への対処も必要である。\na：正。内服薬と点鼻薬でも同種成分の作用が重なるため併用に注意する。\nb：正。アトピー性皮膚炎が疑われる場合や診断されている場合は、専門的な治療のため受診を勧める。\nc：正。感染が原因のかゆみでは、かゆみ止めだけで済ませず感染症への対処を優先する。\nd：正。原因となるアレルゲンを医療機関で特定した後、医師の管理下で体を徐々に慣らす治療が行われる場合がある。\n覚えるべきポイント：原因の除去・回避と受診勧奨を重視する。減感作療法は自己判断で行わない。\n参照資料：厚生労働省『試験問題の作成に関する手引き』令和4年3月版、第3章Ⅶ-3、p.146・147。",
+      "reference": {
+        "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+        "edition": "2022-03",
+        "pages": [
+          146,
+          147
+        ]
+      },
+      "originalImageChecked": true,
+      "originalPdfPage": 31,
+      "originalPdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R4touhanmondaimae.pdf",
+      "audit": {
+        "sourceChecked": true,
+        "officialBankAnswerChecked": true,
+        "status": "PENDING_INDEPENDENT_REVIEW",
+        "sourceEvidence": "Handbook printed pages checked; PDF zero-based index = printed page + 7"
+      }
+    },
+    {
+      "id": "KSAI-2022-045",
+      "questionNo": 45,
+      "answer": 0,
+      "answerNumberOfficial": 1,
+      "explanation": "正答の理由：点鼻薬はヒスタミンの放出を抑える成分と、放出されたヒスタミンの作用を抑える成分を区別する。\na：正。クロモグリク酸ナトリウムは肥満細胞からのヒスタミン放出を抑える。\nb：正。クロルフェニラミンはヒスタミンが受容体に作用するのを妨げる。\nc：誤。テトラヒドロゾリンは血管を拡張するのではなく収縮させる。\nd：正。血管収縮成分の過度な使用でかえって鼻づまりが悪化することがあり、3日程度で改善しない場合は使用をやめ受診を検討する。\n覚えるべきポイント：点鼻薬でも全身への影響や成分重複があり得る。\n参照資料：厚生労働省『試験問題の作成に関する手引き』令和4年3月版、第3章Ⅷ-1・2、p.148・149・150。",
+      "reference": {
+        "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+        "edition": "2022-03",
+        "pages": [
+          148,
+          149,
+          150
+        ]
+      },
+      "audit": {
+        "sourceChecked": true,
+        "officialBankAnswerChecked": true,
+        "status": "PENDING_INDEPENDENT_REVIEW",
+        "sourceEvidence": "Handbook printed pages checked; PDF zero-based index = printed page + 7"
+      }
+    },
+    {
+      "id": "KSAI-2022-046",
+      "questionNo": 46,
+      "answer": 4,
+      "answerNumberOfficial": 5,
+      "explanation": "正答の理由：緑内障に市販点眼薬で対処することはできない。点眼方法と製剤の特徴も問われている。\na：正。緑内障に対する治療効果を持つ一般用点眼薬はなく、成分によっては悪化するおそれがある。\nb：誤。1滴は約50μL、結膜嚢の容量は約30μLであり、1滴でも容量を上回る。\nc：誤。防腐剤を含まない使い切り製品もあり、すべての点眼薬に必須ではない。\nd：誤。点眼後は目を閉じ、必要に応じ目頭を押さえる。繰り返しまばたきするのではない。\n覚えるべきポイント：点眼後は閉眼し、容器先端をまつ毛などに触れさせない。\n参照資料：厚生労働省『試験問題の作成に関する手引き』令和4年3月版、第3章Ⅸ 点眼薬の一般的注意・受診勧奨、p.151・152。",
+      "reference": {
+        "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+        "edition": "2022-03",
+        "pages": [
+          151,
+          152
+        ]
+      },
+      "audit": {
+        "sourceChecked": true,
+        "officialBankAnswerChecked": true,
+        "status": "PENDING_INDEPENDENT_REVIEW",
+        "sourceEvidence": "Handbook printed pages checked; PDF zero-based index = printed page + 7"
+      }
+    },
+    {
+      "id": "KSAI-2022-047",
+      "questionNo": 47,
+      "answer": 2,
+      "answerNumberOfficial": 3,
+      "explanation": "正答の理由：ケトチフェンの説明のみが正しい。各点眼成分の目的は異なる。\na：誤。ネオスチグミンはアセチルコリンを分解する酵素を阻害し、その働きを助ける。\nb：正。ケトチフェンは抗ヒスタミン作用により目のかゆみを抑える目的で配合される。\nc：誤。パンテノールは目の調節機能の回復を助ける目的で用いられる。血行促進による充血改善はビタミンEなどの配合目的である。\nd：誤。イプシロン-アミノカプロン酸は抗炎症成分。乾燥防止にはコンドロイチン硫酸ナトリウムなどが使われる。\n覚えるべきポイント：調節機能、抗炎症、抗ヒスタミン、乾燥防止を分類する。\n参照資料：厚生労働省『試験問題の作成に関する手引き』令和4年3月版、第3章Ⅸ-1・2・3・4・6、p.152・153・154・155。",
+      "reference": {
+        "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+        "edition": "2022-03",
+        "pages": [
+          152,
+          153,
+          154,
+          155
+        ]
+      },
+      "audit": {
+        "sourceChecked": true,
+        "officialBankAnswerChecked": true,
+        "status": "PENDING_INDEPENDENT_REVIEW",
+        "sourceEvidence": "Handbook printed pages checked; PDF zero-based index = printed page + 7"
+      }
+    },
+    {
+      "id": "KSAI-2022-048",
+      "questionNo": 48,
+      "answer": 3,
+      "answerNumberOfficial": 4,
+      "explanation": "正答の理由：冷感刺激成分を含む貼付剤の作用と注意事項について、aとcが正しい。\na：正。サリチル酸グリコールは局所刺激による血行促進や知覚神経への作用によって痛みを軽減するとされる。\nb：誤。ビタミンEの配合目的は血行促進。設問の出血性疾患に関する使用回避はヘパリン類似物質やポリエチレンスルホン酸ナトリウムの注意事項である。\nc：正。メントールは冷感を与え、血行促進や痛み・かゆみの軽減を目的に配合される。\nd：誤。冷感刺激成分を含む外用鎮痛薬は急性の腫れや熱感を伴う打撲・捻挫に適するとされる。\n覚えるべきポイント：冷感刺激と温感刺激の使い分け、血液凝固への影響のある成分を覚える。\n参照資料：厚生労働省『試験問題の作成に関する手引き』令和4年3月版、第3章Ⅹ-2、p.161・162・163。",
+      "reference": {
+        "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+        "edition": "2022-03",
+        "pages": [
+          161,
+          162,
+          163
+        ]
+      },
+      "audit": {
+        "sourceChecked": true,
+        "officialBankAnswerChecked": true,
+        "status": "PENDING_INDEPENDENT_REVIEW",
+        "sourceEvidence": "Handbook printed pages checked; PDF zero-based index = printed page + 7"
+      }
+    },
+    {
+      "id": "KSAI-2022-049",
+      "questionNo": 49,
+      "answer": 0,
+      "answerNumberOfficial": 1,
+      "explanation": "正答の理由：正しいのはaとb。皮膚用薬では角質軟化の仕組みと鎮痛作用を区別する。\na：正。紫雲膏はひびやあかぎれ、軽い外傷など幅広い皮膚症状に用いられる。ただし化膿や広範囲の傷、重い熱傷などには不向き。\nb：正。ナファゾリンは創傷部の血管を収縮させ、出血を抑える目的で配合される。\nc：誤。ケラチンを変質させる成分はイオウ。サリチル酸は角質成分を溶解して柔らかくする。\nd：誤。イブプロフェンピコノールはにきびの炎症などを抑えるが、外用での鎮痛作用はほとんど期待されない。\n覚えるべきポイント：サリチル酸は角質溶解、イオウはケラチン変質。\n参照資料：厚生労働省『試験問題の作成に関する手引き』令和4年3月版、第3章Ⅹ-2・3、p.161・163・164・165。",
+      "reference": {
+        "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+        "edition": "2022-03",
+        "pages": [
+          161,
+          163,
+          164,
+          165
+        ]
+      },
+      "audit": {
+        "sourceChecked": true,
+        "officialBankAnswerChecked": true,
+        "status": "PENDING_INDEPENDENT_REVIEW",
+        "sourceEvidence": "Handbook printed pages checked; PDF zero-based index = printed page + 7"
+      }
+    },
+    {
+      "id": "KSAI-2022-050",
+      "questionNo": 50,
+      "answer": 3,
+      "answerNumberOfficial": 4,
+      "explanation": "正答の理由：貼付剤や噴霧剤の取り扱いは局所の刺激や熱傷を防ぐために重要である。\na：正。同一箇所に繰り返し貼ると皮膚への負担が蓄積し、かぶれやすくなる。\nb：誤。至近距離からの噴霧は凍傷の原因になり得る。製品の指示に従って患部から距離を取る。\nc：誤。湿潤した患部に浸透性だけを理由として液剤を選ぶのは不適切で、刺激や痛みを生じる製品もある。患部と製品の注意事項に応じて剤形を選択する。\nd：正。温感刺激成分を含む貼付剤の上から暖房器具で加温すると痛みが強まり、低温やけどの危険もある。\n覚えるべきポイント：噴霧距離、貼付部位の変更、温感貼付剤の加温回避を覚える。\n参照資料：厚生労働省『試験問題の作成に関する手引き』令和4年3月版、第3章Ⅹ 剤形による取扱い・2(f)、第五章別表5-1、p.156・163・388。",
+      "reference": {
+        "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+        "edition": "2022-03",
+        "pages": [
+          156,
+          163,
+          388
+        ]
+      },
+      "audit": {
+        "sourceChecked": false,
+        "officialBankAnswerChecked": true,
+        "status": "PENDING_INDEPENDENT_REVIEW",
+        "sourceEvidence": "pp.156,163 image checked; p.388 text checked; direct general dosage-form statement still to locate"
+      }
     }
   ],
-  "savedCount": 40,
-  "nextQuestionNo": 41
+  "savedCount": 50,
+  "nextQuestionNo": 51
 }
