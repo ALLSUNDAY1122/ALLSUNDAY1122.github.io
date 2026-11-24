@@ -197,7 +197,7 @@
       "app_id": "6797228406",
       "bundle_id": "com.allsunday1122.fp2manabisprint",
       "version": "1.0.0",
-      "build": "8",
+      "build": "9",
       "iap": true,
       "iap_product_ids": [
         "com.allsunday1122.fp2manabisprint.premium.lifetime",
@@ -211,11 +211,11 @@
       "source_bank": "fp2-manabi-sprint/questions/canonical/approved-questions-20261123.json",
       "content_review_pass": 310,
       "publishable_questions": 0,
-      "icon_source_blob_sha": "ce0cb5bc61296d7ca2ebde213c729ae5d1e4ab9d",
+      "icon_source_blob_sha": "82c8e6e5acfe7711fb07f8a9892aba0c742a6310",
       "icon_apple_hash_verified": false,
       "build_validation": "HEAD_0b1dc287_CI8_SUCCESS_UNSIGNED_SIMULATOR",
       "app_store_upload": "NOT_STARTED",
-      "note": "FP2 StoreKit2 IAP source preparation only: lifetime ¥800 and monthly ¥200 local catalog. App Store Connect products NOT CREATED/VERIFIED; signing, upload and App Review not performed. Canonical 310 / selected 298 unchanged, release gate remains BLOCKED.",
+      "note": "PR #5734 canonical icon verified locally (SHA-256 22f943997e915b7e055458d8fda803f1eda0cb4d641668c5c03d4bf238ea182b, RGB 1024x1024, user approved 2026-11-24); ASC icon is separately UNVERIFIED. Build 9 / Version 1.0.0 metadata only. StoreKit2 lifetime local ¥800 and monthly local ¥200 integration; ASC products not verified. Canonical 310 / selected 298 unchanged. No signing, upload or App Review. Q0/Q5 remain BLOCKED.",
       "ci_run_url": "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45195987237",
       "ci_source_sha": "0b1dc287b5a6f2f8d39c1b4560e30411f730cf0c",
       "ci_verified_steps": [
@@ -242,9 +242,9 @@
       },
       "ci_8_of_8_evidence": "fp2-manabi-sprint/audit/FP2_PREFLIGHT_CI8_HUMAN_REQUIRED_20261123.md",
       "ci_8_of_8_conclusions": "HEAD_298_SELECTED_ALL_8_SUCCESS",
-      "icon_internal_verification": "PASS_IDENTICAL_FP2_LEGACY_GIT_BLOB",
-      "icon_current_sha256": "d456178b2a7b04f180e39b3ad62f5c194832e85aa15102bf6452751551db8033",
-      "icon_asc_verification": "HUMAN_REQUIRED",
+      "icon_internal_verification": "PASS_USER_APPROVED_20261124_RGB_1024_SHA256",
+      "icon_current_sha256": "22f943997e915b7e055458d8fda803f1eda0cb4d641668c5c03d4bf238ea182b",
+      "icon_asc_verification": "HUMAN_REQUIRED_NOT_CHECKED",
       "human_required": [
         "ASC_ICON_REFERENCE_CONFIRMATION",
         "ASC_APP_ID_BUNDLE_VERSION_BUILD_IAP_PRIVACY_METADATA_SCREENSHOTS_PUBLIC_URLS_READBACK",
@@ -275,7 +275,7 @@
       "latest_head_ci_result": "FP2_CHECKS_8_OF_8_SUCCESS",
       "latest_head_ci_checked": "2026-11-24",
       "latest_head_ci_url": "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/commit/0b1dc287b5a6f2f8d39c1b4560e30411f730cf0c/checks",
-      "asc_readback": "NOT_PERFORMED_IAP_PRODUCTS",
+      "asc_readback": "NOT_PERFORMED_BUILD9",
       "submission_state": "NOT_SUBMITTED",
       "final_approval": "PENDING_USER_EXPLICIT_APPROVAL",
       "auto_fix_required": [],
@@ -298,7 +298,11 @@
           "fp2-2024-05-gakka-008",
           "fp2-2024-05-gakka-053"
         ]
-      }
+      },
+      "icon_canonical_status": "APPICON_CANONICAL_VERIFIED",
+      "icon_canonical_verified": true,
+      "icon_manifest_path": "fp2-manabi-sprint/ios/APPICON_MANIFEST.json",
+      "icon_user_approved_on": "2026-11-24"
     }
   }
 }
