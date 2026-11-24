@@ -218,8 +218,13 @@ assert 'APPROVED_OFFICIAL_BANK.json' in official_html
 assert 'renderRubySequence(q)' in official_html
 native_swift = (NATIVE/'Sources/TouhanSprintApp.swift').read_text(encoding='utf-8')
 expo_js = (IOS/'App.js').read_text(encoding='utf-8')
-assert EXPECTED_OFFICIAL_URL in native_swift and EXPECTED_OFFICIAL_URL in expo_js
-assert '公式過去問599問' in metadata and 'remote HTTPS' in metadata
+assert 'loadFileURL' in native_swift and 'OfflineWeb' in native_swift and '.nonPersistent()' in native_swift
+assert EXPECTED_OFFICIAL_URL in expo_js
+local = NATIVE/'OfflineWeb'
+manifest = json.loads((local/'manifest.json').read_text())
+assert manifest['count']==599 and manifest['bankSha256']==hashlib.sha256((WEB/'official-kansai/APPROVED_OFFICIAL_BANK.json').read_bytes()).hexdigest()
+assert 'connect-src' in (local/'official-practice.html').read_text()
+assert '公式過去問599問' in metadata and 'bundled offline' in metadata
 
 print(
     'PASS: Touhan release + learning + question quality acceptance; '

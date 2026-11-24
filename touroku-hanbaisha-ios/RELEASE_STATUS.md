@@ -1458,3 +1458,8 @@ Apple固定識別子: Bundle `com.allsunday1122.tourokuhanbaisha`、ASC `6802119
 - ASC App ID `6802119268`、ASC Build ID `f33140d7-988c-460c-9b90-9c20e85a07f3`、processingState=`VALID`、internalBuildState=`IN_BETA_TESTING`、buildAudienceType=`APP_STORE_ELIGIBLE`、expired=false。アップロード2026-11-24 09:03:06 JST、有効期限 **2027-02-22 09:03:06 JST**（API原値2027-02-21T16:03:06-08:00）。
 - 内部グループ `sum`、hasAccessToAllBuilds=true、testerCount=1。全ビルドアクセスと内部配信状態により配信可能と判定（個別build-group relationshipは未照会）。iPhone実機インストール・599問実動作はユーザー確認待ち。外部ベータ審査・本審査最終送信・一般公開は実施しない。
 - 証跡：`automation/codemagic-results/touhan-599-inspect-20261124-0910.json`、`automation/asc-results/touhan-build14-testflight-readback-20261124-0920.json`。過去の署名のみ・11/14記録は履歴として保持し、本節を最新判定とする。`release-status.json` の現行判定と同期。
+
+
+## 2026-11-24 11:13 JST Q4/Q5 オフライン候補実装
+- 599問の公式バンクと監査済み図版をビルド時にハッシュ照合・同梱、WKWebViewローカル起動、CSP connect-src none、非永続ストア。公式PDF等は明示操作で外部ブラウザ。旧360問はWeb版のみ。公開プライバシー文書・サポート・次版メタデータ案更新。
+- Q4/Q5は実測前のためBLOCKED、従来Build 14の12/14 PASSとQ7配信証跡は維持。新候補のSimulator/オフラインUI試験、署名・新TestFlight・ASC質問票確認が必要。本審査未送信。

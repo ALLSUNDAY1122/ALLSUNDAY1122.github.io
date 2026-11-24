@@ -3,89 +3,77 @@ import WebKit
 import UIKit
 
 private enum ReleaseConfig {
-    static let homeURL = URL(string: "https://allsunday1122.github.io/touroku-hanbaisha-sprint/official-practice.html")!
-    static let allowedHost = "allsunday1122.github.io"
-    static let allowedPathPrefix = "/touroku-hanbaisha-sprint/"
+    static var root: URL? { Bundle.main.resourceURL?.appendingPathComponent("OfflineWeb", isDirectory: true) }
+    static var homeURL: URL? { root?.appendingPathComponent("official-practice.html") }
 }
 
 @main
 struct TouhanSprintApp: App {
     var body: some Scene {
-        WindowGroup {
-            TouhanWebView()
-                .ignoresSafeArea(.container, edges: .bottom)
-        }
+        WindowGroup { TouhanWebView().ignoresSafeArea(.container, edges: .bottom) }
     }
 }
 
 struct TouhanWebView: UIViewRepresentable {
-    func makeCoordinator() -> Coordinator {
-        Coordinator()
-    }
+    func makeCoordinator() -> Coordinator { Coordinator() }
 
     func makeUIView(context: Context) -> WKWebView {
         let configuration = WKWebViewConfiguration()
-        configuration.websiteDataStore = .default()
+        configuration.websiteDataStore = .nonPersistent()
         configuration.defaultWebpagePreferences.allowsContentJavaScript = true
-
         let webView = WKWebView(frame: .zero, configuration: configuration)
         webView.navigationDelegate = context.coordinator
+        webView.uiDelegate = context.coordinator
         webView.allowsBackForwardNavigationGestures = true
-        webView.scrollView.contentInsetAdjustmentBehavior = .automatic
-        webView.load(URLRequest(url: ReleaseConfig.homeURL, cachePolicy: .reloadRevalidatingCacheData, timeoutInterval: 30))
+        if let home = ReleaseConfig.homeURL, let root = ReleaseConfig.root {
+            webView.loadFileURL(home, allowingReadAccessTo: root)
+        } else {
+            context.coordinator.showFailure(in: webView)
+        }
         return webView
     }
 
     func updateUIView(_ webView: WKWebView, context: Context) {}
 
-    final class Coordinator: NSObject, WKNavigationDelegate {
-        func webView(
-            _ webView: WKWebView,
-            decidePolicyFor navigationAction: WKNavigationAction,
-            decisionHandler: @escaping (WKNavigationActionPolicy) -> Void
-        ) {
-            guard let url = navigationAction.request.url else {
-                decisionHandler(.cancel)
-                return
-            }
+    final class Coordinator: NSObject, WKNavigationDelegate, WKUIDelegate {
+        private func isLocal(_ url: URL) -> Bool {
+            guard url.isFileURL, let root = ReleaseConfig.root else { return false }
+            return url.standardizedFileURL.path.hasPrefix(root.standardizedFileURL.path + "/")
+        }
 
-            if isInAppURL(url) {
-                decisionHandler(.allow)
-                return
-            }
-
-            if let scheme = url.scheme?.lowercased(), ["http", "https", "mailto"].contains(scheme) {
+        func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction,
+                     decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+            guard let url = navigationAction.request.url else { decisionHandler(.cancel); return }
+            if isLocal(url) { decisionHandler(.allow); return }
+            if url.absoluteString == "about:blank" { decisionHandler(.allow); return }
+            if navigationAction.navigationType == .linkActivated,
+               let scheme = url.scheme?.lowercased(), ["https", "mailto"].contains(scheme) {
                 UIApplication.shared.open(url)
             }
             decisionHandler(.cancel)
         }
 
-        func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-            showNetworkFallback(in: webView)
-        }
-
-        func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
-            showNetworkFallback(in: webView)
-        }
-
-        private func isInAppURL(_ url: URL) -> Bool {
-            guard url.scheme?.lowercased() == "https",
-                  url.host?.lowercased() == ReleaseConfig.allowedHost else {
-                return false
+        func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration,
+                     for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
+            guard let url = navigationAction.request.url else { return nil }
+            if isLocal(url), let root = ReleaseConfig.root {
+                webView.loadFileURL(url, allowingReadAccessTo: root)
+            } else if navigationAction.navigationType == .linkActivated,
+                      let scheme = url.scheme?.lowercased(), ["https", "mailto"].contains(scheme) {
+                UIApplication.shared.open(url)
             }
-            return url.path == "/touroku-hanbaisha-sprint" || url.path.hasPrefix(ReleaseConfig.allowedPathPrefix)
+            return nil
         }
 
-        private func showNetworkFallback(in webView: WKWebView) {
-            let home = ReleaseConfig.homeURL.absoluteString
-                .replacingOccurrences(of: "&", with: "&amp;")
-                .replacingOccurrences(of: "\"", with: "&quot;")
-            let html = """
-            <!doctype html><html lang="ja"><head><meta name="viewport" content="width=device-width,initial-scale=1">
-            <style>body{font-family:-apple-system,sans-serif;background:#f7f8fa;color:#173a5e;margin:0;padding:48px 24px;text-align:center}main{max-width:520px;margin:auto}a{display:inline-block;margin-top:20px;padding:14px 22px;border-radius:12px;background:#173a5e;color:#fff;text-decoration:none;font-weight:700}</style></head>
-            <body><main><h1>通信を確認してください</h1><p>学習画面を読み込めませんでした。通信状態を確認して、もう一度お試しください。</p><a href="\(home)">再読み込み</a></main></body></html>
-            """
-            webView.loadHTMLString(html, baseURL: nil)
+        func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+            if (error as NSError).code != NSURLErrorCancelled { showFailure(in: webView) }
+        }
+        func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+            if (error as NSError).code != NSURLErrorCancelled { showFailure(in: webView) }
+        }
+
+        func showFailure(in webView: WKWebView) {
+            webView.loadHTMLString("<html lang='ja'><meta name='viewport' content='width=device-width'><h1>学習データを読み込めませんでした</h1><p>アプリを終了して再起動してください。</p></html>", baseURL: nil)
         }
     }
 }

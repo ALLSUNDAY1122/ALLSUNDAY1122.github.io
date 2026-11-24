@@ -37,3 +37,5 @@ print(f'PASS: canonical AppIcon {w}x{h}')
 PY
 
 echo "PASS: generated AppIcon exactly matches Drive canonical SHA-256 $ACTUAL_SHA256"
+
+python3 "$SCRIPT_DIR/../scripts/prepare_offline_web.py"

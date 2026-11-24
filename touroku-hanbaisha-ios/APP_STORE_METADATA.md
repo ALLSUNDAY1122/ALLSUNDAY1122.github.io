@@ -22,7 +22,7 @@
 ・漢字へのルビ対応を確定できない設問は読みを原典出現順に独立表示
 ・旧版の独自問題360問はWeb上で別途利用可能
 
-公式PDFの改行・図表・ルビ表示をスマートフォン向けに加工しています。原典の出典は各問題画面に表示します。関西広域連合の公式アプリではありません。インターネット接続が必要です。オフライン学習は現在対応していません。医薬品の使用判断や治療を目的とするものではありません。
+公式PDFの改行・図表・ルビ表示をスマートフォン向けに加工しています。原典の出典は各問題画面に表示します。関西広域連合の公式アプリではありません。オフライン対応版では問題・図版をアプリ内に同梱し、通常学習は通信不要です。公式PDF等の外部リンクには通信が必要です。医薬品の使用判断や治療を目的とするものではありません。
 
 ## キーワード案
 登録販売者,資格,試験,過去問,医薬品,ドラッグストア,勉強,学習,模試,復習
@@ -33,11 +33,11 @@
 - マーケティングURL: https://allsunday1122.github.io/touroku-hanbaisha-sprint/
 
 ## App Review Notes
-This educational app loads a remote HTTPS practice page inside WKWebView and contains 599 official past examination questions published by the Kansai Regional Union (2022–2026). The officially invalid 2023 question 90 is excluded. Each question links to official source/answer PDFs. Unattached ruby readings are displayed in original PDF order, with no inferred Kanji mapping. The app requires internet access and is not an official government app. No medical advice, user login, or in-app purchase is provided. Store privacy declarations require final verification for remote web content.
+This educational app loads a bundled offline practice page inside WKWebView and contains 599 official past examination questions published by the Kansai Regional Union (2022–2026). The officially invalid 2023 question 90 is excluded. Each question links to official source/answer PDFs. Unattached ruby readings are displayed in original PDF order, with no inferred Kanji mapping. Normal practice requires no internet; external source and support links open in the external browser. The app is not an official government app. No medical advice, user login, or in-app purchase is provided. Store privacy declarations require final verification in App Store Connect.
 
 ## 提出前にApp Store Connectで最終確認する項目
 - Seller Name / Copyright はApple Developer登録名に合わせる
-- App Privacy回答は、最終ビルドがリモートWebView方式かオフライン同梱方式か確定後に再確認する
+- App Privacy回答は、オフライン対応版の実測と質問票現物を照合する（Build 14は旧リモート版）
 - 1024×1024 App Storeアイコン
 - iPhoneスクリーンショット
 - 実機での表示・途中保存・模試完走
