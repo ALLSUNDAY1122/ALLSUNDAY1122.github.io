@@ -812,8 +812,8 @@
     "v3_original_pdf_image_8": "PASS_8_SCOPE_RIGHTS_CHROMIUM_16",
     "v3_ruby_visual_10": "PASS_DIRECT_IMAGE_10_CHROMIUM_20",
     "v2_ruby_78_visual_followup": "HOLD_78_MAPPING_WARNINGS_CONTACT_SHEETS_15_VIEWED",
-    "ai_preflight_acceptance": "BLOCKED_12_OF_14_Q4_Q5",
-    "ios_offline_runtime": "BLOCKED_REMOTE_ONLY",
+    "ai_preflight_acceptance": "BLOCKED_13_OF_14_Q5",
+    "ios_offline_runtime": "PASS_599_CHROMIUM_WEBKIT_AND_SIMULATOR",
     "native_simulator": "PASS_XCODEBUILD_BOOT_INSTALL_LAUNCH_SCREENSHOT",
     "app_privacy": "NOT_VERIFIED_QUESTIONNAIRE",
     "asc_metadata_599": "PASS"
@@ -1490,14 +1490,15 @@
     "q6_later_result": "PASS",
     "q5_later_evidence": "touroku-hanbaisha-ios/PRIVACY_Q5_AUDIT_20261124.json",
     "q5_later_result": "SOURCE_BROWSER_PASS_ASC_NOT_VERIFIED",
-    "current_pass": 12,
+    "current_pass": 13,
     "current_blocking": [
-      "Q4_OFFLINE_RESILIENCE",
       "Q5_PRIVACY_AND_NETWORK_DISCLOSURE"
     ],
-    "reassessment_note": "Original preflight 10/14 is historical. Q6 simulator PASS; Q7 ASC API confirms Build 14 VALID and IN_BETA_TESTING, internal group sum has access to all builds. Current 12/14; Q4 and Q5 remain blocked. Physical device installation not verified.",
+    "reassessment_note": "Current 13/14: Q4 both browser engines 599/599 in two environments plus native Simulator build/launch. Q5 ASC questionnaire pending. Q7 historical Build 14 PASS; new offline candidate delivery pending.",
     "q7_later_evidence": "automation/asc-results/touhan-build14-testflight-readback-20261124-0920.json",
-    "q7_later_result": "PASS"
+    "q7_later_result": "PASS",
+    "q4_later_result": "PASS",
+    "q4_later_evidence": "touroku-hanbaisha-ios/OFFLINE_Q4_20261124.json"
   },
   "q5_privacy_audit_20261124": {
     "sourceAndBrowserAudit": "PASS",
@@ -1677,10 +1678,10 @@
     "githubInspectRunId": 45295103103
   },
   "q4_q5_offline_candidate_20261124": {
-    "status": "IMPLEMENTED_PENDING_RUNTIME_CI",
+    "status": "Q4_PASS_Q5_ASC_PENDING_NEW_BUILD_REQUESTED",
     "scope": "Native WKWebView local packaged official 599 questions and verified figures; no remote learning requests; explicit external source links only",
-    "q4": "PENDING_RUNTIME_VERIFICATION",
-    "q5": "PENDING_RUNTIME_AND_ASC_QUESTIONNAIRE",
+    "q4": "PASS",
+    "q5": "PENDING_ASC_QUESTIONNAIRE",
     "build14": "PREVIOUS_REMOTE_BUILD_TESTFLIGHT_VALID",
     "requiresNewSignedBuild": true,
     "appReviewSubmitted": false,
@@ -1718,18 +1719,21 @@
     "offlineAlternativeRetryRun": 45312864891,
     "offlineChromium": {
       "completed": 599,
-      "externalRequests": 0,
-      "pageErrors": 0,
       "result": "PASS",
-      "artifactId": 14884121611
+      "externalRequests": 0,
+      "pageErrors": 0
     },
     "offlineWebKit": {
-      "result": "FAIL_FEEDBACK_TEXT_ASSERTION",
-      "fileNavigation": "PASS"
+      "completed": 599,
+      "result": "PASS",
+      "externalRequests": 0,
+      "pageErrors": 0
     },
     "offlineNextFix": "Wait for exact feedback result element and verify selected correct class; preserve all 599 questions and network assertions",
     "offlineLatestContainerRun": 45313106222,
     "offlineLatestNormalRun": 45313106230,
-    "offlineLatestStatus": "BOTH_RUNNING_FULL_QUESTION_TEST_AFTER_SUCCESSFUL_SETUP"
+    "offlineLatestStatus": "BOTH_SUCCESS",
+    "offlineEvidence": "touroku-hanbaisha-ios/OFFLINE_Q4_20261124.json",
+    "newBuildRequest": "touhan-offline-20261124-1135"
   }
 }

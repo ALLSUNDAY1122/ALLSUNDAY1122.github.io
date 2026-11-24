@@ -1504,3 +1504,8 @@ Apple固定識別子: Bundle `com.allsunday1122.tourokuhanbaisha`、ASC `6802119
 
 ## Q4 再検証状況（2026-11-24 11:33 JST）
 - 公式コンテナ45313106222、通常環境45313106230ともブラウザ準備・同梱成功、599問完走試験実行中。実行中ログ未取得。整合性45313106132 SUCCESS。WebKit完走未確定のためQ4保留、12/14維持、新IPA未開始。
+
+
+## Q4 PASS・新規IPA要求（2026-11-24 11:35 JST）
+- 45313106222 / 45313106230 ともSUCCESS、各Chromium/WebKit 599/599、図版104、外部要求0、page error 0。証跡 OFFLINE_Q4_20261124.json。Simulator 45310905655 build/install/launch実測PASS（保存競合復旧済）。Q4 PASS、現行13/14、Q5 ASC質問票のみ残る。実機オフライン未確認。
+- Codemagic touhan-ios 新規署名・ASC upload要求 touhan-offline-20261124-1135。新ビルド番号・署名・配信は未確認。旧Build14のQ7 PASS維持。本審査未送信。
