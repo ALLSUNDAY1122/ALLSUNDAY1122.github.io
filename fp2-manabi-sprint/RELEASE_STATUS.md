@@ -1,5 +1,14 @@
 # 2026-11-24｜main統合後のFP2正本（PR #5717競合解消）
 
+## 2026-11-24｜FP2 AppIcon正規原本確定・Build 9（現行設定）
+
+- **APPICON_CANONICAL_VERIFIED / PASS**：PR #5734のユーザー承認済みシリーズPNGを正規原本として確認。1024×1024、RGB、アルファなし、SHA-256 `22f943997e915b7e055458d8fda803f1eda0cb4d641668c5c03d4bf238ea182b`、Git Blob `82c8e6e5acfe7711fb07f8a9892aba0c742a6310`。正本 `ios/APPICON_MANIFEST.json` と `automation/app-release-registry.json` を同期。**APPICON_CANONICAL_UNVERIFIEDは解消**。
+- **ASCアイコンの確認とは別**：App Store Connectにログインしておらず、Apple側のアイコン一致は未確認。レジストリの `icon_apple_hash_verified=false` を維持。
+- **Version 1.0.0 / 次期Build 9**。StoreKit2買い切りローカル¥800・月額ローカル¥200をソース統合、商品登録・署名・アップロード・App Review提出は行わない。
+- 正規バンク310問、アプリ同梱選抜298問、予備12問、原典データ変更なし。Q0/Q5公開判定は従来どおり **BLOCKED**。
+- 以下の古いBuild 1/2・旧アイコン未検証・旧300問の記述は作業履歴であり、本節の現行設定・正規アイコン判定には優先しない。
+
+
 - mainの取込：逆向き統合PR #5724をmergeコミット `80bed862d0f10d7cbb3a8e2f8fd633fe47450153` で統合し、`RELEASE_STATUS.md` の競合を解消。以下の監査完了節は統合前のリリースブランチの正本から保持。
 - 現行正規バンク **310問**＝日本FP協会公式逐語監査PASS **298問（全件選抜）**＋監査済み独自予備 **12問**。旧300問へ補充しない。2024-09 Q07と2024-05 Q08はFAIL隔離、HOLD0。公開承認0、全問`publishable=false`。
 - 監査済み選抜 **298/298** の`legalChecked`・`explanationChecked`は両方true、追加180問台帳 **180/180 VERIFIED**。ただし原典・権利の最終公開承認ではない。
