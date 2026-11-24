@@ -1,8 +1,8 @@
 {
   "year": 2022,
   "targetCount": 120,
-  "auditedCount": 20,
-  "auditPassedCount": 20,
+  "auditedCount": 30,
+  "auditPassedCount": 30,
   "holdCount": 0,
   "sourceExplanationBlob": "149761e7ae675567ed501fa4a72249603b116edd",
   "sourceBank": "APPROVED_OFFICIAL_BANK(5).json",
@@ -1424,6 +1424,740 @@
         "numericAndRegulatoryCheck": "PASS"
       },
       "notes": "公式問題画像と正規バンクの正答組合せ、解説の各記述を手引き本文画像に逐項照合。"
+    },
+    {
+      "questionId": "KSAI-2022-021",
+      "questionNo": 21,
+      "verdict": "PASS",
+      "evidence": {
+        "explanationAnswerNumberOfficial": 5,
+        "bankAnswerNumberOfficial": 5,
+        "answerMatch": true,
+        "truthPattern": "誤誤誤誤正",
+        "handbook": {
+          "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+          "edition": "2022-03",
+          "statements": [
+            {
+              "statement": "1",
+              "judgment": "誤",
+              "printedPages": [
+                58,
+                59
+              ],
+              "pdfPageIndices": [
+                65,
+                66
+              ],
+              "basis": "去痰・解熱鎮痛2成分で不適"
+            },
+            {
+              "statement": "2",
+              "judgment": "誤",
+              "printedPages": [
+                58,
+                59
+              ],
+              "pdfPageIndices": [
+                65,
+                66
+              ],
+              "basis": "ノスカピンのみ一致"
+            },
+            {
+              "statement": "3",
+              "judgment": "誤",
+              "printedPages": [
+                58,
+                59
+              ],
+              "pdfPageIndices": [
+                65,
+                66
+              ],
+              "basis": "メチルエフェドリンのみ一致"
+            },
+            {
+              "statement": "4",
+              "judgment": "誤",
+              "printedPages": [
+                58,
+                59
+              ],
+              "pdfPageIndices": [
+                65,
+                66
+              ],
+              "basis": "a,c一致、bは解熱鎮痛"
+            },
+            {
+              "statement": "5",
+              "judgment": "正",
+              "printedPages": [
+                59
+              ],
+              "pdfPageIndices": [
+                66
+              ],
+              "basis": "3成分の分類一致"
+            }
+          ],
+          "pageImagesChecked": true
+        },
+        "officialQuestion": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R4touhanmondaimae.pdf",
+          "printedPage": 13,
+          "pdfPageIndex": 13,
+          "imageChecked": true
+        },
+        "numericAndRegulatoryCheck": "PASS"
+      },
+      "notes": "公式原典画像と正規バンク、解説の選択肢別理由を手引き本文画像で照合。"
+    },
+    {
+      "questionId": "KSAI-2022-022",
+      "questionNo": 22,
+      "verdict": "PASS",
+      "evidence": {
+        "explanationAnswerNumberOfficial": 4,
+        "bankAnswerNumberOfficial": 4,
+        "answerMatch": true,
+        "truthPattern": "正誤正誤",
+        "handbook": {
+          "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+          "edition": "2022-03",
+          "statements": [
+            {
+              "statement": "a",
+              "judgment": "正",
+              "printedPages": [
+                60
+              ],
+              "pdfPageIndices": [
+                67
+              ],
+              "basis": "構造類似と抗炎症"
+            },
+            {
+              "statement": "b",
+              "judgment": "誤",
+              "printedPages": [
+                59
+              ],
+              "pdfPageIndices": [
+                66
+              ],
+              "basis": "血栓注意はトラネキサム酸"
+            },
+            {
+              "statement": "c",
+              "judgment": "正",
+              "printedPages": [
+                59
+              ],
+              "pdfPageIndices": [
+                66
+              ],
+              "basis": "起炎物質産生抑制"
+            },
+            {
+              "statement": "d",
+              "judgment": "誤",
+              "printedPages": [
+                60
+              ],
+              "pdfPageIndices": [
+                67
+              ],
+              "basis": "偽アルドステロン症はグリチルリチン酸"
+            }
+          ],
+          "pageImagesChecked": true
+        },
+        "officialQuestion": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R4touhanmondaimae.pdf",
+          "printedPage": 14,
+          "pdfPageIndex": 14,
+          "imageChecked": true
+        },
+        "numericAndRegulatoryCheck": "PASS"
+      },
+      "notes": "公式原典画像と正規バンク、解説の選択肢別理由を手引き本文画像で照合。"
+    },
+    {
+      "questionId": "KSAI-2022-023",
+      "questionNo": 23,
+      "verdict": "PASS",
+      "evidence": {
+        "explanationAnswerNumberOfficial": 3,
+        "bankAnswerNumberOfficial": 3,
+        "answerMatch": true,
+        "truthPattern": "誤誤正誤",
+        "handbook": {
+          "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+          "edition": "2022-03",
+          "statements": [
+            {
+              "statement": "a",
+              "judgment": "誤",
+              "printedPages": [
+                61
+              ],
+              "pdfPageIndices": [
+                68
+              ],
+              "basis": "葛根湯は中等度以上・無汗"
+            },
+            {
+              "statement": "b",
+              "judgment": "誤",
+              "printedPages": [
+                61
+              ],
+              "pdfPageIndices": [
+                68
+              ],
+              "basis": "麻黄湯は体力充実"
+            },
+            {
+              "statement": "c",
+              "judgment": "正",
+              "printedPages": [
+                62
+              ],
+              "pdfPageIndices": [
+                69
+              ],
+              "basis": "香蘇散は虚弱・胃腸弱い"
+            },
+            {
+              "statement": "d",
+              "judgment": "誤",
+              "printedPages": [
+                61
+              ],
+              "pdfPageIndices": [
+                68
+              ],
+              "basis": "小柴胡湯は中等度・虚弱不向き"
+            }
+          ],
+          "pageImagesChecked": true
+        },
+        "officialQuestion": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R4touhanmondaimae.pdf",
+          "printedPage": 14,
+          "pdfPageIndex": 14,
+          "imageChecked": true
+        },
+        "numericAndRegulatoryCheck": "PASS"
+      },
+      "notes": "公式原典画像と正規バンク、解説の選択肢別理由を手引き本文画像で照合。"
+    },
+    {
+      "questionId": "KSAI-2022-024",
+      "questionNo": 24,
+      "verdict": "PASS",
+      "evidence": {
+        "explanationAnswerNumberOfficial": 3,
+        "bankAnswerNumberOfficial": 3,
+        "answerMatch": true,
+        "truthPattern": "誤正正正",
+        "handbook": {
+          "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+          "edition": "2022-03",
+          "statements": [
+            {
+              "statement": "a",
+              "judgment": "誤",
+              "printedPages": [
+                70,
+                71
+              ],
+              "pdfPageIndices": [
+                77,
+                78
+              ],
+              "basis": "芍薬甘草湯と呉茱萸湯の相違・連用回避"
+            },
+            {
+              "statement": "b",
+              "judgment": "正",
+              "printedPages": [
+                70
+              ],
+              "pdfPageIndices": [
+                77
+              ],
+              "basis": "疎経活血湯の適応"
+            },
+            {
+              "statement": "c",
+              "judgment": "正",
+              "printedPages": [
+                70
+              ],
+              "pdfPageIndices": [
+                77
+              ],
+              "basis": "麻杏薏甘湯の適応"
+            },
+            {
+              "statement": "d",
+              "judgment": "正",
+              "printedPages": [
+                71
+              ],
+              "pdfPageIndices": [
+                78
+              ],
+              "basis": "釣藤散の適応"
+            }
+          ],
+          "pageImagesChecked": true
+        },
+        "officialQuestion": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R4touhanmondaimae.pdf",
+          "printedPage": 15,
+          "pdfPageIndex": 15,
+          "imageChecked": true
+        },
+        "numericAndRegulatoryCheck": "PASS"
+      },
+      "notes": "公式原典画像と正規バンク、解説の選択肢別理由を手引き本文画像で照合。"
+    },
+    {
+      "questionId": "KSAI-2022-025",
+      "questionNo": 25,
+      "verdict": "PASS",
+      "evidence": {
+        "explanationAnswerNumberOfficial": 5,
+        "bankAnswerNumberOfficial": 5,
+        "answerMatch": true,
+        "truthPattern": "正正正正",
+        "handbook": {
+          "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+          "edition": "2022-03",
+          "statements": [
+            {
+              "statement": "a",
+              "judgment": "正",
+              "printedPages": [
+                71,
+                72
+              ],
+              "pdfPageIndices": [
+                78,
+                79
+              ],
+              "basis": "発熱と激しい消化器症状"
+            },
+            {
+              "statement": "b",
+              "judgment": "正",
+              "printedPages": [
+                72
+              ],
+              "pdfPageIndices": [
+                79
+              ],
+              "basis": "1週間以上の発熱"
+            },
+            {
+              "statement": "c",
+              "judgment": "正",
+              "printedPages": [
+                72
+              ],
+              "pdfPageIndices": [
+                79
+              ],
+              "basis": "増悪する月経痛・子宮内膜症"
+            },
+            {
+              "statement": "d",
+              "judgment": "正",
+              "printedPages": [
+                72
+              ],
+              "pdfPageIndices": [
+                79
+              ],
+              "basis": "起床時こわばり・関節リウマチ"
+            }
+          ],
+          "pageImagesChecked": true
+        },
+        "officialQuestion": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R4touhanmondaimae.pdf",
+          "printedPage": 15,
+          "pdfPageIndex": 15,
+          "imageChecked": true
+        },
+        "numericAndRegulatoryCheck": "PASS"
+      },
+      "notes": "解説は長引く発熱と要約しているが、設問の1週間以上という閾値は手引き72頁と一致。"
+    },
+    {
+      "questionId": "KSAI-2022-026",
+      "questionNo": 26,
+      "verdict": "PASS",
+      "evidence": {
+        "explanationAnswerNumberOfficial": 1,
+        "bankAnswerNumberOfficial": 1,
+        "answerMatch": true,
+        "truthPattern": "正誤誤誤誤",
+        "handbook": {
+          "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+          "edition": "2022-03",
+          "statements": [
+            {
+              "statement": "1",
+              "judgment": "正",
+              "printedPages": [
+                75
+              ],
+              "pdfPageIndices": [
+                82
+              ],
+              "basis": "加味帰脾湯の貧血・不眠"
+            },
+            {
+              "statement": "2",
+              "judgment": "誤",
+              "printedPages": [
+                75
+              ],
+              "pdfPageIndices": [
+                82
+              ],
+              "basis": "桂枝加竜骨牡蛎湯の神経過敏"
+            },
+            {
+              "statement": "3",
+              "judgment": "誤",
+              "printedPages": [
+                75
+              ],
+              "pdfPageIndices": [
+                82
+              ],
+              "basis": "抑肝散の神経高ぶり"
+            },
+            {
+              "statement": "4",
+              "judgment": "誤",
+              "printedPages": [
+                75
+              ],
+              "pdfPageIndices": [
+                82
+              ],
+              "basis": "柴胡加竜骨牡蛎湯の体力・動悸便秘"
+            },
+            {
+              "statement": "5",
+              "judgment": "誤",
+              "printedPages": [
+                83
+              ],
+              "pdfPageIndices": [
+                90
+              ],
+              "basis": "小建中湯の虚弱・腹痛"
+            }
+          ],
+          "pageImagesChecked": true
+        },
+        "officialQuestion": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R4touhanmondaimae.pdf",
+          "printedPage": 16,
+          "pdfPageIndex": 16,
+          "imageChecked": true
+        },
+        "numericAndRegulatoryCheck": "PASS"
+      },
+      "notes": "公式原典画像と正規バンク、解説の選択肢別理由を手引き本文画像で照合。"
+    },
+    {
+      "questionId": "KSAI-2022-027",
+      "questionNo": 27,
+      "verdict": "PASS",
+      "evidence": {
+        "explanationAnswerNumberOfficial": 4,
+        "bankAnswerNumberOfficial": 4,
+        "answerMatch": true,
+        "truthPattern": "誤誤誤正",
+        "handbook": {
+          "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+          "edition": "2022-03",
+          "statements": [
+            {
+              "statement": "a",
+              "judgment": "誤",
+              "printedPages": [
+                71
+              ],
+              "pdfPageIndices": [
+                78
+              ],
+              "basis": "アルコールで胃腸障害増強"
+            },
+            {
+              "statement": "b",
+              "judgment": "誤",
+              "printedPages": [
+                9
+              ],
+              "pdfPageIndices": [
+                16
+              ],
+              "basis": "吸収・代謝双方への影響"
+            },
+            {
+              "statement": "c",
+              "judgment": "誤",
+              "printedPages": [
+                76
+              ],
+              "pdfPageIndices": [
+                83
+              ],
+              "basis": "ジフェンヒドラミン作用増強"
+            },
+            {
+              "statement": "d",
+              "judgment": "正",
+              "printedPages": [
+                71
+              ],
+              "pdfPageIndices": [
+                78
+              ],
+              "basis": "アセトアミノフェン肝機能障害"
+            }
+          ],
+          "pageImagesChecked": true
+        },
+        "officialQuestion": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R4touhanmondaimae.pdf",
+          "printedPage": 16,
+          "pdfPageIndex": 16,
+          "imageChecked": true
+        },
+        "numericAndRegulatoryCheck": "PASS"
+      },
+      "notes": "手引き71頁に飲酒によるアセトアミノフェン肝機能障害の増加を明記。"
+    },
+    {
+      "questionId": "KSAI-2022-028",
+      "questionNo": 28,
+      "verdict": "PASS",
+      "evidence": {
+        "explanationAnswerNumberOfficial": 5,
+        "bankAnswerNumberOfficial": 5,
+        "answerMatch": true,
+        "truthPattern": "正誤正正",
+        "handbook": {
+          "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+          "edition": "2022-03",
+          "statements": [
+            {
+              "statement": "a",
+              "judgment": "正",
+              "printedPages": [
+                76
+              ],
+              "pdfPageIndices": [
+                83
+              ],
+              "basis": "基礎疾患なしの一時的不眠"
+            },
+            {
+              "statement": "b",
+              "judgment": "誤",
+              "printedPages": [
+                73
+              ],
+              "pdfPageIndices": [
+                80
+              ],
+              "basis": "慢性不眠は対象外"
+            },
+            {
+              "statement": "c",
+              "judgment": "正",
+              "printedPages": [
+                73
+              ],
+              "pdfPageIndices": [
+                80
+              ],
+              "basis": "15歳未満の中枢興奮"
+            },
+            {
+              "statement": "d",
+              "judgment": "正",
+              "printedPages": [
+                73
+              ],
+              "pdfPageIndices": [
+                80
+              ],
+              "basis": "妊娠中は適用外"
+            }
+          ],
+          "pageImagesChecked": true
+        },
+        "officialQuestion": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R4touhanmondaimae.pdf",
+          "printedPage": 17,
+          "pdfPageIndex": 17,
+          "imageChecked": true
+        },
+        "numericAndRegulatoryCheck": "PASS"
+      },
+      "notes": "公式原典画像と正規バンク、解説の選択肢別理由を手引き本文画像で照合。"
+    },
+    {
+      "questionId": "KSAI-2022-029",
+      "questionNo": 29,
+      "verdict": "PASS",
+      "evidence": {
+        "explanationAnswerNumberOfficial": 3,
+        "bankAnswerNumberOfficial": 3,
+        "answerMatch": true,
+        "truthPattern": "正正誤誤",
+        "handbook": {
+          "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+          "edition": "2022-03",
+          "statements": [
+            {
+              "statement": "a",
+              "judgment": "正",
+              "printedPages": [
+                77
+              ],
+              "pdfPageIndices": [
+                84
+              ],
+              "basis": "中枢刺激と振戦不安"
+            },
+            {
+              "statement": "b",
+              "judgment": "正",
+              "printedPages": [
+                77
+              ],
+              "pdfPageIndices": [
+                84
+              ],
+              "basis": "心筋刺激・動悸"
+            },
+            {
+              "statement": "c",
+              "judgment": "誤",
+              "printedPages": [
+                77
+              ],
+              "pdfPageIndices": [
+                84
+              ],
+              "basis": "Na再吸収抑制・利尿"
+            },
+            {
+              "statement": "d",
+              "judgment": "誤",
+              "printedPages": [
+                77
+              ],
+              "pdfPageIndices": [
+                84
+              ],
+              "basis": "胃液分泌促進"
+            }
+          ],
+          "pageImagesChecked": true
+        },
+        "officialQuestion": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R4touhanmondaimae.pdf",
+          "printedPage": 17,
+          "pdfPageIndex": 17,
+          "imageChecked": true
+        },
+        "numericAndRegulatoryCheck": "PASS"
+      },
+      "notes": "公式原典画像と正規バンク、解説の選択肢別理由を手引き本文画像で照合。"
+    },
+    {
+      "questionId": "KSAI-2022-030",
+      "questionNo": 30,
+      "verdict": "PASS",
+      "evidence": {
+        "explanationAnswerNumberOfficial": 4,
+        "bankAnswerNumberOfficial": 4,
+        "answerMatch": true,
+        "truthPattern": "正誤正誤",
+        "handbook": {
+          "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+          "edition": "2022-03",
+          "statements": [
+            {
+              "statement": "a",
+              "judgment": "正",
+              "printedPages": [
+                80
+              ],
+              "pdfPageIndices": [
+                87
+              ],
+              "basis": "心理要因に鎮静成分"
+            },
+            {
+              "statement": "b",
+              "judgment": "誤",
+              "printedPages": [
+                80
+              ],
+              "pdfPageIndices": [
+                87
+              ],
+              "basis": "局所麻酔とキサンチンの相違"
+            },
+            {
+              "statement": "c",
+              "judgment": "正",
+              "printedPages": [
+                79
+              ],
+              "pdfPageIndices": [
+                86
+              ],
+              "basis": "メクリジン抗ヒスタミン"
+            },
+            {
+              "statement": "d",
+              "judgment": "誤",
+              "printedPages": [
+                79
+              ],
+              "pdfPageIndices": [
+                86
+              ],
+              "basis": "ジフェニドール前庭神経・内耳血流"
+            }
+          ],
+          "pageImagesChecked": true
+        },
+        "officialQuestion": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R4touhanmondaimae.pdf",
+          "printedPage": 18,
+          "pdfPageIndex": 18,
+          "imageChecked": true
+        },
+        "numericAndRegulatoryCheck": "PASS"
+      },
+      "notes": "公式原典画像と正規バンク、解説の選択肢別理由を手引き本文画像で照合。"
     }
   ]
 }
