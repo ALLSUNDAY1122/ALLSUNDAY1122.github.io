@@ -178,7 +178,120 @@
           "to": "U+300C / U+300D"
         }
       ],
-      "unresolved": "Existing OCR CMap ledger field 4 failed non-CMap-only comparison; raw OCR field evidence and independent corrected-field rerun not verified in this session."
+      "unresolved": "Existing OCR CMap ledger field 4 failed non-CMap-only comparison; raw OCR field evidence and independent corrected-field rerun not verified in this session.",
+      "revalidation": {
+        "date": "2026-11-24",
+        "originalPageImageReviewedAgain": true,
+        "allFieldsMatchCorrectedCandidateVisually": true,
+        "independentPdfTextReadbackChoice4Matches": true,
+        "officialAnswerTableVisualMatch": true,
+        "independentOcrExecuted": false,
+        "executionBlocker": "Local runtime DNS resolution of www.mhlw.go.jp failed; PDF binary download failed. Web original screenshot and PDF text accessible, not a new OCR execution."
+      }
+    },
+    {
+      "id": "K111-AM025",
+      "status": "HOLD_REVALIDATION",
+      "sourcePdfPage": 15,
+      "sourcePdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp220421-05a_01.pdf",
+      "officialAnswerPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp220421-05seitou.pdf",
+      "officialAnswer": 2,
+      "sourceImageVisualReviewed": true,
+      "allFiveChoicesVisualReviewed": true,
+      "printedOptionCount": 5,
+      "sourceImageSha256": "a274dbc6b810d227cf4c7c8791c9039ee0c0090c09142f75693d450e068d9890",
+      "sourcePdfSha256": "e853d7a86ef06ef41e8622f550dcf9bb3ffa48af076e412394070f237827bfb3",
+      "before": {
+        "id": "K111-AM025",
+        "sourceExam": 111,
+        "session": "AM",
+        "questionNo": 25,
+        "question": "感染症の予防及び感染症の患者に対する医療に関する法律感染症法において、 結核が分類されるのはどれか。",
+        "choices": [
+          "一 類",
+          "二 類",
+          "三 類",
+          "四 類",
+          "五 類"
+        ],
+        "answer": 1,
+        "sourcePage": 15,
+        "sourceRefs": [
+          "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp220421-05a_01.pdf",
+          "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp220421-05seitou.pdf"
+        ],
+        "sourceAttribution": "出典：厚生労働省『第111回看護師国家試験』を学習用データとして加工",
+        "requiresMedia": null,
+        "rightsStatus": "not_audited",
+        "reviewStatus": "HOLD_OFFICIAL_TEXT_FIDELITY_LAYOUT_AND_MEDIA",
+        "extractionValid": true,
+        "textFidelity": "UNVERIFIED_PDF_GLYPH_MAPPING",
+        "answerSourceChecked": false,
+        "officialKeyPdfSha256": "b395c7eddb7820daaaf19ae44766889cf19b7b4f5e0d8f9411a8ba1787dfac85",
+        "officialScoringNotice": null,
+        "officialScoringStatus": "normal",
+        "sourceAnswerTokens": [
+          "2"
+        ],
+        "officialKeyRaw": "2",
+        "officialAcceptedAnswers": [
+          1
+        ],
+        "answerKeyVerification": "MATCH_SINGLE_DIGIT_KEY_NOT_VERBATIM_CERTIFIED",
+        "publishable": false
+      },
+      "after": {
+        "id": "K111-AM025",
+        "sourceExam": 111,
+        "session": "AM",
+        "questionNo": 25,
+        "question": "感染症の予防及び感染症の患者に対する医療に関する法律〈感染症法〉において、結核が分類されるのはどれか。",
+        "choices": [
+          "一類",
+          "二類",
+          "三類",
+          "四類",
+          "五類"
+        ],
+        "answer": 1,
+        "sourcePage": 15,
+        "sourceRefs": [
+          "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp220421-05a_01.pdf",
+          "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp220421-05seitou.pdf"
+        ],
+        "sourceAttribution": "出典：厚生労働省『第111回看護師国家試験』を学習用データとして加工",
+        "requiresMedia": null,
+        "rightsStatus": "not_audited",
+        "reviewStatus": "VISUAL_CORRECTED_PENDING_OCR_FIELD_REVALIDATION",
+        "extractionValid": true,
+        "textFidelity": "UNVERIFIED_PDF_GLYPH_MAPPING",
+        "answerSourceChecked": false,
+        "officialKeyPdfSha256": "b395c7eddb7820daaaf19ae44766889cf19b7b4f5e0d8f9411a8ba1787dfac85",
+        "officialScoringNotice": null,
+        "officialScoringStatus": "normal",
+        "sourceAnswerTokens": [
+          "2"
+        ],
+        "officialKeyRaw": "2",
+        "officialAcceptedAnswers": [
+          1
+        ],
+        "answerKeyVerification": "MATCH_SINGLE_DIGIT_KEY_NOT_VERBATIM_CERTIFIED",
+        "publishable": false,
+        "releaseEligible": false
+      },
+      "errors": [
+        {
+          "kind": "PDF_CMAP_CONTROL_SUBSTITUTION",
+          "from": "U+008D / U+008F",
+          "to": "U+3008 / U+3009"
+        },
+        {
+          "kind": "PRINT_LAYOUT_WHITESPACE",
+          "detail": "Line break and spaced two-character option labels normalized; five options retained"
+        }
+      ],
+      "unresolved": "Independent OCR not executed; original PDF binary unavailable in runtime."
     }
   ],
   "policy": "Source only; publishable false; no app release or submission."
