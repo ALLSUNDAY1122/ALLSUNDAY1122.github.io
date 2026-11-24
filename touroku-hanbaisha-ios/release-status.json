@@ -812,9 +812,9 @@
     "v3_original_pdf_image_8": "PASS_8_SCOPE_RIGHTS_CHROMIUM_16",
     "v3_ruby_visual_10": "PASS_DIRECT_IMAGE_10_CHROMIUM_20",
     "v2_ruby_78_visual_followup": "HOLD_78_MAPPING_WARNINGS_CONTACT_SHEETS_15_VIEWED",
-    "ai_preflight_acceptance": "BLOCKED_13_OF_14_Q5",
-    "ios_offline_runtime": "PASS_599_CHROMIUM_WEBKIT_AND_SIMULATOR",
-    "native_simulator": "PASS_XCODEBUILD_BOOT_INSTALL_LAUNCH_SCREENSHOT",
+    "ai_preflight_acceptance": "BLOCKED",
+    "ios_offline_runtime": "BLOCKED_REMOTE_ONLY",
+    "native_simulator": "NOT_TESTED",
     "app_privacy": "NOT_VERIFIED_QUESTIONNAIRE",
     "asc_metadata_599": "PASS"
   },
@@ -1475,30 +1475,19 @@
   "ai_preflight_acceptance_20261124": {
     "result": "BLOCKED",
     "totalGates": 14,
-    "pass": 10,
+    "pass": 8,
     "blocking": [
+      "Q2_NATIVE_WEBVIEW_INTEGRATION",
+      "Q3_METADATA_DISCLOSURE",
       "Q4_OFFLINE_RESILIENCE",
       "Q5_PRIVACY_AND_NETWORK_DISCLOSURE",
       "Q6_IOS_BUILD_AND_LAUNCH",
       "Q7_TESTFLIGHT_READY"
     ],
     "report": "touroku-hanbaisha-ios/AI_PREFLIGHT_ACCEPTANCE_20261124.json",
-    "run_id": 45286288944,
-    "native_ios_simulator_tested": true,
-    "testflight_uploaded": true,
-    "q6_later_evidence": "touroku-hanbaisha-ios/IOS_SIMULATOR_Q6_20261124.json",
-    "q6_later_result": "PASS",
-    "q5_later_evidence": "touroku-hanbaisha-ios/PRIVACY_Q5_AUDIT_20261124.json",
-    "q5_later_result": "SOURCE_BROWSER_PASS_ASC_NOT_VERIFIED",
-    "current_pass": 13,
-    "current_blocking": [
-      "Q5_PRIVACY_AND_NETWORK_DISCLOSURE"
-    ],
-    "reassessment_note": "Current 13/14. Q4 dual-engine dual-environment 599/599 plus Simulator build/launch PASS; Q7 offline Build 15 signed IPA uploaded, ASC VALID and IN_BETA_TESTING, internal group sum has access to all builds and one tester. Physical device installation not verified. Q5 ASC questionnaire pending.",
-    "q7_later_evidence": "automation/asc-results/touhan-build15-testflight-readback-20261124-r2.json",
-    "q7_later_result": "PASS",
-    "q4_later_result": "PASS",
-    "q4_later_evidence": "touroku-hanbaisha-ios/OFFLINE_Q4_20261124.json"
+    "run_id": 45326744723,
+    "native_ios_simulator_tested": false,
+    "testflight_uploaded": false
   },
   "q5_privacy_audit_20261124": {
     "sourceAndBrowserAudit": "PASS",

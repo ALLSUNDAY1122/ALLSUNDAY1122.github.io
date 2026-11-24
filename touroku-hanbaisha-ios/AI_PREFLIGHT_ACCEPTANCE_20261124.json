@@ -1,6 +1,6 @@
 {
   "schema": "touhan-ai-preflight-acceptance-v1",
-  "timestampJST": "2026-11-24T08:12:08.270451+09:00",
+  "timestampJST": "2026-11-24T13:38:48.742255+09:00",
   "canonicalBank": 599,
   "years": {
     "2022": 120,
@@ -30,7 +30,7 @@
     },
     {
       "id": "Q2_NATIVE_WEBVIEW_INTEGRATION",
-      "status": "PASS",
+      "status": "FAIL",
       "detail": "both native entrypoints=https://allsunday1122.github.io/touroku-hanbaisha-sprint/official-practice.html; web data URL relative; bundle/team anchored",
       "evidence": [
         "touroku-hanbaisha-ios/App.js",
@@ -39,7 +39,7 @@
     },
     {
       "id": "Q3_METADATA_DISCLOSURE",
-      "status": "PASS",
+      "status": "FAIL",
       "detail": "Store metadata must disclose 599 official past questions, invalid Q90, network dependency and source links",
       "evidence": [
         "touroku-hanbaisha-ios/APP_STORE_METADATA.md"
@@ -47,8 +47,8 @@
     },
     {
       "id": "Q4_OFFLINE_RESILIENCE",
-      "status": "FAIL",
-      "detail": "Remote-only WebView loads GitHub Pages. No shipped offline app bundle; an unavailable network prevents studying.",
+      "status": "NOT_TESTED",
+      "detail": "Offline behavior requires native runtime verification.",
       "evidence": [
         "touroku-hanbaisha-ios/App.js",
         "touroku-hanbaisha-ios/native-ios/Sources/TouhanSprintApp.swift"
@@ -91,7 +91,7 @@
       "status": "PASS",
       "detail": "GitHub Actions step success",
       "evidence": [
-        "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45286288944"
+        "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45326744723"
       ]
     },
     {
@@ -99,7 +99,7 @@
       "status": "PASS",
       "detail": "GitHub Actions step success",
       "evidence": [
-        "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45286288944"
+        "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45326744723"
       ]
     },
     {
@@ -107,7 +107,7 @@
       "status": "PASS",
       "detail": "GitHub Actions step success",
       "evidence": [
-        "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45286288944"
+        "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45326744723"
       ]
     },
     {
@@ -115,7 +115,7 @@
       "status": "PASS",
       "detail": "GitHub Actions step success",
       "evidence": [
-        "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45286288944"
+        "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45326744723"
       ]
     },
     {
@@ -123,17 +123,19 @@
       "status": "PASS",
       "detail": "GitHub Actions step success",
       "evidence": [
-        "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45286288944"
+        "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45326744723"
       ]
     }
   ],
   "blocking": [
+    "Q2_NATIVE_WEBVIEW_INTEGRATION",
+    "Q3_METADATA_DISCLOSURE",
     "Q4_OFFLINE_RESILIENCE",
     "Q5_PRIVACY_AND_NETWORK_DISCLOSURE",
     "Q6_IOS_BUILD_AND_LAUNCH",
     "Q7_TESTFLIGHT_READY"
   ],
   "explicitNoSubmission": true,
-  "actionsRunId": 45286288944,
-  "actionsHead": "a7b142d79012d3e09d8c3c892b696b217f412df2"
+  "actionsRunId": 45326744723,
+  "actionsHead": "4c048215f4e02a598a2ba1874bd246580214567d"
 }
