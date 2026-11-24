@@ -1,10 +1,10 @@
 {
   "year": 2025,
   "targetCount": 120,
-  "auditedCount": 100,
-  "auditPassedCount": 100,
+  "auditedCount": 110,
+  "auditPassedCount": 110,
   "holdCount": 0,
-  "unauditedCount": 20,
+  "unauditedCount": 10,
   "auditDate": "2026-11-25",
   "sourceExplanationBlobSha": "9d864bd1b27508c4df00f4c98e63e7276665c667",
   "sourceBank": "ユーザー添付 APPROVED_OFFICIAL_BANK(4).json",
@@ -5615,6 +5615,565 @@
           30
         ],
         "method": "正規バンクの設問・全選択肢を公式試験PDFの該当ページ本文と照合。sourceFiguresなし。画像問題に該当しない"
+      }
+    },
+    {
+      "questionId": "KSAI-2025-101",
+      "verdict": "PASS",
+      "answerNumberOfficial": 5,
+      "evidence": [
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 368,
+          "finding": "適正使用情報は一般生活者に理解しやすい平易な表現で記載され、専門家の情報提供を踏まえて一般生活者が自己判断で使用する（印刷p368）"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 377,
+          "finding": "添付文書は必要なときにいつでも取り出して読めるよう保管する（印刷p369）"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 384,
+          "finding": "添付文書の代わりに外部容器・被包へ必要な注意事項を記載する場合がある（印刷p376）"
+        }
+      ],
+      "notes": "a誤：専門的で理解しにくい表現ではなく、平易な表現。b誤：専門家の情報提供を踏まえたうえで生活者自身が判断して使用。c正：添付文書の保管。d正：容器・被包への記載例。正しい組合せc,d＝5。",
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allReasonsAndDistractorsSupported": true,
+        "noUnsupportedNumericalOrInstitutionalClaims": true,
+        "originalImage": "NOT_APPLICABLE"
+      },
+      "officialAnswerEvidence": {
+        "source": "ユーザー添付 APPROVED_OFFICIAL_BANK(4).json",
+        "questionNo": 101,
+        "answerNumberOfficial": 5,
+        "match": true,
+        "officialAnswerPdf": "https://www.kouiki-kansai.jp/material/files/group/12/R7touhan_kaitou.pdf"
+      },
+      "originalQuestionEvidence": {
+        "source": "関西広域連合 令和7年度登録販売者試験問題（後半）",
+        "url": "https://www.kouiki-kansai.jp/material/files/group/12/R7tourokuhannbaisyashiken_kouhan.pdf",
+        "pdfPageIndices": [
+          30
+        ],
+        "printedPages": [
+          31
+        ],
+        "method": "公式PDFの設問・全選択肢・正誤表を直接照合。画像設問ではない"
+      }
+    },
+    {
+      "questionId": "KSAI-2025-102",
+      "verdict": "PASS",
+      "answerNumberOfficial": 4,
+      "evidence": [
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 369,
+          "finding": "添付文書は新たな知見等に基づき必要に応じ随時改訂（印刷p368）"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 369,
+          "finding": "販売名に薬効名が含まれる場合、薬効名の記載は省略されることがある（印刷p369）"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 375,
+          "finding": "養生訓は記載されることがあるが必須記載ではない（印刷p375）"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 380,
+          "finding": "医療用は電子的提供へ移行した一方、一般用医薬品は紙の添付文書が引き続き同梱（印刷p380）"
+        }
+      ],
+      "notes": "a誤：2年ごとの定期改訂ではなく必要に応じ随時。b正：薬効名は販売名に含まれる場合省略可能。c誤：養生訓は必須ではない。d正：一般用は紙添付文書を維持。正誤誤正＝4。",
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allReasonsAndDistractorsSupported": true,
+        "noUnsupportedNumericalOrInstitutionalClaims": true,
+        "originalImage": "NOT_APPLICABLE"
+      },
+      "officialAnswerEvidence": {
+        "source": "ユーザー添付 APPROVED_OFFICIAL_BANK(4).json",
+        "questionNo": 102,
+        "answerNumberOfficial": 4,
+        "match": true,
+        "officialAnswerPdf": "https://www.kouiki-kansai.jp/material/files/group/12/R7touhan_kaitou.pdf"
+      },
+      "originalQuestionEvidence": {
+        "source": "関西広域連合 令和7年度登録販売者試験問題（後半）",
+        "url": "https://www.kouiki-kansai.jp/material/files/group/12/R7tourokuhannbaisyashiken_kouhan.pdf",
+        "pdfPageIndices": [
+          31
+        ],
+        "printedPages": [
+          32
+        ],
+        "method": "公式PDFの設問・全選択肢・正誤表を直接照合。画像設問ではない"
+      }
+    },
+    {
+      "questionId": "KSAI-2025-103",
+      "verdict": "PASS",
+      "answerNumberOfficial": 3,
+      "evidence": [
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 369,
+          "finding": "「使用上の注意」は他の記載事項と区別して記載される構成（印刷p369）"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 376,
+          "finding": "一般用検査薬では陰性でも症状がある場合の再検査・医師相談等を記載（印刷p376）"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 372,
+          "finding": "アレルギー既往者は相談・慎重判断の対象。特定成分でアレルギーを起こしたことがある人への「使用しないこと」と「長期連用しないこと」は異なる（印刷p372）"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 371,
+          "finding": "一般的な副作用を先に記載し、その後に重篤な副作用を記載（印刷p371）"
+        }
+      ],
+      "notes": "a正：使用上の注意を目立たせる。b正：陰性でも症状があれば再検査・受診相談。c誤：特定成分でアレルギー症状歴がある者は「使用しないこと」であり「長期連用しないこと」ではない。d誤：一般的副作用の後に重篤副作用を記載。正正誤誤＝3。",
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allReasonsAndDistractorsSupported": true,
+        "noUnsupportedNumericalOrInstitutionalClaims": true,
+        "originalImage": "NOT_APPLICABLE"
+      },
+      "officialAnswerEvidence": {
+        "source": "ユーザー添付 APPROVED_OFFICIAL_BANK(4).json",
+        "questionNo": 103,
+        "answerNumberOfficial": 3,
+        "match": true,
+        "officialAnswerPdf": "https://www.kouiki-kansai.jp/material/files/group/12/R7touhan_kaitou.pdf"
+      },
+      "originalQuestionEvidence": {
+        "source": "関西広域連合 令和7年度登録販売者試験問題（後半）",
+        "url": "https://www.kouiki-kansai.jp/material/files/group/12/R7tourokuhannbaisyashiken_kouhan.pdf",
+        "pdfPageIndices": [
+          32
+        ],
+        "printedPages": [
+          33
+        ],
+        "method": "公式PDFの設問・全選択肢・正誤表を直接照合。画像設問ではない"
+      }
+    },
+    {
+      "questionId": "KSAI-2025-104",
+      "verdict": "PASS",
+      "answerNumberOfficial": 2,
+      "evidence": [
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 383,
+          "finding": "錠剤・カプセル剤は室温との急な温度差で湿気を帯びるおそれがあり冷蔵庫保管は不適当（印刷p383）"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 383,
+          "finding": "シロップ剤は変質しやすく、開封後は冷蔵庫内保管が望ましい（印刷p383）"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 384,
+          "finding": "点眼薬は複数使用者間で共用しない。家族も例外ではない（印刷p384）"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 383,
+          "finding": "小児の誤飲防止のため手の届かない場所に保管（印刷p383）"
+        }
+      ],
+      "notes": "a正、b正、c誤：家族以外に限らず他人との共用自体を避ける。d正。正正誤正＝2。",
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allReasonsAndDistractorsSupported": true,
+        "noUnsupportedNumericalOrInstitutionalClaims": true,
+        "originalImage": "NOT_APPLICABLE"
+      },
+      "officialAnswerEvidence": {
+        "source": "ユーザー添付 APPROVED_OFFICIAL_BANK(4).json",
+        "questionNo": 104,
+        "answerNumberOfficial": 2,
+        "match": true,
+        "officialAnswerPdf": "https://www.kouiki-kansai.jp/material/files/group/12/R7touhan_kaitou.pdf"
+      },
+      "originalQuestionEvidence": {
+        "source": "関西広域連合 令和7年度登録販売者試験問題（後半）",
+        "url": "https://www.kouiki-kansai.jp/material/files/group/12/R7tourokuhannbaisyashiken_kouhan.pdf",
+        "pdfPageIndices": [
+          33
+        ],
+        "printedPages": [
+          34
+        ],
+        "method": "公式PDFの設問・全選択肢・正誤表を直接照合。画像設問ではない"
+      }
+    },
+    {
+      "questionId": "KSAI-2025-105",
+      "verdict": "PASS",
+      "answerNumberOfficial": 2,
+      "evidence": [
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 377,
+          "finding": "滋養強壮目的の内服液剤で1回服用量中0.1mLを超えるアルコール含有の場合、含有と分量を表示（印刷p377）"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 378,
+          "finding": "製造後3年超、適切な保存条件下で品質安定確認済みの場合は使用期限の法的表示義務なし（印刷p377）"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 378,
+          "finding": "表示使用期限は未開封で適切に保管した場合の品質保証。開封後は包装形態・使用・保管状況により説明（印刷p377）"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 378,
+          "finding": "危険物に該当する消毒用アルコールには消防法に基づく「火気厳禁」等の表示（印刷p378）"
+        }
+      ],
+      "notes": "a正：アルコール含有・分量表示。b正：3年超安定性確認時は法的表示義務なし。c誤：外箱期限は開封後の保証ではない。d正：危険物の火気厳禁表示。正正誤正＝2。",
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allReasonsAndDistractorsSupported": true,
+        "noUnsupportedNumericalOrInstitutionalClaims": true,
+        "originalImage": "NOT_APPLICABLE"
+      },
+      "officialAnswerEvidence": {
+        "source": "ユーザー添付 APPROVED_OFFICIAL_BANK(4).json",
+        "questionNo": 105,
+        "answerNumberOfficial": 2,
+        "match": true,
+        "officialAnswerPdf": "https://www.kouiki-kansai.jp/material/files/group/12/R7touhan_kaitou.pdf"
+      },
+      "originalQuestionEvidence": {
+        "source": "関西広域連合 令和7年度登録販売者試験問題（後半）",
+        "url": "https://www.kouiki-kansai.jp/material/files/group/12/R7tourokuhannbaisyashiken_kouhan.pdf",
+        "pdfPageIndices": [
+          34
+        ],
+        "printedPages": [
+          35
+        ],
+        "method": "公式PDFの設問・全選択肢・正誤表を直接照合。画像設問ではない"
+      }
+    },
+    {
+      "questionId": "KSAI-2025-106",
+      "verdict": "PASS",
+      "answerNumberOfficial": 4,
+      "evidence": [
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 386,
+          "finding": "緊急安全性情報は緊急かつ重大な注意喚起・使用制限対策が必要な場合、厚労省の命令・指示又は製造販売業者の自主決定等で作成（印刷p386）"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 386,
+          "finding": "A4黄色地でイエローレター（印刷p386）"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 386,
+          "finding": "PMDAメディナビ、直接配布、DM、FAX、電子メール等で情報伝達（1か月以内）（印刷p386）"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 386,
+          "finding": "安全性速報はA4青色地のブルーレター。緊急安全性情報との区別（印刷p386）"
+        }
+      ],
+      "notes": "a正。b誤：緊急安全性情報は黄色のイエローレター。c正：電子メール等での伝達も記載。d誤：製造販売業者の自主決定でも作成される。正誤正誤＝4。",
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allReasonsAndDistractorsSupported": true,
+        "noUnsupportedNumericalOrInstitutionalClaims": true,
+        "originalImage": "NOT_APPLICABLE"
+      },
+      "officialAnswerEvidence": {
+        "source": "ユーザー添付 APPROVED_OFFICIAL_BANK(4).json",
+        "questionNo": 106,
+        "answerNumberOfficial": 4,
+        "match": true,
+        "officialAnswerPdf": "https://www.kouiki-kansai.jp/material/files/group/12/R7touhan_kaitou.pdf"
+      },
+      "originalQuestionEvidence": {
+        "source": "関西広域連合 令和7年度登録販売者試験問題（後半）",
+        "url": "https://www.kouiki-kansai.jp/material/files/group/12/R7tourokuhannbaisyashiken_kouhan.pdf",
+        "pdfPageIndices": [
+          35
+        ],
+        "printedPages": [
+          36
+        ],
+        "method": "公式PDFの設問・全選択肢・正誤表を直接照合。画像設問ではない"
+      }
+    },
+    {
+      "questionId": "KSAI-2025-107",
+      "verdict": "PASS",
+      "answerNumberOfficial": 3,
+      "evidence": [
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 403,
+          "finding": "予測不能な副作用の非重篤国内事例は定期報告、15日以内は死亡・重篤（印刷p403）"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 403,
+          "finding": "予測可能な感染症でも重篤（死亡含む）国内事例は15日以内（印刷p403）"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 403,
+          "finding": "副作用・感染症の発生傾向が著しく変化した研究報告は30日以内（印刷p403）"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 403,
+          "finding": "承認効能・効果を有しないことを示す研究報告も30日以内（印刷p403）"
+        }
+      ],
+      "notes": "a誤：予測不能でも非重篤の国内副作用症例は定期報告。b正：予測可能な感染症の重篤国内事例も15日以内。c,d誤：いずれの研究報告も30日以内。誤正誤誤＝3。",
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allReasonsAndDistractorsSupported": true,
+        "noUnsupportedNumericalOrInstitutionalClaims": true,
+        "originalImage": "NOT_APPLICABLE"
+      },
+      "officialAnswerEvidence": {
+        "source": "ユーザー添付 APPROVED_OFFICIAL_BANK(4).json",
+        "questionNo": 107,
+        "answerNumberOfficial": 3,
+        "match": true,
+        "officialAnswerPdf": "https://www.kouiki-kansai.jp/material/files/group/12/R7touhan_kaitou.pdf"
+      },
+      "originalQuestionEvidence": {
+        "source": "関西広域連合 令和7年度登録販売者試験問題（後半）",
+        "url": "https://www.kouiki-kansai.jp/material/files/group/12/R7tourokuhannbaisyashiken_kouhan.pdf",
+        "pdfPageIndices": [
+          36
+        ],
+        "printedPages": [
+          37
+        ],
+        "method": "公式PDFの設問・全選択肢・正誤表を直接照合。画像設問ではない"
+      }
+    },
+    {
+      "questionId": "KSAI-2025-108",
+      "verdict": "PASS",
+      "answerNumberOfficial": 2,
+      "evidence": [
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 384,
+          "finding": "因果関係が必ずしも明確でなくても報告対象となり得る（印刷p384）"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 384,
+          "finding": "報告様式の全記入欄を埋める必要はなく、把握可能な範囲でよい（印刷p384）"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 384,
+          "finding": "危害防止の観点から必要性を認めた場合は適宜速やかに報告（印刷p384）"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 384,
+          "finding": "安全対策上必要なら過量使用・誤用等による健康被害も報告（印刷p384）"
+        }
+      ],
+      "notes": "a正、b正、c正、d誤：過量使用による健康被害も安全対策上必要なら報告対象。正正正誤＝2。",
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allReasonsAndDistractorsSupported": true,
+        "noUnsupportedNumericalOrInstitutionalClaims": true,
+        "originalImage": "NOT_APPLICABLE"
+      },
+      "officialAnswerEvidence": {
+        "source": "ユーザー添付 APPROVED_OFFICIAL_BANK(4).json",
+        "questionNo": 108,
+        "answerNumberOfficial": 2,
+        "match": true,
+        "officialAnswerPdf": "https://www.kouiki-kansai.jp/material/files/group/12/R7touhan_kaitou.pdf"
+      },
+      "originalQuestionEvidence": {
+        "source": "関西広域連合 令和7年度登録販売者試験問題（後半）",
+        "url": "https://www.kouiki-kansai.jp/material/files/group/12/R7tourokuhannbaisyashiken_kouhan.pdf",
+        "pdfPageIndices": [
+          37
+        ],
+        "printedPages": [
+          38
+        ],
+        "method": "公式PDFの設問・全選択肢・正誤表を直接照合。画像設問ではない"
+      }
+    },
+    {
+      "questionId": "KSAI-2025-109",
+      "verdict": "PASS",
+      "answerNumberOfficial": 5,
+      "evidence": [
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 385,
+          "finding": "副作用被害救済制度は医薬品を適正に使用したにもかかわらず生じた一定の健康被害が対象（印刷p385）"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 385,
+          "finding": "給付費は製造販売業者から年度ごとに納付される拠出金で賄う（印刷p385）"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 385,
+          "finding": "給付請求者は健康被害を受けた本人又は家族。医師がPMDAへ請求する制度ではない（印刷p385）"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 385,
+          "finding": "PMDAは友愛福祉財団委託による血液製剤由来HIV感染者・発症者への健康管理費用支給等を行う（印刷p385）"
+        }
+      ],
+      "notes": "a誤：適正使用が原則要件。b正：給付費は製造販売業者の拠出金。c誤：請求者は本人又は家族等であり、医師ではない。d正：HIV関連委託事業。正誤正誤の組合せではなく、誤正誤正＝5。公式原典画像で設問・全選択肢・正誤表を目視し、正規バンク画像SHAと照合。",
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allReasonsAndDistractorsSupported": true,
+        "noUnsupportedNumericalOrInstitutionalClaims": true,
+        "originalImage": "PASS"
+      },
+      "officialAnswerEvidence": {
+        "source": "ユーザー添付 APPROVED_OFFICIAL_BANK(4).json",
+        "questionNo": 109,
+        "answerNumberOfficial": 5,
+        "match": true,
+        "officialAnswerPdf": "https://www.kouiki-kansai.jp/material/files/group/12/R7touhan_kaitou.pdf"
+      },
+      "originalQuestionEvidence": {
+        "source": "関西広域連合 令和7年度登録販売者試験問題（後半）",
+        "url": "https://www.kouiki-kansai.jp/material/files/group/12/R7tourokuhannbaisyashiken_kouhan.pdf",
+        "pdfPageIndices": [
+          38
+        ],
+        "printedPages": [
+          39
+        ],
+        "method": "公式PDF原典画像（PDFページ39、印刷ページ39相当）を直接目視し、設問・全選択肢・正誤表を確認",
+        "sourceImageBankRecord": {
+          "path": "official-kansai/layout-crops/KSAI-2025-109-p39-1.png",
+          "sha256": "74f60b7eb37da28c1fd964343f38b46f4c811099ed130cfcfe520083ea709158",
+          "visualVerified": true
+        }
+      }
+    },
+    {
+      "questionId": "KSAI-2025-110",
+      "verdict": "PASS",
+      "answerNumberOfficial": 2,
+      "evidence": [
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 387,
+          "finding": "人体に直接使用しない殺菌消毒剤は救済制度の対象外（印刷p387）"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 385,
+          "finding": "給付請求を受け、医学的・薬学的判断により副作用かどうか等を審査（印刷p385）"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 387,
+          "finding": "入院治療が必要と認められ、やむを得ず自宅療養した場合も対象（印刷p387）"
+        },
+        {
+          "source": "厚生労働省『試験問題の作成に関する手引き』令和7年4月一部改訂版（416ページ）",
+          "url": "https://www.mhlw.go.jp/content/001478035.pdf",
+          "printedPage": 387,
+          "finding": "無承認無許可医薬品（健康食品として販売されたもの等）による健康被害は対象外（印刷p387）"
+        }
+      ],
+      "notes": "a正。b誤：因果関係等の判断がつかなくても請求を妨げない。c正：入院相当ならやむを得ない自宅療養も対象。d誤：無承認無許可医薬品は対象外。正誤正誤＝2。",
+      "criteria": {
+        "officialAnswerMatch": true,
+        "allReasonsAndDistractorsSupported": true,
+        "noUnsupportedNumericalOrInstitutionalClaims": true,
+        "originalImage": "NOT_APPLICABLE"
+      },
+      "officialAnswerEvidence": {
+        "source": "ユーザー添付 APPROVED_OFFICIAL_BANK(4).json",
+        "questionNo": 110,
+        "answerNumberOfficial": 2,
+        "match": true,
+        "officialAnswerPdf": "https://www.kouiki-kansai.jp/material/files/group/12/R7touhan_kaitou.pdf"
+      },
+      "originalQuestionEvidence": {
+        "source": "関西広域連合 令和7年度登録販売者試験問題（後半）",
+        "url": "https://www.kouiki-kansai.jp/material/files/group/12/R7tourokuhannbaisyashiken_kouhan.pdf",
+        "pdfPageIndices": [
+          38
+        ],
+        "printedPages": [
+          39
+        ],
+        "method": "公式PDFの設問・全選択肢・正誤表を直接照合。画像設問ではない"
       }
     }
   ]
