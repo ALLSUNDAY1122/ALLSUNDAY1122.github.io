@@ -1545,3 +1545,8 @@ Apple固定識別子: Bundle `com.allsunday1122.tourokuhanbaisha`、ASC `6802119
 ## 学習ホーム版 Simulatorコンパイル修正（2026-11-24）
 - Run 45326744802 FAIL、13:37 JST。環境準備PASS、Swift 6 compile 3 errors、起動・記録復元・重複防止未実施。artifact 14890805697。
 - コンパイラ診断: TouhanSprintApp.swift:154:17 note: add '@MainActor' to make static method 'installSnapshot(in:)' part of global actor 'MainActor'。155/157行のWebKit API 3件。指示どおりメソッドに@MainActorを追加。Swift 6設定と問題・集計ロジック変更なし。Simulator再検証待ち。新IPA未開始、Build15維持。本審査未送信。
+
+
+## 学習ホーム版 MainActor修正後の再検証
+- Simulator 45334990399: Xcode環境・iOSコンパイルSUCCESS、インストール/起動工程実行中、保存復元・重複防止未確定。旧コンパイル失敗解消。
+- 整合性45334990413 SUCCESS。総合品質45334990367実行中。新IPAはSimulator実測PASSまで保留。Build15配信維持、本審査未送信。
