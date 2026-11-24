@@ -1,15 +1,10 @@
 {
   "year": 2022,
   "targetCount": 120,
-  "createdCount": 100,
+  "createdCount": 110,
   "auditPassedCount": 0,
-  "sourceCheckedCount": 99,
-  "hold": [
-    {
-      "id": "KSAI-2022-091",
-      "reason": "bの店舗販売業における分割販売の直接根拠を追加確認する必要あり。"
-    }
-  ],
+  "sourceCheckedCount": 110,
+  "hold": [],
   "pendingIndependentAudit": [
     "KSAI-2022-001",
     "KSAI-2022-002",
@@ -110,7 +105,17 @@
     "KSAI-2022-097",
     "KSAI-2022-098",
     "KSAI-2022-099",
-    "KSAI-2022-100"
+    "KSAI-2022-100",
+    "KSAI-2022-101",
+    "KSAI-2022-102",
+    "KSAI-2022-103",
+    "KSAI-2022-104",
+    "KSAI-2022-105",
+    "KSAI-2022-106",
+    "KSAI-2022-107",
+    "KSAI-2022-108",
+    "KSAI-2022-109",
+    "KSAI-2022-110"
   ],
   "sourceBankBlob": "8741e2675af6f41f7fba2afdc89566f48b8258e7",
   "explanations": [
@@ -2029,21 +2034,22 @@
       "questionNo": 91,
       "answer": 2,
       "answerNumberOfficial": 3,
-      "explanation": "正答の理由：店舗管理者の職務と店舗販売のルールを区別する。\na：正。管理者は原則として他の場所で薬事実務を兼務できず、例外には所管行政庁の許可が必要。\nb：正。特定の購入者の注文に応じた分割販売は店舗販売業では可能である。配置販売業の開封分割禁止と区別する。\nc：正。管理者は衛生上必要な意見を書面で販売業者に伝える義務がある。\nd：誤。7m以内の陳列原則の例外となる立入防止範囲は1.2mであり、1mでは足りない。\n覚えるべきポイント：指定第二類の陳列は7m、立入防止の例外は1.2m。\n参照資料：厚生労働省『試験問題の作成に関する手引き』令和4年3月版、第4章、p.228・230・240。試験当時の制度に基づく。",
+      "explanation": "正答の理由：店舗管理者の職務と店舗販売のルールを区別する。\na：正。管理者は原則として他の場所で薬事実務を兼務できず、例外には所管行政庁の許可が必要。\nb：正。特定の購入者の求めに応じた開封・分割販売は店舗販売業でも可能。ただし容器や添付文書等の法定表示に対応する必要がある。配置販売業では禁止される。\nc：正。管理者は衛生上必要な意見を書面で販売業者に伝える義務がある。\nd：誤。7m以内の陳列原則の例外となる立入防止範囲は1.2mであり、1mでは足りない。\n覚えるべきポイント：指定第二類の陳列は7m、立入防止の例外は1.2m。\n参照資料：厚生労働省『試験問題の作成に関する手引き』令和4年3月版、第4章、p.223・228・230・240。試験当時の制度に基づく。",
       "reference": {
         "url": "https://www.mhlw.go.jp/content/001087177.pdf",
         "edition": "2022-03",
         "pages": [
+          223,
           228,
           230,
           240
         ]
       },
       "audit": {
-        "sourceChecked": false,
+        "sourceChecked": true,
         "officialBankAnswerChecked": true,
         "status": "PENDING_INDEPENDENT_REVIEW",
-        "sourceEvidence": "pp.228,230,240 inspected; direct positive basis for split sales (b) pending"
+        "sourceEvidence": "令和4年3月版手引き p.223 (PDF index 230) の下段を画像で確認。店舗販売業における分割販売の明文あり。"
       }
     },
     {
@@ -2238,8 +2244,233 @@
         "status": "PENDING_INDEPENDENT_REVIEW",
         "sourceEvidence": "Printed pages inspected in current session; PDF indices 260,261,262"
       }
+    },
+    {
+      "id": "KSAI-2022-101",
+      "questionNo": 101,
+      "answer": 2,
+      "answerNumberOfficial": 3,
+      "explanation": "正答の理由：適正使用情報を基に生活者が判断するため、添付文書と個別の説明の双方が重要である。\na：誤。要指導医薬品も専門家の提供する情報を基に生活者が自己の判断で使用する。\nb：正。説明書は多様な利用者を対象とするため、平易であっても個別事情のすべてには対応できない。\nc：誤。一般用検査薬だけで確定診断はできない。陽性なら医師の診断を受ける旨が示される。\nd：正。法52条2項に基づく用法等の情報は、添付文書の代わりに容器や被包に記載されることもある。\n覚えるべきポイント：検査薬は診断の補助。個別事情は専門家の説明で補う。\n参照資料：厚生労働省『試験問題の作成に関する手引き』令和4年3月版、第5章、p.362・364・370。",
+      "reference": {
+        "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+        "edition": "2022-03",
+        "pages": [
+          362,
+          364,
+          370
+        ]
+      },
+      "audit": {
+        "sourceChecked": true,
+        "officialBankAnswerChecked": true,
+        "status": "PENDING_INDEPENDENT_REVIEW",
+        "sourceEvidence": "2022-03 handbook page images inspected in current turn; PDF zero-based indices 369,371,377"
+      }
+    },
+    {
+      "id": "KSAI-2022-102",
+      "questionNo": 102,
+      "answer": 1,
+      "answerNumberOfficial": 2,
+      "explanation": "正答の理由：説明書は繰り返し参照できる状態で保管する。\na：正。使用者の年齢や体調が変化するため、必要時に読み直せるようにしておく。\nb：誤。販売時の説明を直接受けていない家族も、使用前に説明書を確認する必要がある。\nc：正。販売名の上には説明書を読むことと保管することを促す文言がある。\nd：正。製造販売業者への問い合わせに必要な窓口名や連絡先、受付時間が記載される。\n覚えるべきポイント：添付文書は購入時だけでなく使用時にも確認する。\n参照資料：厚生労働省『試験問題の作成に関する手引き』令和4年3月版、第5章、p.363・370。",
+      "reference": {
+        "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+        "edition": "2022-03",
+        "pages": [
+          363,
+          370
+        ]
+      },
+      "audit": {
+        "sourceChecked": true,
+        "officialBankAnswerChecked": true,
+        "status": "PENDING_INDEPENDENT_REVIEW",
+        "sourceEvidence": "2022-03 handbook page images inspected in current turn; PDF zero-based indices 370,377"
+      }
+    },
+    {
+      "id": "KSAI-2022-103",
+      "questionNo": 103,
+      "answer": 3,
+      "answerNumberOfficial": 4,
+      "explanation": "正答の理由：誤りは4。治療中の人は原則として使用前の相談を求める区分に記載される。\n1：正。使用上の注意は三つの区分からなり、重要事項が先に示される。\n2：正。一定期間の服用が必要な漢方処方でも、長期連用には専門家への相談を促す。記載がないものは短期使用に限られる。\n3：正。外用薬では傷の状態や塗布する場所によって症状悪化などの危険があるため、使用不可の部位が示される。\n4：誤。治療中の人は相談することの項に記載される。処方薬を自己判断で中断せず、医師等に併用の適否を確認する。\n5：正。眠気やまぶしさ等による事故を防ぐため、該当成分を含む内服薬では服用後の運転操作を禁止する注意がある。\n覚えるべきポイント：相談することと使用禁止を区別する。\n参照資料：厚生労働省『試験問題の作成に関する手引き』令和4年3月版、第5章、p.363・364・365・368。",
+      "reference": {
+        "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+        "edition": "2022-03",
+        "pages": [
+          363,
+          364,
+          365,
+          368
+        ]
+      },
+      "audit": {
+        "sourceChecked": true,
+        "officialBankAnswerChecked": true,
+        "status": "PENDING_INDEPENDENT_REVIEW",
+        "sourceEvidence": "2022-03 handbook page images inspected in current turn; PDF zero-based indices 370,371,372,375"
+      }
+    },
+    {
+      "id": "KSAI-2022-104",
+      "questionNo": 104,
+      "answer": 4,
+      "answerNumberOfficial": 5,
+      "explanation": "正答の理由：保管温度や容器、共用に関する注意を理解するとbとdが正しい。\na：誤。散剤の冷蔵は取り出す際の結露で吸湿するおそれがある。開封後の冷蔵が望ましい場合があるのはシロップ剤などで、製品の表示に従う。\nb：正。別容器への移し替えは薬の識別を難しくし、容器の汚れや湿気で品質が低下する可能性がある。\nc：誤。点眼薬の共用は汚染された薬液を介した感染の原因となり得るので避ける。\nd：正。開封前にも保管条件が分かるよう、外箱や容器等に注意事項が記載される。\n覚えるべきポイント：散剤の冷蔵・容器の移し替え・点眼薬の共用に注意する。\n参照資料：厚生労働省『試験問題の作成に関する手引き』令和4年3月版、第5章、p.369・370・371。",
+      "reference": {
+        "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+        "edition": "2022-03",
+        "pages": [
+          369,
+          370,
+          371
+        ]
+      },
+      "originalImageChecked": true,
+      "originalPdfPage": 28,
+      "originalPdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R4touhanmondaiato.pdf",
+      "audit": {
+        "sourceChecked": true,
+        "officialBankAnswerChecked": true,
+        "status": "PENDING_INDEPENDENT_REVIEW",
+        "sourceEvidence": "2022-03 handbook page images inspected in current turn; PDF zero-based indices 376,377,378"
+      }
+    },
+    {
+      "id": "KSAI-2022-105",
+      "questionNo": 105,
+      "answer": 0,
+      "answerNumberOfficial": 1,
+      "explanation": "正答の理由：安全性速報は通常の改訂より迅速な安全情報の周知が必要な場合に用いられる。\na：誤。医薬品だけでなく医療機器と再生医療等製品も対象。\nb：正。通常の注意事項変更では間に合わない注意喚起が必要な場合に作成される。\nc：正。行政の指示等や製造販売業者の判断により作成される。\nd：誤。安全性速報は青色のブルーレター。黄色は緊急安全性情報である。\n覚えるべきポイント：安全性速報＝青、緊急安全性情報＝黄。\n参照資料：厚生労働省『試験問題の作成に関する手引き』令和4年3月版、第5章、p.372。",
+      "reference": {
+        "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+        "edition": "2022-03",
+        "pages": [
+          372
+        ]
+      },
+      "audit": {
+        "sourceChecked": true,
+        "officialBankAnswerChecked": true,
+        "status": "PENDING_INDEPENDENT_REVIEW",
+        "sourceEvidence": "2022-03 handbook page images inspected in current turn; PDF zero-based indices 379"
+      }
+    },
+    {
+      "id": "KSAI-2022-106",
+      "questionNo": 106,
+      "answer": 1,
+      "answerNumberOfficial": 2,
+      "explanation": "正答の理由：安全性情報は一般用医薬品も対象に含め、PMDAから幅広く入手できる。\na：正。一般用医薬品に関する重要な副作用情報も扱う。\nb：正。重要な注意事項の改訂では、判断材料となった事例の概要も紹介される。\nc：誤。PMDAのウェブサイトには緊急安全性情報も掲載される。\nd：誤。PMDAメディナビは医薬関係者だけに限られず、誰でも利用できる。\n覚えるべきポイント：安全情報の収集にはPMDAの公開情報や配信サービスを活用する。\n参照資料：厚生労働省『試験問題の作成に関する手引き』令和4年3月版、第5章、p.373。",
+      "reference": {
+        "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+        "edition": "2022-03",
+        "pages": [
+          373
+        ]
+      },
+      "audit": {
+        "sourceChecked": true,
+        "officialBankAnswerChecked": true,
+        "status": "PENDING_INDEPENDENT_REVIEW",
+        "sourceEvidence": "2022-03 handbook page images inspected in current turn; PDF zero-based indices 380"
+      }
+    },
+    {
+      "id": "KSAI-2022-107",
+      "questionNo": 107,
+      "answer": 1,
+      "answerNumberOfficial": 2,
+      "explanation": "正答の理由：企業の報告は法的義務であり、調査期間や症例区分で取扱いが異なる。\na：誤。法68条の10第1項の対象となる報告は自主的なものではなく義務である。\nb：誤。医療用から一般用に初めて転用した成分の調査期間は当時おおむね3年。約8年は既存と明らかに異なる有効成分の再審査の目安。\nc：正。登録販売者を含む医薬関係者には企業の情報収集への協力努力義務がある。\nd：誤。国内で起きた予測できない非重篤な副作用も定期報告の対象である。\n覚えるべきポイント：企業の報告義務、スイッチ成分の約3年、非重篤な未知症例の定期報告を覚える。\n参照資料：厚生労働省『試験問題の作成に関する手引き』令和4年3月版、第5章、p.376・377・397。",
+      "reference": {
+        "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+        "edition": "2022-03",
+        "pages": [
+          376,
+          377,
+          397
+        ]
+      },
+      "audit": {
+        "sourceChecked": true,
+        "officialBankAnswerChecked": true,
+        "status": "PENDING_INDEPENDENT_REVIEW",
+        "sourceEvidence": "2022-03 handbook page images inspected in current turn; PDF zero-based indices 383,384,404"
+      }
+    },
+    {
+      "id": "KSAI-2022-108",
+      "questionNo": 108,
+      "answer": 0,
+      "answerNumberOfficial": 1,
+      "explanation": "正答の理由：医薬関係者の副作用報告は因果関係が確定する前でも安全対策のために行える。\na：正。医薬品の使用や販売の現場から疑わしい事例を収集し、安全対策につなげる制度である。\nb：正。薬による可能性のある体調異常や生活に支障のある健康被害などが報告対象となる。\nc：正。薬と症状の因果関係が明確でなくても報告できる。\nd：誤。医薬関係者による報告に一律30日という期限はなく、必要と判断したら速やかに報告する。\n覚えるべきポイント：企業報告の期限と医薬関係者の速やかな報告を区別する。\n参照資料：厚生労働省『試験問題の作成に関する手引き』令和4年3月版、第5章、p.376・378。",
+      "reference": {
+        "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+        "edition": "2022-03",
+        "pages": [
+          376,
+          378
+        ]
+      },
+      "originalImageChecked": true,
+      "originalPdfPage": 30,
+      "originalPdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R4touhanmondaiato.pdf",
+      "audit": {
+        "sourceChecked": true,
+        "officialBankAnswerChecked": true,
+        "status": "PENDING_INDEPENDENT_REVIEW",
+        "sourceEvidence": "2022-03 handbook page images inspected in current turn; PDF zero-based indices 383,385"
+      }
+    },
+    {
+      "id": "KSAI-2022-109",
+      "questionNo": 109,
+      "answer": 2,
+      "answerNumberOfficial": 3,
+      "explanation": "正答の理由：1979年の薬事法改正の背景と市販後安全対策に関する正しい組合せは、スモン事件・再審査及び再評価・緊急命令である。\n1：誤。事件名は合うが、承認と業務停止命令は空欄に合わない。\n2：誤。事件名と緊急命令は合うが、承認ではなく再審査・再評価制度である。\n3：正。スモン事件を背景とした再審査・再評価制度の創設と緊急命令の法整備がすべて合う。\n4：誤。薬害エイズ事件ではなくスモン事件であり、業務停止命令も空欄には合わない。\n5：誤。事件名と二つの制度名がいずれも設問の歴史的経緯と合わない。\n覚えるべきポイント：1979年改正は市販後安全対策と副作用被害救済制度の創設につながった。\n参照資料：厚生労働省『試験問題の作成に関する手引き』令和4年3月版、第5章、p.378。",
+      "reference": {
+        "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+        "edition": "2022-03",
+        "pages": [
+          378
+        ]
+      },
+      "originalImageChecked": true,
+      "originalPdfPage": 30,
+      "originalPdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R4touhanmondaiato.pdf",
+      "audit": {
+        "sourceChecked": true,
+        "officialBankAnswerChecked": true,
+        "status": "PENDING_INDEPENDENT_REVIEW",
+        "sourceEvidence": "2022-03 handbook page images inspected in current turn; PDF zero-based indices 385"
+      }
+    },
+    {
+      "id": "KSAI-2022-110",
+      "questionNo": 110,
+      "answer": 4,
+      "answerNumberOfficial": 5,
+      "explanation": "正答の理由：医薬品副作用被害救済制度は対象製品と被害の程度に条件がある。\na：誤。健康食品一般による被害はこの制度の対象ではない。適正に使った医薬品による一定の副作用被害を救済する制度である。\nb：正。救済給付費は機構法19条に基づく製造販売業者の年度ごとの拠出金から賄われる。\nc：誤。医療機関で治療を要さず回復する程度の軽微な被害は対象外。入院治療相当の疾病等が対象となる。\nd：正。精製水やワセリンなど一部の日局収載品は対象外とされている。\n覚えるべきポイント：適正使用だけで自動的に給付対象になるわけではない。被害の程度と除外品目を確認する。\n参照資料：厚生労働省『試験問題の作成に関する手引き』令和4年3月版、第5章、p.379・380・381。",
+      "reference": {
+        "url": "https://www.mhlw.go.jp/content/001087177.pdf",
+        "edition": "2022-03",
+        "pages": [
+          379,
+          380,
+          381
+        ]
+      },
+      "originalImageChecked": true,
+      "originalPdfPage": 31,
+      "originalPdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R4touhanmondaiato.pdf",
+      "audit": {
+        "sourceChecked": true,
+        "officialBankAnswerChecked": true,
+        "status": "PENDING_INDEPENDENT_REVIEW",
+        "sourceEvidence": "2022-03 handbook page images inspected in current turn; PDF zero-based indices 386,387,388"
+      }
     }
   ],
-  "savedCount": 100,
-  "nextQuestionNo": 101
+  "savedCount": 110,
+  "nextQuestionNo": 111
 }
