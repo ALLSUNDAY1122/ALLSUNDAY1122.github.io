@@ -1,6 +1,6 @@
 {
   "app": "登録販売者｜学びスプリント",
-  "updated_at": "2026-11-23T23:24:18.550Z",
+  "updated_at": "2026-11-24T00:25:00Z",
   "version": "1.0.0",
   "bundle_id": "com.allsunday1122.tourokuhanbaisha",
   "app_store_connect_app_id": "6802119268",
@@ -758,8 +758,8 @@
     "official_source_import": "PARTIAL_APPROVED_599_OF_600",
     "verbatim_and_answer_audit": "AUTO_88_GEOMETRY_215_RUBY_51_ORDERED_5_LAYOUT_13_VISUAL_14_REMAINING_214",
     "mobile_ui": "PENDING",
-    "ios_build": "PASS_SIMULATOR_DEBUG_NO_SIGNING",
-    "internal_testflight": "Q7_SIGNED_IPA_PASS_ASC_UPLOAD_PENDING",
+    "ios_build": "PASS_SIMULATOR_AND_CODEMAGIC_SIGNED_IPA_BUILD_14",
+    "internal_testflight": "PASS_BUILD_14_VALID_IN_BETA_TESTING",
     "screenshots": "PENDING",
     "privacy_and_metadata": "ASC_PENDING",
     "device_check": "USER_REQUIRED",
@@ -812,7 +812,7 @@
     "v3_original_pdf_image_8": "PASS_8_SCOPE_RIGHTS_CHROMIUM_16",
     "v3_ruby_visual_10": "PASS_DIRECT_IMAGE_10_CHROMIUM_20",
     "v2_ruby_78_visual_followup": "HOLD_78_MAPPING_WARNINGS_CONTACT_SHEETS_15_VIEWED",
-    "ai_preflight_acceptance": "BLOCKED_11_OF_14_Q4_Q5_Q7",
+    "ai_preflight_acceptance": "BLOCKED_12_OF_14_Q4_Q5",
     "ios_offline_runtime": "BLOCKED_REMOTE_ONLY",
     "native_simulator": "PASS_XCODEBUILD_BOOT_INSTALL_LAUNCH_SCREENSHOT",
     "app_privacy": "NOT_VERIFIED_QUESTIONNAIRE",
@@ -1485,20 +1485,19 @@
     "report": "touroku-hanbaisha-ios/AI_PREFLIGHT_ACCEPTANCE_20261124.json",
     "run_id": 45286288944,
     "native_ios_simulator_tested": true,
-    "testflight_uploaded": false,
+    "testflight_uploaded": true,
     "q6_later_evidence": "touroku-hanbaisha-ios/IOS_SIMULATOR_Q6_20261124.json",
     "q6_later_result": "PASS",
     "q5_later_evidence": "touroku-hanbaisha-ios/PRIVACY_Q5_AUDIT_20261124.json",
     "q5_later_result": "SOURCE_BROWSER_PASS_ASC_NOT_VERIFIED",
-    "current_pass": 11,
+    "current_pass": 12,
     "current_blocking": [
       "Q4_OFFLINE_RESILIENCE",
-      "Q5_PRIVACY_AND_NETWORK_DISCLOSURE",
-      "Q7_TESTFLIGHT_READY"
+      "Q5_PRIVACY_AND_NETWORK_DISCLOSURE"
     ],
-    "reassessment_note": "Original preflight 10/14 remains historical; Q6 measured PASS by later macOS workflow; Q5 source/browser PASS but ASC declaration unverified.",
-    "q7_later_evidence": "q7_testflight_preparation_20261124",
-    "q7_later_result": "SIGNED_IPA_BUILDING_NOT_VERIFIED"
+    "reassessment_note": "Original preflight 10/14 is historical. Q6 simulator PASS; Q7 ASC API confirms Build 14 VALID and IN_BETA_TESTING, internal group sum has access to all builds. Current 12/14; Q4 and Q5 remain blocked. Physical device installation not verified.",
+    "q7_later_evidence": "automation/asc-results/touhan-build14-testflight-readback-20261124-0920.json",
+    "q7_later_result": "PASS"
   },
   "q5_privacy_audit_20261124": {
     "sourceAndBrowserAudit": "PASS",
@@ -1578,7 +1577,7 @@
     "githubRunId": 45291115834
   },
   "q7_testflight_preparation_20261124": {
-    "scope": "App Store signing, Codemagic signed-IPA build preparation; no TestFlight upload nor App Review",
+    "scope": "App Store signing, IPA upload and internal TestFlight availability; no App Review",
     "codemagicAppId": "6a769d81a1add9d06020b524",
     "appStoreConnectAppId": "6802119268",
     "bundleId": "com.allsunday1122.tourokuhanbaisha",
@@ -1614,9 +1613,17 @@
         "status": "SIGNED_IPA_VERIFIED",
         "signedIpa": "PASS",
         "evidence": "touroku-hanbaisha-ios/Q7_SIGNED_IPA_VERIFIED_20261124.json"
+      },
+      {
+        "buildId": "6b04d34baf7a62b566bb3490",
+        "workflow": "touhan-ios",
+        "status": "FINISHED",
+        "signedIpa": "PASS",
+        "ascUpload": "PASS",
+        "evidence": "automation/codemagic-results/touhan-599-inspect-20261124-0910.json"
       }
     ],
-    "nextRequired": "App Store Connect/TestFlight upload and Apple processing readback; no final App Review submission",
+    "nextRequired": "User physical iPhone installation and 599-question runtime verification; Q4/Q5 remain blocked; no final App Review submission",
     "humanGates": [
       {
         "trigger": "Apple account 2FA or membership/license agreement required by signing",
@@ -1631,8 +1638,43 @@
         "action": "User performs iPhone verification"
       }
     ],
-    "testflightUploaded": false,
+    "testflightUploaded": true,
     "appReviewSubmitted": false,
-    "signedIpaVerified": true
+    "signedIpaVerified": true,
+    "testflightAvailable": true,
+    "result": "PASS"
+  },
+  "q7_testflight_delivery_20261124": {
+    "result": "PASS",
+    "codemagicBuildId": "6b04d34baf7a62b566bb3490",
+    "workflow": "touhan-ios",
+    "marketingVersion": "1.0.0",
+    "buildNumber": 14,
+    "ascBuildId": "f33140d7-988c-460c-9b90-9c20e85a07f3",
+    "processingState": "VALID",
+    "internalBuildState": "IN_BETA_TESTING",
+    "externalBuildState": "READY_FOR_BETA_SUBMISSION",
+    "buildAudienceType": "APP_STORE_ELIGIBLE",
+    "uploadedDate": "2026-11-23T16:03:06-08:00",
+    "uploadedDateJST": "2026-11-24T09:03:06+09:00",
+    "expirationDate": "2027-02-21T16:03:06-08:00",
+    "expirationDateJST": "2027-02-22T09:03:06+09:00",
+    "expired": false,
+    "internalGroups": [
+      {
+        "id": "cdd5f083-c442-46ff-95fe-a4ef7c7072ef",
+        "name": "sum",
+        "hasAccessToAllBuilds": true,
+        "testerCount": 1
+      }
+    ],
+    "assignmentBasis": "All-build access; direct per-build group relationship not queried",
+    "testflightAvailable": true,
+    "physicalDeviceVerified": false,
+    "appReviewSubmitted": false,
+    "ascEvidence": "automation/asc-results/touhan-build14-testflight-readback-20261124-0920.json",
+    "codemagicEvidence": "automation/codemagic-results/touhan-599-inspect-20261124-0910.json",
+    "githubStartRunId": 45293353252,
+    "githubInspectRunId": 45295103103
   }
 }
