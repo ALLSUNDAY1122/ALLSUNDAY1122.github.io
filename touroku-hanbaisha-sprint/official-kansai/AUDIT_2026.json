@@ -1,10 +1,10 @@
 {
   "year": 2026,
   "targetCount": 120,
-  "auditedCount": 80,
-  "auditPassedCount": 79,
-  "holdCount": 1,
-  "pendingCount": 40,
+  "auditedCount": 90,
+  "auditPassedCount": 90,
+  "holdCount": 0,
+  "pendingCount": 30,
   "sourceExplanationPath": "touroku-hanbaisha-sprint/official-kansai/EXPLANATIONS_2026.json",
   "sourceExplanationBlobSha": "ed5e24ed3310cc99ceb2bf92aa29379a145c6ce0",
   "auditDate": "2026-11-24",
@@ -4329,7 +4329,7 @@
     },
     {
       "questionId": "KSAI-2026-070",
-      "verdict": "HOLD",
+      "verdict": "PASS",
       "evidence": {
         "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
         "guideEdition": "令和8年4月一部改訂",
@@ -4342,8 +4342,8 @@
               45
             ],
             "truth": "誤",
-            "topic": "骨質・骨膜・骨髄・関節軟骨の四組織。現行解説は関節軟骨を欠落",
-            "result": "EXPLANATION_SOURCE_MISMATCH"
+            "topic": "骨質・骨膜・骨髄・関節軟骨の四組織。設問aは骨膜欠落。修正版一致",
+            "result": "MATCH"
           },
           {
             "item": "b",
@@ -4387,7 +4387,76 @@
           "reason": "全問追加原典画像照合（正規バンク上は全問テキスト形式）"
         }
       },
-      "notes": "添付APPROVED_OFFICIAL_BANK(3).jsonの正答番号・設問・選択肢、手引き原典画像、公式試験PDF後半原典画像を直接照合。作成側の未確定ページを独立確定。公式正答PDFは今回直接再取得せず、ユーザー了承済み正規バンクで照合。HOLD：aの解説は骨の基本構造から関節軟骨を欠落させている。骨質・骨膜・骨髄・関節軟骨の四組織と訂正するよう作成側へ修正依頼推奨。正答番号は変更不要。"
+      "notes": "添付APPROVED_OFFICIAL_BANK(3).jsonの正答番号・設問・選択肢、手引き原典画像、公式試験PDF後半原典画像を直接照合。作成側の未確定ページを独立確定。公式正答PDFは今回直接再取得せず、ユーザー了承済み正規バンクで照合。HOLD：aの解説は骨の基本構造から関節軟骨を欠落させている。骨質・骨膜・骨髄・関節軟骨の四組織と訂正するよう作成側へ修正依頼推奨。正答番号は変更不要。 再監査：手引き印刷37（PDF45）と公式後半PDF8の原典画像を再取得し、修正版a・正答理由・要点とb～d全記述を照合。正答1は添付正規バンク一致。PASSへ更新。",
+      "reauditHistory": [
+        {
+          "previousVerdict": "HOLD",
+          "previousNotes": "添付APPROVED_OFFICIAL_BANK(3).jsonの正答番号・設問・選択肢、手引き原典画像、公式試験PDF後半原典画像を直接照合。作成側の未確定ページを独立確定。公式正答PDFは今回直接再取得せず、ユーザー了承済み正規バンクで照合。HOLD：aの解説は骨の基本構造から関節軟骨を欠落させている。骨質・骨膜・骨髄・関節軟骨の四組織と訂正するよう作成側へ修正依頼推奨。正答番号は変更不要。",
+          "previousEvidence": {
+            "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+            "guideEdition": "令和8年4月一部改訂",
+            "guidePageCount": 426,
+            "items": [
+              {
+                "item": "a",
+                "printedPage": "37",
+                "pdfPages": [
+                  45
+                ],
+                "truth": "誤",
+                "topic": "骨質・骨膜・骨髄・関節軟骨の四組織。現行解説は関節軟骨を欠落",
+                "result": "EXPLANATION_SOURCE_MISMATCH"
+              },
+              {
+                "item": "b",
+                "printedPage": "37",
+                "pdfPages": [
+                  45
+                ],
+                "truth": "正",
+                "topic": "造血幹細胞から血球・血小板分化",
+                "result": "MATCH"
+              },
+              {
+                "item": "c",
+                "printedPage": "37",
+                "pdfPages": [
+                  45
+                ],
+                "truth": "誤",
+                "topic": "無機質の硬さ・有機質の強靭さ",
+                "result": "MATCH"
+              },
+              {
+                "item": "d",
+                "printedPage": "37",
+                "pdfPages": [
+                  45
+                ],
+                "truth": "正",
+                "topic": "関節軟骨の衝撃緩和",
+                "result": "MATCH"
+              }
+            ],
+            "officialAnswerNumber": 1,
+            "bankAnswerNumber": 1,
+            "answerMatch": true,
+            "questionImage": {
+              "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
+              "pdfPage": 8,
+              "printedPage": 6,
+              "checked": true,
+              "reason": "全問追加原典画像照合（正規バンク上は全問テキスト形式）"
+            }
+          },
+          "date": "2026-11-24",
+          "sourceExplanationBlobSha": "ed5e24ed3310cc99ceb2bf92aa29379a145c6ce0",
+          "verdict": "PASS",
+          "printedPage": 37,
+          "pdfPage": 45,
+          "questionPdfPage": 8
+        }
+      ]
     },
     {
       "questionId": "KSAI-2026-071",
@@ -5000,6 +5069,648 @@
         }
       },
       "notes": "添付正規バンクと正答一致。手引き原典画像と公式試験問題PDF原典画像で全記述を逐項確認。公式正答PDFは直接再取得せず了承済み正規バンクを使用。原典画像では問80全文はPDF15ページ目に収まる（バンクは15・16を記録）。"
+    },
+    {
+      "questionId": "KSAI-2026-081",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "1",
+            "printedPage": "205",
+            "pdfPages": [
+              213
+            ],
+            "truth": "誤",
+            "topic": "c研究開発",
+            "result": "MATCH"
+          },
+          {
+            "item": "2",
+            "printedPage": "205",
+            "pdfPages": [
+              213
+            ],
+            "truth": "正",
+            "topic": "保健衛生・指定薬物・研究開発",
+            "result": "MATCH"
+          },
+          {
+            "item": "3",
+            "printedPage": "205",
+            "pdfPages": [
+              213
+            ],
+            "truth": "誤",
+            "topic": "b指定薬物",
+            "result": "MATCH"
+          },
+          {
+            "item": "4",
+            "printedPage": "205",
+            "pdfPages": [
+              213
+            ],
+            "truth": "誤",
+            "topic": "a保健衛生・c研究開発",
+            "result": "MATCH"
+          },
+          {
+            "item": "5",
+            "printedPage": "205",
+            "pdfPages": [
+              213
+            ],
+            "truth": "誤",
+            "topic": "全三語不一致",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 2,
+        "bankAnswerNumber": 2,
+        "answerMatch": true,
+        "questionImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
+          "pdfPage": 16,
+          "printedPage": 14,
+          "checked": true,
+          "reason": "画像掲載問題"
+        }
+      },
+      "notes": "添付正規バンクの1-based正答と一致。公式試験後半PDF原典画像と手引き該当頁原典画像から全記述・全選択肢を逐項照合。公式正答PDFは直接再取得せず、了承済み正規バンクを使用。法令・制度・数値に不整合なし。"
+    },
+    {
+      "questionId": "KSAI-2026-082",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "a",
+            "printedPage": "206",
+            "pdfPages": [
+              214
+            ],
+            "truth": "誤",
+            "topic": "従事先所在地",
+            "result": "MATCH"
+          },
+          {
+            "item": "b",
+            "printedPage": "207",
+            "pdfPages": [
+              215
+            ],
+            "truth": "正",
+            "topic": "登録証交付",
+            "result": "MATCH"
+          },
+          {
+            "item": "c",
+            "printedPage": "207",
+            "pdfPages": [
+              215
+            ],
+            "truth": "誤",
+            "topic": "30日以内",
+            "result": "MATCH"
+          },
+          {
+            "item": "d",
+            "printedPage": "205",
+            "pdfPages": [
+              213
+            ],
+            "truth": "誤",
+            "topic": "厚労大臣届出・毎年度研修",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 3,
+        "bankAnswerNumber": 3,
+        "answerMatch": true,
+        "questionImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
+          "pdfPage": 17,
+          "printedPage": 15,
+          "checked": true,
+          "reason": "テキスト形式だが原典画像追加照合"
+        }
+      },
+      "notes": "添付正規バンクの1-based正答と一致。公式試験後半PDF原典画像と手引き該当頁原典画像から全記述・全選択肢を逐項照合。公式正答PDFは直接再取得せず、了承済み正規バンクを使用。法令・制度・数値に不整合なし。"
+    },
+    {
+      "questionId": "KSAI-2026-083",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "a",
+            "printedPage": "208",
+            "pdfPages": [
+              216
+            ],
+            "truth": "誤",
+            "topic": "製造販売業許可",
+            "result": "MATCH"
+          },
+          {
+            "item": "b",
+            "printedPage": "208",
+            "pdfPages": [
+              216
+            ],
+            "truth": "誤",
+            "topic": "品目承認原則",
+            "result": "MATCH"
+          },
+          {
+            "item": "c",
+            "printedPage": "208",
+            "pdfPages": [
+              216
+            ],
+            "truth": "誤",
+            "topic": "日本薬局方は厚労大臣",
+            "result": "MATCH"
+          },
+          {
+            "item": "d",
+            "printedPage": "209",
+            "pdfPages": [
+              217
+            ],
+            "truth": "正",
+            "topic": "不正表示・不良品陳列禁止",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 4,
+        "bankAnswerNumber": 4,
+        "answerMatch": true,
+        "questionImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
+          "pdfPage": 18,
+          "printedPage": 16,
+          "checked": true,
+          "reason": "テキスト形式だが原典画像追加照合"
+        }
+      },
+      "notes": "添付正規バンクの1-based正答と一致。公式試験後半PDF原典画像と手引き該当頁原典画像から全記述・全選択肢を逐項照合。公式正答PDFは直接再取得せず、了承済み正規バンクを使用。法令・制度・数値に不整合なし。"
+    },
+    {
+      "questionId": "KSAI-2026-084",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "a",
+            "printedPage": "211",
+            "pdfPages": [
+              219
+            ],
+            "truth": "正",
+            "topic": "需要者選択",
+            "result": "MATCH"
+          },
+          {
+            "item": "b",
+            "printedPage": "211",
+            "pdfPages": [
+              219
+            ],
+            "truth": "正",
+            "topic": "侵襲性検体除外",
+            "result": "MATCH"
+          },
+          {
+            "item": "c",
+            "printedPage": "211",
+            "pdfPages": [
+              219
+            ],
+            "truth": "誤",
+            "topic": "生活者判断可能な症状",
+            "result": "MATCH"
+          },
+          {
+            "item": "d",
+            "printedPage": "211",
+            "pdfPages": [
+              219
+            ],
+            "truth": "正",
+            "topic": "特定要指導医薬品指定",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 1,
+        "bankAnswerNumber": 1,
+        "answerMatch": true,
+        "questionImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
+          "pdfPage": 19,
+          "printedPage": 17,
+          "checked": true,
+          "reason": "テキスト形式だが原典画像追加照合"
+        }
+      },
+      "notes": "添付正規バンクの1-based正答と一致。公式試験後半PDF原典画像と手引き該当頁原典画像から全記述・全選択肢を逐項照合。公式正答PDFは直接再取得せず、了承済み正規バンクを使用。法令・制度・数値に不整合なし。"
+    },
+    {
+      "questionId": "KSAI-2026-085",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "a",
+            "printedPage": "213",
+            "pdfPages": [
+              221
+            ],
+            "truth": "正",
+            "topic": "安全域",
+            "result": "MATCH"
+          },
+          {
+            "item": "b",
+            "printedPage": "213",
+            "pdfPages": [
+              221
+            ],
+            "truth": "誤",
+            "topic": "毒薬施錠",
+            "result": "MATCH"
+          },
+          {
+            "item": "c",
+            "printedPage": "213",
+            "pdfPages": [
+              221
+            ],
+            "truth": "誤",
+            "topic": "14歳未満",
+            "result": "MATCH"
+          },
+          {
+            "item": "d",
+            "printedPage": "213",
+            "pdfPages": [
+              221
+            ],
+            "truth": "誤",
+            "topic": "譲受人職業",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 4,
+        "bankAnswerNumber": 4,
+        "answerMatch": true,
+        "questionImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
+          "pdfPage": 20,
+          "printedPage": 18,
+          "checked": true,
+          "reason": "テキスト形式だが原典画像追加照合"
+        }
+      },
+      "notes": "添付正規バンクの1-based正答と一致。公式試験後半PDF原典画像と手引き該当頁原典画像から全記述・全選択肢を逐項照合。公式正答PDFは直接再取得せず、了承済み正規バンクを使用。法令・制度・数値に不整合なし。"
+    },
+    {
+      "questionId": "KSAI-2026-086",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "a",
+            "printedPage": "214",
+            "pdfPages": [
+              222
+            ],
+            "truth": "誤",
+            "topic": "医療機器含む",
+            "result": "MATCH"
+          },
+          {
+            "item": "b",
+            "printedPage": "214",
+            "pdfPages": [
+              222
+            ],
+            "truth": "正",
+            "topic": "感染リスク",
+            "result": "MATCH"
+          },
+          {
+            "item": "c",
+            "printedPage": "214",
+            "pdfPages": [
+              222
+            ],
+            "truth": "誤",
+            "topic": "植物除外",
+            "result": "MATCH"
+          },
+          {
+            "item": "d",
+            "printedPage": "214",
+            "pdfPages": [
+              222
+            ],
+            "truth": "誤",
+            "topic": "一般用指定なし",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 3,
+        "bankAnswerNumber": 3,
+        "answerMatch": true,
+        "questionImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
+          "pdfPage": 21,
+          "printedPage": 19,
+          "checked": true,
+          "reason": "テキスト形式だが原典画像追加照合"
+        }
+      },
+      "notes": "添付正規バンクの1-based正答と一致。公式試験後半PDF原典画像と手引き該当頁原典画像から全記述・全選択肢を逐項照合。公式正答PDFは直接再取得せず、了承済み正規バンクを使用。法令・制度・数値に不整合なし。"
+    },
+    {
+      "questionId": "KSAI-2026-087",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "a",
+            "printedPage": "216",
+            "pdfPages": [
+              224
+            ],
+            "truth": "正",
+            "topic": "ジフェンヒドラミン",
+            "result": "MATCH"
+          },
+          {
+            "item": "b",
+            "printedPage": "216",
+            "pdfPages": [
+              224
+            ],
+            "truth": "正",
+            "topic": "ジヒドロコデイン",
+            "result": "MATCH"
+          },
+          {
+            "item": "c",
+            "printedPage": "216",
+            "pdfPages": [
+              224
+            ],
+            "truth": "誤",
+            "topic": "アスピリン非指定",
+            "result": "MATCH"
+          },
+          {
+            "item": "d",
+            "printedPage": "216",
+            "pdfPages": [
+              224
+            ],
+            "truth": "誤",
+            "topic": "アセトアミノフェン非指定",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 1,
+        "bankAnswerNumber": 1,
+        "answerMatch": true,
+        "questionImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
+          "pdfPage": 21,
+          "printedPage": 19,
+          "checked": true,
+          "reason": "テキスト形式だが原典画像追加照合"
+        }
+      },
+      "notes": "添付正規バンクの1-based正答と一致。公式試験後半PDF原典画像と手引き該当頁原典画像から全記述・全選択肢を逐項照合。公式正答PDFは直接再取得せず、了承済み正規バンクを使用。指定成分は外用剤除外という設問条件で一致。施行時期は手引き改訂版の制度に基づく。"
+    },
+    {
+      "questionId": "KSAI-2026-088",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "1",
+            "printedPage": "217",
+            "pdfPages": [
+              225
+            ],
+            "truth": "正",
+            "topic": "リスク区分",
+            "result": "MATCH"
+          },
+          {
+            "item": "2",
+            "printedPage": "217",
+            "pdfPages": [
+              225
+            ],
+            "truth": "正",
+            "topic": "店舗専用",
+            "result": "MATCH"
+          },
+          {
+            "item": "3",
+            "printedPage": "217",
+            "pdfPages": [
+              225
+            ],
+            "truth": "正",
+            "topic": "日局非収載成分名分量",
+            "result": "MATCH"
+          },
+          {
+            "item": "4",
+            "printedPage": "217",
+            "pdfPages": [
+              225
+            ],
+            "truth": "正",
+            "topic": "製造番号",
+            "result": "MATCH"
+          },
+          {
+            "item": "5",
+            "printedPage": "217–218",
+            "pdfPages": [
+              225,
+              226
+            ],
+            "truth": "誤",
+            "topic": "効能効果性能は法定表示事項に含まれない",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 5,
+        "bankAnswerNumber": 5,
+        "answerMatch": true,
+        "questionImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
+          "pdfPage": 22,
+          "printedPage": 20,
+          "checked": true,
+          "reason": "テキスト形式だが原典画像追加照合"
+        }
+      },
+      "notes": "添付正規バンクの1-based正答と一致。公式試験後半PDF原典画像と手引き該当頁原典画像から全記述・全選択肢を逐項照合。公式正答PDFは直接再取得せず、了承済み正規バンクを使用。法令・制度・数値に不整合なし。"
+    },
+    {
+      "questionId": "KSAI-2026-089",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "a",
+            "printedPage": "219",
+            "pdfPages": [
+              227
+            ],
+            "truth": "正",
+            "topic": "品目承認例外",
+            "result": "MATCH"
+          },
+          {
+            "item": "b",
+            "printedPage": "219–220",
+            "pdfPages": [
+              227,
+              228
+            ],
+            "truth": "正",
+            "topic": "医薬部外品表示",
+            "result": "MATCH"
+          },
+          {
+            "item": "c",
+            "printedPage": "220",
+            "pdfPages": [
+              228
+            ],
+            "truth": "誤",
+            "topic": "防除用表示",
+            "result": "MATCH"
+          },
+          {
+            "item": "d",
+            "printedPage": "219",
+            "pdfPages": [
+              227
+            ],
+            "truth": "正",
+            "topic": "販売業許可不要",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 2,
+        "bankAnswerNumber": 2,
+        "answerMatch": true,
+        "questionImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
+          "pdfPage": 22,
+          "printedPage": 20,
+          "checked": true,
+          "reason": "テキスト形式だが原典画像追加照合"
+        }
+      },
+      "notes": "添付正規バンクの1-based正答と一致。公式試験後半PDF原典画像と手引き該当頁原典画像から全記述・全選択肢を逐項照合。公式正答PDFは直接再取得せず、了承済み正規バンクを使用。法令・制度・数値に不整合なし。"
+    },
+    {
+      "questionId": "KSAI-2026-090",
+      "verdict": "PASS",
+      "evidence": {
+        "guideUrl": "https://www.mhlw.go.jp/content/001692425.pdf",
+        "guideEdition": "令和8年4月一部改訂",
+        "guidePageCount": 426,
+        "items": [
+          {
+            "item": "a",
+            "printedPage": "220",
+            "pdfPages": [
+              228
+            ],
+            "truth": "誤",
+            "topic": "医薬品成分例外・薬理作用なしの量",
+            "result": "MATCH"
+          },
+          {
+            "item": "b",
+            "printedPage": "220",
+            "pdfPages": [
+              228
+            ],
+            "truth": "正",
+            "topic": "医薬品的効能標榜不可",
+            "result": "MATCH"
+          },
+          {
+            "item": "c",
+            "printedPage": "220",
+            "pdfPages": [
+              228
+            ],
+            "truth": "誤",
+            "topic": "構造機能への作用目的除外",
+            "result": "MATCH"
+          },
+          {
+            "item": "d",
+            "printedPage": "221",
+            "pdfPages": [
+              229
+            ],
+            "truth": "正",
+            "topic": "不良・不正表示販売禁止",
+            "result": "MATCH"
+          }
+        ],
+        "officialAnswerNumber": 4,
+        "bankAnswerNumber": 4,
+        "answerMatch": true,
+        "questionImage": {
+          "url": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
+          "pdfPage": 23,
+          "printedPage": 21,
+          "checked": true,
+          "reason": "テキスト形式だが原典画像追加照合"
+        }
+      },
+      "notes": "添付正規バンクの1-based正答と一致。公式試験後半PDF原典画像と手引き該当頁原典画像から全記述・全選択肢を逐項照合。公式正答PDFは直接再取得せず、了承済み正規バンクを使用。医薬品成分の例外は薬理作用が期待できない量以下という条件の明記を推奨（設問の絶対禁止を否定する趣旨は正しい）。"
     }
   ],
   "sourceDiffHistory": [
