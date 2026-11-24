@@ -1,0 +1,40 @@
+name: Touhan IAP draft bootstrap
+on:
+  push:
+    branches: [main]
+    paths: [automation/touhan-iap-draft-command.json]
+permissions:
+  contents: write
+jobs:
+  draft:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create and read back draft products only
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: python scripts/touhan_iap_draft.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: touhan-iap-draft-result
+          path: automation/touhan-iap-draft-result.json
+      - name: Persist draft result
+        if: always()
+        run: |
+          test -f automation/touhan-iap-draft-result.json
+          cp automation/touhan-iap-draft-result.json /tmp/touhan-iap-result.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for n in 1 2 3; do
+            git fetch origin main
+            git reset --hard origin/main
+            cp /tmp/touhan-iap-result.json automation/touhan-iap-draft-result.json
+            git add automation/touhan-iap-draft-result.json
+            git diff --cached --quiet || git commit -m 'Record Touhan IAP draft readback'
+            if git push origin HEAD:main; then exit 0; fi
+          done
+          exit 1
