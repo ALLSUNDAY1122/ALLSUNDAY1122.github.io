@@ -16,22 +16,47 @@ def number_lines(text, number):
     pat=re.compile(r"^\s*(?:問\s*)?0*"+str(number)+r"(?=$|[\s.．。)）])")
     return [i for i,line in enumerate(lines) if pat.match(line)]
 
-def context_for_group(text,number):
-    """Printed situation-block range header and shared passage, not generic prose.
-    Must identify exact 91-93 / 94-96 ... printed heading and first-question anchor.
+# The printed heading, not a fixed group size, defines membership.
+_GROUP_HEADER = re.compile(r"次の文を読み\s*(\d{1,3})(?:\s*([〜～~－−–—\-、，,])\s*(\d{1,3}))?\s*の問いに答えよ[。．]?")
+
+def context_for_group(text, number):
+    """Find one unambiguous printed group and its first question."""
+    text = unicodedata.normalize("NFKC", text)
+    lines = text.splitlines()
+    candidates = []
+    for h, line in enumerate(lines):
+        m = _GROUP_HEADER.search(line)
+        if not m:
+            continue
+        first, last = int(m[1]), int(m[3] or m[1])
+        if not (91 <= first <= number <= last <= 120):
+            continue
+        if m[2] in ("、", ",", "，") and last != first + 1:
+            continue
+        for a in number_lines(text, first):
+            if a <= h or any(_GROUP_HEADER.search(v) for v in lines[h+1:a]):
+                continue
+            passage = "\n".join(lines[h:a]).strip()
+            if len(normalized(passage)) >= 35:
+                candidates.append({"first": first, "last": last, "passage": passage,
+                                   "header": line.strip()})
+    return candidates[0] if len(candidates) == 1 else None
+
+def _context_pages(doc, pdf, start, stop, poppler_text, clean_font):
+    """Join page-ordered, coordinate-sorted source text and independent page text.
+    Remove only recognizable printed page furniture. Unknown lines remain and
+    must pass the existing exact comparison and glyph gates.
     """
-    lines=text.splitlines()
-    first=91+3*((number-91)//3)
-    last=first+2
-    rx=re.compile(r"次の文を読み\s*"+str(first)+r"\s*[〜～~－−-]\s*"+str(last))
-    headers=[i for i,line in enumerate(lines) if rx.search(line)]
-    anchors=number_lines(text,first)
-    candidates=[(h,a) for h in headers for a in anchors if a>h]
-    if len(candidates)!=1:return None
-    h,a=candidates[0]
-    passage="\n".join(lines[h:a]).strip()
-    if len(normalized(passage))<35:return None
-    return {"first":first,"last":last,"passage":passage,"header":lines[h].strip()}
+    primary, secondary = [], []
+    for p in range(start, stop + 1):
+        page = doc[p-1]
+        primary.append(_without_page_furniture(page.get_text("text", sort=True)))
+        secondary.append(_without_page_furniture(poppler_text(pdf, p)))
+    return "\n".join(primary), "\n".join(secondary)
+
+def _without_page_furniture(text):
+    return "\n".join(line for line in text.splitlines()
+                     if not re.fullmatch(r"\s*(?:[A-Z]{3,8}-\d{2}-[前後]H-\d+|[—―－-]\s*\d+\s*[—―－-])\s*", line))
 
 def equivalent_shared_context(a,b):
     """Compare exact Japanese/punctuation/numerical content plus a Latin token bag.
@@ -117,10 +142,23 @@ def verify(doc,pdf,n,page_hint,stem,choices,poppler_text,clean_font,normalize,vi
         matches=[]
         rejected=[]
         for p in range(max(1,pg-3),pg+1):
-            original=doc[p-1].get_text("text",sort=False)
-            alt_raw=poppler_text(pdf,p)
-            info=context_for_group(clean_font(original),n)
+            # Choose the shortest page window containing the actual heading
+            # and first numbered anchor. Do not count earlier windows twice.
+            original=alt_raw=None
+            info=None
+            end_page=p
+            for end_page in range(p,pg+1):
+                original,alt_raw=_context_pages(doc,pdf,p,end_page,poppler_text,clean_font)
+                info=context_for_group(clean_font(original),n)
+                if info is not None:
+                    break
             if info is None:continue
+            # The heading must actually start on p, not a later page.
+            if not _GROUP_HEADER.search(unicodedata.normalize("NFKC",clean_font(doc[p-1].get_text("text",sort=True)))):
+                continue
+            if not any(_GROUP_HEADER.search(line) and int(_GROUP_HEADER.search(line)[1])==info["first"]
+                       for line in clean_font(doc[p-1].get_text("text",sort=True)).splitlines()):
+                continue
             alt_info=context_for_group(clean_font(alt_raw),n)
             if alt_info is None:rejected.append("POPLER_SHARED_CONTEXT_NOT_FOUND");continue
             same,shared_evidence=equivalent_shared_context(info["passage"],alt_info["passage"])
@@ -150,7 +188,7 @@ def verify(doc,pdf,n,page_hint,stem,choices,poppler_text,clean_font,normalize,vi
             if glyph_pairs:
                 for l,r in (("ï","ñ"),("è","ê"),("\u008d","\u008f")):
                     if l in glyph_pairs and r in glyph_pairs:common=common.replace(l,"（").replace(r,"）")
-            matches.append({"page":p,"groupFirst":info["first"],"groupLast":info["last"],
+            matches.append({"page":p,"contextPageEnd":end_page,"groupFirst":info["first"],"groupLast":info["last"],
                             "commonText":common,"normalizedLength":len(normalized(common)),
                             "visualContextGlyphEvidence":context_glyph_evidence if glyph_pairs else None,
                             "method":"printed range header + first question position + exact Japanese content and Latin token multiset",
