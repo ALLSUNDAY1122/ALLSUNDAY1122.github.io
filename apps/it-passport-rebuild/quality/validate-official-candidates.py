@@ -9,7 +9,19 @@ bank=json.loads((root/"official-candidate-index.json").read_text(encoding="utf-8
 ledger=json.loads((root/"official-source-ledger.json").read_text(encoding="utf-8"))
 manifest=json.loads((root/"manifest.json").read_text(encoding="utf-8"))
 published=json.loads((root/"official-verbatim.json").read_text(encoding="utf-8"))
-assert len(published)==manifest["canonical"]["official"]["current"]==0, "Prematurely promoted official content"
+assert len(published)==manifest["canonical"]["official"]["current"], "Official manifest/current mismatch"
+assert len({x["id"] for x in published})==len(published), "Duplicate audited IDs"
+for x in published:
+    assert x["origin_type"]=="ipa_published_verbatim" and x["verbatim_visual_audit"]=="PASS"
+    assert x["official_answer_audit"]=="PASS" and len(x["choices"])==4
+    assert x["question"].strip() and all(t.strip() for t in x["choices"])
+    assert re.fullmatch("[a-f0-9]{64}",x["source_image_sha256"])
+    assert x["source_image_committed"] is False and x["publishable"] is False
+    year=next(y for y in answers["years"] if y["year"]==x["year"])
+    assert x["correct_label"]==year["answer_sequence_question_1_to_100"][x["question_number"]-1]
+    assert x["correct_index"]=="アイウエ".index(x["correct_label"])
+    assert x["source_question_pdf_sha256"]==year["question_sha256"]
+    assert x["source_answer_pdf_sha256"]==year["answer_sha256"]
 assert answers["answer_records_verified"]==500 and answers["sha256_match_to_user"]==10
 assert len(bank["items"])==bank["candidate_count"]==500
 assert bank["answer_audit_pass"]==500 and bank["question_verbatim_pass"]==0
