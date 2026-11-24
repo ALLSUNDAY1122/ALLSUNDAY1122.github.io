@@ -4,6 +4,7 @@ on:
     branches:
       - feature/fp2-swiftui-wkwebview-release-20261123
       - feature/fp2-release-scope-20261123
+      - main
     paths:
       - "fp2-manabi-sprint/**"
       - "automation/app-release-registry.json"
@@ -72,6 +73,33 @@ jobs:
           print('FP2 registry / offline asset / IAP contract PASS')
           PY
           test -f fp2-manabi-sprint/ios/Assets.xcassets/AppIcon.appiconset/AppIcon.png
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib,json,struct
+          root=Path('fp2-manabi-sprint/ios')
+          meta=json.loads((root/'APPICON_MANIFEST.json').read_text())
+          registry=json.loads(Path('automation/app-release-registry.json').read_text())['apps']['fp2']
+          path=Path(meta['asset_path'])
+          raw=path.read_bytes()
+          assert raw[:8]==b'\x89PNG\r\n\x1a\n','invalid PNG signature'
+          width,height,depth,ctype,compression,filtering,interlace=struct.unpack('>IIBBBBB',raw[16:29])
+          assert (width,height)==(1024,1024) and (depth,ctype)==(8,2), 'icon must be 1024x1024 RGB 8-bit, no alpha'
+          i=8
+          while i<len(raw):
+              size=struct.unpack('>I',raw[i:i+4])[0]
+              tag=raw[i+4:i+8]
+              assert tag!=b'tRNS','PNG contains transparency chunk'
+              i+=12+size
+              if tag==b'IEND': break
+          digest=hashlib.sha256(raw).hexdigest()
+          assert digest=='22f943997e915b7e055458d8fda803f1eda0cb4d641668c5c03d4bf238ea182b'
+          assert meta['sha256']==digest and registry['icon_current_sha256']==digest
+          assert meta['canonical_status']=='APPICON_CANONICAL_VERIFIED'
+          assert registry['icon_source_blob_sha']==meta['git_blob_sha']
+          assert registry['icon_canonical_verified'] is True
+          assert registry['icon_apple_hash_verified'] is False, 'ASC icon must not be claimed checked'
+          print('FP2 canonical AppIcon SHA-256 / 1024 RGB no alpha PASS:',digest)
+          PY
           sips -g pixelWidth -g pixelHeight fp2-manabi-sprint/ios/Assets.xcassets/AppIcon.appiconset/AppIcon.png
       - name: Install XcodeGen
         run: brew install xcodegen
