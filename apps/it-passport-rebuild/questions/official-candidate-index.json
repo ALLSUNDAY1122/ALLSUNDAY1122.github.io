@@ -3,9 +3,9 @@
   "source": "IPA question/answer PDFs uploaded by user; 10 SHA verified",
   "candidate_count": 500,
   "answer_audit_pass": 500,
-  "question_verbatim_pass": 95,
+  "question_verbatim_pass": 98,
   "release_eligible": false,
-  "note": "95 original-source manually visually verified official question/4 choices, remaining 405 HOLD. Q2026-25 invalid crop and Q2023-37 table remain HOLD; original image binaries uncommitted.",
+  "note": "98 original-source manually visually verified; 402 HOLD; Q2026-25 and Q2023-37 remain HOLD; images uncommitted.",
   "items": [
     {
       "id": "itp-2022-q001",
@@ -82,11 +82,16 @@
       "correct_label": "ア",
       "correct_index": 0,
       "answer_audit": "PASS_TWO_PDF_TEXT_ENGINES",
-      "question_body_status": "OCR_CANDIDATE_VISUAL_AUDIT_REQUIRED",
-      "choices_status": "OCR_CANDIDATE_VISUAL_AUDIT_REQUIRED",
+      "question_body_status": "PASS_INDEPENDENT_VISUAL",
+      "choices_status": "PASS_INDEPENDENT_VISUAL",
       "diagram_status": "IMAGE_CROP_PENDING",
       "origin_type": "ipa_published_exam_candidate",
-      "publishable": false
+      "publishable": false,
+      "figure_status": "NOT_REQUIRED",
+      "audit_evidence": "official-verbatim-audit-high95-recalculated-b01-20261124.json",
+      "official_bank": "official-verbatim.json",
+      "source_image_sha256": "f357dc2b5c87231dbe54d8ce668a97d08982466ecbe0597769ebdd20e97a08de",
+      "source_image_committed": false
     },
     {
       "id": "itp-2022-q005",
@@ -101,11 +106,16 @@
       "correct_label": "イ",
       "correct_index": 1,
       "answer_audit": "PASS_TWO_PDF_TEXT_ENGINES",
-      "question_body_status": "OCR_CANDIDATE_VISUAL_AUDIT_REQUIRED",
-      "choices_status": "OCR_CANDIDATE_VISUAL_AUDIT_REQUIRED",
+      "question_body_status": "PASS_INDEPENDENT_VISUAL",
+      "choices_status": "PASS_INDEPENDENT_VISUAL",
       "diagram_status": "IMAGE_CROP_PENDING",
       "origin_type": "ipa_published_exam_candidate",
-      "publishable": false
+      "publishable": false,
+      "figure_status": "NOT_REQUIRED",
+      "audit_evidence": "official-verbatim-audit-high95-recalculated-b01-20261124.json",
+      "official_bank": "official-verbatim.json",
+      "source_image_sha256": "86d6a052d413dab873402d4cafb49f2a3a84cd26d628217f4d08b79fefd59920",
+      "source_image_committed": false
     },
     {
       "id": "itp-2022-q006",
@@ -120,11 +130,16 @@
       "correct_label": "ウ",
       "correct_index": 2,
       "answer_audit": "PASS_TWO_PDF_TEXT_ENGINES",
-      "question_body_status": "OCR_CANDIDATE_VISUAL_AUDIT_REQUIRED",
-      "choices_status": "OCR_CANDIDATE_VISUAL_AUDIT_REQUIRED",
+      "question_body_status": "PASS_INDEPENDENT_VISUAL",
+      "choices_status": "PASS_INDEPENDENT_VISUAL",
       "diagram_status": "IMAGE_CROP_PENDING",
       "origin_type": "ipa_published_exam_candidate",
-      "publishable": false
+      "publishable": false,
+      "figure_status": "NOT_REQUIRED",
+      "audit_evidence": "official-verbatim-audit-high95-recalculated-b01-20261124.json",
+      "official_bank": "official-verbatim.json",
+      "source_image_sha256": "11a1c74e83b4ad43a5e5dcf6d1dc16e58a2d4857e1a4b19b5a98349430ba3f32",
+      "source_image_committed": false
     },
     {
       "id": "itp-2022-q007",
@@ -9983,5 +9998,5 @@
       "source_image_committed": false
     }
   ],
-  "question_verbatim_hold": 405
+  "question_verbatim_hold": 402
 }
