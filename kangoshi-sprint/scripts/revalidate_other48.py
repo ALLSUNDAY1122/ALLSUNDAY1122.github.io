@@ -1,5 +1,6 @@
 import json, pathlib, hashlib, subprocess, re, unicodedata, os, sys, collections
 import fitz
+from PIL import Image, ImageOps, ImageFilter
 R=pathlib.Path("kangoshi-sprint"); A=R/"audit"; B=R/"product-content"
 sys.path.insert(0,str(R/"scripts"))
 from official_answer_key_audit import parse as official_key
@@ -53,14 +54,38 @@ for qid in l["targetIds"]:
   for i,want in enumerate(expected):
    clip=fitz.Rect(rect.x0,bounds[i],rect.x1,bounds[i+1]); f=out/f"{qid}-field{i}.png"
    page.get_pixmap(matrix=fitz.Matrix(4,4),clip=clip,alpha=False).save(f)
-   reads={}; matches=[]
+   reads={}; matches=[]; variants=[]
    for mode in (3,6,7,11):
     t=subprocess.run(["tesseract",str(f),"stdout","-l","jpn+eng","--psm",str(mode)],capture_output=True,text=True,timeout=90,check=True).stdout
     reads[str(mode)]=t
     z=norm(t); label=str(num if i==0 else i)
     z=re.sub(r"^"+label+r"[.、)]?","",z,count=1)
     if z==norm(want):matches.append(mode)
-   rec["fields"].append({"index":i,"expected":want,"ocr":reads,"matchingModes":matches,"imageSha256":sha(f)})
+   # Retry only on mismatch, preserving exact text comparison and source pixels.
+   # A variant never substitutes expected characters into OCR output.
+   if len(matches)<2:
+    for scale in (5,7):
+     for pad in (0,2):
+      region=fitz.Rect(max(0,clip.x0-pad),max(rect.y0,clip.y0-pad),min(page.rect.width,clip.x1+pad),min(rect.y1,clip.y1+pad))
+      raw=out/f"{qid}-field{i}-s{scale}-p{pad}.png"
+      page.get_pixmap(matrix=fitz.Matrix(scale,scale),clip=region,alpha=False).save(raw)
+      gray=ImageOps.autocontrast(Image.open(raw).convert("L"))
+      for threshold in (None,160,200):
+       im=gray if threshold is None else gray.point(lambda v:255 if v>=threshold else 0)
+       # Remove only blank margins; leave a white border for recognition.
+       box=ImageOps.invert(im).getbbox()
+       if box:im=ImageOps.expand(im.crop(box),border=32,fill=255)
+       fn=out/f"{qid}-field{i}-s{scale}-p{pad}-t{threshold}.png";im.save(fn)
+       for mode in ((6,11) if i==0 else (6,7,13)):
+        t=subprocess.run(["tesseract",str(fn),"stdout","-l","jpn+eng","--psm",str(mode)],capture_output=True,text=True,timeout=90,check=True).stdout
+        z=norm(t);z=re.sub(r"^"+label+r"[.、)]?","",z,count=1)
+        ok=z==norm(want)
+        variants.append({"scale":scale,"pad":pad,"threshold":threshold,"psm":mode,"ocr":t,"match":ok,"image":fn.name,"imageSha256":sha(fn)})
+        if ok and mode not in matches:matches.append(mode)
+       if len(matches)>=2:break
+      if len(matches)>=2:break
+     if len(matches)>=2:break
+   rec["fields"].append({"index":i,"expected":want,"ocr":reads,"matchingModes":matches,"imageSha256":sha(f),"preprocessingTrials":variants})
   official,keysha=keys[exam]; key=official[qid]
   assert key["status"]=="KEY_SINGLE" and key["rawValue"]==str(q["answer"]+1) and keysha==q["officialKeyPdfSha256"]
   assert q["officialScoringStatus"]=="normal"
@@ -78,6 +103,7 @@ h["hold"]=[x for x in h["hold"] if x["id"] not in newids];h["count"]=len(h["hold
 assert v["count"]+h["count"]==480 and all(q["publishable"] is False and q["releaseEligible"] is False for q in v["questions"])
 m["verifiedExtension"].update(canonicalSourceVerifiedCount=v["count"],canonicalSourceVerifiedTotal=total,remainingNotVerified=h["count"],runtimeAdditionalCount=0,releaseEligibleAdditionalCount=0)
 p.update(newPromoted=len(new),newIds=sorted(newids),canonicalVerified=v["count"])
+l.setdefault("previousOcrRuns",[]).append({"runId":l.get("latestRunId"),"results":l.get("latestOcrResults",[])})
 l.update(canonicalAfter=total,newPromoted=len(new),remaining=h["count"],latestRunId=os.environ["GITHUB_RUN_ID"],latestOcrResults=results)
 for path,data in ((V,v),(H,h),(M,m),(P,p),(L,l)):save(path,data)
 s=load(R/"release-status.json");s.update(recordedImported=total,newlyImported=v["count"],additionalRequired=h["count"],releaseStatus="PREFLIGHT_BLOCKED",submissionAllowed=False,contentGate=f"CANONICAL_SOURCE_{total}_OF_1200_EXISTING_RUNTIME_720_NEW{v['count']}_RELEASE_BLOCKED_{h['count']}_UNVERIFIED")
@@ -85,7 +111,7 @@ s["canonicalBank"].update(sourceVerifiedExtension=v["count"],verifiedTotal=total
 s["staging"].update(verifiedExtensionCount=v["count"],remainingNotCanonicalVerified=h["count"],publishableNew=0)
 s["automation"]["bulkHoldCount"]=h["count"];s["textAudit"]["notImported"]=h["count"]
 s["holdRemediation"].update(finalHold=h["count"],netReleasedFromHold=413-h["count"],reasonCountsNow=dict(collections.Counter(reason for row in h["hold"] for reason in row["reasons"])))
-s["latestOther48VisualReview"].update(runId=os.environ["GITHUB_RUN_ID"],ocrAttempted=len(results),fullyRevalidated=sum(c["status"]=="PASS_SOURCE_ONLY" for c in cases.values()),newPromoted=len(new),remainingInScope=len(set(l["targetIds"])&{x["id"] for x in h["hold"]}),canonical=total,totalHeld=h["count"],status="SOURCE_ONLY_RELEASE_BLOCKED")
+s["latestOther48VisualReview"].update(independentOcrBlocker="See current per-field preprocessing trials; no character substitution allowed",runId=os.environ["GITHUB_RUN_ID"],ocrAttempted=len(results),fullyRevalidated=sum(c["status"]=="PASS_SOURCE_ONLY" for c in cases.values()),newPromoted=len(new),remainingInScope=len(set(l["targetIds"])&{x["id"] for x in h["hold"]}),canonical=total,totalHeld=h["count"],status="SOURCE_ONLY_RELEASE_BLOCKED")
 save(R/"release-status.json",s)
 with (R/"RELEASE_STATUS.md").open("a") as f:f.write(f"\n## OCRその他48問 独立OCR Run {os.environ['GITHUB_RUN_ID']}\n\n- OCR試行 {len(results)}問、昇格 {len(new)}問、正規 {total}/1200、保留 {h['count']}。目視未確認の候補は昇格禁止。公開・本審査禁止。\n")
 print(json.dumps({"checked":len(results),"promoted":sorted(newids),"total":total,"held":h["count"]},ensure_ascii=False))
