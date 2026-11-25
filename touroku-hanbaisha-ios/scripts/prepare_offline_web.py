@@ -64,6 +64,16 @@ assert html.count("correct+' / '+denominator+'（採点対象）'")==2
 html=html.replace("correct+' / '+denominator+'（採点対象）'","'正解 '+correct+'問 / 回答 '+denominator+'問'")
 
 html=html.replace('</style>',Path(__file__).with_name('offline_learning.css').read_text()+'</style>',1)
+html=html.replace('<section class="card hidden" id="setup">','<section class="card hidden" id="setup"><div class="mock-top"><div class="eyebrow">模擬試験</div><h2>本番形式</h2><p class="sub">年度・分野を選んで学習します。</p><div id="mockYears" class="mockYears"></div></div>',1)
+html=html.replace('<section id="quiz" class="hidden"><div class="meta"><span id="counter"></span><span id="score"></span></div>','<section id="quiz" class="hidden"><div class="quizhead"><button class="button" id="headerHome">‹ ホーム</button><div class="quizmeta"><b>登録販売者</b><span id="qtag"></span></div><div class="counter" id="counter"></div></div><div class="qbar"><div id="progressBar"></div></div><div class="meta"><span id="score"></span></div>')
+html=html.replace("function updateCount(){$('count').textContent='この範囲で学べる問題：'+eligible().length+'問';$('start').disabled=!eligible().length}", "function updateCount(){const total=records.filter(q=>($('year').value==='all'||String(q.year)===$('year').value)&&($('chapter').value==='all'||q.chapter===$('chapter').value)).length;const n=eligible().length;$('count').textContent=premiumUnlocked?'この範囲で学べる問題：'+n+'問':'無料で学べる問題：'+n+'問／全'+total+'問（Premiumで全599問）';$('start').disabled=!total}")
+html=html.replace("subset=eligible();if(!subset.length)return;sessionScope=", "subset=eligible();if(!subset.length){requestPremium();return}sessionScope=")
+html=html.replace("$('counter').textContent=(position+1)+' / '+subset.length+'問';", "$('counter').textContent=(position+1)+' / '+subset.length+'問';$('qtag').textContent=q.chapter;$('progressBar').style.width=(position/subset.length*100)+'%';")
+html=html.replace("function appendRich(parent,parts,plain){if(!parts){parent.textContent=plain;return}", "function displayPdfText(value){return String(value||'').replace(/\\r\\n?/g,'\\n').replace(/(?<!\\n)\\n(?!\\n)/g,'')}\nfunction appendRich(parent,parts,plain){if(!parts){parent.textContent=displayPdfText(plain);return}")
+html=html.replace('document.createTextNode(piece.text)','document.createTextNode(displayPdfText(piece.text))')
+html=html.replace('body.textContent=explanation.explanation','body.textContent=displayPdfText(explanation.explanation)')
+html=html.replace("$('unknown').classList.add('hidden');$('next').classList.remove('hidden');", "$('feedback').append($('attribution'));$('unknown').classList.add('hidden');$('next').classList.remove('hidden');")
+
 html=html.replace('<section class="card" id="setup">',shell+'<p id="saveWarning" class="saveWarning" role="alert"></p><section class="card hidden" id="setup">',1)
 html=html.replace("let records=[],subset=[],position=0,correct=0,denominator=0,selected=false,excluded=0;","let records=[],subset=[],position=0,correct=0,denominator=0,selected=false,excluded=0;"+logic+"\n$('headerHome').onclick=showHome;")
 html=html.replace("$('chapter').onchange=updateCount;updateCount();","$('chapter').onchange=updateCount;updateCount();showHome();")
