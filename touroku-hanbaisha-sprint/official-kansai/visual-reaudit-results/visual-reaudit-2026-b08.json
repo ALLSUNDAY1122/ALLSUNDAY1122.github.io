@@ -1,0 +1,115 @@
+{
+  "batch": "visual-reaudit-2026-b08",
+  "repository": "ALLSUNDAY1122/ALLSUNDAY1122.github.io",
+  "branch": "main",
+  "auditMethod": "MANUAL_VISUAL_COMPARISON_OF_ATTACHED_OFFICIAL_PDF_PAGE_IMAGES",
+  "source": {
+    "candidateFile": "visual-reaudit-2026-b08.candidates.json",
+    "attachedPdf": "visual-reaudit-2026-b08.pdf",
+    "attachedPdfPages": 8,
+    "officialPdf": "2026-second_half",
+    "bundlePageMapping": [
+      {"bundlePdfPage": 1, "officialPdfPage": 15, "questionIds": ["KSAI-2026-079", "KSAI-2026-080"]},
+      {"bundlePdfPage": 2, "officialPdfPage": 16, "questionIds": ["KSAI-2026-080"]},
+      {"bundlePdfPage": 3, "officialPdfPage": 17, "questionIds": ["KSAI-2026-082"]},
+      {"bundlePdfPage": 4, "officialPdfPage": 18, "questionIds": ["KSAI-2026-083"]},
+      {"bundlePdfPage": 5, "officialPdfPage": 19, "questionIds": ["KSAI-2026-084"]},
+      {"bundlePdfPage": 6, "officialPdfPage": 20, "questionIds": ["KSAI-2026-085"]},
+      {"bundlePdfPage": 7, "officialPdfPage": 21, "questionIds": ["KSAI-2026-086", "KSAI-2026-087"]},
+      {"bundlePdfPage": 8, "officialPdfPage": 22, "questionIds": ["KSAI-2026-088", "KSAI-2026-089"]}
+    ]
+  },
+  "summary": {"pass": 10, "fail": 0, "hold": 0, "total": 10},
+  "answerVerification": {
+    "answerNumberOfficial": "候補JSONの値を転記。正答の正誤判定は行っていない。",
+    "answerPDFChecked": false,
+    "answerPdfVisuallyChecked": false
+  },
+  "results": [
+    {
+      "id": "KSAI-2026-079", "questionNo": 79, "bundlePdfPages": [1], "officialPdfPages": [15],
+      "status": "PASS", "answerNumberOfficial": 3, "answerPDFChecked": false,
+      "checks": {"questionText": "PASS", "allChoices": "PASS", "ruby": "PASS", "tables": "PASS", "symbols": "PASS"},
+      "originalChoices": ["正／誤／正／誤", "誤／正／正／誤", "誤／誤／正／正", "正／正／誤／誤", "正／誤／誤／正"],
+      "notes": "本文a〜d、空咳・痰・咳のルビ、5行4列の正誤表を目視照合。ルビ位置・表の行列対応を含め一致。"
+    },
+    {
+      "id": "KSAI-2026-080", "questionNo": 80, "bundlePdfPages": [1, 2], "officialPdfPages": [15, 16],
+      "status": "PASS", "answerNumberOfficial": 5, "answerPDFChecked": false,
+      "checks": {"questionText": "PASS", "allChoices": "PASS", "ruby": "PASS", "tables": "PASS_NOT_APPLICABLE", "symbols": "PASS"},
+      "originalChoices": ["ａ、ｂ", "ａ、ｃ", "ｂ、ｃ", "ｂ、ｄ", "ｃ、ｄ"],
+      "notes": "本文a〜d、亢（こう）・膀胱（ぼうこう）のルビ2箇所、5つの組合せ選択肢を目視照合。ページ1から2への続きも含め一致。"
+    },
+    {
+      "id": "KSAI-2026-082", "questionNo": 82, "bundlePdfPages": [3], "officialPdfPages": [17],
+      "status": "PASS", "answerNumberOfficial": 3, "answerPDFChecked": false,
+      "checks": {"questionText": "PASS", "allChoices": "PASS", "ruby": "PASS_NOT_PRESENT", "tables": "PASS", "symbols": "PASS"},
+      "originalChoices": ["正／正／誤／誤", "正／誤／正／正", "誤／正／誤／誤", "正／誤／正／誤", "誤／誤／正／正"],
+      "notes": "本文a〜d、60日の表記、括弧内の研修実施機関の記述、5行4列の正誤表を目視照合。全て一致。"
+    },
+    {
+      "id": "KSAI-2026-083", "questionNo": 83, "bundlePdfPages": [4], "officialPdfPages": [18],
+      "status": "PASS", "answerNumberOfficial": 4, "answerPDFChecked": false,
+      "checks": {"questionText": "PASS", "allChoices": "PASS", "ruby": "PASS_NOT_PRESENT", "tables": "PASS", "symbols": "PASS"},
+      "originalChoices": ["正／正／誤／誤", "誤／正／正／誤", "誤／誤／正／正", "誤／誤／誤／正", "正／誤／誤／誤"],
+      "notes": "本文a〜dの許可・届出・日本薬局方・陳列禁止の各記述と5行4列の正誤表を目視照合。全て一致。"
+    },
+    {
+      "id": "KSAI-2026-084", "questionNo": 84, "bundlePdfPages": [5], "officialPdfPages": [19],
+      "status": "PASS", "answerNumberOfficial": 1, "answerPDFChecked": false,
+      "checks": {"questionText": "PASS", "allChoices": "PASS", "ruby": "PASS_NOT_PRESENT", "tables": "PASS", "symbols": "PASS"},
+      "originalChoices": ["正／正／誤／正", "誤／誤／正／誤", "正／正／正／誤", "正／誤／正／誤", "誤／正／誤／正"],
+      "notes": "本文a〜d、胃炎・胃・十二指腸潰瘍の例示、「特定要指導医薬品」の表記、5行4列の正誤表を目視照合。全て一致。"
+    },
+    {
+      "id": "KSAI-2026-085", "questionNo": 85, "bundlePdfPages": [6], "officialPdfPages": [20],
+      "status": "PASS", "answerNumberOfficial": 4, "answerPDFChecked": false,
+      "checks": {"questionText": "PASS", "allChoices": "PASS", "ruby": "PASS_NOT_PRESENT", "tables": "PASS", "symbols": "PASS"},
+      "originalChoices": ["誤／正／正／誤", "正／誤／正／誤", "正／正／誤／正", "正／誤／誤／誤", "誤／誤／誤／誤"],
+      "notes": "本文a〜d、18歳未満の表記、毒薬・劇薬の説明、5行4列の正誤表を目視照合。全て一致。"
+    },
+    {
+      "id": "KSAI-2026-086", "questionNo": 86, "bundlePdfPages": [7], "officialPdfPages": [21],
+      "status": "PASS", "answerNumberOfficial": 3, "answerPDFChecked": false,
+      "checks": {"questionText": "PASS", "allChoices": "PASS", "ruby": "PASS_NOT_PRESENT", "tables": "PASS", "symbols": "PASS"},
+      "originalChoices": ["正／正／誤／誤", "正／誤／正／正", "誤／正／誤／誤", "正／誤／正／誤", "誤／誤／正／正"],
+      "notes": "本文a〜dおよび5行4列の正誤表を目視照合。全て一致。"
+    },
+    {
+      "id": "KSAI-2026-087", "questionNo": 87, "bundlePdfPages": [7], "officialPdfPages": [21],
+      "status": "PASS", "answerNumberOfficial": 1, "answerPDFChecked": false,
+      "checks": {"questionText": "PASS", "allChoices": "PASS", "ruby": "PASS_NOT_PRESENT", "tables": "PASS_NOT_APPLICABLE", "symbols": "PASS"},
+      "originalChoices": ["ａ、ｂ", "ａ、ｃ", "ｂ、ｃ", "ｂ、ｄ", "ｃ、ｄ"],
+      "notes": "指定濫用防止医薬品の設問文、4成分名（ジフェンヒドラミン、ジヒドロコデイン、アスピリン、アセトアミノフェン）、5つの組合せ選択肢を目視照合。全て一致。"
+    },
+    {
+      "id": "KSAI-2026-088", "questionNo": 88, "bundlePdfPages": [8], "officialPdfPages": [22],
+      "status": "PASS", "answerNumberOfficial": 5, "answerPDFChecked": false,
+      "checks": {"questionText": "PASS", "allChoices": "PASS", "ruby": "PASS_NOT_PRESENT", "tables": "PASS_NOT_APPLICABLE", "symbols": "PASS"},
+      "originalChoices": ["一般用医薬品のリスク区分を示す字句", "配置販売品目以外の一般用医薬品にあっては、「店舗専用」の文字", "日本薬局方に収載されている医薬品以外の医薬品における有効成分の名称及びその分量", "製造番号又は製造記号", "効能、効果又は性能"],
+      "notes": "設問文および5つの選択肢を目視照合。選択肢3の「名称及びその分量」は改行を除き原典と一致。"
+    },
+    {
+      "id": "KSAI-2026-089", "questionNo": 89, "bundlePdfPages": [8], "officialPdfPages": [22],
+      "status": "PASS", "answerNumberOfficial": 2, "answerPDFChecked": false,
+      "checks": {"questionText": "PASS", "allChoices": "PASS", "ruby": "PASS_NOT_PRESENT", "tables": "PASS", "symbols": "PASS"},
+      "originalChoices": ["正／正／誤／誤", "正／正／誤／正", "正／誤／誤／誤", "誤／誤／正／正", "誤／誤／正／誤"],
+      "notes": "本文a〜d、衛生害虫類の括弧内例示、5行4列の正誤表を目視照合。全て一致。"
+    }
+  ],
+  "overallFindings": {
+    "failReasons": [],
+    "holdReasons": [],
+    "scopeNotes": [
+      "添付PDFのページ画像を目視し、問題文・全選択肢・ルビ・表のセル位置と行列対応・記号を照合した。",
+      "問80は添付PDF1〜2ページにまたがるため、両ページを照合した。",
+      "問79の空咳・痰・咳のルビ、および問80の亢・膀胱のルビを目視照合した。",
+      "問80、問87、問88は表形式の正誤表ではなく組合せ・番号選択肢であるため、原典の並び順を記録した。",
+      "answerNumberOfficialは記録のみ。正答PDFは直接確認していないため全件answerPDFChecked=false。"
+    ],
+    "nonChanges": [
+      "touroku-hanbaisha-sprint/official-kansai/APPROVED_OFFICIAL_BANK.json（正式バンク本体）",
+      "状態ファイル"
+    ]
+  }
+}
