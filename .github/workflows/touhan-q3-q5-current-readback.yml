@@ -84,7 +84,7 @@ jobs:
                       'GitHub Pages hosting provider request-log retention/purpose was not independently verified.',
                       'No physical iOS device network capture.']
           }
-          (b/'Q5_CURRENT_20261125.json').write_text(json.dumps(q5,ensure_ascii=False,indent=2)+'\\n')
+          (b/'Q5_CURRENT_20261125.json').write_text(json.dumps(q5,ensure_ascii=False,indent=2)+'\n')
           print(json.dumps({'Q3':q3.get('status'),'Q5Source':q5['sourceAndBrowserAudit'],
             'privacyURL':q5['privacyPolicyURLMatched'],'questionnaireVerified':q5['questionnaireVerified'],
             'externalHosts':external},ensure_ascii=False))
