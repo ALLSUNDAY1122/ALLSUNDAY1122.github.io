@@ -1,0 +1,189 @@
+{
+  "batch": "visual-reaudit-2023-b08",
+  "repository": "ALLSUNDAY1122/ALLSUNDAY1122.github.io",
+  "auditMethod": {
+    "source": "添付された公式問題PDFのページ画像を目視し、現行バンク候補JSONの各レコードと照合",
+    "excludedMethods": [
+      "PDF文字データのみの照合",
+      "自動照合のみの判定",
+      "推測によるPASS判定"
+    ],
+    "pageMapping": [
+      {
+        "bundlePdfPage": 1,
+        "officialPdf": "2023-second_half",
+        "officialPdfPage": 9
+      },
+      {
+        "bundlePdfPage": 2,
+        "officialPdf": "2023-second_half",
+        "officialPdfPage": 10
+      },
+      {
+        "bundlePdfPage": 3,
+        "officialPdf": "2023-second_half",
+        "officialPdfPage": 11
+      },
+      {
+        "bundlePdfPage": 4,
+        "officialPdf": "2023-second_half",
+        "officialPdfPage": 12
+      },
+      {
+        "bundlePdfPage": 5,
+        "officialPdf": "2023-second_half",
+        "officialPdfPage": 13
+      },
+      {
+        "bundlePdfPage": 6,
+        "officialPdf": "2023-second_half",
+        "officialPdfPage": 14
+      },
+      {
+        "bundlePdfPage": 7,
+        "officialPdf": "2023-second_half",
+        "officialPdfPage": 15
+      }
+    ],
+    "candidateJsonSha256": "984f0c1ac71424535eb1220fe5de3ead3a5a70ff94cf6adda4afef27935e9b5f",
+    "officialQuestionPdfSha256": "43efd62ac768c1bac880cb268f194230ee63a662e1ea1f61193e2b70ee925fe2"
+  },
+  "summary": {
+    "total": 10,
+    "pass": 9,
+    "fail": 1,
+    "hold": 0
+  },
+  "results": [
+    {
+      "id": "KSAI-2023-074",
+      "questionNo": 74,
+      "bundlePdfPages": [
+        1
+      ],
+      "status": "FAIL",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "findings": [
+        "問題文中の「軟膏剤」2箇所に原典ルビ「こう」が付されているが、現行レコードはoriginalRubyReadingsをSOURCE_ORDER_UNATTACHED方式で保持し、漢字「膏」と読みの対応付けがない。",
+        "現行question文字列に「軟膏 剤」と不要な空白が入り、原典の「軟膏剤」をそのまま再現していない。",
+        "原典どおりのルビ対応は、1箇所目「軟膏（膏＝こう）剤」、2箇所目「軟膏（膏＝こう）剤」。",
+        "選択肢表の5行4列は原典と一致。"
+      ],
+      "officialChoicesVisuallyConfirmed": [
+        "誤／正／正／誤",
+        "正／誤／正／誤",
+        "正／正／誤／正",
+        "正／誤／誤／誤",
+        "誤／誤／誤／誤"
+      ]
+    },
+    {
+      "id": "KSAI-2023-075",
+      "questionNo": 75,
+      "bundlePdfPages": [
+        2
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "reason": "問題文・a〜dの全記述と5行4列の選択肢表が原典画像と一致。抗癌薬の「癌」に対するルビ「がん」はquestionPartsで癌／がんとして対応付けられている。"
+    },
+    {
+      "id": "KSAI-2023-076",
+      "questionNo": 76,
+      "bundlePdfPages": [
+        2
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "reason": "問題文・a〜dの全記述、5行4列の選択肢表を照合。表の全20セルの値と列対応が原典画像と一致。"
+    },
+    {
+      "id": "KSAI-2023-077",
+      "questionNo": 77,
+      "bundlePdfPages": [
+        3
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "reason": "問題文・a〜dの全記述、5行4列の選択肢表を照合。糞便の「糞」に対するルビ「ふん」はquestionPartsで正しく対応付けられている。表の全20セルも一致。"
+    },
+    {
+      "id": "KSAI-2023-078",
+      "questionNo": 78,
+      "bundlePdfPages": [
+        3
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "reason": "問題文・a〜dの全記述、5行4列の選択肢表を照合。喘息の「喘」に対するルビ「ぜん」はquestionPartsで正しく対応付けられている。表の全20セルも一致。"
+    },
+    {
+      "id": "KSAI-2023-079",
+      "questionNo": 79,
+      "bundlePdfPages": [
+        4
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "reason": "問題文・a〜dの全記述と5行4列の選択肢表を照合。表の全20セルの値と列対応が原典画像と一致。"
+    },
+    {
+      "id": "KSAI-2023-080",
+      "questionNo": 80,
+      "bundlePdfPages": [
+        4
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "reason": "問題文・a〜dの全記述と組合せ選択肢5件を照合。嘔吐の「嘔」に対するルビ「おう」はquestionPartsで正しく対応付けられている。選択肢は「a,b」「a,c」「b,c」「b,d」「c,d」の順で原典と一致。"
+    },
+    {
+      "id": "KSAI-2023-081",
+      "questionNo": 81,
+      "bundlePdfPages": [
+        5
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "reason": "問題文・法令引用部分・穴埋め箇所と3列5行の選択肢表を照合。各行のa・b・cの文字列と列対応が原典画像と一致。"
+    },
+    {
+      "id": "KSAI-2023-082",
+      "questionNo": 82,
+      "bundlePdfPages": [
+        6
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "reason": "問題文・a〜dの全記述と5行4列の選択肢表を照合。表の全20セルの値と列対応が原典画像と一致。"
+    },
+    {
+      "id": "KSAI-2023-083",
+      "questionNo": 83,
+      "bundlePdfPages": [
+        7
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "reason": "問題文・a〜dの全記述と5行4列の選択肢表を照合。表の全20セルの値と列対応が原典画像と一致。"
+    }
+  ],
+  "limitations": [
+    "正答PDFは直接確認していない。answerNumberOfficialは候補JSONに記録された値を転記したものであり、正答PDFによる独立検証を意味しない。全件answerPDFChecked=false。",
+    "問74のFAILは監査結果として記録した。正式バンク本体への修正は行っていない。"
+  ],
+  "protectedFiles": {
+    "officialBankModified": false,
+    "stateFilesModified": false
+  }
+}
