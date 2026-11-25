@@ -1619,7 +1619,7 @@ Apple固定識別子: Bundle `com.allsunday1122.tourokuhanbaisha`、ASC `6802119
 
 ## 2026-11-25｜PR #5741 Build 21・Q2〜Q6最新証拠（追補）
 
-確認HEAD：`17e848830fb8a41d104cb980c70c170dc36b3d62`（本追補作成時点）。PR #5741の現HEADを基準とし、過去HEADの証拠は履歴として区別する。
+確認基準：PR #5741の現行ブランチからQ2〜Q6証拠JSON・Build 21配信記録を再読込。過去HEADのSimulator／ブラウザ証拠は履歴として区別する。
 
 | Gate | 最新判定 | 根拠・限界 |
 |---|---|---|
