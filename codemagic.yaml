@@ -2090,6 +2090,14 @@ workflows:
           app = pathlib.Path(sys.argv[1])
           info = plistlib.loads((app / 'Info.plist').read_bytes())
           assert info['CFBundleIdentifier'] == os.environ['BUNDLE_ID']
+          expected_orientations = {'UIInterfaceOrientationPortrait', 'UIInterfaceOrientationPortraitUpsideDown', 'UIInterfaceOrientationLandscapeLeft', 'UIInterfaceOrientationLandscapeRight'}
+          for key in ('UISupportedInterfaceOrientations', 'UISupportedInterfaceOrientations~ipad'):
+              values = info.get(key)
+              if key.endswith('~ipad') and values is None:
+                  values = info.get('UISupportedInterfaceOrientations')
+              if not isinstance(values, list) or len(values) != 4 or set(values) != expected_orientations:
+                  raise SystemExit(f'FAIL: {key} must contain all four orientations: {values!r}')
+          print('PASS: IPA Info.plist supports all four orientations')
           expected = pathlib.Path('apps/it-passport-rebuild/ios/Resources/official-500.json').read_bytes()
           actual = (app / 'official-500.json').read_bytes()
           assert actual == expected
