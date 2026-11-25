@@ -68,7 +68,8 @@ with sync_playwright() as pw:
             assert not re.search(r'(?<!\n)\n(?!\n)(?![a-d][ \u3000])',rendered_question),q['id']
             if q['id']=='KSAI-2022-104':
                 expected=['a 正／b 正／c 誤／d 誤','a 正／b 誤／c 正／d 誤','a 誤／b 正／c 正／d 正','a 正／b 誤／c 誤／d 正','a 誤／b 正／c 誤／d 正']
-                assert page.locator('#choices button').all_text_contents()==expected
+                rendered=[re.sub(r'^\\s*\\d+\\.\\s*','',x) for x in page.locator('#choices button').all_text_contents()]
+                assert rendered==expected,rendered
                 figure=page.locator('#sourceFigure img').first
                 assert figure.bounding_box()['width']>=365,figure.bounding_box()
             assert page.locator('#choices button').count()==len(q['choices'])
@@ -80,6 +81,9 @@ with sync_playwright() as pw:
             page.locator('#choices button').nth(q['answer']).click()
             print('CHECK '+engine.name+' '+q['id'],flush=True) if report['count']-before<2 else None
             expect(page.locator('#feedback .result')).to_have_text('正解', timeout=5000)
+            if q['id']=='KSAI-2022-102':
+                expect(page.locator('#choiceHeader')).to_have_text('a　b　c　d')
+                expect(page.locator('#choiceHeader')).to_be_visible()
             expect(page.locator('#feedback .explanation')).to_be_visible()
             assert page.locator('#feedback .explanation').inner_text().strip()
             expect(page.locator('#feedback #attribution')).to_be_visible()
