@@ -28,14 +28,10 @@ jobs:
         run: |
           python -m pip install --disable-pip-version-check 'playwright==1.56.0'
           python -m playwright install --with-deps chromium
-      - name: Update editable draft App Store listing from approved local copy (no submission)
+      - name: Preserve owner-saved App Store listing; perform readback only
         id: q3update
         continue-on-error: true
-        env:
-          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
-          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
-          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
-        run: python touroku-hanbaisha-ios/scripts/update_asc_metadata_q3.py
+        run: echo "No App Store metadata writes are permitted in this workflow."
       - name: Read back current App Store listing metadata
         id: q3
         continue-on-error: true
