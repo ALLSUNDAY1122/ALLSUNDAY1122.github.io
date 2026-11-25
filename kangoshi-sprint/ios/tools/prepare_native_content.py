@@ -117,8 +117,16 @@ if sum(1 for q in questions if q['scoringMode']=='excluded' and not q['acceptedC
     raise SystemExit('officially excluded questions must have no accepted answer')
 
 free_ids=[]
+by_id={q['id']:q for q in questions}
 for category in ('必修','一般','状況設定'):
-    free_ids += [q['id'] for q in questions if q['sourceExam']==115 and q['category']==category][:8]
+    ids=[q['id'] for q in questions if q['sourceExam']==115 and q['category']==category][:8]
+    if len(ids)!=8:
+        raise SystemExit(f'free samples for {category} must be 8 unique exam-115 items, got {len(ids)}: {ids}')
+    free_ids += ids
+if len(free_ids)!=24 or len(set(free_ids))!=24:
+    raise SystemExit(f'free samples must be 24 unique IDs, got {len(free_ids)} unique {len(set(free_ids))}')
+if any(i not in by_id for i in free_ids):
+    raise SystemExit('free sample IDs must all resolve in the release payload')
 
 payload={
     'schemaVersion':1,'qualification':'看護師国家試験','contentVersion':f'kangoshi-2026-11-official-pdf-verified-{len(questions)}',
