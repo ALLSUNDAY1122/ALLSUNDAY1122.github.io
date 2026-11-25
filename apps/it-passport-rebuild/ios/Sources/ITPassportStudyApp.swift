@@ -9,6 +9,7 @@ struct ITPassportStudyApp: App {
     var body: some Scene {
         WindowGroup {
             HomeView()
+                .preferredColorScheme(.light)
                 .environmentObject(premium)
                 .task { await premium.refresh() }
                 .onChange(of: scenePhase) { phase in
