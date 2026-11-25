@@ -68,7 +68,7 @@ with sync_playwright() as pw:
             assert not re.search(r'(?<!\n)\n(?!\n)(?![a-dａ-ｄ][ \u3000])',rendered_question),q['id']
             if q['id']=='KSAI-2022-104':
                 expected=['a 正／b 正／c 誤／d 誤','a 正／b 誤／c 正／d 誤','a 誤／b 正／c 正／d 正','a 正／b 誤／c 誤／d 正','a 誤／b 正／c 誤／d 正']
-                rendered=[re.sub(r'^\s*\d+\.\s*','',x) for x in page.locator('#choices button').all_text_contents()]
+                rendered=[re.sub(r'^\s*\d+[．.]\s*','',x) for x in page.locator('#choices button').all_text_contents()]
                 assert rendered==expected,rendered
                 figure=page.locator('#sourceFigure img').first
                 assert figure.bounding_box()['width']>=365,figure.bounding_box()
