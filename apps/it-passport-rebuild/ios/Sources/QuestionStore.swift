@@ -85,10 +85,13 @@ enum QuestionStore {
             .sorted { ($0.officialNumber ?? 0) < ($1.officialNumber ?? 0) }
     }
 
-    static func daily(limit: Int = 8, premium: Bool) -> [StudyQuestion] {
+    static func daily(limit: Int = 8, premium: Bool, weakIDs: [String] = []) -> [StudyQuestion] {
         let domains = ["strategy", "management", "technology"]
-        var buckets = Dictionary(uniqueKeysWithValues: domains.map { ($0, questions(domain: $0, premium: premium)) })
-        var output: [StudyQuestion] = []
+        let weakSet = Set(weakIDs)
+        // 復習優先：苦手問題を先に並べる。
+        var output: [StudyQuestion] = Array(accessible(premium: premium).filter { weakSet.contains($0.id) }.prefix(limit))
+        let used = Set(output.map(\.id))
+        var buckets = Dictionary(uniqueKeysWithValues: domains.map { ($0, questions(domain: $0, premium: premium).filter { !used.contains($0.id) }) })
         while output.count < limit {
             var added = false
             for domain in domains where output.count < limit {
@@ -101,8 +104,8 @@ enum QuestionStore {
             if !added { break }
         }
         if output.count < limit {
-            let used = Set(output.map(\.id))
-            output.append(contentsOf: accessible(premium: premium).filter { !used.contains($0.id) }.prefix(limit - output.count))
+            let usedNow = Set(output.map(\.id))
+            output.append(contentsOf: accessible(premium: premium).filter { !usedNow.contains($0.id) }.prefix(limit - output.count))
         }
         return output
     }

@@ -111,7 +111,7 @@ struct HomeView: View {
     }
 
     private var todayCard: some View {
-        let daily = QuestionStore.daily(limit: dailyCount, premium: premium.isPremium)
+        let daily = QuestionStore.daily(limit: dailyCount, premium: premium.isPremium, weakIDs: records.weakIDs)
         return VStack(alignment: .leading, spacing: 10) {
             Text("今日の学習")
                 .font(.system(size: 21, weight: .bold, design: .serif))
@@ -284,13 +284,16 @@ struct HomeView: View {
     private var domainGrid: some View {
         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
             ForEach(domains) { domain in
-                let count = QuestionStore.questions(domain: domain.id, premium: premium.isPremium).count
+                let stats = records.domainStats(domain: domain.id, premium: premium.isPremium)
                 NavigationLink(value: StudyRoute.domain(domainId: domain.id)) {
                     VStack(alignment: .leading, spacing: 8) {
                         Text(domain.title)
                             .font(.system(size: 17, weight: .bold, design: .serif))
                             .foregroundStyle(Palette.ink)
-                        Text("\(count)問")
+                        Text("回答済み \(stats.answered)/\(stats.total)問")
+                            .font(.caption)
+                            .foregroundStyle(Palette.sub)
+                        Text(stats.attempts > 0 ? "正答率 \(stats.accuracy)%・苦手 \(stats.weak)問" : "未回答")
                             .font(.caption)
                             .foregroundStyle(Palette.sub)
                         Spacer(minLength: 0)
@@ -303,7 +306,7 @@ struct HomeView: View {
                         .foregroundStyle(Palette.navy)
                     }
                     .padding(15)
-                    .frame(maxWidth: .infinity, minHeight: 122, alignment: .leading)
+                    .frame(maxWidth: .infinity, minHeight: 150, alignment: .leading)
                     .background(Palette.card, in: RoundedRectangle(cornerRadius: 16))
                     .overlay(RoundedRectangle(cornerRadius: 16).stroke(Palette.line))
                 }
@@ -377,6 +380,8 @@ private struct DomainSetView: View {
     let domain: StudyDomain
 
     @EnvironmentObject private var premium: PremiumStore
+    @EnvironmentObject private var records: StudyRecordStore
+    @State private var showSettings = false
     private var questions: [StudyQuestion] { QuestionStore.questions(domain: domain.id, premium: premium.isPremium) }
     private var sets: [QuestionSet] {
         stride(from: 0, to: questions.count, by: 10).enumerated().map { offset, start in
@@ -385,7 +390,8 @@ private struct DomainSetView: View {
     }
 
     var body: some View {
-        ScrollView {
+        let stats = records.domainStats(domain: domain.id, premium: premium.isPremium)
+        return ScrollView {
             VStack(alignment: .leading, spacing: 12) {
                 Text(domain.title)
                     .font(.system(size: 28, weight: .bold, design: .serif))
@@ -393,6 +399,10 @@ private struct DomainSetView: View {
                 Text("全\(questions.count)問を10問ずつのセットに分割")
                     .font(.subheadline)
                     .foregroundStyle(Palette.sub)
+                Text(stats.attempts > 0 ? "回答済み \(stats.answered)/\(stats.total)問・正答率 \(stats.accuracy)%・苦手 \(stats.weak)問" : "回答済み \(stats.answered)/\(stats.total)問・未回答")
+                    .font(.subheadline)
+                    .foregroundStyle(Palette.sub)
+                domainWeakReviewCard(stats: stats)
 
                 ForEach(sets) { set in
                     let slice = Array(questions[(set.start - 1)..<set.end])
@@ -400,7 +410,7 @@ private struct DomainSetView: View {
                         HStack {
                             VStack(alignment: .leading, spacing: 4) {
                                 Text(set.title).font(.headline).foregroundStyle(Palette.ink)
-                                Text("\(set.subtitle)・\(slice.count)問")
+                                Text("\(set.subtitle)・回答済み \(records.answeredCount(for: slice))/\(slice.count)問")
                                     .font(.caption)
                                     .foregroundStyle(Palette.sub)
                             }
@@ -421,6 +431,44 @@ private struct DomainSetView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(Palette.paper, for: .navigationBar)
         .toolbarBackground(.visible, for: .navigationBar)
+        .sheet(isPresented: $showSettings) { PremiumSettingsView() }
+    }
+
+    private func domainWeakReviewCard(stats: StudyRecordStore.DomainStats) -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack {
+                Text("この分野の苦手だけ復習")
+                    .font(.headline)
+                    .foregroundStyle(Palette.ink)
+                Spacer()
+                Text("苦手 \(stats.weak)問")
+                    .font(.caption.bold())
+                    .foregroundStyle(Palette.navy)
+            }
+            if stats.weak == 0 {
+                Text("この分野の苦手はありません。")
+                    .font(.subheadline)
+                    .foregroundStyle(Palette.sub)
+            } else if premium.isPremium {
+                NavigationLink(value: StudyRoute.quiz(title: "\(domain.title)・苦手復習", questions: records.weakQuestions(domain: domain.id))) {
+                    Text("苦手だけ復習する　\(stats.weak)問")
+                }
+                .buttonStyle(PrimaryButtonStyle(background: Palette.navy))
+            } else {
+                Button { showSettings = true } label: {
+                    HStack {
+                        Text("苦手復習はPremiumで利用できます")
+                        Spacer()
+                        Image(systemName: "lock.fill")
+                    }
+                    .font(.subheadline.bold())
+                }
+                .buttonStyle(.bordered)
+            }
+        }
+        .padding(16)
+        .background(Palette.card, in: RoundedRectangle(cornerRadius: 16))
+        .overlay(RoundedRectangle(cornerRadius: 16).stroke(Palette.line))
     }
 }
 
@@ -530,10 +578,7 @@ private struct QuizView: View {
 
     private func questionBody(_ q: StudyQuestion) -> some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text(q.question)
-                .font(.system(size: 19, weight: .bold, design: .serif))
-                .foregroundStyle(Palette.ink)
-                .lineSpacing(5)
+            QuestionTextView(text: q.question, font: .system(size: 19, weight: .bold, design: .serif))
             if q.originType == "ipa_published_verbatim" {
                 Text(q.primaryEvidence)
                     .font(.caption)
@@ -583,6 +628,12 @@ private struct QuizView: View {
                 .disabled(!isMock && selected != nil)
             }
 
+            if !isMock && selected == nil {
+                Button("わからない") { giveUp(question: q) }
+                    .buttonStyle(.bordered)
+                    .frame(maxWidth: .infinity)
+            }
+
             if isMock {
                 mockNavigation
             } else if selected != nil {
@@ -594,9 +645,13 @@ private struct QuizView: View {
                         .font(.subheadline)
                         .foregroundStyle(Palette.ink)
                     if let detail = q.detailedExplanation, !detail.isEmpty {
-                        Text(detail)
-                            .font(.subheadline)
-                            .foregroundStyle(Palette.ink)
+                        DisclosureGroup("詳しい解説を見る") {
+                            Text(detail)
+                                .font(.subheadline)
+                                .foregroundStyle(Palette.ink)
+                        }
+                        .font(.subheadline.bold())
+                        .foregroundStyle(Palette.navy)
                     }
                     Text(q.primaryEvidence)
                         .font(.caption)
@@ -709,6 +764,13 @@ private struct QuizView: View {
         records.record(questionId: question.id, correct: correct)
     }
 
+    /// 「わからない」は不正解として記録し、苦手に登録して解説を表示する。
+    private func giveUp(question: StudyQuestion) {
+        guard canStudy, selected == nil else { return }
+        records.record(questionId: question.id, correct: false)
+        selected = -1
+    }
+
     private func mockAnswer(_ choice: Int, question: StudyQuestion) {
         guard canStudy else { return }
         answers[question.id] = choice
@@ -790,9 +852,7 @@ private struct MockReviewView: View {
                                 .font(.caption.bold())
                                 .foregroundStyle(mine == nil ? Palette.sub : mine == q.correctIndex ? .green : .red)
                         }
-                        Text(q.question)
-                            .font(.subheadline)
-                            .foregroundStyle(Palette.ink)
+                        QuestionTextView(text: q.question, font: .subheadline)
                         ForEach(q.choices.indices, id: \.self) { i in
                             HStack(alignment: .top, spacing: 6) {
                                 Text(["ア", "イ", "ウ", "エ"][i]).font(.caption.bold())
@@ -810,9 +870,13 @@ private struct MockReviewView: View {
                             .font(.caption)
                             .foregroundStyle(Palette.ink)
                         if let detail = q.detailedExplanation, !detail.isEmpty {
-                            Text(detail)
-                                .font(.caption)
-                                .foregroundStyle(Palette.sub)
+                            DisclosureGroup("詳しい解説を見る") {
+                                Text(detail)
+                                    .font(.caption)
+                                    .foregroundStyle(Palette.sub)
+                            }
+                            .font(.caption.bold())
+                            .foregroundStyle(Palette.navy)
                         }
                         Text(q.primaryEvidence)
                             .font(.caption)
@@ -830,6 +894,195 @@ private struct MockReviewView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(Palette.paper, for: .navigationBar)
         .toolbarBackground(.visible, for: .navigationBar)
+    }
+}
+
+// MARK: - 問題文の表描画
+// 問題文に含まれるパイプ記号の表を SwiftUI の表として描画する。
+// 対応する形式：(1) 見出し行＋区切り行（|---|---|）のある Markdown 表、
+// (2) 「選択肢 | …」や「売上高 | …」のように「 | 」を含む行が2行以上続くブロック。
+// どちらにも当てはまらない行は従来どおりテキスト表示（フォールバック）。
+
+private enum QuestionTextSegment {
+    case text(String)
+    case table(MarkdownTable)
+}
+
+private struct MarkdownTable {
+    let headers: [String]
+    let alignments: [Alignment]
+    let rows: [[String]]
+}
+
+private enum QuestionTextParser {
+    static func segments(_ text: String) -> [QuestionTextSegment] {
+        let lines = text.components(separatedBy: "\n")
+        var result: [QuestionTextSegment] = []
+        var buffer: [String] = []
+        var i = 0
+        func flush() {
+            if !buffer.isEmpty {
+                result.append(.text(buffer.joined(separator: "\n")))
+                buffer.removeAll()
+            }
+        }
+        while i < lines.count {
+            if let table = parseMarkdownTable(lines, at: i) {
+                flush()
+                result.append(.table(table.value))
+                i = table.nextIndex
+                continue
+            }
+            if let table = parsePipeBlock(lines, at: i) {
+                flush()
+                result.append(.table(table.value))
+                i = table.nextIndex
+                continue
+            }
+            buffer.append(lines[i])
+            i += 1
+        }
+        flush()
+        return result
+    }
+
+    private static func parseMarkdownTable(_ lines: [String], at i: Int) -> (value: MarkdownTable, nextIndex: Int)? {
+        guard i + 1 < lines.count,
+              lines[i].contains("|"),
+              isSeparatorRow(lines[i + 1]) else { return nil }
+        let headers = splitCells(lines[i])
+        guard !headers.isEmpty else { return nil }
+        let alignments = parseAlignments(lines[i + 1], count: headers.count)
+        var rows: [[String]] = []
+        var j = i + 2
+        while j < lines.count && lines[j].trimmingCharacters(in: .whitespaces).hasPrefix("|") {
+            rows.append(splitCells(lines[j]))
+            j += 1
+        }
+        guard !rows.isEmpty else { return nil }
+        let width = max(headers.count, rows.map(\.count).max() ?? 0)
+        return (
+            MarkdownTable(
+                headers: normalize(headers, to: width),
+                alignments: alignments + Array(repeating: Alignment.leading, count: max(0, width - alignments.count)),
+                rows: rows.map { normalize($0, to: width) }
+            ),
+            j
+        )
+    }
+
+    private static func parsePipeBlock(_ lines: [String], at i: Int) -> (value: MarkdownTable, nextIndex: Int)? {
+        var block: [String] = []
+        var j = i
+        while j < lines.count {
+            let line = lines[j]
+            guard line.contains(" | "),
+                  !line.trimmingCharacters(in: .whitespaces).hasSuffix("。"),
+                  !isSeparatorRow(line) else { break }
+            block.append(line)
+            j += 1
+        }
+        guard block.count >= 2 else { return nil }
+        let cells = block.map(splitCells)
+        let width = cells.map(\.count).max() ?? 0
+        guard width >= 2 else { return nil }
+        return (
+            MarkdownTable(
+                headers: normalize(cells[0], to: width),
+                alignments: Array(repeating: Alignment.leading, count: width),
+                rows: Array(cells.dropFirst().map { normalize($0, to: width) })
+            ),
+            j
+        )
+    }
+
+    private static func splitCells(_ line: String) -> [String] {
+        var text = line.trimmingCharacters(in: .whitespaces)
+        if text.hasPrefix("|") { text.removeFirst() }
+        if text.hasSuffix("|") { text.removeLast() }
+        return text.split(separator: "|", omittingEmptySubsequences: false).map {
+            $0.trimmingCharacters(in: .whitespaces)
+        }
+    }
+
+    private static func isSeparatorRow(_ line: String) -> Bool {
+        let cells = splitCells(line)
+        guard !cells.isEmpty else { return false }
+        return cells.allSatisfy { cell in
+            let core = cell.trimmingCharacters(in: CharacterSet(charactersIn: ":"))
+            return !core.isEmpty && core.allSatisfy { $0 == "-" }
+        }
+    }
+
+    private static func parseAlignments(_ line: String, count: Int) -> [Alignment] {
+        let cells = splitCells(line)
+        return (0..<count).map { index in
+            guard index < cells.count else { return Alignment.leading }
+            let cell = cells[index]
+            if cell.hasPrefix(":") && cell.hasSuffix(":") && cell.count > 1 { return Alignment.center }
+            if cell.hasSuffix(":") { return Alignment.trailing }
+            return Alignment.leading
+        }
+    }
+
+    private static func normalize(_ cells: [String], to width: Int) -> [String] {
+        if cells.count >= width { return Array(cells.prefix(width)) }
+        return cells + Array(repeating: "", count: width - cells.count)
+    }
+}
+
+private struct QuestionTextView: View {
+    let text: String
+    let font: Font
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            ForEach(Array(QuestionTextParser.segments(text).enumerated()), id: \.offset) { _, segment in
+                switch segment {
+                case .text(let value):
+                    if !value.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                        Text(value)
+                            .font(font)
+                            .foregroundStyle(Palette.ink)
+                            .lineSpacing(5)
+                    }
+                case .table(let table):
+                    MarkdownTableView(table: table)
+                }
+            }
+        }
+    }
+}
+
+private struct MarkdownTableView: View {
+    let table: MarkdownTable
+
+    var body: some View {
+        Grid(horizontalSpacing: 0, verticalSpacing: 0) {
+            GridRow {
+                ForEach(table.headers.indices, id: \.self) { index in
+                    Text(table.headers[index])
+                        .font(.caption.bold())
+                        .foregroundStyle(Palette.ink)
+                        .frame(maxWidth: .infinity, alignment: table.alignments[index])
+                        .padding(6)
+                        .background(Palette.navy.opacity(0.08))
+                        .border(Palette.line, width: 0.5)
+                }
+            }
+            ForEach(table.rows.indices, id: \.self) { row in
+                GridRow {
+                    ForEach(table.rows[row].indices, id: \.self) { index in
+                        Text(table.rows[row][index])
+                            .font(.caption)
+                            .foregroundStyle(Palette.ink)
+                            .frame(maxWidth: .infinity, alignment: table.alignments[index])
+                            .padding(6)
+                            .border(Palette.line, width: 0.5)
+                    }
+                }
+            }
+        }
     }
 }
 

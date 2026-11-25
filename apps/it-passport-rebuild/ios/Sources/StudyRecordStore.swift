@@ -82,6 +82,45 @@ final class StudyRecordStore: ObservableObject {
         return QuestionStore.accessible(premium: true).filter { ids.contains($0.id) }
     }
 
+    /// 指定した分野の苦手問題を問題バンク順に返す。
+    func weakQuestions(domain: String) -> [StudyQuestion] {
+        let ids = Set(weakIDs)
+        return QuestionStore.accessible(premium: true).filter { $0.domain == domain && ids.contains($0.id) }
+    }
+
+    /// 分野の集計：回答済み問題数・試行数・正解試行数・苦手件数。
+    struct DomainStats {
+        var total: Int = 0
+        var answered: Int = 0
+        var attempts: Int = 0
+        var correct: Int = 0
+        var weak: Int = 0
+
+        var accuracy: Int {
+            guard attempts > 0 else { return 0 }
+            return Int(Double(correct) / Double(attempts) * 100)
+        }
+    }
+
+    func domainStats(domain: String, premium: Bool) -> DomainStats {
+        let qs = QuestionStore.questions(domain: domain, premium: premium)
+        var stats = DomainStats(total: qs.count)
+        for q in qs {
+            if let record = state.records[q.id] {
+                if record.attempts > 0 { stats.answered += 1 }
+                stats.attempts += record.attempts
+                stats.correct += record.correct
+            }
+            if state.weak[q.id] != nil { stats.weak += 1 }
+        }
+        return stats
+    }
+
+    /// 指定した問題群のうち、1回以上回答した問題の数。
+    func answeredCount(for questions: [StudyQuestion]) -> Int {
+        questions.reduce(0) { $0 + ((state.records[$1.id]?.attempts ?? 0) > 0 ? 1 : 0) }
+    }
+
     // MARK: - 記録
 
     func record(questionId: String, correct: Bool) {
