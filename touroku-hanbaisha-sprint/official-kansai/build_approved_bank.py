@@ -538,8 +538,11 @@ for q in prior_questions:
             raise RuntimeError("latest manual visual re-audit evidence mismatch: "+q["id"])
         # Keep the exact record already certified against the latest visual
         # evidence, including corrected sourcePdfPages and ruby rich parts.
+        was_accepted=q["id"] in accepted
+        if not was_accepted and method!="MANUAL_VISUAL_REAUDIT":
+            raise RuntimeError("visual PASS record has no reconstructable source method: "+q["id"])
         accepted[q["id"]]=q
-        if method=="MANUAL_VISUAL_REAUDIT" and q["id"] not in accepted:
+        if not was_accepted:
             stat=status_by_year[str(q["year"])]
             if stat.get("hold",0)<=0:
                 raise RuntimeError("manual visual re-audit has no unresolved source hold: "+q["id"])
