@@ -1,0 +1,255 @@
+{
+  "batch": "visual-reaudit-fix3-b01",
+  "repository": "ALLSUNDAY1122/ALLSUNDAY1122.github.io",
+  "branch": "main",
+  "auditMethod": "MANUAL_VISUAL_COMPARISON_WITH_ATTACHED_OFFICIAL_PDF_PAGE_IMAGES",
+  "sourceFiles": {
+    "officialQuestionPdf": "visual-reaudit-fix3-b01.pdf",
+    "currentBankCandidates": "visual-reaudit-fix3-b01.candidates.json"
+  },
+  "scope": {
+    "ids": [
+      "KSAI-2022-021",
+      "KSAI-2023-057",
+      "KSAI-2024-115",
+      "KSAI-2026-111"
+    ],
+    "total": 4,
+    "pageMapping": "bundlePdfPagesは添付PDFの1-basedページ番号。sourcePdfPagesは公式PDFのページ番号。"
+  },
+  "summary": {
+    "PASS": 3,
+    "FAIL": 1,
+    "HOLD": 0
+  },
+  "answerPolicy": "answerNumberOfficialは添付JSONの現行値を記録。正答PDFは今回の添付資料に含まれておらず直接確認していないため、全件answerPDFChecked=false。",
+  "records": [
+    {
+      "id": "KSAI-2022-021",
+      "year": 2022,
+      "questionNo": 21,
+      "bundlePdfPages": [
+        1
+      ],
+      "sourcePdfPages": [
+        14
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "findings": [
+        "添付PDF 1ページ目を目視。設問本文は「かぜ薬の配合成分に関する記述について、（ ）の中に入れるべき字句の正しい組合せを一つ選べ。」で始まり、本文中のa・b・cの説明と一致。",
+        "「咳」のルビ「せき」がquestionPartsでrubyBase「咳」・rubyText「せき」として対応している。",
+        "選択肢表はa・b・cの3列、5行。原典の各行は次のとおりで、choiceTableおよびchoices/choicesPartsと一致。"
+      ],
+      "sourceChoiceTable": [
+        [
+          "グアイフェネシン",
+          "イソプロピルアンチピリン",
+          "エテンザミド"
+        ],
+        [
+          "グアイフェネシン",
+          "ノスカピン",
+          "エテンザミド"
+        ],
+        [
+          "メチルエフェドリン塩酸塩",
+          "イソプロピルアンチピリン",
+          "エテンザミド"
+        ],
+        [
+          "メチルエフェドリン塩酸塩",
+          "イソプロピルアンチピリン",
+          "ヨウ化イソプロパミド"
+        ],
+        [
+          "メチルエフェドリン塩酸塩",
+          "ノスカピン",
+          "ヨウ化イソプロパミド"
+        ]
+      ]
+    },
+    {
+      "id": "KSAI-2023-057",
+      "year": 2023,
+      "questionNo": 57,
+      "bundlePdfPages": [
+        2
+      ],
+      "sourcePdfPages": [
+        37
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "findings": [
+        "添付PDF 2ページ目を目視。設問冒頭の「防風通聖散」にルビ「ぼうふうつうしょうさん」が付され、questionPartsのrubyBase/rubyTextと一致。",
+        "選択肢dの「肥胖症」の「胖」にルビ「はん」が付され、questionPartsのrubyBase「胖」・rubyText「はん」と一致。",
+        "a〜dの全文および5行×4列の正誤組合せ表を照合。選択肢表は原典の行・列順と一致。"
+      ],
+      "sourceChoiceTable": [
+        [
+          "正",
+          "正",
+          "正",
+          "正"
+        ],
+        [
+          "誤",
+          "誤",
+          "正",
+          "正"
+        ],
+        [
+          "誤",
+          "誤",
+          "誤",
+          "正"
+        ],
+        [
+          "正",
+          "正",
+          "誤",
+          "誤"
+        ],
+        [
+          "正",
+          "誤",
+          "正",
+          "誤"
+        ]
+      ]
+    },
+    {
+      "id": "KSAI-2024-115",
+      "year": 2024,
+      "questionNo": 115,
+      "bundlePdfPages": [
+        3
+      ],
+      "sourcePdfPages": [
+        38
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "findings": [
+        "添付PDF 3ページ目を目視。設問本文およびa〜dの成分名を照合し一致。",
+        "選択肢b「次没食子酸ビスマス」の「没食子」にルビ「もっしょくし」が付され、questionPartsのrubyBase「没食子」・rubyText「もっしょくし」と一致。前回指摘されたルビ対象範囲は今回の現行レコードで修正されている。",
+        "5行×4列の正誤組合せ表を照合し、choiceTableの各行・各列と一致。"
+      ],
+      "sourceChoiceTable": [
+        [
+          "正",
+          "正",
+          "誤",
+          "誤"
+        ],
+        [
+          "誤",
+          "正",
+          "正",
+          "誤"
+        ],
+        [
+          "誤",
+          "誤",
+          "正",
+          "正"
+        ],
+        [
+          "誤",
+          "誤",
+          "誤",
+          "正"
+        ],
+        [
+          "正",
+          "誤",
+          "誤",
+          "誤"
+        ]
+      ]
+    },
+    {
+      "id": "KSAI-2026-111",
+      "year": 2026,
+      "questionNo": 111,
+      "bundlePdfPages": [
+        4
+      ],
+      "sourcePdfPages": [
+        42
+      ],
+      "status": "FAIL",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "findings": [
+        "添付PDF 4ページ目を目視。設問本文、a〜dの全記述、5行×4列の正誤組合せ表は一致。",
+        "原典ではa・bそれぞれの「小柴胡湯」にルビ「しょうさいことう」が付されている。現行レコードのquestion文字列にも読みは2回含まれるが、各読みがa・bの「小柴胡湯」に構造的に対応付けられておらず、抽出文字列上では各読みが「ａ」「ｂ」の前に独立行として置かれている。rubyBase/rubyTextまたは同等の位置情報も存在しないため、ルビの対象範囲・配置が原典どおりに再現された記録とは確認できない。"
+      ],
+      "requiredCorrection": {
+        "field": "questionParts",
+        "expected": [
+          {
+            "text": "aの記述の先頭「ａ 」"
+          },
+          {
+            "rubyBase": "小柴胡湯",
+            "rubyText": "しょうさいことう"
+          },
+          {
+            "text": "は、インターフェロン製剤の併用例による間質性肺炎が報告されたことから、…"
+          },
+          {
+            "text": "bの記述の先頭「ｂ 」"
+          },
+          {
+            "rubyBase": "小柴胡湯",
+            "rubyText": "しょうさいことう"
+          },
+          {
+            "text": "を使用して、間質性肺炎を発症し、…"
+          }
+        ],
+        "note": "全文をこの構造に分割し、既存のa〜dの本文・表記を変更せず、2箇所のルビをそれぞれの「小柴胡湯」に位置付けること。"
+      },
+      "sourceChoiceTable": [
+        [
+          "正",
+          "正",
+          "正",
+          "誤"
+        ],
+        [
+          "正",
+          "正",
+          "誤",
+          "正"
+        ],
+        [
+          "正",
+          "誤",
+          "正",
+          "正"
+        ],
+        [
+          "誤",
+          "正",
+          "正",
+          "正"
+        ],
+        [
+          "正",
+          "正",
+          "正",
+          "正"
+        ]
+      ]
+    }
+  ],
+  "limitations": [
+    "本監査は公式問題PDFのページ画像と現行バンクの文字・ルビ・表記録との照合であり、公式正答の独立検証や設問内容の医学・薬学的妥当性評価は行っていない。"
+  ]
+}
