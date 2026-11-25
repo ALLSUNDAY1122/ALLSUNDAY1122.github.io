@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Derive release status from on-disk audit evidence; no optimistic claims."""
-import collections,json
+import collections,json,os
 from pathlib import Path
 from datetime import datetime,timezone,timedelta
 B=Path(__file__).resolve().parent
@@ -21,7 +21,8 @@ for y in range(2022,2027):
     else:
         by_year[str(y)]={"candidate":120,"autoDiffPass":0,"autoDiffHeld":0,"notYetDiffed":120,
                           "reasons":{"PDF_REEXTRACTION_NOT_CONFIRMED":120},"advisories":{},"evidence":None}
-bank=json.loads((B/"APPROVED_OFFICIAL_BANK.json").read_text())
+bank_path=Path(os.environ.get("TOUHAN_REBUILT_BANK_PATH",str(B/"APPROVED_OFFICIAL_BANK.json")))
+bank=json.loads(bank_path.read_text())
 manual=json.loads((B/"MANUAL_VISUAL_AUDIT_20261123.json").read_text())
 existing=json.loads((IOS/"release-status.json").read_text())
 total=bank["count"]
