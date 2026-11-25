@@ -1,0 +1,184 @@
+{
+  "batch": "visual-reaudit-fix4-b01",
+  "repository": "ALLSUNDAY1122/ALLSUNDAY1122.github.io",
+  "branch": "main",
+  "auditMethod": "MANUAL_VISUAL_COMPARISON_WITH_ATTACHED_OFFICIAL_PDF_PAGE_IMAGES",
+  "sourceFiles": {
+    "officialQuestionPdf": "visual-reaudit-fix4-b01.pdf",
+    "currentBankCandidates": "visual-reaudit-fix4-b01.candidates.json"
+  },
+  "scope": {
+    "ids": [
+      "KSAI-2025-026",
+      "KSAI-2025-028",
+      "KSAI-2025-041"
+    ],
+    "total": 3,
+    "pageMapping": "bundlePdfPagesは添付PDFの1-basedページ番号。sourcePdfPagesは公式PDFのページ番号。"
+  },
+  "summary": {
+    "PASS": 3,
+    "FAIL": 0,
+    "HOLD": 0
+  },
+  "answerPolicy": "answerNumberOfficialは添付JSONの現行値を記録。正答PDFは添付されておらず直接確認していないため、全件answerPDFChecked=false。",
+  "records": [
+    {
+      "id": "KSAI-2025-026",
+      "year": 2025,
+      "questionNo": 26,
+      "bundlePdfPages": [
+        1
+      ],
+      "sourcePdfPages": [
+        22
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "findings": [
+        "添付PDF 1ページ目の問26を目視照合。設問文「次の記述にあてはまる漢方処方製剤として、最も適切なものを選べ。」および体力中等度・慢性頭痛・めまい・肩こり等の説明文は現行レコードと一致。",
+        "選択肢5件の順序・名称が一致し、各ルビの対象と読みも原典どおり。",
+        "第1選択肢「呉茱萸湯」のルビ「ごしゅゆとう」はchoicesParts内に正しく配置され、設問本文末尾への混入はない。"
+      ],
+      "sourceChoices": [
+        {
+          "number": 1,
+          "text": "呉茱萸湯",
+          "rubyBase": "呉茱萸湯",
+          "rubyText": "ごしゅゆとう"
+        },
+        {
+          "number": 2,
+          "text": "香蘇散",
+          "rubyBase": "香蘇散",
+          "rubyText": "こうそさん"
+        },
+        {
+          "number": 3,
+          "text": "麻黄湯",
+          "rubyBase": "麻黄湯",
+          "rubyText": "まおうとう"
+        },
+        {
+          "number": 4,
+          "text": "釣藤散",
+          "rubyBase": "釣藤散",
+          "rubyText": "ちょうとうさん"
+        },
+        {
+          "number": 5,
+          "text": "芍薬甘草湯",
+          "rubyBase": "芍薬甘草湯",
+          "rubyText": "しゃくやくかんぞうとう"
+        }
+      ]
+    },
+    {
+      "id": "KSAI-2025-028",
+      "year": 2025,
+      "questionNo": 28,
+      "bundlePdfPages": [
+        2
+      ],
+      "sourcePdfPages": [
+        23
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "findings": [
+        "添付PDF 2ページ目の問28を目視照合。a〜dの全文、漢方処方製剤名、文章中の語句は現行レコードと一致。",
+        "ルビは酸棗仁湯／さんそうにんとう、加味帰脾湯／かみきひとう、疳／かん、柴胡加竜骨牡蛎湯／さいこかりゅうこつぼれいとう、悸／き（c）、小建中湯／しょうけんちゅうとう、悸／き（d）、倦／けんの順で原典と一致。",
+        "特に「疲労倦怠」の「倦」に「けん」が対応し、「怠」には対応していないことを目視確認。前回のルビ対象誤りは現行questionPartsで解消。",
+        "5行×4列の正誤組合せ表を行・列ごとに照合し一致。"
+      ],
+      "sourceChoiceTable": [
+        [
+          "正",
+          "正",
+          "正",
+          "誤"
+        ],
+        [
+          "正",
+          "正",
+          "誤",
+          "正"
+        ],
+        [
+          "正",
+          "誤",
+          "正",
+          "正"
+        ],
+        [
+          "誤",
+          "正",
+          "正",
+          "正"
+        ],
+        [
+          "正",
+          "正",
+          "正",
+          "正"
+        ]
+      ]
+    },
+    {
+      "id": "KSAI-2025-041",
+      "year": 2025,
+      "questionNo": 41,
+      "bundlePdfPages": [
+        3
+      ],
+      "sourcePdfPages": [
+        32
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "findings": [
+        "添付PDF 3ページ目の問41を目視照合。設問本文全体、句読点、括弧内の随伴症状「肩こり、頭重、耳鳴り」等は現行レコードと一致。",
+        "本文中の「痒み」は原典で「痒」に「かゆ」のルビが付され、現行questionPartsでもrubyBase「痒」・rubyText「かゆ」として正しく対応。",
+        "選択肢5件の名称・順序および各ルビが一致。第1選択肢「芎帰膠艾湯」のルビ「きゅうききょうがいとう」を含め、ルビはchoicesParts内に配置され、設問本文末尾への混入はない。"
+      ],
+      "sourceChoices": [
+        {
+          "number": 1,
+          "text": "芎帰膠艾湯",
+          "rubyBase": "芎帰膠艾湯",
+          "rubyText": "きゅうききょうがいとう"
+        },
+        {
+          "number": 2,
+          "text": "乙字湯",
+          "rubyBase": "乙字湯",
+          "rubyText": "おつじとう"
+        },
+        {
+          "number": 3,
+          "text": "竜胆瀉肝湯",
+          "rubyBase": "竜胆瀉肝湯",
+          "rubyText": "りゅうたんしゃかんとう"
+        },
+        {
+          "number": 4,
+          "text": "八味地黄丸",
+          "rubyBase": "八味地黄丸",
+          "rubyText": "はちみじおうがん"
+        },
+        {
+          "number": 5,
+          "text": "苓桂朮甘湯",
+          "rubyBase": "苓桂朮甘湯",
+          "rubyText": "りょうけいじゅつかんとう"
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "本監査は公式問題PDFのページ画像と現行バンクの問題文・選択肢・ルビ・表記録との視覚的照合であり、公式正答の独立検証や設問内容の医学・薬学的妥当性評価は行っていない。"
+  ]
+}
