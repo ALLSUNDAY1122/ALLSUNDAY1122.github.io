@@ -65,7 +65,7 @@ with sync_playwright() as pw:
         for q in bank['questions']:
             assert page.locator('#question').inner_text().strip()
             rendered_question=page.locator('#question').evaluate("el=>Array.from(el.childNodes).map(n=>n.textContent||'').join('')")
-            assert not re.search(r'(?<!\n)\n(?!\n)(?![a-d][ \u3000])',rendered_question),q['id']
+            assert not re.search(r'(?<!\n)\n(?!\n)(?![a-dａ-ｄ][ \u3000])',rendered_question),q['id']
             if q['id']=='KSAI-2022-104':
                 expected=['a 正／b 正／c 誤／d 誤','a 正／b 誤／c 正／d 誤','a 誤／b 正／c 正／d 正','a 正／b 誤／c 誤／d 正','a 誤／b 正／c 誤／d 正']
                 rendered=[re.sub(r'^\s*\d+\.\s*','',x) for x in page.locator('#choices button').all_text_contents()]
