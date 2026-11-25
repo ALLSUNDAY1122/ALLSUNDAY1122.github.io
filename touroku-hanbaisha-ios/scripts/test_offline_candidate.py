@@ -55,7 +55,7 @@ with sync_playwright() as pw:
         for q in bank['questions']:
             assert page.locator('#question').inner_text().strip()
             rendered_question=page.locator('#question').evaluate("el=>Array.from(el.childNodes).map(n=>n.textContent||'').join('')")
-            assert not re.search(r'(?<!\\n)\\n(?!\\n)',rendered_question),q['id']
+            assert not re.search(r'(?<!\n)\n(?!\n)',rendered_question),q['id']
             assert page.locator('#choices button').count()==len(q['choices'])
             for img in page.locator('#sourceFigure img').all():
                 img.scroll_into_view_if_needed()
