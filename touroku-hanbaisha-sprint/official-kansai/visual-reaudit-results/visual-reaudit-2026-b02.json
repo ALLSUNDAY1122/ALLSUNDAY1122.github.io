@@ -1,0 +1,892 @@
+{
+  "batch": "visual-reaudit-2026-b02",
+  "repository": "ALLSUNDAY1122/ALLSUNDAY1122.github.io",
+  "branch": "main",
+  "auditType": "manual_visual_reaudit",
+  "source": {
+    "candidateAttachment": "visual-reaudit-2026-b02.candidates.json",
+    "renderedOfficialQuestionPdfAttachment": "visual-reaudit-2026-b02.pdf",
+    "issuer": "関西広域連合",
+    "title": "令和8年度登録販売者試験（前半）",
+    "sourceUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
+    "answerSourceUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+    "answerPdfInspected": false,
+    "bankBlobShaBefore": "8741e2675af6f41f7fba2afdc89566f48b8258e7"
+  },
+  "method": {
+    "description": "添付PDFのレンダリング画像10ページを目視し、添付JSONのidsで指定された10問について、問題文・全選択肢・ルビ・表の行列と各セル対応・記号を照合。PDF文字データ抽出、自動照合、候補JSONの既存audit.statusは目視判定の代替にしていない。",
+    "pagesReviewed": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "pageMapping": [
+      {
+        "bundlePdfPage": 1,
+        "officialPdfPage": 13
+      },
+      {
+        "bundlePdfPage": 2,
+        "officialPdfPage": 14
+      },
+      {
+        "bundlePdfPage": 3,
+        "officialPdfPage": 15
+      },
+      {
+        "bundlePdfPage": 4,
+        "officialPdfPage": 18
+      },
+      {
+        "bundlePdfPage": 5,
+        "officialPdfPage": 19
+      },
+      {
+        "bundlePdfPage": 6,
+        "officialPdfPage": 20
+      },
+      {
+        "bundlePdfPage": 7,
+        "officialPdfPage": 21
+      },
+      {
+        "bundlePdfPage": 8,
+        "officialPdfPage": 22
+      },
+      {
+        "bundlePdfPage": 9,
+        "officialPdfPage": 23
+      },
+      {
+        "bundlePdfPage": 10,
+        "officialPdfPage": 24
+      }
+    ],
+    "answerHandling": "answerNumberOfficialは添付候補JSONの値を転記。正答PDFは直接確認していないため、全件answerPDFChecked=false。",
+    "failRule": "原典画像とレコードの問題文・全選択肢・ルビ・表・記号に不一致があればFAIL。正誤表は行列の各セル位置まで照合し、選択肢の表またはルビが別選択肢へ混入・ずれた場合もFAIL。"
+  },
+  "scope": {
+    "questionIds": [
+      "KSAI-2026-014",
+      "KSAI-2026-015",
+      "KSAI-2026-016",
+      "KSAI-2026-019",
+      "KSAI-2026-020",
+      "KSAI-2026-022",
+      "KSAI-2026-023",
+      "KSAI-2026-024",
+      "KSAI-2026-025",
+      "KSAI-2026-026"
+    ],
+    "count": 10
+  },
+  "summary": {
+    "total": 10,
+    "pass": 6,
+    "fail": 4,
+    "hold": 0,
+    "failReasons": [
+      {
+        "id": "KSAI-2026-020",
+        "reason": "第5選択肢末尾に次ページの章見出しが混入。"
+      },
+      {
+        "id": "KSAI-2026-022",
+        "reason": "選択肢文字列に後続選択肢のルビが混入し、ルビの選択肢対応がずれている。"
+      },
+      {
+        "id": "KSAI-2026-024",
+        "reason": "成分名の「dℓ－」が「㎗－」と記録され、記号が不一致。"
+      },
+      {
+        "id": "KSAI-2026-026",
+        "reason": "選択肢名の字間スペースとルビの選択肢対応ずれ。"
+      }
+    ],
+    "holdReasons": []
+  },
+  "results": [
+    {
+      "id": "KSAI-2026-014",
+      "status": "PASS",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "bundlePdfPages": [
+        1
+      ],
+      "officialPdfPages": [
+        13
+      ],
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "NOT_APPLICABLE",
+        "tableOrChoiceLayout": "PASS",
+        "symbols": "PASS"
+      },
+      "officialChoices": [
+        "誤 正 正 誤",
+        "正 誤 正 誤",
+        "正 正 誤 正",
+        "正 誤 誤 誤",
+        "誤 誤 誤 誤"
+      ],
+      "table": {
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rowCount": 5,
+        "columnCount": 4,
+        "rows": [
+          {
+            "row": 1,
+            "cells": [
+              "誤",
+              "正",
+              "正",
+              "誤"
+            ]
+          },
+          {
+            "row": 2,
+            "cells": [
+              "正",
+              "誤",
+              "正",
+              "誤"
+            ]
+          },
+          {
+            "row": 3,
+            "cells": [
+              "正",
+              "正",
+              "誤",
+              "正"
+            ]
+          },
+          {
+            "row": 4,
+            "cells": [
+              "正",
+              "誤",
+              "誤",
+              "誤"
+            ]
+          },
+          {
+            "row": 5,
+            "cells": [
+              "誤",
+              "誤",
+              "誤",
+              "誤"
+            ]
+          }
+        ]
+      },
+      "visualNotes": "プラセボ効果に関するa〜dの全文と正誤表5行×4列を画像で照合。全セルの行列位置を含め一致。"
+    },
+    {
+      "id": "KSAI-2026-015",
+      "status": "PASS",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "bundlePdfPages": [
+        2
+      ],
+      "officialPdfPages": [
+        14
+      ],
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "NOT_APPLICABLE",
+        "tableOrChoiceLayout": "PASS",
+        "symbols": "PASS"
+      },
+      "officialChoices": [
+        "誤 正 正 誤",
+        "正 誤 正 正",
+        "誤 正 誤 正",
+        "正 誤 正 誤",
+        "正 正 誤 正"
+      ],
+      "table": {
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rowCount": 5,
+        "columnCount": 4,
+        "rows": [
+          {
+            "row": 1,
+            "cells": [
+              "誤",
+              "正",
+              "正",
+              "誤"
+            ]
+          },
+          {
+            "row": 2,
+            "cells": [
+              "正",
+              "誤",
+              "正",
+              "正"
+            ]
+          },
+          {
+            "row": 3,
+            "cells": [
+              "誤",
+              "正",
+              "誤",
+              "正"
+            ]
+          },
+          {
+            "row": 4,
+            "cells": [
+              "正",
+              "誤",
+              "正",
+              "誤"
+            ]
+          },
+          {
+            "row": 5,
+            "cells": [
+              "正",
+              "正",
+              "誤",
+              "正"
+            ]
+          }
+        ]
+      },
+      "visualNotes": "医薬品の品質に関するa〜dの全文と正誤表5行×4列を照合。使用期限・保管環境の記述を含め一致。"
+    },
+    {
+      "id": "KSAI-2026-016",
+      "status": "PASS",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "bundlePdfPages": [
+        3
+      ],
+      "officialPdfPages": [
+        15
+      ],
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "NOT_APPLICABLE",
+        "tableOrChoiceLayout": "PASS",
+        "symbols": "PASS"
+      },
+      "officialChoices": [
+        "正 正 誤 正",
+        "正 正 誤 誤",
+        "誤 正 正 誤",
+        "誤 正 誤 正",
+        "誤 誤 正 誤"
+      ],
+      "table": {
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rowCount": 5,
+        "columnCount": 4,
+        "rows": [
+          {
+            "row": 1,
+            "cells": [
+              "正",
+              "正",
+              "誤",
+              "正"
+            ]
+          },
+          {
+            "row": 2,
+            "cells": [
+              "正",
+              "正",
+              "誤",
+              "誤"
+            ]
+          },
+          {
+            "row": 3,
+            "cells": [
+              "誤",
+              "正",
+              "正",
+              "誤"
+            ]
+          },
+          {
+            "row": 4,
+            "cells": [
+              "誤",
+              "正",
+              "誤",
+              "正"
+            ]
+          },
+          {
+            "row": 5,
+            "cells": [
+              "誤",
+              "誤",
+              "正",
+              "誤"
+            ]
+          }
+        ]
+      },
+      "visualNotes": "販売時コミュニケーションに関するa〜dの全文と正誤表5行×4列を照合。一致。"
+    },
+    {
+      "id": "KSAI-2026-019",
+      "status": "PASS",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "bundlePdfPages": [
+        4
+      ],
+      "officialPdfPages": [
+        18
+      ],
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tableOrChoiceLayout": "PASS",
+        "symbols": "PASS"
+      },
+      "officialChoices": [
+        {
+          "a": "血漿",
+          "b": "エイズ治療・研究開発センターの整備",
+          "c": "感染症報告"
+        },
+        {
+          "a": "血漿",
+          "b": "医薬品副作用被害救済制度の拡充",
+          "c": "製造販売後の安全性に関する調査"
+        },
+        {
+          "a": "血漿",
+          "b": "血液製剤の全面使用禁止",
+          "c": "感染症報告"
+        },
+        {
+          "a": "血球",
+          "b": "エイズ治療・研究開発センターの整備",
+          "c": "感染症報告"
+        },
+        {
+          "a": "血球",
+          "b": "医薬品副作用被害救済制度の拡充",
+          "c": "製造販売後の安全性に関する調査"
+        }
+      ],
+      "rubyReadingsInVisualOrder": [
+        "しょう",
+        "しょう",
+        "しょう"
+      ],
+      "visualNotes": "HIV訴訟の本文と表5行×3列を照合。血漿の3箇所に付く「しょう」のルビを確認。血球と血漿の区別、b・c列の組合せ、全行の対応が一致。"
+    },
+    {
+      "id": "KSAI-2026-020",
+      "status": "FAIL",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "bundlePdfPages": [
+        5,
+        6
+      ],
+      "officialPdfPages": [
+        19,
+        20
+      ],
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "FAIL",
+        "ruby": "NOT_APPLICABLE",
+        "tableOrChoiceLayout": "FAIL",
+        "symbols": "PASS"
+      },
+      "officialChoices": [
+        "正 誤 正 誤",
+        "正 誤 誤 正",
+        "誤 正 正 正",
+        "誤 正 誤 正",
+        "誤 誤 正 正"
+      ],
+      "table": {
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rowCount": 5,
+        "columnCount": 4,
+        "rows": [
+          {
+            "row": 1,
+            "cells": [
+              "正",
+              "誤",
+              "正",
+              "誤"
+            ]
+          },
+          {
+            "row": 2,
+            "cells": [
+              "正",
+              "誤",
+              "誤",
+              "正"
+            ]
+          },
+          {
+            "row": 3,
+            "cells": [
+              "誤",
+              "正",
+              "正",
+              "正"
+            ]
+          },
+          {
+            "row": 4,
+            "cells": [
+              "誤",
+              "正",
+              "誤",
+              "正"
+            ]
+          },
+          {
+            "row": 5,
+            "cells": [
+              "誤",
+              "誤",
+              "正",
+              "正"
+            ]
+          }
+        ]
+      },
+      "discrepancies": [
+        {
+          "field": "choices[4]",
+          "recorded": "誤 誤 正 正 ［主な医薬品とその作用］",
+          "official": "誤 誤 正 正",
+          "reason": "候補レコードの第5選択肢末尾に、次ページ冒頭の章見出し「［主な医薬品とその作用］」が混入している。公式画像では選択肢5は「誤 誤 正 正」で終わり、章見出しは次ページの独立した見出し。"
+        }
+      ],
+      "visualNotes": "問20の本文・a〜dと正誤表5行×4列は一致。ただし選択肢5への次ページ章見出し混入により、全選択肢のレコード一致要件を満たさないためFAIL。"
+    },
+    {
+      "id": "KSAI-2026-022",
+      "status": "FAIL",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "bundlePdfPages": [
+        6
+      ],
+      "officialPdfPages": [
+        20
+      ],
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "FAIL",
+        "ruby": "FAIL",
+        "tableOrChoiceLayout": "FAIL",
+        "symbols": "PASS"
+      },
+      "recordedChoices": [
+        "香蘇散／はんげこうぼくとう",
+        "半夏厚朴湯",
+        "安中散／しょうさいことう",
+        "小柴胡湯／けいしかしゃくやくとう",
+        "桂枝加芍薬湯"
+      ],
+      "officialChoices": [
+        "香蘇散",
+        "半夏厚朴湯",
+        "安中散",
+        "小柴胡湯",
+        "桂枝加芍薬湯"
+      ],
+      "rubyReadingsInVisualOrder": [
+        "こうそさん",
+        "はんげこうぼくとう",
+        "あんちゅうさん",
+        "しょうさいことう",
+        "けいしかしゃくやくとう"
+      ],
+      "discrepancies": [
+        {
+          "field": "choices / ruby placement",
+          "recorded": "choices[0]に「はんげこうぼくとう」、choices[2]に「しょうさいことう」、choices[3]に「けいしかしゃくやくとう」が続けて格納されている。",
+          "official": "ルビは順に、選択肢1「香蘇散」=こうそさん、2「半夏厚朴湯」=はんげこうぼくとう、3「安中散」=あんちゅうさん、4「小柴胡湯」=しょうさいことう、5「桂枝加芍薬湯」=けいしかしゃくやくとう。",
+          "reason": "公式画像では各ルビは直下ではなく、それぞれ対応する選択肢の直上に配置されている。現行choices配列は後続選択肢のルビを直前選択肢の文字列に含めており、選択肢単位の記録が原典の配置と一致しない。"
+        }
+      ],
+      "visualNotes": "問題文と5つの漢方処方名、ルビ5件の出現順自体は確認できるが、choices配列内のルビ配置が選択肢間でずれている。原典の各選択肢との対応が崩れているためFAIL。"
+    },
+    {
+      "id": "KSAI-2026-023",
+      "status": "PASS",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "bundlePdfPages": [
+        7
+      ],
+      "officialPdfPages": [
+        21
+      ],
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tableOrChoiceLayout": "PASS",
+        "symbols": "PASS"
+      },
+      "officialChoices": [
+        "正 正 誤 誤",
+        "正 誤 正 誤",
+        "正 誤 誤 正",
+        "誤 誤 正 正",
+        "誤 誤 正 誤"
+      ],
+      "table": {
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rowCount": 5,
+        "columnCount": 4,
+        "rows": [
+          {
+            "row": 1,
+            "cells": [
+              "正",
+              "正",
+              "誤",
+              "誤"
+            ]
+          },
+          {
+            "row": 2,
+            "cells": [
+              "正",
+              "誤",
+              "正",
+              "誤"
+            ]
+          },
+          {
+            "row": 3,
+            "cells": [
+              "正",
+              "誤",
+              "誤",
+              "正"
+            ]
+          },
+          {
+            "row": 4,
+            "cells": [
+              "誤",
+              "誤",
+              "正",
+              "正"
+            ]
+          },
+          {
+            "row": 5,
+            "cells": [
+              "誤",
+              "誤",
+              "正",
+              "誤"
+            ]
+          }
+        ]
+      },
+      "rubyReadingsInVisualOrder": [
+        "かっこんとう",
+        "せき",
+        "さいこけいしとう",
+        "たん",
+        "せき",
+        "ぜき",
+        "ぜん",
+        "しょうせいりゅうとう",
+        "たん",
+        "せき",
+        "ぜん",
+        "けいしとう"
+      ],
+      "visualNotes": "葛根湯・柴胡桂枝湯・小青竜湯・桂枝湯の本文、ふりがな12件の原典出現順、正誤表5行×4列を照合。表の各セルとルビ列が一致。"
+    },
+    {
+      "id": "KSAI-2026-024",
+      "status": "FAIL",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "bundlePdfPages": [
+        8
+      ],
+      "officialPdfPages": [
+        22
+      ],
+      "checks": {
+        "questionText": "FAIL",
+        "allChoices": "PASS",
+        "ruby": "NOT_APPLICABLE",
+        "tableOrChoiceLayout": "PASS",
+        "symbols": "FAIL"
+      },
+      "officialChoices": [
+        "正 正 正 誤",
+        "正 正 誤 正",
+        "正 誤 正 正",
+        "誤 正 正 正",
+        "正 正 正 正"
+      ],
+      "table": {
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rowCount": 5,
+        "columnCount": 4,
+        "rows": [
+          {
+            "row": 1,
+            "cells": [
+              "正",
+              "正",
+              "正",
+              "誤"
+            ]
+          },
+          {
+            "row": 2,
+            "cells": [
+              "正",
+              "正",
+              "誤",
+              "正"
+            ]
+          },
+          {
+            "row": 3,
+            "cells": [
+              "正",
+              "誤",
+              "正",
+              "正"
+            ]
+          },
+          {
+            "row": 4,
+            "cells": [
+              "誤",
+              "正",
+              "正",
+              "正"
+            ]
+          },
+          {
+            "row": 5,
+            "cells": [
+              "正",
+              "正",
+              "正",
+              "正"
+            ]
+          }
+        ]
+      },
+      "discrepancies": [
+        {
+          "field": "question / dosageTable.ingredient",
+          "recorded": "㎗－メチルエフェドリン塩酸塩",
+          "official": "dℓ－メチルエフェドリン塩酸塩",
+          "reason": "公式画像の成分名は「dℓ－」の字形（dとℓの2文字）であり、レコードの「㎗」は平方書きの単一Unicode記号。文字・記号が一致しない。"
+        }
+      ],
+      "visualNotes": "相談内容、成分表の他の成分・分量、a〜d、正誤表5行×4列は一致。成分表のメチルエフェドリン表記だけが原典のdℓとレコードの㎗で異なるためFAIL。"
+    },
+    {
+      "id": "KSAI-2026-025",
+      "status": "PASS",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "bundlePdfPages": [
+        9
+      ],
+      "officialPdfPages": [
+        23
+      ],
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tableOrChoiceLayout": "PASS",
+        "symbols": "PASS"
+      },
+      "officialChoices": [
+        "正 正 誤 正",
+        "誤 誤 正 誤",
+        "正 正 正 誤",
+        "正 誤 正 誤",
+        "誤 正 誤 正"
+      ],
+      "table": {
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rowCount": 5,
+        "columnCount": 4,
+        "rows": [
+          {
+            "row": 1,
+            "cells": [
+              "正",
+              "正",
+              "誤",
+              "正"
+            ]
+          },
+          {
+            "row": 2,
+            "cells": [
+              "誤",
+              "誤",
+              "正",
+              "誤"
+            ]
+          },
+          {
+            "row": 3,
+            "cells": [
+              "正",
+              "正",
+              "正",
+              "誤"
+            ]
+          },
+          {
+            "row": 4,
+            "cells": [
+              "正",
+              "誤",
+              "正",
+              "誤"
+            ]
+          },
+          {
+            "row": 5,
+            "cells": [
+              "誤",
+              "正",
+              "誤",
+              "正"
+            ]
+          }
+        ]
+      },
+      "rubyReadingsInVisualOrder": [
+        "ぜん"
+      ],
+      "visualNotes": "成分表の3成分・分量、アスピリン喘息のルビ「ぜん」、a〜dの全文、正誤表5行×4列を照合。一致。"
+    },
+    {
+      "id": "KSAI-2026-026",
+      "status": "FAIL",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "bundlePdfPages": [
+        10
+      ],
+      "officialPdfPages": [
+        24
+      ],
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "FAIL",
+        "ruby": "FAIL",
+        "tableOrChoiceLayout": "FAIL",
+        "symbols": "PASS"
+      },
+      "recordedChoices": [
+        "釣 藤散／そ けいかっけつとう",
+        "疎経活血湯／ま きょうよくかんとう",
+        "麻 杏 薏甘湯／けい し か じゅつ ぶ とう",
+        "桂枝加 朮 附湯",
+        "芍 薬甘草湯"
+      ],
+      "officialChoices": [
+        "釣藤散",
+        "疎経活血湯",
+        "麻杏薏甘湯",
+        "桂枝加朮附湯",
+        "芍薬甘草湯"
+      ],
+      "rubyReadingsInVisualOrder": [
+        "けいれん",
+        "けいれん",
+        "ちょうとうさん",
+        "そけいかっけつとう",
+        "まきょうよくかんとう",
+        "けいしかじゅつぶとう",
+        "しゃくやくかんぞうとう"
+      ],
+      "discrepancies": [
+        {
+          "field": "choices / ruby placement",
+          "recorded": "choices[0]に選択肢2のルビ「そけいかっけつとう」、choices[1]に選択肢3のルビ「まきょうよくかんとう」、choices[2]に選択肢4のルビ「けいしかじゅつぶとう」が続けて格納され、choices[4]に選択肢5のルビが含まれない。",
+          "official": "選択肢1「釣藤散」=ちょうとうさん、2「疎経活血湯」=そけいかっけつとう、3「麻杏薏甘湯」=まきょうよくかんとう、4「桂枝加朮附湯」=けいしかじゅつぶとう、5「芍薬甘草湯」=しゃくやくかんぞうとう。",
+          "reason": "原典画像では各ルビは対応する選択肢の直上に配置される。現行choices配列は次の選択肢のルビを直前の選択肢に含め、選択肢5のルビを選択肢文字列に格納していない。選択肢名にも字間スペースが挿入されている。"
+        }
+      ],
+      "visualNotes": "設問本文の「痙攣」のルビ2件と選択肢のルビ5件の出現順は確認。選択肢名・ルビのグルーピングが原典の配置と不一致のためFAIL。"
+    }
+  ]
+}
