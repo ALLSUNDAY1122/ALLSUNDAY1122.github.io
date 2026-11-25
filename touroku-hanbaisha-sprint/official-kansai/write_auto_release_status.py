@@ -27,7 +27,7 @@ manual=json.loads((B/"MANUAL_VISUAL_AUDIT_20261123.json").read_text())
 existing=json.loads((IOS/"release-status.json").read_text())
 total=bank["count"]
 promotion_methods=("auto","geometry","ruby","rubyOrdered","layout","visual","cropImage","rubyFontCluster",
-                   "visualRubyV2","imageV3","directRubyV3","sourceOrderUnattached","ruby113Auto")
+                   "visualRubyV2","imageV3","directRubyV3","sourceOrderUnattached","ruby113Auto","manualVisualReaudit")
 method_totals={method:sum(s.get(method,0) for s in bank["byYear"].values()) for method in promotion_methods}
 if total!=sum(method_totals.values()) or total>600:raise RuntimeError("approved count mismatch")
 auto=method_totals["auto"]
