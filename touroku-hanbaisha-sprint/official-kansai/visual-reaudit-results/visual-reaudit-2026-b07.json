@@ -1,0 +1,681 @@
+{
+  "batch": "visual-reaudit-2026-b07",
+  "repository": "ALLSUNDAY1122/ALLSUNDAY1122.github.io",
+  "branch": "main",
+  "auditType": "manual_visual_reaudit",
+  "source": {
+    "candidateAttachment": "visual-reaudit-2026-b07.candidates.json",
+    "renderedOfficialQuestionPdfAttachment": "visual-reaudit-2026-b07.pdf",
+    "issuer": "関西広域連合",
+    "title": "令和8年度登録販売者試験",
+    "sourceUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf",
+    "answerSourceUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+    "answerPdfInspected": false
+  },
+  "method": {
+    "description": "添付PDFのレンダリング画像8ページを目視し、対象10問の問題文・全選択肢・ルビ・表の行列およびセル対応・記号を照合。PDF文字データや自動照合、候補JSONの既存audit.statusは目視判定の代替に使用していない。",
+    "pagesReviewed": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "pageMapping": [
+      {
+        "bundlePdfPage": 1,
+        "officialPdf": "2026-second_half",
+        "officialPdfPage": 7
+      },
+      {
+        "bundlePdfPage": 2,
+        "officialPdf": "2026-second_half",
+        "officialPdfPage": 8
+      },
+      {
+        "bundlePdfPage": 2,
+        "officialPdf": "2026-second_half",
+        "officialPdfPage": 8
+      },
+      {
+        "bundlePdfPage": 3,
+        "officialPdf": "2026-second_half",
+        "officialPdfPage": 9
+      },
+      {
+        "bundlePdfPage": 3,
+        "officialPdf": "2026-second_half",
+        "officialPdfPage": 9
+      },
+      {
+        "bundlePdfPage": 4,
+        "officialPdf": "2026-second_half",
+        "officialPdfPage": 10
+      },
+      {
+        "bundlePdfPage": 5,
+        "officialPdf": "2026-second_half",
+        "officialPdfPage": 11
+      },
+      {
+        "bundlePdfPage": 6,
+        "officialPdf": "2026-second_half",
+        "officialPdfPage": 12
+      },
+      {
+        "bundlePdfPage": 7,
+        "officialPdf": "2026-second_half",
+        "officialPdfPage": 13
+      },
+      {
+        "bundlePdfPage": 8,
+        "officialPdf": "2026-second_half",
+        "officialPdfPage": 14
+      }
+    ],
+    "answerHandling": "answerNumberOfficialのみ候補JSONから記録。正答PDFを直接確認していないため全件answerPDFChecked=false。",
+    "failRule": "原典画像と現行レコードの文字・ルビ・空白・表セル対応が一致しない場合はFAIL。"
+  },
+  "scope": {
+    "questionIds": [
+      "KSAI-2026-069",
+      "KSAI-2026-070",
+      "KSAI-2026-071",
+      "KSAI-2026-072",
+      "KSAI-2026-073",
+      "KSAI-2026-074",
+      "KSAI-2026-075",
+      "KSAI-2026-076",
+      "KSAI-2026-077",
+      "KSAI-2026-078"
+    ],
+    "count": 10
+  },
+  "summary": {
+    "total": 10,
+    "pass": 7,
+    "fail": 3,
+    "hold": 0,
+    "failReasons": [
+      {
+        "id": "KSAI-2026-070",
+        "reason": "選択肢2の正誤表、第3列が現行「正」・原典「誤」。正しい選択肢は「誤｜正｜誤｜誤」。"
+      },
+      {
+        "id": "KSAI-2026-073",
+        "reason": "「尿中への排泄 が」となっており、原典「尿中への排泄が」に対してルビ直後に余分な空白がある。"
+      },
+      {
+        "id": "KSAI-2026-078",
+        "reason": "「倦 怠感」となっており、原典「倦怠感」に対してルビ直後に余分な空白がある。"
+      }
+    ],
+    "holdReasons": []
+  },
+  "results": [
+    {
+      "id": "KSAI-2026-069",
+      "questionNo": 69,
+      "status": "PASS",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "bundlePdfPages": [
+        1
+      ],
+      "officialPdfPages": [
+        7
+      ],
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "NOT_APPLICABLE",
+        "tableOrChoiceLayout": "PASS",
+        "symbols": "PASS"
+      },
+      "notes": "添付PDF第1頁（公式PDF第7頁）を目視。問題文・空欄a/b/c、5選択肢の3列対応を照合。全行一致。",
+      "table": {
+        "columns": [
+          "a",
+          "b",
+          "c"
+        ],
+        "rows": [
+          [
+            "下がり",
+            "減る",
+            "アポクリン腺"
+          ],
+          [
+            "下がり",
+            "増える",
+            "エクリン腺"
+          ],
+          [
+            "上がり",
+            "増える",
+            "アポクリン腺"
+          ],
+          [
+            "上がり",
+            "増える",
+            "エクリン腺"
+          ],
+          [
+            "上がり",
+            "減る",
+            "アポクリン腺"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "KSAI-2026-070",
+      "questionNo": 70,
+      "status": "FAIL",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "bundlePdfPages": [
+        2
+      ],
+      "officialPdfPages": [
+        8
+      ],
+      "checks": {
+        "questionText": "FAIL",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tableOrChoiceLayout": "PASS",
+        "symbols": "PASS"
+      },
+      "notes": "添付PDF第2頁（公式PDF第8頁）を目視。本文「靭」のルビ「じん」も確認。表の選択肢2は原典が「誤｜正｜誤｜誤」だが、現行レコードは「誤｜正｜正｜誤」。第3列が不一致。原典どおりの選択肢2は「誤｜正｜誤｜誤」。",
+      "rubyReadings": [
+        {
+          "base": "靭",
+          "reading": "じん"
+        }
+      ],
+      "table": {
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rows": [
+          [
+            "誤",
+            "正",
+            "誤",
+            "正"
+          ],
+          [
+            "誤",
+            "正",
+            "誤",
+            "誤"
+          ],
+          [
+            "正",
+            "誤",
+            "正",
+            "正"
+          ],
+          [
+            "誤",
+            "誤",
+            "正",
+            "誤"
+          ],
+          [
+            "正",
+            "正",
+            "誤",
+            "正"
+          ]
+        ]
+      },
+      "discrepancy": {
+        "choiceNumber": 2,
+        "field": "c",
+        "candidate": "正",
+        "official": "誤",
+        "correctedOfficialChoice": "誤｜正｜誤｜誤"
+      }
+    },
+    {
+      "id": "KSAI-2026-071",
+      "questionNo": 71,
+      "status": "PASS",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "bundlePdfPages": [
+        2
+      ],
+      "officialPdfPages": [
+        8
+      ],
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "NOT_APPLICABLE",
+        "tableOrChoiceLayout": "PASS",
+        "symbols": "PASS"
+      },
+      "notes": "添付PDF第2頁（公式PDF第8頁）下段を目視。本文a〜dと5選択肢（ａ、ｂ／ａ、ｃ／ｂ、ｃ／ｂ、ｄ／ｃ、ｄ）を照合。全て一致。",
+      "officialChoices": [
+        "ａ、ｂ",
+        "ａ、ｃ",
+        "ｂ、ｃ",
+        "ｂ、ｄ",
+        "ｃ、ｄ"
+      ]
+    },
+    {
+      "id": "KSAI-2026-072",
+      "questionNo": 72,
+      "status": "PASS",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "bundlePdfPages": [
+        3
+      ],
+      "officialPdfPages": [
+        9
+      ],
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tableOrChoiceLayout": "PASS",
+        "symbols": "PASS"
+      },
+      "notes": "添付PDF第3頁（公式PDF第9頁）上段を目視。本文・「坐」のルビ「ざ」・5行×4列の正誤表を照合。全て一致。",
+      "rubyReadings": [
+        {
+          "base": "坐",
+          "reading": "ざ"
+        }
+      ],
+      "table": {
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rows": [
+          [
+            "誤",
+            "正",
+            "正",
+            "誤"
+          ],
+          [
+            "正",
+            "誤",
+            "正",
+            "正"
+          ],
+          [
+            "誤",
+            "正",
+            "誤",
+            "正"
+          ],
+          [
+            "正",
+            "誤",
+            "正",
+            "誤"
+          ],
+          [
+            "正",
+            "正",
+            "誤",
+            "正"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "KSAI-2026-073",
+      "questionNo": 73,
+      "status": "FAIL",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "bundlePdfPages": [
+        3
+      ],
+      "officialPdfPages": [
+        9
+      ],
+      "checks": {
+        "questionText": "FAIL",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tableOrChoiceLayout": "PASS",
+        "symbols": "PASS"
+      },
+      "notes": "添付PDF第3頁（公式PDF第9頁）下段を目視。「排泄」のルビ「せつ」3箇所と5選択肢を確認。dの原典は「尿中への排泄が早まる」だが、現行question/questionPartsは「尿中への排泄 が早まる」となり、ルビ後に余分な空白があるためFAIL。原典どおりの該当表記は「尿中への排泄が早まる」。",
+      "rubyReadings": [
+        {
+          "base": "泄",
+          "reading": "せつ",
+          "occurrences": 3
+        }
+      ],
+      "officialChoices": [
+        "ａ、ｂ",
+        "ａ、ｃ",
+        "ｂ、ｃ",
+        "ｂ、ｄ",
+        "ｃ、ｄ"
+      ],
+      "discrepancy": {
+        "field": "question.d",
+        "candidate": "尿中への排泄 が早まる",
+        "official": "尿中への排泄が早まる",
+        "correction": "ルビ「せつ」の直後の余分な空白を削除"
+      }
+    },
+    {
+      "id": "KSAI-2026-074",
+      "questionNo": 74,
+      "status": "PASS",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "bundlePdfPages": [
+        4
+      ],
+      "officialPdfPages": [
+        10
+      ],
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tableOrChoiceLayout": "PASS",
+        "symbols": "PASS"
+      },
+      "notes": "添付PDF第4頁（公式PDF第10頁）を目視。本文・「排泄」のルビ「せつ」・5行×4列の正誤表を照合。全て一致。",
+      "rubyReadings": [
+        {
+          "base": "泄",
+          "reading": "せつ"
+        }
+      ],
+      "table": {
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rows": [
+          [
+            "正",
+            "正",
+            "正",
+            "誤"
+          ],
+          [
+            "正",
+            "正",
+            "誤",
+            "正"
+          ],
+          [
+            "正",
+            "誤",
+            "正",
+            "正"
+          ],
+          [
+            "誤",
+            "正",
+            "正",
+            "正"
+          ],
+          [
+            "正",
+            "正",
+            "正",
+            "正"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "KSAI-2026-075",
+      "questionNo": 75,
+      "status": "PASS",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "bundlePdfPages": [
+        5
+      ],
+      "officialPdfPages": [
+        11
+      ],
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tableOrChoiceLayout": "PASS",
+        "symbols": "PASS"
+      },
+      "notes": "添付PDF第5頁（公式PDF第11頁）を目視。本文・「軟膏」の「膏」のルビ「こう」・5行×4列の正誤表を照合。全て一致。",
+      "rubyReadings": [
+        {
+          "base": "膏",
+          "reading": "こう"
+        }
+      ],
+      "table": {
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rows": [
+          [
+            "誤",
+            "正",
+            "誤",
+            "正"
+          ],
+          [
+            "誤",
+            "正",
+            "正",
+            "誤"
+          ],
+          [
+            "正",
+            "誤",
+            "正",
+            "正"
+          ],
+          [
+            "正",
+            "誤",
+            "正",
+            "誤"
+          ],
+          [
+            "正",
+            "正",
+            "誤",
+            "正"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "KSAI-2026-076",
+      "questionNo": 76,
+      "status": "PASS",
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "bundlePdfPages": [
+        6
+      ],
+      "officialPdfPages": [
+        12
+      ],
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "NOT_APPLICABLE",
+        "tableOrChoiceLayout": "PASS",
+        "symbols": "PASS"
+      },
+      "notes": "添付PDF第6頁（公式PDF第12頁）を目視。本文a〜dと5行×4列の正誤表を照合。全セル一致。",
+      "table": {
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rows": [
+          [
+            "正",
+            "正",
+            "正",
+            "正"
+          ],
+          [
+            "誤",
+            "誤",
+            "正",
+            "正"
+          ],
+          [
+            "誤",
+            "誤",
+            "誤",
+            "正"
+          ],
+          [
+            "正",
+            "正",
+            "誤",
+            "誤"
+          ],
+          [
+            "正",
+            "誤",
+            "正",
+            "誤"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "KSAI-2026-077",
+      "questionNo": 77,
+      "status": "PASS",
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "bundlePdfPages": [
+        7
+      ],
+      "officialPdfPages": [
+        13
+      ],
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "NOT_APPLICABLE",
+        "tableOrChoiceLayout": "PASS",
+        "symbols": "PASS"
+      },
+      "notes": "添付PDF第7頁（公式PDF第13頁）を目視。本文a〜dと5行×4列の正誤表を照合。全セル一致。",
+      "table": {
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rows": [
+          [
+            "正",
+            "正",
+            "正",
+            "誤"
+          ],
+          [
+            "正",
+            "正",
+            "誤",
+            "正"
+          ],
+          [
+            "正",
+            "正",
+            "誤",
+            "誤"
+          ],
+          [
+            "誤",
+            "誤",
+            "正",
+            "誤"
+          ],
+          [
+            "誤",
+            "正",
+            "誤",
+            "正"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "KSAI-2026-078",
+      "questionNo": 78,
+      "status": "FAIL",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "bundlePdfPages": [
+        8
+      ],
+      "officialPdfPages": [
+        14
+      ],
+      "checks": {
+        "questionText": "FAIL",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tableOrChoiceLayout": "PASS",
+        "symbols": "PASS"
+      },
+      "notes": "添付PDF第8頁（公式PDF第14頁）を目視。「倦」のルビ「けん」と5選択肢を確認。原典は「倦怠感」だが、現行question/questionPartsは「倦 怠感」となり、ルビ後に余分な空白があるためFAIL。原典どおりの該当表記は「倦怠感」。",
+      "rubyReadings": [
+        {
+          "base": "倦",
+          "reading": "けん"
+        }
+      ],
+      "officialChoices": [
+        "ａ、ｂ",
+        "ａ、ｃ",
+        "ｂ、ｃ",
+        "ｂ、ｄ",
+        "ｃ、ｄ"
+      ],
+      "discrepancy": {
+        "field": "question.d",
+        "candidate": "倦 怠感",
+        "official": "倦怠感",
+        "correction": "ルビ「けん」の直後の余分な空白を削除"
+      }
+    }
+  ]
+}
