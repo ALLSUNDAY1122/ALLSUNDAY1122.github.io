@@ -9,7 +9,7 @@ from urllib.parse import urlsplit
 from playwright.sync_api import sync_playwright
 
 ROOT=Path(__file__).resolve().parents[2]
-WEB=ROOT/"touroku-hanbaisha-sprint"
+WEB=IOS/"native-ios/OfflineWeb"
 IOS=ROOT/"touroku-hanbaisha-ios"
 REPORT=IOS/"PRIVACY_Q5_AUDIT_20261124.json"
 class Handler(SimpleHTTPRequestHandler):
@@ -27,7 +27,10 @@ try:
         page.on("request",lambda r:observations.append({"url":r.url,"method":r.method,"resourceType":r.resource_type}))
         page.on("pageerror",lambda err:errors.append(str(err)))
         page.goto("http://127.0.0.1:8766/official-practice.html",wait_until="networkidle")
-        page.locator("#available").get_by_text("599問",exact=False).wait_for(timeout=30000)
+        manifest=json.loads((WEB/"manifest.json").read_text())
+        assert manifest.get("count")==599 and manifest.get("explanationsCount")==599
+        page.locator("#homeProgress").wait_for(timeout=30000)
+        page.locator("#homeStart").click()
         page.locator("#start").click()
         page.locator("#choices button").first.click()
         browser_store=page.evaluate("""() => ({
@@ -41,6 +44,7 @@ try:
         local_paths=[urlsplit(x).path for x in urls]
         local_only=all(urlsplit(u).hostname in ("127.0.0.1","localhost") for u in urls)
         data_ok=not browser_store["localStorageKeys"] and not browser_store["sessionStorageKeys"] and not browser_store["cookie"]
+        page.locator("#navSettings").click()
         link=page.locator('a[href="./privacy.html"]')
         link_visible=link.count()==1
         page.goto("http://127.0.0.1:8766/privacy.html",wait_until="networkidle")
@@ -54,7 +58,7 @@ manifest_ok=(plist.get("NSPrivacyTracking") is False
     and plist.get("NSPrivacyCollectedDataTypes")==[]
     and plist.get("NSPrivacyTrackingDomains")==[])
 metadata=(IOS/"APP_STORE_METADATA.md").read_text()
-metadata_ok=("privacy.html" in metadata and "bundled offline" in metadata)
+metadata_ok=("privacy.html" in metadata and "通常学習は通信不要" in metadata)
 runtime_ok=local_only and data_ok and link_visible and policy_ok and not errors and manifest_ok and metadata_ok
 now=datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=9))).isoformat()
 result={"schema":"touhan-q5-privacy-audit-v1","timestampJST":now,
