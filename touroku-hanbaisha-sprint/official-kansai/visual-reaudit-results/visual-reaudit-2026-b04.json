@@ -1,0 +1,165 @@
+{
+  "batch": "visual-reaudit-2026-b04",
+  "repository": "ALLSUNDAY1122/ALLSUNDAY1122.github.io",
+  "branch": "main",
+  "source": {
+    "candidateFile": "visual-reaudit-2026-b04.candidates(1).json",
+    "officialQuestionPdf": "令和8年度登録販売者試験（前半）",
+    "visualSource": "添付PDFのページ画像（各問のbundlePdfPagesを使用）",
+    "answerPdfChecked": false,
+    "method": "各ページ画像を目視し、問題文・選択肢・ルビ・表・記号を候補レコードと照合。PDF文字抽出・自動照合結果を合格根拠としていない。"
+  },
+  "summary": {
+    "total": 10,
+    "PASS": 9,
+    "FAIL": 1,
+    "HOLD": 0
+  },
+  "results": [
+    {
+      "id": "KSAI-2026-038",
+      "questionNo": 38,
+      "bundlePdfPages": [1],
+      "status": "PASS",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "findings": [
+        "問題文、6粒中の成分・分量表、a〜dの説明文をページ画像と照合し一致。",
+        "噛の読み「か」を含むルビを目視確認。",
+        "正誤組合せ表は5行×4列で、各行のセル順・内容がchoicesと一致。"
+      ]
+    },
+    {
+      "id": "KSAI-2026-039",
+      "questionNo": 39,
+      "bundlePdfPages": [2],
+      "status": "PASS",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "findings": [
+        "問題文およびa〜dの全文をページ画像と照合し一致。",
+        "「痩」の読み「そう」を目視確認し、questionPartsのrubyBase/rubyTextと一致。",
+        "正誤組合せ表は5行×4列で、各行のセル順・内容がchoicesと一致。"
+      ]
+    },
+    {
+      "id": "KSAI-2026-040",
+      "questionNo": 40,
+      "bundlePdfPages": [3],
+      "status": "PASS",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "findings": [
+        "問題文およびa〜dの全文をページ画像と照合し一致。",
+        "正誤組合せ表は5行×4列で、各行のセル順・内容がchoicesと一致。"
+      ]
+    },
+    {
+      "id": "KSAI-2026-041",
+      "questionNo": 41,
+      "bundlePdfPages": [4],
+      "status": "PASS",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "findings": [
+        "問題文およびa〜dの全文をページ画像と照合し一致。",
+        "痔・痔疾・肛門部等に付されたルビを目視し、originalRubyReadingsの出現順と一致。",
+        "5つの組合せ選択肢（a,b／a,c／b,c／b,d／c,d）の順序・表記が一致。"
+      ]
+    },
+    {
+      "id": "KSAI-2026-042",
+      "questionNo": 42,
+      "bundlePdfPages": [4],
+      "status": "PASS",
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "findings": [
+        "設問文および5つの漢方処方製剤名をページ画像と照合し一致。",
+        "牛車腎気丸・猪苓湯・六味丸・乙字湯・苓桂朮甘湯に付された5つの読みを目視確認し、originalRubyReadingsの出現順と一致。",
+        "選択肢の順序に相違なし。"
+      ]
+    },
+    {
+      "id": "KSAI-2026-043",
+      "questionNo": 43,
+      "bundlePdfPages": [5],
+      "status": "FAIL",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "findings": [
+        "設問文および5つの選択肢の漢方処方製剤名はページ画像と一致。",
+        "原典画像では選択肢5「柴胡桂枝乾姜湯」に「さいこけいしかんきょうとう」のルビが付されているが、候補レコードのoriginalRubyReadingsには当該読みが含まれていない。",
+        "候補レコードのchoices[4]本文には当該ルビ文字列が含まれる一方、SOURCE_ORDER_UNATTACHED方式の読み一覧から欠落しており、ルビ情報の記録が内部不整合。"
+      ],
+      "requiredCorrection": {
+        "field": "originalRubyReadings",
+        "appendAfter": "うんせいいん",
+        "missingReading": "さいこけいしかんきょうとう",
+        "correctedSourceOrder": [
+          "おう",
+          "ごしゃくさん",
+          "けいしぶくりょうがん",
+          "かみしょうようさん",
+          "うんせいいん",
+          "さいこけいしかんきょうとう"
+        ]
+      }
+    },
+    {
+      "id": "KSAI-2026-044",
+      "questionNo": 44,
+      "bundlePdfPages": [6],
+      "status": "PASS",
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "findings": [
+        "問題文およびa〜dの全文をページ画像と照合し一致。",
+        "桃核承気湯・当帰芍薬散・温経湯・四物湯等に付されたルビを目視し、originalRubyReadingsの出現順と一致。",
+        "正誤組合せ表は5行×4列で、各行のセル順・内容がchoicesと一致。"
+      ]
+    },
+    {
+      "id": "KSAI-2026-045",
+      "questionNo": 45,
+      "bundlePdfPages": [7],
+      "status": "PASS",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "findings": [
+        "問題文およびa〜dの全文をページ画像と照合し一致。",
+        "蕁麻疹・痒み・湿疹等に付されたルビを目視し、originalRubyReadingsの出現順と一致。",
+        "5つの組合せ選択肢の順序・表記が一致。"
+      ]
+    },
+    {
+      "id": "KSAI-2026-046",
+      "questionNo": 46,
+      "bundlePdfPages": [8],
+      "status": "PASS",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "findings": [
+        "問題文およびa〜dの全文をページ画像と照合し一致。",
+        "正誤組合せ表は5行×4列で、各行のセル順・内容がchoicesと一致。"
+      ]
+    },
+    {
+      "id": "KSAI-2026-048",
+      "questionNo": 48,
+      "bundlePdfPages": [9],
+      "status": "PASS",
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "findings": [
+        "問題文、1mL中の成分・分量表、添加物の注記、a〜dの説明文をページ画像と照合し一致。",
+        "痒み等に付されたルビを目視し、originalRubyReadingsの出現順と一致。",
+        "正誤組合せ表は5行×4列で、各行のセル順・内容がchoicesと一致。"
+      ]
+    }
+  ],
+  "limitations": [
+    "添付資料に正答PDFは含まれていないため、全問answerPDFCheckedはfalse。answerNumberOfficialは候補レコードの値を転記し、正答の独立検証は行っていない。",
+    "本監査は問題PDF画像上の表示との照合であり、問題の医学・薬学的内容の正誤や公式正答の妥当性を評価するものではない。"
+  ]
+}
