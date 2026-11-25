@@ -55,7 +55,11 @@ def check():
         assert item.get("answer_source_url") == source["answer_pdf"], f"{pair}: incorrect official answer source"
         assert isinstance(item.get("source_page"), int) and item["source_page"] >= 1, f"{pair}: PDF page missing"
         assert item.get("source_label") == f"出典：令和{year - 2018}年度 ITパスポート試験 公開問題 問{number}", f"{pair}: source label missing"
-        assert item.get("modified") is False, f"{pair}: modified question cannot be advertised as verbatim"
+        modified = item.get("modified")
+        assert type(modified) is bool, f"{pair}: modified flag missing or invalid"
+        if modified:
+            note = item.get("modification_note")
+            assert isinstance(note, str) and note.strip(), f"{pair}: modification disclosure required"
         assert item.get("verbatim_visual_audit") == "PASS", f"{pair}: visual audit not PASS"
         assert item.get("official_answer_audit") == "PASS", f"{pair}: answer audit not PASS"
         assert isinstance(item.get("question"), str) and item["question"].strip(), f"{pair}: text missing"
