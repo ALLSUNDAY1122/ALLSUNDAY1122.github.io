@@ -52,6 +52,7 @@ explanation_payload=explanation_raw.decode('utf-8').replace('<',r'\u003c')
 html=html.replace('</main><script>','</main><script type="application/json" id="offlineBank">'+payload+'</script><script type="application/json" id="offlineExplanations">'+explanation_payload+'</script><script>')
 html=html.replace('<head>','<head><meta http-equiv="Content-Security-Policy" content="default-src \'none\'; script-src \'unsafe-inline\'; style-src \'unsafe-inline\'; img-src file: data:; connect-src \'none\'; base-uri \'none\'; form-action \'none\'">',1)
 html=html.replace('<a href="./index.html">‹ ホーム</a>','<button class="button" id="headerHome">‹ ホーム</button>')
+html=html.replace('<div id="question" class="question"></div><div id="rubySequence" class="ruby-sequence hidden"></div>','<div id="question" class="question"><span id="rubySequence" class="ruby-sequence hidden"></span></div>')
 # Apply only to the native bundle; keep the public legacy web page unchanged.
 from pathlib import Path
 shell=Path(__file__).with_name('offline_learning_shell.html').read_text()
@@ -69,8 +70,9 @@ html=html.replace('<section id="quiz" class="hidden"><div class="meta"><span id=
 html=html.replace("function updateCount(){$('count').textContent='この範囲で学べる問題：'+eligible().length+'問';$('start').disabled=!eligible().length}", "function updateCount(){const total=records.filter(q=>($('year').value==='all'||String(q.year)===$('year').value)&&($('chapter').value==='all'||q.chapter===$('chapter').value)).length;const n=eligible().length;$('count').textContent=premiumUnlocked?'この範囲で学べる問題：'+n+'問':'無料で学べる問題：'+n+'問／全'+total+'問（Premiumで全599問）';$('start').disabled=!total}")
 html=html.replace("subset=eligible();if(!subset.length)return;sessionScope=", "subset=eligible();if(!subset.length){requestPremium();return}sessionScope=")
 html=html.replace("$('counter').textContent=(position+1)+' / '+subset.length+'問';", "$('counter').textContent=(position+1)+' / '+subset.length+'問';$('qtag').textContent=q.chapter;$('progressBar').style.width=(position/subset.length*100)+'%';")
-html=html.replace("function appendRich(parent,parts,plain){if(!parts){parent.textContent=plain;return}", "function displayPdfText(value){return String(value||'').replace(/\\r\\n?/g,'\\n').replace(/(?<!\\n)\\n(?!\\n)/g,'')}\nfunction appendRich(parent,parts,plain){if(!parts){parent.textContent=displayPdfText(plain);return}")
+html=html.replace("function appendRich(parent,parts,plain){if(!parts){parent.textContent=plain;return}", "function displayPdfText(value){return String(value||'').replace(/\\r\\n?/g,'\\n').replace(/(?<!\\n)\\n(?!\\n)/g,'')}\nfunction appendRich(parent,parts,plain){const sequence=$('rubySequence');if(!parts){parent.textContent=displayPdfText(plain);if(sequence)parent.append(sequence);return}")
 html=html.replace('document.createTextNode(piece.text)','document.createTextNode(displayPdfText(piece.text))')
+html=html.replace('parent.append(ruby)}}\\nfunction approvedFigures','parent.append(ruby)}if(sequence)parent.append(sequence)}\\nfunction approvedFigures')
 html=html.replace('body.textContent=explanation.explanation','body.textContent=displayPdfText(explanation.explanation)')
 html=html.replace("$('unknown').classList.add('hidden');$('next').classList.remove('hidden');", "$('feedback').append($('attribution'));$('unknown').classList.add('hidden');$('next').classList.remove('hidden');")
 
