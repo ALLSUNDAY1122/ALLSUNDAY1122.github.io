@@ -51,7 +51,10 @@ assert html.count('</main><script>')==1
 explanation_payload=explanation_raw.decode('utf-8').replace('<',r'\u003c')
 html=html.replace('</main><script>','</main><script type="application/json" id="offlineBank">'+payload+'</script><script type="application/json" id="offlineExplanations">'+explanation_payload+'</script><script>')
 html=html.replace('<head>','<head><meta http-equiv="Content-Security-Policy" content="default-src \'none\'; script-src \'unsafe-inline\'; style-src \'unsafe-inline\'; img-src file: data:; connect-src \'none\'; base-uri \'none\'; form-action \'none\'">',1)
-html=html.replace('<a href="./index.html">‹ ホーム</a>','<button class="button" id="headerHome">‹ ホーム</button>')
+html,header_removed=re.subn(r'<header>.*?</header>','',html,count=1,flags=re.S)
+assert header_removed==1, 'legacy public-page header must not appear in native learning screens'
+html,notice_removed=re.subn(r'<div id="notice" class="note">.*?</div>','',html,count=1,flags=re.S)
+assert notice_removed==1, 'legacy audit notice must not appear in native learning screens'
 html=html.replace('<div id="question" class="question"></div><div id="rubySequence" class="ruby-sequence hidden"></div>','<div id="question" class="question"><span id="rubySequence" class="ruby-sequence hidden"></span></div>')
 # Apply only to the native bundle; keep the public legacy web page unchanged.
 from pathlib import Path
@@ -96,6 +99,8 @@ assert 'function renderAnswer(i)' in html and 'checkpoint()' in html and 'id="ho
 assert "const attribution=$('feedback').querySelector('#attribution')" in html, 'next-question transition must move and hide the previous attribution before rendering the next question'
 html=html.replace('候補600問を監査済みと表示しません。','インターネット接続なしで学習できます。')
 assert 'fetch(BANK' not in html
+assert '関西広域連合・原典照合済み' not in html and '未監査の候補問題' not in html
+assert html.count('id="headerHome"')==1, 'question screen must have exactly one home/back button'
 html=html.replace('</script></body></html>', "document.getElementById('next').addEventListener('click',()=>{const attribution=$('feedback').querySelector('#attribution');if(attribution){attribution.classList.add('hidden');$('quiz').querySelector('article.card').append(attribution)}},true);</script></body></html>")
 assert "addEventListener('click',()=>{const attribution=$('feedback').querySelector('#attribution')" in html, 'capture-phase next-question attribution cleanup must be present for every transition, including completion'
 (OUT/'official-practice.html').write_text(html,encoding='utf-8')
