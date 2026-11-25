@@ -13,7 +13,8 @@
 <p class="sub" id="count"></p><button class="button primary" id="start">監査済み問題を学習する</button></section>
 <section id="quiz" class="hidden"><div class="meta"><span id="counter"></span><span id="score"></span></div>
 <article class="card"><h2 id="questionTitle"></h2><div id="question" class="question"></div><div id="rubySequence" class="ruby-sequence hidden"></div><div id="sourceFigure" class="source-figure"></div><div id="choices"></div>
-<div id="feedback" class="hidden" aria-live="polite"></div><div class="controls"><button class="button" id="unknown">わからない</button><button class="button primary hidden" id="next">次へ</button></div></article></section>
+<div id="feedback" class="hidden" aria-live="polite"></div><div class="controls"><button class="button" id="unknown">わからない</button><button class="button primary hidden" id="next">次へ</button></div>
+<div class="source" id="attribution"></div></article></section>
 <section id="complete" class="card hidden"><h2>学習結果</h2><p id="summary" class="result"></p><p id="exclusion" class="sub"></p><button class="button primary" id="restart">別の範囲で学ぶ</button></section>
 <footer>出典表示は問題ごとに記載しています。関西広域連合の公式アプリではありません。<a href="./privacy.html">プライバシーポリシー</a>　<a href="./support.html">サポート</a></footer>
 </main><script>
@@ -85,6 +86,7 @@ $('start').onclick=()=>{subset=eligible();if(!subset.length)return;position=0;co
 function show(){
 selected=false;const q=subset[position];$('counter').textContent=(position+1)+' / '+subset.length+'問';$('score').textContent=correct+' / '+denominator+'（採点対象）';$('questionTitle').textContent=q.year+'年度・問'+q.questionNo+'・'+q.chapter;appendRich($('question'),q.questionParts,q.question);renderRubySequence(q);renderFigures(q);
 $('feedback').classList.add('hidden');$('feedback').replaceChildren();$('unknown').classList.remove('hidden');$('next').classList.add('hidden');
+const attr=$('attribution');attr.replaceChildren();attr.append(document.createTextNode(q.attributionDisplay+'　'),sourceLink(q.sourceUrl,'公式問題PDF'),document.createTextNode('　'),sourceLink(q.answerSourceUrl,'公式正答PDF'),document.createElement('div'),document.createTextNode(q.modificationDisclosureDisplay||'表示配置はPDFと異なります'));
 const choices=$('choices');choices.replaceChildren();q.choices.forEach((s,i)=>{const b=document.createElement('button');b.className='button choice';const n=document.createElement('span');n.className='num';n.textContent=i+1+'．';const t=document.createElement('span');appendRich(t,q.choicesParts?.[i],s);b.append(n,t);b.onclick=()=>answer(i);choices.append(b)});
 
 }
