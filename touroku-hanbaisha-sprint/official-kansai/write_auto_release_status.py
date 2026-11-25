@@ -25,13 +25,16 @@ bank=json.loads((B/"APPROVED_OFFICIAL_BANK.json").read_text())
 manual=json.loads((B/"MANUAL_VISUAL_AUDIT_20261123.json").read_text())
 existing=json.loads((IOS/"release-status.json").read_text())
 total=bank["count"]
-auto=sum(s["auto"] for s in bank["byYear"].values())
-visual=sum(s["visual"] for s in bank["byYear"].values())
-geometry=sum(v.get("geometry",0) for v in bank["byYear"].values())
-ruby=sum(v.get("ruby",0) for v in bank["byYear"].values())
-ruby_ordered=sum(v.get("rubyOrdered",0) for v in bank["byYear"].values())
-layout=sum(v.get("layout",0) for v in bank["byYear"].values())
-if total!=auto+geometry+ruby+ruby_ordered+layout+visual or total>600:raise RuntimeError("approved count mismatch")
+promotion_methods=("auto","geometry","ruby","rubyOrdered","layout","visual","cropImage","rubyFontCluster",
+                   "visualRubyV2","imageV3","directRubyV3","sourceOrderUnattached","ruby113Auto")
+method_totals={method:sum(s.get(method,0) for s in bank["byYear"].values()) for method in promotion_methods}
+if total!=sum(method_totals.values()) or total>600:raise RuntimeError("approved count mismatch")
+auto=method_totals["auto"]
+visual=method_totals["visual"]
+geometry=method_totals["geometry"]
+ruby=method_totals["ruby"]
+ruby_ordered=method_totals["rubyOrdered"]
+layout=method_totals["layout"]
 if "KSAI-2023-090" in bank["approvedIds"]:raise RuntimeError("invalid q90 not visually reviewed")
 now=datetime.now(timezone(timedelta(hours=9))).isoformat(timespec="seconds")
 existing["updated_at"]=now
@@ -40,11 +43,12 @@ qb.update({"verified_official_imported":total,"official_question_text_imported":
            "production_official_bank_count":total,"auto_diff_pass_promoted":auto,
            "manual_visual_pass_preserved":visual,"auto_geometry_new_promoted":geometry,"auto_ruby_new_promoted":ruby,"auto_ruby_ordered_promoted":ruby_ordered,"auto_layout_new_promoted":layout,"official_question_text_staged":600,
            "auto_diff_per_year":by_year,
-           "auto_diff_reason_totals":dict(global_reasons),"auto_diff_advisory_totals":dict(global_advisories)})
+           "auto_diff_reason_totals":dict(global_reasons),"auto_diff_advisory_totals":dict(global_advisories),
+           "approved_by_method":method_totals})
 gate=existing.setdefault("gates",{})
 gate["normalized_pdf_auto_diff"]=f"COMPLETE_{600-sum(x['notYetDiffed'] for x in by_year.values())}_OF_600"
 gate["official_source_import"]=f"PARTIAL_APPROVED_{total}_OF_600"
-gate["verbatim_and_answer_audit"]=f"AUTO_{auto}_GEOMETRY_{geometry}_RUBY_{ruby}_ORDERED_{ruby_ordered}_LAYOUT_{layout}_VISUAL_{visual}_REMAINING_{600-total}"
+gate["verbatim_and_answer_audit"]=f"AUTO_{auto}_GEOMETRY_{geometry}_RUBY_{ruby}_ORDERED_{ruby_ordered}_LAYOUT_{layout}_VISUAL_{visual}_CROP_{method_totals['cropImage']}_FONT_RUBY_{method_totals['rubyFontCluster']}_VISUAL_RUBY_V2_{method_totals['visualRubyV2']}_IMAGE_V3_{method_totals['imageV3']}_DIRECT_RUBY_V3_{method_totals['directRubyV3']}_SOURCE_ORDER_{method_totals['sourceOrderUnattached']}_RUBY113_{method_totals['ruby113Auto']}_REMAINING_{600-total}"
 gate["content_complete"]="PASS" if total==600 else "BLOCKED"
 gate["official_release_readiness"]="BLOCKED_UNTIL_CONTENT_AND_APP_REVIEW"
 existing["release_gate"]="BLOCKED"
