@@ -67,7 +67,7 @@ with sync_playwright() as pw:
             rendered_question=page.locator('#question').evaluate("el=>Array.from(el.childNodes).map(n=>n.textContent||'').join('')")
             assert not re.search(r'(?<!\n)\n(?!\n)(?![a-dａ-ｄ][ \u3000])',rendered_question),q['id']
             if q['id']=='KSAI-2022-104':
-                expected=['正　正　誤　誤','正　誤　正　誤','誤　正　正　正','正　誤　誤　正','誤　正　誤　正']
+                expected=['正／正／誤／誤','正／誤／正／誤','誤／正／正／正','正／誤／誤／正','誤／正／誤／正']
                 rendered=[re.sub(r'^\s*\d+[．.]\s*','',x) for x in page.locator('#choices button').all_text_contents()]
                 assert rendered==expected,rendered
                 figure=page.locator('#sourceFigure img').first
