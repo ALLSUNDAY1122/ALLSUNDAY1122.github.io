@@ -65,8 +65,12 @@ with sync_playwright() as pw:
             expect(page.locator('#feedback .result')).to_have_text('正解', timeout=5000)
             expect(page.locator('#feedback .explanation')).to_be_visible()
             assert page.locator('#feedback .explanation').inner_text().strip()
+            expect(page.locator('#feedback #attribution')).to_be_visible()
+            assert page.locator('#feedback #attribution a').count()>=2
             assert page.locator('#choices button').nth(q['answer']).evaluate("el=>el.classList.contains('good')"), q['id']
             page.locator('#next').click()
+            expect(page.locator('#feedback #attribution')).to_have_count(0)
+            expect(page.locator('#attribution')).to_be_hidden()
             report['count']+=1
             report['browserEngines'][engine.name]+=1
         expect(page.locator('#summary')).to_contain_text('599 / 599')
