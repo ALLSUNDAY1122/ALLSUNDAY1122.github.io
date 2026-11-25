@@ -24,6 +24,9 @@ with sync_playwright() as pw:
         expect(page.locator('#available')).to_contain_text('599問')
         expect(page.locator('#homeProgress')).to_have_text('0 / 599')
         assert page.evaluate("JSON.parse(document.getElementById('offlineBank').textContent)") == bank
+        explanation_bundle=page.evaluate("JSON.parse(document.getElementById('offlineExplanations').textContent)")
+        assert explanation_bundle['count']==len(explanation_bundle['records'])==599
+        assert explanation_bundle['auditSummary']=={'PASS':599,'HOLD':0,'PENDING':0}
         expect(page.locator('#home')).to_be_visible()
         page.locator('#homeStart').click()
         assert page.evaluate('eligible().length')==50
@@ -56,6 +59,8 @@ with sync_playwright() as pw:
             page.locator('#choices button').nth(q['answer']).click()
             print('CHECK '+engine.name+' '+q['id'],flush=True) if report['count']-before<2 else None
             expect(page.locator('#feedback .result')).to_have_text('正解', timeout=5000)
+            expect(page.locator('#feedback .explanation')).to_be_visible()
+            assert page.locator('#feedback .explanation').inner_text().strip()
             assert page.locator('#choices button').nth(q['answer']).evaluate("el=>el.classList.contains('good')"), q['id']
             page.locator('#next').click()
             report['count']+=1
