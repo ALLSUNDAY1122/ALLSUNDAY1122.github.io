@@ -263,6 +263,7 @@ if crop_audit_path.exists() and crop_mobile_path.exists():
             # independently passing crop audit below is sufficient to reconstruct
             # the same record without lowering the visual/rights/mobile criteria.
             # Duplicate records already present in accepted were skipped above.
+            # The historical flag does not waive any of the evidence checks below.
             assets=meta.get("displayAssets") or meta["assets"]
             if len(assets)!=1 or rec.get("effectiveCropAssets")!=[assets[0]["webPath"]]:
                 raise RuntimeError("crop display source drift: "+id)
