@@ -12,6 +12,20 @@ on:
       - 'touroku-hanbaisha-ios/scripts/offline_learning_shell.html'
       - 'touroku-hanbaisha-sprint/official-practice.html'
       - 'touroku-hanbaisha-ios/scripts/test_offline_candidate.py'
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - integration/explanation-ui-20261125
+    paths:
+      - '.github/workflows/touhan-ios-simulator-q6.yml'
+      - 'touroku-hanbaisha-ios/native-ios/Sources/TouhanSprintApp.swift'
+      - 'touroku-hanbaisha-ios/native-ios/project.yml'
+      - 'touroku-hanbaisha-ios/scripts/prepare_offline_web.py'
+      - 'touroku-hanbaisha-ios/scripts/offline_learning.js'
+      - 'touroku-hanbaisha-ios/scripts/offline_learning.css'
+      - 'touroku-hanbaisha-ios/scripts/offline_learning_shell.html'
+      - 'touroku-hanbaisha-sprint/official-practice.html'
+      - 'touroku-hanbaisha-ios/scripts/test_offline_candidate.py'
 permissions:
   contents: write
 concurrency:
@@ -23,6 +37,8 @@ jobs:
     timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - name: Xcode/Simulator environment and XcodeGen
         id: environment
         run: |
@@ -123,11 +139,12 @@ jobs:
         if: success()
         env:
           RUN_ID: ${{ github.run_id }}
-          HEAD_SHA: ${{ github.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          TARGET_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
           DEVICE: ${{ steps.launch.outputs.device }}
         run: |
           set -euxo pipefail
-          test "$GITHUB_REF_NAME" != "main"
+          test "$TARGET_BRANCH" != "main"
           python3 - <<'PY'
           import datetime,json,os
           from pathlib import Path
@@ -162,8 +179,8 @@ jobs:
           git add touroku-hanbaisha-ios/OFFLINE_Q4_20261125.json touroku-hanbaisha-ios/IOS_SIMULATOR_Q6_20261125.json touroku-hanbaisha-ios/OFFLINE_Q4_BROWSER_20261125.json
           git commit -m 'audit(touhan): record current-head native simulator and offline evidence'
           for attempt in 1 2 3; do
-            git pull --rebase origin "$GITHUB_REF_NAME"
-            if git push origin "HEAD:$GITHUB_REF_NAME"; then exit 0; fi
+            git pull --rebase origin "$TARGET_BRANCH"
+            if git push origin "HEAD:$TARGET_BRANCH"; then exit 0; fi
           done
           exit 1
       - uses: actions/upload-artifact@v4
