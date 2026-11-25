@@ -511,7 +511,7 @@ def manual_visual_reaudit_ok(q,audit):
     pair=manual_visual_ledgers.get((name,q["id"]))
     if pair is None: return False
     ledger,row=pair
-    method=str(ledger.get("method") or ledger.get("auditMethod") or "")
+    method=str(ledger.get("method") or ledger.get("auditMethod") or (ledger.get("source") or {}).get("method") or "")
     if "VISUAL" not in method.upper(): return False
     if ledger.get("repository") not in (None,"ALLSUNDAY1122/ALLSUNDAY1122.github.io"): return False
     if row.get("status")!="PASS" or row.get("answerPDFChecked") is not False: return False
