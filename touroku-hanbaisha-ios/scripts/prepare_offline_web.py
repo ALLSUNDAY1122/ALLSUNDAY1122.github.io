@@ -93,6 +93,8 @@ assert 'function renderAnswer(i)' in html and 'checkpoint()' in html and 'id="ho
 assert "const attribution=$('feedback').querySelector('#attribution')" in html, 'next-question transition must move and hide the previous attribution before rendering the next question'
 html=html.replace('候補600問を監査済みと表示しません。','インターネット接続なしで学習できます。')
 assert 'fetch(BANK' not in html
+html=html.replace('</script></body></html>', "document.getElementById('next').addEventListener('click',()=>{if(position+1<subset.length){const attribution=$('feedback').querySelector('#attribution');if(attribution){attribution.classList.add('hidden');$('quiz').querySelector('article.card').append(attribution)} }},true);</script></body></html>")
+assert "addEventListener('click',()=>{if(position+1<subset.length)" in html, 'capture-phase next-question attribution cleanup must be present'
 (OUT/'official-practice.html').write_text(html,encoding='utf-8')
 for name in ['privacy.html','support.html']:
     text=(WEB/name).read_text()
