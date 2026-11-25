@@ -1081,6 +1081,17 @@ workflows:
           test -n "$IPA_PATH"
           rm -rf /tmp/kangoshi-ipa && mkdir -p /tmp/kangoshi-ipa && unzip -q "$IPA_PATH" -d /tmp/kangoshi-ipa
           PLIST="$(find /tmp/kangoshi-ipa/Payload -maxdepth 2 -name Info.plist -path '*.app/*' -print -quit)"
+          test -n "$PLIST"
+          APP_DIR="$(dirname "$PLIST")"
+          echo "=== IPA .app contents ==="
+          ls -la "$APP_DIR"
+          if [ -f "$APP_DIR/Assets.car" ]; then
+            echo "Assets.car: present ($(wc -c < "$APP_DIR/Assets.car" | tr -d ' ') bytes)"
+          else
+            echo "Assets.car: MISSING"
+          fi
+          echo "=== IPA Info.plist ==="
+          plutil -p "$PLIST"
           /usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$PLIST" | grep -qx 'jp.allsunday1122.kangoshi'
           /usr/libexec/PlistBuddy -c 'Print :UIRequiresFullScreen' "$PLIST" | grep -qx 'true'
           /usr/libexec/PlistBuddy -c 'Print :UIDeviceFamily' "$PLIST" | tee /tmp/kangoshi-family.txt
