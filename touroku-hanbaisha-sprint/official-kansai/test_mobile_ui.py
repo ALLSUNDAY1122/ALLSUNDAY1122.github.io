@@ -30,6 +30,8 @@ def standard(page,width):
         if i==0:page.screenshot(path=f"/tmp/touhan_mobile_{width}.png",full_page=True)
         if len(q["choices"])==4:four_seen=True
         page.locator("#choices button").nth(q["answer"]).click()
+        page.locator("#feedback .explanation").wait_for(state="visible")
+        assert page.locator("#feedback .explanation").inner_text().strip()
         page.locator("#next").click()
     assert four_seen,"Four-option official sample missing"
     assert str(BANK["count"])+" / "+str(BANK["count"]) in page.locator("#summary").inner_text()
