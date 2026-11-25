@@ -61,6 +61,10 @@ function similarity(a, b) {
 }
 
 const manifest = readJson('manifest.json');
+const releaseQuarantine = readJson('release-quarantine-20261125.json');
+const glyphRepairDoc = readJson('official-pdf-text-repairs-20261125.json');
+if (!glyphRepairDoc) errors.push('official-pdf-text-repairs-20261125.json missing');
+const glyphRepairs = new Map((glyphRepairDoc?.questions || []).map(x => [x.id, x.edits]));
 if (!manifest) process.exit(1);
 const correctionDoc = readJson('required-150/text-corrections.json');
 const officialPdfCorrections = new Map((correctionDoc?.corrections || []).map(x => [x.id, x]));
@@ -82,8 +86,9 @@ for (const exam of Object.keys(expected).map(Number)) {
     continue;
   }
   if (set.sourceYear !== expected[exam].year) errors.push(`exam ${exam}: sourceYear mismatch`);
-  if (set.questionCount !== 240 || set.sourceQuestionCount !== 240 || set.runtimeEligibleCount !== 240) {
-    errors.push(`exam ${exam}: counts must remain 240`);
+  const quarantinedInExam = (releaseQuarantine?.items || []).filter(x => x.id.startsWith(`K${exam}-`)).length;
+  if (set.questionCount !== 240 || set.sourceQuestionCount !== 240 || set.runtimeEligibleCount !== 240 - quarantinedInExam) {
+    errors.push(`exam ${exam}: counts must remain 240 (runtime eligible = 240 - official-PDF quarantine ${quarantinedInExam})`);
   }
 }
 if ([...manifestExams.keys()].some(x => !expected[x])) errors.push('manifest contains a non-official extra exam set');
@@ -99,7 +104,15 @@ for (const exam of Object.keys(expected).map(Number)) {
   }
   const rawById = new Map(rawDoc.questions.map(q => {
     const correction = officialPdfCorrections.get(q.id);
-    return [q.id, correction ? {...q, ...correction, id:q.id} : q];
+    const base = correction ? {...q, ...correction, id:q.id} : {...q};
+    // Apply verified official-PDF glyph repairs where the raw import carries the same broken text layer.
+    for (const ed of glyphRepairs.get(q.id) || []) {
+      if (ed.field.startsWith('choices[')) {
+        const i = Number(ed.field.slice(8, -1));
+        if (Array.isArray(base.choices) && base.choices[i] === ed.before) { base.choices = [...base.choices]; base.choices[i] = ed.after; }
+      } else if (base[ed.field] === ed.before) base[ed.field] = ed.after;
+    }
+    return [q.id, base];
   }));
   const slotSet = new Set(rawDoc.questions.map(q => `${q.session}-${q.questionNo}`));
   if (slotSet.size !== 240) errors.push(`exam ${exam}: raw session/questionNo slots are not unique`);

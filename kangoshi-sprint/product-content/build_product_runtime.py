@@ -8,6 +8,7 @@ DRAFT=ROOT/'enriched-draft'
 MANIFEST=ROOT/'manifest.json'
 REVIEW_QUEUE=ROOT/'situation-audit'/'expert-review-queue.json'
 KNOWN_SPECIALIST_IDS={'K115-AM103','K115-AM114'}
+QUARANTINE=ROOT/'release-quarantine-20261125.json'
 
 sets=[]
 all_questions=[]
@@ -27,6 +28,13 @@ blocked={x.get('questionId') for x in review_doc.get('items') or [] if x.get('ap
 blocked.discard(None)
 if not blocked.issubset(KNOWN_SPECIALIST_IDS):
     raise SystemExit(f'unexpected review-blocked ids: {sorted(blocked-KNOWN_SPECIALIST_IDS)}')
+# Official-PDF verification quarantine (unverifiable text / non-PDL media / incomplete items).
+quarantine_doc=json.loads(QUARANTINE.read_text(encoding='utf-8'))
+quarantined={x['id'] for x in quarantine_doc.get('items') or []}
+draft_quarantined={q['id'] for q in all_questions if q.get('releaseQuarantineStatus')=='quarantined'}
+if quarantined!=draft_quarantined:
+    raise SystemExit(f'draft quarantine markers out of sync with {QUARANTINE.name}: run apply_official_pdf_text_repairs.py')
+blocked|=quarantined
 
 def compact(q):
     keep=(
@@ -53,6 +61,7 @@ payload+='window.KANGOSHI_ALL_QUESTIONS=ALL;\n'
 payload+='window.KANGOSHI_QUESTIONS=ALL.filter(q=>q.releaseEligible!==false);\n'
 payload+='window.KANGOSHI_RUNTIME_META='+json.dumps({
     'schemaVersion':3,'canonicalTotal':720,'runtimeEligible':len(eligible),'releaseBlockedIds':sorted(blocked),
+    'releaseQuarantined':len(quarantined),'releaseQuarantineRef':'product-content/'+QUARANTINE.name,
     'reviewBasis':'ai_ci_primary_source_audit','source':'product-content/enriched-draft','generatedBy':'build_product_runtime.py'
 },ensure_ascii=False,separators=(',',':'))+';\n})();\n'
 (APP/'questions-runtime.js').write_text(payload,encoding='utf-8')
@@ -77,6 +86,7 @@ for s in manifest.get('sets') or []:
     (ready if eligible_count==240 else pending).append(exam)
 manifest['runtime']={
     'schemaVersion':3,'canonicalTotal':720,'runtimeEligible':len(eligible),'releaseBlocked':sorted(blocked),
+    'releaseQuarantined':len(quarantined),'releaseQuarantineRef':'product-content/'+QUARANTINE.name,
     'reviewBasis':'ai_ci_primary_source_audit',
     'readyExamSets':sorted(ready,reverse=True),'pendingExamSets':sorted(pending,reverse=True)
 }
@@ -84,7 +94,7 @@ MANIFEST.write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encodi
 
 audit={
     'schemaVersion':3,'canonicalTotal':len(runtime),'runtimeEligible':len(eligible),
-    'blockedIds':sorted(blocked),'reviewBasis':'ai_ci_primary_source_audit',
+    'blockedIds':sorted(blocked),'quarantinedIds':sorted(quarantined),'reviewBasis':'ai_ci_primary_source_audit',
     'byExam':{},'mediaResolved':0,'mediaMissingAssets':[],
     'readyExamSets':sorted(ready,reverse=True),'pendingExamSets':sorted(pending,reverse=True),
     'pass':True,'errors':[]
@@ -93,6 +103,7 @@ for exam in (115,114,113):
     rows=[q for q in runtime if q['sourceExam']==exam]
     audit['byExam'][str(exam)]={
         'total':len(rows),'eligible':sum(q['releaseEligible'] for q in rows),
+        'eligibleMediaResolved':sum(1 for q in rows if q['releaseEligible'] and q.get('mediaReleaseStatus')=='resolved'),
         'required':sum(q['category']=='必修' for q in rows),
         'general':sum(q['category']=='一般' for q in rows),
         'situation':sum(q['category']=='状況設定' for q in rows)
@@ -103,8 +114,15 @@ for q in runtime:
         audit['mediaResolved']+=1
         for rel in assets:
             if not (APP/rel).exists(): audit['mediaMissingAssets'].append({'id':q['id'],'asset':rel})
-if audit['mediaResolved']!=38:
-    audit['errors'].append(f"expected 38 resolved media questions, got {audit['mediaResolved']}")
+by_id={q['id']:q for q in all_questions}
+audit['eligibleMediaQuestions']=[]
+for q in runtime:
+    src=by_id[q['id']]
+    if q['releaseEligible'] and src.get('requiresMedia'):
+        audit['eligibleMediaQuestions'].append(q['id'])
+        if q.get('mediaReleaseStatus')!='resolved' or q.get('mediaRightsStatus')!='verified_pdl1' or not q.get('mediaAttribution'):
+            audit['errors'].append(f"{q['id']}: release-eligible media must be resolved, PDL1.0-verified and attributed")
+audit['eligibleMediaCount']=len(audit['eligibleMediaQuestions'])
 if audit['mediaMissingAssets']:
     audit['errors'].append('runtime media asset missing')
 for exam,row in audit['byExam'].items():

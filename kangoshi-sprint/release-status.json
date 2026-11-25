@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-24",
+  "updatedAt": "2026-11-25",
   "app": "kangoshi-sprint",
   "targetExams": [
     115,
@@ -15,14 +15,14 @@
   "additionalRequired": 168,
   "releaseStatus": "PREFLIGHT_BLOCKED",
   "submissionAllowed": false,
-  "contentGate": "CANONICAL_SOURCE_1032_OF_1200_EXISTING_RUNTIME_720_NEW312_RELEASE_BLOCKED_168_UNVERIFIED",
-  "mediaGate": "PDL_JPG15_RIGHTS_USABLE_SVG18_CONTENT_HOLD_5_ORIGINAL_PDF_CROPS_PREPARED_RIGHTS_HOLD",
+  "contentGate": "RUNTIME_720_OFFICIAL_PDF_GLYPH_VERIFIED_637_RELEASE_ELIGIBLE_83_QUARANTINED",
+  "mediaGate": "PDL_JPG15_USABLE_(13_ELIGIBLE_2_TEXT_QUARANTINED)_SVG18_QUARANTINED_PDF_CROPS5_QUARANTINED",
   "appleAppId": "6801792293",
   "bundleId": "jp.allsunday1122.kangoshi",
-  "appIconGate": "NOT_INTEGRATED_AS_OF_COORDINATOR_STATUS",
+  "appIconGate": "CANONICAL_PNG_NOT_AVAILABLE_TO_AGENT_USER_UPLOAD_REQUIRED",
   "iapGate": "NOT_REGISTERED_AS_OF_COORDINATOR_STATUS",
   "finalSubmission": "PROHIBITED_WITHOUT_EXPLICIT_APPROVAL",
-  "note": "Existing 720-question PASS claims are historical and do not establish 5-exam completeness or current independent PDF verification.",
+  "note": "2026-11-25: 旧PASS629/HOLD91は壊れたPDF文字層同士の比較。字形検証による修復後の配信可能数は runtimeRelease20261125 を参照。",
   "newlyImported": 312,
   "officialSourcePagesVerified": [
     112,
@@ -777,5 +777,92 @@
       "glossGeometryHold": 5,
       "strictOcrHold": 13
     }
+  },
+  "runtimeRelease20261125": {
+    "updatedAt": "2026-11-25",
+    "scope": "第115・114・113回 runtime 720問（iOS初回リリース対象）",
+    "finding": "公式PDFの埋め込みフォントのToUnicode破損により、数字・括弧・一部漢字が欠落/誤字のまま配信テキストに入っていた（従来PASS629も同じ壊れた文字層同士の比較だった）。",
+    "glyphRepair": {
+      "badGlyphOccurrences": 1613,
+      "glyphClusters": 38,
+      "visuallyLabeled": 38,
+      "questionsRepaired": 250,
+      "fieldsRepaired": 390,
+      "ledger": "product-content/official-pdf-text-repairs-20261125.json",
+      "applyScript": "product-content/apply_official_pdf_text_repairs.py"
+    },
+    "releaseEligible": 637,
+    "quarantined": 83,
+    "canonicalTotal": 720,
+    "byExam": {
+      "115": {
+        "releaseEligible": 224,
+        "quarantined": 16,
+        "byCategory": {
+          "必修": {
+            "total": 50,
+            "releaseEligible": 46
+          },
+          "一般": {
+            "total": 130,
+            "releaseEligible": 124
+          },
+          "状況設定": {
+            "total": 60,
+            "releaseEligible": 54
+          }
+        }
+      },
+      "114": {
+        "releaseEligible": 217,
+        "quarantined": 23,
+        "byCategory": {
+          "必修": {
+            "total": 50,
+            "releaseEligible": 46
+          },
+          "一般": {
+            "total": 130,
+            "releaseEligible": 120
+          },
+          "状況設定": {
+            "total": 60,
+            "releaseEligible": 51
+          }
+        }
+      },
+      "113": {
+        "releaseEligible": 196,
+        "quarantined": 44,
+        "byCategory": {
+          "必修": {
+            "total": 50,
+            "releaseEligible": 48
+          },
+          "一般": {
+            "total": 130,
+            "releaseEligible": 117
+          },
+          "状況設定": {
+            "total": 60,
+            "releaseEligible": 31
+          }
+        }
+      }
+    },
+    "quarantineByPrimaryReason": {
+      "media_original_svg_redraw_unverified": 18,
+      "text_not_verbatim_verifiable": 60,
+      "media_official_pdf_crop_rights_pending": 5
+    },
+    "quarantineLedger": "product-content/release-quarantine-20261125.json",
+    "mediaPolicy": "PDL1.0確認済みJPGのみ配信（出典・加工表示付き）。独自再作図SVG18件・公式PDFクロップ5件は隔離。",
+    "iOS": {
+      "UIRequiresFullScreen": true,
+      "TARGETED_DEVICE_FAMILY": "1",
+      "codemagicWorkflow": "kangoshi-ios → internal TestFlight group sun, submit_to_app_store=false"
+    },
+    "appIcon": "MISSING: Drive file 1VDnbT0s9gEPde4baCfw9kXYfnEHLQrp3 not accessible from connector (404); canonical PNG SHA-256 6afe1648… must be uploaded by the user",
+    "appReviewSubmission": "PROHIBITED_WITHOUT_EXPLICIT_APPROVAL"
   }
 }

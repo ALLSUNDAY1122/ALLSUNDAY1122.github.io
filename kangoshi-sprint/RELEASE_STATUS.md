@@ -1,5 +1,42 @@
 # 看護師国家試験｜RELEASE_STATUS
 
+更新：2026-11-25 JST　**App Review送信禁止（ユーザーの明示OKなし）／iOS初回リリース対象＝第115〜113回 runtime**
+
+## 2026-11-25 公式PDF字形検証による runtime 720問の修復と隔離
+
+**重大な発見：** 厚労省公式PDFの埋め込みサブセットフォント（RyuminPr6-Regular／FutoGoB101Pr6-Bold 系）の文字対応表（ToUnicode）が壊れており、数字・（）〈〉『』・一部漢字（疼腿梢穿扁倦鞘溢牙）が欠落・誤字（`!` `?` `C` `u` `x` `V` `Z` `¹` `¼`、制御文字など）のまま配信テキストに入っていた。従来の「PASS 629」も同じ壊れた文字層同士の比較で、誤りを検出できていなかった。
+
+| 項目 | 件数 |
+|---|---:|
+| 不正グリフ出現箇所（PyMuPDF texttrace） | 1,613 |
+| 字形クラスタ（4倍描画・画像ハッシュ）／目視で文字確定 | 38／38 |
+| 本文を修復した問題／フィールド | 250問／390フィールド |
+| **リリース可能（releaseEligible）** | **637 / 720** |
+| 隔離（releaseEligible=false） | 83 |
+
+| 回 | 可能 | 隔離 | 必修 | 一般 | 状況設定 |
+|---|---:|---:|---:|---:|---:|
+| 第115回 | 224 | 16 | 46/50 | 124/130 | 54/60 |
+| 第114回 | 217 | 23 | 46/50 | 120/130 | 51/60 |
+| 第113回 | 196 | 44 | 48/50 | 117/130 | 31/60 |
+
+隔離の主理由：公式PDFと逐語照合できない本文 60、独自再作図SVG（忠実性未確認）18、公式PDFクロップ（権利確認待ち）5。
+
+旧HOLD 91問の帰結：本文不一致46 → 41修復・5隔離／選択肢不一致3 → 3修復／不完全4（数値問題）→ 4照合済み／メディア38 → PDL1.0確認済みJPG 13配信・25隔離（SVG18・クロップ5・本文未確認のJPG2）。旧PASS 629のうち53問は本文が照合不能のため隔離。
+
+**検証方法：** 確定字形で公式PDFのページ文字列を再構成し、各フィールドについて「英字を除く正規化本文が公式ページ上で連続一致」かつ「前後境界の数字・括弧の欠落なし（問題番号・選択肢番号トークンで確認）」を満たす場合のみ修正を採用。英語併記の位置ずれは日本語部分と英単語の存在を別々に確認。推測による本文補完は行っていない。
+
+- 修復台帳（前後テキスト・方法・PDF SHA-256・38字形マップ）：`product-content/official-pdf-text-repairs-20261125.json`
+- 隔離台帳（問題ID・理由）：`product-content/release-quarantine-20261125.json`
+- 適用スクリプト（冪等・ドリフト時FAIL）：`product-content/apply_official_pdf_text_repairs.py`（`kangoshi-enrichment.yml` に組込み。上流再生成でも修復が消えない）
+- 配信：Web runtime は隔離問を `releaseEligible=false`、iOS は `prepare_native_content.py` が隔離問を同梱しない（637問）。
+- iOS：`UIRequiresFullScreen=YES`、`TARGETED_DEVICE_FAMILY "1"`（iPhoneのみ）。Codemagic `kangoshi-ios` は ASC連携＋ios_signing → TestFlight内部グループ `sun`、`submit_to_app_store: false`。
+- **未解決：** アプリアイコン（Drive 1VDnbT0s9gEPde4baCfw9kXYfnEHLQrp3、SHA-256 `6afe1648…ee80`）をエージェントが取得できず未配置。ユーザーの原本アップロードが必要。
+
+---
+
+## 以前の記録（2026-11-24 以前）
+
 更新：2026-11-24 JST　**最終送信禁止／リリース判定 PREFLIGHT_BLOCKED**
 
 ## 現時点の問題バンク（全1,200問）

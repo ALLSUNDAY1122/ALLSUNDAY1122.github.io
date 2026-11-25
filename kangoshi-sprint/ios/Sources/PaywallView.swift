@@ -24,7 +24,7 @@ struct PaywallView: View {
                     VStack(spacing: 8) {
                         Image(systemName: "graduationcap.fill").font(.system(size: 42)).foregroundStyle(KSTheme.ai)
                         Text("学びスプリント プレミアム").font(.title2.bold()).foregroundStyle(KSTheme.ink)
-                        Text("必要なところだけ、短く繰り返す。全720問と本番形式を解放します。").font(.subheadline).multilineTextAlignment(.center).foregroundStyle(KSTheme.secondary)
+                        Text("必要なところだけ、短く繰り返す。収録全問と本番形式を解放します。").font(.subheadline).multilineTextAlignment(.center).foregroundStyle(KSTheme.secondary)
                     }.padding(.top,20)
                     KSCard(content: VStack(alignment:.leading,spacing:12) {
                         Label("苦手を3回連続正解まで自動追跡", systemImage:"repeat.circle.fill")

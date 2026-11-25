@@ -1,4 +1,4 @@
-const CACHE='kangoshi-sprint-v25-20260814-canonical-runtime1';
+const CACHE='kangoshi-sprint-v26-20261125-canonical-runtime2';
 const ASSETS=[
  './','./index.html','./style.css',
  './questions.js','./questions-numeric.js','./questions-audit-v1.js','./question-taxonomy-v1.js',

@@ -42,7 +42,7 @@ struct HomeView: View {
                     actionButton(title:"苦手をつぶす",subtitle:"3回連続正解で卒業",icon:"repeat",count:"\(model.weakQuestions.count)問",premium:true) {
                         if purchase.isPremium { model.startWeak() } else { showPaywall=true }
                     }
-                    actionButton(title:"模擬試験",subtitle:"第115・114・113回／各240問",icon:"doc.text.fill",count:"3回",premium:true) {
+                    actionButton(title:"模擬試験",subtitle:"第115・114・113回／必修・一般・状況設定",icon:"doc.text.fill",count:"3回",premium:true) {
                         if purchase.isPremium { tab=1 } else { showPaywall=true }
                     }
 
@@ -131,7 +131,7 @@ struct SettingsView: View {
             settingCard("1日の目標") { Picker("目標",selection:Binding(get:{model.learning.goal},set:{model.setGoal($0)})) { ForEach([4,8,16],id:\.self){Text("\($0)問").tag($0)} }.pickerStyle(.segmented) }
             settingCard("文字サイズ") { Picker("文字",selection:Binding(get:{model.learning.fontScale},set:{model.setFontScale($0)})) { Text("標準").tag("normal");Text("大").tag("large");Text("特大").tag("xlarge") }.pickerStyle(.segmented) }
             settingCard("プレミアム") { VStack(alignment:.leading,spacing:10){HStack{Text(purchase.isPremium ? "利用中" : "無料プラン").font(.subheadline.bold());Spacer();if purchase.isPremium {Image(systemName:"checkmark.seal.fill").foregroundStyle(KSTheme.green)}};Button(purchase.isPremium ? "購入情報を確認" : "プレミアムを見る"){showPaywall=true}.buttonStyle(.bordered).tint(KSTheme.ai);Button("購入を復元"){Task{await purchase.restore()}}.font(.subheadline.bold()).foregroundStyle(KSTheme.ai)} }
-            settingCard("この教材について") { Text("看護師国家試験｜学びスプリント。第115・114・113回の720問、11科目分類、状況設定60症例、公式特殊採点を収録しています。").font(.caption).foregroundStyle(KSTheme.secondary) }
+            settingCard("この教材について") { Text("看護師国家試験｜学びスプリント。第115・114・113回から、厚生労働省の公式PDFと照合できた\(model.allQuestions.count)問を収録（11科目分類・公式特殊採点に対応）。照合できない問題は収録していません。").font(.caption).foregroundStyle(KSTheme.secondary) }
             settingCard("学習記録リセット") { Button("すべての学習記録を削除",role:.destructive){showReset=true}.font(.subheadline.bold()) }
         }.padding(.bottom,24) }.background(KSTheme.paper.ignoresSafeArea()).toolbar(.hidden,for:.navigationBar).alert("学習記録を削除しますか？",isPresented:$showReset){Button("削除",role:.destructive){model.resetLearning()};Button("キャンセル",role:.cancel){}} }
     }

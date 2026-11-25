@@ -26,6 +26,10 @@ for (let p = i; p < text.length; p++) {
 if (end < 0) throw new Error('questions-runtime.js: ALL array is unterminated');
 const questions = JSON.parse(text.slice(i, end));
 const errors = [];
+// Canonical slots stay 720 (difficulty provenance); only the official-PDF quarantine may be non-eligible.
+const quarantine = JSON.parse(fs.readFileSync(new URL('./product-content/release-quarantine-20261125.json', import.meta.url), 'utf8'));
+const quarantined = new Set(quarantine.items.map(x => x.id));
+if (quarantined.size !== quarantine.quarantinedCount) errors.push('release quarantine count mismatch');
 const expectedExams = [113, 114, 115];
 const expectedSessions = ['AM', 'PM'];
 
@@ -53,7 +57,8 @@ for (const q of questions) {
   if (q.id !== expectedId) errors.push(`${q.id}: official-slot id mismatch, expected ${expectedId}`);
   if (!Array.isArray(q.officialAcceptedAnswers)) errors.push(`${q.id}: officialAcceptedAnswers missing`);
   if (!q.officialScoringStatus) errors.push(`${q.id}: officialScoringStatus missing`);
-  if (q.releaseEligible !== true) errors.push(`${q.id}: releaseEligible must be true`);
+  const shouldBeEligible = !quarantined.has(q.id);
+  if (q.releaseEligible !== shouldBeEligible) errors.push(`${q.id}: releaseEligible must be ${shouldBeEligible} (official-PDF release quarantine)`);
 }
 
 if (errors.length) {
@@ -62,4 +67,4 @@ if (errors.length) {
   process.exit(1);
 }
 
-console.log('PASS: difficulty provenance locked to 720 real exam slots (115/114/113), 240 each, official scoring metadata present; no synthetic filler slots.');
+console.log(`PASS: difficulty provenance locked to 720 real exam slots (115/114/113), 240 each, official scoring metadata present; no synthetic filler slots; ${720 - quarantined.size} release-eligible, ${quarantined.size} official-PDF quarantined.`);

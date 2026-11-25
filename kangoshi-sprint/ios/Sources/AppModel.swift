@@ -16,8 +16,9 @@ final class KangoshiAppModel: ObservableObject {
         guard let url = Bundle.main.url(forResource: "questions.generated", withExtension: "json"),
               let data = try? Data(contentsOf: url),
               let decoded = try? JSONDecoder().decode(NativeContentBundle.self, from: data),
-              decoded.questions.count == 720 else {
-            fatalError("Canonical 720-question native resource is missing or invalid")
+              !decoded.questions.isEmpty,
+              decoded.questions.count == decoded.totalQuestions else {
+            fatalError("Official-PDF verified native question resource is missing or invalid")
         }
         content = decoded
         questionsById = Dictionary(uniqueKeysWithValues: decoded.questions.map { ($0.id, $0) })
@@ -37,6 +38,10 @@ final class KangoshiAppModel: ObservableObject {
     }
     var majorSubjects: [String] { Array(Set(content.questions.map(\.majorSubject))).sorted { $0.localizedStandardCompare($1) == .orderedAscending } }
     var accuracy: Int { learning.totalAnswers > 0 ? Int((Double(learning.totalCorrect) / Double(learning.totalAnswers) * 100).rounded()) : 0 }
+
+    func questionCount(exam: Int, category: String? = nil) -> Int {
+        content.questions.filter { $0.sourceExam == exam && (category == nil || $0.category == category!) }.count
+    }
 
     func todayCount() -> Int { learning.dailyAnswers[dayKey()] ?? 0 }
     func todayCorrect() -> Int { learning.dailyCorrect[dayKey()] ?? 0 }
