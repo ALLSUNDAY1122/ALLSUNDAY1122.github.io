@@ -235,7 +235,7 @@ for q in official_rows:
                     else:
                         assert set(part)=={'rubyBase','rubyText'},q['id']
                         base,text=part['rubyBase'],part['rubyText']
-                        assert isinstance(base,str) and re.fullmatch(r'[\\u3400-\\u9fff々]+',base),q['id']
+                        assert isinstance(base,str) and re.fullmatch(r'[\u3400-\u9fff々]+',base),q['id']
                         assert isinstance(text,str) and re.fullmatch(r'[ぁ-んァ-ンー]{1,12}',text),q['id']
                         attached.append(text)
                         rendered.append(base)
