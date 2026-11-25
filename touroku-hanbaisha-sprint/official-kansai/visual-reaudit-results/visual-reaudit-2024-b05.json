@@ -1,0 +1,581 @@
+{
+  "batch": "visual-reaudit-2024-b05",
+  "auditType": "MANUAL_VISUAL_SOURCE_IMAGE_REAUDIT",
+  "auditedAt": "2026-11-25T17:30:00+09:00",
+  "repository": "ALLSUNDAY1122/ALLSUNDAY1122.github.io",
+  "source": {
+    "issuer": "関西広域連合",
+    "title": "令和6年度登録販売者試験（前半）",
+    "questionPdf": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_zennhan.pdf",
+    "attachedBundle": "visual-reaudit-2024-b05.pdf",
+    "attachedCandidates": "visual-reaudit-2024-b05.candidates.json"
+  },
+  "method": "添付公式問題PDFの7ページを画像で目視し、指定10問について現行候補JSONの設問文・全選択肢・ルビ・表・記号を照合した。PDFの文字データや自動照合は判定根拠に使用していない。各問の掲載ページは候補JSONのbundlePdfPagesおよびbundlePagesに従った。",
+  "scope": [
+    "KSAI-2024-047",
+    "KSAI-2024-048",
+    "KSAI-2024-050",
+    "KSAI-2024-051",
+    "KSAI-2024-052",
+    "KSAI-2024-053",
+    "KSAI-2024-054",
+    "KSAI-2024-055",
+    "KSAI-2024-056",
+    "KSAI-2024-057"
+  ],
+  "summary": {
+    "total": 10,
+    "pass": 9,
+    "fail": 1,
+    "hold": 0
+  },
+  "answerPolicy": "answerNumberOfficialは候補JSONの値を転記。正答PDFは直接確認していないため全件answerPDFChecked=false。",
+  "results": [
+    {
+      "id": "KSAI-2024-047",
+      "questionNo": 47,
+      "bundlePdfPage": 1,
+      "officialPdfPage": 32,
+      "status": "PASS",
+      "questionTextMatch": true,
+      "choicesMatch": true,
+      "rubyMatch": true,
+      "tableMatch": true,
+      "officialChoices": [
+        "正　正　誤　正",
+        "誤　誤　正　誤",
+        "正　正　正　誤",
+        "正　誤　正　誤",
+        "誤　正　誤　正"
+      ],
+      "officialTableRows": [
+        [
+          "正",
+          "正",
+          "誤",
+          "正"
+        ],
+        [
+          "誤",
+          "誤",
+          "正",
+          "誤"
+        ],
+        [
+          "正",
+          "正",
+          "正",
+          "誤"
+        ],
+        [
+          "正",
+          "誤",
+          "正",
+          "誤"
+        ],
+        [
+          "誤",
+          "正",
+          "誤",
+          "正"
+        ]
+      ],
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "reason": "問題文・a〜dの全記述・5つの正誤組合せを画像で照合し一致。表の行列対応も一致。"
+    },
+    {
+      "id": "KSAI-2024-048",
+      "questionNo": 48,
+      "bundlePdfPage": 1,
+      "officialPdfPage": 32,
+      "status": "PASS",
+      "questionTextMatch": true,
+      "choicesMatch": true,
+      "rubyMatch": true,
+      "tableMatch": true,
+      "officialRuby": [
+        {
+          "base": "嗽",
+          "reading": "そう",
+          "context": "含嗽薬"
+        }
+      ],
+      "officialChoices": [
+        "正　誤　正　正",
+        "正　正　正　誤",
+        "正　正　誤　誤",
+        "誤　正　誤　正",
+        "誤　誤　正　正"
+      ],
+      "officialTableRows": [
+        [
+          "正",
+          "誤",
+          "正",
+          "正"
+        ],
+        [
+          "正",
+          "正",
+          "正",
+          "誤"
+        ],
+        [
+          "正",
+          "正",
+          "誤",
+          "誤"
+        ],
+        [
+          "誤",
+          "正",
+          "誤",
+          "正"
+        ],
+        [
+          "誤",
+          "誤",
+          "正",
+          "正"
+        ]
+      ],
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "reason": "問題文・a〜dの全記述・全5行4列の正誤表・「含嗽」のルビ「そう」を画像で照合し一致。"
+    },
+    {
+      "id": "KSAI-2024-050",
+      "questionNo": 50,
+      "bundlePdfPage": 2,
+      "officialPdfPage": 33,
+      "status": "PASS",
+      "questionTextMatch": true,
+      "choicesMatch": true,
+      "rubyMatch": true,
+      "tableMatch": true,
+      "officialChoices": [
+        "正　正　正　誤",
+        "正　正　誤　正",
+        "正　誤　正　正",
+        "誤　正　正　正",
+        "正　正　正　正"
+      ],
+      "officialTableRows": [
+        [
+          "正",
+          "正",
+          "正",
+          "誤"
+        ],
+        [
+          "正",
+          "正",
+          "誤",
+          "正"
+        ],
+        [
+          "正",
+          "誤",
+          "正",
+          "正"
+        ],
+        [
+          "誤",
+          "正",
+          "正",
+          "正"
+        ],
+        [
+          "正",
+          "正",
+          "正",
+          "正"
+        ]
+      ],
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "reason": "問題文・a〜dの全記述（ケトプロフェン、ピロキシリン、イオウ、尿素）および全5行4列の正誤表を画像で照合し一致。"
+    },
+    {
+      "id": "KSAI-2024-051",
+      "questionNo": 51,
+      "bundlePdfPage": 3,
+      "officialPdfPage": 34,
+      "status": "PASS",
+      "questionTextMatch": true,
+      "choicesMatch": true,
+      "rubyMatch": true,
+      "tableMatch": true,
+      "officialIngredientTable": [
+        [
+          "カルプロニウム塩化物",
+          "2.0 g"
+        ],
+        [
+          "カシュウチンキ（原生薬量 1 g）",
+          "3.0 mL"
+        ],
+        [
+          "チクセツニンジンチンキ（原生薬量 1 g）",
+          "3.0 mL"
+        ],
+        [
+          "ヒノキチオール",
+          "0.05 g"
+        ],
+        [
+          "パントテニールエチルエーテル（パントテン酸の誘導体）",
+          "1.0 g"
+        ],
+        [
+          "ｌ－メントール",
+          "0.3 g"
+        ]
+      ],
+      "officialChoices": [
+        "ａ、ｂ",
+        "ａ、ｃ",
+        "ｂ、ｃ",
+        "ｂ、ｄ",
+        "ｃ、ｄ"
+      ],
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "reason": "問題文・100mL中の成分と分量6行・a〜dの全記述・5つの組合せ選択肢を画像で照合し一致。"
+    },
+    {
+      "id": "KSAI-2024-052",
+      "questionNo": 52,
+      "bundlePdfPage": 4,
+      "officialPdfPage": 35,
+      "status": "PASS",
+      "questionTextMatch": true,
+      "choicesMatch": true,
+      "rubyMatch": true,
+      "tableMatch": true,
+      "officialRubyInSourceOrder": [
+        "のう",
+        "のう",
+        "うしょく",
+        "うしょく"
+      ],
+      "officialChoices": [
+        "誤　正　正　誤",
+        "正　誤　正　正",
+        "正　正　正　正",
+        "正　誤　正　誤",
+        "誤　正　誤　正"
+      ],
+      "officialTableRows": [
+        [
+          "誤",
+          "正",
+          "正",
+          "誤"
+        ],
+        [
+          "正",
+          "誤",
+          "正",
+          "正"
+        ],
+        [
+          "正",
+          "正",
+          "正",
+          "正"
+        ],
+        [
+          "正",
+          "誤",
+          "正",
+          "誤"
+        ],
+        [
+          "誤",
+          "正",
+          "誤",
+          "正"
+        ]
+      ],
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "reason": "問題文・a〜dの全記述・全5行4列の正誤表・「歯槽膿漏」の出現箇所2件の「のう」と「齲蝕」2件の「うしょく」を画像で照合し一致。"
+    },
+    {
+      "id": "KSAI-2024-053",
+      "questionNo": 53,
+      "bundlePdfPage": 5,
+      "officialPdfPage": 36,
+      "status": "PASS",
+      "questionTextMatch": true,
+      "choicesMatch": true,
+      "rubyMatch": true,
+      "tableMatch": true,
+      "officialRubyInSourceOrder": [
+        "そしゃく",
+        "そしゃく",
+        "くう"
+      ],
+      "officialChoices": [
+        "正　正　正　正",
+        "誤　誤　正　正",
+        "誤　誤　誤　正",
+        "正　正　誤　誤",
+        "正　誤　正　誤"
+      ],
+      "officialTableRows": [
+        [
+          "正",
+          "正",
+          "正",
+          "正"
+        ],
+        [
+          "誤",
+          "誤",
+          "正",
+          "正"
+        ],
+        [
+          "誤",
+          "誤",
+          "誤",
+          "正"
+        ],
+        [
+          "正",
+          "正",
+          "誤",
+          "誤"
+        ],
+        [
+          "正",
+          "誤",
+          "正",
+          "誤"
+        ]
+      ],
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "reason": "問題文・a〜dの全記述・禁煙補助剤のルビ（咀嚼2件「そしゃく」、口腔「くう」）・全5行4列の正誤表を画像で照合し一致。"
+    },
+    {
+      "id": "KSAI-2024-054",
+      "questionNo": 54,
+      "bundlePdfPage": 5,
+      "officialPdfPage": 36,
+      "status": "PASS",
+      "questionTextMatch": true,
+      "choicesMatch": true,
+      "rubyMatch": true,
+      "tableMatch": true,
+      "officialChoices": [
+        "正　正　誤　誤",
+        "正　正　誤　正",
+        "正　誤　誤　誤",
+        "誤　誤　正　正",
+        "誤　誤　正　誤"
+      ],
+      "officialTableRows": [
+        [
+          "正",
+          "正",
+          "誤",
+          "誤"
+        ],
+        [
+          "正",
+          "正",
+          "誤",
+          "正"
+        ],
+        [
+          "正",
+          "誤",
+          "誤",
+          "誤"
+        ],
+        [
+          "誤",
+          "誤",
+          "正",
+          "正"
+        ],
+        [
+          "誤",
+          "誤",
+          "正",
+          "誤"
+        ]
+      ],
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "reason": "問題文・a〜dの全記述（滋養強壮保健薬、ゴオウ・ロクジョウ、摂取量、薬用酒）および全5行4列の正誤表を画像で照合し一致。"
+    },
+    {
+      "id": "KSAI-2024-055",
+      "questionNo": 55,
+      "bundlePdfPage": 6,
+      "officialPdfPage": 37,
+      "status": "PASS",
+      "questionTextMatch": true,
+      "choicesMatch": true,
+      "rubyMatch": true,
+      "tableMatch": true,
+      "officialChoices": [
+        "誤　正　正　誤",
+        "正　誤　正　正",
+        "誤　正　誤　正",
+        "正　誤　正　誤",
+        "正　正　誤　正"
+      ],
+      "officialTableRows": [
+        [
+          "誤",
+          "正",
+          "正",
+          "誤"
+        ],
+        [
+          "正",
+          "誤",
+          "正",
+          "正"
+        ],
+        [
+          "誤",
+          "正",
+          "誤",
+          "正"
+        ],
+        [
+          "正",
+          "誤",
+          "正",
+          "誤"
+        ],
+        [
+          "正",
+          "正",
+          "誤",
+          "正"
+        ]
+      ],
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "reason": "問題文・a〜dの全記述（ビタミンB2、アミノエチルスルホン酸、システイン、ビタミンB6）および全5行4列の正誤表を画像で照合し一致。"
+    },
+    {
+      "id": "KSAI-2024-056",
+      "questionNo": 56,
+      "bundlePdfPage": 6,
+      "officialPdfPage": 37,
+      "status": "FAIL",
+      "questionTextMatch": true,
+      "choicesMatch": true,
+      "rubyMatch": false,
+      "tableMatch": true,
+      "officialChoices": [
+        "1 黄連解毒湯（ルビ：おうれんげどくとう）",
+        "2 防已黄耆湯（ルビ：ぼういおうぎとう）",
+        "3 防風通聖散（ルビ：ぼうふうつうしょうさん）",
+        "4 大柴胡湯（ルビ：だいさいことう）",
+        "5 清上防風湯（ルビ：せいじょうぼうふうとう）"
+      ],
+      "candidateRubyPlacement": {
+        "questionTrailingRuby": "おうれんげどくとう",
+        "choice1TrailingRuby": "ぼういおうぎとう",
+        "choice2TrailingRuby": "ぼうふうつうしょうさん",
+        "choice3TrailingRuby": "だいさいことう",
+        "choice4TrailingRuby": "せいじょうぼうふうとう",
+        "choice5TrailingRuby": null
+      },
+      "correctRubyMapping": [
+        {
+          "choice": 1,
+          "base": "黄連解毒湯",
+          "reading": "おうれんげどくとう"
+        },
+        {
+          "choice": 2,
+          "base": "防已黄耆湯",
+          "reading": "ぼういおうぎとう"
+        },
+        {
+          "choice": 3,
+          "base": "防風通聖散",
+          "reading": "ぼうふうつうしょうさん"
+        },
+        {
+          "choice": 4,
+          "base": "大柴胡湯",
+          "reading": "だいさいことう"
+        },
+        {
+          "choice": 5,
+          "base": "清上防風湯",
+          "reading": "せいじょうぼうふうとう"
+        }
+      ],
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "reason": "設問文・5つの処方名自体は一致するが、候補JSONのルビ配置が原典と一致しない。原典では各ルビがそれぞれ直下の対応処方名に付く。候補JSONでは第1処方名のルビが設問本文末尾に置かれ、第2〜第5処方名のルビが直前の選択肢文字列末尾に格納され、第5選択肢にはルビがない。したがって、選択肢とルビの対応が1つずつずれている。正しい対応はofficialChoicesおよびcorrectRubyMappingに記録した。"
+    },
+    {
+      "id": "KSAI-2024-057",
+      "questionNo": 57,
+      "bundlePdfPage": 7,
+      "officialPdfPage": 38,
+      "status": "PASS",
+      "questionTextMatch": true,
+      "choicesMatch": true,
+      "rubyMatch": true,
+      "tableMatch": true,
+      "officialChoices": [
+        "正　正　誤　誤",
+        "正　正　誤　正",
+        "正　誤　誤　誤",
+        "誤　誤　正　正",
+        "誤　誤　正　誤"
+      ],
+      "officialTableRows": [
+        [
+          "正",
+          "正",
+          "誤",
+          "誤"
+        ],
+        [
+          "正",
+          "正",
+          "誤",
+          "正"
+        ],
+        [
+          "正",
+          "誤",
+          "誤",
+          "誤"
+        ],
+        [
+          "誤",
+          "誤",
+          "正",
+          "正"
+        ],
+        [
+          "誤",
+          "誤",
+          "正",
+          "誤"
+        ]
+      ],
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "reason": "問題文・a〜dの全記述・全5行4列の正誤表を画像で照合し一致。ルビを要する箇所は確認されなかった。"
+    }
+  ],
+  "constraints": "正式バンク本体および状態ファイルは変更していない。監査結果JSONのみ新規作成。問49は指定idsに含まれないため対象外。"
+}
