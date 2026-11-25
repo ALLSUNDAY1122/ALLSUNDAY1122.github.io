@@ -3,16 +3,8 @@ on:
   push:
     paths:
       - '.github/workflows/touhan-q7-testflight-release.yml'
-      - 'scripts/codemagic_build_gateway.py'
-      - 'codemagic.yaml'
-      - 'touroku-hanbaisha-ios/scripts/touhan_q7_testflight_readback.py'
-      - 'touroku-hanbaisha-ios/native-ios/Sources/TouhanSprintApp.swift'
-      - 'touroku-hanbaisha-ios/native-ios/project.yml'
-      - 'touroku-hanbaisha-ios/scripts/prepare_offline_web.py'
-      - 'touroku-hanbaisha-ios/scripts/offline_learning.js'
-      - 'touroku-hanbaisha-ios/scripts/offline_learning.css'
-      - 'touroku-hanbaisha-ios/scripts/offline_learning_shell.html'
-      - 'touroku-hanbaisha-sprint/official-practice.html'
+      - 'touroku-hanbaisha-ios/OFFLINE_Q4_20261125.json'
+      - 'touroku-hanbaisha-ios/IOS_SIMULATOR_Q6_20261125.json'
 permissions:
   contents: write
 concurrency:
@@ -28,6 +20,28 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Require fresh PASS evidence for the exact tested source before release
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,subprocess
+          from pathlib import Path
+          b=Path('touroku-hanbaisha-ios')
+          q4=json.loads((b/'OFFLINE_Q4_20261125.json').read_text())
+          q6=json.loads((b/'IOS_SIMULATOR_Q6_20261125.json').read_text())
+          assert q4.get('status')=='PASS' and q4.get('count')==1198
+          assert q4.get('bankCount')==599 and q4.get('explanationsCount')==599
+          assert q4.get('externalRequests')==[] and q4.get('pageErrors')==[] and q4.get('consoleErrors')==[]
+          assert q4.get('browserEngines')=={'chromium':599,'webkit':599}
+          assert q6.get('status')=='PASS' and q6.get('bankCount')==599 and q6.get('explanationsCount')==599
+          assert q6.get('installAndLaunch')=='success' and q6.get('learningPersistence')=='PASS' and q6.get('offlineBundleVerified') is True
+          assert q4.get('testedHead')==q6.get('headSHA') and q4.get('githubRunId')==q6.get('githubRunId')
+          tested=q6['headSHA']
+          changed=subprocess.check_output(['git','diff','--name-only',tested+'..HEAD'],text=True).splitlines()
+          allowed={'touroku-hanbaisha-ios/OFFLINE_Q4_20261125.json','touroku-hanbaisha-ios/IOS_SIMULATOR_Q6_20261125.json','touroku-hanbaisha-ios/OFFLINE_Q4_BROWSER_20261125.json'}
+          assert set(changed)<=allowed, {'testedHead':tested,'currentHead':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),'changedSinceTest':changed}
+          print(json.dumps({'status':'PASS','testedHead':tested,'changedSinceTest':changed,'q4RunId':q4['githubRunId'],'q6RunId':q6['githubRunId']},ensure_ascii=False))
+          PY
       - name: Start Codemagic signed IPA and ASC upload workflow on this PR branch
         id: start
         continue-on-error: true
