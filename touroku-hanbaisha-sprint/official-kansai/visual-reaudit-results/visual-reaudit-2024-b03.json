@@ -1,0 +1,315 @@
+{
+  "batch": "visual-reaudit-2024-b03",
+  "auditType": "MANUAL_VISUAL_SOURCE_IMAGE_REAUDIT",
+  "auditedAt": "2026-11-25T17:10:00+09:00",
+  "repository": "ALLSUNDAY1122/ALLSUNDAY1122.github.io",
+  "source": {
+    "issuer": "関西広域連合",
+    "title": "令和6年度登録販売者試験（前半）",
+    "questionPdf": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_zennhan.pdf",
+    "attachedBundle": "visual-reaudit-2024-b03.pdf",
+    "attachedCandidates": "visual-reaudit-2024-b03.candidates.json"
+  },
+  "method": "添付された公式問題PDFのページ画像を目視し、候補レコードの問題文・全選択肢・ルビ・表・記号を照合した。PDF文字データや自動照合は判定根拠に使用していない。問28は候補レコードが画像表示方式のため、main上のsourceFigures画像も取得して目視照合した。",
+  "scope": [
+    "KSAI-2024-026",
+    "KSAI-2024-027",
+    "KSAI-2024-028",
+    "KSAI-2024-029",
+    "KSAI-2024-030",
+    "KSAI-2024-031",
+    "KSAI-2024-032",
+    "KSAI-2024-033",
+    "KSAI-2024-034",
+    "KSAI-2024-035"
+  ],
+  "summary": {
+    "total": 10,
+    "pass": 9,
+    "fail": 1,
+    "hold": 0
+  },
+  "answerPolicy": "answerNumberOfficialは添付候補JSONの値を転記。正答PDFは直接確認していないため全件answerPDFChecked=false。",
+  "results": [
+    {
+      "id": "KSAI-2024-026",
+      "questionNo": 26,
+      "bundlePdfPage": 1,
+      "officialPdfPage": 20,
+      "status": "PASS",
+      "questionTextMatch": true,
+      "choicesMatch": true,
+      "rubyMatch": true,
+      "ruby": [
+        "ごしゅゆとう",
+        "おう",
+        "ちょうとうさん",
+        "けいれん",
+        "けいれん",
+        "けいしかじゅつぶとう",
+        "しゃくやくかんぞうとう"
+      ],
+      "tableMatch": true,
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "reason": "問題文・a〜dの全記述・全5行4列の正誤表を画像で照合し一致。ルビ7件（「ごしゅゆとう」「おう」等）も原典の出現順と一致。"
+    },
+    {
+      "id": "KSAI-2024-027",
+      "questionNo": 27,
+      "bundlePdfPage": 1,
+      "officialPdfPage": 20,
+      "status": "PASS",
+      "questionTextMatch": true,
+      "choicesMatch": true,
+      "rubyMatch": true,
+      "ruby": [],
+      "tableMatch": true,
+      "officialChoices": [
+        "ａ、ｂ",
+        "ａ、ｃ",
+        "ｂ、ｃ",
+        "ｂ、ｄ",
+        "ｃ、ｄ"
+      ],
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "reason": "問題文・a〜dの全記述・5つの組合せ選択肢を画像で照合し一致。"
+    },
+    {
+      "id": "KSAI-2024-028",
+      "questionNo": 28,
+      "bundlePdfPage": 2,
+      "officialPdfPage": 21,
+      "status": "PASS",
+      "questionTextMatch": true,
+      "choicesMatch": true,
+      "rubyMatch": true,
+      "ruby": [],
+      "tableMatch": true,
+      "recordRepresentation": "SOURCE_FIGURE_IMAGE",
+      "sourceFigure": "touroku-hanbaisha-sprint/official-kansai/layout-crops/KSAI-2024-028-p21-1.png",
+      "sourceFigureSha": "fbda6fcd3bef15aa17730177c60243c0f27c09e9",
+      "officialTableRows": [
+        [
+          "正",
+          "誤",
+          "正",
+          "正"
+        ],
+        [
+          "正",
+          "正",
+          "正",
+          "誤"
+        ],
+        [
+          "正",
+          "正",
+          "誤",
+          "誤"
+        ],
+        [
+          "誤",
+          "正",
+          "誤",
+          "正"
+        ],
+        [
+          "誤",
+          "誤",
+          "正",
+          "正"
+        ]
+      ],
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "reason": "候補JSONは設問・選択肢をsourceFigures画像として表示する方式。main上の画像素材を取得して目視し、添付公式PDFの問28と問題文・a〜dの全記述・正誤表5行4列が一致することを確認。JSON内のプレースホルダー文字列は表示本文ではなく画像表示方式の代替フィールドとして扱った。"
+    },
+    {
+      "id": "KSAI-2024-029",
+      "questionNo": 29,
+      "bundlePdfPage": 2,
+      "officialPdfPage": 21,
+      "status": "PASS",
+      "questionTextMatch": true,
+      "choicesMatch": true,
+      "rubyMatch": true,
+      "ruby": [],
+      "tableMatch": true,
+      "officialChoices": [
+        "誤　正　正　誤",
+        "正　正　誤　正",
+        "正　誤　正　誤",
+        "誤　正　誤　正",
+        "正　誤　正　正"
+      ],
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "reason": "問題文・a〜dの全記述・全5行4列の正誤表を画像で照合し一致。"
+    },
+    {
+      "id": "KSAI-2024-030",
+      "questionNo": 30,
+      "bundlePdfPage": 3,
+      "officialPdfPage": 22,
+      "status": "FAIL",
+      "questionTextMatch": true,
+      "choicesMatch": true,
+      "rubyMatch": false,
+      "tableMatch": true,
+      "rubyCandidate": [
+        "き",
+        "けん",
+        "けいしかしゃくやくとう",
+        "しょうけんちゅうとう",
+        "よくかんさん",
+        "びゃっこかにんじんとう"
+      ],
+      "officialRubyReadings": [
+        "き",
+        "けん",
+        "さいこかりゅうこつぼれいとう",
+        "けいしかしゃくやくとう",
+        "しょうけんちゅうとう",
+        "よくかんさん",
+        "びゃっこかにんじんとう"
+      ],
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "reason": "問題文・全5選択肢・選択肢の順序・各処方名の表記は一致。ただし選択肢1「柴胡加竜骨牡蛎湯」のルビ「さいこかりゅうこつぼれいとう」が候補JSONのoriginalRubyReadingsから欠落。原典では選択肢1の直上に当該ルビがある。原典のルビ出現順はofficialRubyReadingsに記録。"
+    },
+    {
+      "id": "KSAI-2024-031",
+      "questionNo": 31,
+      "bundlePdfPage": 3,
+      "officialPdfPage": 22,
+      "status": "PASS",
+      "questionTextMatch": true,
+      "choicesMatch": true,
+      "rubyMatch": true,
+      "ruby": [
+        "がいそう",
+        "せき"
+      ],
+      "tableMatch": true,
+      "officialChoices": [
+        "正　正　誤　誤",
+        "正　誤　正　正",
+        "誤　正　誤　誤",
+        "正　誤　正　誤",
+        "誤　誤　正　正"
+      ],
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "reason": "問題文・a〜dの全記述・全5行4列の正誤表・ルビ「咳嗽（がいそう）」「咳（せき）」を画像で照合し一致。"
+    },
+    {
+      "id": "KSAI-2024-032",
+      "questionNo": 32,
+      "bundlePdfPage": 4,
+      "officialPdfPage": 23,
+      "status": "PASS",
+      "questionTextMatch": true,
+      "choicesMatch": true,
+      "rubyMatch": true,
+      "ruby": [
+        "くう",
+        "そう",
+        "くう",
+        "そう",
+        "くう",
+        "そう",
+        "くう"
+      ],
+      "tableMatch": true,
+      "officialChoices": [
+        "誤　正　誤　正",
+        "誤　正　正　誤",
+        "正　誤　正　正",
+        "誤　誤　正　誤",
+        "正　正　誤　正"
+      ],
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "reason": "問題文・a〜dの全記述・全5行4列の正誤表・「口腔」「含嗽」のルビ7件を画像で照合し一致。"
+    },
+    {
+      "id": "KSAI-2024-033",
+      "questionNo": 33,
+      "bundlePdfPage": 4,
+      "officialPdfPage": 23,
+      "status": "PASS",
+      "questionTextMatch": true,
+      "choicesMatch": true,
+      "rubyMatch": true,
+      "ruby": [
+        "せき",
+        "たん",
+        "たん",
+        "せき",
+        "ぜき",
+        "ぜん",
+        "たん",
+        "くふうげどくとう",
+        "ばくもんどうとう",
+        "きょうせいはてきがん",
+        "ききょうとう",
+        "びゃっこかにんじんとう"
+      ],
+      "tableMatch": true,
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "reason": "問題文・全5処方名・処方名のルビ・本文中のルビ7件を画像で照合し一致。"
+    },
+    {
+      "id": "KSAI-2024-034",
+      "questionNo": 34,
+      "bundlePdfPage": 5,
+      "officialPdfPage": 24,
+      "status": "PASS",
+      "questionTextMatch": true,
+      "choicesMatch": true,
+      "rubyMatch": true,
+      "ruby": [],
+      "tableMatch": true,
+      "officialChoices": [
+        "誤　正　正　誤",
+        "正　誤　正　誤",
+        "正　正　誤　正",
+        "正　誤　誤　誤",
+        "誤　誤　誤　誤"
+      ],
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "reason": "問題文・a〜dの全記述・全5行4列の正誤表を画像で照合し一致。"
+    },
+    {
+      "id": "KSAI-2024-035",
+      "questionNo": 35,
+      "bundlePdfPage": 5,
+      "officialPdfPage": 24,
+      "status": "PASS",
+      "questionTextMatch": true,
+      "choicesMatch": true,
+      "rubyMatch": true,
+      "ruby": [
+        "しゃ",
+        "れん",
+        "しゃ"
+      ],
+      "tableMatch": true,
+      "officialChoices": [
+        "正　正　正　誤",
+        "正　正　誤　正",
+        "正　誤　正　正",
+        "誤　正　正　正",
+        "正　正　正　正"
+      ],
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "reason": "問題文・a〜dの全記述・全5行4列の正誤表・「止瀉」「収斂」のルビ3件を画像で照合し一致。"
+    }
+  ],
+  "constraints": "正式バンク本体および状態ファイルは変更していない。監査結果JSONのみ新規作成。"
+}
