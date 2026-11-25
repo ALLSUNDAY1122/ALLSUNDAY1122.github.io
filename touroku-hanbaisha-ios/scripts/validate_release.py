@@ -209,8 +209,64 @@ for q in official_rows:
     assert q['verbatimCertified'] is True and q['renderReady'] is True and q['needsVisualReview'] is False,q['id']
     assert len(q['choices']) in (4,5) and q['answer'] == q['answerNumberOfficial'] - 1,q['id']
     if q.get('originalRubyReadings') is not None:
-        assert q['rubyDisplayMode'] == 'SOURCE_ORDER_UNATTACHED' and q['rubySourceVerified'] is True,q['id']
-        assert q['originalRubyReadings'] and not q.get('questionParts') and not q.get('choicesParts'),q['id']
+        readings=q['originalRubyReadings']
+        assert isinstance(readings,list) and 0<len(readings)<=100,q['id']
+        assert all(isinstance(x,str) and re.fullmatch(r'[ぁ-んァ-ンー]{1,20}',x) for x in readings),q['id']
+        audit=q.get('audit',{})
+        pinned_source=q.get('rubySourceVerified') is True and re.fullmatch(r'[a-f0-9]{64}',q.get('rubySourcePdfSha256',''))
+        manual_visual=False
+        if not pinned_source:
+            record=audit.get('record','')
+            assert audit.get('status')=='PASS' and audit.get('method')=='MANUAL_VISUAL_REAUDIT',q['id']
+            assert re.fullmatch(r'visual-reaudit-fix[0-9]+-b[0-9]+\.json',record),q['id']
+            ledger_path=WEB/'official-kansai'/'visual-reaudit-results'/record
+            assert ledger_path.is_file(),(q['id'],record)
+            ledger=json.loads(ledger_path.read_text(encoding='utf-8'))
+            rows=ledger.get('results') or ledger.get('records') or []
+            row=next((r for r in rows if r.get('id')==q['id']),None)
+            assert row is not None and row.get('status')=='PASS',q['id']
+            assert row.get('answerPDFChecked') is False and row.get('answerNumberOfficial')==q['answerNumberOfficial'],q['id']
+            assert row.get('bundlePdfPages') or row.get('bundlePages'),q['id']
+            assert row.get('evidence') or row.get('visualNotes') or row.get('findings'),q['id']
+            if row.get('checks') is not None:
+                assert all(row['checks'].get(k) is True for k in ('questionText','allChoices','ruby','tables','symbols')),q['id']
+            assert row.get('discrepancies') in (None,[]),q['id']
+            manual_visual=True
+        assert pinned_source or manual_visual,q['id']
+        mode=q.get('rubyDisplayMode')
+        if mode == 'SOURCE_ORDER_UNATTACHED':
+            assert not q.get('questionParts') and not q.get('choicesParts'),q['id']
+        elif mode == 'POSITIONALLY_ATTACHED':
+            qparts=q.get('questionParts') or []
+            cparts=q.get('choicesParts') or []
+            assert qparts or cparts,q['id']
+            assert isinstance(qparts,list),q['id']
+            assert isinstance(cparts,list) and (not cparts or len(cparts)==len(q['choices'])),q['id']
+            attached=[]
+            def verify_rich_parts(parts,plain):
+                assert isinstance(parts,list) and parts,q['id']
+                rendered=[]
+                for part in parts:
+                    assert isinstance(part,dict),q['id']
+                    if 'text' in part:
+                        assert set(part)=={'text'} and isinstance(part['text'],str),q['id']
+                        rendered.append(part['text'])
+                    else:
+                        assert set(part)=={'rubyBase','rubyText'},q['id']
+                        base,text=part['rubyBase'],part['rubyText']
+                        assert isinstance(base,str) and re.fullmatch(r'[\u3400-\u9fff々]+',base),q['id']
+                        assert isinstance(text,str) and re.fullmatch(r'[ぁ-んァ-ンー]{1,20}',text),q['id']
+                        attached.append(text)
+                        rendered.append(base)
+                assert ''.join(''.join(rendered).split())==''.join(plain.split()),q['id']
+            if qparts:
+                verify_rich_parts(qparts,q['question'])
+            for i,parts in enumerate(cparts):
+                verify_rich_parts(parts,q['choices'][i])
+            assert attached and len(attached)<=len(readings),q['id']
+            assert readings[-len(attached):]==attached,q['id']
+        else:
+            raise AssertionError((q['id'],mode))
     for fig in q.get('sourceFigures',[]):
         assert (WEB / fig['webPath']).is_file(),(q['id'],fig['webPath'])
 official_html = (WEB/'official-practice.html').read_text(encoding='utf-8')

@@ -6,7 +6,7 @@ from playwright.sync_api import sync_playwright, expect
 ROOT=Path(__file__).resolve().parents[2]
 OUT=ROOT/'touroku-hanbaisha-ios/native-ios/OfflineWeb'
 bank=json.loads((ROOT/'touroku-hanbaisha-sprint/official-kansai/APPROVED_OFFICIAL_BANK.json').read_text())
-report={'count':0,'figures':0,'externalRequests':[],'pageErrors':[]}
+report={'count':0,'figures':0,'externalRequests':[],'pageErrors':[],'browserEngines':{}}
 with sync_playwright() as pw:
     for engine in [pw.chromium,pw.webkit]:
         browser=engine.launch()
@@ -15,15 +15,22 @@ with sync_playwright() as pw:
         ctx.route('http://**/*', lambda route: route.abort())
         ctx.route('https://**/*', lambda route: route.abort())
         before=report['count']
+        report['browserEngines'][engine.name]=0
         print('START engine='+engine.name,flush=True)
         page=ctx.new_page()
         page.add_init_script("""window.__touhanStudyState=null; window.webkit={messageHandlers:{studyRecord:{postMessage:s=>{window.__savedStudy=JSON.parse(s)}}}};""")
         page.on('request',lambda r:report['externalRequests'].append(r.url) if r.url.startswith(('http:','https:')) else None)
         page.on('pageerror',lambda e:report['pageErrors'].append(str(e)))
+        page.on('console',lambda m: print('BROWSER_CONSOLE '+m.type+' '+m.text,flush=True) if m.type=='error' else None)
         page.goto((OUT/'official-practice.html').as_uri())
+        print('DEBUG offlineBank='+str(page.locator('#offlineBank').count())+' bankChars='+str(page.locator('#offlineBank').text_content() and len(page.locator('#offlineBank').text_content()))+' explanationChars='+str(page.locator('#offlineExplanations').text_content() and len(page.locator('#offlineExplanations').text_content()))+' available='+page.locator('#available').inner_text(),flush=True)
         expect(page.locator('#available')).to_contain_text('599問')
         expect(page.locator('#homeProgress')).to_have_text('0 / 599')
         assert page.evaluate("JSON.parse(document.getElementById('offlineBank').textContent)") == bank
+        explanation_bundle=page.evaluate("JSON.parse(document.getElementById('offlineExplanations').textContent)")
+        assert explanation_bundle['schema']=='touroku-hanbaisha-audited-explanations-v1'
+        assert explanation_bundle['count']==len(explanation_bundle['records'])==599
+        assert explanation_bundle['auditSummary']=={'PASS':599,'HOLD':0,'PENDING':0}
         expect(page.locator('#home')).to_be_visible()
         page.locator('#homeStart').click()
         assert page.evaluate('eligible().length')==50
@@ -56,9 +63,12 @@ with sync_playwright() as pw:
             page.locator('#choices button').nth(q['answer']).click()
             print('CHECK '+engine.name+' '+q['id'],flush=True) if report['count']-before<2 else None
             expect(page.locator('#feedback .result')).to_have_text('正解', timeout=5000)
+            expect(page.locator('#feedback .explanation')).to_be_visible()
+            assert page.locator('#feedback .explanation').inner_text().strip()
             assert page.locator('#choices button').nth(q['answer']).evaluate("el=>el.classList.contains('good')"), q['id']
             page.locator('#next').click()
             report['count']+=1
+            report['browserEngines'][engine.name]+=1
         expect(page.locator('#summary')).to_contain_text('599 / 599')
         assert page.evaluate('Object.keys(window.__savedStudy.stats).length')==599
         assert page.evaluate('window.__savedStudy.session') is None
@@ -85,5 +95,7 @@ with sync_playwright() as pw:
         assert '599問' in page.locator('body').inner_text()
         print(json.dumps({'engine':engine.name,'completed':report['count']-before,'externalRequests':report['externalRequests'],'pageErrors':report['pageErrors']},ensure_ascii=False),flush=True)
         browser.close()
-assert report['count']==1198 and not report['externalRequests'] and not report['pageErrors'],report
+assert report['count']==1198 and report['browserEngines']=={'chromium':599,'webkit':599} and not report['externalRequests'] and not report['pageErrors'],report
+report.update({'status':'PASS','bankCount':599,'explanationsCount':599,'nativeSimulatorOfflineBundleVerified':False,'scope':'Packaged OfflineWeb file:// browser tests with all HTTP(S) requests blocked; simulator native bundle verification follows in Q6 workflow.'})
+(ROOT/'touroku-hanbaisha-ios/OFFLINE_Q4_BROWSER_20261125.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n')
 print(json.dumps(report,ensure_ascii=False))

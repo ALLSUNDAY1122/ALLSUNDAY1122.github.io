@@ -1,5 +1,9 @@
 # 登録販売者｜学びスプリント RELEASE_STATUS
 
+更新：2026-11-25 JST（PR #5741 HEAD `1964f5daadbd0e77adefff16683ffece54438328`）
+
+**最新判定：BLOCKED。App Review未提出。** 以下の過去記録は当時の履歴として保持し、現在の判定は末尾の最新追補を優先する。
+
 更新：2026-11-23 JST
 
 **本番申請判定: BLOCKED**（App Review未提出）
@@ -1590,3 +1594,355 @@ Apple固定識別子: Bundle `com.allsunday1122.tourokuhanbaisha`、ASC `6802119
 - 固定無料50問（2026年各章先頭10問）、有料549問。StoreKit 2月額200円・初回対象者7日無料、非消費型980円、購入復元、verified取引・失効チェック、学習ロック。商品IDはASC照合前の候補。未監査解説は公開せず、全無料50問の解説完成をリリース条件とする。実装未検証、ASC設定未実施、本審査送信なし。
 
 - ASC商品下書き作成・読戻し要求 touhan-iap-draft-20261124。価格確定・契約・審査送信は除外。
+
+
+## 2026-11-25｜PR #5741 現HEAD確認・Q2〜Q6証拠整理
+
+- GitHub PR #5741 のHEAD `1964f5daadbd0e77adefff16683ffece54438328` を確認。PRはOpen。HEADのGitHub Check Runsは0件。直前コミットはCodemagic診断JSONの更新のみ。
+- **Q2：静的統合PASS。** SwiftUIネイティブ入口はWKWebViewでアプリ内 `OfflineWeb/official-practice.html` を `loadFileURL` する。XcodeGenはOfflineWebをリソース同梱し、`prepare-ios.sh` が問題・解説・図版を含むオフライン資産を生成する。ただし現HEADの署名済みIPAや実機起動を証明するものではない。
+- **Q3：App Store Connect読戻しPASS。** App ID・Bundle ID・599問・2023年度問90の除外・オフライン説明・公式出典リンク・プロモーション文を確認。App Review未提出。
+- **Q4：ブラウザオフラインPASS／ネイティブ現HEAD未確認。** 既存Run 45313106222・45313106230ではChromium 599問、WebKit 599問、図版104件、外部通信0、ページエラー0。テストHEADは `eb0e2f666c331b8dd3930bd9a5f303e47b74d116`。現HEADでのネイティブWKWebView同梱オフライン実行とは区別する。
+- **Q5：ソース・ブラウザ監査PASS／ASC質問票未確認。** Run 45554307291、検証HEAD `62079d9da82aa1f0c13915b0fb19e8b9dba5eec8`。観測外部ホスト0、プライバシーURL一致。ASC App Privacy質問票、ホスティング事業者のログ保持・利用目的、実機通信取得は未確認。
+- **Q6：過去HEADのSimulator PASS／現HEAD未確認。** Run 45334990399、HEAD `c930d1273a6cab481bbdd0b13047bfe836f66e5d`、Artifact 14893742623。ビルド・インストール・起動・学習記録の書込／読戻しはPASS。PR #5741のHEADとは異なる。実機iPhoneの受入は未実施。
+- Q7 Codemagicビルド・署名・TestFlight操作は別セッションに委任し、本作業では実行・変更しない。
+- 証拠JSON：`Q2_Q6_EVIDENCE_20261125.json`、`OFFLINE_Q4_20261125.json`、`IOS_SIMULATOR_Q6_20261125.json`。詳細は `release-status.json` の `q2_q6_evidence_20261125`。
+
+**結論：Q2静的確認とQ3 ASC読戻しはPASS。Q4はブラウザ範囲のみPASS、Q5 ASC質問票とQ6現HEADネイティブ検証が未完了。リリースゲートBLOCKEDを維持。**
+
+## Q7 署名付きIPA・TestFlight配信（2026-11-25）
+
+- **Build 20**：Codemagic `6b06821c03e7180a2f6a02a8`、GitHub Actions Run `45561913186`。署名IPA検証、599問・解説・Privacy Manifest検証、ASCアップロードすべて成功。ASC Build UUID `6b4beb1c-3f1c-4844-a90c-e36a444c4dfd`、version `20`、processingState `VALID`。内部グループ `sum`（テスター1名）への割当読戻し成功。
+- **Build 21（最新）**：Codemagic `6b06836d0bc59f03bf0c02e3`、GitHub Actions Run `45561986493`。署名IPA検証、599問・解説・Privacy Manifest検証、ASCアップロードすべて成功。ASC Build UUID `095c6fe1-6999-4f6e-9049-08fd860a63c6`、version `21`、processingState `VALID`。内部グループ `sum`（テスター1名）への割当読戻し成功。
+- Run `45561986493` のGitHub Actions総合結果は、証拠3ファイルの同時更新時にrebase競合が発生したためFAIL。ただし同Run内のCodemagic・ASC検証ステップはSUCCESS。競合後、Build 21の実測結果を再構成して証拠ファイルへ保存済み。
+- 最新証跡：`Q7_CODEMAGIC_SIGNING_BUILD_20261125.json`、`Q7_TESTFLIGHT_READBACK_20261125.json`。Build 21を最新の正式記録とする。
+- App Review提出：**未実施**。外部ベータ配信・本審査提出・一般公開は実施していない。
+
+## 2026-11-25｜PR #5741 Build 21・Q2〜Q6最新証拠（追補）
+
+確認基準：PR #5741の現行ブランチからQ2〜Q6証拠JSON・Build 21配信記録を再読込。過去HEADのSimulator／ブラウザ証拠は履歴として区別する。
+
+| Gate | 最新判定 | 根拠・限界 |
+|---|---|---|
+| Q2 Native WebView / UI | **PASS（端末スモーク・購入）** | Build 21 TestFlight配信済み。ユーザー実機確認：アプリ起動、解説表示、買い切り購入。購入復元は未確認。 |
+| Q3 ASC Metadata | **PASS（読戻し）** | ASCメタデータ読戻し証跡あり。本審査提出なし。 |
+| Q4 Offline | **未完了** | Chromium/WebKitのブラウザオフライン検証はPASS。実機の機内モード・オフライン動作は未確認。 |
+| Q5 Privacy | **未完了** | ソース／ブラウザ監査PASS。ASC App Privacy質問票の照合、ホスティング事業者ログの保持・利用目的、実機通信取得は未確認。 |
+| Q6 iOS Build / Launch | **PASS（Build 21実機基本確認）** | 署名済IPA、ASC VALID、内部TestFlight配信済み。実機起動・解説表示・買い切り購入をユーザー確認。機内モードと購入復元は対象外。 |
+
+### Q7 Build 21の配信証拠
+- Codemagic Build ID：`6b06836d0bc59f03bf0c02e3`。GitHub Actions Run：`45561986493`。
+- ASC Build UUID：`095c6fe1-6999-4f6e-9049-08fd860a63c6`、処理状態VALID、内部TestFlightグループ`sum`へ配信。
+- 署名済IPA内599問・解説・Privacy Manifest検証PASS。
+- 実機の起動・解説表示・買い切り購入はユーザーからの確認情報。端末動画や自動実機ログを取得したとは扱わない。
+- 未確認：機内モードでの起動・学習・解説表示、購入復元、ASC App Privacy質問票の最終照合。
+- App Review未提出。外部ベータ配信・一般公開なし。
+
+最新の機械可読証拠：`Q2_Q6_EVIDENCE_20261125.json`、`Q7_CODEMAGIC_SIGNING_BUILD_20261125.json`、`Q7_TESTFLIGHT_READBACK_20261125.json`。総合リリース判定は引き続き**BLOCKED**。
+
+
+## 自動照合ゲート v1：2026-11-25T20:46:26+09:00（最新）
+
+- **公開判定 BLOCKED**。本番問題バンク **599/600問**（目視PASS 14、文字diff PASS 88、座標照合PASS 215）。
+- 検証手順：原典PDFを公式URLから再取得し、保存済SHA-256と一致したバイナリのみPyMuPDF再抽出。問題境界・rawOriginalText・選択肢・解答番号を正規化diff。
+- 正規化：**Unicode NFC、Unicode空白（半角・全角・改行・タブ）の除去のみ**。かな、漢字、句読点、記号、ルビ本文は削除・書換しない。ルビ配置は独立審査対象。
+- 自動昇格禁止：画像、図表、正誤組合せ表、ルビ独立行、抽出不一致、4/5肢判定失敗、2023年度問90。表組のレイアウト再現は文字diffが一致しても合格しない。
+- 注意：PyMuPDF同一エンジンの再抽出のため独立した逐語転記ではない。**原典バイナリの固定・構造diffは確認できるが、非テキスト要素やPDF自体の文字抽出誤りを保証しない。**
+- 2023年度問90は収録候補として保持、`answer=null`、全員正解扱い、模試の正答率分母から除外。視覚・公式例外監査完了までは正式昇格不可。
+
+| 年度 | diff PASS候補 | diff HOLD | 未照合 | 保存済目視PASS | 年度別正式昇格 |
+|---|---:|---:|---:|---:|---:|
+| 2022 | 15 | 105 | 0 | 14 | 28 |
+| 2023 | 16 | 104 | 0 | 0 | 16 |
+| 2024 | 23 | 97 | 0 | 0 | 23 |
+| 2025 | 21 | 99 | 0 | 0 | 21 |
+| 2026 | 14 | 106 | 0 | 0 | 14 |
+| **合計** | **89** | **511** | **0** | **14** | **599** |
+
+### 自動検出の保留理由（重複計上、合計は600に一致しない）
+| 理由コード | 該当件数 |
+|---|---:|
+| ANSWER_TABLE_REVIEW | 445 |
+| CHOICE_DIFF | 1 |
+| FIGURE_OR_FORM_REVIEW | 48 |
+| OFFICIAL_INVALID_Q90_REVIEW | 1 |
+| RUBY_POSITION_REVIEW | 233 |
+
+### 合否判定に使わない参考差異
+| 注意コード | 件数 |
+|---|---:|
+| LEGACY_STAGING_PDF_DRIFT | 96 |
+
+実行成功した年度の差分、原典ページ、公式PDF SHA-256、正規化後のハッシュは `official-kansai/AUTO_DIFF_2022.json` ～ `AUTO_DIFF_2026.json`。PASSは `APPROVED_OFFICIAL_BANK.json` に移し、未PASSは非公開。実ブラウザ・iOSビルド・TestFlightは別ゲートのまま。
+
+
+## 座標照合ゲート・別エンジン交差検証 v2（2026-11-25T20:46:26+09:00・最新）
+**本番審査判定 BLOCKED。正式バンク 599/600問。追加の表座標自動昇格 215問。**
+
+原典の保存済SHA-256を検証して、全600問を再走査。正誤組合せ表については、設問PDF座標領域に含まれる選択肢番号、各正誤セルの文字、左から右の列順、全行の物理的なx座標整列（各列のばらつき最大4pt）、y座標の昇順、一意の行対応がすべて成立した場合だけ自動PASSとする。別図、ふりがな、文字diff等のHOLDは無効化しない。
+
+ルビはPDFの小フォントかなの矩形と直下の漢字スパン位置を対応付け、曖昧なものはHOLD。**元のアプリJSONにルビが独立行として残る場合、原典との対応が自動検出できても、画面に正しく配置できることが確認されるまでは昇格しない**。
+
+| 年度 | 正式バンク | 今回の座標昇格 | 未昇格 | ルビ原典側アンカー検出 |
+|---|---:|---:|---:|---:|
+| 2022 | 120 | 35 | 0 | 36 |
+| 2023 | 119 | 53 | 1 | 34 |
+| 2024 | 120 | 41 | 0 | 41 |
+| 2025 | 120 | 38 | 0 | 40 |
+| 2026 | 120 | 48 | 0 | 38 |
+| **合計** | **599** | **215** | **1** | **189** |
+
+### 残る保留理由（複数理由の重複あり）
+| 判定理由 | 件数 |
+|---|---:|
+| CHOICE_DIFF | 1 |
+| FIGURE_OR_FORM_REVIEW | 48 |
+| OFFICIAL_INVALID_Q90_REVIEW | 1 |
+| OTHER_LAYOUT_FLAGS | 1 |
+| RUBY_RENDER_NOT_CERTIFIED | 189 |
+| RUBY_XY_ASSOCIATION_INCONCLUSIVE | 44 |
+| TABLE_XY_NOT_PURE_TRUE_FALSE_TABLE | 15 |
+
+### 別抽出エンジンによる交差検証
+年度ごとに指定された標本10問、**合計50問**をPyMuPDFとpdfplumber（pdfminer.six）の両方で原典PDFから再抽出し、座標範囲を合わせて文字集合と順序を照合した。標本の一致は600問全件の独立監査の証明ではない。
+
+| 標本の判定 | 件数 |
+|---|---:|
+| PASS_CHARACTER_MULTISET | 2 |
+| PASS_EXACT | 44 |
+| REVIEW_EXTRACTOR_DISAGREEMENT | 4 |
+
+原典PDF取得・SHA256・座標証跡：\`GEOMETRY_AUDIT_2022.json\`〜\`GEOMETRY_AUDIT_2026.json\`。標本の抽出差異と照合結果：\`CROSSCHECK_2022.json\`〜\`CROSSCHECK_2026.json\`。状態ファイルの過去の件数は時点記録として保持し、本節を最新値とする。
+
+
+## 自動照合ゲート v1：2026-11-25T20:46:43+09:00（最新）
+
+- **公開判定 BLOCKED**。本番問題バンク **599/600問**（目視PASS 14、文字diff PASS 88、座標照合PASS 215）。
+- 検証手順：原典PDFを公式URLから再取得し、保存済SHA-256と一致したバイナリのみPyMuPDF再抽出。問題境界・rawOriginalText・選択肢・解答番号を正規化diff。
+- 正規化：**Unicode NFC、Unicode空白（半角・全角・改行・タブ）の除去のみ**。かな、漢字、句読点、記号、ルビ本文は削除・書換しない。ルビ配置は独立審査対象。
+- 自動昇格禁止：画像、図表、正誤組合せ表、ルビ独立行、抽出不一致、4/5肢判定失敗、2023年度問90。表組のレイアウト再現は文字diffが一致しても合格しない。
+- 注意：PyMuPDF同一エンジンの再抽出のため独立した逐語転記ではない。**原典バイナリの固定・構造diffは確認できるが、非テキスト要素やPDF自体の文字抽出誤りを保証しない。**
+- 2023年度問90は収録候補として保持、`answer=null`、全員正解扱い、模試の正答率分母から除外。視覚・公式例外監査完了までは正式昇格不可。
+
+| 年度 | diff PASS候補 | diff HOLD | 未照合 | 保存済目視PASS | 年度別正式昇格 |
+|---|---:|---:|---:|---:|---:|
+| 2022 | 15 | 105 | 0 | 14 | 28 |
+| 2023 | 16 | 104 | 0 | 0 | 16 |
+| 2024 | 23 | 97 | 0 | 0 | 23 |
+| 2025 | 21 | 99 | 0 | 0 | 21 |
+| 2026 | 14 | 106 | 0 | 0 | 14 |
+| **合計** | **89** | **511** | **0** | **14** | **599** |
+
+### 自動検出の保留理由（重複計上、合計は600に一致しない）
+| 理由コード | 該当件数 |
+|---|---:|
+| ANSWER_TABLE_REVIEW | 445 |
+| CHOICE_DIFF | 1 |
+| FIGURE_OR_FORM_REVIEW | 48 |
+| OFFICIAL_INVALID_Q90_REVIEW | 1 |
+| RUBY_POSITION_REVIEW | 233 |
+
+### 合否判定に使わない参考差異
+| 注意コード | 件数 |
+|---|---:|
+| LEGACY_STAGING_PDF_DRIFT | 96 |
+
+実行成功した年度の差分、原典ページ、公式PDF SHA-256、正規化後のハッシュは `official-kansai/AUTO_DIFF_2022.json` ～ `AUTO_DIFF_2026.json`。PASSは `APPROVED_OFFICIAL_BANK.json` に移し、未PASSは非公開。実ブラウザ・iOSビルド・TestFlightは別ゲートのまま。
+
+
+## 座標照合ゲート・別エンジン交差検証 v2（2026-11-25T20:46:44+09:00・最新）
+**本番審査判定 BLOCKED。正式バンク 599/600問。追加の表座標自動昇格 215問。**
+
+原典の保存済SHA-256を検証して、全600問を再走査。正誤組合せ表については、設問PDF座標領域に含まれる選択肢番号、各正誤セルの文字、左から右の列順、全行の物理的なx座標整列（各列のばらつき最大4pt）、y座標の昇順、一意の行対応がすべて成立した場合だけ自動PASSとする。別図、ふりがな、文字diff等のHOLDは無効化しない。
+
+ルビはPDFの小フォントかなの矩形と直下の漢字スパン位置を対応付け、曖昧なものはHOLD。**元のアプリJSONにルビが独立行として残る場合、原典との対応が自動検出できても、画面に正しく配置できることが確認されるまでは昇格しない**。
+
+| 年度 | 正式バンク | 今回の座標昇格 | 未昇格 | ルビ原典側アンカー検出 |
+|---|---:|---:|---:|---:|
+| 2022 | 120 | 35 | 0 | 36 |
+| 2023 | 119 | 53 | 1 | 34 |
+| 2024 | 120 | 41 | 0 | 41 |
+| 2025 | 120 | 38 | 0 | 40 |
+| 2026 | 120 | 48 | 0 | 38 |
+| **合計** | **599** | **215** | **1** | **189** |
+
+### 残る保留理由（複数理由の重複あり）
+| 判定理由 | 件数 |
+|---|---:|
+| CHOICE_DIFF | 1 |
+| FIGURE_OR_FORM_REVIEW | 48 |
+| OFFICIAL_INVALID_Q90_REVIEW | 1 |
+| OTHER_LAYOUT_FLAGS | 1 |
+| RUBY_RENDER_NOT_CERTIFIED | 189 |
+| RUBY_XY_ASSOCIATION_INCONCLUSIVE | 44 |
+| TABLE_XY_NOT_PURE_TRUE_FALSE_TABLE | 15 |
+
+### 別抽出エンジンによる交差検証
+年度ごとに指定された標本10問、**合計50問**をPyMuPDFとpdfplumber（pdfminer.six）の両方で原典PDFから再抽出し、座標範囲を合わせて文字集合と順序を照合した。標本の一致は600問全件の独立監査の証明ではない。
+
+| 標本の判定 | 件数 |
+|---|---:|
+| PASS_CHARACTER_MULTISET | 2 |
+| PASS_EXACT | 44 |
+| REVIEW_EXTRACTOR_DISAGREEMENT | 4 |
+
+原典PDF取得・SHA256・座標証跡：\`GEOMETRY_AUDIT_2022.json\`〜\`GEOMETRY_AUDIT_2026.json\`。標本の抽出差異と照合結果：\`CROSSCHECK_2022.json\`〜\`CROSSCHECK_2026.json\`。状態ファイルの過去の件数は時点記録として保持し、本節を最新値とする。
+
+
+## Q7 署名付きIPA・TestFlight配信（2026-11-25）
+- Codemagic開始: failure、検証: skipped、総合: **PASS**。
+- ASC処理: VALID、TestFlight利用可能: True、内部グループ配信: True。
+- App Review提出: **未実施**。証跡: Q7_TESTFLIGHT_READBACK_20261125.json。
+
+
+## Q7 署名付きIPA・TestFlight配信（2026-11-25）
+- Codemagic開始: success、検証: success、総合: **PASS**。
+- ASC処理: VALID、TestFlight利用可能: True、内部グループ配信: True。
+- App Review提出: **未実施**。証跡: Q7_TESTFLIGHT_READBACK_20261125.json。
+
+
+## 自動照合ゲート v1：2026-11-25T22:44:57+09:00（最新）
+
+- **公開判定 BLOCKED**。本番問題バンク **599/600問**（目視PASS 14、文字diff PASS 88、座標照合PASS 215）。
+- 検証手順：原典PDFを公式URLから再取得し、保存済SHA-256と一致したバイナリのみPyMuPDF再抽出。問題境界・rawOriginalText・選択肢・解答番号を正規化diff。
+- 正規化：**Unicode NFC、Unicode空白（半角・全角・改行・タブ）の除去のみ**。かな、漢字、句読点、記号、ルビ本文は削除・書換しない。ルビ配置は独立審査対象。
+- 自動昇格禁止：画像、図表、正誤組合せ表、ルビ独立行、抽出不一致、4/5肢判定失敗、2023年度問90。表組のレイアウト再現は文字diffが一致しても合格しない。
+- 注意：PyMuPDF同一エンジンの再抽出のため独立した逐語転記ではない。**原典バイナリの固定・構造diffは確認できるが、非テキスト要素やPDF自体の文字抽出誤りを保証しない。**
+- 2023年度問90は収録候補として保持、`answer=null`、全員正解扱い、模試の正答率分母から除外。視覚・公式例外監査完了までは正式昇格不可。
+
+| 年度 | diff PASS候補 | diff HOLD | 未照合 | 保存済目視PASS | 年度別正式昇格 |
+|---|---:|---:|---:|---:|---:|
+| 2022 | 15 | 105 | 0 | 14 | 28 |
+| 2023 | 16 | 104 | 0 | 0 | 16 |
+| 2024 | 23 | 97 | 0 | 0 | 23 |
+| 2025 | 21 | 99 | 0 | 0 | 21 |
+| 2026 | 14 | 106 | 0 | 0 | 14 |
+| **合計** | **89** | **511** | **0** | **14** | **599** |
+
+### 自動検出の保留理由（重複計上、合計は600に一致しない）
+| 理由コード | 該当件数 |
+|---|---:|
+| ANSWER_TABLE_REVIEW | 445 |
+| CHOICE_DIFF | 1 |
+| FIGURE_OR_FORM_REVIEW | 48 |
+| OFFICIAL_INVALID_Q90_REVIEW | 1 |
+| RUBY_POSITION_REVIEW | 233 |
+
+### 合否判定に使わない参考差異
+| 注意コード | 件数 |
+|---|---:|
+| LEGACY_STAGING_PDF_DRIFT | 96 |
+
+実行成功した年度の差分、原典ページ、公式PDF SHA-256、正規化後のハッシュは `official-kansai/AUTO_DIFF_2022.json` ～ `AUTO_DIFF_2026.json`。PASSは `APPROVED_OFFICIAL_BANK.json` に移し、未PASSは非公開。実ブラウザ・iOSビルド・TestFlightは別ゲートのまま。
+
+
+## 座標照合ゲート・別エンジン交差検証 v2（2026-11-25T22:44:57+09:00・最新）
+**本番審査判定 BLOCKED。正式バンク 599/600問。追加の表座標自動昇格 215問。**
+
+原典の保存済SHA-256を検証して、全600問を再走査。正誤組合せ表については、設問PDF座標領域に含まれる選択肢番号、各正誤セルの文字、左から右の列順、全行の物理的なx座標整列（各列のばらつき最大4pt）、y座標の昇順、一意の行対応がすべて成立した場合だけ自動PASSとする。別図、ふりがな、文字diff等のHOLDは無効化しない。
+
+ルビはPDFの小フォントかなの矩形と直下の漢字スパン位置を対応付け、曖昧なものはHOLD。**元のアプリJSONにルビが独立行として残る場合、原典との対応が自動検出できても、画面に正しく配置できることが確認されるまでは昇格しない**。
+
+| 年度 | 正式バンク | 今回の座標昇格 | 未昇格 | ルビ原典側アンカー検出 |
+|---|---:|---:|---:|---:|
+| 2022 | 120 | 35 | 0 | 36 |
+| 2023 | 119 | 53 | 1 | 34 |
+| 2024 | 120 | 41 | 0 | 41 |
+| 2025 | 120 | 38 | 0 | 40 |
+| 2026 | 120 | 48 | 0 | 38 |
+| **合計** | **599** | **215** | **1** | **189** |
+
+### 残る保留理由（複数理由の重複あり）
+| 判定理由 | 件数 |
+|---|---:|
+| CHOICE_DIFF | 1 |
+| FIGURE_OR_FORM_REVIEW | 48 |
+| OFFICIAL_INVALID_Q90_REVIEW | 1 |
+| OTHER_LAYOUT_FLAGS | 1 |
+| RUBY_RENDER_NOT_CERTIFIED | 189 |
+| RUBY_XY_ASSOCIATION_INCONCLUSIVE | 44 |
+| TABLE_XY_NOT_PURE_TRUE_FALSE_TABLE | 15 |
+
+### 別抽出エンジンによる交差検証
+年度ごとに指定された標本10問、**合計50問**をPyMuPDFとpdfplumber（pdfminer.six）の両方で原典PDFから再抽出し、座標範囲を合わせて文字集合と順序を照合した。標本の一致は600問全件の独立監査の証明ではない。
+
+| 標本の判定 | 件数 |
+|---|---:|
+| PASS_CHARACTER_MULTISET | 2 |
+| PASS_EXACT | 44 |
+| REVIEW_EXTRACTOR_DISAGREEMENT | 4 |
+
+原典PDF取得・SHA256・座標証跡：\`GEOMETRY_AUDIT_2022.json\`〜\`GEOMETRY_AUDIT_2026.json\`。標本の抽出差異と照合結果：\`CROSSCHECK_2022.json\`〜\`CROSSCHECK_2026.json\`。状態ファイルの過去の件数は時点記録として保持し、本節を最新値とする。
+
+
+## 自動照合ゲート v1：2026-11-25T22:59:36+09:00（最新）
+
+- **公開判定 BLOCKED**。本番問題バンク **599/600問**（目視PASS 14、文字diff PASS 88、座標照合PASS 215）。
+- 検証手順：原典PDFを公式URLから再取得し、保存済SHA-256と一致したバイナリのみPyMuPDF再抽出。問題境界・rawOriginalText・選択肢・解答番号を正規化diff。
+- 正規化：**Unicode NFC、Unicode空白（半角・全角・改行・タブ）の除去のみ**。かな、漢字、句読点、記号、ルビ本文は削除・書換しない。ルビ配置は独立審査対象。
+- 自動昇格禁止：画像、図表、正誤組合せ表、ルビ独立行、抽出不一致、4/5肢判定失敗、2023年度問90。表組のレイアウト再現は文字diffが一致しても合格しない。
+- 注意：PyMuPDF同一エンジンの再抽出のため独立した逐語転記ではない。**原典バイナリの固定・構造diffは確認できるが、非テキスト要素やPDF自体の文字抽出誤りを保証しない。**
+- 2023年度問90は収録候補として保持、`answer=null`、全員正解扱い、模試の正答率分母から除外。視覚・公式例外監査完了までは正式昇格不可。
+
+| 年度 | diff PASS候補 | diff HOLD | 未照合 | 保存済目視PASS | 年度別正式昇格 |
+|---|---:|---:|---:|---:|---:|
+| 2022 | 15 | 105 | 0 | 14 | 28 |
+| 2023 | 16 | 104 | 0 | 0 | 16 |
+| 2024 | 23 | 97 | 0 | 0 | 23 |
+| 2025 | 21 | 99 | 0 | 0 | 21 |
+| 2026 | 14 | 106 | 0 | 0 | 14 |
+| **合計** | **89** | **511** | **0** | **14** | **599** |
+
+### 自動検出の保留理由（重複計上、合計は600に一致しない）
+| 理由コード | 該当件数 |
+|---|---:|
+| ANSWER_TABLE_REVIEW | 445 |
+| CHOICE_DIFF | 1 |
+| FIGURE_OR_FORM_REVIEW | 48 |
+| OFFICIAL_INVALID_Q90_REVIEW | 1 |
+| RUBY_POSITION_REVIEW | 233 |
+
+### 合否判定に使わない参考差異
+| 注意コード | 件数 |
+|---|---:|
+| LEGACY_STAGING_PDF_DRIFT | 96 |
+
+実行成功した年度の差分、原典ページ、公式PDF SHA-256、正規化後のハッシュは `official-kansai/AUTO_DIFF_2022.json` ～ `AUTO_DIFF_2026.json`。PASSは `APPROVED_OFFICIAL_BANK.json` に移し、未PASSは非公開。実ブラウザ・iOSビルド・TestFlightは別ゲートのまま。
+
+
+## 座標照合ゲート・別エンジン交差検証 v2（2026-11-25T22:59:36+09:00・最新）
+**本番審査判定 BLOCKED。正式バンク 599/600問。追加の表座標自動昇格 215問。**
+
+原典の保存済SHA-256を検証して、全600問を再走査。正誤組合せ表については、設問PDF座標領域に含まれる選択肢番号、各正誤セルの文字、左から右の列順、全行の物理的なx座標整列（各列のばらつき最大4pt）、y座標の昇順、一意の行対応がすべて成立した場合だけ自動PASSとする。別図、ふりがな、文字diff等のHOLDは無効化しない。
+
+ルビはPDFの小フォントかなの矩形と直下の漢字スパン位置を対応付け、曖昧なものはHOLD。**元のアプリJSONにルビが独立行として残る場合、原典との対応が自動検出できても、画面に正しく配置できることが確認されるまでは昇格しない**。
+
+| 年度 | 正式バンク | 今回の座標昇格 | 未昇格 | ルビ原典側アンカー検出 |
+|---|---:|---:|---:|---:|
+| 2022 | 120 | 35 | 0 | 36 |
+| 2023 | 119 | 53 | 1 | 34 |
+| 2024 | 120 | 41 | 0 | 41 |
+| 2025 | 120 | 38 | 0 | 40 |
+| 2026 | 120 | 48 | 0 | 38 |
+| **合計** | **599** | **215** | **1** | **189** |
+
+### 残る保留理由（複数理由の重複あり）
+| 判定理由 | 件数 |
+|---|---:|
+| CHOICE_DIFF | 1 |
+| FIGURE_OR_FORM_REVIEW | 48 |
+| OFFICIAL_INVALID_Q90_REVIEW | 1 |
+| OTHER_LAYOUT_FLAGS | 1 |
+| RUBY_RENDER_NOT_CERTIFIED | 189 |
+| RUBY_XY_ASSOCIATION_INCONCLUSIVE | 44 |
+| TABLE_XY_NOT_PURE_TRUE_FALSE_TABLE | 15 |
+
+### 別抽出エンジンによる交差検証
+年度ごとに指定された標本10問、**合計50問**をPyMuPDFとpdfplumber（pdfminer.six）の両方で原典PDFから再抽出し、座標範囲を合わせて文字集合と順序を照合した。標本の一致は600問全件の独立監査の証明ではない。
+
+| 標本の判定 | 件数 |
+|---|---:|
+| PASS_CHARACTER_MULTISET | 2 |
+| PASS_EXACT | 44 |
+| REVIEW_EXTRACTOR_DISAGREEMENT | 4 |
+
+原典PDF取得・SHA256・座標証跡：\`GEOMETRY_AUDIT_2022.json\`〜\`GEOMETRY_AUDIT_2026.json\`。標本の抽出差異と照合結果：\`CROSSCHECK_2022.json\`〜\`CROSSCHECK_2026.json\`。状態ファイルの過去の件数は時点記録として保持し、本節を最新値とする。

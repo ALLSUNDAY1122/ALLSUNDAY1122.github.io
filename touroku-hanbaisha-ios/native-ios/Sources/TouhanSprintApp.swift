@@ -30,7 +30,7 @@ struct TouhanWebView: UIViewRepresentable {
 
     func makeUIView(context: Context) -> WKWebView {
         let configuration = WKWebViewConfiguration()
-        configuration.websiteDataStore = .nonPersistent()
+        configuration.websiteDataStore = WKWebsiteDataStore.nonPersistent()
         configuration.defaultWebpagePreferences.allowsContentJavaScript = true
         StudyStore.installSnapshot(in: configuration.userContentController)
         configuration.userContentController.add(context.coordinator, name: "studyRecord")

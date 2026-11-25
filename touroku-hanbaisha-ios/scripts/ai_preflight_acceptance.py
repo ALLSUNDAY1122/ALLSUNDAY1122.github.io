@@ -17,6 +17,74 @@ checks=[]
 def gate(name, status, detail, evidence=None):
     checks.append({"id":name,"status":status,"detail":detail,"evidence":evidence or []})
 def is_file(p):return p.is_file() and p.stat().st_size>0
+def manual_visual_audit_pass(q):
+    audit=q.get("audit") or {}
+    if audit.get("method")!="MANUAL_VISUAL_REAUDIT" or audit.get("status")!="PASS":
+        return False
+    name=audit.get("record")
+    if not isinstance(name,str) or Path(name).name!=name:
+        return False
+    evidence_path=B/"visual-reaudit-results"/name
+    if not is_file(evidence_path):
+        return False
+    evidence=json.loads(evidence_path.read_text(encoding="utf-8"))
+    rows=evidence.get("results") or evidence.get("records") or []
+    record=next((r for r in rows if r.get("id")==q.get("id")),None)
+    return bool(record and record.get("status")=="PASS")
+def collect_ruby_text(value):
+    found=[]
+    if isinstance(value,dict):
+        if isinstance(value.get("rubyText"),str):
+            found.append(value["rubyText"])
+        for key,child in value.items():
+            if key!="rubyText":
+                found.extend(collect_ruby_text(child))
+    elif isinstance(value,list):
+        for child in value:
+            found.extend(collect_ruby_text(child))
+    return found
+def is_subsequence(items, sequence):
+    pos=0
+    for item in items:
+        try:
+            pos=sequence.index(item,pos)+1
+        except ValueError:
+            return False
+    return True
+def q6_tested_sources_unchanged(tested_head, workflow_head):
+    if not isinstance(tested_head,str) or not re.fullmatch(r"[0-9a-f]{40}",tested_head):
+        return False, []
+    if not isinstance(workflow_head,str) or not re.fullmatch(r"[0-9a-f]{40}",workflow_head):
+        return False, []
+    current=subprocess.run(["git","rev-parse","HEAD"],capture_output=True,text=True)
+    if current.returncode!=0 or current.stdout.strip()!=workflow_head:
+        return False, []
+    if tested_head==workflow_head:
+        return True, []
+    ancestor=subprocess.run(["git","merge-base","--is-ancestor",tested_head,workflow_head],
+        capture_output=True,text=True)
+    if ancestor.returncode!=0:
+        return False, []
+    diff=subprocess.run(["git","diff","--name-only",f"{tested_head}..{workflow_head}"],
+        capture_output=True,text=True)
+    if diff.returncode!=0:
+        return False, []
+    changed=sorted(set(x for x in diff.stdout.splitlines() if x))
+    protected=[]
+    for path in changed:
+        if path.startswith("touroku-hanbaisha-sprint/"):
+            if path=="touroku-hanbaisha-sprint/official-kansai/GEOMETRY_PIPELINE_DIAGNOSTICS.json":
+                continue
+            if path.startswith("touroku-hanbaisha-sprint/official-kansai/visual-reaudit-results/"):
+                continue
+            protected.append(path)
+        elif path.startswith("touroku-hanbaisha-ios/native-ios/"):
+            protected.append(path)
+        elif path.startswith("touroku-hanbaisha-ios/scripts/") and path!="touroku-hanbaisha-ios/scripts/ai_preflight_acceptance.py":
+            protected.append(path)
+        elif path==".github/workflows/touhan-ios-simulator-q6.yml":
+            protected.append(path)
+    return not protected, protected
 def main():
     status=json.loads((IOS/"release-status.json").read_text())
     bank=json.loads((B/"APPROVED_OFFICIAL_BANK.json").read_text())
@@ -42,11 +110,20 @@ def main():
             invalid.append(x)
         if "originalRubyReadings" in q:
             ordered+=1
-            if not (q.get("rubyDisplayMode")=="SOURCE_ORDER_UNATTACHED"
-                    and q.get("rubySourceVerified") is True
-                    and q.get("originalRubyReadings")
-                    and all(re.fullmatch(r"[ぁ-んァ-ンー]{1,20}",z) for z in q["originalRubyReadings"])
-                    and q.get("questionParts") is None and q.get("choicesParts") is None):
+            readings=q.get("originalRubyReadings")
+            readings_ok=(isinstance(readings,list) and bool(readings)
+                and all(isinstance(z,str) and re.fullmatch(r"[ぁ-んァ-ンー]{1,20}",z) for z in readings))
+            mode=q.get("rubyDisplayMode")
+            if mode=="SOURCE_ORDER_UNATTACHED":
+                representation_ok=(q.get("rubySourceVerified") is True
+                    and q.get("questionParts") is None and q.get("choicesParts") is None)
+            elif mode=="POSITIONALLY_ATTACHED":
+                attached=collect_ruby_text(q.get("questionParts"))+collect_ruby_text(q.get("choicesParts"))
+                representation_ok=(bool(attached) and is_subsequence(attached,readings)
+                    and manual_visual_audit_pass(q))
+            else:
+                representation_ok=False
+            if not (readings_ok and representation_ok):
                 invalid.append(x+":RUBY")
         if q.get("questionParts") or q.get("choicesParts"):rich+=1
         for fig in q.get("sourceFigures",[]):
@@ -63,38 +140,86 @@ def main():
     swift=(IOS/"native-ios/Sources/TouhanSprintApp.swift").read_text()
     js=(IOS/"App.js").read_text()
     ui=(WEB/"official-practice.html").read_text()
-    ready=(app["extra"].get("webAppUrl")==EXPECTED and EXPECTED in swift and EXPECTED in js
-           and "APPROVED_OFFICIAL_BANK.json" in ui and "renderRubySequence(q)" in ui
-           and "official-practice.html" in (WEB/"app-v07.js").read_text()
+    project=(IOS/"native-ios/project.yml").read_text()
+    prepare=(IOS/"scripts/prepare_offline_web.py").read_text()
+    cm=(ROOT/"codemagic.yaml").read_text()
+    native_local=("ReleaseConfig.root" in swift and "ReleaseConfig.homeURL" in swift
+        and "webView.loadFileURL(home, allowingReadAccessTo: root)" in swift
+        and "WKWebViewConfiguration()" in swift)
+    bundled_resources=("path: OfflineWeb" in project and "buildPhase: resources" in project
+        and "OUT=ROOT/'touroku-hanbaisha-ios/native-ios/OfflineWeb'" in prepare
+        and "official-practice.html" in prepare and "manifest.json" in prepare)
+    release_target=("XCODE_PROJECT: touroku-hanbaisha-ios/native-ios/TouhanSprint.xcodeproj" in cm
+        and "XCODE_SCHEME: TouhanSprint" in cm and "prepare-ios.sh" in cm)
+    ready=(native_local and bundled_resources and release_target
            and app["ios"]["bundleIdentifier"]=="com.allsunday1122.tourokuhanbaisha"
-           and "MN3D2ZM44N" in (IOS/"native-ios/project.yml").read_text())
+           and "MN3D2ZM44N" in project and "renderRubySequence(q)" in ui
+           and "official-practice.html" in (WEB/"app-v07.js").read_text())
     gate("Q2_NATIVE_WEBVIEW_INTEGRATION","PASS" if ready else "FAIL",
-         f"both native entrypoints={EXPECTED}; web data URL relative; bundle/team anchored",
-         ["touroku-hanbaisha-ios/App.js","touroku-hanbaisha-ios/native-ios/Sources/TouhanSprintApp.swift"])
+         f"native WKWebView local file entry={native_local}; OfflineWeb Xcode resources={bundled_resources}; Codemagic release target={release_target}; legacy Expo App.js remote wrapper is not the App Store release target",
+         ["touroku-hanbaisha-ios/native-ios/Sources/TouhanSprintApp.swift","touroku-hanbaisha-ios/native-ios/project.yml","codemagic.yaml"])
     metadata=(IOS/"APP_STORE_METADATA.md").read_text()
     meta_ok=all(x in metadata for x in
-        ("599問","2023年度問90","インターネット接続が必要","公式問題PDF","プライバシーポリシー"))
-    gate("Q3_METADATA_DISCLOSURE","PASS" if meta_ok else "FAIL",
-        "Store metadata must disclose 599 official past questions, invalid Q90, network dependency and source links",
-        ["touroku-hanbaisha-ios/APP_STORE_METADATA.md"])
-    # These evidence checks are intentionally not converted to PASS by static inspection.
-    offline="source={{ uri: HOME_URL }}" in js and "webView.load(URLRequest(url: ReleaseConfig.homeURL" in swift
-    gate("Q4_OFFLINE_RESILIENCE","FAIL" if offline else "NOT_TESTED",
-        "Remote-only WebView loads GitHub Pages. No shipped offline app bundle; an unavailable network prevents studying."
-        if offline else "Offline behavior requires native runtime verification.",
-        ["touroku-hanbaisha-ios/App.js","touroku-hanbaisha-ios/native-ios/Sources/TouhanSprintApp.swift"])
-    privacy=json.loads((IOS/"app.json").read_text())["expo"]
+        ("599問","2023年度問90","通常学習は通信不要","外部リンク","公式問題PDF","プライバシーポリシー"))
+    q3read=IOS/"ASC_METADATA_Q3_READBACK_20261125.json"
+    q3data=json.loads(q3read.read_text()) if q3read.is_file() else {}
+    q3_asc=(q3data.get("status")=="PASS" and q3data.get("descriptionMentions599") is True
+        and q3data.get("descriptionMentionsInvalidQ90") is True
+        and q3data.get("descriptionDisclosesOffline") is True
+        and q3data.get("descriptionLinksOfficialSources") is True
+        and q3data.get("promotionalTextMentions599") is True)
+    gate("Q3_METADATA_DISCLOSURE","PASS" if meta_ok and q3_asc else ("NOT_VERIFIED" if meta_ok else "FAIL"),
+        f"local listing copy accurate={meta_ok}; live ASC readback={q3_asc}; readback={q3data.get('readAtJST','MISSING')}",
+        ["touroku-hanbaisha-ios/APP_STORE_METADATA.md","touroku-hanbaisha-ios/ASC_METADATA_Q3_READBACK_20261125.json"])
+    # Require both a native local-file package and a current simulator run that inspected the packaged assets.
+    q4report=IOS/"OFFLINE_Q4_20261125.json"
+    q4data=json.loads(q4report.read_text()) if q4report.is_file() else {}
+    q6file=IOS/"IOS_SIMULATOR_Q6_20261125.json"
+    q6=json.loads(q6file.read_text()) if q6file.is_file() else {}
+    offline_static=("webView.loadFileURL(home, allowingReadAccessTo: root)" in swift
+        and "path: OfflineWeb" in project and bool(re.search(r"connect-src \\*'none\\*'", prepare))
+        and "offlineExplanations" in prepare and "explanationsCount" in prepare)
+    offline_runtime=(q4data.get("status")=="PASS" and q4data.get("nativeSimulatorOfflineBundleVerified") is True
+        and q4data.get("bankCount")==599 and q4data.get("explanationsCount")==599
+        and q4data.get("externalRequests")==[] and q4data.get("pageErrors")==[]
+        and q4data.get("testedHead")==q6.get("headSHA"))
+    gate("Q4_OFFLINE_RESILIENCE","PASS" if offline_static and offline_runtime else "NOT_VERIFIED",
+        f"native local bundle/static CSP={offline_static}; simulator packaged offline proof={offline_runtime}; report={q4data.get('githubRunId','MISSING')}",
+        ["touroku-hanbaisha-ios/native-ios/Sources/TouhanSprintApp.swift","touroku-hanbaisha-ios/OFFLINE_Q4_20261125.json"])
+    import plistlib
     privacyinfo=IOS/"native-ios/PrivacyInfo.xcprivacy"
-    gate("Q5_PRIVACY_AND_NETWORK_DISCLOSURE","NOT_VERIFIED",
-        "PrivacyInfo.xcprivacy exists, but actual remote page behavior and App Store Connect App Privacy answers were not independently verified.",
-        ["touroku-hanbaisha-ios/native-ios/PrivacyInfo.xcprivacy"])
-    # AI Preflight Acceptance is not an Xcode archive or iPhone/iOS simulator run.
-    gate("Q6_IOS_BUILD_AND_LAUNCH","NOT_TESTED",
-        "No successful native iOS simulator build, signed archive, physical-device launch, or TestFlight install observed in this run.",
-        ["touroku-hanbaisha-ios/native-ios/project.yml"])
-    gate("Q7_TESTFLIGHT_READY","BLOCKED",
-        "Internal TestFlight distribution requires passing native build/launch and verification of signing/ASC setup. No upload or App Review submission performed.",
-        ["touroku-hanbaisha-ios/eas.json"])
+    plist=plistlib.loads(privacyinfo.read_bytes())
+    native_privacy=(plist.get("NSPrivacyTracking") is False
+        and plist.get("NSPrivacyCollectedDataTypes")==[]
+        and "WKWebsiteDataStore.nonPersistent()" in swift
+        and "studyRecord" in swift and "UserDefaults" in swift)
+    q5report=IOS/"Q5_CURRENT_20261125.json"
+    q5data=json.loads(q5report.read_text()) if q5report.is_file() else {}
+    q5_source=(q5data.get("sourceAndBrowserAudit")=="PASS"
+        and q5data.get("privacyPolicyURLMatched") is True
+        and q5data.get("observedExternalHosts")==[])
+    q5_asc=(q5data.get("questionnaireVerified") is True
+        and q5data.get("questionnaireDataTypesReconciled") is True)
+    gate("Q5_NATIVE_PRIVACY_IMPLEMENTATION","PASS" if native_privacy else "FAIL",
+        f"tracking=false; collectedDataTypes=0; nonPersistent WKWebView; app-only UserDefaults={native_privacy}",
+        ["touroku-hanbaisha-ios/native-ios/PrivacyInfo.xcprivacy","touroku-hanbaisha-ios/native-ios/Sources/TouhanSprintApp.swift"])
+    gate("Q5_PRIVACY_AND_NETWORK_DISCLOSURE","PASS" if q5_source and q5_asc else "NOT_VERIFIED",
+        f"source/browser and policy URL={q5_source}; actual ASC App Privacy questionnaire reconciled={q5_asc}; unavailable through documented ASC API unless UI evidence is supplied",
+        ["touroku-hanbaisha-ios/Q5_CURRENT_20261125.json"])
+    q6_head_ok,q6_protected_changes=q6_tested_sources_unchanged(q6.get("headSHA"),os.getenv("GITHUB_SHA"))
+    q6ok=(q6.get("status")=="PASS" and q6.get("build")=="success" and q6.get("installAndLaunch")=="success"
+        and q6.get("learningPersistence")=="PASS" and q6_head_ok)
+    gate("Q6_IOS_BUILD_AND_LAUNCH","PASS" if q6ok else "NOT_VERIFIED",
+        f"Xcode build/install/launch + progress persistence; testedHead={q6.get('headSHA','MISSING')}; workflowHead={os.getenv('GITHUB_SHA','UNAVAILABLE')}; runtime source unchanged since test={q6_head_ok}; protected changes={q6_protected_changes}; run={q6.get('githubRunId','MISSING')}",
+        ["touroku-hanbaisha-ios/IOS_SIMULATOR_Q6_20261125.json"])
+    q7file=IOS/"Q7_TESTFLIGHT_READBACK_20261125.json"
+    q7=json.loads(q7file.read_text()) if q7file.is_file() else {}
+    q7ok=(q7.get("status")=="PASS" and q7.get("signedIpaVerified") is True
+        and q7.get("ascProcessingState")=="VALID" and q7.get("testFlightAvailable") is True
+        and q7.get("testFlightDistributed") is True)
+    gate("Q7_TESTFLIGHT_READY","PASS" if q7ok else "BLOCKED",
+        f"signed IPA and App Store Connect/TestFlight processing readback={q7ok}; state={q7.get('ascProcessingState','MISSING')}; no App Review submission",
+        ["touroku-hanbaisha-ios/Q7_TESTFLIGHT_READBACK_20261125.json"])
     gate("Q8_APP_REVIEW_SUBMISSION","PASS" if status.get("app_review_submitted") is False else "FAIL",
         "No App Review final submission authorized; must remain false.",
         ["touroku-hanbaisha-ios/release-status.json"])
