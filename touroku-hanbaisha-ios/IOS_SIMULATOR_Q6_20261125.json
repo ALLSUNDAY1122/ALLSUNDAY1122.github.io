@@ -1,35 +1,35 @@
 {
-  "schema": "touhan-q6-ios-simulator-evidence-v1",
-  "timestampJST": "2026-11-25T14:08:00+09:00",
+  "schema": "touhan-q6-ios-simulator-v1",
+  "timestampJST": "2026-11-25T23:36:29.266249+09:00",
   "status": "PASS",
   "environment": "success",
   "build": "success",
   "installAndLaunch": "success",
-  "githubRunId": 45334990399,
-  "artifactId": 14893742623,
-  "headSHA": "c930d1273a6cab481bbdd0b13047bfe836f66e5d",
   "learningPersistence": "PASS",
-  "smoke": {
-    "write": {
-      "status": "PASS",
-      "question": "KSAI-2024-081",
-      "position": 1,
-      "progress": 1,
-      "accuracy": "100%"
-    },
-    "read": {
-      "status": "PASS",
-      "progress": 2,
-      "accuracy": "50%",
-      "position": 1,
-      "attempts": 2
-    }
+  "offlineBundleVerified": true,
+  "githubRunId": 45633790583,
+  "headSHA": "f38d3bb39ce6c0d5b1f680d8e019c9fd80404d10",
+  "device": "DA1C9012-81EC-4C70-B52A-068AEAFBA1DE",
+  "bankCount": 599,
+  "explanationsCount": 599,
+  "smokeWrite": {
+    "phase": "write",
+    "status": "PASS",
+    "question": "KSAI-2024-081",
+    "position": 1,
+    "progress": 1,
+    "accuracy": "100%"
   },
-  "offlineBundleVerified": false,
-  "currentPrHeadVerified": false,
+  "smokeRead": {
+    "phase": "read",
+    "status": "PASS",
+    "progress": 2,
+    "accuracy": "50%",
+    "position": 1,
+    "attempts": 2
+  },
   "limits": [
-    "Successful simulator build/launch and persistence smoke were recorded on an earlier HEAD, not PR #5741 HEAD 1964f5daadbd0e77adefff16683ffece54438328.",
-    "No physical iPhone installation or acceptance test.",
-    "Offline packaged-bundle behavior is not established by this Q6 run; see Q4."
+    "No physical iPhone test",
+    "No TestFlight installation"
   ]
 }
