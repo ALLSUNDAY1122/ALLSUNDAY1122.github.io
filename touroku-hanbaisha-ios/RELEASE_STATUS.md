@@ -1792,3 +1792,9 @@ Apple固定識別子: Bundle `com.allsunday1122.tourokuhanbaisha`、ASC `6802119
 - Codemagic開始: failure、検証: skipped、総合: **PASS**。
 - ASC処理: VALID、TestFlight利用可能: True、内部グループ配信: True。
 - App Review提出: **未実施**。証跡: Q7_TESTFLIGHT_READBACK_20261125.json。
+
+
+## Q7 署名付きIPA・TestFlight配信（2026-11-25）
+- Codemagic開始: success、検証: success、総合: **PASS**。
+- ASC処理: VALID、TestFlight利用可能: True、内部グループ配信: True。
+- App Review提出: **未実施**。証跡: Q7_TESTFLIGHT_READBACK_20261125.json。
