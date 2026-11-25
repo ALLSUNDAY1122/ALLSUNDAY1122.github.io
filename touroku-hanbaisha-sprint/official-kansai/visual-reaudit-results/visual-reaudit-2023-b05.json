@@ -1,0 +1,633 @@
+{
+  "batch": "visual-reaudit-2023-b05",
+  "repository": "ALLSUNDAY1122/ALLSUNDAY1122.github.io",
+  "source": "関西広域連合「令和5年度登録販売者試験」2023-first_half",
+  "method": "添付PDFの各該当ページのレンダリング画像を目視し、候補JSONの対象レコードと問題文・全選択肢・ルビ・表・記号を照合した。PDFの文字データ抽出や自動照合結果を判定根拠としていない。",
+  "sourceFiles": {
+    "pdf": {
+      "name": "visual-reaudit-2023-b05.pdf",
+      "sha256": "1505ab019b8f88303202e2f5715df59b5cf7595d363668ffcdc6169c4878e2f0",
+      "pages": 6
+    },
+    "candidateJson": {
+      "name": "visual-reaudit-2023-b05.candidates.json",
+      "sha256": "d8cb43fcf78ba758d6215eb679027ebb40fdd2358016b71f5f7c9869bf2e7b76"
+    }
+  },
+  "scope": [
+    "KSAI-2023-043",
+    "KSAI-2023-044",
+    "KSAI-2023-045",
+    "KSAI-2023-046",
+    "KSAI-2023-047",
+    "KSAI-2023-048",
+    "KSAI-2023-049",
+    "KSAI-2023-050",
+    "KSAI-2023-051",
+    "KSAI-2023-052"
+  ],
+  "summary": {
+    "total": 10,
+    "PASS": 9,
+    "FAIL": 1,
+    "HOLD": 0
+  },
+  "results": [
+    {
+      "id": "KSAI-2023-043",
+      "questionNo": 43,
+      "status": "PASS",
+      "bundlePdfPages": [
+        1
+      ],
+      "officialPdf": "2023-first_half",
+      "officialPdfPages": [
+        28
+      ],
+      "questionTextVerified": true,
+      "choicesVerified": true,
+      "tableVerified": true,
+      "choicePairs": [
+        "a,b",
+        "a,d",
+        "b,c",
+        "b,d",
+        "c,d"
+      ],
+      "rubyVerified": true,
+      "ruby": [
+        {
+          "base": "当帰芍薬散",
+          "reading": "とうきしゃくやくさん",
+          "context": "選択肢a"
+        },
+        {
+          "base": "加味逍遙散",
+          "reading": "かみしょうようさん",
+          "context": "選択肢b"
+        },
+        {
+          "base": "桂枝茯苓丸",
+          "reading": "けいしぶくりょうがん",
+          "context": "選択肢c"
+        },
+        {
+          "base": "桃核承気湯",
+          "reading": "とうかくじょうきとう",
+          "context": "選択肢d"
+        }
+      ],
+      "symbolsVerified": true,
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "findings": []
+    },
+    {
+      "id": "KSAI-2023-044",
+      "questionNo": 44,
+      "status": "PASS",
+      "bundlePdfPages": [
+        2
+      ],
+      "officialPdf": "2023-first_half",
+      "officialPdfPages": [
+        29
+      ],
+      "questionTextVerified": true,
+      "choicesVerified": true,
+      "tableVerified": true,
+      "choiceTexts": [
+        "桂枝茯苓丸",
+        "温清飲",
+        "桃核承気湯",
+        "当帰芍薬散",
+        "四物湯"
+      ],
+      "rubyVerified": true,
+      "rubyDisplayMode": "原典出現順（漢字への個別対応付けなし）",
+      "rubyReadingsInOrder": [
+        "しん",
+        "けいしぶくりょうがん",
+        "うんせいいん",
+        "とうかくじょうきとう",
+        "とうきしゃくやくさん",
+        "しもつとう"
+      ],
+      "ruby": [
+        {
+          "base": "症",
+          "reading": "しん",
+          "context": "血の道症"
+        },
+        {
+          "base": "桂枝茯苓丸",
+          "reading": "けいしぶくりょうがん",
+          "context": "選択肢1"
+        },
+        {
+          "base": "温清飲",
+          "reading": "うんせいいん",
+          "context": "選択肢2"
+        },
+        {
+          "base": "桃核承気湯",
+          "reading": "とうかくじょうきとう",
+          "context": "選択肢3"
+        },
+        {
+          "base": "当帰芍薬散",
+          "reading": "とうきしゃくやくさん",
+          "context": "選択肢4"
+        },
+        {
+          "base": "四物湯",
+          "reading": "しもつとう",
+          "context": "選択肢5"
+        }
+      ],
+      "symbolsVerified": true,
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "findings": []
+    },
+    {
+      "id": "KSAI-2023-045",
+      "questionNo": 45,
+      "status": "PASS",
+      "bundlePdfPages": [
+        2
+      ],
+      "officialPdf": "2023-first_half",
+      "officialPdfPages": [
+        29
+      ],
+      "questionTextVerified": true,
+      "choicesVerified": true,
+      "tableVerified": true,
+      "tableHeaders": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ],
+      "tableRows": [
+        [
+          "正",
+          "正",
+          "正",
+          "誤"
+        ],
+        [
+          "正",
+          "正",
+          "誤",
+          "正"
+        ],
+        [
+          "正",
+          "誤",
+          "正",
+          "正"
+        ],
+        [
+          "誤",
+          "正",
+          "正",
+          "正"
+        ],
+        [
+          "正",
+          "正",
+          "正",
+          "正"
+        ]
+      ],
+      "rubyVerified": true,
+      "ruby": [],
+      "symbolsVerified": true,
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "findings": []
+    },
+    {
+      "id": "KSAI-2023-046",
+      "questionNo": 46,
+      "status": "PASS",
+      "bundlePdfPages": [
+        3
+      ],
+      "officialPdf": "2023-first_half",
+      "officialPdfPages": [
+        30
+      ],
+      "questionTextVerified": true,
+      "choicesVerified": true,
+      "tableVerified": true,
+      "choicePairs": [
+        "a,b",
+        "a,c",
+        "b,c",
+        "b,d",
+        "c,d"
+      ],
+      "rubyVerified": true,
+      "ruby": [
+        {
+          "base": "腔",
+          "reading": "くう",
+          "context": "副鼻腔炎"
+        },
+        {
+          "base": "痒",
+          "reading": "かゆ",
+          "context": "痒み"
+        }
+      ],
+      "symbolsVerified": true,
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "findings": []
+    },
+    {
+      "id": "KSAI-2023-047",
+      "questionNo": 47,
+      "status": "PASS",
+      "bundlePdfPages": [
+        3
+      ],
+      "officialPdf": "2023-first_half",
+      "officialPdfPages": [
+        30
+      ],
+      "questionTextVerified": true,
+      "choicesVerified": true,
+      "tableVerified": true,
+      "tableHeaders": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ],
+      "tableRows": [
+        [
+          "正",
+          "正",
+          "誤",
+          "正"
+        ],
+        [
+          "正",
+          "正",
+          "誤",
+          "誤"
+        ],
+        [
+          "誤",
+          "正",
+          "正",
+          "誤"
+        ],
+        [
+          "誤",
+          "正",
+          "誤",
+          "正"
+        ],
+        [
+          "誤",
+          "誤",
+          "正",
+          "誤"
+        ]
+      ],
+      "rubyVerified": true,
+      "ruby": [],
+      "symbolsVerified": true,
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "findings": []
+    },
+    {
+      "id": "KSAI-2023-048",
+      "questionNo": 48,
+      "status": "FAIL",
+      "bundlePdfPages": [
+        4
+      ],
+      "officialPdf": "2023-first_half",
+      "officialPdfPages": [
+        31
+      ],
+      "questionTextVerified": true,
+      "choicesVerified": true,
+      "tableVerified": true,
+      "ingredientTable": [
+        {
+          "ingredient": "テトラヒドロゾリン塩酸塩",
+          "amount": "0.05 g"
+        },
+        {
+          "ingredient": "グリチルリチン酸二カリウム",
+          "amount": "0.25 g"
+        },
+        {
+          "ingredient": "クロルフェニラミンマレイン酸塩",
+          "amount": "0.03 g"
+        },
+        {
+          "ingredient": "パンテノール",
+          "amount": "0.1 g"
+        },
+        {
+          "ingredient": "アスパラギン酸カリウム",
+          "amount": "1.0 g"
+        }
+      ],
+      "tableHeaders": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ],
+      "tableRows": [
+        [
+          "正",
+          "誤",
+          "正",
+          "正"
+        ],
+        [
+          "正",
+          "正",
+          "正",
+          "誤"
+        ],
+        [
+          "正",
+          "正",
+          "誤",
+          "誤"
+        ],
+        [
+          "誤",
+          "正",
+          "誤",
+          "正"
+        ],
+        [
+          "誤",
+          "誤",
+          "正",
+          "正"
+        ]
+      ],
+      "rubyVerified": false,
+      "ruby": [
+        {
+          "base": "瞼",
+          "reading": "けん",
+          "context": "眼瞼（まぶた）"
+        },
+        {
+          "base": "毛",
+          "reading": "しょう",
+          "context": "睫毛（まつげ）"
+        }
+      ],
+      "symbolsVerified": true,
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "findings": [
+        {
+          "type": "RUBY_ASSOCIATION_AND_PLACEMENT",
+          "detail": "原典PDFのbundle page 4では、選択肢cの「眼瞼（まぶた）」の「瞼」に「けん」、「睫毛（まつげ）」の「毛」に「しょう」のルビがそれぞれ付されている。候補JSONのquestion文字列では「けん」「しょう」が選択肢cの文中の対応漢字位置に保持されず、「ｃ」の直前にまとめて配置されている。原典のルビ位置・漢字との対応を再現できていないためFAIL。"
+        },
+        {
+          "type": "CORRECT_SOURCE_RUBY",
+          "detail": "選択肢cの原典表記は「眼瞼（まぶた）や睫毛（まつげ）」であり、ルビは「瞼」＝けん、「毛」＝しょう。"
+        }
+      ]
+    },
+    {
+      "id": "KSAI-2023-049",
+      "questionNo": 49,
+      "status": "PASS",
+      "bundlePdfPages": [
+        5
+      ],
+      "officialPdf": "2023-first_half",
+      "officialPdfPages": [
+        32
+      ],
+      "questionTextVerified": true,
+      "choicesVerified": true,
+      "tableVerified": true,
+      "tableHeaders": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ],
+      "tableRows": [
+        [
+          "誤",
+          "誤",
+          "誤",
+          "正"
+        ],
+        [
+          "誤",
+          "誤",
+          "正",
+          "誤"
+        ],
+        [
+          "誤",
+          "正",
+          "誤",
+          "誤"
+        ],
+        [
+          "正",
+          "誤",
+          "誤",
+          "誤"
+        ],
+        [
+          "誤",
+          "誤",
+          "誤",
+          "誤"
+        ]
+      ],
+      "rubyVerified": true,
+      "ruby": [],
+      "symbolsVerified": true,
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "findings": []
+    },
+    {
+      "id": "KSAI-2023-050",
+      "questionNo": 50,
+      "status": "PASS",
+      "bundlePdfPages": [
+        5
+      ],
+      "officialPdf": "2023-first_half",
+      "officialPdfPages": [
+        32
+      ],
+      "questionTextVerified": true,
+      "choicesVerified": true,
+      "tableVerified": true,
+      "tableHeaders": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ],
+      "tableRows": [
+        [
+          "正",
+          "正",
+          "誤",
+          "正"
+        ],
+        [
+          "正",
+          "正",
+          "誤",
+          "誤"
+        ],
+        [
+          "誤",
+          "正",
+          "正",
+          "誤"
+        ],
+        [
+          "誤",
+          "正",
+          "誤",
+          "正"
+        ],
+        [
+          "誤",
+          "誤",
+          "正",
+          "誤"
+        ]
+      ],
+      "rubyVerified": true,
+      "ruby": [],
+      "symbolsVerified": true,
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "findings": []
+    },
+    {
+      "id": "KSAI-2023-051",
+      "questionNo": 51,
+      "status": "PASS",
+      "bundlePdfPages": [
+        6
+      ],
+      "officialPdf": "2023-first_half",
+      "officialPdfPages": [
+        33
+      ],
+      "questionTextVerified": true,
+      "choicesVerified": true,
+      "tableVerified": true,
+      "choicePairs": [
+        "a,b",
+        "a,d",
+        "b,c",
+        "b,d",
+        "c,d"
+      ],
+      "rubyVerified": true,
+      "ruby": [
+        {
+          "base": "疹",
+          "reading": "しん",
+          "context": "湿疹"
+        },
+        {
+          "base": "痺",
+          "reading": "ひ",
+          "context": "麻痺"
+        },
+        {
+          "base": "痒",
+          "reading": "かゆ",
+          "context": "痒み"
+        }
+      ],
+      "symbolsVerified": true,
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "findings": []
+    },
+    {
+      "id": "KSAI-2023-052",
+      "questionNo": 52,
+      "status": "PASS",
+      "bundlePdfPages": [
+        6
+      ],
+      "officialPdf": "2023-first_half",
+      "officialPdfPages": [
+        33
+      ],
+      "questionTextVerified": true,
+      "choicesVerified": true,
+      "tableVerified": true,
+      "tableHeaders": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ],
+      "tableRows": [
+        [
+          "正",
+          "誤",
+          "正",
+          "誤"
+        ],
+        [
+          "正",
+          "誤",
+          "誤",
+          "正"
+        ],
+        [
+          "誤",
+          "正",
+          "正",
+          "正"
+        ],
+        [
+          "誤",
+          "正",
+          "誤",
+          "正"
+        ],
+        [
+          "誤",
+          "誤",
+          "正",
+          "正"
+        ]
+      ],
+      "rubyVerified": true,
+      "ruby": [],
+      "symbolsVerified": true,
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "findings": []
+    }
+  ]
+}
