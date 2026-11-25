@@ -14,6 +14,11 @@ private struct QuestionSet: Identifiable, Hashable {
     var subtitle: String { "問題 \(start)〜\(end)" }
 }
 
+private enum StudyRoute: Hashable {
+    case domain(domainId: String)
+    case quiz(title: String, questions: [StudyQuestion], isMock: Bool = false)
+}
+
 private enum Palette {
     static let paper = Color(red: 247/255, green: 243/255, blue: 234/255)
     static let card = Color(red: 1.0, green: 253/255, blue: 249/255)
@@ -27,7 +32,9 @@ private enum Palette {
 
 struct HomeView: View {
     @State private var dailyCount = 8
+    @State private var path = NavigationPath()
     @EnvironmentObject private var premium: PremiumStore
+    @EnvironmentObject private var records: StudyRecordStore
     @State private var showSettings = false
 
     private let domains = [
@@ -37,7 +44,7 @@ struct HomeView: View {
     ]
 
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $path) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
                     header
@@ -47,9 +54,17 @@ struct HomeView: View {
                     }
                     .buttonStyle(.bordered)
                     todayCard
-                    Text("分野から解く")
-                        .font(.headline)
-                        .foregroundStyle(Palette.sub)
+                    studyStatusCard
+                    weakReviewCard
+                    mockExamCard
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("分野から解く")
+                            .font(.headline)
+                            .foregroundStyle(Palette.sub)
+                        Text(premium.isPremium ? "表示中の問題数は全500問分の合計です。" : "表示中の問題数は2026年度100問分の内訳です。Premiumでは全500問分の合計になります。")
+                            .font(.caption)
+                            .foregroundStyle(Palette.sub)
+                    }
                     domainGrid
                     officialExamCard
                     sourceNotice
@@ -58,7 +73,20 @@ struct HomeView: View {
                 .padding(.bottom, 32)
             }
             .background(Palette.paper.ignoresSafeArea())
-            .toolbar(.hidden, for: .navigationBar)
+            .navigationTitle("ITパスポート")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbarBackground(Palette.paper, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .navigationDestination(for: StudyRoute.self) { route in
+                switch route {
+                case .domain(let domainId):
+                    if let domain = domains.first(where: { $0.id == domainId }) {
+                        DomainSetView(domain: domain)
+                    }
+                case .quiz(let title, let questions, let isMock):
+                    QuizView(title: title, questions: questions, isMock: isMock, path: $path)
+                }
+            }
         }
         .tint(Palette.navy)
         .sheet(isPresented: $showSettings) { PremiumSettingsView() }
@@ -98,9 +126,7 @@ struct HomeView: View {
             }
             .pickerStyle(.segmented)
             .accessibilityLabel("今日の学習の問題数")
-            NavigationLink {
-                QuizView(title: "今日のスプリント", questions: daily)
-            } label: {
+            NavigationLink(value: StudyRoute.quiz(title: "今日のスプリント", questions: daily)) {
                 Text("今日のスプリントを始める　\(daily.count)問")
             }
             .buttonStyle(PrimaryButtonStyle(background: Palette.navy))
@@ -111,13 +137,155 @@ struct HomeView: View {
         .overlay(RoundedRectangle(cornerRadius: 18).stroke(Palette.line))
     }
 
+    private var studyStatusCard: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("学習状況")
+                .font(.system(size: 21, weight: .bold, design: .serif))
+                .foregroundStyle(Palette.ink)
+            HStack(spacing: 0) {
+                statCell(value: "\(records.totalAnswered)", label: "総回答数")
+                Divider()
+                statCell(value: "\(records.accuracy)%", label: "正答率")
+                Divider()
+                statCell(value: "\(records.weakCount)", label: "苦手")
+            }
+            .frame(maxWidth: .infinity)
+            VStack(alignment: .leading, spacing: 6) {
+                HStack {
+                    Text("今日の進捗")
+                        .font(.subheadline.bold())
+                        .foregroundStyle(Palette.ink)
+                    Spacer()
+                    Text("今日 \(records.todayAnswered)問 / 目標\(dailyCount)問")
+                        .font(.caption)
+                        .foregroundStyle(Palette.sub)
+                }
+                ProgressView(value: Double(min(records.todayAnswered, dailyCount)), total: Double(dailyCount))
+                    .tint(Palette.navy)
+            }
+            if !records.state.history.isEmpty {
+                Divider()
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("最近の学習")
+                        .font(.caption.bold())
+                        .foregroundStyle(Palette.sub)
+                    ForEach(records.state.history.prefix(3)) { session in
+                        HStack {
+                            Text(session.title)
+                                .font(.caption)
+                                .foregroundStyle(Palette.ink)
+                            Spacer()
+                            Text("\(session.score)/\(session.total)問")
+                                .font(.caption)
+                                .foregroundStyle(Palette.sub)
+                            Text(session.date, format: .dateTime.month().day())
+                                .font(.caption)
+                                .foregroundStyle(Palette.sub)
+                        }
+                    }
+                }
+            }
+        }
+        .padding(18)
+        .background(Palette.card, in: RoundedRectangle(cornerRadius: 18))
+        .overlay(RoundedRectangle(cornerRadius: 18).stroke(Palette.line))
+    }
+
+    private func statCell(value: String, label: String) -> some View {
+        VStack(spacing: 2) {
+            Text(value)
+                .font(.system(size: 22, weight: .bold, design: .serif))
+                .foregroundStyle(Palette.ink)
+            Text(label)
+                .font(.caption)
+                .foregroundStyle(Palette.sub)
+        }
+        .frame(maxWidth: .infinity)
+    }
+
+    private var weakReviewCard: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack {
+                Text("苦手復習")
+                    .font(.system(size: 21, weight: .bold, design: .serif))
+                    .foregroundStyle(Palette.ink)
+                Spacer()
+                Text("現在の苦手 \(records.weakCount)問")
+                    .font(.caption.bold())
+                    .foregroundStyle(Palette.navy)
+            }
+            Text("不正解だった問題を集めて復習できます。3回連続で正解すると苦手から外れます。")
+                .font(.subheadline)
+                .foregroundStyle(Palette.sub)
+            if records.weakCount == 0 {
+                Text("苦手はありません。この調子で続けましょう。")
+                    .font(.subheadline)
+                    .foregroundStyle(Palette.sub)
+            } else if premium.isPremium {
+                NavigationLink(value: StudyRoute.quiz(title: "苦手復習", questions: records.weakQuestions())) {
+                    Text("苦手復習を始める　\(records.weakCount)問")
+                }
+                .buttonStyle(PrimaryButtonStyle(background: Palette.navy))
+            } else {
+                Button { showSettings = true } label: {
+                    HStack {
+                        Text("苦手復習はPremiumで利用できます")
+                        Spacer()
+                        Image(systemName: "lock.fill")
+                    }
+                    .font(.subheadline.bold())
+                }
+                .buttonStyle(.bordered)
+            }
+        }
+        .padding(18)
+        .background(Palette.card, in: RoundedRectangle(cornerRadius: 18))
+        .overlay(RoundedRectangle(cornerRadius: 18).stroke(Palette.line))
+    }
+
+    private var mockExamCard: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("模試")
+                .font(.system(size: 21, weight: .bold, design: .serif))
+                .foregroundStyle(Palette.ink)
+            Text("年度別の公式公開問題100問を120分で解きます。採点は終了時のみ。公式IRT評価点・合否判定ではありません。")
+                .font(.subheadline)
+                .foregroundStyle(Palette.sub)
+            ForEach(QuestionStore.availableOfficialYears, id: \.self) { year in
+                let questions = QuestionStore.officialExam(year: year, premium: premium.isPremium)
+                if !premium.isPremium && year != QuestionStore.freeYear {
+                    Button { showSettings = true } label: {
+                        HStack {
+                            Text(verbatim: "\(year)年度").font(.subheadline.bold()).foregroundStyle(Palette.ink)
+                            Spacer()
+                            Text("Premium・模試100問").font(.caption).foregroundStyle(Palette.sub)
+                            Image(systemName: "lock.fill")
+                        }
+                    }
+                    .buttonStyle(.plain)
+                } else if questions.count == 100 {
+                    NavigationLink(value: StudyRoute.quiz(title: "\(year)年度 模試", questions: questions, isMock: true)) {
+                        HStack {
+                            Text(verbatim: "\(year)年度").font(.subheadline.bold()).foregroundStyle(Palette.ink)
+                            Spacer()
+                            Text("100問・120分").font(.caption).foregroundStyle(Palette.sub)
+                            Image(systemName: "chevron.right")
+                        }
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+        }
+        .padding(16)
+        .background(Palette.card, in: RoundedRectangle(cornerRadius: 16))
+        .overlay(RoundedRectangle(cornerRadius: 16).stroke(Palette.line))
+    }
+
     private var domainGrid: some View {
         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
             ForEach(domains) { domain in
                 let count = QuestionStore.questions(domain: domain.id, premium: premium.isPremium).count
-                NavigationLink {
-                    DomainSetView(domain: domain)
-                } label: {
+                NavigationLink(value: StudyRoute.domain(domainId: domain.id)) {
                     VStack(alignment: .leading, spacing: 8) {
                         Text(domain.title)
                             .font(.system(size: 17, weight: .bold, design: .serif))
@@ -160,7 +328,7 @@ struct HomeView: View {
                     if !premium.isPremium && year != QuestionStore.freeYear {
                         Button { showSettings = true } label: {
                             HStack {
-                                Text("\(year)年度").font(.subheadline.bold()).foregroundStyle(Palette.ink)
+                                Text(verbatim: "\(year)年度").font(.subheadline.bold()).foregroundStyle(Palette.ink)
                                 Spacer()
                                 Text("Premium・100問").font(.caption).foregroundStyle(Palette.sub)
                                 Image(systemName: "lock.fill")
@@ -168,11 +336,9 @@ struct HomeView: View {
                         }
                         .buttonStyle(.plain)
                     } else if questions.count == 100 {
-                        NavigationLink {
-                            QuizView(title: "\(year)年度 公式公開問題", questions: questions)
-                        } label: {
+                        NavigationLink(value: StudyRoute.quiz(title: "\(year)年度 公式公開問題", questions: questions)) {
                             HStack {
-                                Text("\(year)年度").font(.subheadline.bold()).foregroundStyle(Palette.ink)
+                                Text(verbatim: "\(year)年度").font(.subheadline.bold()).foregroundStyle(Palette.ink)
                                 Spacer()
                                 Text("100問").font(.caption).foregroundStyle(Palette.sub)
                                 Image(systemName: "chevron.right")
@@ -180,7 +346,7 @@ struct HomeView: View {
                         }
                         .buttonStyle(.plain)
                     } else {
-                        Text("\(year)年度：照合未完了（\(questions.count)/100問）")
+                        Text(verbatim: "\(year)年度：照合未完了（\(questions.count)/100問）")
                             .font(.caption)
                             .foregroundStyle(Palette.sub)
                     }
@@ -230,9 +396,7 @@ private struct DomainSetView: View {
 
                 ForEach(sets) { set in
                     let slice = Array(questions[(set.start - 1)..<set.end])
-                    NavigationLink {
-                        QuizView(title: "\(domain.title)・\(set.title)", questions: slice)
-                    } label: {
+                    NavigationLink(value: StudyRoute.quiz(title: "\(domain.title)・\(set.title)", questions: slice)) {
                         HStack {
                             VStack(alignment: .leading, spacing: 4) {
                                 Text(set.title).font(.headline).foregroundStyle(Palette.ink)
@@ -255,20 +419,31 @@ private struct DomainSetView: View {
         .background(Palette.paper.ignoresSafeArea())
         .navigationTitle(domain.title)
         .navigationBarTitleDisplayMode(.inline)
+        .toolbarBackground(Palette.paper, for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
     }
 }
 
 private struct QuizView: View {
     let title: String
     let questions: [StudyQuestion]
+    let isMock: Bool
+    var path: Binding<NavigationPath>
 
     @EnvironmentObject private var premium: PremiumStore
+    @EnvironmentObject private var records: StudyRecordStore
     @State private var showSettings = false
     @State private var index = 0
     @State private var selected: Int? = nil
     @State private var correctCount = 0
     @State private var finished = false
     @State private var imageScale: CGFloat = 1
+    @State private var answers: [String: Int] = [:]
+    @State private var remainingSeconds = 7200
+    @State private var showFinishConfirm = false
+    @State private var showMockReview = false
+
+    private static let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
     private var canStudy: Bool {
         premium.isPremium || questions.allSatisfy { $0.year == QuestionStore.freeYear }
@@ -279,133 +454,220 @@ private struct QuizView: View {
         return questions[index]
     }
 
+    private var remainingTimeText: String {
+        "\(remainingSeconds / 60):\(String(format: "%02d", remainingSeconds % 60))"
+    }
+
     var body: some View {
-        ScrollView {
-            if !canStudy {
-                VStack(spacing: 16) {
-                    Label("Premiumが必要です", systemImage: "lock.fill").font(.headline).foregroundStyle(Palette.ink)
-                    Text("2026年度100問は無料で学習できます。")
-                        .foregroundStyle(Palette.ink)
-                    Button("購入・復元へ") { showSettings = true }
-                }.padding(24)
-            } else if finished {
-                resultView
-            } else if let q = current {
-                VStack(alignment: .leading, spacing: 16) {
-                    HStack {
-                        Text(q.category).font(.caption.bold()).foregroundStyle(Palette.navy)
-                        Spacer()
-                        Text("\(index + 1) / \(questions.count)").font(.caption).foregroundStyle(Palette.sub)
-                    }
-                    ProgressView(value: Double(index), total: Double(max(questions.count, 1)))
-                        .tint(Palette.navy)
-                    Text(q.question)
-                        .font(.system(size: 19, weight: .bold, design: .serif))
-                        .foregroundStyle(Palette.ink)
-                        .lineSpacing(5)
-                    if q.originType == "ipa_published_verbatim" {
-                        Text(q.primaryEvidence)
-                            .font(.caption)
-                            .foregroundStyle(Palette.sub)
-                    } else {
-                        Text("独自演習（IPA公式公開問題ではありません）")
-                            .font(.caption)
-                            .foregroundStyle(Palette.sub)
-                    }
-                    if q.modified || q.representationChanged {
-                        Text("改変あり：\(q.modificationNote ?? "表示形式を変更")")
-                            .font(.caption)
+        VStack(spacing: 0) {
+            if canStudy, !finished, let q = current {
+                quizHeader(q)
+            }
+            ScrollView {
+                if !canStudy {
+                    VStack(spacing: 16) {
+                        Label("Premiumが必要です", systemImage: "lock.fill").font(.headline).foregroundStyle(Palette.ink)
+                        Text("2026年度100問は無料で学習できます。")
                             .foregroundStyle(Palette.ink)
+                        Button("購入・復元へ") { showSettings = true }
+                    }.padding(24)
+                } else if finished {
+                    resultView
+                } else if let q = current {
+                    questionBody(q)
+                } else {
+                    VStack(spacing: 12) {
+                        Image(systemName: "questionmark.circle")
+                            .font(.system(size: 36))
+                            .foregroundStyle(Palette.navy)
+                        Text("問題がありません")
+                            .font(.headline)
+                            .foregroundStyle(Palette.ink)
+                        Text("問題データの読み込み状態を確認してください。")
+                            .font(.subheadline)
+                            .foregroundStyle(Palette.sub)
                     }
-                    if let asset = q.sourceFigureName, !asset.isEmpty {
-                        Image(asset)
-                            .resizable()
-                            .scaledToFit()
-                            .scaleEffect(imageScale)
-                            .gesture(MagnificationGesture().onChanged { value in
-                                imageScale = min(max(value, 1), 4)
-                            })
-                            .onTapGesture(count: 2) { imageScale = 1 }
-                            .accessibilityLabel(q.sourceFigureAlt ?? "問題の公式図表")
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 8)
-                    }
-
-                    ForEach(q.choices.indices, id: \.self) { choiceIndex in
-                        Button {
-                            answer(choiceIndex, question: q)
-                        } label: {
-                            HStack(alignment: .top, spacing: 10) {
-                                Text(["ア", "イ", "ウ", "エ"][choiceIndex]).font(.headline)
-                                Text(q.choices[choiceIndex]).frame(maxWidth: .infinity, alignment: .leading)
-                            }
-                            .padding(15)
-                            .foregroundStyle(choiceForeground(choiceIndex, q: q))
-                            .background(choiceBackground(choiceIndex, q: q), in: RoundedRectangle(cornerRadius: 14))
-                            .overlay(RoundedRectangle(cornerRadius: 14).stroke(choiceBorder(choiceIndex, q: q), lineWidth: 1.4))
-                        }
-                        .buttonStyle(.plain)
-                        .disabled(selected != nil)
-                    }
-
-                    if selected != nil {
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text(selected == q.correctIndex ? "正解" : "不正解")
-                                .font(.headline)
-                                .foregroundStyle(Palette.ink)
-                            Text(q.explanation)
-                                .font(.subheadline)
-                                .foregroundStyle(Palette.ink)
-                            if let detail = q.detailedExplanation, !detail.isEmpty {
-                                Text(detail)
-                                    .font(.subheadline)
-                                    .foregroundStyle(Palette.ink)
-                            }
-                            Text("出典根拠：\(q.primaryEvidence)")
-                                .font(.caption)
-                                .foregroundStyle(Palette.sub)
-                            Button(index + 1 == questions.count ? "結果を見る" : "次の問題") {
-                                advance()
-                            }
-                            .buttonStyle(PrimaryButtonStyle(background: Palette.navy))
-                        }
-                        .padding(16)
-                        .background(Palette.card, in: RoundedRectangle(cornerRadius: 16))
-                        .overlay(RoundedRectangle(cornerRadius: 16).stroke(Palette.line))
-                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(32)
                 }
-                .padding(18)
-            } else {
-                VStack(spacing: 12) {
-                    Image(systemName: "questionmark.circle")
-                        .font(.system(size: 36))
-                        .foregroundStyle(Palette.navy)
-                    Text("問題がありません")
-                        .font(.headline)
-                        .foregroundStyle(Palette.ink)
-                    Text("問題データの読み込み状態を確認してください。")
-                        .font(.subheadline)
-                        .foregroundStyle(Palette.sub)
-                }
-                .frame(maxWidth: .infinity)
-                .padding(32)
             }
         }
         .background(Palette.paper.ignoresSafeArea())
         .navigationTitle(title)
         .navigationBarTitleDisplayMode(.inline)
+        .toolbarBackground(Palette.paper, for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
+        .onReceive(Self.timer) { _ in tick() }
+        .alert("模試を終了して採点しますか？", isPresented: $showFinishConfirm) {
+            Button("採点する", role: .destructive) { finishMock() }
+            Button("続ける", role: .cancel) { }
+        }
         .sheet(isPresented: $showSettings) { PremiumSettingsView() }
+        .navigationDestination(isPresented: $showMockReview) {
+            MockReviewView(title: title, questions: questions, answers: answers)
+        }
+    }
+
+    private func quizHeader(_ q: StudyQuestion) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            HStack {
+                Text(q.category).font(.caption.bold()).foregroundStyle(Palette.navy)
+                Spacer()
+                if isMock {
+                    Text("残り \(remainingTimeText)")
+                        .font(.caption.bold())
+                        .foregroundStyle(remainingSeconds <= 600 ? .red : Palette.navy)
+                }
+                Text("\(index + 1) / \(questions.count)").font(.caption).foregroundStyle(Palette.sub)
+            }
+            ProgressView(value: Double(index), total: Double(max(questions.count, 1)))
+                .tint(Palette.navy)
+        }
+        .padding(.horizontal, 18)
+        .padding(.vertical, 10)
+        .background(Palette.paper)
+    }
+
+    private func questionBody(_ q: StudyQuestion) -> some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text(q.question)
+                .font(.system(size: 19, weight: .bold, design: .serif))
+                .foregroundStyle(Palette.ink)
+                .lineSpacing(5)
+            if q.originType == "ipa_published_verbatim" {
+                Text(q.primaryEvidence)
+                    .font(.caption)
+                    .foregroundStyle(Palette.sub)
+            } else {
+                Text("独自演習（IPA公式公開問題ではありません）")
+                    .font(.caption)
+                    .foregroundStyle(Palette.sub)
+            }
+            if q.modified || q.representationChanged {
+                Text("改変あり：\(q.modificationNote ?? "表示形式を変更")")
+                    .font(.caption)
+                    .foregroundStyle(Palette.ink)
+            }
+            if let asset = q.sourceFigureName, !asset.isEmpty {
+                Image(asset)
+                    .resizable()
+                    .scaledToFit()
+                    .scaleEffect(imageScale)
+                    .gesture(MagnificationGesture().onChanged { value in
+                        imageScale = min(max(value, 1), 4)
+                    })
+                    .onTapGesture(count: 2) { imageScale = 1 }
+                    .accessibilityLabel(q.sourceFigureAlt ?? "問題の公式図表")
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 8)
+            }
+
+            ForEach(q.choices.indices, id: \.self) { choiceIndex in
+                Button {
+                    if isMock {
+                        mockAnswer(choiceIndex, question: q)
+                    } else {
+                        answer(choiceIndex, question: q)
+                    }
+                } label: {
+                    HStack(alignment: .top, spacing: 10) {
+                        Text(["ア", "イ", "ウ", "エ"][choiceIndex]).font(.headline)
+                        Text(q.choices[choiceIndex]).frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                    .padding(15)
+                    .foregroundStyle(choiceForeground(choiceIndex, q: q))
+                    .background(choiceBackground(choiceIndex, q: q), in: RoundedRectangle(cornerRadius: 14))
+                    .overlay(RoundedRectangle(cornerRadius: 14).stroke(choiceBorder(choiceIndex, q: q), lineWidth: 1.4))
+                }
+                .buttonStyle(.plain)
+                .disabled(!isMock && selected != nil)
+            }
+
+            if isMock {
+                mockNavigation
+            } else if selected != nil {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text(selected == q.correctIndex ? "正解" : "不正解")
+                        .font(.headline)
+                        .foregroundStyle(Palette.ink)
+                    Text(q.explanation)
+                        .font(.subheadline)
+                        .foregroundStyle(Palette.ink)
+                    if let detail = q.detailedExplanation, !detail.isEmpty {
+                        Text(detail)
+                            .font(.subheadline)
+                            .foregroundStyle(Palette.ink)
+                    }
+                    Text(q.primaryEvidence)
+                        .font(.caption)
+                        .foregroundStyle(Palette.sub)
+                    Button(index + 1 == questions.count ? "結果を見る" : "次の問題") {
+                        advance()
+                    }
+                    .buttonStyle(PrimaryButtonStyle(background: Palette.navy))
+                }
+                .padding(16)
+                .background(Palette.card, in: RoundedRectangle(cornerRadius: 16))
+                .overlay(RoundedRectangle(cornerRadius: 16).stroke(Palette.line))
+            }
+        }
+        .padding(18)
+    }
+
+    private var mockNavigation: some View {
+        VStack(spacing: 12) {
+            HStack(spacing: 12) {
+                if index > 0 {
+                    Button("前へ") {
+                        index -= 1
+                        imageScale = 1
+                    }
+                    .buttonStyle(.bordered)
+                }
+                if index + 1 == questions.count {
+                    Button("終了して採点") { showFinishConfirm = true }
+                        .buttonStyle(PrimaryButtonStyle(background: Palette.navy))
+                } else {
+                    Button("次へ") {
+                        index += 1
+                        imageScale = 1
+                    }
+                    .buttonStyle(PrimaryButtonStyle(background: Palette.navy))
+                }
+            }
+            Button("模試を終了して採点する") { showFinishConfirm = true }
+                .font(.subheadline)
+                .frame(maxWidth: .infinity)
+        }
     }
 
     private var resultView: some View {
-        VStack(spacing: 16) {
-            Image(systemName: "flag.checkered").font(.system(size: 42)).foregroundStyle(Palette.navy)
-            Text("セット完了").font(.system(size: 28, weight: .bold, design: .serif)).foregroundStyle(Palette.ink)
+        let weak = records.weakQuestions()
+        return VStack(spacing: 16) {
+            Image(systemName: isMock ? "timer" : "flag.checkered").font(.system(size: 42)).foregroundStyle(Palette.navy)
+            Text(isMock ? "模試結果" : "セット完了").font(.system(size: 28, weight: .bold, design: .serif)).foregroundStyle(Palette.ink)
             Text("\(questions.count)問中 \(correctCount)問正解")
                 .font(.title3.bold())
                 .foregroundStyle(Palette.ink)
             Text("正答率 \(questions.isEmpty ? 0 : Int(Double(correctCount) / Double(questions.count) * 100))%")
                 .foregroundStyle(Palette.sub)
+            if isMock {
+                Text("※ 公式IRT評価点・合否判定ではありません。")
+                    .font(.caption)
+                    .foregroundStyle(Palette.sub)
+                    .multilineTextAlignment(.center)
+                domainAccuracyRows
+                Button("全問の正答・解説を見る") { showMockReview = true }
+                    .buttonStyle(.bordered)
+            }
+            if !weak.isEmpty {
+                NavigationLink(value: StudyRoute.quiz(title: "苦手復習", questions: weak)) {
+                    Text("苦手だけ復習する　\(weak.count)問")
+                }
+                .buttonStyle(PrimaryButtonStyle(background: Palette.navy))
+            }
+            Button("ホームへ戻る") { path.wrappedValue = NavigationPath() }
+                .buttonStyle(.bordered)
         }
         .frame(maxWidth: .infinity)
         .padding(32)
@@ -414,15 +676,48 @@ private struct QuizView: View {
         .padding(18)
     }
 
+    private var domainAccuracyRows: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            ForEach([("strategy", "ストラテジ系"), ("management", "マネジメント系"), ("technology", "テクノロジ系")], id: \.0) { domain, label in
+                let qs = questions.filter { $0.domain == domain }
+                let ok = qs.filter { answers[$0.id] == $0.correctIndex }.count
+                if !qs.isEmpty {
+                    HStack {
+                        Text(label).font(.subheadline).foregroundStyle(Palette.ink)
+                        Spacer()
+                        Text("\(ok)/\(qs.count)問・\(Int(Double(ok) / Double(qs.count) * 100))%")
+                            .font(.subheadline).foregroundStyle(Palette.sub)
+                    }
+                }
+            }
+        }
+    }
+
+    private func tick() {
+        guard isMock, !finished, canStudy else { return }
+        if remainingSeconds > 0 {
+            remainingSeconds -= 1
+            if remainingSeconds == 0 { finishMock() }
+        }
+    }
+
     private func answer(_ choice: Int, question: StudyQuestion) {
         guard canStudy, selected == nil else { return }
         selected = choice
-        if choice == question.correctIndex { correctCount += 1 }
+        let correct = choice == question.correctIndex
+        if correct { correctCount += 1 }
+        records.record(questionId: question.id, correct: correct)
+    }
+
+    private func mockAnswer(_ choice: Int, question: StudyQuestion) {
+        guard canStudy else { return }
+        answers[question.id] = choice
     }
 
     private func advance() {
         guard canStudy else { return }
         if index + 1 >= questions.count {
+            records.addSession(title: title, score: correctCount, total: questions.count)
             finished = true
         } else {
             index += 1
@@ -431,7 +726,25 @@ private struct QuizView: View {
         }
     }
 
+    private func finishMock() {
+        guard !finished else { return }
+        var score = 0
+        for q in questions {
+            if let chosen = answers[q.id] {
+                let correct = chosen == q.correctIndex
+                if correct { score += 1 }
+                records.record(questionId: q.id, correct: correct)
+            }
+        }
+        correctCount = score
+        records.addSession(title: title, score: score, total: questions.count)
+        finished = true
+    }
+
     private func choiceBackground(_ choice: Int, q: StudyQuestion) -> Color {
+        if isMock {
+            return answers[q.id] == choice ? Palette.navy.opacity(0.12) : Palette.card
+        }
         guard let selected else { return Palette.card }
         if choice == q.correctIndex { return Color.green.opacity(0.13) }
         if choice == selected { return Color.red.opacity(0.10) }
@@ -439,6 +752,9 @@ private struct QuizView: View {
     }
 
     private func choiceBorder(_ choice: Int, q: StudyQuestion) -> Color {
+        if isMock {
+            return answers[q.id] == choice ? Palette.navy : Palette.line
+        }
         guard let selected else { return Palette.line }
         if choice == q.correctIndex { return .green }
         if choice == selected { return .red }
@@ -446,10 +762,74 @@ private struct QuizView: View {
     }
 
     private func choiceForeground(_ choice: Int, q: StudyQuestion) -> Color {
+        if isMock { return Palette.ink }
         guard let selected else { return Palette.ink }
         if choice == q.correctIndex { return .green }
         if choice == selected { return .red }
         return Palette.ink
+    }
+}
+
+private struct MockReviewView: View {
+    let title: String
+    let questions: [StudyQuestion]
+    let answers: [String: Int]
+
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 12) {
+                ForEach(questions) { q in
+                    let mine = answers[q.id]
+                    VStack(alignment: .leading, spacing: 8) {
+                        HStack {
+                            Text(verbatim: "\(q.year)年度 問\(q.questionNumber)")
+                                .font(.caption.bold())
+                                .foregroundStyle(Palette.navy)
+                            Spacer()
+                            Text(mine == nil ? "未回答" : mine == q.correctIndex ? "正解" : "不正解")
+                                .font(.caption.bold())
+                                .foregroundStyle(mine == nil ? Palette.sub : mine == q.correctIndex ? .green : .red)
+                        }
+                        Text(q.question)
+                            .font(.subheadline)
+                            .foregroundStyle(Palette.ink)
+                        ForEach(q.choices.indices, id: \.self) { i in
+                            HStack(alignment: .top, spacing: 6) {
+                                Text(["ア", "イ", "ウ", "エ"][i]).font(.caption.bold())
+                                Text(q.choices[i]).font(.caption)
+                                if i == q.correctIndex {
+                                    Text("正答").font(.caption.bold()).foregroundStyle(.green)
+                                }
+                                if mine == i && mine != q.correctIndex {
+                                    Text("あなたの回答").font(.caption.bold()).foregroundStyle(.red)
+                                }
+                            }
+                            .foregroundStyle(Palette.ink)
+                        }
+                        Text(q.explanation)
+                            .font(.caption)
+                            .foregroundStyle(Palette.ink)
+                        if let detail = q.detailedExplanation, !detail.isEmpty {
+                            Text(detail)
+                                .font(.caption)
+                                .foregroundStyle(Palette.sub)
+                        }
+                        Text(q.primaryEvidence)
+                            .font(.caption)
+                            .foregroundStyle(Palette.sub)
+                    }
+                    .padding(14)
+                    .background(Palette.card, in: RoundedRectangle(cornerRadius: 14))
+                    .overlay(RoundedRectangle(cornerRadius: 14).stroke(Palette.line))
+                }
+            }
+            .padding(18)
+        }
+        .background(Palette.paper.ignoresSafeArea())
+        .navigationTitle("\(title)・振り返り")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbarBackground(Palette.paper, for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
     }
 }
 
