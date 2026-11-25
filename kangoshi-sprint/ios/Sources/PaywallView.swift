@@ -7,6 +7,11 @@ struct PaywallView: View {
 
     private let monthlyID = "jp.allsunday1122.kangoshi.monthly"
     private let lifetimeID = "jp.allsunday1122.kangoshi.lifetime"
+    // Guideline 3.1.2: tappable Privacy Policy and Terms of Use (EULA) on the paywall.
+    // Privacy URL matches kangoshi-sprint/app-store/APP_STORE_METADATA_JA.md.
+    // EULA follows the 学びスプリント FP2 Golden Master (Apple Standard EULA).
+    static let privacyPolicyURL = URL(string: "https://allsunday1122.github.io/kangoshi-sprint/privacy.html")!
+    static let termsOfUseURL = URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!
 
     private var stateMessage: String? {
         switch purchase.state {
@@ -66,9 +71,18 @@ struct PaywallView: View {
 
                     Button("購入を復元") { Task { await purchase.restore() } }
                         .font(.subheadline.bold()).foregroundStyle(KSTheme.ai)
+                        .accessibilityIdentifier("restore-purchases")
                     if let stateMessage { Text(stateMessage).font(.caption).foregroundStyle(KSTheme.shu).multilineTextAlignment(.center) }
-                    Text("月額プランは自動更新、買い切りプランは1回の購入です。価格はApp Storeから取得した表示を使用します。購入・更新・解約・復元はApple IDの設定に従います。")
+                    Text("月額プランは1か月ごとの自動更新です。更新の停止・解約はiOSの設定 > Apple ID > サブスクリプションから行えます。買い切りプランは1回の購入です。価格はApp Storeから取得した表示を使用します。")
                         .font(.caption2).foregroundStyle(KSTheme.tertiary).multilineTextAlignment(.center)
+                    HStack(spacing: 18) {
+                        Link("プライバシーポリシー", destination: Self.privacyPolicyURL)
+                            .accessibilityIdentifier("privacy-policy-link")
+                        Link("利用規約", destination: Self.termsOfUseURL)
+                            .accessibilityIdentifier("terms-of-use-link")
+                    }
+                    .font(.caption.bold())
+                    .foregroundStyle(KSTheme.ai)
                 }.padding(18)
             }.background(KSTheme.paper.ignoresSafeArea())
                 .navigationTitle("プレミアム")

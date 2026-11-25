@@ -8,6 +8,7 @@ final class KangoshiAppModel: ObservableObject {
     @Published var session: StudySession?
     @Published var lastFinished: HistoryEntry?
     @Published var selectedMajorSubject: String?
+    @Published var startError: String?
 
     private let stateKey = "kangoshi-native-learning-v1"
     private let questionsById: [String: NativeQuestion]
@@ -27,8 +28,28 @@ final class KangoshiAppModel: ObservableObject {
         else { learning = PersistedLearningState() }
     }
 
+    static let freeCategories = ["必修", "一般", "状況設定"]
+    static let freeSampleCountPerCategory = 8
+
     var allQuestions: [NativeQuestion] { content.questions }
-    var freeQuestions: [NativeQuestion] { content.freeSampleQuestionIds.compactMap { questionsById[$0] } }
+    /// Resolved free-tier questions. Uses bundled IDs when they resolve; otherwise
+    /// falls back to the first 8 release-eligible items in exam 115 per category.
+    var freeQuestions: [NativeQuestion] {
+        let bundled = content.freeSampleQuestionIds.compactMap { questionsById[$0] }
+        if bundled.count == content.freeSampleQuestionIds.count, bundled.count == Self.freeCategories.count * Self.freeSampleCountPerCategory {
+            return bundled
+        }
+        if !bundled.isEmpty { return bundled }
+        return Self.fallbackFreeQuestions(from: content.questions)
+    }
+    func freeSampleCount(category: String) -> Int { freeQuestions.filter { $0.category == category }.count }
+    static func fallbackFreeQuestions(from questions: [NativeQuestion]) -> [NativeQuestion] {
+        var rows: [NativeQuestion] = []
+        for category in freeCategories {
+            rows += questions.filter { $0.sourceExam == 115 && $0.category == category }.prefix(freeSampleCountPerCategory)
+        }
+        return rows
+    }
     var currentQuestion: NativeQuestion? {
         guard let session, !session.finished, session.index < session.questionIds.count else { return nil }
         return questionsById[session.questionIds[session.index]]
@@ -95,7 +116,15 @@ final class KangoshiAppModel: ObservableObject {
     func weak(in major: String) -> Int { content.questions.filter { $0.majorSubject == major && learning.weak[$0.id] != nil }.count }
 
     private func start(pool: [NativeQuestion], title: String, count: Int) {
-        guard !pool.isEmpty, count > 0 else { return }
+        guard count > 0 else {
+            startError = "学習を開始できませんでした。"
+            return
+        }
+        guard !pool.isEmpty else {
+            startError = "\(title) に使える無料問題がありません。問題データの無料枠を確認してください。"
+            return
+        }
+        startError = nil
         let unseen = pool.filter { !learning.seen.contains($0.id) }.shuffled(), seen = pool.filter { learning.seen.contains($0.id) }.shuffled()
         let ids = Array((unseen + seen).prefix(min(count, pool.count))).map(\.id)
         session = StudySession(questionIds: ids, title: title, sourceExam: nil, category: nil, isMock: false)

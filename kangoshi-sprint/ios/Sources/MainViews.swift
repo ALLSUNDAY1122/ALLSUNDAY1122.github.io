@@ -35,26 +35,36 @@ struct HomeView: View {
                     PageHeader(eyebrow:"学びスプリント",title:"看護師国家試験",tagline:"今日も1問、力に変える。")
                     todayCard
                     Button { model.startDaily(isPremium:purchase.isPremium) } label: {
-                        HStack { VStack(alignment:.leading,spacing:3) { Text("今日のスプリント").font(.headline); Text("\(model.learning.goal)問・短く集中").font(.caption).opacity(0.85) }; Spacer(); Image(systemName:"arrow.right") }
+                        HStack { VStack(alignment:.leading,spacing:3) {
+                            HStack(spacing:8) {
+                                Text("今日のスプリント").font(.headline)
+                                if !purchase.isPremium { Text("無料").font(.caption2.bold()).padding(.horizontal,7).padding(.vertical,3).background(Color.white.opacity(0.2)).clipShape(Capsule()) }
+                            }
+                            Text(purchase.isPremium ? "\(model.learning.goal)問・短く集中" : "無料の\(model.learning.goal)問・短く集中").font(.caption).opacity(0.85)
+                        }; Spacer(); Image(systemName:"arrow.right") }
                             .foregroundStyle(.white).padding(17).background(KSTheme.ai).clipShape(RoundedRectangle(cornerRadius:16))
-                    }.padding(.horizontal,18).accessibilityLabel("今日のスプリント")
+                    }.padding(.horizontal,18).accessibilityLabel("今日のスプリント").accessibilityIdentifier("daily-sprint")
+
+                    if !purchase.isPremium {
+                        VStack(alignment:.leading,spacing:10) {
+                            HStack { Text("無料お試し").font(.subheadline.bold()); Spacer(); Text("第115回から各区分 \(KangoshiAppModel.freeSampleCountPerCategory)問").font(.caption).foregroundStyle(KSTheme.tertiary) }
+                            HStack(spacing:8) {
+                                ForEach(KangoshiAppModel.freeCategories,id:\.self) { c in
+                                    Button("\(c) \(model.freeSampleCount(category: c))問") { model.startFreeSample(category:c) }
+                                        .buttonStyle(.bordered).tint(KSTheme.ai)
+                                        .disabled(model.freeSampleCount(category: c) == 0)
+                                        .accessibilityLabel("\(c) お試し")
+                                        .accessibilityIdentifier("free-sample-\(c)")
+                                }
+                            }
+                        }.padding(.horizontal,18)
+                    }
 
                     actionButton(title:"苦手をつぶす",subtitle:"3回連続正解で卒業",icon:"repeat",count:"\(model.weakQuestions.count)問",premium:true) {
                         if purchase.isPremium { model.startWeak() } else { showPaywall=true }
                     }
                     actionButton(title:"模擬試験",subtitle:"第115・114・113回／必修・一般・状況設定",icon:"doc.text.fill",count:"3回",premium:true) {
                         if purchase.isPremium { tab=1 } else { showPaywall=true }
-                    }
-
-                    if !purchase.isPremium {
-                        VStack(alignment:.leading,spacing:10) {
-                            HStack { Text("無料お試し").font(.subheadline.bold()); Spacer(); Text("各8問").font(.caption).foregroundStyle(KSTheme.tertiary) }
-                            HStack(spacing:8) {
-                                ForEach(["必修","一般","状況設定"],id:\.self) { c in
-                                    Button(c) { model.startFreeSample(category:c) }.buttonStyle(.bordered).tint(KSTheme.ai)
-                                }
-                            }
-                        }.padding(.horizontal,18)
                     }
 
                     VStack(alignment:.leading,spacing:10) {
@@ -76,9 +86,14 @@ struct HomeView: View {
                         stat("\(model.learning.totalAnswers)","のべ回答")
                         stat("\(model.accuracy)%","正答率")
                         stat("\(model.learning.history.count)","学習回数")
-                    }.padding(.horizontal,18).padding(.bottom,24)
+                    }.padding(.horizontal,18).padding(.bottom,48)
                 }
             }.background(KSTheme.paper.ignoresSafeArea()).toolbar(.hidden,for:.navigationBar)
+            .alert("学習を開始できません", isPresented: Binding(get: { model.startError != nil }, set: { if !$0 { model.startError = nil } })) {
+                Button("OK", role: .cancel) { model.startError = nil }
+            } message: {
+                Text(model.startError ?? "")
+            }
         }
     }
 
