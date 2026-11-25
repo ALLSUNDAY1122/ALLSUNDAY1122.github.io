@@ -59,6 +59,7 @@ shell=Path(__file__).with_name('offline_learning_shell.html').read_text()
 logic="const freeIds=new Set("+json.dumps(free)+");\n"+Path(__file__).with_name('offline_learning.js').read_text()
 logic+=Path(__file__).with_name('offline_premium.js').read_text()
 assert "const attributionNode=$('attribution')" in logic, 'source attribution must remain mounted and reusable across question transitions'
+assert "if($('openRecords'))$('openRecords').onclick=showRecords" in logic and "if($('recordsHome'))$('recordsHome').onclick=showHome" in logic, 'new four-tab shell must not require removed legacy navigation nodes'
 html=html.replace("return records.filter(q=>($('year')","return records.filter(q=>canStudy(q)&&($('year')")
 html=html.replace("if(selected)return;selected=true;const q=subset[position]","if(selected)return;if(!canStudy(subset[position])){beginSetup();return}selected=true;const q=subset[position]")
 html=html.replace("selected=false;const q=subset[position];","selected=false;const q=subset[position];if(!canStudy(q)){beginSetup();return;}")
@@ -78,7 +79,7 @@ html=html.replace('body.textContent=explanation.explanation','body.textContent=d
 html=html.replace("$('unknown').classList.add('hidden');$('next').classList.remove('hidden');", "$('feedback').append($('attribution'));$('unknown').classList.add('hidden');$('next').classList.remove('hidden');")
 
 html=html.replace('<section class="card" id="setup">',shell+'<p id="saveWarning" class="saveWarning" role="alert"></p><section class="card hidden" id="setup">',1)
-html=html.replace("let records=[],subset=[],position=0,correct=0,denominator=0,selected=false,excluded=0;","let records=[],subset=[],position=0,correct=0,denominator=0,selected=false,excluded=0;"+logic+"\n$('headerHome').onclick=showHome;")
+html=html.replace("let records=[],subset=[],position=0,correct=0,denominator=0,selected=false,excluded=0;","let records=[],subset=[],position=0,correct=0,denominator=0,selected=false,excluded=0;"+logic+"\nif($('headerHome'))$('headerHome').onclick=showHome;")
 html=html.replace("$('chapter').onchange=updateCount;updateCount();","$('chapter').onchange=updateCount;updateCount();showHome();")
 html=html.replace("subset=eligible();if(!subset.length)return;position=0;correct=0;denominator=0;excluded=0;","subset=eligible();if(!subset.length)return;sessionScope={year:$('year').value,chapter:$('chapter').value};position=0;correct=0;denominator=0;excluded=0;lastAnswer=null;")
 html=html.replace("$('quiz').classList.remove('hidden');show()};","setScreen('quiz');show();checkpoint()};")
