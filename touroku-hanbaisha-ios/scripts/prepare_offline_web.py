@@ -9,6 +9,14 @@ bank_path=WEB/'official-kansai/APPROVED_OFFICIAL_BANK.json'
 raw=bank_path.read_bytes()
 bank=json.loads(raw)
 rows=bank['questions']
+explanation_path=WEB/'official-kansai/EXPLANATIONS_AUDITED_599.json'
+explanation_raw=explanation_path.read_bytes()
+explanation_data=json.loads(explanation_raw)
+explanation_records=explanation_data['records']
+assert explanation_data['count']==len(explanation_records)==599
+assert explanation_data['auditSummary']=={'PASS':599,'HOLD':0,'PENDING':0}
+assert len({x['id'] for x in explanation_records})==599
+assert {x['id'] for x in explanation_records}=={q['id'] for q in rows}
 assert bank['count']==len(rows)==599
 assert len({q['id'] for q in rows})==599 and 'KSAI-2023-090' not in {q['id'] for q in rows}
 if OUT.exists(): shutil.rmtree(OUT)
@@ -31,13 +39,16 @@ html=(WEB/'official-practice.html').read_text()
 old="fetch(BANK,{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(d=>{"
 assert html.count(old)==1
 html=html.replace(old,"Promise.resolve().then(()=>JSON.parse(document.getElementById('offlineBank').textContent)).then(d=>{")
+assert html.count("fetch('official-kansai/EXPLANATIONS_AUDITED_599.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(d=>{if(d?.count!==599||d.records?.length!==599||d.auditSummary?.PASS!==599||d.auditSummary?.HOLD!==0)throw Error('解説監査データの件数・状態が一致しません');explanationMap=new Map(d.records.map(x=>[x.id,x]));}).catch(()=>{explanationMap=new Map()});")==1
+html=html.replace("fetch('official-kansai/EXPLANATIONS_AUDITED_599.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(d=>{if(d?.count!==599||d.records?.length!==599||d.auditSummary?.PASS!==599||d.auditSummary?.HOLD!==0)throw Error('解説監査データの件数・状態が一致しません');explanationMap=new Map(d.records.map(x=>[x.id,x]));}).catch(()=>{explanationMap=new Map()});","const offlineExplanationData=JSON.parse(document.getElementById('offlineExplanations').textContent);if(offlineExplanationData.count!==599||offlineExplanationData.records?.length!==599||offlineExplanationData.auditSummary?.PASS!==599||offlineExplanationData.auditSummary?.HOLD!==0)throw Error('offline explanation bundle integrity failure');explanationMap=new Map(offlineExplanationData.records.map(x=>[x.id,x]));")
 premium=json.loads((ROOT/'touroku-hanbaisha-ios/IAP_POLICY.json').read_text())
 free= premium['freeIds']
 assert len(free)==len(set(free))==50 and set(free)<= {q['id'] for q in rows}
 assert all(sum(q['id'] in free and q['chapter']==c for q in rows)==10 for c in {q['chapter'] for q in rows})
 payload=raw.decode('utf-8').replace('<',r'\u003c')
 assert html.count('</main><script>')==1
-html=html.replace('</main><script>','</main><script type="application/json" id="offlineBank">'+payload+'</script><script>')
+explanation_payload=explanation_raw.decode('utf-8').replace('<',r'\u003c')
+html=html.replace('</main><script>','</main><script type="application/json" id="offlineBank">'+payload+'</script><script type="application/json" id="offlineExplanations">'+explanation_payload+'</script><script>')
 html=html.replace('<head>','<head><meta http-equiv="Content-Security-Policy" content="default-src \'none\'; script-src \'unsafe-inline\'; style-src \'unsafe-inline\'; img-src file: data:; connect-src \'none\'; base-uri \'none\'; form-action \'none\'">',1)
 html=html.replace('<a href="./index.html">‹ ホーム</a>','<button class="button" id="headerHome">‹ ホーム</button>')
 # Apply only to the native bundle; keep the public legacy web page unchanged.
@@ -69,5 +80,5 @@ for name in ['privacy.html','support.html']:
     text=(WEB/name).read_text()
     text=text.replace('<head>','<head><meta http-equiv="Content-Security-Policy" content="default-src \'none\'; style-src \'unsafe-inline\'; base-uri \'none\'; form-action \'none\'">',1)
     (OUT/name).write_text(text,encoding='utf-8')
-(OUT/'manifest.json').write_text(json.dumps({'count':599,'bankSha256':hashlib.sha256(raw).hexdigest(),'figures':figures,'mode':'offline-inline-json'},indent=2)+'\n')
+(OUT/'manifest.json').write_text(json.dumps({'count':599,'bankSha256':hashlib.sha256(raw).hexdigest(),'explanationsCount':599,'explanationsSha256':hashlib.sha256(explanation_raw).hexdigest(),'figures':figures,'mode':'offline-inline-json'},indent=2)+'\n')
 print('PASS: generated offline bundle: 599 questions,',len(figures),'verified figures')
