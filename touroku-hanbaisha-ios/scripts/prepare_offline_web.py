@@ -72,7 +72,9 @@ assert html.count("correct+' / '+denominator+'（採点対象）'")==2
 html=html.replace("correct+' / '+denominator+'（採点対象）'","'正解 '+correct+'問 / 回答 '+denominator+'問'")
 
 html=html.replace('</style>',Path(__file__).with_name('offline_learning.css').read_text()+'</style>',1)
-html=html.replace('<section class="card hidden" id="setup">','<section class="card hidden" id="setup"><div class="mock-top"><div class="eyebrow">模擬試験</div><h2>本番形式</h2><p class="sub">年度・分野を選んで学習します。</p><div id="mockYears" class="mockYears"></div></div>',1)
+setup_html='''<section class="card hidden" id="setup"><div class="mock-top"><div class="eyebrow">模擬試験</div><h2>本番形式</h2><p class="sub">年度別の本番形式模試を選択してください。</p><div id="mockYears" class="mockYears"></div></div><p id="available" class="sub">収録年度を読み込んでいます。</p><div class="hidden" aria-hidden="true"><select id="year"><option value="all">全年度</option></select><select id="chapter"><option value="all">全分野</option></select><p id="count"></p><button id="start" type="button">模擬試験を開始</button></div></section>'''
+html,setup_count=re.subn(r'<section class="card hidden" id="setup">.*?</section>',setup_html,html,count=1,flags=re.S)
+assert setup_count==1, 'replace legacy study-range screen with year-based mock exam list'
 html=html.replace('<section id="quiz" class="hidden"><div class="meta"><span id="counter"></span><span id="score"></span></div>','<section id="quiz" class="hidden"><div class="quizhead"><button class="button" id="headerHome">‹ ホーム</button><div class="quizmeta"><b>登録販売者</b><span id="qtag"></span></div><div class="counter" id="counter"></div></div><div class="qbar"><div id="progressBar"></div></div><div class="meta"><span id="score"></span></div>')
 html=html.replace("function updateCount(){$('count').textContent='この範囲で学べる問題：'+eligible().length+'問';$('start').disabled=!eligible().length}", "function updateCount(){const total=records.filter(q=>($('year').value==='all'||String(q.year)===$('year').value)&&($('chapter').value==='all'||q.chapter===$('chapter').value)).length;const n=eligible().length;$('count').textContent=premiumUnlocked?'この範囲で学べる問題：'+n+'問':'無料で学べる問題：'+n+'問／全'+total+'問（Premiumで全599問）';$('start').disabled=!total}")
 html=html.replace("subset=eligible();if(!subset.length)return;sessionScope=", "subset=eligible();if(!subset.length){requestPremium();return}sessionScope=")
@@ -99,6 +101,8 @@ assert 'function renderAnswer(i)' in html and 'checkpoint()' in html and 'id="ho
 assert "const attribution=$('feedback').querySelector('#attribution')" in html, 'next-question transition must move and hide the previous attribution before rendering the next question'
 html=html.replace('候補600問を監査済みと表示しません。','インターネット接続なしで学習できます。')
 assert 'fetch(BANK' not in html
+assert '学習範囲' not in html and '監査済み問題を学習する' not in html and '監査済み問題を読み込んでいます' not in html
+assert 'id="mockYears"' in html and '年度別の本番形式模試' in html
 assert '関西広域連合・原典照合済み' not in html and '未監査の候補問題' not in html
 assert html.count('id="headerHome"')==1, 'question screen must have exactly one home/back button'
 html=html.replace('</script></body></html>', "document.getElementById('next').addEventListener('click',()=>{const attribution=$('feedback').querySelector('#attribution');if(attribution){attribution.classList.add('hidden');$('quiz').querySelector('article.card').append(attribution)}},true);</script></body></html>")
