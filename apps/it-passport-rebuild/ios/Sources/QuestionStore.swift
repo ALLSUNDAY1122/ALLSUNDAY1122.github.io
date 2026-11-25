@@ -68,6 +68,10 @@ enum QuestionStore {
         all.filter { premium || $0.year == freeYear }
     }
 
+    static func question(id: String) -> StudyQuestion? {
+        all.first { $0.id == id }
+    }
+
     static func questions(domain: String, premium: Bool) -> [StudyQuestion] {
         accessible(premium: premium).filter { $0.domain == domain }
     }
