@@ -989,12 +989,12 @@ workflows:
     integrations:
       app_store_connect: "Codemagic Shiwake Swipe"
     environment:
-      ios_signing:
-        distribution_type: app_store
-        bundle_identifier: jp.allsunday1122.kangoshi
+      groups:
+        - app2_010_touhan_signing
       vars:
         BUNDLE_ID: jp.allsunday1122.kangoshi
         APP_STORE_CONNECT_APP_ID: "6801792293"
+        CODEMAGIC_PROFILE_REF: kangoshi_appstore_20260822
         IAP_PRODUCT_ID: jp.allsunday1122.kangoshi.monthly
         IAP_LIFETIME_PRODUCT_ID: jp.allsunday1122.kangoshi.lifetime
         APPICON_SHA256: 6afe16483852c98e0e030874ce7829f0e1a42fe017bb2f854eee1d9410f8ee80
@@ -1010,6 +1010,7 @@ workflows:
         script: |
           set -euo pipefail
           cd "$CM_BUILD_DIR"
+          test -n "${CERTIFICATE_PRIVATE_KEY:-}"
           test "$BUNDLE_ID" = "jp.allsunday1122.kangoshi"
           test "$IAP_PRODUCT_ID" = "jp.allsunday1122.kangoshi.monthly"
           test "$IAP_LIFETIME_PRODUCT_ID" = "jp.allsunday1122.kangoshi.lifetime"
@@ -1037,7 +1038,8 @@ workflows:
         script: |
           set -euo pipefail
           cd "$CM_BUILD_DIR/kangoshi-sprint/ios"
-          BUILD_NUM="${CM_BUILD_NUMBER:?CM_BUILD_NUMBER is required}"
+          BUILD_NUM="${BUILD_NUMBER:-${PROJECT_BUILD_NUMBER:-${CM_BUILD_NUMBER:-}}}"
+          test -n "$BUILD_NUM"
           python3 - "$BUILD_NUM" <<'PYBUILD'
           from pathlib import Path
           import re,sys
@@ -1048,6 +1050,18 @@ workflows:
           p.write_text(text,encoding='utf-8')
           PYBUILD
           xcodegen generate
+      - name: Initialize signing keychain
+        script: |
+          set -euo pipefail
+          keychain initialize
+      - name: Fetch managed App Store signing files
+        script: |
+          set -euo pipefail
+          app-store-connect fetch-signing-files "$BUNDLE_ID" --type IOS_APP_STORE
+      - name: Add signing certificate to keychain
+        script: |
+          set -euo pipefail
+          keychain add-certificates
       - name: Apply App Store signing profiles
         script: |
           set -euo pipefail
