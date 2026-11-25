@@ -99,7 +99,7 @@ struct TouhanPaywall: View {
                             Text(p.id == TouhanPremium.monthly ? "月額プラン" : "買い切りプラン").font(.headline)
                             Text(p.displayPrice + (p.id == TouhanPremium.monthly ? " / 月" : "（一度のみ）"))
                             if p.id == TouhanPremium.monthly {
-                                if premium.trialEligible { Text("対象者は初回7日間無料。その後は月額料金で自動更新。") }
+                                if premium.trialEligible { Text("対象者は初回1週間無料。その後は月額料金で自動更新。") }
                                 Text("自動更新。解約はAppleアカウントのサブスクリプション設定から。")
                             }
                             Button("購入する") { Task { await premium.purchase(p) } }.buttonStyle(.borderedProminent).disabled(premium.busy || premium.unlocked)
