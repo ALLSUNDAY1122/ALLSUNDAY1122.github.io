@@ -126,7 +126,7 @@ def main():
          ["touroku-hanbaisha-ios/native-ios/Sources/TouhanSprintApp.swift","touroku-hanbaisha-ios/native-ios/project.yml","codemagic.yaml"])
     metadata=(IOS/"APP_STORE_METADATA.md").read_text()
     meta_ok=all(x in metadata for x in
-        ("599問","2023年度問90","通常学習は通信不要","外部リンク","公式問題PDF","プライバシーポリシー"))
+        ("599問","2023年度問90","通常の学習に通信は不要","外部リンク","公式PDF","プライバシーポリシー"))
     q3read=IOS/"ASC_METADATA_Q3_READBACK_20261125.json"
     q3data=json.loads(q3read.read_text()) if q3read.is_file() else {}
     q3_asc=(q3data.get("status")=="PASS" and q3data.get("descriptionMentions599") is True
