@@ -1303,28 +1303,48 @@ workflows:
           codesign --verify --deep --strict "$APP_DIR"
           test -f "$APP_DIR/embedded.mobileprovision"
           security cms -D -i "$APP_DIR/embedded.mobileprovision" > "$VERIFY_DIR/profile.plist"
-          python3 - "$APP_DIR" "$VERIFY_DIR/profile.plist" "$BUNDLE_ID" "$CM_BUILD_NUMBER" <<'PYIPA'
+          RELEASE_BUILD_NUMBER="${CM_BUILD_NUMBER:-${BUILD_NUMBER:-}}"
+          case "$RELEASE_BUILD_NUMBER" in
+            ''|*[!0-9]*) echo "FAIL: no numeric Codemagic build number (CM_BUILD_NUMBER/BUILD_NUMBER)" >&2; exit 1 ;;
+          esac
+          python3 - "$APP_DIR" "$VERIFY_DIR/profile.plist" "$BUNDLE_ID" "$RELEASE_BUILD_NUMBER" <<'PYIPA'
           import json,plistlib,sys
           from pathlib import Path
           app=Path(sys.argv[1]);profile=plistlib.loads(Path(sys.argv[2]).read_bytes())
           bundle=sys.argv[3];build=str(sys.argv[4])
-          info=plistlib.loads((app/'Info.plist').read_bytes())
-          assert info.get('CFBundleIdentifier')==bundle,info.get('CFBundleIdentifier')
-          assert str(info.get('CFBundleVersion'))==build,(info.get('CFBundleVersion'),build)
+          info_path=app/'Info.plist'
+          assert info_path.is_file(),f'Info.plist missing: {info_path}'
+          info=plistlib.loads(info_path.read_bytes())
+          actual_bundle=str(info.get('CFBundleIdentifier',''))
+          actual_build=str(info.get('CFBundleVersion',''))
+          assert actual_bundle==bundle, f'CFBundleIdentifier mismatch actual={actual_bundle!r} expected={bundle!r}'
+          assert actual_build==build, f'CFBundleVersion mismatch actual={actual_build!r} expected={build!r}'
           ent=profile.get('Entitlements',{})
-          assert str(ent.get('application-identifier','')).endswith('.'+bundle)
-          assert 'MN3D2ZM44N' in profile.get('TeamIdentifier',[])
-          assert ent.get('get-task-allow') is False
+          app_identifier=str(ent.get('application-identifier',''))
+          assert app_identifier.endswith('.'+bundle), f'provisioning application-identifier mismatch: {app_identifier!r}'
+          assert 'MN3D2ZM44N' in profile.get('TeamIdentifier',[]), f'provisioning TeamIdentifier mismatch: {profile.get("TeamIdentifier")!r}'
+          assert ent.get('get-task-allow') is False, f'get-task-allow must be false: {ent.get("get-task-allow")!r}'
           web=app/'OfflineWeb'
-          manifest=json.loads((web/'manifest.json').read_text())
-          html=(web/'official-practice.html').read_text()
-          assert manifest.get('count')==599 and manifest.get('explanationsCount')==599
-          assert 'id="offlineBank"' in html and 'id="offlineExplanations"' in html
-          privacy=plistlib.loads((app/'PrivacyInfo.xcprivacy').read_bytes())
-          assert privacy.get('NSPrivacyTracking') is False
-          assert privacy.get('NSPrivacyCollectedDataTypes')==[]
-          assert (app/'_CodeSignature').is_dir()
-          print('PASS: signed IPA includes offline 599 bank/explanations, privacy manifest and App Store profile')
+          assert web.is_dir(), f'OfflineWeb resource directory missing: {web}'
+          manifest_path=web/'manifest.json'
+          html_path=web/'official-practice.html'
+          assert manifest_path.is_file(), f'offline manifest missing: {manifest_path}'
+          assert html_path.is_file(), f'offline practice HTML missing: {html_path}'
+          manifest=json.loads(manifest_path.read_text(encoding='utf-8'))
+          html=html_path.read_text(encoding='utf-8')
+          assert manifest.get('count')==599, f'bank count mismatch: {manifest.get("count")!r}'
+          assert manifest.get('explanationsCount')==599, f'explanation count mismatch: {manifest.get("explanationsCount")!r}'
+          assert manifest.get('bankSha256') and len(str(manifest['bankSha256']))==64, 'bank SHA-256 missing/invalid'
+          assert manifest.get('explanationsSha256') and len(str(manifest['explanationsSha256']))==64, 'explanation SHA-256 missing/invalid'
+          assert 'id="offlineBank"' in html, 'offline bank payload marker missing'
+          assert 'id="offlineExplanations"' in html, 'offline explanations payload marker missing'
+          privacy_path=app/'PrivacyInfo.xcprivacy'
+          assert privacy_path.is_file(), f'PrivacyInfo.xcprivacy missing: {privacy_path}'
+          privacy=plistlib.loads(privacy_path.read_bytes())
+          assert privacy.get('NSPrivacyTracking') is False, f'privacy tracking declaration invalid: {privacy.get("NSPrivacyTracking")!r}'
+          assert privacy.get('NSPrivacyCollectedDataTypes')==[], f'collected data declaration invalid: {privacy.get("NSPrivacyCollectedDataTypes")!r}'
+          assert (app/'_CodeSignature').is_dir(), 'code signature directory missing'
+          print(f'PASS: signed IPA bundle={actual_bundle} build={actual_build}; offline bank=599; explanations=599; privacy manifest valid; App Store profile valid')
           PYIPA
           rm -rf "$VERIFY_DIR"
       - name: Upload signed release candidate IPA to App Store Connect
