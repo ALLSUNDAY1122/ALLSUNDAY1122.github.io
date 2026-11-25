@@ -1,0 +1,353 @@
+{
+  "batch": "visual-reaudit-2024-b04",
+  "auditType": "MANUAL_VISUAL_SOURCE_IMAGE_REAUDIT",
+  "auditedAt": "2026-11-25T17:20:00+09:00",
+  "repository": "ALLSUNDAY1122/ALLSUNDAY1122.github.io",
+  "source": {
+    "issuer": "関西広域連合",
+    "title": "令和6年度登録販売者試験（前半）",
+    "questionPdf": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_zennhan.pdf",
+    "attachedBundle": "visual-reaudit-2024-b04.pdf",
+    "attachedCandidates": "visual-reaudit-2024-b04.candidates.json"
+  },
+  "method": "添付された公式問題PDFの各ページ画像を目視し、候補レコードの問題文・全選択肢・ルビ・表・記号を照合した。PDF文字データや自動照合は判定根拠に使用していない。問40は候補レコードが画像表示方式のため、main上のsourceFigures画像を取得して添付PDFの問40と目視照合した。",
+  "scope": [
+    "KSAI-2024-036",
+    "KSAI-2024-037",
+    "KSAI-2024-038",
+    "KSAI-2024-039",
+    "KSAI-2024-040",
+    "KSAI-2024-042",
+    "KSAI-2024-043",
+    "KSAI-2024-044",
+    "KSAI-2024-045",
+    "KSAI-2024-046"
+  ],
+  "summary": {
+    "total": 10,
+    "pass": 10,
+    "fail": 0,
+    "hold": 0
+  },
+  "answerPolicy": "answerNumberOfficialは添付候補JSONの値を転記。正答PDFは直接確認していないため全件answerPDFChecked=false。",
+  "results": [
+    {
+      "id": "KSAI-2024-036",
+      "questionNo": 36,
+      "bundlePdfPage": 1,
+      "officialPdfPage": 25,
+      "status": "PASS",
+      "questionTextMatch": true,
+      "choicesMatch": true,
+      "rubyMatch": true,
+      "ruby": [
+        "ましにんがん",
+        "おう",
+        "りっくんしとう",
+        "じ",
+        "だいおうかんぞうとう",
+        "しん",
+        "じ",
+        "あんちゅうさん",
+        "おう"
+      ],
+      "tableMatch": true,
+      "officialChoices": [
+        "正　誤　正　誤",
+        "正　誤　誤　正",
+        "誤　正　正　正",
+        "誤　正　誤　正",
+        "誤　誤　正　正"
+      ],
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "reason": "問題文・a〜dの全記述・全5行4列の正誤表を画像で照合し一致。処方名および本文中のルビ9件も原典の出現順・表記と一致。"
+    },
+    {
+      "id": "KSAI-2024-037",
+      "questionNo": 37,
+      "bundlePdfPage": 1,
+      "officialPdfPage": 25,
+      "status": "PASS",
+      "questionTextMatch": true,
+      "choicesMatch": true,
+      "rubyMatch": true,
+      "ruby": [
+        "しゃ",
+        "かん",
+        "しゃ",
+        "しゃ",
+        "しゃ",
+        "かん"
+      ],
+      "tableMatch": true,
+      "officialChoices": [
+        "ａ、ｂ",
+        "ａ、ｃ",
+        "ｂ、ｃ",
+        "ｂ、ｄ",
+        "ｃ、ｄ"
+      ],
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "reason": "問題文・a〜dの全説明・5つの組合せ選択肢を画像で照合し一致。「瀉下」「浣腸」のルビ6件も原典と一致。"
+    },
+    {
+      "id": "KSAI-2024-038",
+      "questionNo": 38,
+      "bundlePdfPage": 2,
+      "officialPdfPage": 26,
+      "status": "PASS",
+      "questionTextMatch": true,
+      "choicesMatch": true,
+      "rubyMatch": true,
+      "ruby": [
+        "けい",
+        "けい"
+      ],
+      "tableMatch": true,
+      "officialChoices": [
+        "誤　正　誤　正",
+        "誤　正　正　誤",
+        "正　誤　正　正",
+        "正　誤　正　誤",
+        "正　正　誤　正"
+      ],
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "reason": "問題文・a〜dの全記述・全5行4列の正誤表を画像で照合し一致。「痙」のルビ「けい」2件も原典と一致。"
+    },
+    {
+      "id": "KSAI-2024-039",
+      "questionNo": 39,
+      "bundlePdfPage": 2,
+      "officialPdfPage": 26,
+      "status": "PASS",
+      "questionTextMatch": true,
+      "choicesMatch": true,
+      "rubyMatch": true,
+      "ruby": [
+        "か",
+        "ひ"
+      ],
+      "tableMatch": true,
+      "officialChoices": [
+        "正　正　正　誤",
+        "正　正　誤　正",
+        "正　誤　正　正",
+        "誤　正　正　正",
+        "正　正　正　正"
+      ],
+      "officialTableRows": [
+        [
+          "正",
+          "正",
+          "正",
+          "誤"
+        ],
+        [
+          "正",
+          "正",
+          "誤",
+          "正"
+        ],
+        [
+          "正",
+          "誤",
+          "正",
+          "正"
+        ],
+        [
+          "誤",
+          "正",
+          "正",
+          "正"
+        ],
+        [
+          "正",
+          "正",
+          "正",
+          "正"
+        ]
+      ],
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "reason": "問題文・a〜dの全記述・「噛」「麻痺」のルビ・全5行4列の正誤表を画像で照合し一致。表の各セルとa〜dの列対応も原典どおり。"
+    },
+    {
+      "id": "KSAI-2024-040",
+      "questionNo": 40,
+      "bundlePdfPage": 3,
+      "officialPdfPage": 27,
+      "status": "PASS",
+      "questionTextMatch": true,
+      "choicesMatch": true,
+      "rubyMatch": true,
+      "ruby": [
+        "せつ",
+        "そう"
+      ],
+      "tableMatch": true,
+      "recordRepresentation": "SOURCE_FIGURE_IMAGE",
+      "sourceFigure": "touroku-hanbaisha-sprint/official-kansai/layout-crops/KSAI-2024-040-p27-1.png",
+      "sourceFigureBlobSha": "e8069131f27aa256d73c2741de501456754fa06c",
+      "officialTableRows": [
+        [
+          "誤",
+          "誤",
+          "誤",
+          "正"
+        ],
+        [
+          "誤",
+          "誤",
+          "正",
+          "誤"
+        ],
+        [
+          "誤",
+          "正",
+          "誤",
+          "誤"
+        ],
+        [
+          "正",
+          "誤",
+          "誤",
+          "誤"
+        ],
+        [
+          "誤",
+          "誤",
+          "誤",
+          "誤"
+        ]
+      ],
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "reason": "候補JSONは設問・表をsourceFigures画像として表示する方式。main上の画像素材を取得して目視し、添付公式PDFの問40と設問文、6カプセル中の成分・分量表（パンテチン375mg、大豆油不けん化物600mg、トコフェロール酢酸エステル100mg、ルチン60mg、ピリドキシン塩酸塩10mg）、a〜dの全記述および正誤表5行4列が一致することを確認。"
+    },
+    {
+      "id": "KSAI-2024-042",
+      "questionNo": 42,
+      "bundlePdfPage": 4,
+      "officialPdfPage": 29,
+      "status": "PASS",
+      "questionTextMatch": true,
+      "choicesMatch": true,
+      "rubyMatch": true,
+      "tableMatch": true,
+      "officialChoices": [
+        "ａ、ｂ",
+        "ａ、ｃ",
+        "ｂ、ｃ",
+        "ｂ、ｄ",
+        "ｃ、ｄ"
+      ],
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "reason": "問題文・a〜dの全記述・5つの組合せ選択肢・本文中の痔、痔瘻、肛門、肛門腺窩、糞便、化膿、痒み等のルビを画像で照合し一致。"
+    },
+    {
+      "id": "KSAI-2024-043",
+      "questionNo": 43,
+      "bundlePdfPage": 4,
+      "officialPdfPage": 29,
+      "status": "PASS",
+      "questionTextMatch": true,
+      "choicesMatch": true,
+      "rubyMatch": true,
+      "ruby": [
+        "かみしょうようさん",
+        "とうかくじょうきとう",
+        "うんけいとう",
+        "しん",
+        "けいしぶくりょうがん"
+      ],
+      "tableMatch": true,
+      "officialChoices": [
+        "正　正　誤　誤",
+        "正　誤　正　正",
+        "誤　正　誤　誤",
+        "正　誤　正　誤",
+        "誤　誤　正　正"
+      ],
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "reason": "問題文・a〜dの全記述・全5行4列の正誤表を画像で照合し一致。漢方処方名および「湿疹」のルビ5件も原典の出現順・表記と一致。"
+    },
+    {
+      "id": "KSAI-2024-044",
+      "questionNo": 44,
+      "bundlePdfPage": 5,
+      "officialPdfPage": 30,
+      "status": "PASS",
+      "questionTextMatch": true,
+      "choicesMatch": true,
+      "rubyMatch": true,
+      "ruby": [],
+      "tableMatch": true,
+      "officialChoices": [
+        "ａ、ｂ",
+        "ａ、ｃ",
+        "ｂ、ｃ",
+        "ｂ、ｄ",
+        "ｃ、ｄ"
+      ],
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "reason": "年齢・症状・6錠中の成分と分量（d-クロルフェニラミンマレイン酸塩6mg、ベラドンナ総アルカロイド0.6mg、フェニレフリン塩酸塩30mg）、a〜dの全説明および5つの組合せ選択肢を画像で照合し一致。"
+    },
+    {
+      "id": "KSAI-2024-045",
+      "questionNo": 45,
+      "bundlePdfPage": 6,
+      "officialPdfPage": 31,
+      "status": "PASS",
+      "questionTextMatch": true,
+      "choicesMatch": true,
+      "rubyMatch": true,
+      "ruby": [
+        "くう",
+        "くう",
+        "のう"
+      ],
+      "tableMatch": true,
+      "officialChoices": [
+        "誤　誤　誤　正",
+        "誤　誤　正　誤",
+        "誤　正　誤　誤",
+        "正　誤　誤　誤",
+        "誤　誤　誤　誤"
+      ],
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "reason": "問題文・a〜dの全記述・全5行4列の正誤表を画像で照合し一致。「鼻腔」「副鼻腔」「蓄膿症」のルビ3件も原典と一致。"
+    },
+    {
+      "id": "KSAI-2024-046",
+      "questionNo": 46,
+      "bundlePdfPage": 6,
+      "officialPdfPage": 31,
+      "status": "PASS",
+      "questionTextMatch": true,
+      "choicesMatch": true,
+      "rubyMatch": true,
+      "ruby": [
+        "のう"
+      ],
+      "tableMatch": true,
+      "officialChoices": [
+        "誤　正　正　誤",
+        "正　誤　正　誤",
+        "正　正　誤　正",
+        "正　誤　誤　誤",
+        "誤　誤　誤　誤"
+      ],
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "reason": "問題文・a〜dの全記述・全5行4列の正誤表を画像で照合し一致。「結膜嚢」のルビ「のう」も原典の位置・読みと一致。"
+    }
+  ],
+  "constraints": "正式バンク本体および状態ファイルは変更していない。監査結果JSONのみ新規作成。"
+}
