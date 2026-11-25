@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Append second-stage evidence to canonical release files without overstating counts."""
-# Count every independently approved promotion ledger, including all later certified methods.
+# Count every independently approved promotion ledger, including all later certified methods; use isolated rebuild evidence.
 import collections,json,os
 from datetime import datetime,timezone,timedelta
 from pathlib import Path
