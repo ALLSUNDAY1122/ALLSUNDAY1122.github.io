@@ -56,20 +56,33 @@ def main():
             if state in ("failed","error","cancelled","canceled"):break
         time.sleep(30)
     if not build:raise RuntimeError("Exact Codemagic build ID not found before timeout")
-    actions=build.get("actions") or []
+    # The Codemagic REST API uses the original field names buildActions,
+    # artefacts and index; accept the newer aliases as well, without weakening
+    # any release assertions.
+    detail_code,detail=cm_get("/builds/"+urllib.parse.quote(str(build_id),safe=""),token)
+    if detail_code==200 and isinstance(detail,dict):
+        build=detail.get("build") or detail.get("data") or detail
+    actions=build.get("buildActions") or build.get("actions") or []
     steps=[{"name":str(x.get("name") or x.get("type") or "")[:180],"status":str(x.get("status") or "UNKNOWN").lower()}
       for x in actions if isinstance(x,dict)]
-    artifacts=build.get("artifacts") or []
+    artifacts=build.get("artefacts") or build.get("artifacts") or []
     artifact_names=[str(x.get("name") or x.get("fileName") or x.get("filename") or x.get("path") or "") for x in artifacts if isinstance(x,dict)]
+    artifact_types=[str(x.get("type") or "").lower() for x in artifacts if isinstance(x,dict)]
     signed_step=next((x for x in steps if x["name"]=="Verify signed IPA contains offline 599 bank, explanations and privacy manifest"),None)
     upload_step=next((x for x in steps if x["name"]=="Upload signed release candidate IPA to App Store Connect"),None)
-    result.update({"codemagicBranch":build.get("branch"),"codemagicBuildNumber":str(build.get("buildNumber") or ""),
-      "codemagicSteps":steps,"artifactNames":artifact_names})
+    version=build.get("version") if isinstance(build.get("version"),dict) else {}
+    build_number=str(build.get("buildNumber") or build.get("index") or version.get("buildNumber") or version.get("index") or "")
+    build_branch=build.get("branch")
+    if isinstance(build_branch,dict): build_branch=build_branch.get("name") or build_branch.get("branch")
+    result.update({"codemagicBranch":build_branch,"codemagicBuildNumber":build_number,
+      "codemagicSteps":steps,"artifactNames":artifact_names,"artifactTypes":artifact_types,
+      "codemagicDetailHttpStatus":detail_code})
+    ipa_present=any(x.lower().endswith(".ipa") for x in artifact_names) or "ipa" in artifact_types
     signed=(str(build.get("status","")).lower() in ("finished","success","succeeded","passed")
-      and any(x.lower().endswith(".ipa") for x in artifact_names)
+      and ipa_present
       and signed_step is not None and signed_step["status"] in ("success","finished","passed")
       and upload_step is not None and upload_step["status"] in ("success","finished","passed")
-      and build.get("branch")==BRANCH)
+      and build_branch==BRANCH)
     result["signedIpaVerified"]=signed
     if not signed:raise RuntimeError("Codemagic build did not prove signed IPA verification and ASC upload step success")
     build_number=result["codemagicBuildNumber"]
@@ -119,7 +132,7 @@ def main():
     finally:
         if cleanup:cleanup.unlink(missing_ok=True)
     result["completedAtJST"]=stamp()
-    OUT.write_text(json.dumps(result,ensure_ascii=False,indent=2)+"\\n")
+    OUT.write_text(json.dumps(result,ensure_ascii=False,indent=2)+"\n")
     print(json.dumps({k:v for k,v in result.items() if k not in ("codemagicSteps","artifactNames","internalGroupsWithTesters")},ensure_ascii=False))
     if result["status"]!="PASS":raise SystemExit("Q7 uploaded build is not assigned to a verified internal TestFlight group")
 if __name__=="__main__":
@@ -128,6 +141,6 @@ if __name__=="__main__":
         partial={"schema":"touhan-q7-testflight-readback-v1","timestampJST":datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=9))).isoformat(),
           "status":"FAIL","error":str(exc)[:800],"signedIpaVerified":False,"ascProcessingState":"NOT_VERIFIED",
           "testFlightAvailable":False,"testFlightDistributed":False,"appReviewSubmitted":False}
-        OUT.write_text(json.dumps(partial,ensure_ascii=False,indent=2)+"\\n")
+        OUT.write_text(json.dumps(partial,ensure_ascii=False,indent=2)+"\n")
         print(json.dumps(partial,ensure_ascii=False))
         raise
