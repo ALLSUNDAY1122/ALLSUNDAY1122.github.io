@@ -1291,6 +1291,42 @@ workflows:
           xcode-project build-ipa \
             --project "$CM_BUILD_DIR/$XCODE_PROJECT" \
             --scheme "$XCODE_SCHEME"
+      - name: Verify signed IPA contains offline 599 bank, explanations and privacy manifest
+        script: |
+          set -euo pipefail
+          IPA_PATH="$(find "$CM_BUILD_DIR/build/ios/ipa" -maxdepth 1 -type f -name '*.ipa' -print -quit)"
+          test -n "$IPA_PATH"
+          VERIFY_DIR="$(mktemp -d)"
+          unzip -q "$IPA_PATH" -d "$VERIFY_DIR"
+          APP_DIR="$(find "$VERIFY_DIR/Payload" -maxdepth 1 -type d -name '*.app' -print -quit)"
+          test -n "$APP_DIR"
+          codesign --verify --deep --strict "$APP_DIR"
+          test -f "$APP_DIR/embedded.mobileprovision"
+          security cms -D -i "$APP_DIR/embedded.mobileprovision" > "$VERIFY_DIR/profile.plist"
+          python3 - "$APP_DIR" "$VERIFY_DIR/profile.plist" "$BUNDLE_ID" "$CM_BUILD_NUMBER" <<'PYIPA'
+          import json,plistlib,sys
+          from pathlib import Path
+          app=Path(sys.argv[1]);profile=plistlib.loads(Path(sys.argv[2]).read_bytes())
+          bundle=sys.argv[3];build=str(sys.argv[4])
+          info=plistlib.loads((app/'Info.plist').read_bytes())
+          assert info.get('CFBundleIdentifier')==bundle,info.get('CFBundleIdentifier')
+          assert str(info.get('CFBundleVersion'))==build,(info.get('CFBundleVersion'),build)
+          ent=profile.get('Entitlements',{})
+          assert str(ent.get('application-identifier','')).endswith('.'+bundle)
+          assert 'MN3D2ZM44N' in profile.get('TeamIdentifier',[])
+          assert ent.get('get-task-allow') is False
+          web=app/'OfflineWeb'
+          manifest=json.loads((web/'manifest.json').read_text())
+          html=(web/'official-practice.html').read_text()
+          assert manifest.get('count')==599 and manifest.get('explanationsCount')==599
+          assert 'id="offlineBank"' in html and 'id="offlineExplanations"' in html
+          privacy=plistlib.loads((app/'PrivacyInfo.xcprivacy').read_bytes())
+          assert privacy.get('NSPrivacyTracking') is False
+          assert privacy.get('NSPrivacyCollectedDataTypes')==[]
+          assert (app/'_CodeSignature').is_dir()
+          print('PASS: signed IPA includes offline 599 bank/explanations, privacy manifest and App Store profile')
+          PYIPA
+          rm -rf "$VERIFY_DIR"
       - name: Upload signed release candidate IPA to App Store Connect
         script: |
           set -euo pipefail
