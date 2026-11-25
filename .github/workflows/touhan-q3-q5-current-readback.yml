@@ -1,0 +1,114 @@
+name: Touhan Q3/Q5 Current Store and Privacy Readback
+on:
+  push:
+    paths:
+      - '.github/workflows/touhan-q3-q5-current-readback.yml'
+      - 'touroku-hanbaisha-ios/scripts/readback_asc_metadata_q3.py'
+      - 'touroku-hanbaisha-ios/scripts/audit_privacy_q5.py'
+      - 'touroku-hanbaisha-ios/scripts/readback_asc_privacy_q5.py'
+      - 'touroku-hanbaisha-ios/APP_STORE_METADATA.md'
+      - 'touroku-hanbaisha-sprint/official-practice.html'
+      - 'touroku-hanbaisha-sprint/privacy.html'
+permissions:
+  contents: write
+concurrency:
+  group: touhan-q3-q5-readback-${{ github.ref_name }}
+  cancel-in-progress: false
+jobs:
+  readback:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install exact browser audit tools
+        run: |
+          python -m pip install --disable-pip-version-check 'playwright==1.56.0'
+          python -m playwright install --with-deps chromium
+      - name: Read current App Store listing metadata (read only)
+        id: q3
+        continue-on-error: true
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: python touroku-hanbaisha-ios/scripts/readback_asc_metadata_q3.py
+      - name: Audit actual privacy policy, browser requests and local storage
+        id: q5source
+        continue-on-error: true
+        run: python touroku-hanbaisha-ios/scripts/audit_privacy_q5.py
+      - name: Read current ASC privacy policy URL and questionnaire accessibility (read only)
+        id: q5asc
+        continue-on-error: true
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: python touroku-hanbaisha-ios/scripts/readback_asc_privacy_q5.py
+      - name: Consolidate evidence without upgrading unavailable questionnaire
+        if: always()
+        env:
+          Q3_RESULT: ${{ steps.q3.outcome }}
+          Q5_SOURCE_RESULT: ${{ steps.q5source.outcome }}
+          Q5_ASC_RESULT: ${{ steps.q5asc.outcome }}
+          RUN_ID: ${{ github.run_id }}
+          HEAD_SHA: ${{ github.sha }}
+        run: |
+          python - <<'PY'
+          import datetime,json,os
+          from pathlib import Path
+          b=Path('touroku-hanbaisha-ios')
+          def read(path):
+              try:return json.loads((b/path).read_text())
+              except Exception:return {}
+          q3=read('ASC_METADATA_Q3_READBACK_20261125.json')
+          privacy=read('PRIVACY_Q5_AUDIT_20261124.json')
+          asc=read('ASC_Q5_PRIVACY_METADATA_READBACK_20261124.json')
+          hosts=privacy.get('observedHosts',[])
+          external=[h for h in hosts if h not in ('127.0.0.1','localhost','::1')]
+          q5={
+            'schema':'touhan-q5-current-evidence-v1',
+            'timestampJST':datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=9))).isoformat(),
+            'githubRunId':int(os.environ['RUN_ID']),'testedHead':os.environ['HEAD_SHA'],
+            'sourceAndBrowserAudit':privacy.get('sourceAndBrowserAudit','FAIL') if os.environ['Q5_SOURCE_RESULT']=='success' else 'FAIL',
+            'observedHosts':hosts,'observedExternalHosts':external,
+            'privacyPolicyURLMatched':asc.get('privacyPolicyURLMatched') is True if os.environ['Q5_ASC_RESULT']=='success' else False,
+            'questionnaireVerified':asc.get('questionnaireVerified') is True,
+            'questionnaireDataTypesReconciled':False,
+            'hostingProviderLogsVerified':False,
+            'questionnaireAccess':'NOT_EXPOSED_BY_DOCUMENTED_READ_ONLY_ASC_API',
+            'submissionPerformed':False,
+            'limits':['App Store Connect App Privacy questionnaire requires authenticated UI/manual confirmation.',
+                      'GitHub Pages hosting provider request-log retention/purpose was not independently verified.',
+                      'No physical iOS device network capture.']
+          }
+          (b/'Q5_CURRENT_20261125.json').write_text(json.dumps(q5,ensure_ascii=False,indent=2)+'\\n')
+          print(json.dumps({'Q3':q3.get('status'),'Q5Source':q5['sourceAndBrowserAudit'],
+            'privacyURL':q5['privacyPolicyURLMatched'],'questionnaireVerified':q5['questionnaireVerified'],
+            'externalHosts':external},ensure_ascii=False))
+          PY
+      - name: Commit current readback evidence to this PR branch only
+        if: always()
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF_NAME" != "main"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add touroku-hanbaisha-ios/ASC_METADATA_Q3_READBACK_20261125.json
+          git add touroku-hanbaisha-ios/Q5_CURRENT_20261125.json
+          git add touroku-hanbaisha-ios/PRIVACY_Q5_AUDIT_20261124.json
+          git add touroku-hanbaisha-ios/ASC_Q5_PRIVACY_METADATA_READBACK_20261124.json
+          git commit -m 'audit(touhan): record current ASC listing and privacy readbacks' || true
+          git push origin "HEAD:$GITHUB_REF_NAME"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: touhan-q3-q5-current-readback
+          path: |
+            touroku-hanbaisha-ios/ASC_METADATA_Q3_READBACK_20261125.json
+            touroku-hanbaisha-ios/Q5_CURRENT_20261125.json
+            touroku-hanbaisha-ios/PRIVACY_Q5_AUDIT_20261124.json
+            touroku-hanbaisha-ios/ASC_Q5_PRIVACY_METADATA_READBACK_20261124.json
+          if-no-files-found: ignore
