@@ -1,0 +1,505 @@
+{
+  "batch": "visual-reaudit-2025-b03",
+  "auditType": "manual_visual_reaudit",
+  "repository": "ALLSUNDAY1122/ALLSUNDAY1122.github.io",
+  "baseBranch": "main",
+  "source": {
+    "candidateFile": "visual-reaudit-2025-b03.candidates.json",
+    "pdfFile": "visual-reaudit-2025-b03.pdf",
+    "pdfPages": 7,
+    "officialSource": "関西広域連合「令和7年度登録販売者試験」前半",
+    "officialPdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R7tourokuhannbaisyashiken_zennhan.pdf",
+    "answerPdfInspected": false
+  },
+  "scope": {
+    "questionIds": [
+      "KSAI-2025-025",
+      "KSAI-2025-026",
+      "KSAI-2025-027",
+      "KSAI-2025-028",
+      "KSAI-2025-029",
+      "KSAI-2025-030",
+      "KSAI-2025-031",
+      "KSAI-2025-032",
+      "KSAI-2025-033",
+      "KSAI-2025-034"
+    ],
+    "questionNumbers": [
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34
+    ],
+    "bundlePdfPages": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "officialPdfPages": [
+      21,
+      22,
+      22,
+      23,
+      24,
+      25,
+      26,
+      26,
+      27,
+      27
+    ]
+  },
+  "method": {
+    "description": "添付PDF全7ページのレンダリング画像を目視し、添付候補JSONの各レコードと問題文、全選択肢、ルビ、表の行列・セル対応、記号を照合した。PDF文字データ抽出や既存自動監査結果は目視判定の代替根拠としていない。",
+    "answerHandling": "answerNumberOfficialの値のみ転記。正答PDFは未確認のため全件answerPDFChecked=false。",
+    "failRule": "問題文・選択肢・ルビ・表・記号のいずれかが原典画像と一致しない場合はFAILとし、原典画像で確認できる正しい内容を記録した。"
+  },
+  "results": [
+    {
+      "id": "KSAI-2025-025",
+      "questionNo": 25,
+      "bundlePdfPages": [
+        1
+      ],
+      "officialPdfPages": [
+        21
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tables": "該当なし",
+        "symbols": "PASS"
+      },
+      "visuallyVerifiedRubyReadings": [
+        "かっこんとう",
+        "しょうさいことう",
+        "しょうせいりゅうとう",
+        "ばくもんどうとう"
+      ],
+      "visuallyVerifiedChoices": [
+        "1（a、b）",
+        "2（a、c）",
+        "3（b、c）",
+        "4（b、d）",
+        "5（c、d）"
+      ],
+      "notes": "問25の本文、a〜dの漢方処方名とルビ4件、選択肢1〜5を照合。候補choicesと一致。"
+    },
+    {
+      "id": "KSAI-2025-026",
+      "questionNo": 26,
+      "bundlePdfPages": [
+        2
+      ],
+      "officialPdfPages": [
+        22
+      ],
+      "status": "FAIL",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "FAIL",
+        "ruby": "FAIL",
+        "tables": "該当なし",
+        "symbols": "PASS"
+      },
+      "discrepancies": [
+        "候補question末尾に「ごしゅゆとう」が置かれ、選択肢1の読みが選択肢配列の外に分離されている。",
+        "候補choicesでは、各選択肢の文字列末尾に次の選択肢のルビが混入している。具体的に、選択肢1に「こう そ さん」、選択肢2に「ま おう とう」、選択肢3に「ちょう とう さん」、選択肢4に「しゃく やく かん ぞう とう」が格納されており、選択肢ごとのルビ対応がずれている。"
+      ],
+      "originalChoices": [
+        {
+          "number": 1,
+          "text": "呉茱萸湯",
+          "ruby": "ごしゅゆとう"
+        },
+        {
+          "number": 2,
+          "text": "香蘇散",
+          "ruby": "こうそさん"
+        },
+        {
+          "number": 3,
+          "text": "麻黄湯",
+          "ruby": "まおうとう"
+        },
+        {
+          "number": 4,
+          "text": "釣藤散",
+          "ruby": "ちょうとうさん"
+        },
+        {
+          "number": 5,
+          "text": "芍薬甘草湯",
+          "ruby": "しゃくやくかんぞうとう"
+        }
+      ],
+      "notes": "原典PDF画像2ページの問26を目視。薬名そのものの文字は候補と一致するが、候補データでは選択肢1のルビがquestionに分離され、選択肢2〜5のルビがそれぞれ直前の選択肢文字列に連結されている。表示単位の選択肢・ルビ対応として原典と一致しないためFAIL。上記originalChoicesに原典の正しい各選択肢とルビを記録。"
+    },
+    {
+      "id": "KSAI-2025-027",
+      "questionNo": 27,
+      "bundlePdfPages": [
+        2
+      ],
+      "officialPdfPages": [
+        22
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "該当なし",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "visuallyVerifiedChoices": [
+        "1：正・誤・正・正",
+        "2：正・正・正・誤",
+        "3：正・正・誤・誤",
+        "4：誤・正・誤・正",
+        "5：誤・誤・正・正"
+      ],
+      "notes": "本文a〜dおよび正誤表5行×4列を照合。候補choicesの全行・全列が原典画像と一致。"
+    },
+    {
+      "id": "KSAI-2025-028",
+      "questionNo": 28,
+      "bundlePdfPages": [
+        3
+      ],
+      "officialPdfPages": [
+        23
+      ],
+      "status": "FAIL",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "FAIL",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "discrepancies": [
+        "原典画像ではcの漢方処方名「柴胡加竜骨牡蛎湯」に「さいこかりゅうこつぼれいとう」のルビが付されているが、候補questionおよびoriginalRubyReadingsに当該読みが存在しない。"
+      ],
+      "originalRubyReadingsInSourceOrder": [
+        "さんそうにんとう",
+        "かみきひとう",
+        "さいこかりゅうこつぼれいとう",
+        "かん",
+        "き",
+        "しょうけんちゅうとう",
+        "き",
+        "けん"
+      ],
+      "visuallyVerifiedChoices": [
+        "1：正・正・正・誤",
+        "2：正・正・誤・正",
+        "3：正・誤・正・正",
+        "4：誤・正・正・正",
+        "5：正・正・正・正"
+      ],
+      "notes": "原典PDF画像3ページの問28を目視。a・b・c・dの本文、その他のルビ、正誤表5行×4列は候補と一致。ただしcの処方名に付されたルビ1件が候補から欠落しているためFAIL。originalRubyReadingsInSourceOrderには原典画像の読みを出現順で記録。"
+    },
+    {
+      "id": "KSAI-2025-029",
+      "questionNo": 29,
+      "bundlePdfPages": [
+        4
+      ],
+      "officialPdfPages": [
+        24
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "該当なし",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "visuallyVerifiedIngredientTable": [
+        [
+          "ジフェニドール塩酸塩",
+          "16.6 mg"
+        ],
+        [
+          "スコポラミン臭化水素酸塩水和物",
+          "0.16 mg"
+        ],
+        [
+          "無水カフェイン",
+          "30 mg"
+        ],
+        [
+          "ピリドキシン塩酸塩（ビタミンB6）",
+          "5 mg"
+        ]
+      ],
+      "visuallyVerifiedChoices": [
+        "1：正・正・正・誤",
+        "2：正・正・誤・正",
+        "3：正・誤・正・正",
+        "4：誤・正・正・正",
+        "5：正・正・正・正"
+      ],
+      "notes": "55歳男性の事例本文、1錠中の成分・分量表4行、説明a〜d、正誤表5行×4列を照合。成分名・数値・単位・選択肢セルは候補と一致。"
+    },
+    {
+      "id": "KSAI-2025-030",
+      "questionNo": 30,
+      "bundlePdfPages": [
+        5
+      ],
+      "officialPdfPages": [
+        25
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "visuallyVerifiedIngredientTable": [
+        [
+          "ブロムヘキシン塩酸塩",
+          "4 mg"
+        ],
+        [
+          "ジヒドロコデインリン酸塩",
+          "10 mg"
+        ],
+        [
+          "ノスカピン",
+          "20 mg"
+        ],
+        [
+          "dl－メチルエフェドリン塩酸塩",
+          "25 mg"
+        ],
+        [
+          "カルビノキサミンマレイン酸塩",
+          "4 mg"
+        ],
+        [
+          "無水カフェイン",
+          "50 mg"
+        ]
+      ],
+      "visuallyVerifiedRubyReadingsInSourceOrder": [
+        "がい",
+        "たん",
+        "がい",
+        "せき",
+        "ぜん"
+      ],
+      "visuallyVerifiedChoices": [
+        "1：誤・正・正・誤",
+        "2：正・正・誤・正",
+        "3：正・誤・正・誤",
+        "4：誤・正・誤・正",
+        "5：正・誤・正・正"
+      ],
+      "notes": "2カプセル中の成分・分量表6行、本文a〜d、ルビ5件、正誤表5行×4列を照合。表の全成分・分量・単位およびルビ出現順は候補と一致。"
+    },
+    {
+      "id": "KSAI-2025-031",
+      "questionNo": 31,
+      "bundlePdfPages": [
+        6
+      ],
+      "officialPdfPages": [
+        26
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "visuallyVerifiedRubyReadingsInSourceOrder": [
+        "くう",
+        "そう",
+        "くう",
+        "がい",
+        "たん",
+        "そう",
+        "そう",
+        "そう"
+      ],
+      "visuallyVerifiedChoices": [
+        "1：正・誤・正・誤",
+        "2：正・誤・誤・正",
+        "3：誤・誤・正・誤",
+        "4：正・正・誤・誤",
+        "5：誤・誤・誤・正"
+      ],
+      "notes": "見出し、本文a〜dに付されたルビ8件、正誤表5行×4列を照合。原典画像上の「くう」「そう」「がい」「たん」の出現順と候補のoriginalRubyReadingsが一致。表の全セルも一致。"
+    },
+    {
+      "id": "KSAI-2025-032",
+      "questionNo": 32,
+      "bundlePdfPages": [
+        6
+      ],
+      "officialPdfPages": [
+        26
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "visuallyVerifiedRuby": [
+        {
+          "base": "悸",
+          "reading": "き"
+        }
+      ],
+      "visuallyVerifiedChoices": [
+        "1：誤・正・誤・正",
+        "2：誤・正・正・誤",
+        "3：正・誤・正・正",
+        "4：誤・誤・正・誤",
+        "5：正・正・誤・正"
+      ],
+      "notes": "本文a〜d、dの「動悸」に付された「き」のルビ、正誤表5行×4列を照合。questionPartsのルビ分割位置および全選択肢セルが原典画像と一致。"
+    },
+    {
+      "id": "KSAI-2025-033",
+      "questionNo": 33,
+      "bundlePdfPages": [
+        7
+      ],
+      "officialPdfPages": [
+        27
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tables": "該当なし",
+        "symbols": "PASS"
+      },
+      "visuallyVerifiedRuby": [
+        {
+          "base": "瀉",
+          "reading": "しゃ"
+        },
+        {
+          "base": "痙",
+          "reading": "けい"
+        }
+      ],
+      "visuallyVerifiedChoices": [
+        "1（a、b）",
+        "2（a、c）",
+        "3（b、c）",
+        "4（b、d）",
+        "5（c、d）"
+      ],
+      "notes": "寝冷えによる下痢の事例本文、止瀉薬の「瀉」および胃腸鎮痛鎮痙薬の「痙」のルビ、説明a〜d、選択肢1〜5を照合。候補questionPartsとchoicesが原典画像に一致。"
+    },
+    {
+      "id": "KSAI-2025-034",
+      "questionNo": 34,
+      "bundlePdfPages": [
+        7
+      ],
+      "officialPdfPages": [
+        27
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "visuallyVerifiedRubyReadingsInSourceOrder": [
+        "しゃ",
+        "ふん",
+        "ふん",
+        "ふん"
+      ],
+      "visuallyVerifiedChoices": [
+        "1：誤・正・正・誤",
+        "2：誤・正・誤・正",
+        "3：誤・誤・誤・正",
+        "4：正・正・誤・誤",
+        "5：正・誤・正・誤"
+      ],
+      "notes": "瀉下成分の本文a〜d、見出しの「瀉」と本文中の「糞便」に付されたルビ4件、正誤表5行×4列を照合。候補のルビ出現順および選択肢全セルと一致。"
+    }
+  ],
+  "summary": {
+    "total": 10,
+    "pass": 8,
+    "fail": 2,
+    "hold": 0,
+    "passIds": [
+      "KSAI-2025-025",
+      "KSAI-2025-027",
+      "KSAI-2025-029",
+      "KSAI-2025-030",
+      "KSAI-2025-031",
+      "KSAI-2025-032",
+      "KSAI-2025-033",
+      "KSAI-2025-034"
+    ],
+    "failIds": [
+      "KSAI-2025-026",
+      "KSAI-2025-028"
+    ],
+    "holdIds": [],
+    "failReasons": {
+      "KSAI-2025-026": "選択肢のルビがquestion欄と各choice欄に分散・ずれ込み、選択肢と読みの対応が原典と不一致。",
+      "KSAI-2025-028": "選択肢cの漢方処方名「柴胡加竜骨牡蛎湯」のルビ「さいこかりゅうこつぼれいとう」が欠落。"
+    },
+    "answerPDFCheckedCount": 0
+  },
+  "constraints": {
+    "approvedOfficialBankModified": false,
+    "statusFilesModified": false,
+    "onlyNewAuditResultFile": true
+  }
+}
