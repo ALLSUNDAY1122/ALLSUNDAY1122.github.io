@@ -54,7 +54,7 @@ def main():
         result["error"]=str(e)[:500]
     finally:
         if cleanup:cleanup.unlink(missing_ok=True)
-        OUT.write_text(json.dumps(result,ensure_ascii=False,indent=2)+"\\n")
+        OUT.write_text(json.dumps(result,ensure_ascii=False,indent=2)+"\n")
     print(json.dumps(result,ensure_ascii=False))
     if result["status"]!="PASS":raise SystemExit("Q3 live ASC metadata readback did not pass")
 if __name__=="__main__":main()
