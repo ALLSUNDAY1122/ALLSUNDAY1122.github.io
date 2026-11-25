@@ -47,6 +47,7 @@ jobs:
           assert valid(current)==valid(rebuilt)
           print('PASS: isolated builder independently reproduces 599 IDs; current bank content is preserved untouched')
           PY
+          echo "TOUHAN_REBUILT_BANK_PATH=$tmp_dir/official-kansai/APPROVED_OFFICIAL_BANK.json" >> "$GITHUB_ENV"
       - name: Reconcile release counts from all approved audit methods
         run: |
           set -euo pipefail
