@@ -12,7 +12,7 @@ permissions:
   contents: write
 concurrency:
   group: touhan-ios-sim-q6
-  cancel-in-progress: false
+  cancel-in-progress: true
 jobs:
   simulator:
     runs-on: macos-15
