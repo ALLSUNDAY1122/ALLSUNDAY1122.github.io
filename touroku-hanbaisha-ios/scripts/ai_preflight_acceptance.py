@@ -171,11 +171,25 @@ def main():
         ["touroku-hanbaisha-ios/Q5_CURRENT_20261125.json"])
     q6file=IOS/"IOS_SIMULATOR_Q6_20261125.json"
     q6=json.loads(q6file.read_text()) if q6file.is_file() else {}
+    # Q6 executes on the pre-evidence commit, then commits only its own signed
+    # simulator evidence. Accept that exact parent relationship, never stale reports.
+    try:
+        evidence_parent=subprocess.check_output(["git","rev-parse","HEAD^"],text=True).strip()
+        evidence_commit=subprocess.check_output(["git","log","-1","--format=%s"],text=True).strip()
+        evidence_files=set(subprocess.check_output(
+            ["git","diff-tree","--no-commit-id","--name-only","-r","HEAD"],text=True).splitlines())
+        expected_files={
+            "touroku-hanbaisha-ios/OFFLINE_Q4_20261125.json",
+            "touroku-hanbaisha-ios/IOS_SIMULATOR_Q6_20261125.json",
+            "touroku-hanbaisha-ios/OFFLINE_Q4_BROWSER_20261125.json"}
+        evidence_commit_ok=(evidence_commit=="audit(touhan): record current-head native simulator and offline evidence"
+            and evidence_files==expected_files and evidence_parent==q6.get("headSHA"))
+    except Exception:
+        evidence_commit_ok=False
     q6ok=(q6.get("status")=="PASS" and q6.get("build")=="success" and q6.get("installAndLaunch")=="success"
-        and q6.get("learningPersistence")=="PASS"
-        and q6.get("headSHA")==os.getenv("GITHUB_SHA"))
+        and q6.get("learningPersistence")=="PASS" and evidence_commit_ok)
     gate("Q6_IOS_BUILD_AND_LAUNCH","PASS" if q6ok else "NOT_VERIFIED",
-        f"Xcode build/install/launch + progress persistence on this exact workflow HEAD={q6ok}; evidenceHead={q6.get('headSHA','MISSING')}; workflowHead={os.getenv('GITHUB_SHA','UNAVAILABLE')}; offline bundle is evaluated separately by Q4; run={q6.get('githubRunId','MISSING')}",
+        f"Xcode build/install/launch + progress persistence; current evidence-only commit parent matches tested HEAD={q6ok}; evidenceHead={q6.get('headSHA','MISSING')}; workflowHead={os.getenv('GITHUB_SHA','UNAVAILABLE')}; evidenceCommitValid={evidence_commit_ok}; offline bundle is evaluated separately by Q4; run={q6.get('githubRunId','MISSING')}",
         ["touroku-hanbaisha-ios/IOS_SIMULATOR_Q6_20261125.json"])
     q7file=IOS/"Q7_TESTFLIGHT_READBACK_20261125.json"
     q7=json.loads(q7file.read_text()) if q7file.is_file() else {}
