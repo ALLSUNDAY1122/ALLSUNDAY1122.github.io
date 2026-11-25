@@ -58,6 +58,7 @@ from pathlib import Path
 shell=Path(__file__).with_name('offline_learning_shell.html').read_text()
 logic="const freeIds=new Set("+json.dumps(free)+");\n"+Path(__file__).with_name('offline_learning.js').read_text()
 logic+=Path(__file__).with_name('offline_premium.js').read_text()
+assert "const attributionNode=$('attribution')" in logic, 'source attribution must remain mounted and reusable across question transitions'
 html=html.replace("return records.filter(q=>($('year')","return records.filter(q=>canStudy(q)&&($('year')")
 html=html.replace("if(selected)return;selected=true;const q=subset[position]","if(selected)return;if(!canStudy(subset[position])){beginSetup();return}selected=true;const q=subset[position]")
 html=html.replace("selected=false;const q=subset[position];","selected=false;const q=subset[position];if(!canStudy(q)){beginSetup();return;}")
