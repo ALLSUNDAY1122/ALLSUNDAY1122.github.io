@@ -31,6 +31,21 @@ let explanationMap=new Map();
 fetch('official-kansai/EXPLANATIONS_AUDITED_599.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(d=>{if(d?.count!==599||d.records?.length!==599||d.auditSummary?.PASS!==599||d.auditSummary?.HOLD!==0)throw Error('解説監査データの件数・状態が一致しません');explanationMap=new Map(d.records.map(x=>[x.id,x]));}).catch(()=>{explanationMap=new Map()});
 const allowed=new Set(['NORMAL','OFFICIALLY_INVALID_ALL_CANDIDATES_CORRECT']);
 
+
+let premiumUnlocked=false;
+window.setPremiumEntitlement=value=>{premiumUnlocked=value===true;$('premiumStatus').textContent=premiumUnlocked?'Premium利用中：全599問を利用できます':'無料プラン：対象の50問を利用できます';updateCount();renderHome()};
+window.studySaveFailed=()=>{$('premiumStatus').textContent='学習記録の端末保存に失敗しました。空き容量を確認してください。'};
+function openNativePremium(){try{window.webkit?.messageHandlers?.premiumPaywall?.postMessage('open')}catch(_){}}
+$('openPremium').onclick=openNativePremium;$('restorePremium').onclick=openNativePremium;
+function applyFont(){document.documentElement.classList.remove('ui-font-large','ui-font-xlarge');if(uiState.font==='large')document.documentElement.classList.add('ui-font-large');if(uiState.font==='xlarge')document.documentElement.classList.add('ui-font-xlarge');document.querySelectorAll('[data-font]').forEach(b=>b.classList.toggle('primary',b.dataset.font===uiState.font))}
+document.querySelectorAll('[data-font]').forEach(b=>b.onclick=()=>{uiState.font=b.dataset.font;persistUi();applyFont()});
+document.querySelectorAll('[data-goal]').forEach(b=>b.onclick=()=>{uiState.goal=Number(b.dataset.goal);persistUi();renderHome();document.querySelectorAll('[data-goal]').forEach(x=>x.classList.toggle('primary',x===b))});
+$('examDate').value=uiState.examDate||'';
+$('saveExamDate').onclick=()=>{uiState.examDate=$('examDate').value||'';persistUi();renderHome();alert('試験日を保存しました。')};
+$('exportData').onclick=()=>{const payload=JSON.stringify({app:'touroku-hanbaisha-manabi-sprint',version:1,exportedAt:new Date().toISOString(),state:uiState},null,2);const url=URL.createObjectURL(new Blob([payload],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download='touhan-study-backup.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)};
+$('importData').onchange=async e=>{const file=e.target.files?.[0];if(!file)return;try{if(file.size>2e6)throw Error('ファイルサイズが大きすぎます');const p=JSON.parse(await file.text());if(p.app!=='touroku-hanbaisha-manabi-sprint'||p.version!==1||!p.state||!p.state.stats||!Array.isArray(p.state.history))throw Error('このアプリのバックアップではありません');if(!confirm('現在の学習記録をバックアップの内容で置き換えますか？'))return;uiState={...uiState,...p.state};persistUi();applyFont();renderHome();renderRecords();alert('学習データを復元しました')}catch(err){alert('読み込み失敗：'+err.message)}finally{e.target.value=''}};
+applyFont();
+
 function setScreen(id){['home','mock','records','settings'].forEach(k=>$(k).classList.toggle('active',k===id));$('mainNav').style.display=['quiz','complete'].includes(id)?'none':'grid';document.querySelectorAll('#mainNav button').forEach(b=>b.classList.toggle('active',b.dataset.screen===id));if(id==='home')renderHome();if(id==='records')renderRecords();}
 let uiState={version:1,answered:0,correct:0,weak:{},history:[],goal:8,font:'normal',examDate:'',resume:null,daily:{},stats:{totalAnswered:0,totalCorrect:0},records:[]};
 try{const saved=window.__touhanStudyState||JSON.parse(localStorage.getItem('touhan.ui.v1')||'null');if(saved&&typeof saved==='object'){uiState={...uiState,...saved};uiState.stats={...uiState.stats,...(saved.stats||{})};uiState.answered=Number(saved.answered??uiState.stats.totalAnswered)||0;uiState.correct=Number(saved.correct??uiState.stats.totalCorrect)||0;uiState.history=Array.isArray(saved.history)?saved.history:[];uiState.weak=saved.weak&&typeof saved.weak==='object'?saved.weak:{}}}catch(_){}
