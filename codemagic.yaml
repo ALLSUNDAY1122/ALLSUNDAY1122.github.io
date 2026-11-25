@@ -2043,8 +2043,10 @@ workflows:
           import os, pathlib
           p = pathlib.Path('project.yml')
           s = p.read_text()
-          number = os.environ['CM_BUILD_NUMBER']
-          assert number.isdecimal()
+          number = os.environ.get('BUILD_NUMBER', '')
+          if not number.isascii() or not number.isdecimal() or int(number) < 1:
+              raise SystemExit('FAIL: Codemagic BUILD_NUMBER missing or invalid')
+          print('PASS: Codemagic BUILD_NUMBER=' + number)
           assert s.count('CURRENT_PROJECT_VERSION: 1') == 1
           p.write_text(s.replace('CURRENT_PROJECT_VERSION: 1', 'CURRENT_PROJECT_VERSION: ' + number, 1))
           PY
