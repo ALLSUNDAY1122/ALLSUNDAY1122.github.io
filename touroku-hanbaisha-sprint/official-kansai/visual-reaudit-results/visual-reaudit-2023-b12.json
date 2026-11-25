@@ -1,0 +1,191 @@
+{
+  "batch": "visual-reaudit-2023-b12",
+  "repository": "ALLSUNDAY1122/ALLSUNDAY1122.github.io",
+  "branch": "main",
+  "auditType": "FULL_QUESTION_VISUAL_REAUDIT",
+  "source": {
+    "attachedPdf": "visual-reaudit-2023-b12.pdf",
+    "attachedCandidateFile": "visual-reaudit-2023-b12.candidates.json",
+    "bundlePdfPage": 1,
+    "officialPdf": "2023-second_half",
+    "officialPdfPage": 36,
+    "inspectionMethod": "添付PDFのページ画像を直接目視し、添付候補JSONの対象レコードと照合した。PDF文字データや自動照合を目視の代替としていない。"
+  },
+  "totals": {
+    "pass": 0,
+    "fail": 2,
+    "hold": 0
+  },
+  "answerVerification": {
+    "policy": "answerNumberOfficialは候補JSONの値を転記した。正答PDFは直接確認していない。",
+    "answerPDFChecked": false
+  },
+  "results": [
+    {
+      "id": "KSAI-2023-119",
+      "questionNo": 119,
+      "bundlePdfPages": [
+        1
+      ],
+      "officialPdfPages": [
+        36
+      ],
+      "status": "FAIL",
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "SOURCE_ORDER_PRESERVED_BUT_NOT_POSITIONALLY_ATTACHED",
+        "table": "FAIL",
+        "symbolsAndNotation": "PASS"
+      },
+      "discrepancies": [
+        {
+          "field": "表・項目cの医薬品名",
+          "current": "メトキシフェナミン塩酸塩を含む鎮咳 去痰 薬",
+          "official": "メトキシフェナミン塩酸塩を含む鎮咳去痰薬",
+          "reason": "現行レコードでは語中に不要な空白が入り、原典の連続した医薬品名を再現していない。"
+        },
+        {
+          "field": "表・項目dの医薬品名",
+          "current": "酸化マグネシウムを含む瀉 下薬",
+          "official": "酸化マグネシウムを含む瀉下薬",
+          "reason": "現行レコードでは語中に不要な空白が入り、原典の連続した医薬品名を再現していない。"
+        },
+        {
+          "field": "ruby",
+          "current": "originalRubyReadings=[\"がい\",\"たん\",\"しゃ\"], rubyDisplayMode=\"SOURCE_ORDER_UNATTACHED\"",
+          "official": "原典画像では「鎮咳去痰薬」の「咳」「痰」および「瀉下薬」の「瀉」にルビが付されている。",
+          "reason": "読みの出現順は保持されているが、現行レコードは対象文字への対応付けを保持していない。原典のルビ配置そのものとの一致は確認できない。"
+        }
+      ],
+      "officialCorrection": {
+        "tableRows": [
+          {
+            "label": "a",
+            "condition": "肝臓病",
+            "ingredient": "アセトアミノフェンを含む解熱鎮痛薬"
+          },
+          {
+            "label": "b",
+            "condition": "高血圧",
+            "ingredient": "スクラルファートを含む胃腸薬"
+          },
+          {
+            "label": "c",
+            "condition": "甲状腺機能障害",
+            "ingredient": "メトキシフェナミン塩酸塩を含む鎮咳去痰薬"
+          },
+          {
+            "label": "d",
+            "condition": "腎臓病",
+            "ingredient": "酸化マグネシウムを含む瀉下薬"
+          }
+        ],
+        "ruby": [
+          {
+            "base": "咳",
+            "reading": "がい"
+          },
+          {
+            "base": "痰",
+            "reading": "たん"
+          },
+          {
+            "base": "瀉",
+            "reading": "しゃ"
+          }
+        ],
+        "choices": [
+          "誤  正  正  誤",
+          "正  誤  正  正",
+          "正  正  正  正",
+          "正  誤  正  誤",
+          "誤  正  誤  正"
+        ]
+      },
+      "observation": "原典画像の基礎疾患等／医薬品成分・薬効群等の表は4行2列で、各行の対応は候補と一致する。正誤選択肢5行4列も一致する。一方、表内の医薬品名2か所に語中空白があり、ルビは読み順のみで対象字への対応が未保持のためFAIL。",
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false
+    },
+    {
+      "id": "KSAI-2023-120",
+      "questionNo": 120,
+      "bundlePdfPages": [
+        1
+      ],
+      "officialPdfPages": [
+        36
+      ],
+      "status": "FAIL",
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "FAIL",
+        "ruby": "FAIL",
+        "table": "PASS_NOT_APPLICABLE",
+        "symbolsAndNotation": "PASS"
+      },
+      "discrepancies": [
+        {
+          "field": "選択肢3の末尾",
+          "current": "メチルエフェドリン塩酸塩\\nしゃくやくかん ぞう とう",
+          "official": "メチルエフェドリン塩酸塩",
+          "reason": "現行レコードでは選択肢4に属するルビ文字列が選択肢3の文字列内に混入している。"
+        },
+        {
+          "field": "選択肢4",
+          "current": "芍薬甘 草 湯",
+          "official": "芍薬甘草湯",
+          "reason": "原典では連続した成分名であるが、現行レコードでは不要な空白で分断されている。"
+        },
+        {
+          "field": "選択肢4のruby",
+          "current": "選択肢3の末尾に「しゃくやくかん ぞう とう」として格納",
+          "official": "選択肢4の「芍薬甘草湯」に付された読み「しゃくやくかんぞうとう」",
+          "reason": "ルビが誤った選択肢に紐付けられており、対象文字列・読みの配置が原典と一致しない。"
+        }
+      ],
+      "officialCorrection": {
+        "choices": [
+          "スコポラミン臭化水素酸塩水和物",
+          "イブプロフェン",
+          "メチルエフェドリン塩酸塩",
+          "芍薬甘草湯",
+          "ビサコジル"
+        ],
+        "ruby": [
+          {
+            "choiceNumber": 4,
+            "base": "芍薬甘草湯",
+            "reading": "しゃくやくかんぞうとう"
+          }
+        ]
+      },
+      "observation": "原典画像では選択肢3は「メチルエフェドリン塩酸塩」で終了し、選択肢4は「芍薬甘草湯」で、その語にルビが付されている。現行候補はルビを選択肢3側に格納し、選択肢4の成分名を分断しているためFAIL。",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false
+    }
+  ],
+  "overallFindings": {
+    "failReasons": [
+      {
+        "id": "KSAI-2023-119",
+        "reason": "表内の「鎮咳去痰薬」「瀉下薬」の語中空白、およびルビの対象文字との位置対応が未保持。"
+      },
+      {
+        "id": "KSAI-2023-120",
+        "reason": "選択肢4のルビが選択肢3に混入し、「芍薬甘草湯」の文字列も分断されている。"
+      }
+    ],
+    "holdReasons": [],
+    "answerPolicy": "正答PDF未確認のため全件answerPDFChecked=false。",
+    "nonChanges": [
+      "touroku-hanbaisha-sprint/official-kansai/APPROVED_OFFICIAL_BANK.json",
+      "状態ファイル"
+    ]
+  },
+  "scopeConstraints": {
+    "officialBankModified": false,
+    "stateFilesModified": false,
+    "onlyNewAuditResultFile": true
+  }
+}
