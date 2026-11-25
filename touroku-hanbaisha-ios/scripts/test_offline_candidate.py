@@ -81,6 +81,7 @@ with sync_playwright() as pw:
             page.locator('#choices button').nth(q['answer']).click()
             print('CHECK '+engine.name+' '+q['id'],flush=True) if report['count']-before<2 else None
             expect(page.locator('#feedback .result')).to_have_text('正解', timeout=5000)
+            expect(page.locator('#next')).to_have_text('結果を見る' if q is bank['questions'][-1] else '次の問題へ')
             if q['id']=='KSAI-2022-102':
                 expect(page.locator('#choiceHeader')).to_have_text('a　b　c　d')
                 expect(page.locator('#choiceHeader')).to_be_visible()
@@ -123,6 +124,11 @@ with sync_playwright() as pw:
         page.locator('#navHome').click()
         page.locator('#navSettings').click()
         expect(page.locator('#settings')).to_be_visible()
+        expect(page.locator('label[for="importData"]')).to_have_text('バックアップファイルを選択')
+        expect(page.locator('#importFileName')).to_have_text('未選択')
+        assert page.locator('#importData').get_attribute('accept')=='application/json,.json'
+        nav=page.locator('.localnav').bounding_box()
+        assert nav['y']+nav['height']>=812-1,nav
         page.locator('a[href="./privacy.html"]').click()
         assert 'プライバシーポリシー' in page.locator('body').inner_text()
         page.go_back()
