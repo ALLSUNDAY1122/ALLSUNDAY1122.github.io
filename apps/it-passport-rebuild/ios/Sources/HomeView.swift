@@ -19,6 +19,10 @@ private enum Palette {
     static let card = Color(red: 1.0, green: 253/255, blue: 249/255)
     static let navy = Color(red: 47/255, green: 74/255, blue: 109/255)
     static let line = Color(red: 232/255, green: 223/255, blue: 207/255)
+
+    static let ink = Color(red: 31/255, green: 41/255, blue: 55/255)
+
+    static let sub = Color(red: 91/255, green: 100/255, blue: 112/255)
 }
 
 struct HomeView: View {
@@ -45,7 +49,7 @@ struct HomeView: View {
                     todayCard
                     Text("分野から解く")
                         .font(.headline)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Palette.sub)
                     domainGrid
                     officialExamCard
                     sourceNotice
@@ -64,15 +68,16 @@ struct HomeView: View {
         VStack(alignment: .leading, spacing: 4) {
             Text("学びスプリント")
                 .font(.caption.bold())
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.sub)
             Text("ITパスポート")
                 .font(.system(size: 31, weight: .bold, design: .serif))
+                .foregroundStyle(Palette.ink)
                 .minimumScaleFactor(0.72)
                 .lineLimit(1)
                 .frame(maxWidth: .infinity, alignment: .leading)
             Text("今日も1問、力に変える。")
                 .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.sub)
         }
         .padding(.top, 10)
     }
@@ -82,9 +87,10 @@ struct HomeView: View {
         return VStack(alignment: .leading, spacing: 10) {
             Text("今日の学習")
                 .font(.system(size: 21, weight: .bold, design: .serif))
+                .foregroundStyle(Palette.ink)
             Text("片手でも進めやすい短時間学習。今日の問題数を選べます。")
                 .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.sub)
             Picker("問題数", selection: $dailyCount) {
                 Text("4問").tag(4)
                 Text("8問").tag(8)
@@ -115,10 +121,10 @@ struct HomeView: View {
                     VStack(alignment: .leading, spacing: 8) {
                         Text(domain.title)
                             .font(.system(size: 17, weight: .bold, design: .serif))
-                            .foregroundStyle(.primary)
+                            .foregroundStyle(Palette.ink)
                         Text("\(count)問")
                             .font(.caption)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Palette.sub)
                         Spacer(minLength: 0)
                         HStack {
                             Text("10問ずつ選ぶ")
@@ -143,19 +149,20 @@ struct HomeView: View {
         VStack(alignment: .leading, spacing: 12) {
             Text("IPA公式公開問題・年度別100問")
                 .font(.headline)
+                .foregroundStyle(Palette.ink)
             if QuestionStore.availableOfficialYears.isEmpty {
                 Text("公式公開問題の原文・正答・図表を照合中です。監査前の問題は公開しません。")
                     .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.sub)
             } else {
                 ForEach(QuestionStore.availableOfficialYears, id: \.self) { year in
                     let questions = QuestionStore.officialExam(year: year, premium: premium.isPremium)
                     if !premium.isPremium && year != QuestionStore.freeYear {
                         Button { showSettings = true } label: {
                             HStack {
-                                Text("\(year)年度").font(.subheadline.bold())
+                                Text("\(year)年度").font(.subheadline.bold()).foregroundStyle(Palette.ink)
                                 Spacer()
-                                Text("Premium・100問").font(.caption)
+                                Text("Premium・100問").font(.caption).foregroundStyle(Palette.sub)
                                 Image(systemName: "lock.fill")
                             }
                         }
@@ -165,9 +172,9 @@ struct HomeView: View {
                             QuizView(title: "\(year)年度 公式公開問題", questions: questions)
                         } label: {
                             HStack {
-                                Text("\(year)年度").font(.subheadline.bold())
+                                Text("\(year)年度").font(.subheadline.bold()).foregroundStyle(Palette.ink)
                                 Spacer()
-                                Text("100問").font(.caption)
+                                Text("100問").font(.caption).foregroundStyle(Palette.sub)
                                 Image(systemName: "chevron.right")
                             }
                         }
@@ -175,7 +182,7 @@ struct HomeView: View {
                     } else {
                         Text("\(year)年度：照合未完了（\(questions.count)/100問）")
                             .font(.caption)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Palette.sub)
                     }
                 }
             }
@@ -189,9 +196,10 @@ struct HomeView: View {
         VStack(alignment: .leading, spacing: 6) {
             Label("公式公開問題", systemImage: "checkmark.shield")
                 .font(.subheadline.bold())
+                .foregroundStyle(Palette.ink)
             Text("2026年度100問は無料。Premiumでは2022〜2026年度の全500問を学習できます。")
                 .font(.caption)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.sub)
         }
         .padding(16)
         .background(Palette.card, in: RoundedRectangle(cornerRadius: 16))
@@ -215,9 +223,10 @@ private struct DomainSetView: View {
             VStack(alignment: .leading, spacing: 12) {
                 Text(domain.title)
                     .font(.system(size: 28, weight: .bold, design: .serif))
+                    .foregroundStyle(Palette.ink)
                 Text("全\(questions.count)問を10問ずつのセットに分割")
                     .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Palette.sub)
 
                 ForEach(sets) { set in
                     let slice = Array(questions[(set.start - 1)..<set.end])
@@ -226,10 +235,10 @@ private struct DomainSetView: View {
                     } label: {
                         HStack {
                             VStack(alignment: .leading, spacing: 4) {
-                                Text(set.title).font(.headline)
+                                Text(set.title).font(.headline).foregroundStyle(Palette.ink)
                                 Text("\(set.subtitle)・\(slice.count)問")
                                     .font(.caption)
-                                    .foregroundStyle(.secondary)
+                                    .foregroundStyle(Palette.sub)
                             }
                             Spacer()
                             Image(systemName: "chevron.right").foregroundStyle(Palette.navy)
@@ -274,8 +283,9 @@ private struct QuizView: View {
         ScrollView {
             if !canStudy {
                 VStack(spacing: 16) {
-                    Label("Premiumが必要です", systemImage: "lock.fill").font(.headline)
+                    Label("Premiumが必要です", systemImage: "lock.fill").font(.headline).foregroundStyle(Palette.ink)
                     Text("2026年度100問は無料で学習できます。")
+                        .foregroundStyle(Palette.ink)
                     Button("購入・復元へ") { showSettings = true }
                 }.padding(24)
             } else if finished {
@@ -285,25 +295,27 @@ private struct QuizView: View {
                     HStack {
                         Text(q.category).font(.caption.bold()).foregroundStyle(Palette.navy)
                         Spacer()
-                        Text("\(index + 1) / \(questions.count)").font(.caption).foregroundStyle(.secondary)
+                        Text("\(index + 1) / \(questions.count)").font(.caption).foregroundStyle(Palette.sub)
                     }
                     ProgressView(value: Double(index), total: Double(max(questions.count, 1)))
                         .tint(Palette.navy)
                     Text(q.question)
                         .font(.system(size: 19, weight: .bold, design: .serif))
+                        .foregroundStyle(Palette.ink)
                         .lineSpacing(5)
                     if q.originType == "ipa_published_verbatim" {
                         Text(q.primaryEvidence)
                             .font(.caption)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Palette.sub)
                     } else {
                         Text("独自演習（IPA公式公開問題ではありません）")
                             .font(.caption)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Palette.sub)
                     }
                     if q.modified || q.representationChanged {
                         Text("改変あり：\(q.modificationNote ?? "表示形式を変更")")
                             .font(.caption)
+                            .foregroundStyle(Palette.ink)
                     }
                     if let asset = q.sourceFigureName, !asset.isEmpty {
                         Image(asset)
@@ -340,10 +352,18 @@ private struct QuizView: View {
                         VStack(alignment: .leading, spacing: 8) {
                             Text(selected == q.correctIndex ? "正解" : "不正解")
                                 .font(.headline)
-                            Text(q.explanation).font(.subheadline)
+                                .foregroundStyle(Palette.ink)
+                            Text(q.explanation)
+                                .font(.subheadline)
+                                .foregroundStyle(Palette.ink)
+                            if let detail = q.detailedExplanation, !detail.isEmpty {
+                                Text(detail)
+                                    .font(.subheadline)
+                                    .foregroundStyle(Palette.ink)
+                            }
                             Text("出典根拠：\(q.primaryEvidence)")
                                 .font(.caption)
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(Palette.sub)
                             Button(index + 1 == questions.count ? "結果を見る" : "次の問題") {
                                 advance()
                             }
@@ -362,9 +382,10 @@ private struct QuizView: View {
                         .foregroundStyle(Palette.navy)
                     Text("問題がありません")
                         .font(.headline)
+                        .foregroundStyle(Palette.ink)
                     Text("問題データの読み込み状態を確認してください。")
                         .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Palette.sub)
                 }
                 .frame(maxWidth: .infinity)
                 .padding(32)
@@ -379,11 +400,12 @@ private struct QuizView: View {
     private var resultView: some View {
         VStack(spacing: 16) {
             Image(systemName: "flag.checkered").font(.system(size: 42)).foregroundStyle(Palette.navy)
-            Text("セット完了").font(.system(size: 28, weight: .bold, design: .serif))
+            Text("セット完了").font(.system(size: 28, weight: .bold, design: .serif)).foregroundStyle(Palette.ink)
             Text("\(questions.count)問中 \(correctCount)問正解")
                 .font(.title3.bold())
+                .foregroundStyle(Palette.ink)
             Text("正答率 \(questions.isEmpty ? 0 : Int(Double(correctCount) / Double(questions.count) * 100))%")
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Palette.sub)
         }
         .frame(maxWidth: .infinity)
         .padding(32)
@@ -424,10 +446,10 @@ private struct QuizView: View {
     }
 
     private func choiceForeground(_ choice: Int, q: StudyQuestion) -> Color {
-        guard let selected else { return .primary }
+        guard let selected else { return Palette.ink }
         if choice == q.correctIndex { return .green }
         if choice == selected { return .red }
-        return .primary
+        return Palette.ink
     }
 }
 
