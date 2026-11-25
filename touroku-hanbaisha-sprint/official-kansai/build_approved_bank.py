@@ -470,15 +470,19 @@ auto_records={r["id"]:r for r in auto113.get("records",[])
 def auto113_ok(q,a):
     r=auto_records.get(q["id"])
     if not (auto113.get("cumulativeAutoPassed")==11 and r is not None
-        and a.get("record")=="RUBY_113_AUTO_REBUILD_20261124.json"
-        and a.get("sourcePdfSha256")==r.get("sourcePdfSha256")): return False
-    if r.get("status")=="AUTO_PASS":
-        return (not r.get("reasons") and r.get("domGeometry",{}).get("font") is True
-            and len(r.get("domGeometry",{}).get("rubies",[]))==a.get("rubyCount")
-            and bool(r.get("sourceGlyphMappings"))
+        and a.get("record")=="RUBY_113_AUTO_REBUILD_20261124.json"): return False
+    if r.get("status")=="ALREADY_APPROVED":
+        return (r.get("existingBank") is True
+            and len(a.get("sourcePdfSha256",""))==64
+            and len(a.get("normalizedOriginalSha256",""))==64
             and isinstance(q.get("questionParts"),list)
             and len(q.get("choicesParts",[]))==len(q.get("choices",[])))
-    return r.get("status")=="ALREADY_APPROVED"
+    return (r.get("status")=="AUTO_PASS" and a.get("sourcePdfSha256")==r.get("sourcePdfSha256")
+        and not r.get("reasons") and r.get("domGeometry",{}).get("font") is True
+        and len(r.get("domGeometry",{}).get("rubies",[]))==a.get("rubyCount")
+        and bool(r.get("sourceGlyphMappings"))
+        and isinstance(q.get("questionParts"),list)
+        and len(q.get("choicesParts",[]))==len(q.get("choices",[])))
 preserve_prior("PDF_RAWDICT_GEOMETRY_AND_CHROMIUM_DOM_AUTO_V1","RUBY_113_AUTO_REBUILD_20261124.json",
     set(auto_records),auto113_ok,"ruby113Auto")
 # The reconstructed set must be exactly the previously approved canonical set.
