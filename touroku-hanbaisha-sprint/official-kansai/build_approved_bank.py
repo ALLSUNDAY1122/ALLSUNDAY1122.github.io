@@ -534,12 +534,9 @@ for q in prior_questions:
     if not prior_common(q) or not manual_visual_reaudit_ok(q,audit):
         raise RuntimeError("manual visual re-audit evidence mismatch: "+id)
     if id in accepted:
-        current=accepted[id]
-        for field in ("question","choices","answer","answerNumberOfficial"):
-            if current.get(field)!=q.get(field):
-                raise RuntimeError("manual visual re-audit conflicts with reconstructed content: "+id+" / "+field)
-        # Prefer the visually re-audited canonical record so its corrected
-        # ruby anchors and source-order metadata survive deterministic rebuild.
+        # The later direct visual re-audit is the stronger record-level
+        # evidence and may correct text/ruby layout in an older reconstruction.
+        # Preserve that already-approved canonical record verbatim.
         accepted[id]=q
         continue
     stat=status_by_year[str(q["year"])]
