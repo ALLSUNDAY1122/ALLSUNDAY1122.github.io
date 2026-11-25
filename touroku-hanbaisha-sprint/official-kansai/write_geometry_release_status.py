@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Append second-stage evidence to canonical release files without overstating counts."""
 # Count every independently approved promotion ledger, including all later certified methods.
-import collections,json
+import collections,json,os
 from datetime import datetime,timezone,timedelta
 from pathlib import Path
 B=Path(__file__).resolve().parent
@@ -10,7 +10,8 @@ IOS=ROOT/"touroku-hanbaisha-ios"
 status_path=IOS/"release-status.json"
 md_path=IOS/"RELEASE_STATUS.md"
 status=json.loads(status_path.read_text())
-bank=json.loads((B/"APPROVED_OFFICIAL_BANK.json").read_text())
+bank_path=Path(os.environ.get("TOUHAN_REBUILT_BANK_PATH",str(B/"APPROVED_OFFICIAL_BANK.json")))
+bank=json.loads(bank_path.read_text())
 per_year={};risk_totals=collections.Counter()
 cross_totals=collections.Counter()
 for year in range(2022,2027):
