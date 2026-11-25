@@ -6,8 +6,10 @@ on:
       - '.github/workflows/touhan-ios-simulator-q6.yml'
       - 'touroku-hanbaisha-ios/native-ios/Sources/TouhanSprintApp.swift'
       - 'touroku-hanbaisha-ios/native-ios/project.yml'
+      - 'touroku-hanbaisha-ios/scripts/prepare_offline_web.py'
+      - 'touroku-hanbaisha-ios/scripts/test_offline_candidate.py'
 permissions:
-  contents: read
+  contents: write
 concurrency:
   group: touhan-ios-sim-q6
   cancel-in-progress: false
@@ -30,6 +32,25 @@ jobs:
           python -m pip install 'cairosvg==2.8.2'
           bash touroku-hanbaisha-ios/native-ios/prepare-ios.sh
           mkdir -p touroku-hanbaisha-ios/ci-evidence
+      - name: Verify bundled OfflineWeb with all HTTP(S) requests blocked
+        id: offline
+        run: |
+          set -euxo pipefail
+          python3 -m venv "$RUNNER_TEMP/touhan-playwright"
+          source "$RUNNER_TEMP/touhan-playwright/bin/activate"
+          python -m pip install --disable-pip-version-check 'playwright==1.56.0'
+          python -m playwright install chromium webkit
+          python touroku-hanbaisha-ios/scripts/test_offline_candidate.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('touroku-hanbaisha-ios/OFFLINE_Q4_BROWSER_20261125.json')
+          d=json.loads(p.read_text())
+          assert d['status']=='PASS' and d['bankCount']==599 and d['explanationsCount']==599
+          assert d['browserEngines']=={'chromium':599,'webkit':599}
+          assert d['externalRequests']==[] and d['pageErrors']==[]
+          print('PASS: bundled file:// 599 questions + explanations, HTTP(S) blocked')
+          PY
       - name: Generate Xcode project and build for iOS Simulator
         id: build
         run: |
@@ -40,6 +61,19 @@ jobs:
           grep 'BUILD SUCCEEDED' "$RUNNER_TEMP/touhan-xcodebuild.log"
           APP="$RUNNER_TEMP/touhan-derived/Build/Products/Debug-iphonesimulator/TouhanSprint.app"
           test -d "$APP"
+          test -s "$APP/OfflineWeb/official-practice.html"
+          test -s "$APP/OfflineWeb/manifest.json"
+          python3 - "$APP/OfflineWeb" <<'PY'
+          import json,sys
+          from pathlib import Path
+          p=Path(sys.argv[1])
+          m=json.loads((p/'manifest.json').read_text())
+          h=(p/'official-practice.html').read_text()
+          assert m['count']==599 and m['explanationsCount']==599
+          assert 'id="offlineBank"' in h and 'id="offlineExplanations"' in h
+          assert "connect-src \\'none\\'" in h
+          print('PASS: native .app contains 599-question and 599-explanation OfflineWeb bundle')
+          PY
           /usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP/Info.plist" | grep -Fx 'com.allsunday1122.tourokuhanbaisha'
           echo "app_path=$APP" >> "$GITHUB_OUTPUT"
       - name: Boot simulator, install app, launch and capture
@@ -81,6 +115,53 @@ jobs:
           cat "$EVID/smoke-read.json"
           python3 -c 'import json; d=json.load(open("touroku-hanbaisha-ios/ci-evidence/smoke-read.json")); assert d["status"]=="PASS" and d["progress"]==2 and d["accuracy"]=="50%" and d["attempts"]==2,d'
           xcrun simctl io "$DEVICE" screenshot "$EVID/learning-restored.png"
+      - name: Record current-head Q4/Q6 evidence to PR branch
+        if: success()
+        env:
+          RUN_ID: ${{ github.run_id }}
+          HEAD_SHA: ${{ github.sha }}
+          DEVICE: ${{ steps.launch.outputs.device }}
+        run: |
+          set -euxo pipefail
+          test "$GITHUB_REF_NAME" != "main"
+          python3 - <<'PY'
+          import datetime,json,os
+          from pathlib import Path
+          b=Path('touroku-hanbaisha-ios')
+          browser=json.loads((b/'OFFLINE_Q4_BROWSER_20261125.json').read_text())
+          app=b/'native-ios/OfflineWeb'
+          manifest=json.loads((app/'manifest.json').read_text())
+          html=(app/'official-practice.html').read_text()
+          assert manifest['count']==599 and manifest['explanationsCount']==599
+          assert 'id="offlineBank"' in html and 'id="offlineExplanations"' in html
+          assert browser['externalRequests']==[] and browser['pageErrors']==[]
+          stamp=datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=9))).isoformat()
+          q4={**browser,'timestampJST':stamp,'nativeSimulatorOfflineBundleVerified':True,
+              'nativeBundleManifest':manifest,'githubRunId':int(os.environ['RUN_ID']),
+              'testedHead':os.environ['HEAD_SHA'],
+              'limits':['Simulator file:// bundle and browser HTTP(S)-blocked test passed.',
+                        'Physical iPhone airplane-mode test not performed.',
+                        'App Store Connect/TestFlight installation not performed.']}
+          (b/'OFFLINE_Q4_20261125.json').write_text(json.dumps(q4,ensure_ascii=False,indent=2)+'\n')
+          q6={'schema':'touhan-q6-ios-simulator-v1','timestampJST':stamp,'status':'PASS',
+              'environment':'success','build':'success','installAndLaunch':'success',
+              'learningPersistence':'PASS','offlineBundleVerified':True,
+              'githubRunId':int(os.environ['RUN_ID']),'headSHA':os.environ['HEAD_SHA'],
+              'device':os.environ['DEVICE'],'bankCount':599,'explanationsCount':599,
+              'smokeWrite':json.loads((b/'ci-evidence/smoke-write.json').read_text()),
+              'smokeRead':json.loads((b/'ci-evidence/smoke-read.json').read_text()),
+              'limits':['No physical iPhone test','No TestFlight installation']}
+          (b/'IOS_SIMULATOR_Q6_20261125.json').write_text(json.dumps(q6,ensure_ascii=False,indent=2)+'\n')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add touroku-hanbaisha-ios/OFFLINE_Q4_20261125.json touroku-hanbaisha-ios/IOS_SIMULATOR_Q6_20261125.json touroku-hanbaisha-ios/OFFLINE_Q4_BROWSER_20261125.json
+          git commit -m 'audit(touhan): record current-head native simulator and offline evidence'
+          for attempt in 1 2 3; do
+            git pull --rebase origin "$GITHUB_REF_NAME"
+            if git push origin "HEAD:$GITHUB_REF_NAME"; then exit 0; fi
+          done
+          exit 1
       - uses: actions/upload-artifact@v4
         if: always()
         with:

@@ -1,0 +1,99 @@
+{
+  "schema": "touhan-q2-q6-evidence-summary-v1",
+  "timestampJST": "2026-11-25T20:47:00+09:00",
+  "repository": "ALLSUNDAY1122/ALLSUNDAY1122.github.io",
+  "pullRequest": 5741,
+  "reviewedHead": "1069d86152643e180b35bdc57a685cbb3c1f6e46",
+  "overall": "BLOCKED",
+  "q2": {
+    "status": "PASS_DEVICE_SMOKE_AND_PURCHASE",
+    "evidence": [
+      "touroku-hanbaisha-ios/native-ios/Sources/TouhanSprintApp.swift",
+      "touroku-hanbaisha-ios/native-ios/project.yml",
+      "touroku-hanbaisha-ios/native-ios/prepare-ios.sh",
+      "touroku-hanbaisha-ios/scripts/prepare_offline_web.py",
+      "codemagic.yaml",
+      "touroku-hanbaisha-ios/Q7_TESTFLIGHT_READBACK_20261125.json"
+    ],
+    "details": [
+      "Native SwiftUI entrypoint creates WKWebView and loads Bundle.main/OfflineWeb/official-practice.html using loadFileURL.",
+      "XcodeGen project packages OfflineWeb as a resource folder.",
+      "prepare-ios.sh generates the local web bundle; preparation script embeds the 599-question bank and 599 audited explanations and pins figure SHA-256.",
+      "Static source wiring passes; no claim of current-HEAD native archive or device execution.",
+      "Build 21 is signed and distributed to internal TestFlight. User-confirmed physical-device acceptance: app launch, explanation display, and lifetime purchase completed. Purchase restoration is not yet tested. This device observation is user-reported; the repository evidence proves TestFlight availability, not a device recording."
+    ]
+  },
+  "q3": {
+    "status": "PASS_ASC_READBACK",
+    "evidence": [
+      "touroku-hanbaisha-ios/ASC_METADATA_Q3_READBACK_20261125.json"
+    ],
+    "details": [
+      "ASC app ID 6802119268 and bundle ID verified.",
+      "Version 1.0 PREPARE_FOR_SUBMISSION; description and promotional text both mention 599 questions; invalid 2023 Q90 and offline behavior disclosed; official source links present.",
+      "Readback status PASS; no App Review submission."
+    ]
+  },
+  "q4": {
+    "status": "BROWSER_OFFLINE_PASS_DEVICE_AIRPLANE_MODE_UNVERIFIED",
+    "evidence": [
+      "touroku-hanbaisha-ios/OFFLINE_Q4_20261125.json",
+      "touroku-hanbaisha-ios/OFFLINE_Q4_20261124.json"
+    ],
+    "details": [
+      "Chromium 599/599 and WebKit 599/599; 104 figures; zero external requests; zero page errors on testedHead eb0e2f666c331b8dd3930bd9a5f303e47b74d116.",
+      "Native WKWebView offline packaged bundle on current PR HEAD not verified; no physical device offline test.",
+      "Current device airplane-mode/offline operation has not been tested. Do not promote Q4 to complete."
+    ]
+  },
+  "q5": {
+    "status": "SOURCE_BROWSER_PASS_ASC_QUESTIONNAIRE_UNVERIFIED",
+    "evidence": [
+      "touroku-hanbaisha-ios/Q5_CURRENT_20261125.json",
+      "touroku-hanbaisha-ios/PRIVACY_Q5_AUDIT_20261124.json",
+      "touroku-hanbaisha-ios/native-ios/PrivacyInfo.xcprivacy"
+    ],
+    "details": [
+      "Local-host source/browser audit PASS; observed external hosts []; privacy policy URL matches.",
+      "ASC App Privacy questionnaire/data types not verified; hosting provider request/log retention not verified; no physical iOS WebView network capture.",
+      "Privacy manifest and non-persistent WKWebView are source-level evidence, not a substitute for ASC questionnaire reconciliation.",
+      "App Store Connect App Privacy questionnaire reconciliation and hosting-provider log retention/purpose remain unverified."
+    ]
+  },
+  "q6": {
+    "status": "PASS_TESTFLIGHT_AND_USER_CONFIRMED_DEVICE_SMOKE",
+    "evidence": [
+      "touroku-hanbaisha-ios/IOS_SIMULATOR_Q6_20261125.json",
+      "touroku-hanbaisha-ios/IOS_SIMULATOR_Q6_20261124.json",
+      "touroku-hanbaisha-ios/Q7_TESTFLIGHT_READBACK_20261125.json"
+    ],
+    "details": [
+      "Native simulator build/install/launch and progress persistence smoke PASS on c930d1273a6cab481bbdd0b13047bfe836f66e5d (run 45334990399, artifact 14893742623).",
+      "Evidence HEAD differs from PR #5741 HEAD; current-head build/launch remains unverified. No physical iPhone acceptance.",
+      "Build 21 is available in internal TestFlight; user confirms physical-device app launch, explanation display and lifetime purchase. The prior simulator run is still tied to an older HEAD; Build 21 device acceptance is a separate user-reported observation. No airplane-mode test or purchase-restore test is claimed."
+    ]
+  },
+  "explicitNoAppReviewSubmission": true,
+  "q7Scope": "Not changed or executed in this work; delegated to separate session.",
+  "q7": {
+    "status": "PASS_TESTFLIGHT_DISTRIBUTION_DEVICE_ACCEPTANCE_PARTIAL",
+    "build": "21",
+    "codemagicBuildId": "6b06836d0bc59f03bf0c02e3",
+    "githubRunId": 45561986493,
+    "ascBuildId": "095c6fe1-6999-4f6e-9049-08fd860a63c6",
+    "testFlightGroup": "sum",
+    "signedIpaVerified": true,
+    "ascProcessingState": "VALID",
+    "testFlightDistributed": true,
+    "userConfirmedDeviceChecks": [
+      "app launch",
+      "explanation display",
+      "lifetime purchase"
+    ],
+    "unverified": [
+      "airplane mode/offline operation",
+      "purchase restoration"
+    ],
+    "appReviewSubmitted": false
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "schema": "touhan-q4-offline-evidence-v1",
+  "timestampJST": "2026-11-25T14:08:00+09:00",
+  "status": "PASS",
+  "testedHead": "eb0e2f666c331b8dd3930bd9a5f303e47b74d116",
+  "githubRuns": [
+    45313106222,
+    45313106230
+  ],
+  "browser": {
+    "chromiumQuestions": 599,
+    "webkitQuestions": 599,
+    "figures": 104,
+    "externalRequests": 0,
+    "pageErrors": 0,
+    "result": "PASS"
+  },
+  "nativeSimulatorOfflineBundleVerified": false,
+  "limits": [
+    "Browser offline via HTTP/HTTPS request blocking; not proof of native WKWebView packaged offline execution on PR HEAD 1964f5daadbd0e77adefff16683ffece54438328.",
+    "No physical iPhone/Safari offline test.",
+    "The native bundle source currently uses WKWebView.loadFileURL and XcodeGen OfflineWeb resources; current-head simulator verification remains outstanding."
+  ]
+}

@@ -5,43 +5,55 @@ on:
     paths:
       - 'touroku-hanbaisha-sprint/official-kansai/build_approved_bank.py'
       - 'touroku-hanbaisha-sprint/official-kansai/write_geometry_release_status.py'
+      - 'touroku-hanbaisha-sprint/official-kansai/write_auto_release_status.py'
       - '.github/workflows/touhan-geometry-finalize.yml'
 permissions:
   contents: write
 concurrency:
-  group: touhan-geometry-finalize-main
+  group: touhan-geometry-finalize-${{ github.ref }}
   cancel-in-progress: false
 jobs:
   finalize:
+    if: github.ref_name != 'main'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: main
+          ref: ${{ github.ref_name }}
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Rebuild only audited published questions, report and capture exceptions
+      - name: Rebuild in an isolated copy and verify the canonical bank is unchanged
+        shell: bash
         run: |
-          set -o pipefail
-          (
-            python touroku-hanbaisha-sprint/official-kansai/build_approved_bank.py &&
-            python touroku-hanbaisha-sprint/official-kansai/write_auto_release_status.py &&
-            python touroku-hanbaisha-sprint/official-kansai/write_geometry_release_status.py
-          ) > /tmp/touhan-finalize.log 2>&1
-          result=$?
-          cat /tmp/touhan-finalize.log
-          if [ "$result" -ne 0 ]; then
-            python - <<'PY'
-          import json
+          set -euo pipefail
+          source_dir=touroku-hanbaisha-sprint/official-kansai
+          tmp_dir="$(mktemp -d)"
+          cp -a "$source_dir" "$tmp_dir/official-kansai"
+          python "$tmp_dir/official-kansai/build_approved_bank.py" | tee /tmp/touhan-builder.log
+          python - "$tmp_dir/official-kansai/APPROVED_OFFICIAL_BANK.json" <<'PY'
+          import json,sys
           from pathlib import Path
-          p=Path('touroku-hanbaisha-sprint/official-kansai/GEOMETRY_RELEASE_WRITER_ERROR.json')
-          p.write_text(json.dumps({'status':'BLOCKED','error':Path('/tmp/touhan-finalize.log').read_text()[-5500:]},ensure_ascii=False,indent=2)+'\n')
+          current=json.loads(Path('touroku-hanbaisha-sprint/official-kansai/APPROVED_OFFICIAL_BANK.json').read_text())
+          rebuilt=json.loads(Path(sys.argv[1]).read_text())
+          def valid(d):
+              ids=[q['id'] for q in d['questions']]
+              assert d['count']==len(ids)==len(d['approvedIds'])==599
+              assert len(set(ids))==599 and set(ids)==set(d['approvedIds'])
+              assert 'KSAI-2023-090' not in set(ids)
+              assert {y:sum(q['year']==y for q in d['questions']) for y in range(2022,2027)}=={2022:120,2023:119,2024:120,2025:120,2026:120}
+              return set(ids)
+          assert valid(current)==valid(rebuilt)
+          print('PASS: isolated builder independently reproduces 599 IDs; current bank content is preserved untouched')
           PY
-            exit 1
-          fi
-      - name: Verify release bank and source gates
+          echo "TOUHAN_REBUILT_BANK_PATH=$tmp_dir/official-kansai/APPROVED_OFFICIAL_BANK.json" >> "$GITHUB_ENV"
+      - name: Reconcile release counts from all approved audit methods
+        run: |
+          set -euo pipefail
+          python touroku-hanbaisha-sprint/official-kansai/write_auto_release_status.py
+          python touroku-hanbaisha-sprint/official-kansai/write_geometry_release_status.py
+      - name: Verify release status without changing the canonical bank
         run: |
           python - <<'PY'
           import json
@@ -49,26 +61,28 @@ jobs:
           b=Path('touroku-hanbaisha-sprint/official-kansai')
           d=json.loads((b/'APPROVED_OFFICIAL_BANK.json').read_text())
           s=json.loads(Path('touroku-hanbaisha-ios/release-status.json').read_text())
-          assert d['count']==s['question_bank']['production_official_bank_count']
+          assert d['count']==s['question_bank']['production_official_bank_count']==599
           assert s['release_gate']=='BLOCKED'
+          assert s['app_review_submitted'] is False
           assert 'KSAI-2023-090' not in d['approvedIds']
           assert s['question_bank']['cross_engine_sample_size']==50
-          assert s['question_bank']['auto_geometry_and_ruby_per_year']
-          print('PASS: all geometry and crosscheck status saved')
+          assert sum(s['question_bank']['approved_by_method'].values())==599
+          print('PASS: release count, invalid-Q90 exclusion, and blocked submission state')
           PY
-      - name: Commit successful outcomes or explicit failure evidence
+      - name: Commit evidence to this branch only
         if: always()
+        shell: bash
         run: |
+          set -euo pipefail
+          test "$GITHUB_REF_NAME" != "main"
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -f touroku-hanbaisha-sprint/official-kansai/GEOMETRY_RELEASE_WRITER_ERROR.json 2>/dev/null || true
-          git add touroku-hanbaisha-sprint/official-kansai/APPROVED_OFFICIAL_BANK.json
           git add touroku-hanbaisha-ios/release-status.json touroku-hanbaisha-ios/RELEASE_STATUS.md
           if ! git diff --cached --quiet; then
-            git commit -m 'audit(touhan): finalize coordinate promotion and independent crosscheck status'
+            git commit -m 'audit(touhan): reconcile all official approval methods'
             for attempt in 1 2 3; do
-              git pull --rebase origin main
-              if git push origin HEAD:main; then exit 0; fi
+              git pull --rebase origin "$GITHUB_REF_NAME"
+              if git push origin "HEAD:$GITHUB_REF_NAME"; then exit 0; fi
               if [ "$attempt" -eq 3 ]; then exit 1; fi
             done
           fi

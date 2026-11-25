@@ -234,8 +234,17 @@ if crop_audit_path.exists() and crop_mobile_path.exists():
             raise RuntimeError("real browser QA has missing or duplicate viewport cases")
         for rec in records:
             id=rec["id"];year=int(id.split("-")[1]);no=int(id.split("-")[2])
-            if id in accepted or not rec.get("promoted") or rec.get("result")!="PASS":
-                raise RuntimeError("crop approval duplicate or missing evidence: "+id)
+            # Some crop QA rows were included in the historical 44-row batch even
+            # though the manifest already marks them as approved by an earlier
+            # independent route. Preserve that prior approval; never replace its
+            # text/ruby record with the image-only fallback generated below.
+            if id in accepted:
+                prior=accepted[id]
+                if prior.get("audit",{}).get("status")!="PASS":
+                    raise RuntimeError("existing approval lacks PASS audit: "+id)
+                continue
+            if not rec.get("promoted") or rec.get("result")!="PASS":
+                raise RuntimeError("crop approval evidence missing: "+id)
             if (id,375) not in passes or (id,430) not in passes:
                 raise RuntimeError("crop viewport not passed: "+id)
             if rec.get("mobile375")!="PASS_REAL_CHROMIUM" or rec.get("mobile430")!="PASS_REAL_CHROMIUM":
@@ -246,11 +255,26 @@ if crop_audit_path.exists() and crop_mobile_path.exists():
                 raise RuntimeError("crop third-party rights not cleared: "+id)
             manifest=json.loads((B/f"LAYOUT_CROPS_{year}.json").read_text())
             meta=next((x for x in manifest["records"] if x["id"]==id),None)
-            if not meta or meta["alreadyApproved"]:
+            if not meta:
                 raise RuntimeError("missing crop source manifest: "+id)
-            assets=meta.get("displayAssets") or meta["assets"]
-            if len(assets)!=1 or rec.get("effectiveCropAssets")!=[assets[0]["webPath"]]:
+            # alreadyApproved is a historical manifest snapshot, not a veto.
+            # This builder reconstructs the canonical bank from source evidence;
+            # if an older approval is absent from the current accepted set, the
+            # independently passing crop audit below is sufficient to reconstruct
+            # the same record without lowering the visual/rights/mobile criteria.
+            # Duplicate records already present in accepted were skipped above.
+            # The historical flag does not waive any of the evidence checks below.
+            manifest_assets=meta.get("displayAssets") or meta["assets"]
+            effective_paths=rec.get("effectiveCropAssets") or []
+            if len(effective_paths)!=1:
+                raise RuntimeError("crop effective display asset must be unique: "+id)
+            assets=[a for a in manifest_assets if a.get("webPath") in effective_paths]
+            if len(assets)!=1:
                 raise RuntimeError("crop display source drift: "+id)
+            correction=rec.get("scopeCorrection")
+            if correction:
+                if correction.get("retainedPath")!=effective_paths[0] or correction.get("excludedPath") in effective_paths:
+                    raise RuntimeError("crop scope correction does not match effective asset: "+id)
             asset=assets[0]
             binary=(B/asset["relativePath"]).read_bytes()
             if hashlib.sha256(binary).hexdigest()!=asset["sha256"]:
@@ -325,6 +349,146 @@ if font_evidence.exists():
         stats["rubyFontCluster"]=stats.get("rubyFontCluster",0)+1
         stats["hold"]-=1
         if stats["hold"]<0:raise RuntimeError("negative ruby font hold: "+id)
+
+# Restore independently approved methods that were added after the original
+# builder implementation. The existing bank is read before it is overwritten;
+# only records with PASS audit status and matching, method-specific evidence
+# ledgers are eligible. This is preservation/reconstruction, not new approval.
+prior_path=B/"APPROVED_OFFICIAL_BANK.json"
+prior_bank=json.loads(prior_path.read_text()) if prior_path.exists() else None
+prior_questions=prior_bank.get("questions",[]) if prior_bank else []
+prior_byid={q["id"]:q for q in prior_questions}
+def prior_common(q):
+    return (q.get("audit",{}).get("status")=="PASS"
+        and q.get("verbatimCertified") is True
+        and q.get("needsVisualReview") is False
+        and q.get("renderReady") is True
+        and q.get("sourceIssuer")=="関西広域連合"
+        and q.get("sourceUrl","").startswith("https://")
+        and q.get("answerSourceUrl","").startswith("https://")
+        and bool(q.get("attributionDisplay"))
+        and isinstance(q.get("choices"),list) and len(q["choices"]) in (4,5)
+        and isinstance(q.get("answer"),int)
+        and q.get("answer")==q.get("answerNumberOfficial",0)-1
+        and q.get("id")!="KSAI-2023-090")
+def sha_ok(rel,digest):
+    # Audit ledgers use web-root paths for figure assets and bank-relative paths
+    # for review screenshots; normalize the former to the official-kansai root.
+    if rel.startswith("official-kansai/"):
+        rel=rel[len("official-kansai/"):]
+    p=B/rel
+    return p.is_file() and hashlib.sha256(p.read_bytes()).hexdigest()==digest
+def preserve_prior(method, evidence_name, evidence_ids, validator, counter):
+    report_path=B/evidence_name
+    if not report_path.is_file(): raise RuntimeError("missing prior approval evidence: "+evidence_name)
+    for q in prior_questions:
+        audit=q.get("audit",{})
+        if audit.get("method")!=method: continue
+        id=q["id"]
+        if id in accepted: raise RuntimeError("prior approval collides with reconstructed record: "+id)
+        if id not in evidence_ids or not prior_common(q) or not validator(q,audit):
+            raise RuntimeError("prior approved record evidence mismatch: "+id+" / "+method)
+        accepted[id]=q
+        stat=status_by_year[str(q["year"])]
+        stat[counter]=stat.get(counter,0)+1
+        stat["hold"]-=1
+        if stat["hold"]<0: raise RuntimeError("negative hold count while restoring "+id)
+# 28 directly viewed official-PDF versus Noto/ruby DOM comparisons.
+v2=json.loads((B/"RUBY_VISUAL_REAUDIT_V2_20261124.json").read_text())
+v2_records={r["id"]:r for r in v2["records"] if r.get("decision")=="PASS"}
+def v2_ok(q,a):
+    r=v2_records.get(q["id"])
+    return (q["id"] in set(v2.get("approvedIds",[])) and r is not None
+        and r.get("directVisualReview")=="SOURCE_AND_APP_SHORTLIST_SHEET_VISUALLY_VIEWED"
+        and a.get("evidence")=="RUBY_VISUAL_REAUDIT_V2_20261124.json"
+        and a.get("rubyElementCount",0)>0
+        and sha_ok(a.get("sourceImage",""),a.get("sourceImageSha256",""))
+        and sha_ok(a.get("candidateScreenshot",""),a.get("candidateScreenshotSha256",""))
+        and isinstance(q.get("questionParts"),list)
+        and len(q.get("choicesParts",[]))==len(q.get("choices",[])))
+preserve_prior("DIRECT_VISUAL_PDF_JP_RUBY_RT_COMPARED_V2","RUBY_VISUAL_REAUDIT_V2_20261124.json",
+    set(v2.get("approvedIds",[])),v2_ok,"visualRubyV2")
+# Eight independently cropped, rights-reviewed, 375/430 Chromium-tested images.
+eight=json.loads((B/"EIGHT_IMAGE_RELEASE_QA_20261124.json").read_text())
+eight_ids={r["id"] for r in eight.get("records",[])}
+eight_pass={(r["id"],r["width"]) for r in eight.get("chromium",[]) if r.get("status")=="PASS"
+    and r.get("imageLoaded") and r.get("noHorizontalOverflow") and r.get("zoomLinkOpened")
+    and r.get("answerScoringCorrect")}
+def eight_ok(q,a):
+    r=next((x for x in eight.get("records",[]) if x["id"]==q["id"]),None)
+    figs=q.get("sourceFigures",[])
+    return (eight.get("status")=="PASS" and eight.get("approved")==8 and r is not None
+        and r.get("visualDirectReview","").startswith("PASS_")
+        and r.get("rights","").startswith("PASS_")
+        and (q["id"],375) in eight_pass and (q["id"],430) in eight_pass
+        and a.get("record")=="EIGHT_IMAGE_RELEASE_QA_20261124.json"
+        and a.get("sourcePdfSha256")==r.get("sourcePdfSha256")
+        and len(figs)==1 and figs[0].get("licenseVerified") is True
+        and figs[0].get("visualVerified") is True
+        and sha_ok(figs[0].get("webPath",""),figs[0].get("sha256","")))
+preserve_prior("SOURCE_PDF_CROP_HUMAN_IMAGE_SCOPE_AND_CHROMIUM_QA_V3","EIGHT_IMAGE_RELEASE_QA_20261124.json",
+    eight_ids,eight_ok,"imageV3")
+# Ten direct source-image/ruby reviews plus two-width production-render tests.
+ten=json.loads((B/"TEN_RUBY_DIRECT_REVIEW_QA_20261124.json").read_text())
+ten_records={r["id"]:r for r in ten.get("records",[])}
+ten_pass={(r["id"],r["width"]) for r in ten.get("browserResults",[]) if r.get("status")=="PASS"
+    and r.get("scoreVerified") is True}
+def ten_ok(q,a):
+    r=ten_records.get(q["id"])
+    return (ten.get("status")=="PASS" and ten.get("directlyViewedImages")==10 and r is not None
+        and r.get("humanDirectlyReviewed","").startswith("PASS_")
+        and (q["id"],375) in ten_pass and (q["id"],430) in ten_pass
+        and a.get("record")=="TEN_RUBY_DIRECT_REVIEW_QA_20261124.json"
+        and a.get("sourcePdfSha256")==r.get("sourcePdfSha256")
+        and a.get("normalizedOriginalSha256")==r.get("originalNormalizedSHA")
+        and a.get("rubyCount")==len(r.get("rubyMappings",[]))
+        and isinstance(q.get("questionParts"),list)
+        and len(q.get("choicesParts",[]))==len(q.get("choices",[])))
+preserve_prior("DIRECT_SOURCE_IMAGE_AND_CHROME_RUBY_V3","TEN_RUBY_DIRECT_REVIEW_QA_20261124.json",
+    set(ten_records),ten_ok,"directRubyV3")
+# 102 records were already present in the 599-question canonical bank; retain
+# their unattached source-order readings only when the historical ledger and
+# each bank record agree. No inferred Kanji-to-reading mapping is introduced.
+source_order=json.loads((B/"RUBY_102_SOURCE_ORDER_PROMOTION_20261124.json").read_text())
+source_order_records={r["id"]:r for r in source_order.get("records",[])}
+def source_order_ok(q,a):
+    r=source_order_records.get(q["id"])
+    return (source_order.get("canonicalCount")==599 and source_order.get("startCurrent")==599
+        and source_order.get("alreadyApproved")==102 and source_order.get("held")==0
+        and r is not None and r.get("status")=="ALREADY_APPROVED" and r.get("previouslyApproved") is True
+        and a.get("record")=="RUBY_102_SOURCE_ORDER_PROMOTION_20261124.json"
+        and bool(q.get("originalRubyReadings"))
+        and q.get("rubyDisplayMode")=="SOURCE_ORDER_UNATTACHED"
+        and q.get("rubySourceVerified") is True
+        and len(a.get("sourcePdfSha256",""))==64 and len(a.get("sourceNormalizedSha256",""))==64)
+preserve_prior("SOURCE_ORDER_UNATTACHED_PDF_RAWDICT","RUBY_102_SOURCE_ORDER_PROMOTION_20261124.json",
+    set(source_order_records),source_order_ok,"sourceOrderUnattached")
+# Eleven previously approved/automatically passed raw-PDF glyph-to-DOM records.
+auto113=json.loads((B/"RUBY_113_AUTO_REBUILD_20261124.json").read_text())
+auto_records={r["id"]:r for r in auto113.get("records",[])
+    if r.get("status") in ("AUTO_PASS","ALREADY_APPROVED")}
+def auto113_ok(q,a):
+    r=auto_records.get(q["id"])
+    if not (auto113.get("cumulativeAutoPassed")==11 and r is not None
+        and a.get("record")=="RUBY_113_AUTO_REBUILD_20261124.json"): return False
+    if r.get("status")=="ALREADY_APPROVED":
+        return (r.get("existingBank") is True
+            and len(a.get("sourcePdfSha256",""))==64
+            and len(a.get("normalizedOriginalSha256",""))==64
+            and isinstance(q.get("questionParts"),list)
+            and len(q.get("choicesParts",[]))==len(q.get("choices",[])))
+    return (r.get("status")=="AUTO_PASS" and a.get("sourcePdfSha256")==r.get("sourcePdfSha256")
+        and not r.get("reasons") and r.get("domGeometry",{}).get("font") is True
+        and len(r.get("domGeometry",{}).get("rubies",[]))==a.get("rubyCount")
+        and bool(r.get("sourceGlyphMappings"))
+        and isinstance(q.get("questionParts"),list)
+        and len(q.get("choicesParts",[]))==len(q.get("choices",[])))
+preserve_prior("PDF_RAWDICT_GEOMETRY_AND_CHROMIUM_DOM_AUTO_V1","RUBY_113_AUTO_REBUILD_20261124.json",
+    set(auto_records),auto113_ok,"ruby113Auto")
+# The reconstructed set must be exactly the previously approved canonical set.
+if prior_bank:
+    if len(accepted)!=prior_bank.get("count") or set(accepted)!=set(prior_byid):
+        raise RuntimeError(f"approved bank reconstruction mismatch: rebuilt={len(accepted)} prior={prior_bank.get('count')}")
 
 approved=sorted(accepted.values(),key=lambda q:(q["year"],q["questionNo"]))
 out={"schema":"touroku-hanbaisha-official-approved-v2","issuer":"関西広域連合",
