@@ -1,0 +1,590 @@
+{
+  "batch": "visual-reaudit-2022-b09",
+  "repository": "ALLSUNDAY1122/ALLSUNDAY1122.github.io",
+  "branch": "main",
+  "auditMethod": "添付された関西広域連合の公式問題PDF（180dpiページ画像）を目視し、添付候補JSONの現行正式バンクレコードおよび参照画像資産と照合。PDF文字データ・自動照合結果を合否判定に使用していない。",
+  "sourceFiles": {
+    "questionPdf": "visual-reaudit-2022-b09.pdf",
+    "candidateJson": "visual-reaudit-2022-b09.candidates.json"
+  },
+  "pageMapping": [
+    {
+      "bundlePdfPage": 1,
+      "officialPdf": "2022-second_half",
+      "officialPdfPage": 24
+    },
+    {
+      "bundlePdfPage": 2,
+      "officialPdf": "2022-second_half",
+      "officialPdfPage": 25
+    },
+    {
+      "bundlePdfPage": 3,
+      "officialPdf": "2022-second_half",
+      "officialPdfPage": 26
+    },
+    {
+      "bundlePdfPage": 4,
+      "officialPdf": "2022-second_half",
+      "officialPdfPage": 27
+    },
+    {
+      "bundlePdfPage": 5,
+      "officialPdf": "2022-second_half",
+      "officialPdfPage": 28
+    },
+    {
+      "bundlePdfPage": 6,
+      "officialPdf": "2022-second_half",
+      "officialPdfPage": 29
+    },
+    {
+      "bundlePdfPage": 7,
+      "officialPdf": "2022-second_half",
+      "officialPdfPage": 31
+    }
+  ],
+  "summary": {
+    "total": 10,
+    "pass": 9,
+    "fail": 1,
+    "hold": 0
+  },
+  "answerPolicy": "answerNumberOfficialは添付候補JSONの値を記録。正答PDFは直接確認していないため、全件answerPDFChecked=false。",
+  "results": [
+    {
+      "id": "KSAI-2022-099",
+      "questionNo": 99,
+      "bundlePdfPages": [
+        1
+      ],
+      "officialPdf": "2022-second_half",
+      "officialPdfPages": [
+        24
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "checked": [
+        "問題文全文",
+        "a〜d全文",
+        "選択肢1〜5",
+        "正誤表5行×4列のセル対応"
+      ],
+      "visualDetails": {
+        "choiceRows": [
+          [
+            "正",
+            "誤",
+            "正",
+            "正"
+          ],
+          [
+            "正",
+            "誤",
+            "正",
+            "誤"
+          ],
+          [
+            "誤",
+            "正",
+            "正",
+            "誤"
+          ],
+          [
+            "誤",
+            "誤",
+            "誤",
+            "正"
+          ],
+          [
+            "正",
+            "正",
+            "誤",
+            "正"
+          ]
+        ]
+      },
+      "differences": [],
+      "notes": "PDF画像1ページ（公式PDF第2部24ページ）。医薬品の販売方法に関する設問、a〜d全文および正誤表20セルが候補レコードと一致。"
+    },
+    {
+      "id": "KSAI-2022-100",
+      "questionNo": 100,
+      "bundlePdfPages": [
+        2,
+        3
+      ],
+      "officialPdf": "2022-second_half",
+      "officialPdfPages": [
+        25,
+        26
+      ],
+      "status": "FAIL",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "checked": [
+        "問題文全文",
+        "a〜d全文",
+        "選択肢1〜5",
+        "正誤表5行×4列",
+        "ページ跨ぎ・次設問見出しとの境界"
+      ],
+      "visualDetails": {
+        "relevantQuestionContentOnBundlePage": 2,
+        "continuationOnBundlePage3": false,
+        "officialChoiceRows": [
+          [
+            "誤",
+            "正",
+            "正",
+            "誤"
+          ],
+          [
+            "正",
+            "正",
+            "誤",
+            "正"
+          ],
+          [
+            "正",
+            "誤",
+            "正",
+            "誤"
+          ],
+          [
+            "誤",
+            "正",
+            "誤",
+            "正"
+          ],
+          [
+            "正",
+            "誤",
+            "正",
+            "正"
+          ]
+        ],
+        "officialChoice5": "正　誤　正　正"
+      },
+      "differences": [
+        {
+          "field": "choices[4]",
+          "currentValue": "正  誤  正  正\\n\\n\\n\\n\\n\\n［医薬品の適正使用と安全対策］",
+          "officialValue": "正　誤　正　正",
+          "reason": "現行レコードの第5選択肢末尾に、次章見出し「［医薬品の適正使用と安全対策］」が混入している。公式PDF画像の問100は公式PDF第2部25ページで完結し、次の画像ページ（第2部26ページ）は次章見出しと問101で始まる。見出しは問100の選択肢ではない。"
+        }
+      ],
+      "notes": "問100の設問・a〜dおよび表の各セルは一致するが、選択肢5に次章見出しが付加されているためFAIL。正しい選択肢5は「正　誤　正　正」。"
+    },
+    {
+      "id": "KSAI-2022-101",
+      "questionNo": 101,
+      "bundlePdfPages": [
+        3
+      ],
+      "officialPdf": "2022-second_half",
+      "officialPdfPages": [
+        26
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "checked": [
+        "設問全文",
+        "a〜d全文",
+        "組合せ選択肢1〜4",
+        "法令条文番号・否定表現"
+      ],
+      "visualDetails": {
+        "choices": [
+          "ａ、ｂ",
+          "ａ、ｃ",
+          "ｂ、ｄ",
+          "ｃ、ｄ"
+        ]
+      },
+      "differences": [],
+      "notes": "PDF画像3ページ（公式PDF第2部26ページ）。医薬品の適正使用情報に関する設問、a〜d全文および組合せ選択肢4件が一致。"
+    },
+    {
+      "id": "KSAI-2022-102",
+      "questionNo": 102,
+      "bundlePdfPages": [
+        3
+      ],
+      "officialPdf": "2022-second_half",
+      "officialPdfPages": [
+        26
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "checked": [
+        "問題文全文",
+        "a〜d全文",
+        "選択肢1〜5",
+        "正誤表5行×4列のセル対応"
+      ],
+      "visualDetails": {
+        "choiceRows": [
+          [
+            "正",
+            "誤",
+            "正",
+            "誤"
+          ],
+          [
+            "正",
+            "誤",
+            "正",
+            "正"
+          ],
+          [
+            "正",
+            "正",
+            "誤",
+            "誤"
+          ],
+          [
+            "誤",
+            "正",
+            "正",
+            "正"
+          ],
+          [
+            "誤",
+            "正",
+            "誤",
+            "正"
+          ]
+        ]
+      },
+      "differences": [],
+      "notes": "PDF画像3ページ（公式PDF第2部26ページ）。添付文書等に関するa〜d全文および正誤表20セルが一致。"
+    },
+    {
+      "id": "KSAI-2022-103",
+      "questionNo": 103,
+      "bundlePdfPages": [
+        4
+      ],
+      "officialPdf": "2022-second_half",
+      "officialPdfPages": [
+        27
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "checked": [
+        "設問全文",
+        "選択肢1〜5全文",
+        "かぎ括弧・否定表現・句読点"
+      ],
+      "visualDetails": {
+        "choices": [
+          "使用上の注意は、「してはいけないこと」、「相談すること」及び「その他の注意」から構成され、適正使用のために重要と考えられる項目が前段に記載されている。",
+          "漢方処方製剤では、ある程度の期間継続して使用されることにより効果が得られるとされているものが多いが、長期連用する場合には、専門家に相談する旨が記載されている（本記載がない漢方処方製剤は、短期の使用に限られるもの）。",
+          "局所に適用する医薬品は、患部の状態によっては症状を悪化させたり、誤った部位に使用すると副作用を生じたりするおそれがあるので、「次の部位には使用しないこと」として、使用を避けるべき患部の状態や適用部位等が簡潔に記載されている。",
+          "医療用医薬品と併用すると、作用の増強、副作用等のリスクの増大が予測されるため、「医師（又は歯科医師）の治療を受けている人」は、「次の人は使用（服用）しないこと」の項に記載されている。",
+          "眠気や異常なまぶしさ等を引き起こす成分が配合されている内服用医薬品では、服用すると重大な事故につながるおそれがあるため、「服用後、乗物又は機械類の運転操作をしないこと」と記載されている。"
+        ]
+      },
+      "differences": [],
+      "notes": "PDF画像4ページ（公式PDF第2部27ページ）。設問および5選択肢全文が候補レコードと一致。"
+    },
+    {
+      "id": "KSAI-2022-104",
+      "questionNo": 104,
+      "bundlePdfPages": [
+        5
+      ],
+      "officialPdf": "2022-second_half",
+      "officialPdfPages": [
+        28
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "checked": [
+        "sourceFigures参照画像の実体",
+        "問題文全文",
+        "a〜d全文",
+        "正誤表5行×4列のセル対応",
+        "公式PDF画像との視覚的一致"
+      ],
+      "visualDetails": {
+        "representation": "公式問題PDFからの設問画像による掲載。question/choicesのプレースホルダー文字列は画像掲載方式のためのもので、設問本文・選択肢本文として扱わない。",
+        "sourceFigure": "touroku-hanbaisha-sprint/official-kansai/layout-crops/KSAI-2022-104-p28-1.png",
+        "choices": [
+          "医薬品は、適切な保管がなされないと化学変化や雑菌の繁殖等を生じることがあるため、特に開封後の散剤は、冷蔵庫内に保管されるのが望ましい。",
+          "医薬品は、容器を移し替えると、誤用の原因になったり、品質が変わったりすることがあるので、旅行等で携行する場合であっても、他の容器に入れ替えることは適当ではない。",
+          "点眼薬は、開封後長期間保存すると変質するおそれがあるため、家族間で共用し、できる限り早目に使い切ることが望ましい。",
+          "購入後すぐ開封しない場合等に、添付文書を見なくても適切な保管がなされるように、その医薬品の容器や包装にも、保管に関する注意事項が記載されている。"
+        ],
+        "choiceRows": [
+          [
+            "正",
+            "正",
+            "誤",
+            "誤"
+          ],
+          [
+            "正",
+            "誤",
+            "正",
+            "誤"
+          ],
+          [
+            "誤",
+            "正",
+            "正",
+            "正"
+          ],
+          [
+            "正",
+            "誤",
+            "誤",
+            "正"
+          ],
+          [
+            "誤",
+            "正",
+            "誤",
+            "正"
+          ]
+        ]
+      },
+      "differences": [],
+      "notes": "候補JSONのquestion/choicesは画像掲載方式のプレースホルダーだが、main上のsourceFigures実体を取得して添付PDF画像5ページ（公式PDF第2部28ページ）と目視比較。設問、a〜d、表の全20セルが一致。画像内に原典の全設問内容が含まれるためPASS。"
+    },
+    {
+      "id": "KSAI-2022-105",
+      "questionNo": 105,
+      "bundlePdfPages": [
+        5
+      ],
+      "officialPdf": "2022-second_half",
+      "officialPdfPages": [
+        28
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "checked": [
+        "問題文全文",
+        "a〜d全文",
+        "選択肢1〜5",
+        "正誤表5行×4列のセル対応",
+        "英字・数字表記"
+      ],
+      "visualDetails": {
+        "choiceRows": [
+          [
+            "誤",
+            "正",
+            "正",
+            "誤"
+          ],
+          [
+            "正",
+            "正",
+            "誤",
+            "正"
+          ],
+          [
+            "正",
+            "誤",
+            "正",
+            "誤"
+          ],
+          [
+            "誤",
+            "正",
+            "誤",
+            "正"
+          ],
+          [
+            "正",
+            "誤",
+            "正",
+            "正"
+          ]
+        ]
+      },
+      "differences": [],
+      "notes": "PDF画像5ページ（公式PDF第2部28ページ）。安全性速報に関するa〜d全文、A4・イエローレターの表記、正誤表20セルが一致。"
+    },
+    {
+      "id": "KSAI-2022-106",
+      "questionNo": 106,
+      "bundlePdfPages": [
+        6
+      ],
+      "officialPdf": "2022-second_half",
+      "officialPdfPages": [
+        29
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "checked": [
+        "問題文全文",
+        "a〜d全文",
+        "選択肢1〜5",
+        "PMDAメディナビ等の英字表記",
+        "正誤表5行×4列"
+      ],
+      "visualDetails": {
+        "choiceRows": [
+          [
+            "正",
+            "正",
+            "誤",
+            "正"
+          ],
+          [
+            "正",
+            "正",
+            "誤",
+            "誤"
+          ],
+          [
+            "誤",
+            "正",
+            "正",
+            "誤"
+          ],
+          [
+            "誤",
+            "正",
+            "誤",
+            "正"
+          ],
+          [
+            "誤",
+            "誤",
+            "正",
+            "誤"
+          ]
+        ]
+      },
+      "differences": [],
+      "notes": "PDF画像6ページ（公式PDF第2部29ページ）。安全性情報に関するa〜d全文、PMDAメディナビの表記、正誤表20セルが一致。"
+    },
+    {
+      "id": "KSAI-2022-107",
+      "questionNo": 107,
+      "bundlePdfPages": [
+        6
+      ],
+      "officialPdf": "2022-second_half",
+      "officialPdfPages": [
+        29
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "checked": [
+        "問題文全文",
+        "a〜d全文",
+        "選択肢1〜5",
+        "法令条文番号・期間表記",
+        "正誤表5行×4列"
+      ],
+      "visualDetails": {
+        "choiceRows": [
+          [
+            "正",
+            "正",
+            "誤",
+            "正"
+          ],
+          [
+            "誤",
+            "誤",
+            "正",
+            "誤"
+          ],
+          [
+            "正",
+            "正",
+            "正",
+            "誤"
+          ],
+          [
+            "正",
+            "誤",
+            "正",
+            "誤"
+          ],
+          [
+            "誤",
+            "正",
+            "誤",
+            "正"
+          ]
+        ]
+      },
+      "differences": [],
+      "notes": "PDF画像6ページ（公式PDF第2部29ページ）。副作用等の報告制度に関するa〜d全文、「第６８条の１０第１項」「概ね８年」の表記、正誤表20セルが一致。"
+    },
+    {
+      "id": "KSAI-2022-111",
+      "questionNo": 111,
+      "bundlePdfPages": [
+        7
+      ],
+      "officialPdf": "2022-second_half",
+      "officialPdfPages": [
+        31
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "checked": [
+        "問題文全文",
+        "a〜d全文",
+        "選択肢1〜5",
+        "年月日・PL法表記",
+        "正誤表5行×4列"
+      ],
+      "visualDetails": {
+        "choiceRows": [
+          [
+            "正",
+            "正",
+            "正",
+            "正"
+          ],
+          [
+            "誤",
+            "誤",
+            "正",
+            "正"
+          ],
+          [
+            "誤",
+            "誤",
+            "誤",
+            "正"
+          ],
+          [
+            "正",
+            "正",
+            "誤",
+            "誤"
+          ],
+          [
+            "正",
+            "誤",
+            "正",
+            "誤"
+          ]
+        ]
+      },
+      "differences": [],
+      "notes": "PDF画像7ページ（公式PDF第2部31ページ）。医薬品PLセンターに関するa〜d全文、平成７年７月・PL法の表記、正誤表20セルが一致。"
+    }
+  ]
+}
