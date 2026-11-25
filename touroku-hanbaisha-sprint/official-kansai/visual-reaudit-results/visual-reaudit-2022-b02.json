@@ -1,0 +1,210 @@
+{
+  "batch": "visual-reaudit-2022-b02",
+  "repository": "ALLSUNDAY1122/ALLSUNDAY1122.github.io",
+  "branch": "main",
+  "source": {
+    "uploadedPdf": "visual-reaudit-2022-b02.pdf",
+    "uploadedCandidates": "visual-reaudit-2022-b02.candidates.json",
+    "method": "各bundleページの画像を目視し、候補JSONのquestion/questionParts/choices/choicesParts、ルビ情報、表・記号を照合。PDFテキスト抽出・自動照合による判定は行っていない。",
+    "answerPolicy": "answerNumberOfficialは候補レコードの値を記録しただけで、正答PDFは直接確認していない。",
+    "answerPDFChecked": false
+  },
+  "summary": {
+    "total": 10,
+    "pass": 9,
+    "fail": 1,
+    "hold": 0
+  },
+  "results": [
+    {
+      "id": "KSAI-2022-025",
+      "questionNo": 25,
+      "bundlePdfPage": 1,
+      "officialPdfPage": 16,
+      "status": "PASS",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "checked": [
+        "問題文",
+        "a〜d全文",
+        "正誤組合せ5行・4列"
+      ],
+      "differences": [],
+      "notes": "問25の問題文・4つの記述・5行4列の正誤表を画像で照合。表の各行は候補choicesと一致し、欠落したルビや記号も認めない。"
+    },
+    {
+      "id": "KSAI-2022-026",
+      "questionNo": 26,
+      "bundlePdfPage": 2,
+      "officialPdfPage": 17,
+      "status": "FAIL",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "checked": [
+        "問題文",
+        "選択肢1〜5の処方名",
+        "選択肢のルビ"
+      ],
+      "differences": [
+        {
+          "field": "originalRubyReadings",
+          "candidate": [
+            "かみきひとう",
+            "よくかんさん",
+            "しょうけんちゅうとう"
+          ],
+          "sourceObserved": [
+            "かみきひとう",
+            "けいしかりゅうこつぼれいとう",
+            "よくかんさん",
+            "さいこかりゅうこつぼれいとう",
+            "しょうけんちゅうとう"
+          ],
+          "detail": "原典画像では選択肢2「桂枝加竜骨牡蛎湯」に「けいしかりゅうこつぼれいとう」、選択肢4「柴胡加竜骨牡蛎湯」に「さいこかりゅうこつぼれいとう」のルビがあるが、候補JSONのoriginalRubyReadingsにはこの2件がない。"
+        }
+      ],
+      "sourceObservedRubyReadings": [
+        "かみきひとう",
+        "けいしかりゅうこつぼれいとう",
+        "よくかんさん",
+        "さいこかりゅうこつぼれいとう",
+        "しょうけんちゅうとう"
+      ],
+      "notes": "処方名本文は一致するが、原典にあるルビ2件が候補レコードから欠落しているためFAIL。原典の選択肢は1 加味帰脾湯、2 桂枝加竜骨牡蛎湯、3 抑肝散、4 柴胡加竜骨牡蛎湯、5 小建中湯。"
+    },
+    {
+      "id": "KSAI-2022-027",
+      "questionNo": 27,
+      "bundlePdfPage": 2,
+      "officialPdfPage": 17,
+      "status": "PASS",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "checked": [
+        "問題文",
+        "a〜d全文",
+        "正誤組合せ5行・4列"
+      ],
+      "differences": [],
+      "notes": "問27の問題文・a〜dの全文および5行4列の正誤表を画像で照合。各記述と表の全セルが候補レコードと一致。"
+    },
+    {
+      "id": "KSAI-2022-028",
+      "questionNo": 28,
+      "bundlePdfPage": 3,
+      "officialPdfPage": 18,
+      "status": "PASS",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "checked": [
+        "問題文",
+        "a〜d全文",
+        "正誤組合せ5行・4列",
+        "ルビの表示内容"
+      ],
+      "differences": [],
+      "notes": "問28の本文・4記述・表を照合。候補の本文中に分離記録された「せい」のルビ2件も原典画像上で確認でき、内容の不一致はない。"
+    },
+    {
+      "id": "KSAI-2022-029",
+      "questionNo": 29,
+      "bundlePdfPage": 3,
+      "officialPdfPage": 18,
+      "status": "PASS",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "checked": [
+        "questionParts全文",
+        "a〜d全文",
+        "正誤組合せ5行・4列",
+        "ルビ（悸／き、嘔／おう）"
+      ],
+      "differences": [],
+      "notes": "questionPartsを含む本文を画像で照合。「動悸」の「悸」に「き」、「嘔吐」の「嘔」に「おう」のルビがあり、候補のrubyBase/rubyTextと一致。5行4列の表も一致。"
+    },
+    {
+      "id": "KSAI-2022-030",
+      "questionNo": 30,
+      "bundlePdfPage": 4,
+      "officialPdfPage": 19,
+      "status": "PASS",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "checked": [
+        "問題文",
+        "a〜d全文",
+        "正誤組合せ5行・4列",
+        "ルビ（嘔／おう）"
+      ],
+      "differences": [],
+      "notes": "問30の本文・全記述・5行4列の表を照合。「嘔吐」の「嘔」に付く「おう」のルビもquestionPartsの記録と一致。"
+    },
+    {
+      "id": "KSAI-2022-031",
+      "questionNo": 31,
+      "bundlePdfPage": 5,
+      "officialPdfPage": 20,
+      "status": "PASS",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "checked": [
+        "問題文",
+        "a〜d全文",
+        "正誤組合せ5行・4列",
+        "originalRubyReadings全件の出現順と読み"
+      ],
+      "differences": [],
+      "notes": "問31の本文・全記述・表を画像で照合。原典画像のルビは候補のoriginalRubyReadingsに記録された出現順・読みと一致。"
+    },
+    {
+      "id": "KSAI-2022-032",
+      "questionNo": 32,
+      "bundlePdfPage": 5,
+      "officialPdfPage": 20,
+      "status": "PASS",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "checked": [
+        "問題文",
+        "a〜d全文",
+        "選択肢1〜4の組合せ表記"
+      ],
+      "differences": [],
+      "notes": "問32の問題文・a〜d全文および4つの組合せ選択肢（1（a、b）、2（a、d）、3（b、c）、4（c、d））を画像で照合。候補と一致。"
+    },
+    {
+      "id": "KSAI-2022-033",
+      "questionNo": 33,
+      "bundlePdfPage": 6,
+      "officialPdfPage": 21,
+      "status": "PASS",
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "checked": [
+        "問題文",
+        "a〜d全文",
+        "正誤組合せ5行・4列",
+        "originalRubyReadings全件の出現順と読み"
+      ],
+      "differences": [],
+      "notes": "問33の本文・全記述・表を画像で照合。安中散、六君子湯、平胃散、人参湯等のルビおよび嘔吐の「おう」の出現順・読みは候補記録と一致。"
+    },
+    {
+      "id": "KSAI-2022-034",
+      "questionNo": 34,
+      "bundlePdfPage": 7,
+      "officialPdfPage": 22,
+      "status": "PASS",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "checked": [
+        "問題文",
+        "a〜d全文",
+        "正誤組合せ5行・4列",
+        "originalRubyReadings全件の出現順と読み"
+      ],
+      "differences": [],
+      "notes": "問34の本文・a〜d全文・5行4列の表を画像で照合。止瀉薬等の「しゃ」、収斂の「れん」、次没食子酸の「もっしょくし」のルビは候補記録と一致。"
+    }
+  ]
+}
