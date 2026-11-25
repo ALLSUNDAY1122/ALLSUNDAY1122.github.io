@@ -99,3 +99,5 @@ for name in ['privacy.html','support.html']:
     (OUT/name).write_text(text,encoding='utf-8')
 (OUT/'manifest.json').write_text(json.dumps({'count':599,'bankSha256':hashlib.sha256(raw).hexdigest(),'explanationsCount':599,'explanationsSha256':hashlib.sha256(explanation_raw).hexdigest(),'figures':figures,'mode':'offline-inline-json'},indent=2)+'\n')
 print('PASS: generated offline bundle: 599 questions,',len(figures),'verified figures')
+
+# Q6 current-branch trigger: attribution cleanup is validated in the packaged OfflineWeb output.
