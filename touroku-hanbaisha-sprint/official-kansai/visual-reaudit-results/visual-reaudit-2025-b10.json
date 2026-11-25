@@ -1,0 +1,714 @@
+{
+  "batch": "visual-reaudit-2025-b10",
+  "auditType": "manual_visual_reaudit",
+  "repository": "ALLSUNDAY1122/ALLSUNDAY1122.github.io",
+  "branch": "main",
+  "source": {
+    "candidateAttachment": "visual-reaudit-2025-b10.candidates.json",
+    "pdfAttachment": "visual-reaudit-2025-b10.pdf",
+    "sourceIssuer": "関西広域連合",
+    "sourceTitle": "令和7年度登録販売者試験（後半）",
+    "sourceUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R7tourokuhannbaisyashiken_kouhan.pdf",
+    "answerSourceUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R7touhan_kaitou.pdf",
+    "answerPdfInspected": false,
+    "bankBlobShaBefore": "8741e2675af6f41f7fba2afdc89566f48b8258e7"
+  },
+  "method": {
+    "description": "添付された公式問題PDF全9ページの画像を直接目視し、候補JSONのidsで指定された10問について問題文、全選択肢、ルビ、表の行列・セル対応、記号を照合した。PDF文字データ抽出や自動照合の判定を目視判定の代替としていない。",
+    "visualPagesReviewed": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "pageMapping": [
+      {
+        "bundlePdfPage": 1,
+        "officialPdfPage": 26
+      },
+      {
+        "bundlePdfPage": 2,
+        "officialPdfPage": 27
+      },
+      {
+        "bundlePdfPage": 3,
+        "officialPdfPage": 28
+      },
+      {
+        "bundlePdfPage": 4,
+        "officialPdfPage": 29
+      },
+      {
+        "bundlePdfPage": 5,
+        "officialPdfPage": 30
+      },
+      {
+        "bundlePdfPage": 6,
+        "officialPdfPage": 31
+      },
+      {
+        "bundlePdfPage": 7,
+        "officialPdfPage": 32
+      },
+      {
+        "bundlePdfPage": 8,
+        "officialPdfPage": 33
+      },
+      {
+        "bundlePdfPage": 9,
+        "officialPdfPage": 34
+      }
+    ],
+    "answerHandling": "answerNumberOfficialのみ記録。正答PDFを直接確認していないため全件answerPDFChecked=false。",
+    "failRule": "原典画像と候補レコードの問題文・全選択肢・ルビ・表・記号に不一致があればFAIL。誤連結・余分な文字もフィールドの不一致として扱う。"
+  },
+  "scope": {
+    "questionIds": [
+      "KSAI-2025-095",
+      "KSAI-2025-096",
+      "KSAI-2025-097",
+      "KSAI-2025-098",
+      "KSAI-2025-099",
+      "KSAI-2025-100",
+      "KSAI-2025-101",
+      "KSAI-2025-102",
+      "KSAI-2025-103",
+      "KSAI-2025-104"
+    ],
+    "questionNumbers": [
+      95,
+      96,
+      97,
+      98,
+      99,
+      100,
+      101,
+      102,
+      103,
+      104
+    ],
+    "bundlePdfPages": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ]
+  },
+  "summary": {
+    "total": 10,
+    "pass": 9,
+    "fail": 1,
+    "hold": 0,
+    "failReasons": [
+      {
+        "id": "KSAI-2025-100",
+        "reason": "choices[4]末尾に次ページの章見出し「［医薬品の適正使用と安全対策］」が誤連結。正しい第5選択肢は「正  誤  正  正」。"
+      }
+    ]
+  },
+  "results": [
+    {
+      "id": "KSAI-2025-095",
+      "questionNo": 95,
+      "bundlePdfPages": [
+        1
+      ],
+      "officialPdfPages": [
+        26
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "該当なし",
+        "tables": "該当なし",
+        "symbols": "PASS"
+      },
+      "choices": [
+        "当該医薬品の名称",
+        "当該医薬品の有効成分の名称及びその分量",
+        "当該医薬品の用法及び用量",
+        "当該医薬品の効能又は効果",
+        "当該医薬品の製造販売業者の氏名又は名称及び住所"
+      ],
+      "notes": "添付PDF1ページ。設問文と1〜5の全選択肢を直接目視照合し、候補レコードと一致。"
+    },
+    {
+      "id": "KSAI-2025-096",
+      "questionNo": 96,
+      "bundlePdfPages": [
+        1
+      ],
+      "officialPdfPages": [
+        26
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "該当なし",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "table": {
+        "rows": [
+          [
+            "正",
+            "誤",
+            "正",
+            "誤"
+          ],
+          [
+            "正",
+            "誤",
+            "誤",
+            "正"
+          ],
+          [
+            "誤",
+            "正",
+            "正",
+            "正"
+          ],
+          [
+            "誤",
+            "正",
+            "誤",
+            "正"
+          ],
+          [
+            "誤",
+            "誤",
+            "正",
+            "正"
+          ]
+        ],
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rowCount": 5,
+        "columnCount": 4
+      },
+      "notes": "添付PDF1ページ。a〜dの本文および5行×4列の正誤表を照合。候補choicesの全セルと原典画像が一致し、行列ずれなし。"
+    },
+    {
+      "id": "KSAI-2025-097",
+      "questionNo": 97,
+      "bundlePdfPages": [
+        2
+      ],
+      "officialPdfPages": [
+        27
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "該当なし",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "table": {
+        "rows": [
+          [
+            "誤",
+            "正",
+            "正",
+            "誤"
+          ],
+          [
+            "正",
+            "正",
+            "誤",
+            "正"
+          ],
+          [
+            "正",
+            "誤",
+            "正",
+            "誤"
+          ],
+          [
+            "誤",
+            "正",
+            "誤",
+            "正"
+          ],
+          [
+            "正",
+            "誤",
+            "正",
+            "正"
+          ]
+        ],
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rowCount": 5,
+        "columnCount": 4
+      },
+      "notes": "添付PDF2ページ。掲示事項a〜dと5行×4列の正誤表を照合。候補choicesの全セルと原典画像が一致。"
+    },
+    {
+      "id": "KSAI-2025-098",
+      "questionNo": 98,
+      "bundlePdfPages": [
+        3
+      ],
+      "officialPdfPages": [
+        28
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "該当なし",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "table": {
+        "rows": [
+          [
+            "正",
+            "正",
+            "誤",
+            "誤"
+          ],
+          [
+            "正",
+            "誤",
+            "正",
+            "誤"
+          ],
+          [
+            "誤",
+            "正",
+            "正",
+            "正"
+          ],
+          [
+            "正",
+            "誤",
+            "誤",
+            "正"
+          ],
+          [
+            "誤",
+            "正",
+            "誤",
+            "正"
+          ]
+        ],
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rowCount": 5,
+        "columnCount": 4
+      },
+      "notes": "添付PDF3ページ。特定販売a〜dの本文と5行×4列の正誤表を照合。候補choicesの全セルと原典画像が一致。"
+    },
+    {
+      "id": "KSAI-2025-099",
+      "questionNo": 99,
+      "bundlePdfPages": [
+        4
+      ],
+      "officialPdfPages": [
+        29
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "ruby": [
+        {
+          "base": "榜",
+          "reading": "ぼう",
+          "occurrence": 1,
+          "context": "標榜"
+        }
+      ],
+      "table": {
+        "rows": [
+          [
+            "誤",
+            "正",
+            "正",
+            "誤"
+          ],
+          [
+            "正",
+            "誤",
+            "正",
+            "正"
+          ],
+          [
+            "誤",
+            "正",
+            "誤",
+            "正"
+          ],
+          [
+            "正",
+            "誤",
+            "正",
+            "誤"
+          ],
+          [
+            "正",
+            "正",
+            "誤",
+            "正"
+          ]
+        ],
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rowCount": 5,
+        "columnCount": 4
+      },
+      "notes": "添付PDF4ページ。キョウニン・アンズに関する前提、a〜dの本文、標榜の「榜」に付くルビ「ぼう」、5行×4列の正誤表を照合。候補のquestionParts・choicesPartsを含め一致。"
+    },
+    {
+      "id": "KSAI-2025-100",
+      "questionNo": 100,
+      "bundlePdfPages": [
+        5,
+        6
+      ],
+      "officialPdfPages": [
+        30,
+        31
+      ],
+      "status": "FAIL",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "FAIL",
+        "ruby": "該当なし",
+        "tables": "FAIL",
+        "symbols": "PASS"
+      },
+      "table": {
+        "rows": [
+          [
+            "誤",
+            "正",
+            "正",
+            "誤"
+          ],
+          [
+            "正",
+            "正",
+            "誤",
+            "正"
+          ],
+          [
+            "正",
+            "誤",
+            "正",
+            "誤"
+          ],
+          [
+            "誤",
+            "正",
+            "誤",
+            "正"
+          ],
+          [
+            "正",
+            "誤",
+            "正",
+            "正"
+          ]
+        ],
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rowCount": 5,
+        "columnCount": 4
+      },
+      "choicesAsPrinted": [
+        "誤  正  正  誤",
+        "正  正  誤  正",
+        "正  誤  正  誤",
+        "誤  正  誤  正",
+        "正  誤  正  正"
+      ],
+      "discrepancy": {
+        "field": "choices[4]",
+        "candidateValue": "正  誤  正  正\\n\\n\\n\\n\\n［医薬品の適正使用と安全対策］",
+        "sourceValue": "正  誤  正  正",
+        "extraText": "［医薬品の適正使用と安全対策］",
+        "extraTextLocation": "添付PDF6ページ（原典PDF31ページ）冒頭の問101より前にある章見出し",
+        "correction": "第5選択肢から章見出しを除去し、choices[4]を「正  誤  正  正」とする。章見出しは問100の選択肢に含めない。"
+      },
+      "notes": "添付PDF5ページに問100の設問・a〜d・5行×4列の表があり、添付PDF6ページ冒頭には次章見出しと問101が続く。候補レコードではPDFページ境界後の章見出しがchoices[4]末尾に誤連結されている。表の5行の値自体は原典と一致するが、選択肢フィールド全体として不一致のためFAIL。"
+    },
+    {
+      "id": "KSAI-2025-101",
+      "questionNo": 101,
+      "bundlePdfPages": [
+        6
+      ],
+      "officialPdfPages": [
+        31
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "該当なし",
+        "tables": "該当なし",
+        "symbols": "PASS"
+      },
+      "choices": [
+        "ａ、ｂ",
+        "ａ、ｃ",
+        "ｂ、ｃ",
+        "ｂ、ｄ",
+        "ｃ、ｄ"
+      ],
+      "notes": "添付PDF6ページ。問101の設問文・a〜dの4記述・5つの組合せ選択肢を照合。候補と一致。"
+    },
+    {
+      "id": "KSAI-2025-102",
+      "questionNo": 102,
+      "bundlePdfPages": [
+        7
+      ],
+      "officialPdfPages": [
+        32
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "該当なし",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "table": {
+        "rows": [
+          [
+            "誤",
+            "正",
+            "正",
+            "誤"
+          ],
+          [
+            "正",
+            "正",
+            "誤",
+            "正"
+          ],
+          [
+            "正",
+            "誤",
+            "正",
+            "誤"
+          ],
+          [
+            "誤",
+            "正",
+            "誤",
+            "正"
+          ],
+          [
+            "正",
+            "誤",
+            "正",
+            "正"
+          ]
+        ],
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rowCount": 5,
+        "columnCount": 4
+      },
+      "notes": "添付PDF7ページ。添付文書等に関するa〜dの本文と5行×4列の正誤表を照合。候補choicesの全セルと原典画像が一致。"
+    },
+    {
+      "id": "KSAI-2025-103",
+      "questionNo": 103,
+      "bundlePdfPages": [
+        8
+      ],
+      "officialPdfPages": [
+        33
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "ruby": [
+        {
+          "base": "喘",
+          "reading": "ぜん",
+          "occurrence": 1,
+          "context": "喘息"
+        }
+      ],
+      "table": {
+        "rows": [
+          [
+            "正",
+            "正",
+            "正",
+            "誤"
+          ],
+          [
+            "正",
+            "正",
+            "誤",
+            "正"
+          ],
+          [
+            "正",
+            "正",
+            "誤",
+            "誤"
+          ],
+          [
+            "誤",
+            "誤",
+            "正",
+            "誤"
+          ],
+          [
+            "誤",
+            "正",
+            "誤",
+            "正"
+          ]
+        ],
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rowCount": 5,
+        "columnCount": 4
+      },
+      "notes": "添付PDF8ページ。使用上の注意に関するa〜dの本文、喘息の「喘」に付くルビ「ぜん」、5行×4列の正誤表を照合。候補のquestionParts・choicesPartsを含め一致。"
+    },
+    {
+      "id": "KSAI-2025-104",
+      "questionNo": 104,
+      "bundlePdfPages": [
+        9
+      ],
+      "officialPdfPages": [
+        34
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "該当なし",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "table": {
+        "rows": [
+          [
+            "正",
+            "正",
+            "誤",
+            "誤"
+          ],
+          [
+            "正",
+            "正",
+            "誤",
+            "正"
+          ],
+          [
+            "正",
+            "誤",
+            "誤",
+            "誤"
+          ],
+          [
+            "誤",
+            "誤",
+            "正",
+            "正"
+          ],
+          [
+            "誤",
+            "誤",
+            "正",
+            "誤"
+          ]
+        ],
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rowCount": 5,
+        "columnCount": 4
+      },
+      "notes": "添付PDF9ページ。保管・取扱い上の注意に関するa〜dの本文と5行×4列の正誤表を照合。候補choicesの全セルと原典画像が一致。"
+    }
+  ]
+}
