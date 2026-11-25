@@ -31,22 +31,42 @@ function isRichParts(parts,plain){return Array.isArray(parts)&&parts.length>0&&p
 function appendRich(parent,parts,plain){if(!parts){parent.textContent=plain;return}if(!isRichParts(parts,plain))throw Error('ルビ監査データの整合性が失われています');parent.replaceChildren();for(const piece of parts){if(piece.text!==undefined){parent.append(document.createTextNode(piece.text));continue}const ruby=document.createElement('ruby');const rt=document.createElement('rt');const rp1=document.createElement('rp');const rp2=document.createElement('rp');ruby.append(document.createTextNode(piece.rubyBase));rp1.textContent='（';rt.textContent=piece.rubyText;rp2.textContent='）';ruby.append(rp1,rt,rp2);parent.append(ruby)}}
 function approvedFigures(q){if(!q.sourceFigures)return true;return Array.isArray(q.sourceFigures)&&q.sourceFigures.length>0&&q.sourceFigures.every(f=>f&&f.licenseVerified===true&&f.visualVerified===true&&typeof f.webPath==='string'&&/^official-kansai\/layout-crops\/KSAI-20[2][2-6]-[0-9]{3}-p[0-9]+-[0-9]+\.png$/.test(f.webPath)&&f.sha256&&f.sourcePdfUrl)}
 function renderFigures(q){const el=$('sourceFigure');el.replaceChildren();if(!q.sourceFigures)return;for(const fig of q.sourceFigures){const figure=document.createElement('figure'),img=document.createElement('img'),caption=document.createElement('figcaption');img.src=fig.webPath;img.alt='関西広域連合の公式問題PDFから切り出した該当設問の図版。'+(fig.page||'')+'ページ';img.loading='lazy';caption.textContent=q.attributionDisplay+'。公式PDFを表示用に切り出し（加工）。';const a=document.createElement('a');a.href=fig.webPath;a.target='_blank';a.rel='noopener noreferrer';a.setAttribute('aria-label','公式PDFの切り出し画像を原寸で表示');a.append(img);caption.textContent+=' 画像をタップすると原寸表示できます。';figure.append(a,caption);el.append(figure)}}
-function richVerified(q){const has=q.questionParts!==undefined||q.choicesParts!==undefined;if(!has)return !['AUTO_PDF_GLYPH_XY_RUBY_DOM_RECONSTRUCTION','AUTO_PDF_ORDERED_GLYPH_RUBY_DOM_RECONSTRUCTION'].includes(q.audit?.method);return Array.isArray(q.choicesParts)&&q.choicesParts.length===q.choices.length&&isRichParts(q.questionParts,q.question)&&q.choicesParts.every((parts,i)=>isRichParts(parts,q.choices[i]))&&[q.questionParts,...q.choicesParts].flat().some(p=>p.rubyBase!==undefined)}
+function richVerified(q){const has=q.questionParts!==undefined||q.choicesParts!==undefined;if(!has)return !['AUTO_PDF_GLYPH_XY_RUBY_DOM_RECONSTRUCTION','AUTO_PDF_ORDERED_GLYPH_RUBY_DOM_RECONSTRUCTION'].includes(q.audit?.method);const questionOK=q.questionParts===undefined||isRichParts(q.questionParts,q.question);const choicesOK=q.choicesParts===undefined||(Array.isArray(q.choicesParts)&&q.choicesParts.length===q.choices.length&&q.choicesParts.every((parts,i)=>isRichParts(parts,q.choices[i])));const parts=[...(q.questionParts||[]),...(q.choicesParts||[]).flat()];return questionOK&&choicesOK&&parts.some(p=>p.rubyBase!==undefined)}
 
+function attachedRubyReadings(q){
+ const parts=[...(q.questionParts||[]),...(q.choicesParts||[]).flat()];
+ return parts.filter(p=>p&&p.rubyBase!==undefined).map(p=>p.rubyText);
+}
+function unattachedRubyReadings(q){
+ const rr=q.originalRubyReadings||[];
+ if(q.rubyDisplayMode==='SOURCE_ORDER_UNATTACHED')return rr;
+ if(q.rubyDisplayMode==='POSITIONALLY_ATTACHED'){
+  const attached=attachedRubyReadings(q);
+  return rr.slice(0,rr.length-attached.length);
+ }
+ return [];
+}
 function sequenceVerified(q){
-if(q.originalRubyReadings===undefined)return true;
-const rr=q.originalRubyReadings;
-return Array.isArray(rr)&&rr.length>0&&rr.length<=100&&rr.every(x=>typeof x==='string'&&/^[ぁ-んァ-ンー]{1,20}$/.test(x))
- &&q.rubyDisplayMode==='SOURCE_ORDER_UNATTACHED'&&q.rubySourceVerified===true
- &&typeof q.rubySourcePdfSha256==='string'&&/^[a-f0-9]{64}$/.test(q.rubySourcePdfSha256)
- &&q.questionParts===undefined&&q.choicesParts===undefined;
+ if(q.originalRubyReadings===undefined)return true;
+ const rr=q.originalRubyReadings;
+ if(!Array.isArray(rr)||rr.length===0||rr.length>100||!rr.every(x=>typeof x==='string'&&/^[ぁ-んァ-ンー]{1,20}$/.test(x)))return false;
+ if(q.rubySourceVerified!==true||typeof q.rubySourcePdfSha256!=='string'||!/^[a-f0-9]{64}$/.test(q.rubySourcePdfSha256))return false;
+ if(q.rubyDisplayMode==='SOURCE_ORDER_UNATTACHED')return q.questionParts===undefined&&q.choicesParts===undefined;
+ if(q.rubyDisplayMode==='POSITIONALLY_ATTACHED'){
+  const attached=attachedRubyReadings(q);
+  return attached.length>0&&attached.length<=rr.length&&JSON.stringify(rr.slice(-attached.length))===JSON.stringify(attached)
+   &&(q.questionParts!==undefined||q.choicesParts!==undefined)
+   &&(q.choicesParts===undefined||(Array.isArray(q.choicesParts)&&q.choicesParts.length===q.choices.length));
+ }
+ return false;
 }
 function renderRubySequence(q){
  const el=$('rubySequence');el.replaceChildren();
- if(!q.originalRubyReadings){el.classList.add('hidden');return}
+ const readings=unattachedRubyReadings(q);
+ if(!readings.length){el.classList.add('hidden');return}
  el.classList.remove('hidden');
  const heading=document.createElement('strong');heading.textContent='原典のルビ（出現順・漢字との対応付けなし）';
- const content=document.createElement('span');content.textContent=q.originalRubyReadings.join('　／　');
+ const content=document.createElement('span');content.textContent=readings.join('　／　');
  el.append(heading,content);
 }
 function verified(q){return sequenceVerified(q)&&approvedFigures(q)&&richVerified(q)&&q.renderReady===true&&q.verbatimCertified===true&&q.needsVisualReview===false&&q.sourceIssuer==='関西広域連合'&&q.attributionDisplay&&q.sourceUrl&&Array.isArray(q.choices)&&[4,5].includes(q.choices.length)&&q.choices.every(Boolean)&&allowed.has(q.officialStatus)&&((q.excludeFromAccuracyDenominator===true&&q.answer===null&&q.officialStatus==='OFFICIALLY_INVALID_ALL_CANDIDATES_CORRECT')||(q.excludeFromAccuracyDenominator!==true&&Number.isInteger(q.answer)&&q.answer>=0&&q.answer<q.choices.length))}
