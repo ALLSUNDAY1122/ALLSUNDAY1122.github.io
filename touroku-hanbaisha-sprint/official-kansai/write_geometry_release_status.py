@@ -28,7 +28,8 @@ for year in range(2022,2027):
         "geometryUnresolved":geometry["remainingHold"],
         "rubySourceAnchorAssociated":sum(q.get("ruby",{}).get("status")=="ASSOCIATED_SOURCE_ONLY" for q in geometry["questions"] if q.get("ruby")),
         "rubySourceInconclusive":sum(q.get("ruby",{}).get("status")=="INCONCLUSIVE" for q in geometry["questions"] if q.get("ruby")),
-        "promotedTotal":mapped["auto"]+mapped["geometry"]+mapped.get("ruby",0)+mapped.get("rubyOrdered",0)+mapped.get("layout",0)+mapped.get("cropImage",0)+mapped.get("rubyFontCluster",0)+mapped["visual"],
+        "promotedTotal":sum(mapped.get(method,0) for method in ("auto","geometry","ruby","rubyOrdered","layout","cropImage","rubyFontCluster","visual","visualRubyV2","imageV3","directRubyV3","sourceOrderUnattached","ruby113Auto")),
+        "promotedByMethod":{method:mapped.get(method,0) for method in ("auto","geometry","ruby","rubyOrdered","layout","cropImage","rubyFontCluster","visual","visualRubyV2","imageV3","directRubyV3","sourceOrderUnattached","ruby113Auto") if mapped.get(method,0)},
         "promotedByGeometry":mapped["geometry"],
         "promotedByRuby":mapped.get("ruby",0),
         "promotedByLayout":mapped.get("layout",0),
@@ -43,6 +44,9 @@ for year in range(2022,2027):
         raise RuntimeError("year count invariant "+str(year))
     per_year[str(year)]=pg
 count=bank["count"];geo=sum(x["geometry"] for x in bank["byYear"].values())
+ids=[q["id"] for q in bank["questions"]]
+if count!=len(ids) or count!=len(set(ids)) or set(ids)!=set(bank["approvedIds"]):
+    raise RuntimeError("bank count/ID integrity mismatch")
 if count!=sum(x["promotedTotal"] for x in per_year.values()):
     raise RuntimeError("bank mismatch")
 if "KSAI-2023-090" in bank["approvedIds"]:raise RuntimeError("Q90 erroneously released")
