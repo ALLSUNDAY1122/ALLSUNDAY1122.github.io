@@ -12,12 +12,22 @@ if hashlib.sha256(icon.read_bytes()).hexdigest()!=expected:
 p=root/'project.yml'
 s=p.read_text(encoding='utf-8')
 source='      - path: Sources\n'
-if '      - path: Assets.xcassets\n' not in s:
+catalog='      - path: Assets.xcassets\n'
+catalog_block='      - path: Assets.xcassets\n        buildPhase: resources\n'
+if catalog not in s:
     if source not in s: raise SystemExit('Sources marker missing')
-    s=s.replace(source,source+'      - path: Assets.xcassets\n',1)
+    s=s.replace(source,source+catalog_block,1)
+elif '      - path: Assets.xcassets\n        buildPhase: resources\n' not in s:
+    s=s.replace(catalog,catalog_block,1)
 bundle='        PRODUCT_BUNDLE_IDENTIFIER: jp.allsunday1122.kangoshi\n'
+appicon='        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon\n'
+icon_name='        INFOPLIST_KEY_CFBundleIconName: AppIcon\n'
 if 'ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon' not in s:
     if bundle not in s: raise SystemExit('Bundle ID marker missing')
-    s=s.replace(bundle,bundle+'        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon\n',1)
+    s=s.replace(bundle,bundle+appicon,1)
+if 'INFOPLIST_KEY_CFBundleIconName: AppIcon' not in s:
+    marker=appicon if appicon in s else bundle
+    if marker not in s: raise SystemExit('icon Info.plist marker missing')
+    s=s.replace(marker,marker+icon_name,1)
 p.write_text(s,encoding='utf-8')
 print('PASS: exact canonical AppIcon verified and bound')
