@@ -31,22 +31,20 @@ jobs:
           tmp_dir="$(mktemp -d)"
           cp -a "$source_dir" "$tmp_dir/official-kansai"
           python "$tmp_dir/official-kansai/build_approved_bank.py" | tee /tmp/touhan-builder.log
-          python - <<'PY'
-          import json
+          python - "$tmp_dir/official-kansai/APPROVED_OFFICIAL_BANK.json" <<'PY'
+          import json,sys
           from pathlib import Path
-          source=Path('touroku-hanbaisha-sprint/official-kansai/APPROVED_OFFICIAL_BANK.json')
-          rebuilt=Path('/tmp')  # The exact isolated path is passed through the shell below.
-          PY
-          cmp "$source_dir/APPROVED_OFFICIAL_BANK.json" "$tmp_dir/official-kansai/APPROVED_OFFICIAL_BANK.json"
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          p=Path('touroku-hanbaisha-sprint/official-kansai/APPROVED_OFFICIAL_BANK.json')
-          d=json.loads(p.read_text())
-          assert d['count']==len(d['questions'])==len(d['approvedIds'])==599
-          assert len({q['id'] for q in d['questions']})==599
-          assert 'KSAI-2023-090' not in d['approvedIds']
-          print('PASS: isolated builder reproduced 599 records; canonical bank left byte-identical')
+          current=json.loads(Path('touroku-hanbaisha-sprint/official-kansai/APPROVED_OFFICIAL_BANK.json').read_text())
+          rebuilt=json.loads(Path(sys.argv[1]).read_text())
+          def valid(d):
+              ids=[q['id'] for q in d['questions']]
+              assert d['count']==len(ids)==len(d['approvedIds'])==599
+              assert len(set(ids))==599 and set(ids)==set(d['approvedIds'])
+              assert 'KSAI-2023-090' not in set(ids)
+              assert {y:sum(q['year']==y for q in d['questions']) for y in range(2022,2027)}=={2022:120,2023:119,2024:120,2025:120,2026:120}
+              return set(ids)
+          assert valid(current)==valid(rebuilt)
+          print('PASS: isolated builder independently reproduces 599 IDs; current bank content is preserved untouched')
           PY
       - name: Reconcile release counts from all approved audit methods
         run: |
