@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
-  "updated_at_jst": "2026-11-25",
+  "updated_at_jst": "2026-11-25T13:32:00+09:00",
   "project": "新ITパスポート｜ゼロベース開発",
   "release_decision": "BLOCKED",
-  "release_stage": "AUDIT_RESULTS_INTEGRATED_500",
+  "release_stage": "SOURCE_IMAGE_LEDGERS_SYNCED_500",
   "app_review_submitted": false,
   "requirements": {
     "official_question_verbatim": true,
@@ -115,13 +115,30 @@
         "additional_boundary_issue": {
           "question": "itp-2026-q025",
           "status": "HOLD_REFRAME_REQUIRED",
-          "finding": "crop includes adjacent questions 24/26"
+          "finding": "crop includes adjacent questions 24/26",
+          "content_status": "PASS_BY_SPECIAL9_ASSET_UNVERIFIED"
         },
         "additional_figure_issue": {
           "question": "itp-2023-q037",
           "status": "HOLD_FIGURE_LAYOUT_REVIEW_REQUIRED",
-          "finding": "table and empty cells need faithful layout reproduction"
-        }
+          "finding": "table and empty cells need faithful layout reproduction",
+          "content_status": "PASS_TEXT_TRANSCRIPTION_ASSET_UNVERIFIED"
+        },
+        "source_metadata_synced_count": 500,
+        "recorded_valid_image_hash_count": 420,
+        "existing_valid_image_hash_count": 346,
+        "recovered_individual_png_hash_count": 74,
+        "individual_image_hash_missing_count": 80,
+        "attachment_pdf_hash_only_count": 69,
+        "no_image_or_attachment_pdf_hash_count": 10,
+        "invalid_image_hash_count": 1,
+        "bank_null_image_hash_count": 153,
+        "bank_invalid_image_hash_count": 1,
+        "original_archive_hash_reverified_count_this_sync": 0,
+        "source_bank_blob_sha": "14d07a50bd727639ceb76a761761ea966ce513dc",
+        "ledger_sync_status": "PASS_500_SOURCE_METADATA",
+        "figure_content_audit_pass_count": 81,
+        "hash_scope_note": "Hashes identify the exact evidence bytes reported, not necessarily the proposed archive WebP path. Whole supplied PDF hashes are separate and never used as image hashes. Original archive crop bytes not reverified in this sync."
       },
       "verified_question_ids": [
         "itp-2022-q001",
@@ -720,7 +737,7 @@
       "github_canonical_quality_run": 45301854554,
       "github_canonical_quality_conclusion": "NEW_CI_PENDING",
       "official_candidate_index_integrity": "STRUCTURE_CHECK_500_PROMOTED",
-      "official_verbatim_release_gate": "BLOCKED_EVIDENCE_AND_RELEASE_GATES_PENDING",
+      "official_verbatim_release_gate": "BLOCKED_IMAGE_EVIDENCE_AND_RELEASE_GATES",
       "original_mock_excluded_from_official_pool": true,
       "original_image_crop_fallback_repair": "PASS_21_OF_21",
       "original_raster_equivalence": "PASS_500_OF_500",
@@ -751,7 +768,8 @@
       "partial_verified_source_111": "PASS_VISUAL",
       "partial_verified_source_113": "PASS_VISUAL",
       "partial_verified_source_116": "PASS_VISUAL",
-      "partial_verified_source_119": "PASS_VISUAL"
+      "partial_verified_source_119": "PASS_VISUAL",
+      "source_image_ledger_sync": "PASS_500_METADATA_420_IMAGE_HASH_RECORDS_80_MISSING"
     }
   },
   "ipa_rights": {
@@ -773,7 +791,7 @@
     {
       "code": "IP-OFF-500",
       "severity": "P0",
-      "detail": "500 verified; 0 HOLD; 77 disclosed modified records; images uncommitted. Content count complete; release evidence pending."
+      "detail": "500/500 content audits recorded; source and image ledgers synced; no content HOLD; image assets and release gates pending."
     },
     {
       "code": "IP-SOURCE-FIDELITY",
@@ -798,12 +816,12 @@
     {
       "code": "IP-TEXT-REPRESENTATION-RELEASE-GATE",
       "severity": "P0",
-      "detail": "Modified records with nonempty modification_note allowed by official release validator; 77 modified records; 153 source image hashes missing; original images remain uncommitted and release remains blocked."
+      "detail": "77 disclosed modified records; 420 individual image hash records in ledger, 80 unavailable or invalid; bank hash fields unchanged; no archive rehash or asset commit; release blocked."
     }
   ],
   "next_machine_actions": [
-    "Resolve missing original-image hash evidence (153) and reconcile source/image ledgers and validators without fabricating evidence.",
-    "Store original lossless image assets in GitHub, verify SHA256, then wire audited official records into iOS without original-mock contamination"
+    "Recover individual image hash evidence for 80 questions (including malformed itp-2026-q023), verify actual archive crop bytes and reconcile bank/candidate hashes without fabrication.",
+    "Verify image assets and update validators to distinguish attachment evidence from archive bytes; run CI and device acceptance."
   ],
   "human_gates": [
     "Apple 2FA",
