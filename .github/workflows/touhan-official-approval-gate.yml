@@ -41,7 +41,17 @@ jobs:
               assert {y:sum(q["year"]==y for q in qs) for y in range(2022,2027)}=={2022:120,2023:119,2024:120,2025:120,2026:120},label
               assert "KSAI-2023-090" not in set(ids),label
               assert all(q["verbatimCertified"] is True and q["renderReady"] is True and q["needsVisualReview"] is False and q["audit"]["status"]=="PASS" for q in qs),label
-          assert rebuilt["questions"]==current["questions"],"isolated rebuild question payload differs from canonical bank"
+          current_by={q["id"]:q for q in current["questions"]}
+          rebuilt_by={q["id"]:q for q in rebuilt["questions"]}
+          diffs=[]
+          for qid in sorted(current_by):
+              if current_by[qid]!=rebuilt_by[qid]:
+                  keys=sorted(k for k in set(current_by[qid])|set(rebuilt_by[qid]) if current_by[qid].get(k)!=rebuilt_by[qid].get(k))
+                  diffs.append({"id":qid,"fields":keys})
+          if diffs:
+              print("REBUILD_PAYLOAD_DIFFS",json.dumps(diffs[:60],ensure_ascii=False))
+              raise AssertionError(f"isolated rebuild differs in {len(diffs)} question records")
+          assert rebuilt["questions"]==current["questions"]
           assert sum(sum(v.get(k,0) for v in rebuilt["byYear"].values()) for k in (
               "auto","geometry","ruby","rubyOrdered","layout","visual","cropImage","rubyFontCluster",
               "visualRubyV2","imageV3","directRubyV3","sourceOrderUnattached","ruby113Auto","manualVisualReaudit"
