@@ -7,8 +7,8 @@
 - Source SHA-256: `a1c5fc063d443de17c8a498c132ccaad961dfa353a372756cd4e79ce4023f288`
 - Source RGB pixel SHA-256: `7ecad6e7e195da9be52b2b75f2afd3dbfd199c1134fb737207abdd808ebc0403`
 - Required output RGB pixel SHA-256: `7fa04f71c4c19897a606849836d7c73f196ec06124659755e9f370c1e3be55b3`
-- Reference output PNG file SHA-256 (original encoding; diagnostic only): `be4b5e7a38909ce702065c660cc18f6401b9ae2a560e71b342d8204f5067e677`
-- Pillow: 12.3.0; LANCZOS resize to 1024×1024, RGB, PNG optimize=True, compress_level=9.
+- Reference output PNG file SHA-256 (reproduced with Pillow 11.3.0; diagnostic only): `be4b5e7a38909ce702065c660cc18f6401b9ae2a560e71b342d8204f5067e677`
+- Pillow: 11.3.0; LANCZOS resize to 1024×1024, RGB, PNG optimize=True, compress_level=9.
 
 `ios/tools/materialize_appicon.sh` reads the repository-local canonical PNG directly, verifies both source hashes and format, then generates the output and verifies its format and exact decoded RGB pixel SHA-256 before replacing `AppIcon-1024.png`.
 
