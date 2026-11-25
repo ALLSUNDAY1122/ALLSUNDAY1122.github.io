@@ -30,12 +30,14 @@ def main():
             if status in ("finished","success","succeeded","passed","failed","error","cancelled","canceled"):break
         time.sleep(30)
     if not build:raise RuntimeError("Exact Codemagic build not found")
+    detail_code,detail_payload=get(token,"/builds/"+urllib.parse.quote(bid))
+    if detail_code==200 and isinstance(detail_payload.get("build"),dict): build=detail_payload["build"]
     actions=[]
-    for a in build.get("actions") or []:
+    for a in build.get("buildActions") or build.get("actions") or []:
         if not isinstance(a,dict):continue
         actions.append({k:a.get(k) for k in ("name","type","status","message","error","exitCode","startedAt","finishedAt") if a.get(k) is not None})
     artifacts=[]
-    for a in build.get("artifacts") or []:
+    for a in build.get("artefacts") or build.get("artifacts") or []:
         if isinstance(a,dict):artifacts.append({k:a.get(k) for k in ("name","fileName","filename","path","size","type","url") if a.get(k) is not None})
     result={"schema":"touhan-q7-codemagic-diagnostic-v1",
       "timestampJST":datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=9))).isoformat(),
@@ -43,11 +45,11 @@ def main():
       "workflowId":build.get("fileWorkflowId") or build.get("workflowId"),"branch":build.get("branch"),
       "buildNumber":build.get("buildNumber"),"buildVersion":build.get("buildVersion"),
       "message":build.get("message"),"startedAt":build.get("startedAt"),"finishedAt":build.get("finishedAt"),
-      "actions":actions,"artifacts":artifacts,"rawKeys":sorted(build.keys())}
-    OUT.write_text(json.dumps(result,ensure_ascii=False,indent=2)+"\\n")
+      "actions":actions,"artifacts":artifacts,"rawKeys":sorted(build.keys()),"buildDetailHttpStatus":detail_code}
+    OUT.write_text(json.dumps(result,ensure_ascii=False,indent=2))
     print(json.dumps(result,ensure_ascii=False))
 if __name__=="__main__":
     try:main()
     except Exception as e:
-        OUT.write_text(json.dumps({"schema":"touhan-q7-codemagic-diagnostic-v1","status":"FAIL","error":str(e)[:500]},ensure_ascii=False,indent=2)+"\\n")
+        OUT.write_text(json.dumps({"schema":"touhan-q7-codemagic-diagnostic-v1","status":"FAIL","error":str(e)[:500]},ensure_ascii=False,indent=2))
         raise
