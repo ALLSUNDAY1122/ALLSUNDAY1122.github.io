@@ -87,6 +87,7 @@ def main():
     if not signed:raise RuntimeError("Codemagic build did not prove signed IPA verification and ASC upload step success")
     build_number=result["codemagicBuildNumber"]
     if not build_number:raise RuntimeError("Codemagic build number missing; cannot uniquely match ASC build")
+    if not build_number.isdigit() or int(build_number)<23:raise RuntimeError(f"Expected TestFlight Build 23 or later; received {build_number!r}")
     key,cleanup=load_private_key()
     try:
         asc_token=make_token(os.environ["ASC_ISSUER_ID"],os.environ["ASC_KEY_ID"],key)
