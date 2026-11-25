@@ -1,0 +1,650 @@
+{
+  "batch": "visual-reaudit-2023-b06",
+  "repository": "ALLSUNDAY1122/ALLSUNDAY1122.github.io",
+  "source": "関西広域連合「令和5年度登録販売者試験」2023-first_half／2023-second_half",
+  "method": "添付PDFの各該当ページのレンダリング画像を目視し、候補JSONの対象レコードと問題文・全選択肢・ルビ・表・記号を照合した。PDFの文字データ抽出や自動照合結果を判定根拠としていない。",
+  "sourceFiles": {
+    "pdf": {
+      "name": "visual-reaudit-2023-b06.pdf",
+      "sha256": "1a266766c7c79c1790d91b2e5356e58a8ca859c188fb9b964c4b7fc49fb4aeb0",
+      "pages": 6
+    },
+    "candidateJson": {
+      "name": "visual-reaudit-2023-b06.candidates.json",
+      "sha256": "de972e6e8d7c1babefea829e3dd01f665e4fcbc2b168735ac9ef9cd8fa3e9bd2"
+    }
+  },
+  "scope": [
+    "KSAI-2023-053",
+    "KSAI-2023-055",
+    "KSAI-2023-056",
+    "KSAI-2023-057",
+    "KSAI-2023-058",
+    "KSAI-2023-059",
+    "KSAI-2023-060",
+    "KSAI-2023-061",
+    "KSAI-2023-062",
+    "KSAI-2023-063"
+  ],
+  "summary": {
+    "total": 10,
+    "PASS": 8,
+    "FAIL": 2,
+    "HOLD": 0
+  },
+  "results": [
+    {
+      "id": "KSAI-2023-053",
+      "questionNo": 53,
+      "status": "FAIL",
+      "bundlePdfPages": [
+        1
+      ],
+      "officialPdf": "2023-first_half",
+      "officialPdfPages": [
+        34
+      ],
+      "questionTextVerified": false,
+      "choicesVerified": true,
+      "tableVerified": true,
+      "tableHeaders": [
+        "配合成分",
+        "配合目的としての作用"
+      ],
+      "tableRows": [
+        [
+          "a",
+          "ジブカイン塩酸塩",
+          "齲蝕（むし歯）で露出した歯髄の知覚神経の伝達を遮断して痛みを鎮める。"
+        ],
+        [
+          "b",
+          "カルバゾクロム",
+          "歯肉炎、歯周炎（歯槽膿漏）の症状である口臭を抑える。"
+        ],
+        [
+          "c",
+          "オイゲノール",
+          "齲蝕（むし歯）部分での細菌の繁殖を抑える。"
+        ],
+        [
+          "d",
+          "銅クロロフィリンナトリウム",
+          "炎症を起こした歯周組織の修復を促す。"
+        ]
+      ],
+      "choicePairs": [
+        "a,b",
+        "a,d",
+        "b,c",
+        "b,d",
+        "c,d"
+      ],
+      "rubyVerified": false,
+      "rubyDisplayMode": "SOURCE_ORDER_UNATTACHED",
+      "rubyReadingsInOrder": [
+        "のう",
+        "うしょく",
+        "のう",
+        "うしょく"
+      ],
+      "ruby": [],
+      "symbolsVerified": true,
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "findings": [
+        {
+          "type": "RUBY_ASSOCIATION_AND_TEXT_SPACING",
+          "detail": "原典画像（添付PDF 1ページ、原典PDF 34ページ）では「歯槽膿漏薬」の「膿」に「のう」、「齲蝕」の表記に「うしょく」が付されている。候補JSONは「歯槽膿 漏薬」「齲 蝕」等と漢字間に空白を含み、originalRubyReadingsもSOURCE_ORDER_UNATTACHEDとして読みだけを出現順に保持し、対応漢字への配置がない。読みの順序は原典と一致するが、原典どおりのルビ位置・語の連続表示を再現できないためFAIL。"
+        },
+        {
+          "type": "CORRECT_SOURCE_RUBY",
+          "detail": "原典の読みは出現順に「のう」「うしょく」「のう」「うしょく」。少なくとも「膿」への「のう」、各「齲蝕」への「うしょく」の対応を維持し、漢字間の不要な空白を除く必要がある。"
+        }
+      ]
+    },
+    {
+      "id": "KSAI-2023-055",
+      "questionNo": 55,
+      "status": "PASS",
+      "bundlePdfPages": [
+        2
+      ],
+      "officialPdf": "2023-first_half",
+      "officialPdfPages": [
+        36
+      ],
+      "questionTextVerified": true,
+      "choicesVerified": true,
+      "tableVerified": true,
+      "tableHeaders": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ],
+      "tableRows": [
+        [
+          "正",
+          "誤",
+          "正",
+          "誤"
+        ],
+        [
+          "正",
+          "誤",
+          "誤",
+          "正"
+        ],
+        [
+          "誤",
+          "誤",
+          "正",
+          "誤"
+        ],
+        [
+          "正",
+          "正",
+          "誤",
+          "誤"
+        ],
+        [
+          "誤",
+          "誤",
+          "誤",
+          "正"
+        ]
+      ],
+      "rubyVerified": true,
+      "ruby": [],
+      "symbolsVerified": true,
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "findings": []
+    },
+    {
+      "id": "KSAI-2023-056",
+      "questionNo": 56,
+      "status": "PASS",
+      "bundlePdfPages": [
+        2
+      ],
+      "officialPdf": "2023-first_half",
+      "officialPdfPages": [
+        36
+      ],
+      "questionTextVerified": true,
+      "choicesVerified": true,
+      "tableVerified": true,
+      "tableHeaders": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ],
+      "tableRows": [
+        [
+          "正",
+          "正",
+          "誤",
+          "誤"
+        ],
+        [
+          "正",
+          "誤",
+          "正",
+          "正"
+        ],
+        [
+          "誤",
+          "正",
+          "誤",
+          "誤"
+        ],
+        [
+          "正",
+          "誤",
+          "正",
+          "誤"
+        ],
+        [
+          "誤",
+          "誤",
+          "正",
+          "正"
+        ]
+      ],
+      "rubyVerified": true,
+      "ruby": [
+        {
+          "base": "倦",
+          "reading": "けん",
+          "context": "全身倦怠感"
+        }
+      ],
+      "symbolsVerified": true,
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "findings": []
+    },
+    {
+      "id": "KSAI-2023-057",
+      "questionNo": 57,
+      "status": "FAIL",
+      "bundlePdfPages": [
+        3
+      ],
+      "officialPdf": "2023-first_half",
+      "officialPdfPages": [
+        37
+      ],
+      "questionTextVerified": false,
+      "choicesVerified": true,
+      "tableVerified": true,
+      "tableHeaders": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ],
+      "tableRows": [
+        [
+          "正",
+          "正",
+          "正",
+          "正"
+        ],
+        [
+          "誤",
+          "誤",
+          "正",
+          "正"
+        ],
+        [
+          "誤",
+          "誤",
+          "誤",
+          "正"
+        ],
+        [
+          "正",
+          "正",
+          "誤",
+          "誤"
+        ],
+        [
+          "正",
+          "誤",
+          "正",
+          "誤"
+        ]
+      ],
+      "rubyVerified": false,
+      "rubyDisplayMode": "SOURCE_ORDER_UNATTACHED",
+      "rubyReadingsInOrder": [
+        "ぼうふうつうしょうさん",
+        "はん"
+      ],
+      "ruby": [],
+      "symbolsVerified": true,
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "findings": [
+        {
+          "type": "RUBY_ASSOCIATION_AND_TEXT_SPACING",
+          "detail": "原典画像（添付PDF 3ページ、原典PDF 37ページ）では「防風通聖散」に「ぼうふうつうしょうさん」、「肥胖症」の「胖」に「はん」のルビが付されている。候補JSONは読みをSOURCE_ORDER_UNATTACHEDとして順序のみ保存し、対応漢字への配置がない。また「肥胖 症」と漢字間に空白が含まれる。原典どおりのルビ位置・語の連続表示を再現できないためFAIL。"
+        },
+        {
+          "type": "CORRECT_SOURCE_RUBY",
+          "detail": "原典のルビは「防風通聖散」＝ぼうふうつうしょうさん、「胖」＝はん。"
+        }
+      ]
+    },
+    {
+      "id": "KSAI-2023-058",
+      "questionNo": 58,
+      "status": "PASS",
+      "bundlePdfPages": [
+        3
+      ],
+      "officialPdf": "2023-first_half",
+      "officialPdfPages": [
+        37
+      ],
+      "questionTextVerified": true,
+      "choicesVerified": true,
+      "tableVerified": true,
+      "tableHeaders": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ],
+      "tableRows": [
+        [
+          "誤",
+          "正",
+          "正",
+          "誤"
+        ],
+        [
+          "正",
+          "誤",
+          "正",
+          "誤"
+        ],
+        [
+          "正",
+          "正",
+          "誤",
+          "正"
+        ],
+        [
+          "正",
+          "誤",
+          "誤",
+          "誤"
+        ],
+        [
+          "誤",
+          "誤",
+          "誤",
+          "誤"
+        ]
+      ],
+      "rubyVerified": true,
+      "ruby": [],
+      "symbolsVerified": true,
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "findings": []
+    },
+    {
+      "id": "KSAI-2023-059",
+      "questionNo": 59,
+      "status": "PASS",
+      "bundlePdfPages": [
+        4
+      ],
+      "officialPdf": "2023-first_half",
+      "officialPdfPages": [
+        38
+      ],
+      "questionTextVerified": true,
+      "choicesVerified": true,
+      "tableVerified": true,
+      "tableHeaders": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ],
+      "tableRows": [
+        [
+          "正",
+          "誤",
+          "正",
+          "誤"
+        ],
+        [
+          "正",
+          "誤",
+          "正",
+          "正"
+        ],
+        [
+          "正",
+          "正",
+          "誤",
+          "誤"
+        ],
+        [
+          "誤",
+          "正",
+          "正",
+          "正"
+        ],
+        [
+          "誤",
+          "正",
+          "誤",
+          "正"
+        ]
+      ],
+      "rubyVerified": true,
+      "ruby": [
+        {
+          "base": "燻",
+          "reading": "くん",
+          "context": "燻蒸処理"
+        }
+      ],
+      "symbolsVerified": true,
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "findings": []
+    },
+    {
+      "id": "KSAI-2023-060",
+      "questionNo": 60,
+      "status": "PASS",
+      "bundlePdfPages": [
+        4
+      ],
+      "officialPdf": "2023-first_half",
+      "officialPdfPages": [
+        38
+      ],
+      "questionTextVerified": true,
+      "choicesVerified": true,
+      "tableVerified": true,
+      "tableHeaders": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ],
+      "tableRows": [
+        [
+          "正",
+          "誤",
+          "正",
+          "誤"
+        ],
+        [
+          "正",
+          "誤",
+          "誤",
+          "正"
+        ],
+        [
+          "誤",
+          "誤",
+          "正",
+          "誤"
+        ],
+        [
+          "正",
+          "正",
+          "誤",
+          "誤"
+        ],
+        [
+          "誤",
+          "誤",
+          "誤",
+          "正"
+        ]
+      ],
+      "rubyVerified": true,
+      "ruby": [],
+      "symbolsVerified": true,
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "findings": []
+    },
+    {
+      "id": "KSAI-2023-061",
+      "questionNo": 61,
+      "status": "PASS",
+      "bundlePdfPages": [
+        5
+      ],
+      "officialPdf": "2023-second_half",
+      "officialPdfPages": [
+        3
+      ],
+      "questionTextVerified": true,
+      "choicesVerified": true,
+      "tableVerified": true,
+      "choicePairs": [
+        "a,b",
+        "a,d",
+        "b,c",
+        "b,d",
+        "c,d"
+      ],
+      "rubyVerified": true,
+      "ruby": [],
+      "symbolsVerified": true,
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "findings": []
+    },
+    {
+      "id": "KSAI-2023-062",
+      "questionNo": 62,
+      "status": "PASS",
+      "bundlePdfPages": [
+        5
+      ],
+      "officialPdf": "2023-second_half",
+      "officialPdfPages": [
+        3
+      ],
+      "questionTextVerified": true,
+      "choicesVerified": true,
+      "tableVerified": true,
+      "tableHeaders": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ],
+      "tableRows": [
+        [
+          "正",
+          "誤",
+          "正",
+          "誤"
+        ],
+        [
+          "誤",
+          "正",
+          "正",
+          "誤"
+        ],
+        [
+          "誤",
+          "誤",
+          "正",
+          "正"
+        ],
+        [
+          "正",
+          "正",
+          "誤",
+          "誤"
+        ],
+        [
+          "正",
+          "誤",
+          "誤",
+          "正"
+        ]
+      ],
+      "rubyVerified": true,
+      "ruby": [
+        {
+          "base": "嚢",
+          "reading": "のう",
+          "context": "胆嚢"
+        },
+        {
+          "base": "疸",
+          "reading": "だん",
+          "context": "黄疸"
+        }
+      ],
+      "symbolsVerified": true,
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "findings": []
+    },
+    {
+      "id": "KSAI-2023-063",
+      "questionNo": 63,
+      "status": "PASS",
+      "bundlePdfPages": [
+        6
+      ],
+      "officialPdf": "2023-second_half",
+      "officialPdfPages": [
+        4
+      ],
+      "questionTextVerified": true,
+      "choicesVerified": true,
+      "tableVerified": true,
+      "tableHeaders": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ],
+      "tableRows": [
+        [
+          "正",
+          "正",
+          "誤",
+          "正"
+        ],
+        [
+          "正",
+          "正",
+          "誤",
+          "誤"
+        ],
+        [
+          "誤",
+          "正",
+          "正",
+          "誤"
+        ],
+        [
+          "誤",
+          "正",
+          "誤",
+          "正"
+        ],
+        [
+          "誤",
+          "誤",
+          "正",
+          "誤"
+        ]
+      ],
+      "rubyVerified": true,
+      "ruby": [
+        {
+          "base": "肋",
+          "reading": "ろっ",
+          "context": "肋間筋"
+        }
+      ],
+      "symbolsVerified": true,
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "findings": []
+    }
+  ]
+}
