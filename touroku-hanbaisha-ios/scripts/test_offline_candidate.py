@@ -20,7 +20,9 @@ with sync_playwright() as pw:
         page.add_init_script("""window.__touhanStudyState=null; window.webkit={messageHandlers:{studyRecord:{postMessage:s=>{window.__savedStudy=JSON.parse(s)}}}};""")
         page.on('request',lambda r:report['externalRequests'].append(r.url) if r.url.startswith(('http:','https:')) else None)
         page.on('pageerror',lambda e:report['pageErrors'].append(str(e)))
+        page.on('console',lambda m: print('BROWSER_CONSOLE '+m.type+' '+m.text,flush=True) if m.type=='error' else None)
         page.goto((OUT/'official-practice.html').as_uri())
+        print('DEBUG offlineBank='+str(page.locator('#offlineBank').count())+' bankChars='+str(page.locator('#offlineBank').text_content() and len(page.locator('#offlineBank').text_content()))+' explanationChars='+str(page.locator('#offlineExplanations').text_content() and len(page.locator('#offlineExplanations').text_content()))+' available='+page.locator('#available').inner_text(),flush=True)
         expect(page.locator('#available')).to_contain_text('599問')
         expect(page.locator('#homeProgress')).to_have_text('0 / 599')
         assert page.evaluate("JSON.parse(document.getElementById('offlineBank').textContent)") == bank
