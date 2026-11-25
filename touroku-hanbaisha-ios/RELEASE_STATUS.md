@@ -1608,3 +1608,4 @@ Apple固定識別子: Bundle `com.allsunday1122.tourokuhanbaisha`、ASC `6802119
 - 証拠JSON：`Q2_Q6_EVIDENCE_20261125.json`、`OFFLINE_Q4_20261125.json`、`IOS_SIMULATOR_Q6_20261125.json`。詳細は `release-status.json` の `q2_q6_evidence_20261125`。
 
 **結論：Q2静的確認とQ3 ASC読戻しはPASS。Q4はブラウザ範囲のみPASS、Q5 ASC質問票とQ6現HEADネイティブ検証が未完了。リリースゲートBLOCKEDを維持。**
+\n\n## Q7 署名付きIPA・TestFlight配信（2026-11-25）\n- Codemagic開始: success、検証: success、総合: **PASS**。\n- ASC処理: VALID、TestFlight利用可能: True、内部グループ配信: True。\n- App Review提出: **未実施**。証跡: Q7_TESTFLIGHT_READBACK_20261125.json。\n
