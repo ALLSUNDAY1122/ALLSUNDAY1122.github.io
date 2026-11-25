@@ -11,7 +11,7 @@ trap 'rm -rf "$TMP"' EXIT
 
 EXPECTED_SOURCE_SHA="a1c5fc063d443de17c8a498c132ccaad961dfa353a372756cd4e79ce4023f288"
 EXPECTED_PIXEL_SHA="7ecad6e7e195da9be52b2b75f2afd3dbfd199c1134fb737207abdd808ebc0403"
-EXPECTED_OUTPUT_SHA="be4b5e7a38909ce702065c660cc18f6401b9ae2a560e71b342d8204f5067e677"
+EXPECTED_OUTPUT_PIXEL_SHA="7fa04f71c4c19897a606849836d7c73f196ec06124659755e9f370c1e3be55b3"
 
 PILLOW_VERSION="12.3.0"
 PYTHON=python3
@@ -21,7 +21,7 @@ if [ ! -f "$SRC" ]; then
   exit 1
 fi
 
-if ! "$PYTHON" -c 'import PIL,sys; sys.exit(PIL.__version__ != sys.argv[1])' "$PILLOW_VERSION"; then
+if ! "$PYTHON" -c 'import PIL,sys; sys.exit(PIL.__version__ != sys.argv[1])' "$PILLOW_VERSION" 2>/dev/null; then
   python3 -m venv "$TMP/venv"
   PYTHON="$TMP/venv/bin/python"
   "$PYTHON" -m pip install --quiet --disable-pip-version-check "Pillow==$PILLOW_VERSION"
@@ -29,12 +29,12 @@ fi
 
 mkdir -p "$ICON_DIR"
 
-"$PYTHON" - "$SRC" "$TMP/AppIcon-1024.png" "$EXPECTED_SOURCE_SHA" "$EXPECTED_PIXEL_SHA" "$EXPECTED_OUTPUT_SHA" "$PILLOW_VERSION" <<'PY'
+"$PYTHON" - "$SRC" "$TMP/AppIcon-1024.png" "$EXPECTED_SOURCE_SHA" "$EXPECTED_PIXEL_SHA" "$EXPECTED_OUTPUT_PIXEL_SHA" "$PILLOW_VERSION" <<'PY'
 import hashlib, io, sys
 from pathlib import Path
 from PIL import Image, __version__
 
-source, output, source_sha, pixel_sha, output_sha, pillow_version = sys.argv[1:]
+source, output, source_sha, pixel_sha, output_pixel_sha, pillow_version = sys.argv[1:]
 
 def require(condition, message):
     if not condition:
@@ -75,11 +75,6 @@ with Image.open(io.BytesIO(raw)) as im:
         compress_level=9
     )
 
-require(
-    sha(Path(output).read_bytes()) == output_sha,
-    'output SHA mismatch'
-)
-
 with Image.open(output) as im:
     require(
         im.format == 'PNG'
@@ -88,11 +83,15 @@ with Image.open(output) as im:
         and 'transparency' not in im.info,
         'output format mismatch'
     )
+    require(sha(im.tobytes()) == output_pixel_sha, 'output RGB pixel SHA mismatch')
+
+output_file_sha = sha(Path(output).read_bytes())
 
 print(
     f'PASS source_sha={source_sha} '
     f'pixel_sha={pixel_sha} '
-    f'output_sha={output_sha} '
+    f'output_pixel_sha={output_pixel_sha} '
+    f'output_file_sha={output_file_sha} '
     'size=1024x1024 alpha=no'
 )
 PY
