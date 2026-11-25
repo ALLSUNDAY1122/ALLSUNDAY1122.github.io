@@ -76,5 +76,5 @@ function bindSettings(){
 }
 function openSettingsPremium(){requestPremium()}
 $('homeStart').onclick=beginSetup;$('navStudy').onclick=beginSetup;$('resume').onclick=resumeStudy;$('navHome').onclick=showHome;$('navRecords').onclick=showRecords;$('navSettings').onclick=()=>setScreen('settings');
-$('todayStart').onclick=startDailySprint;$('startWeak').onclick=startWeakReview;$('openRecords').onclick=showRecords;$('premiumButton').onclick=requestPremium;$('settingsPremium').onclick=openSettingsPremium;
-$('recordsHome').onclick=showHome;bindSettings();applyFont();
+$('todayStart').onclick=startDailySprint;$('startWeak').onclick=startWeakReview;if($('openRecords'))$('openRecords').onclick=showRecords;$('premiumButton').onclick=requestPremium;$('settingsPremium').onclick=openSettingsPremium;
+if($('recordsHome'))$('recordsHome').onclick=showHome;bindSettings();applyFont();
