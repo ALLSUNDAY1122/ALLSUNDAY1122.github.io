@@ -142,7 +142,7 @@ jobs:
               'limits':['Simulator file:// bundle and browser HTTP(S)-blocked test passed.',
                         'Physical iPhone airplane-mode test not performed.',
                         'App Store Connect/TestFlight installation not performed.']}
-          (b/'OFFLINE_Q4_20261125.json').write_text(json.dumps(q4,ensure_ascii=False,indent=2)+'\\n')
+          (b/'OFFLINE_Q4_20261125.json').write_text(json.dumps(q4,ensure_ascii=False,indent=2)+'\n')
           q6={'schema':'touhan-q6-ios-simulator-v1','timestampJST':stamp,'status':'PASS',
               'environment':'success','build':'success','installAndLaunch':'success',
               'learningPersistence':'PASS','offlineBundleVerified':True,
@@ -151,7 +151,7 @@ jobs:
               'smokeWrite':json.loads((b/'ci-evidence/smoke-write.json').read_text()),
               'smokeRead':json.loads((b/'ci-evidence/smoke-read.json').read_text()),
               'limits':['No physical iPhone test','No TestFlight installation']}
-          (b/'IOS_SIMULATOR_Q6_20261125.json').write_text(json.dumps(q6,ensure_ascii=False,indent=2)+'\\n')
+          (b/'IOS_SIMULATOR_Q6_20261125.json').write_text(json.dumps(q6,ensure_ascii=False,indent=2)+'\n')
           PY
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
