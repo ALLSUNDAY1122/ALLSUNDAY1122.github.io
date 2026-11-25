@@ -71,7 +71,7 @@ jobs:
           h=(p/'official-practice.html').read_text()
           assert m['count']==599 and m['explanationsCount']==599
           assert 'id="offlineBank"' in h and 'id="offlineExplanations"' in h
-          assert "connect-src \\'none\\'" in h
+          assert "connect-src 'none'" in h
           print('PASS: native .app contains 599-question and 599-explanation OfflineWeb bundle')
           PY
           /usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP/Info.plist" | grep -Fx 'com.allsunday1122.tourokuhanbaisha'
