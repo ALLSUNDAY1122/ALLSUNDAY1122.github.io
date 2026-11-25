@@ -1,0 +1,420 @@
+{
+  "batch": "visual-reaudit-2025-b12",
+  "auditType": "manual_visual_reaudit",
+  "repository": "ALLSUNDAY1122/ALLSUNDAY1122.github.io",
+  "branch": "main",
+  "source": {
+    "candidateAttachment": "visual-reaudit-2025-b12.candidates.json",
+    "pdfAttachment": "visual-reaudit-2025-b12.pdf",
+    "sourceIssuer": "関西広域連合",
+    "sourceTitle": "令和7年度登録販売者試験（後半）",
+    "sourceUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R7tourokuhannbaisyashiken_kouhan.pdf",
+    "answerSourceUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R7touhan_kaitou.pdf",
+    "answerPdfInspected": false,
+    "bankBlobShaBefore": "8741e2675af6f41f7fba2afdc89566f48b8258e7"
+  },
+  "method": {
+    "description": "添付された公式問題PDF全2ページのレンダリング画像を直接目視し、候補JSONのidsで指定された4問について問題文、全選択肢、ルビ、表の行列・各セル対応、記号を照合した。PDF文字データ抽出や自動照合結果を目視判定の代替としていない。",
+    "visualPagesReviewed": [
+      1,
+      2
+    ],
+    "pageMapping": [
+      {
+        "bundlePdfPage": 1,
+        "officialPdfPage": 44
+      },
+      {
+        "bundlePdfPage": 2,
+        "officialPdfPage": 45
+      }
+    ],
+    "answerHandling": "answerNumberOfficialのみ候補JSONの値を記録。正答PDFは直接確認していないため全件answerPDFChecked=false。",
+    "failRule": "原典画像と候補レコードの問題文・全選択肢・ルビ・表・記号に不一致があればFAIL。表は行と列の対応を含めて判定する。"
+  },
+  "scope": {
+    "questionIds": [
+      "KSAI-2025-117",
+      "KSAI-2025-118",
+      "KSAI-2025-119",
+      "KSAI-2025-120"
+    ],
+    "questionNumbers": [
+      117,
+      118,
+      119,
+      120
+    ],
+    "bundlePdfPages": [
+      1,
+      2
+    ]
+  },
+  "summary": {
+    "total": 4,
+    "pass": 4,
+    "fail": 0,
+    "hold": 0,
+    "failReasons": [],
+    "holdReasons": []
+  },
+  "results": [
+    {
+      "id": "KSAI-2025-117",
+      "questionNo": 117,
+      "bundlePdfPages": [
+        1
+      ],
+      "officialPdfPages": [
+        44
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "choices": [
+        "誤  正  正  誤",
+        "正  正  誤  正",
+        "正  誤  正  誤",
+        "誤  正  誤  正",
+        "正  誤  正  正"
+      ],
+      "ruby": [
+        {
+          "base": "浣",
+          "reading": "かん",
+          "context": "浣腸薬"
+        },
+        {
+          "base": "瀉",
+          "reading": "しゃ",
+          "context": "瀉下薬"
+        }
+      ],
+      "tables": [
+        {
+          "purpose": "設問本文中の基礎疾患等と医薬品成分・薬効群等の対応表",
+          "columns": [
+            "基礎疾患等",
+            "医薬品成分・薬効群等"
+          ],
+          "rows": [
+            [
+              "高血圧",
+              "アセトアミノフェンが配合された解熱鎮痛薬"
+            ],
+            [
+              "腎臓病",
+              "スクラルファートが配合された胃腸薬"
+            ],
+            [
+              "心臓病",
+              "グリセリンが配合された浣腸薬"
+            ],
+            [
+              "肝臓病",
+              "酸化マグネシウムが配合された瀉下薬"
+            ]
+          ],
+          "rowCount": 4,
+          "columnCount": 2
+        },
+        {
+          "purpose": "a〜dの正誤組合せ選択表",
+          "columns": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "rows": [
+            {
+              "row": 1,
+              "cells": [
+                "誤",
+                "正",
+                "正",
+                "誤"
+              ]
+            },
+            {
+              "row": 2,
+              "cells": [
+                "正",
+                "正",
+                "誤",
+                "正"
+              ]
+            },
+            {
+              "row": 3,
+              "cells": [
+                "正",
+                "誤",
+                "正",
+                "誤"
+              ]
+            },
+            {
+              "row": 4,
+              "cells": [
+                "誤",
+                "正",
+                "誤",
+                "正"
+              ]
+            },
+            {
+              "row": 5,
+              "cells": [
+                "正",
+                "誤",
+                "正",
+                "正"
+              ]
+            }
+          ],
+          "rowCount": 5,
+          "columnCount": 4
+        }
+      ],
+      "notes": "添付PDF1ページ（原典44頁）。設問文、基礎疾患等と成分・薬効群等の4行対応表、浣腸薬・瀉下薬のルビ、正誤組合せ表5行×4列を直接目視照合。候補レコードと一致し、表の行列ずれ・誤連結なし。"
+    },
+    {
+      "id": "KSAI-2025-118",
+      "questionNo": 118,
+      "bundlePdfPages": [
+        1
+      ],
+      "officialPdfPages": [
+        44
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "choices": [
+        "誤  正  正  誤",
+        "正  誤  正  誤",
+        "正  正  誤  正",
+        "正  誤  誤  誤",
+        "誤  誤  誤  誤"
+      ],
+      "ruby": [
+        {
+          "base": "芍薬甘草湯",
+          "reading": "しゃくやくかんぞうとう"
+        },
+        {
+          "base": "抑肝散",
+          "reading": "よくかんさん"
+        },
+        {
+          "base": "小建中湯",
+          "reading": "しょうけんちゅうとう"
+        },
+        {
+          "base": "加味帰脾湯",
+          "reading": "かみきひとう"
+        }
+      ],
+      "table": {
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rows": [
+          {
+            "row": 1,
+            "cells": [
+              "誤",
+              "正",
+              "正",
+              "誤"
+            ]
+          },
+          {
+            "row": 2,
+            "cells": [
+              "正",
+              "誤",
+              "正",
+              "誤"
+            ]
+          },
+          {
+            "row": 3,
+            "cells": [
+              "正",
+              "正",
+              "誤",
+              "正"
+            ]
+          },
+          {
+            "row": 4,
+            "cells": [
+              "正",
+              "誤",
+              "誤",
+              "誤"
+            ]
+          },
+          {
+            "row": 5,
+            "cells": [
+              "誤",
+              "誤",
+              "誤",
+              "誤"
+            ]
+          }
+        ],
+        "rowCount": 5,
+        "columnCount": 4
+      },
+      "notes": "添付PDF1ページ（原典44頁）下段。設問文、a〜dの漢方製剤名と各ルビ（芍薬甘草湯・抑肝散・小建中湯・加味帰脾湯）、正誤組合せ表5行×4列を直接目視照合。候補レコードと一致。"
+    },
+    {
+      "id": "KSAI-2025-119",
+      "questionNo": 119,
+      "bundlePdfPages": [
+        2
+      ],
+      "officialPdfPages": [
+        45
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tables": "該当なし",
+        "symbols": "PASS"
+      },
+      "choices": [
+        "ａ、ｂ",
+        "ａ、ｃ",
+        "ｂ、ｃ",
+        "ｂ、ｄ",
+        "ｃ、ｄ"
+      ],
+      "ruby": [
+        {
+          "base": "亢",
+          "reading": "こう",
+          "context": "甲状腺機能亢進症"
+        }
+      ],
+      "notes": "添付PDF2ページ（原典45頁）上段。設問文の「甲状腺機能亢進症」、亢のルビ「こう」、a〜dの成分名4件、5つの組合せ選択肢を直接目視照合。候補レコードと一致。"
+    },
+    {
+      "id": "KSAI-2025-120",
+      "questionNo": 120,
+      "bundlePdfPages": [
+        2
+      ],
+      "officialPdfPages": [
+        45
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "choices": [
+        "正  正  誤  誤",
+        "正  誤  正  正",
+        "誤  正  誤  誤",
+        "正  誤  正  誤",
+        "誤  誤  正  正"
+      ],
+      "ruby": [
+        {
+          "base": "瀉",
+          "reading": "しゃ",
+          "context": "止瀉薬"
+        }
+      ],
+      "table": {
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rows": [
+          {
+            "row": 1,
+            "cells": [
+              "正",
+              "正",
+              "誤",
+              "誤"
+            ]
+          },
+          {
+            "row": 2,
+            "cells": [
+              "正",
+              "誤",
+              "正",
+              "正"
+            ]
+          },
+          {
+            "row": 3,
+            "cells": [
+              "誤",
+              "正",
+              "誤",
+              "誤"
+            ]
+          },
+          {
+            "row": 4,
+            "cells": [
+              "正",
+              "誤",
+              "正",
+              "誤"
+            ]
+          },
+          {
+            "row": 5,
+            "cells": [
+              "誤",
+              "誤",
+              "正",
+              "正"
+            ]
+          }
+        ],
+        "rowCount": 5,
+        "columnCount": 4
+      },
+      "notes": "添付PDF2ページ（原典45頁）下段。ロペラミド塩酸塩を含有する止瀉薬の設問全文、瀉のルビ「しゃ」、a〜dの記述、正誤組合せ表5行×4列を直接目視照合。候補レコードと一致し、行列ずれなし。"
+    }
+  ]
+}
