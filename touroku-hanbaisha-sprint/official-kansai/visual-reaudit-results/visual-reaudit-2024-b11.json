@@ -1,0 +1,335 @@
+{
+  "batch": "visual-reaudit-2024-b11",
+  "repository": "ALLSUNDAY1122/ALLSUNDAY1122.github.io",
+  "branch": "main",
+  "auditMethod": "MANUAL_VISUAL_COMPARISON_OF_ATTACHED_OFFICIAL_PDF_PAGE_IMAGES",
+  "source": {
+    "candidateFile": "visual-reaudit-2024-b11.candidates.json",
+    "officialQuestionPdf": "2024-second_half",
+    "attachedPdf": "visual-reaudit-2024-b11.pdf",
+    "attachedPdfPages": 5,
+    "bundlePageMapping": [
+      {
+        "bundlePdfPage": 1,
+        "officialPdfPage": 35,
+        "questionIds": [
+          "KSAI-2024-112"
+        ]
+      },
+      {
+        "bundlePdfPage": 2,
+        "officialPdfPage": 36,
+        "questionIds": [
+          "KSAI-2024-113"
+        ]
+      },
+      {
+        "bundlePdfPage": 3,
+        "officialPdfPage": 38,
+        "questionIds": [
+          "KSAI-2024-115",
+          "KSAI-2024-116"
+        ]
+      },
+      {
+        "bundlePdfPage": 4,
+        "officialPdfPage": 39,
+        "questionIds": [
+          "KSAI-2024-117",
+          "KSAI-2024-118"
+        ]
+      },
+      {
+        "bundlePdfPage": 5,
+        "officialPdfPage": 40,
+        "questionIds": [
+          "KSAI-2024-119",
+          "KSAI-2024-120"
+        ]
+      }
+    ]
+  },
+  "summary": {
+    "pass": 6,
+    "fail": 2,
+    "hold": 0,
+    "total": 8
+  },
+  "answerVerification": {
+    "answerNumberOfficial": "候補JSONの値を転記したもの。正答の正誤判定はしていない。",
+    "answerPDFChecked": false,
+    "answerPdfVisuallyChecked": false
+  },
+  "results": [
+    {
+      "id": "KSAI-2024-112",
+      "questionNo": 112,
+      "bundlePdfPages": [
+        1
+      ],
+      "officialPdfPages": [
+        35
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS_NOT_PRESENT",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "originalChoices": [
+        "間質性肺炎／糖尿病／ナファゾリン塩酸塩",
+        "間質性肺炎／高血圧症／プソイドエフェドリン塩酸塩",
+        "脳出血／糖尿病／プソイドエフェドリン塩酸塩",
+        "脳出血／高血圧症／ナファゾリン塩酸塩",
+        "脳出血／高血圧症／プソイドエフェドリン塩酸塩"
+      ],
+      "notes": "PDF1ページの問112。本文のPPA副作用症例、禁忌患者、代替成分の記述およびa・b・cの5行3列の組合せ表を照合。全行の内容・列対応が候補レコードと一致。"
+    },
+    {
+      "id": "KSAI-2024-113",
+      "questionNo": 113,
+      "bundlePdfPages": [
+        2
+      ],
+      "officialPdfPages": [
+        36
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS_NOT_PRESENT",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "originalChoices": [
+        "正／誤／正／正",
+        "正／正／正／誤",
+        "正／正／誤／誤",
+        "誤／正／誤／正",
+        "誤／誤／正／正"
+      ],
+      "notes": "PDF2ページの問113。a〜dの本文、期間表記「６月２０日～７月１９日」、引用符を含む表記、および5行4列の正誤表を照合。全行・列対応が一致。"
+    },
+    {
+      "id": "KSAI-2024-115",
+      "questionNo": 115,
+      "bundlePdfPages": [
+        3
+      ],
+      "officialPdfPages": [
+        38
+      ],
+      "status": "FAIL",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "FAIL",
+        "allChoices": "PASS",
+        "ruby": "PASS_WITH_TEXT_SPACING_ERROR",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "originalChoices": [
+        "正／正／誤／誤",
+        "誤／正／正／誤",
+        "誤／誤／正／正",
+        "誤／誤／誤／正",
+        "正／誤／誤／誤"
+      ],
+      "discrepancies": [
+        {
+          "field": "question",
+          "location": "bの成分名",
+          "candidate": "次没食子 酸ビスマス",
+          "official": "次没食子酸ビスマス",
+          "correction": "「子」と「酸」の間の不要な空白を削除する。",
+          "evidence": "添付PDF3ページの問115のb行を拡大目視。原典では「次没食子酸ビスマス」と連続して印字されている。",
+          "severity": "FAIL"
+        }
+      ],
+      "ruby": "原典画像では「没食子」に「もっしょくし」のルビ。候補のoriginalRubyReadingsは読みを保持しているが、本文の不要な空白は原典と不一致。",
+      "notes": "5行4列の正誤表は全行一致。問題文の成分名に不要な空白があるため、問題全体の判定はFAIL。"
+    },
+    {
+      "id": "KSAI-2024-116",
+      "questionNo": 116,
+      "bundlePdfPages": [
+        3
+      ],
+      "officialPdfPages": [
+        38
+      ],
+      "status": "FAIL",
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "FAIL",
+        "allChoices": "PASS",
+        "ruby": "FAIL",
+        "tables": "FAIL",
+        "symbols": "PASS"
+      },
+      "originalChoices": [
+        "正／誤／正／正",
+        "正／誤／正／誤",
+        "誤／正／正／誤",
+        "誤／誤／誤／正",
+        "正／正／誤／正"
+      ],
+      "discrepancies": [
+        {
+          "field": "question.table.a.ingredient",
+          "location": "設問中の基礎疾患等・医薬品成分等の対応表 a行",
+          "candidate": "芍薬甘 草 湯（ルビ文字列：しゃくやくかん ぞう とう）",
+          "official": "芍薬甘草湯（ルビ：しゃくやくかんぞうとう）",
+          "correction": "成分名「芍薬甘草湯」の途中に入った空白を除去し、ルビも原典の連続した読み「しゃくやくかんぞうとう」として保持する。",
+          "evidence": "添付PDF3ページの問116の表a行を拡大目視。原典のセルには「芍薬甘草湯」と連続して印字され、その上に「しゃくやくかんぞうとう」のルビが付されている。",
+          "severity": "FAIL"
+        }
+      ],
+      "notes": "設問内の対応表a行の成分名およびルビ表記が原典と一致しない。別掲の5行4列の正誤選択肢表は全行・列対応が一致。対応表の不一致により問題全体はFAIL。"
+    },
+    {
+      "id": "KSAI-2024-117",
+      "questionNo": 117,
+      "bundlePdfPages": [
+        4
+      ],
+      "officialPdfPages": [
+        39
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS_NOT_PRESENT",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "originalChoices": [
+        "正／正／正／誤",
+        "正／正／誤／正",
+        "正／正／誤／誤",
+        "誤／誤／正／誤",
+        "誤／正／誤／正"
+      ],
+      "notes": "PDF4ページの問117。妊婦の説明（出産予定日12週以内を含む）、a〜d成分名、5行4列の正誤表を照合。全て一致。"
+    },
+    {
+      "id": "KSAI-2024-118",
+      "questionNo": 118,
+      "bundlePdfPages": [
+        4
+      ],
+      "officialPdfPages": [
+        39
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS_NOT_PRESENT",
+        "tables": "PASS_NOT_APPLICABLE",
+        "symbols": "PASS"
+      },
+      "originalChoices": [
+        "アルジオキサ",
+        "イブプロフェン",
+        "ピレンゼピン塩酸塩水和物",
+        "ピリドキシン塩酸塩",
+        "メチルエフェドリン塩酸塩"
+      ],
+      "notes": "PDF4ページの問118。設問文、5つの成分名、番号・句読点を照合。全て一致。"
+    },
+    {
+      "id": "KSAI-2024-119",
+      "questionNo": 119,
+      "bundlePdfPages": [
+        5
+      ],
+      "officialPdfPages": [
+        40
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS_NOT_PRESENT",
+        "tables": "PASS_NOT_APPLICABLE",
+        "symbols": "PASS"
+      },
+      "originalChoices": [
+        "ａ、ｂ",
+        "ａ、ｃ",
+        "ｂ、ｃ",
+        "ｂ、ｄ",
+        "ｃ、ｄ"
+      ],
+      "notes": "PDF5ページの問119。フェニレフリン塩酸塩、鼻炎用内服薬、a〜dの基礎疾患名および5つの組合せを照合。全て一致。"
+    },
+    {
+      "id": "KSAI-2024-120",
+      "questionNo": 120,
+      "bundlePdfPages": [
+        5
+      ],
+      "officialPdfPages": [
+        40
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS_NOT_PRESENT",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "originalChoices": [
+        "正／誤／正／誤",
+        "正／誤／誤／正",
+        "誤／正／正／正",
+        "誤／正／誤／正",
+        "誤／誤／正／正"
+      ],
+      "notes": "PDF5ページの問120。ロートエキス、相談対象者a〜dの本文および5行4列の正誤表を照合。全行・列対応が一致。"
+    }
+  ],
+  "overallFindings": {
+    "failReasons": [
+      {
+        "id": "KSAI-2024-115",
+        "reason": "b「次没食子酸ビスマス」に候補レコード側の不要な空白「次没食子 酸ビスマス」がある。"
+      },
+      {
+        "id": "KSAI-2024-116",
+        "reason": "a行の成分名「芍薬甘草湯」とルビ「しゃくやくかんぞうとう」が候補レコード内で分割・空白挿入され、原典画像と一致しない。"
+      }
+    ],
+    "holdReasons": [],
+    "scopeNotes": [
+      "PDF画像を目視し、問題文・全選択肢・ルビ・表のセル位置と行列対応・記号を照合した。",
+      "問114は添付JSONのids対象外のため監査対象外。",
+      "問115・116は別掲の正誤選択肢表自体は原典と一致しているが、問題文内の成分名・ルビ表記の不一致によりFAILとした。",
+      "answerNumberOfficialは記録のみ。正答PDFは直接確認していないため全件answerPDFChecked=false。"
+    ],
+    "nonChanges": [
+      "touroku-hanbaisha-sprint/official-kansai/APPROVED_OFFICIAL_BANK.json（正式バンク本体）",
+      "状態ファイル"
+    ]
+  }
+}
