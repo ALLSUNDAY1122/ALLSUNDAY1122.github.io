@@ -1,0 +1,169 @@
+{
+  "batch": "visual-reaudit-fix2-b02",
+  "repository": "ALLSUNDAY1122/ALLSUNDAY1122.github.io",
+  "source": "添付された公式問題PDFのページ画像（180dpi）と添付 candidates JSON の現行バンクレコード",
+  "method": "DIRECT_VISUAL_PAGE_IMAGE_TO_RECORD_COMPARISON",
+  "scope": {
+    "ids": [
+      "KSAI-2026-055",
+      "KSAI-2026-064",
+      "KSAI-2026-066",
+      "KSAI-2026-070",
+      "KSAI-2026-073",
+      "KSAI-2026-078",
+      "KSAI-2026-100"
+    ],
+    "questionCount": 7,
+    "bundlePages": 8,
+    "officialPdfs": ["2026-first_half", "2026-second_half"],
+    "officialPdfPages": [46, 4, 5, 8, 9, 14, 31, 32]
+  },
+  "summary": {
+    "PASS": 7,
+    "FAIL": 0,
+    "HOLD": 0
+  },
+  "decisionCriteria": "問題文・全選択肢・ルビ・表・記号を添付された原典ページ画像と目視照合。選択肢表の行列対応が崩れている場合、または原典と異なる文字・ルビ・記号がある場合はFAIL。必要な画像が判読できない場合はHOLD。推測によるPASS判定は行わない。",
+  "scopeNotes": [
+    "KSAI-2026-100の添付JSONはbundlePdfPages=[7,8]およびsourcePdfPages=[31,32]としているが、添付PDF p.7に問100の問題文・全選択肢表が完結している。添付PDF p.8は次問の問101であり、問100の続きではない。問100の内容はp.7で全て目視確認できたため、内容判定はPASSとした。p.8の余分なページ対応メタデータは別途確認対象として記録する。",
+    "添付PDFの画像は設問の原典確認に使用した。正答PDFは添付されておらず直接確認していない。全問でanswerNumberOfficialは添付JSONの値を転記し、answerPDFChecked:falseとした。"
+  ],
+  "results": [
+    {
+      "id": "KSAI-2026-055",
+      "questionNo": 55,
+      "bundlePdfPages": [1],
+      "officialPdf": "2026-first_half",
+      "officialPdfPages": [46],
+      "status": "PASS",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": true,
+        "allChoices": true,
+        "ruby": true,
+        "tables": true,
+        "symbols": true
+      },
+      "evidence": "添付PDF p.1（2026-first_half 原典PDF p.46）。禁煙補助剤（咀嚼剤）の問題文全文を目視照合。咀嚼剤の「そしゃく」、本文中の口腔の「くう」2箇所、鎮咳去痰薬の「がい」「たん」、痔疾の「じ」の各ルビの読み・出現順がoriginalRubyReadingsと一致。表5行×3列について、a〜cの列見出しと全セルを確認。各行は、1「酸性／交感神経／増強」、2「酸性／交感神経／減弱」、3「酸性／副交感神経／増強」、4「アルカリ性／交感神経／減弱」、5「アルカリ性／副交感神経／減弱」で、現行レコードのchoicesと一致。本文の炭酸飲料等の記述、括弧・英字記号も一致。",
+      "discrepancies": []
+    },
+    {
+      "id": "KSAI-2026-064",
+      "questionNo": 64,
+      "bundlePdfPages": [2],
+      "officialPdf": "2026-second_half",
+      "officialPdfPages": [4],
+      "status": "PASS",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": true,
+        "allChoices": true,
+        "ruby": true,
+        "tables": true,
+        "symbols": true
+      },
+      "evidence": "添付PDF p.2（2026-second_half 原典PDF p.4）。血液に関するa〜dの全文を目視照合。血漿の「漿」に付されたルビ「しょう」の位置・読みがquestionPartsのrubyBase「漿」、rubyText「しょう」と一致。選択肢表5行×4列の全セルを確認。各行の正誤配置は現行レコードのchoicesと一致し、列a〜dの対応・行順にも崩れはない。",
+      "discrepancies": []
+    },
+    {
+      "id": "KSAI-2026-066",
+      "questionNo": 66,
+      "bundlePdfPages": [3],
+      "officialPdf": "2026-second_half",
+      "officialPdfPages": [5],
+      "status": "PASS",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": true,
+        "allChoices": true,
+        "ruby": true,
+        "tables": true,
+        "symbols": true
+      },
+      "evidence": "添付PDF p.3（2026-second_half 原典PDF p.5）。尿路に関するa〜dの全文を目視照合。本文中の「膀胱」および「排泄」に付されたルビの出現順・読みは、originalRubyReadingsの8件（ぼうこう、せつ、ぼうこう、ぼうこう、ぼうこう、ぼうこう、ぼうこう、ぼうこう）と一致。選択肢表5行×4列の全セルを確認し、choicesの5行とa〜d列の正誤配置が一致。",
+      "discrepancies": []
+    },
+    {
+      "id": "KSAI-2026-070",
+      "questionNo": 70,
+      "bundlePdfPages": [4],
+      "officialPdf": "2026-second_half",
+      "officialPdfPages": [8],
+      "status": "PASS",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": true,
+        "allChoices": true,
+        "ruby": true,
+        "tables": true,
+        "symbols": true
+      },
+      "evidence": "添付PDF p.4（2026-second_half 原典PDF p.8）。骨格系に関するa〜dの全文を目視照合。本文の「強靭さ」の「靭」に付されたルビ「じん」の位置・読みがquestionPartsのrubyBase「靭」、rubyText「じん」と一致。選択肢表5行×4列の全セルを確認し、現行レコードのchoicesと行順・a〜d列の配置が一致。",
+      "discrepancies": []
+    },
+    {
+      "id": "KSAI-2026-073",
+      "questionNo": 73,
+      "bundlePdfPages": [5],
+      "officialPdf": "2026-second_half",
+      "officialPdfPages": [9],
+      "status": "PASS",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": true,
+        "allChoices": true,
+        "ruby": true,
+        "tables": true,
+        "symbols": true
+      },
+      "evidence": "添付PDF p.5（2026-second_half 原典PDF p.9）。薬の代謝・排泄に関する問題文a〜dの全文を目視照合。「排泄」の「泄」に付されたルビ「せつ」3箇所の位置・読み・出現順がquestionPartsの3つのrubyBase「泄」／rubyText「せつ」と一致。組合せ選択肢5件（a,b／a,c／b,c／b,d／c,d）も画像と一致。",
+      "discrepancies": []
+    },
+    {
+      "id": "KSAI-2026-078",
+      "questionNo": 78,
+      "bundlePdfPages": [6],
+      "officialPdf": "2026-second_half",
+      "officialPdfPages": [14],
+      "status": "PASS",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": true,
+        "allChoices": true,
+        "ruby": true,
+        "tables": true,
+        "symbols": true
+      },
+      "evidence": "添付PDF p.6（2026-second_half 原典PDF p.14）。精神神経系に現れる医薬品の副作用に関するa〜dの全文と組合せ選択肢5件を目視照合。「倦怠感」の「倦」に付されたルビ「けん」の位置・読みがquestionPartsのrubyBase「倦」、rubyText「けん」と一致。組合せ（a,b／a,c／b,c／b,d／c,d）の文字・記号に相違なし。",
+      "discrepancies": []
+    },
+    {
+      "id": "KSAI-2026-100",
+      "questionNo": 100,
+      "bundlePdfPages": [7, 8],
+      "officialPdf": "2026-second_half",
+      "officialPdfPages": [31, 32],
+      "status": "PASS",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": true,
+        "allChoices": true,
+        "ruby": true,
+        "tables": true,
+        "symbols": true
+      },
+      "evidence": "添付PDF p.7（2026-second_half 原典PDF p.31）。法に基づく行政庁による監視指導及び処分に関する問題文の前提説明とa〜dの全文を目視照合。選択肢表5行×4列の全セルを確認し、各行の正誤配置は現行レコードのchoicesと一致。問題文中の「都道府県知事」の定義を含む括弧書き、句読点、a〜d記号も一致。添付PDF p.8（原典PDF p.32）は問101であり、問100の続きではない。",
+      "discrepancies": []
+    }
+  ],
+  "answerKeyNote": "answerNumberOfficialは添付JSONの値を記録。正答PDFは本バッチの添付資料に含まれず直接確認していないため、全問answerPDFChecked:false。",
+  "bankMutation": false,
+  "stateFileMutation": false
+}
