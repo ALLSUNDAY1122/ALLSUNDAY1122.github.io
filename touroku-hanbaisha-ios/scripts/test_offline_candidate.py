@@ -35,6 +35,13 @@ with sync_playwright() as pw:
         assert explanation_bundle['count']==len(explanation_bundle['records'])==599
         assert explanation_bundle['auditSummary']=={'PASS':599,'HOLD':0,'PENDING':0}
         expect(page.locator('#home')).to_be_visible()
+        page.locator('#navStudy').click()
+        expect(page.locator('#mockYears .mockYear')).to_have_count(5)
+        expect(page.locator('#mockYears')).to_contain_text('2022年度')
+        assert '学習範囲' not in page.locator('#setup').inner_text()
+        assert '監査済み' not in page.locator('#setup').inner_text()
+        assert page.locator('#headerHome').count()==1
+        page.locator('#navHome').click()
         page.locator('#homeStart').click()
         assert page.evaluate('eligible().length')==50
         assert page.evaluate("Object.values(eligible().reduce((a,q)=>(a[q.chapter]=(a[q.chapter]||0)+1,a),{})).every(n=>n===10)")
@@ -58,7 +65,12 @@ with sync_playwright() as pw:
         for q in bank['questions']:
             assert page.locator('#question').inner_text().strip()
             rendered_question=page.locator('#question').evaluate("el=>Array.from(el.childNodes).map(n=>n.textContent||'').join('')")
-            assert not re.search(r'(?<!\n)\n(?!\n)',rendered_question),q['id']
+            assert not re.search(r'(?<!\n)\n(?!\n)(?![a-d][ \u3000])',rendered_question),q['id']
+            if q['id']=='KSAI-2022-104':
+                expected=['a 正／b 正／c 誤／d 誤','a 正／b 誤／c 正／d 誤','a 誤／b 正／c 正／d 正','a 正／b 誤／c 誤／d 正','a 誤／b 正／c 誤／d 正']
+                assert page.locator('#choices button').all_text_contents()==expected
+                figure=page.locator('#sourceFigure img').first
+                assert figure.bounding_box()['width']>=365,figure.bounding_box()
             assert page.locator('#choices button').count()==len(q['choices'])
             for img in page.locator('#sourceFigure img').all():
                 img.scroll_into_view_if_needed()
