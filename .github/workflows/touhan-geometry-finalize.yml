@@ -5,6 +5,7 @@ on:
     paths:
       - 'touroku-hanbaisha-sprint/official-kansai/build_approved_bank.py'
       - 'touroku-hanbaisha-sprint/official-kansai/write_geometry_release_status.py'
+      - 'touroku-hanbaisha-sprint/official-kansai/write_auto_release_status.py'
       - '.github/workflows/touhan-geometry-finalize.yml'
 permissions:
   contents: write
@@ -64,6 +65,7 @@ jobs:
           assert s['app_review_submitted'] is False
           assert 'KSAI-2023-090' not in d['approvedIds']
           assert s['question_bank']['cross_engine_sample_size']==50
+          assert sum(s['question_bank']['approved_by_method'].values())==599
           print('PASS: release count, invalid-Q90 exclusion, and blocked submission state')
           PY
       - name: Commit evidence to this branch only
