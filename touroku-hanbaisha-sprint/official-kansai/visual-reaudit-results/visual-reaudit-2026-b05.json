@@ -1,0 +1,994 @@
+{
+  "batch": "visual-reaudit-2026-b05",
+  "repository": "ALLSUNDAY1122/ALLSUNDAY1122.github.io",
+  "branch": "main",
+  "auditType": "manual_visual_reaudit",
+  "source": {
+    "candidateAttachment": "visual-reaudit-2026-b05.candidates.json",
+    "renderedOfficialQuestionPdfAttachment": "visual-reaudit-2026-b05.pdf",
+    "issuer": "関西広域連合",
+    "title": "令和8年度登録販売者試験（前半）",
+    "sourceUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
+    "answerSourceUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+    "answerPdfInspected": false,
+    "bankBlobShaBefore": "8741e2675af6f41f7fba2afdc89566f48b8258e7"
+  },
+  "method": {
+    "description": "添付PDFのレンダリング画像8ページを目視し、添付JSONのidsで指定された10問について問題文・全選択肢・ルビ・表の行列とセル対応・記号を照合。PDF文字抽出、自動照合、候補JSON内の既存audit.statusを合否判定の代替にしていない。",
+    "pagesReviewed": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "pageMapping": [
+      {
+        "bundlePdfPage": 1,
+        "officialPdfPage": 41
+      },
+      {
+        "bundlePdfPage": 2,
+        "officialPdfPage": 42
+      },
+      {
+        "bundlePdfPage": 3,
+        "officialPdfPage": 43
+      },
+      {
+        "bundlePdfPage": 4,
+        "officialPdfPage": 44
+      },
+      {
+        "bundlePdfPage": 5,
+        "officialPdfPage": 44
+      },
+      {
+        "bundlePdfPage": 6,
+        "officialPdfPage": 45
+      },
+      {
+        "bundlePdfPage": 7,
+        "officialPdfPage": 46
+      },
+      {
+        "bundlePdfPage": 8,
+        "officialPdfPage": 47
+      },
+      {
+        "bundlePdfPage": 9,
+        "officialPdfPage": 48
+      },
+      {
+        "bundlePdfPage": 10,
+        "officialPdfPage": 48
+      }
+    ],
+    "answerHandling": "answerNumberOfficialは添付候補JSONの値を転記。正答PDFは直接確認していないため、全件answerPDFChecked=false。",
+    "failRule": "問題文・選択肢・ルビ・表・記号の原典不一致はFAIL。意味が推測できても原典と異なる文字は合格にしない。表は行列の全セル位置まで照合。"
+  },
+  "scope": {
+    "questionIds": [
+      "KSAI-2026-049",
+      "KSAI-2026-050",
+      "KSAI-2026-051",
+      "KSAI-2026-052",
+      "KSAI-2026-053",
+      "KSAI-2026-054",
+      "KSAI-2026-055",
+      "KSAI-2026-056",
+      "KSAI-2026-057",
+      "KSAI-2026-058"
+    ],
+    "count": 10
+  },
+  "summary": {
+    "total": 10,
+    "pass": 7,
+    "fail": 3,
+    "hold": 0,
+    "failReasons": [
+      {
+        "id": "KSAI-2026-051",
+        "reason": "問題文bの油名が原典画像では「ユーカリ油」だが、候補レコードは「ユ－カリ油」。長音記号「ー」(U+30FC)が全角ハイフン「－」(U+FF0D)に置換されているためFAIL。原典どおりの表記は「ユーカリ油」。"
+      },
+      {
+        "id": "KSAI-2026-052",
+        "reason": "問題文aの「イミダゾール系成分」が候補レコードでは「イミダゾ－ル系成分」。長音記号「ー」(U+30FC)が全角ハイフン「－」(U+FF0D)に置換されているためFAIL。原典どおりの表記は「イミダゾール系成分」。"
+      },
+      {
+        "id": "KSAI-2026-055",
+        "reason": "本文の「コーヒーや炭酸飲料」が候補レコードでは「コーヒ－や炭酸飲料」。長音記号「ー」(U+30FC)が全角ハイフン「－」(U+FF0D)に置換されているためFAIL。原典どおりの表記は「コーヒーや炭酸飲料」。"
+      }
+    ],
+    "holdReasons": []
+  },
+  "results": [
+    {
+      "id": "KSAI-2026-049",
+      "questionNo": 49,
+      "status": "PASS",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "bundlePdfPages": [
+        1
+      ],
+      "officialPdfPages": [
+        41
+      ],
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS_NOT_APPLICABLE",
+        "tableOrChoiceLayout": "PASS",
+        "symbols": "PASS"
+      },
+      "officialChoices": [
+        [
+          "正",
+          "正",
+          "正",
+          "正"
+        ],
+        [
+          "誤",
+          "誤",
+          "正",
+          "正"
+        ],
+        [
+          "誤",
+          "誤",
+          "誤",
+          "正"
+        ],
+        [
+          "正",
+          "正",
+          "誤",
+          "誤"
+        ],
+        [
+          "正",
+          "誤",
+          "正",
+          "誤"
+        ]
+      ],
+      "table": {
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rows": [
+          [
+            "正",
+            "正",
+            "正",
+            "正"
+          ],
+          [
+            "誤",
+            "誤",
+            "正",
+            "正"
+          ],
+          [
+            "誤",
+            "誤",
+            "誤",
+            "正"
+          ],
+          [
+            "正",
+            "正",
+            "誤",
+            "誤"
+          ],
+          [
+            "正",
+            "誤",
+            "正",
+            "誤"
+          ]
+        ]
+      },
+      "rubyReadings": [],
+      "notes": "原典画像と問題文・全選択肢・ルビ（該当箇所）・表の行列とセル対応・記号を目視照合。候補レコードとの不一致は認められない。"
+    },
+    {
+      "id": "KSAI-2026-050",
+      "questionNo": 50,
+      "status": "PASS",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "bundlePdfPages": [
+        2
+      ],
+      "officialPdfPages": [
+        42
+      ],
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tableOrChoiceLayout": "PASS",
+        "symbols": "PASS"
+      },
+      "officialChoices": [
+        [
+          "正",
+          "正",
+          "誤",
+          "正"
+        ],
+        [
+          "誤",
+          "誤",
+          "正",
+          "誤"
+        ],
+        [
+          "正",
+          "正",
+          "正",
+          "誤"
+        ],
+        [
+          "正",
+          "誤",
+          "正",
+          "誤"
+        ],
+        [
+          "誤",
+          "正",
+          "誤",
+          "正"
+        ]
+      ],
+      "ingredientTable": {
+        "columns": [
+          "成分",
+          "分量"
+        ],
+        "rows": [
+          [
+            "サリチル酸グリコール",
+            "2.0 g"
+          ],
+          [
+            "グリチルレチン酸",
+            "0.05 g"
+          ],
+          [
+            "トウガラシエキス",
+            "0.02 g"
+          ],
+          [
+            "トコフェロール酢酸エステル",
+            "0.3 g"
+          ]
+        ]
+      },
+      "rubyReadings": [
+        "ひ"
+      ],
+      "notes": "原典画像と問題文・全選択肢・ルビ（該当箇所）・表の行列とセル対応・記号を目視照合。候補レコードとの不一致は認められない。"
+    },
+    {
+      "id": "KSAI-2026-051",
+      "questionNo": 51,
+      "status": "FAIL",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "bundlePdfPages": [
+        3
+      ],
+      "officialPdfPages": [
+        43
+      ],
+      "checks": {
+        "questionText": "FAIL",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tableOrChoiceLayout": "PASS",
+        "symbols": "PASS"
+      },
+      "officialChoices": [
+        [
+          "正",
+          "誤",
+          "正",
+          "正"
+        ],
+        [
+          "正",
+          "正",
+          "正",
+          "誤"
+        ],
+        [
+          "正",
+          "正",
+          "誤",
+          "誤"
+        ],
+        [
+          "誤",
+          "正",
+          "誤",
+          "正"
+        ],
+        [
+          "誤",
+          "誤",
+          "正",
+          "正"
+        ]
+      ],
+      "table": {
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rows": [
+          [
+            "正",
+            "誤",
+            "正",
+            "正"
+          ],
+          [
+            "正",
+            "正",
+            "正",
+            "誤"
+          ],
+          [
+            "正",
+            "正",
+            "誤",
+            "誤"
+          ],
+          [
+            "誤",
+            "正",
+            "誤",
+            "正"
+          ],
+          [
+            "誤",
+            "誤",
+            "正",
+            "正"
+          ]
+        ]
+      },
+      "rubyReadings": [
+        "しゃく",
+        "かゆ"
+      ],
+      "notes": "問題文bの油名が原典画像では「ユーカリ油」だが、候補レコードは「ユ－カリ油」。長音記号「ー」(U+30FC)が全角ハイフン「－」(U+FF0D)に置換されているためFAIL。原典どおりの表記は「ユーカリ油」。"
+    },
+    {
+      "id": "KSAI-2026-052",
+      "questionNo": 52,
+      "status": "FAIL",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "bundlePdfPages": [
+        4
+      ],
+      "officialPdfPages": [
+        44
+      ],
+      "checks": {
+        "questionText": "FAIL",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tableOrChoiceLayout": "PASS",
+        "symbols": "PASS"
+      },
+      "officialChoices": [
+        [
+          "正",
+          "正",
+          "正",
+          "誤"
+        ],
+        [
+          "正",
+          "正",
+          "誤",
+          "正"
+        ],
+        [
+          "正",
+          "誤",
+          "正",
+          "正"
+        ],
+        [
+          "誤",
+          "正",
+          "正",
+          "正"
+        ],
+        [
+          "正",
+          "正",
+          "正",
+          "正"
+        ]
+      ],
+      "table": {
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rows": [
+          [
+            "正",
+            "正",
+            "正",
+            "誤"
+          ],
+          [
+            "正",
+            "正",
+            "誤",
+            "正"
+          ],
+          [
+            "正",
+            "誤",
+            "正",
+            "正"
+          ],
+          [
+            "誤",
+            "正",
+            "正",
+            "正"
+          ],
+          [
+            "正",
+            "正",
+            "正",
+            "正"
+          ]
+        ]
+      },
+      "rubyReadings": [
+        "しん"
+      ],
+      "notes": "問題文aの「イミダゾール系成分」が候補レコードでは「イミダゾ－ル系成分」。長音記号「ー」(U+30FC)が全角ハイフン「－」(U+FF0D)に置換されているためFAIL。原典どおりの表記は「イミダゾール系成分」。"
+    },
+    {
+      "id": "KSAI-2026-053",
+      "questionNo": 53,
+      "status": "PASS",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "bundlePdfPages": [
+        5
+      ],
+      "officialPdfPages": [
+        44
+      ],
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tableOrChoiceLayout": "PASS",
+        "symbols": "PASS"
+      },
+      "officialChoices": [
+        "ａ、ｂ",
+        "ａ、ｃ",
+        "ｂ、ｃ",
+        "ｂ、ｄ",
+        "ｃ、ｄ"
+      ],
+      "sourceTable": {
+        "columns": [
+          "記号",
+          "配合成分",
+          "配合目的"
+        ],
+        "rows": [
+          [
+            "a",
+            "カルバゾクロム",
+            "炎症を起こした歯周組織からの出血を抑える。"
+          ],
+          [
+            "b",
+            "ジブカイン塩酸塩",
+            "齲蝕により露出した歯髄を通っている知覚神経の伝達を遮断して痛みを鎮める。"
+          ],
+          [
+            "c",
+            "カミツレ",
+            "歯周組織の血行を促す。"
+          ],
+          [
+            "d",
+            "オイゲノール",
+            "冷感刺激を与えて知覚神経を麻痺させることによる鎮痛・鎮痒の効果を示す。"
+          ]
+        ]
+      },
+      "rubyReadings": [
+        "のう",
+        "うしょく",
+        "ひ",
+        "よう"
+      ],
+      "notes": "原典画像と問題文・全選択肢・ルビ（該当箇所）・表の行列とセル対応・記号を目視照合。候補レコードとの不一致は認められない。"
+    },
+    {
+      "id": "KSAI-2026-054",
+      "questionNo": 54,
+      "status": "PASS",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "bundlePdfPages": [
+        6
+      ],
+      "officialPdfPages": [
+        45
+      ],
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tableOrChoiceLayout": "PASS",
+        "symbols": "PASS"
+      },
+      "officialChoices": [
+        [
+          "正",
+          "正",
+          "正",
+          "誤"
+        ],
+        [
+          "正",
+          "正",
+          "誤",
+          "正"
+        ],
+        [
+          "正",
+          "正",
+          "誤",
+          "誤"
+        ],
+        [
+          "誤",
+          "誤",
+          "正",
+          "誤"
+        ],
+        [
+          "誤",
+          "正",
+          "誤",
+          "正"
+        ]
+      ],
+      "table": {
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rows": [
+          [
+            "正",
+            "正",
+            "正",
+            "誤"
+          ],
+          [
+            "正",
+            "正",
+            "誤",
+            "正"
+          ],
+          [
+            "正",
+            "正",
+            "誤",
+            "誤"
+          ],
+          [
+            "誤",
+            "誤",
+            "正",
+            "誤"
+          ],
+          [
+            "誤",
+            "正",
+            "誤",
+            "正"
+          ]
+        ]
+      },
+      "rubyReadings": [
+        "くう",
+        "くう",
+        "ほう",
+        "くう"
+      ],
+      "notes": "原典画像と問題文・全選択肢・ルビ（該当箇所）・表の行列とセル対応・記号を目視照合。候補レコードとの不一致は認められない。"
+    },
+    {
+      "id": "KSAI-2026-055",
+      "questionNo": 55,
+      "status": "FAIL",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "bundlePdfPages": [
+        7
+      ],
+      "officialPdfPages": [
+        46
+      ],
+      "checks": {
+        "questionText": "FAIL",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tableOrChoiceLayout": "PASS",
+        "symbols": "PASS"
+      },
+      "officialChoices": [
+        "酸性／交感神経／増強",
+        "酸性／交感神経／減弱",
+        "酸性／副交感神経／増強",
+        "アルカリ性／交感神経／減弱",
+        "アルカリ性／副交感神経／減弱"
+      ],
+      "table": {
+        "columns": [
+          "a",
+          "b",
+          "c"
+        ],
+        "rows": [
+          [
+            "酸性",
+            "交感神経",
+            "増強"
+          ],
+          [
+            "酸性",
+            "交感神経",
+            "減弱"
+          ],
+          [
+            "酸性",
+            "副交感神経",
+            "増強"
+          ],
+          [
+            "アルカリ性",
+            "交感神経",
+            "減弱"
+          ],
+          [
+            "アルカリ性",
+            "副交感神経",
+            "減弱"
+          ]
+        ]
+      },
+      "rubyReadings": [
+        "そしゃく",
+        "くう",
+        "くう",
+        "がい",
+        "たん",
+        "じ"
+      ],
+      "notes": "本文の「コーヒーや炭酸飲料」が候補レコードでは「コーヒ－や炭酸飲料」。長音記号「ー」(U+30FC)が全角ハイフン「－」(U+FF0D)に置換されているためFAIL。原典どおりの表記は「コーヒーや炭酸飲料」。"
+    },
+    {
+      "id": "KSAI-2026-056",
+      "questionNo": 56,
+      "status": "PASS",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "bundlePdfPages": [
+        8
+      ],
+      "officialPdfPages": [
+        47
+      ],
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tableOrChoiceLayout": "PASS",
+        "symbols": "PASS"
+      },
+      "officialChoices": [
+        [
+          "誤",
+          "正",
+          "正",
+          "誤"
+        ],
+        [
+          "正",
+          "誤",
+          "正",
+          "正"
+        ],
+        [
+          "正",
+          "正",
+          "正",
+          "正"
+        ],
+        [
+          "正",
+          "誤",
+          "正",
+          "誤"
+        ],
+        [
+          "誤",
+          "正",
+          "誤",
+          "正"
+        ]
+      ],
+      "table": {
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rows": [
+          [
+            "誤",
+            "正",
+            "正",
+            "誤"
+          ],
+          [
+            "正",
+            "誤",
+            "正",
+            "正"
+          ],
+          [
+            "正",
+            "正",
+            "正",
+            "正"
+          ],
+          [
+            "正",
+            "誤",
+            "正",
+            "誤"
+          ],
+          [
+            "誤",
+            "正",
+            "誤",
+            "正"
+          ]
+        ]
+      },
+      "rubyReadings": [
+        "けん"
+      ],
+      "notes": "原典画像と問題文・全選択肢・ルビ（該当箇所）・表の行列とセル対応・記号を目視照合。候補レコードとの不一致は認められない。"
+    },
+    {
+      "id": "KSAI-2026-057",
+      "questionNo": 57,
+      "status": "PASS",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "bundlePdfPages": [
+        9
+      ],
+      "officialPdfPages": [
+        48
+      ],
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS_NOT_APPLICABLE",
+        "tableOrChoiceLayout": "PASS",
+        "symbols": "PASS"
+      },
+      "officialChoices": [
+        [
+          "正",
+          "正",
+          "正",
+          "誤"
+        ],
+        [
+          "正",
+          "正",
+          "誤",
+          "正"
+        ],
+        [
+          "正",
+          "誤",
+          "正",
+          "正"
+        ],
+        [
+          "誤",
+          "正",
+          "正",
+          "正"
+        ],
+        [
+          "正",
+          "正",
+          "正",
+          "正"
+        ]
+      ],
+      "table": {
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rows": [
+          [
+            "正",
+            "正",
+            "正",
+            "誤"
+          ],
+          [
+            "正",
+            "正",
+            "誤",
+            "正"
+          ],
+          [
+            "正",
+            "誤",
+            "正",
+            "正"
+          ],
+          [
+            "誤",
+            "正",
+            "正",
+            "正"
+          ],
+          [
+            "正",
+            "正",
+            "正",
+            "正"
+          ]
+        ]
+      },
+      "rubyReadings": [],
+      "notes": "原典画像と問題文・全選択肢・ルビ（該当箇所）・表の行列とセル対応・記号を目視照合。候補レコードとの不一致は認められない。"
+    },
+    {
+      "id": "KSAI-2026-058",
+      "questionNo": 58,
+      "status": "PASS",
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "bundlePdfPages": [
+        10
+      ],
+      "officialPdfPages": [
+        48
+      ],
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS_NOT_APPLICABLE",
+        "tableOrChoiceLayout": "PASS",
+        "symbols": "PASS"
+      },
+      "officialChoices": [
+        [
+          "正",
+          "誤",
+          "正",
+          "誤"
+        ],
+        [
+          "正",
+          "誤",
+          "誤",
+          "正"
+        ],
+        [
+          "誤",
+          "正",
+          "正",
+          "正"
+        ],
+        [
+          "誤",
+          "正",
+          "誤",
+          "正"
+        ],
+        [
+          "誤",
+          "誤",
+          "正",
+          "正"
+        ]
+      ],
+      "table": {
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rows": [
+          [
+            "正",
+            "誤",
+            "正",
+            "誤"
+          ],
+          [
+            "正",
+            "誤",
+            "誤",
+            "正"
+          ],
+          [
+            "誤",
+            "正",
+            "正",
+            "正"
+          ],
+          [
+            "誤",
+            "正",
+            "誤",
+            "正"
+          ],
+          [
+            "誤",
+            "誤",
+            "正",
+            "正"
+          ]
+        ]
+      },
+      "rubyReadings": [],
+      "notes": "原典画像と問題文・全選択肢・ルビ（該当箇所）・表の行列とセル対応・記号を目視照合。候補レコードとの不一致は認められない。"
+    }
+  ]
+}
