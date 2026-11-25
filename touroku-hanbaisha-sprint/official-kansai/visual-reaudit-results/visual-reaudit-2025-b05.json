@@ -1,0 +1,466 @@
+{
+  "batch": "visual-reaudit-2025-b05",
+  "auditType": "manual_visual_reaudit",
+  "repository": "ALLSUNDAY1122/ALLSUNDAY1122.github.io",
+  "branch": "main",
+  "source": {
+    "candidateAttachment": "visual-reaudit-2025-b05.candidates.json",
+    "pdfAttachment": "visual-reaudit-2025-b05.pdf",
+    "attachedPdfPages": 6,
+    "officialPdf": "関西広域連合「令和7年度登録販売者試験」前半",
+    "officialPdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R7tourokuhannbaisyashiken_zennhan.pdf",
+    "officialPdfPages": [
+      35,
+      36,
+      37,
+      38,
+      39,
+      40
+    ],
+    "answerPdfInspected": false
+  },
+  "method": {
+    "description": "添付PDFの6ページ分のレンダリング画像を目視し、候補JSONのidsにある10問について問題文、全選択肢、ルビ、表の行列・セル対応、記号を照合した。PDF文字データ抽出や既存自動監査結果を目視判定の代替根拠としていない。",
+    "imageBackedQuestion": "問52は候補JSONのsourceFiguresが指すGitHub main上のPNGをbase64で読み戻して表示し、添付PDF画像と直接照合した。",
+    "answerHandling": "answerNumberOfficialのみ記録。正答PDFは確認していないため全件answerPDFChecked=false。",
+    "failRule": "原典画像と候補レコードの問題文・選択肢・ルビ・表・記号の対応が一致しない場合はFAIL。原典で確認できる正しい表記をcorrectionsに記録した。"
+  },
+  "scope": {
+    "questionIds": [
+      "KSAI-2025-045",
+      "KSAI-2025-046",
+      "KSAI-2025-047",
+      "KSAI-2025-048",
+      "KSAI-2025-049",
+      "KSAI-2025-050",
+      "KSAI-2025-051",
+      "KSAI-2025-052",
+      "KSAI-2025-053",
+      "KSAI-2025-054"
+    ],
+    "questionNumbers": [
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54
+    ],
+    "bundlePdfPages": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ]
+  },
+  "summary": {
+    "total": 10,
+    "pass": 9,
+    "fail": 1,
+    "hold": 0
+  },
+  "results": [
+    {
+      "id": "KSAI-2025-045",
+      "questionNo": 45,
+      "bundlePdfPages": [
+        1
+      ],
+      "officialPdfPages": [
+        35
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "rubyReadingsInSourceOrder": [
+        "じゅうみはいどくとう",
+        "しょうふうさん",
+        "とうきいんし",
+        "いんちんこうとう",
+        "しん",
+        "かゆ",
+        "のう",
+        "くう",
+        "しんいせいはいとう"
+      ],
+      "choiceTable": [
+        [
+          "正",
+          "正",
+          "正",
+          "正"
+        ],
+        [
+          "誤",
+          "誤",
+          "正",
+          "正"
+        ],
+        [
+          "誤",
+          "誤",
+          "誤",
+          "正"
+        ],
+        [
+          "正",
+          "正",
+          "誤",
+          "誤"
+        ],
+        [
+          "正",
+          "誤",
+          "正",
+          "誤"
+        ]
+      ],
+      "notes": "本文a〜d、漢方処方名等のルビ、正誤表5行×4列を原典画像で照合。本文・ルビ出現順・全セルが候補と一致。"
+    },
+    {
+      "id": "KSAI-2025-046",
+      "questionNo": 46,
+      "bundlePdfPages": [
+        1
+      ],
+      "officialPdfPages": [
+        35
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "rubyReadingsInSourceOrder": [
+        "くう",
+        "くう",
+        "くう"
+      ],
+      "notes": "鼻炎用点鼻薬の定義および選択肢1〜5の全文を照合。副鼻腔炎に付されたルビ「くう」3件も原典出現位置・順序と一致。"
+    },
+    {
+      "id": "KSAI-2025-047",
+      "questionNo": 47,
+      "bundlePdfPages": [
+        2
+      ],
+      "officialPdfPages": [
+        36
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "rubyPlacements": [
+        {
+          "base": "瞼",
+          "reading": "けん"
+        },
+        {
+          "base": "睫",
+          "reading": "しょう"
+        },
+        {
+          "base": "嚢",
+          "reading": "のう"
+        }
+      ],
+      "notes": "本文a〜dと組合せ選択肢5件を照合。眼瞼の「けん」、睫毛の「しょう」、結膜嚢の「のう」のルビ配置を原典画像と照合し一致。"
+    },
+    {
+      "id": "KSAI-2025-048",
+      "questionNo": 48,
+      "bundlePdfPages": [
+        2
+      ],
+      "officialPdfPages": [
+        36
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "rubyReadingsInSourceOrder": [
+        "のう",
+        "くう"
+      ],
+      "notes": "本文a〜dと組合せ選択肢5件を照合。選択肢dの「化膿」「口腔」に付されたルビ「のう」「くう」は候補本文中に原典順で保持され、本文・選択肢とも一致。"
+    },
+    {
+      "id": "KSAI-2025-049",
+      "questionNo": 49,
+      "bundlePdfPages": [
+        3
+      ],
+      "officialPdfPages": [
+        37
+      ],
+      "status": "FAIL",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "FAIL",
+        "allChoices": "PASS",
+        "ruby": "該当なし",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "corrections": [
+        {
+          "field": "question.a",
+          "candidate": "アクリノ－ルは、真菌、結核菌、ウイルスに対して殺菌消毒作用を示す。",
+          "official": "アクリノールは、真菌、結核菌、ウイルスに対して殺菌消毒作用を示す。",
+          "reason": "候補は「－」（U+FF0D FULLWIDTH HYPHEN-MINUS）、原典は「ー」（U+30FC KATAKANA-HIRAGANA PROLONGED SOUND MARK）。別文字であり、原典表記に一致しない。"
+        }
+      ],
+      "notes": "選択肢aの成分名に文字コード上の表記不一致を確認。原典の正しい表記は「アクリノール」。選択肢b〜dおよび組合せ選択肢5件は一致。"
+    },
+    {
+      "id": "KSAI-2025-050",
+      "questionNo": 50,
+      "bundlePdfPages": [
+        3
+      ],
+      "officialPdfPages": [
+        37
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "rubyReadingsInSourceOrder": [
+        "かゆ"
+      ],
+      "choiceTable": [
+        [
+          "正",
+          "誤",
+          "正",
+          "誤"
+        ],
+        [
+          "正",
+          "誤",
+          "正",
+          "正"
+        ],
+        [
+          "正",
+          "正",
+          "誤",
+          "誤"
+        ],
+        [
+          "誤",
+          "正",
+          "正",
+          "正"
+        ],
+        [
+          "誤",
+          "正",
+          "誤",
+          "正"
+        ]
+      ],
+      "notes": "本文a〜d、「痒み」のルビ「かゆ」、正誤表5行×4列を照合。本文・ルビ・全セルが候補と一致。"
+    },
+    {
+      "id": "KSAI-2025-051",
+      "questionNo": 51,
+      "bundlePdfPages": [
+        4
+      ],
+      "officialPdfPages": [
+        38
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "rubyReadingsInSourceOrder": [
+        "しん",
+        "かゆ",
+        "ひ",
+        "よう"
+      ],
+      "choiceTable": [
+        [
+          "誤",
+          "正",
+          "正",
+          "誤"
+        ],
+        [
+          "正",
+          "正",
+          "誤",
+          "正"
+        ],
+        [
+          "正",
+          "誤",
+          "正",
+          "誤"
+        ],
+        [
+          "誤",
+          "正",
+          "誤",
+          "正"
+        ],
+        [
+          "正",
+          "誤",
+          "正",
+          "正"
+        ]
+      ],
+      "notes": "本文a〜d、湿疹・痒み・麻痺・鎮痒に付されたルビ4件、正誤表5行×4列を照合。候補と一致。"
+    },
+    {
+      "id": "KSAI-2025-052",
+      "questionNo": 52,
+      "bundlePdfPages": [
+        5
+      ],
+      "officialPdfPages": [
+        39
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "sourceFigure": {
+        "path": "touroku-hanbaisha-sprint/official-kansai/layout-crops/KSAI-2025-052-p39-1.png",
+        "sha256": "153c57a2de8c9d3a53b0227d40569d72c2132d7e987e6b6c58acc8139914d334",
+        "readBackFromMain": true,
+        "visualComparison": "PASS"
+      },
+      "notes": "候補JSONのsourceFiguresが示すPNGをGitHub mainからbase64で読み戻して表示し、添付PDFの問52画像と直接照合。設問、成分4行（ピロールニトリン0.2g〔力価〕、クロトリマゾール0.4g、クロタミトン5g、1-メントール1g）、本文a〜d、組合せ選択肢5件が一致。"
+    },
+    {
+      "id": "KSAI-2025-053",
+      "questionNo": 53,
+      "bundlePdfPages": [
+        5
+      ],
+      "officialPdfPages": [
+        39
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "rubyReadingsInSourceOrder": [
+        "そしゃく",
+        "か",
+        "くう",
+        "か"
+      ],
+      "notes": "本文および選択肢1〜5の全文を照合。咀嚼・噛む・口腔等のルビ4件も原典出現順と一致。"
+    },
+    {
+      "id": "KSAI-2025-054",
+      "questionNo": 54,
+      "bundlePdfPages": [
+        6
+      ],
+      "officialPdfPages": [
+        40
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "該当なし",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "choiceTable": [
+        [
+          "消化不良",
+          "栄養素",
+          "改善又は予防"
+        ],
+        [
+          "消化不良",
+          "エネルギー源",
+          "治療又は予防"
+        ],
+        [
+          "体調不良",
+          "栄養素",
+          "改善又は予防"
+        ],
+        [
+          "体調不良",
+          "栄養素",
+          "治療又は予防"
+        ],
+        [
+          "体調不良",
+          "エネルギー源",
+          "治療又は予防"
+        ]
+      ],
+      "notes": "滋養強壮保健薬の本文と表5行×3列を照合。a・b・c各列の全セル、選択肢の語句が候補と一致。"
+    }
+  ]
+}
