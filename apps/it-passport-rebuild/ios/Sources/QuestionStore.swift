@@ -13,16 +13,29 @@ struct StudyQuestion: Codable, Identifiable, Hashable {
     let modificationNote: String?
     let representationChanged: Bool
     let domain: String?
+    let categoryLabel: String?
+    let shortExplanation: String?
+    let detailedExplanation: String?
     let publishable: Bool
     let releaseEligible: Bool
-    var category: String { domain ?? "未分類" }
+
+    enum CodingKeys: String, CodingKey {
+        case id, year, questionNumber, question, choices, correctIndex
+        case sourceLabel, sourceUrl, modified, modificationNote
+        case representationChanged, domain, publishable, releaseEligible
+        case categoryLabel = "category"
+        case shortExplanation = "short"
+        case detailedExplanation = "detail"
+    }
+
+    var category: String { categoryLabel ?? domain ?? "未分類" }
     var primaryEvidence: String { sourceLabel }
     var originType: String { "ipa_published_verbatim" }
     var officialYear: Int? { year }
     var officialNumber: Int? { questionNumber }
     var sourceFigureName: String? { nil }
     var sourceFigureAlt: String? { nil }
-    var explanation: String { "解説は未収録です。" }
+    var explanation: String { shortExplanation ?? "解説は未収録です。" }
 }
 private struct QuestionBank: Decodable {
     let questions: [StudyQuestion]
