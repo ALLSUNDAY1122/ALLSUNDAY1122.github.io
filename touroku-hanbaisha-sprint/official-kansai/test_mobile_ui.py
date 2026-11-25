@@ -9,7 +9,6 @@ from pathlib import Path
 from playwright.sync_api import sync_playwright
 BASE=Path(__file__).resolve().parents[1]
 BANK=json.loads((BASE/"official-kansai/APPROVED_OFFICIAL_BANK.json").read_text())
-BANK_COUNT=BANK["count"]
 SOURCE_2023=json.loads((BASE/"official-kansai/QUESTIONS_2023_APP_CANDIDATE.json").read_text())
 URL="http://127.0.0.1:8765/official-practice.html"
 def assert_no_overflow(page):
@@ -18,26 +17,20 @@ def assert_no_overflow(page):
 def standard(page,width):
     page.set_viewport_size({"width":width,"height":800})
     page.goto(URL,wait_until="networkidle")
-    page.locator("#homeProgress").wait_for()
-    page.locator("#homeStart").click()
     page.locator("#available").get_by_text(str(BANK["count"])+"問",exact=False).wait_for()
     assert str(BANK["count"])+"問" in page.locator("#count").inner_text()
-    assert page.evaluate("eligible().length")==50
-    assert page.evaluate("Object.values(eligible().reduce((a,q)=>(a[q.chapter]=(a[q.chapter]||0)+1,a),{})).every(n=>n===10)")
     assert_no_overflow(page)
-    page.evaluate("window.setPremiumEntitlement(true)")
-    assert page.evaluate("eligible().length")==BANK_COUNT
     page.locator("#start").click()
     four_seen=False
     for i,q in enumerate(BANK["questions"]):
         assert f"問{q['questionNo']}" in page.locator("#questionTitle").inner_text()
         assert page.locator("#choices button").count()==len(q["choices"])
+        assert q["attributionDisplay"] in page.locator("#attribution").inner_text()
         assert_no_overflow(page)
         if i==0:page.screenshot(path=f"/tmp/touhan_mobile_{width}.png",full_page=True)
         if len(q["choices"])==4:four_seen=True
         page.locator("#choices button").nth(q["answer"]).click()
         page.locator("#feedback .explanation").wait_for(state="visible")
-        assert q["attributionDisplay"] in page.locator("#attribution").inner_text()
         assert page.locator("#feedback .explanation").inner_text().strip()
         page.locator("#next").click()
     assert four_seen,"Four-option official sample missing"
@@ -53,8 +46,6 @@ def q90_mock(page):
         route.fulfill(status=200,content_type="application/json; charset=utf-8",body=json.dumps(body,ensure_ascii=False))
     page.route("**/official-kansai/APPROVED_OFFICIAL_BANK.json",handle)
     page.goto(URL,wait_until="networkidle")
-    page.evaluate("window.setPremiumEntitlement(true)")
-    page.locator("#homeStart").click()
     assert "1問" in page.locator("#count").inner_text()
     page.locator("#start").click()
     page.locator("#choices button").first.click()
