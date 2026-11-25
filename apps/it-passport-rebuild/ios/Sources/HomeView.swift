@@ -23,6 +23,8 @@ private enum Palette {
 
 struct HomeView: View {
     @State private var dailyCount = 8
+    @EnvironmentObject private var premium: PremiumStore
+    @State private var showSettings = false
 
     private let domains = [
         StudyDomain(id: "strategy", title: "ストラテジ系"),
@@ -35,6 +37,11 @@ struct HomeView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
                     header
+                    Button { showSettings = true } label: {
+                        Label(premium.isPremium ? "設定・Premium利用中" : "設定・Premium（全500問）", systemImage: "gearshape")
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                    .buttonStyle(.bordered)
                     todayCard
                     Text("分野から解く")
                         .font(.headline)
@@ -50,6 +57,7 @@ struct HomeView: View {
             .toolbar(.hidden, for: .navigationBar)
         }
         .tint(Palette.navy)
+        .sheet(isPresented: $showSettings) { PremiumSettingsView() }
     }
 
     private var header: some View {
@@ -70,7 +78,7 @@ struct HomeView: View {
     }
 
     private var todayCard: some View {
-        let daily = QuestionStore.daily(limit: dailyCount)
+        let daily = QuestionStore.daily(limit: dailyCount, premium: premium.isPremium)
         return VStack(alignment: .leading, spacing: 10) {
             Text("今日の学習")
                 .font(.system(size: 21, weight: .bold, design: .serif))
@@ -100,7 +108,7 @@ struct HomeView: View {
     private var domainGrid: some View {
         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
             ForEach(domains) { domain in
-                let count = QuestionStore.questions(domain: domain.id).count
+                let count = QuestionStore.questions(domain: domain.id, premium: premium.isPremium).count
                 NavigationLink {
                     DomainSetView(domain: domain)
                 } label: {
@@ -141,8 +149,18 @@ struct HomeView: View {
                     .foregroundStyle(.secondary)
             } else {
                 ForEach(QuestionStore.availableOfficialYears, id: \.self) { year in
-                    let questions = QuestionStore.officialExam(year: year)
-                    if questions.count == 100 {
+                    let questions = QuestionStore.officialExam(year: year, premium: premium.isPremium)
+                    if !premium.isPremium && year != QuestionStore.freeYear {
+                        Button { showSettings = true } label: {
+                            HStack {
+                                Text("\(year)年度").font(.subheadline.bold())
+                                Spacer()
+                                Text("Premium・100問").font(.caption)
+                                Image(systemName: "lock.fill")
+                            }
+                        }
+                        .buttonStyle(.plain)
+                    } else if questions.count == 100 {
                         NavigationLink {
                             QuizView(title: "\(year)年度 公式公開問題", questions: questions)
                         } label: {
@@ -169,9 +187,9 @@ struct HomeView: View {
 
     private var sourceNotice: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Label("問題品質を優先して段階追加中", systemImage: "checkmark.shield")
+            Label("公式公開問題", systemImage: "checkmark.shield")
                 .font(.subheadline.bold())
-            Text("2022〜2026年度の公式公開問題500問を使用する開発版です。")
+            Text("2026年度100問は無料。Premiumでは2022〜2026年度の全500問を学習できます。")
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }
@@ -184,7 +202,8 @@ struct HomeView: View {
 private struct DomainSetView: View {
     let domain: StudyDomain
 
-    private var questions: [StudyQuestion] { QuestionStore.questions(domain: domain.id) }
+    @EnvironmentObject private var premium: PremiumStore
+    private var questions: [StudyQuestion] { QuestionStore.questions(domain: domain.id, premium: premium.isPremium) }
     private var sets: [QuestionSet] {
         stride(from: 0, to: questions.count, by: 10).enumerated().map { offset, start in
             QuestionSet(id: offset + 1, start: start + 1, end: min(start + 10, questions.count))
@@ -234,11 +253,17 @@ private struct QuizView: View {
     let title: String
     let questions: [StudyQuestion]
 
+    @EnvironmentObject private var premium: PremiumStore
+    @State private var showSettings = false
     @State private var index = 0
     @State private var selected: Int? = nil
     @State private var correctCount = 0
     @State private var finished = false
     @State private var imageScale: CGFloat = 1
+
+    private var canStudy: Bool {
+        premium.isPremium || questions.allSatisfy { $0.year == QuestionStore.freeYear }
+    }
 
     private var current: StudyQuestion? {
         guard questions.indices.contains(index) else { return nil }
@@ -247,7 +272,13 @@ private struct QuizView: View {
 
     var body: some View {
         ScrollView {
-            if finished {
+            if !canStudy {
+                VStack(spacing: 16) {
+                    Label("Premiumが必要です", systemImage: "lock.fill").font(.headline)
+                    Text("2026年度100問は無料で学習できます。")
+                    Button("購入・復元へ") { showSettings = true }
+                }.padding(24)
+            } else if finished {
                 resultView
             } else if let q = current {
                 VStack(alignment: .leading, spacing: 16) {
@@ -342,6 +373,7 @@ private struct QuizView: View {
         .background(Palette.paper.ignoresSafeArea())
         .navigationTitle(title)
         .navigationBarTitleDisplayMode(.inline)
+        .sheet(isPresented: $showSettings) { PremiumSettingsView() }
     }
 
     private var resultView: some View {
@@ -361,12 +393,13 @@ private struct QuizView: View {
     }
 
     private func answer(_ choice: Int, question: StudyQuestion) {
-        guard selected == nil else { return }
+        guard canStudy, selected == nil else { return }
         selected = choice
         if choice == question.correctIndex { correctCount += 1 }
     }
 
     private func advance() {
+        guard canStudy else { return }
         if index + 1 >= questions.count {
             finished = true
         } else {
