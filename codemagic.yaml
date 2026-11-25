@@ -1996,3 +1996,83 @@ workflows:
         auth: integration
         submit_to_testflight: false
         submit_to_app_store: false
+
+  itpassportstudy-ios:
+    name: ITパスポート - SwiftUI Internal TestFlight
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    integrations:
+      app_store_connect: "Codemagic Shiwake Swipe"
+    environment:
+      ios_signing:
+        provisioning_profiles:
+          - itpassportstudy_appstore
+      vars:
+        BUNDLE_ID: jp.allsunday1122.itpassportstudy
+        XCODE_PROJECT: apps/it-passport-rebuild/ios/ITPassportStudy.xcodeproj
+        XCODE_SCHEME: ITPassportStudy
+      xcode: latest
+    scripts:
+      - name: Prepare and validate official question resources
+        script: |
+          set -euo pipefail
+          cd "$CM_BUILD_DIR/apps/it-passport-rebuild/ios"
+          bash -n prepare-ios.sh
+          bash prepare-ios.sh
+          test -s Resources/official-500.json
+          bash tools/materialize_appicon.sh
+      - name: Install XcodeGen and generate project
+        script: |
+          set -euo pipefail
+          HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+          cd "$CM_BUILD_DIR/apps/it-passport-rebuild/ios"
+          python3 - <<'PY'
+          import os, pathlib
+          p = pathlib.Path('project.yml')
+          s = p.read_text()
+          number = os.environ['CM_BUILD_NUMBER']
+          assert number.isdecimal()
+          assert s.count('CURRENT_PROJECT_VERSION: 1') == 1
+          p.write_text(s.replace('CURRENT_PROJECT_VERSION: 1', 'CURRENT_PROJECT_VERSION: ' + number, 1))
+          PY
+          xcodegen generate
+      - name: Apply App Store signing profiles
+        script: |
+          set -euo pipefail
+          cd "$CM_BUILD_DIR/apps/it-passport-rebuild/ios"
+          xcode-project use-profiles
+      - name: Build signed IPA
+        script: |
+          set -euo pipefail
+          xcode-project build-ipa --project "$CM_BUILD_DIR/$XCODE_PROJECT" --scheme "$XCODE_SCHEME"
+      - name: Verify signed IPA and bundled question data
+        script: |
+          set -euo pipefail
+          cd "$CM_BUILD_DIR"
+          ipa=(build/ios/ipa/*.ipa)
+          test "${#ipa[@]}" -eq 1
+          test -f "${ipa[0]}"
+          expanded="$(mktemp -d)"
+          ditto -x -k "${ipa[0]}" "$expanded"
+          app="$expanded/Payload/ITPassportStudy.app"
+          codesign --verify --deep --strict "$app"
+          python3 - "$app" <<'PY'
+          import json, os, pathlib, plistlib, sys
+          app = pathlib.Path(sys.argv[1])
+          info = plistlib.loads((app / 'Info.plist').read_bytes())
+          assert info['CFBundleIdentifier'] == os.environ['BUNDLE_ID']
+          expected = pathlib.Path('apps/it-passport-rebuild/ios/Resources/official-500.json').read_bytes()
+          actual = (app / 'official-500.json').read_bytes()
+          assert actual == expected
+          qs = json.loads(actual)['questions']
+          assert len(qs) == len({q['id'] for q in qs}) == 500
+          print('PASS: signed IPA and 500 bundled questions')
+          PY
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: false
+        submit_to_app_store: false
