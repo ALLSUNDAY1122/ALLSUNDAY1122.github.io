@@ -1,0 +1,500 @@
+{
+  "batch": "visual-reaudit-2022-b10",
+  "repository": "ALLSUNDAY1122/ALLSUNDAY1122.github.io",
+  "branch": "main",
+  "bankPath": "touroku-hanbaisha-sprint/official-kansai/APPROVED_OFFICIAL_BANK.json",
+  "bankBlobShaAtAudit": "8741e2675af6f41f7fba2afdc89566f48b8258e7",
+  "auditMethod": "添付された公式問題PDFの各ページ画像を目視し、候補JSONに含まれる現行正式バンクレコードと照合。PDF文字データ・自動照合結果を合否判定に使用していない。",
+  "sourceFiles": {
+    "questionPdf": "visual-reaudit-2022-b10.pdf",
+    "candidateJson": "visual-reaudit-2022-b10.candidates.json"
+  },
+  "pageMapping": [
+    {
+      "bundlePdfPage": 1,
+      "officialPdf": "2022-second_half",
+      "officialPdfPage": 32
+    },
+    {
+      "bundlePdfPage": 2,
+      "officialPdf": "2022-second_half",
+      "officialPdfPage": 34
+    },
+    {
+      "bundlePdfPage": 3,
+      "officialPdf": "2022-second_half",
+      "officialPdfPage": 35
+    },
+    {
+      "bundlePdfPage": 4,
+      "officialPdf": "2022-second_half",
+      "officialPdfPage": 36
+    }
+  ],
+  "summary": {
+    "total": 8,
+    "pass": 8,
+    "fail": 0,
+    "hold": 0
+  },
+  "answerPolicy": "answerNumberOfficialは候補JSONの値を記録。正答PDFは直接確認していないため、全件answerPDFChecked=false。",
+  "results": [
+    {
+      "id": "KSAI-2022-112",
+      "questionNo": 112,
+      "bundlePdfPages": [
+        1
+      ],
+      "officialPdf": "2022-second_half",
+      "officialPdfPages": [
+        32
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "checked": [
+        "問題文全文",
+        "空欄a〜cと複数のbの指定",
+        "選択肢1〜5の全セル",
+        "表の列見出しと行対応",
+        "薬品名・剤形・血中濃度表現"
+      ],
+      "visualDetails": {
+        "choices": [
+          "プソイドエフェドリン塩酸塩／胃腸薬／緩やかに",
+          "プソイドエフェドリン塩酸塩／かぜ薬／急速に",
+          "アミノピリン／かぜ薬／緩やかに",
+          "アミノピリン／かぜ薬／急速に",
+          "アミノピリン／胃腸薬／急速に"
+        ],
+        "tableRows": [
+          [
+            "プソイドエフェドリン塩酸塩",
+            "胃腸薬",
+            "緩やかに"
+          ],
+          [
+            "プソイドエフェドリン塩酸塩",
+            "かぜ薬",
+            "急速に"
+          ],
+          [
+            "アミノピリン",
+            "かぜ薬",
+            "緩やかに"
+          ],
+          [
+            "アミノピリン",
+            "かぜ薬",
+            "急速に"
+          ],
+          [
+            "アミノピリン",
+            "胃腸薬",
+            "急速に"
+          ]
+        ]
+      },
+      "differences": [],
+      "notes": "PDF画像1ページ（公式PDF第2部32ページ）。問題文の空欄、アンプル入り製剤の記述および表の5行×3列が候補レコードと一致。"
+    },
+    {
+      "id": "KSAI-2022-113",
+      "questionNo": 113,
+      "bundlePdfPages": [
+        1
+      ],
+      "officialPdf": "2022-second_half",
+      "officialPdfPages": [
+        32
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "checked": [
+        "問題文全文",
+        "a〜d全文",
+        "選択肢1〜5",
+        "正誤表5行×4列の各セル",
+        "日付・WHO表記・括弧"
+      ],
+      "visualDetails": {
+        "choiceRows": [
+          [
+            "正",
+            "誤",
+            "正",
+            "誤"
+          ],
+          [
+            "正",
+            "誤",
+            "誤",
+            "正"
+          ],
+          [
+            "誤",
+            "誤",
+            "正",
+            "誤"
+          ],
+          [
+            "正",
+            "正",
+            "誤",
+            "誤"
+          ],
+          [
+            "誤",
+            "誤",
+            "誤",
+            "正"
+          ]
+        ]
+      },
+      "differences": [],
+      "notes": "PDF画像1ページ（公式PDF第2部32ページ）。「薬と健康の週間」、国際麻薬乱用撲滅デー等の記述と正誤表20セルが一致。"
+    },
+    {
+      "id": "KSAI-2022-115",
+      "questionNo": 115,
+      "bundlePdfPages": [
+        2
+      ],
+      "officialPdf": "2022-second_half",
+      "officialPdfPages": [
+        34
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "checked": [
+        "設問全文",
+        "選択肢1〜5全文",
+        "薬品成分名の字形・表記"
+      ],
+      "visualDetails": {
+        "choices": [
+          "ケトプロフェン",
+          "ブチルスコポラミン臭化物",
+          "プソイドエフェドリン塩酸塩",
+          "タンニン酸アルブミン",
+          "チペピジンヒベンズ酸塩"
+        ]
+      },
+      "differences": [],
+      "notes": "PDF画像2ページ（公式PDF第2部34ページ）。設問および5つの成分名が候補レコードと一致。"
+    },
+    {
+      "id": "KSAI-2022-116",
+      "questionNo": 116,
+      "bundlePdfPages": [
+        2
+      ],
+      "officialPdf": "2022-second_half",
+      "officialPdfPages": [
+        34
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "checked": [
+        "問題文全文",
+        "a〜d成分名",
+        "選択肢1〜5",
+        "正誤表5行×4列の各セル"
+      ],
+      "visualDetails": {
+        "statements": [
+          "a ジプロフィリン",
+          "b メクリジン塩酸塩",
+          "c アミノ安息香酸エチル",
+          "d ピリドキシン塩酸塩"
+        ],
+        "choiceRows": [
+          [
+            "正",
+            "誤",
+            "正",
+            "誤"
+          ],
+          [
+            "正",
+            "誤",
+            "誤",
+            "正"
+          ],
+          [
+            "誤",
+            "誤",
+            "正",
+            "誤"
+          ],
+          [
+            "正",
+            "正",
+            "誤",
+            "誤"
+          ],
+          [
+            "誤",
+            "誤",
+            "誤",
+            "正"
+          ]
+        ]
+      },
+      "differences": [],
+      "notes": "PDF画像2ページ（公式PDF第2部34ページ）。メトヘモグロビン血症・6歳未満の小児に関する設問、成分名および正誤表20セルが一致。"
+    },
+    {
+      "id": "KSAI-2022-117",
+      "questionNo": 117,
+      "bundlePdfPages": [
+        3
+      ],
+      "officialPdf": "2022-second_half",
+      "officialPdfPages": [
+        35
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "checked": [
+        "問題文全文",
+        "主な成分と理由の対応表",
+        "a〜dの成分名・理由全文",
+        "選択肢1〜5",
+        "正誤表5行×4列の各セル"
+      ],
+      "visualDetails": {
+        "pairs": [
+          {
+            "label": "a",
+            "ingredient": "ヒマシ油類",
+            "reason": "子宮収縮が抑制されるため。"
+          },
+          {
+            "label": "b",
+            "ingredient": "エチニルエストラジオール",
+            "reason": "妊娠中の女性ホルモン成分の摂取によって、胎児の先天性異常の発生が報告されているため。"
+          },
+          {
+            "label": "c",
+            "ingredient": "イブプロフェン",
+            "reason": "腸の急激な動きに刺激されて流産・早産を誘発するおそれがあるため。"
+          },
+          {
+            "label": "d",
+            "ingredient": "オキセサゼイン",
+            "reason": "妊娠中における安全性は確立されていないため。"
+          }
+        ],
+        "choiceRows": [
+          [
+            "正",
+            "正",
+            "誤",
+            "正"
+          ],
+          [
+            "誤",
+            "誤",
+            "正",
+            "誤"
+          ],
+          [
+            "正",
+            "正",
+            "正",
+            "誤"
+          ],
+          [
+            "正",
+            "誤",
+            "正",
+            "誤"
+          ],
+          [
+            "誤",
+            "正",
+            "誤",
+            "正"
+          ]
+        ]
+      },
+      "differences": [],
+      "notes": "PDF画像3ページ（公式PDF第2部35ページ）。表の成分と理由の行対応を目視確認し、候補JSONと一致。正誤表20セルも一致。"
+    },
+    {
+      "id": "KSAI-2022-118",
+      "questionNo": 118,
+      "bundlePdfPages": [
+        3
+      ],
+      "officialPdf": "2022-second_half",
+      "officialPdfPages": [
+        35
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "checked": [
+        "問題文全文",
+        "基礎疾患等と医薬品成分の対応表",
+        "組合せ選択肢1〜4"
+      ],
+      "visualDetails": {
+        "pairs": [
+          {
+            "label": "a",
+            "condition": "胃・十二指腸潰瘍",
+            "ingredient": "エテンザミド"
+          },
+          {
+            "label": "b",
+            "condition": "高血圧",
+            "ingredient": "フェニレフリン塩酸塩"
+          },
+          {
+            "label": "c",
+            "condition": "腎臓病",
+            "ingredient": "メチルエフェドリン塩酸塩"
+          },
+          {
+            "label": "d",
+            "condition": "糖尿病",
+            "ingredient": "ジプロフィリン"
+          }
+        ],
+        "choices": [
+          "ａ、ｂ",
+          "ａ、ｄ",
+          "ｂ、ｃ",
+          "ｃ、ｄ"
+        ]
+      },
+      "differences": [],
+      "notes": "PDF画像3ページ（公式PDF第2部35ページ）。基礎疾患等と成分の対応4行、および組合せ選択肢4件が一致。"
+    },
+    {
+      "id": "KSAI-2022-119",
+      "questionNo": 119,
+      "bundlePdfPages": [
+        4
+      ],
+      "officialPdf": "2022-second_half",
+      "officialPdfPages": [
+        36
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "checked": [
+        "問題文全文",
+        "a〜d全文",
+        "正誤表5行×4列の各セル",
+        "原典のルビ3件と出現順",
+        "ルビの表示方式"
+      ],
+      "visualDetails": {
+        "statements": [
+          "a 副腎皮質の機能低下を生じるおそれがあるため。",
+          "b 激しい腹痛を伴う下痢等の副作用が現れやすくなるため。",
+          "c 倦怠感や虚脱感等が現れることがあるため。",
+          "d 依存性・習慣性がある成分が配合されており、乱用事例が報告されているため。"
+        ],
+        "choiceRows": [
+          [
+            "正",
+            "正",
+            "正",
+            "正"
+          ],
+          [
+            "誤",
+            "誤",
+            "正",
+            "正"
+          ],
+          [
+            "誤",
+            "誤",
+            "誤",
+            "正"
+          ],
+          [
+            "正",
+            "正",
+            "誤",
+            "誤"
+          ],
+          [
+            "正",
+            "誤",
+            "正",
+            "誤"
+          ]
+        ],
+        "originalRubyReadings": [
+          "がい",
+          "たん",
+          "けん"
+        ],
+        "rubyDisplayMode": "SOURCE_ORDER_UNATTACHED",
+        "rubyVisualMapping": [
+          {
+            "reading": "がい",
+            "location": "問題文冒頭の「鎮咳」の「咳」に付された読み"
+          },
+          {
+            "reading": "たん",
+            "location": "問題文冒頭の「去痰」の「痰」に付された読み"
+          },
+          {
+            "reading": "けん",
+            "location": "選択肢cの「倦怠感」の「倦」に付された読み"
+          }
+        ]
+      },
+      "differences": [],
+      "notes": "PDF画像4ページ（公式PDF第2部36ページ）。原典画像上のルビは「がい」「たん」「けん」の順で確認。候補のSOURCE_ORDER_UNATTACHED方式は原典の出現順を保持し、漢字への対応付けを行わない表示仕様であり、読みの欠落・順序違いはない。正誤表20セルも一致。"
+    },
+    {
+      "id": "KSAI-2022-120",
+      "questionNo": 120,
+      "bundlePdfPages": [
+        4
+      ],
+      "officialPdf": "2022-second_half",
+      "officialPdfPages": [
+        36
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "checked": [
+        "問題文全文",
+        "a〜d成分名",
+        "組合せ選択肢1〜4",
+        "成分名の字形"
+      ],
+      "visualDetails": {
+        "statements": [
+          "a 合成ヒドロタルサイト",
+          "b ジフェンヒドラミン塩酸塩",
+          "c ブロモバレリル尿素",
+          "d テオフィリン"
+        ],
+        "choices": [
+          "ａ、ｂ",
+          "ａ、ｄ",
+          "ｂ、ｃ",
+          "ｃ、ｄ"
+        ]
+      },
+      "differences": [],
+      "notes": "PDF画像4ページ（公式PDF第2部36ページ）。問題文、a〜d成分名および組合せ選択肢4件が一致。"
+    }
+  ]
+}
