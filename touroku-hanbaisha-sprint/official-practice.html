@@ -21,7 +21,8 @@
 'use strict';
 const $=id=>document.getElementById(id);
 const BANK='official-kansai/APPROVED_OFFICIAL_BANK.json';
-let records=[],subset=[],position=0,correct=0,denominator=0,selected=false,excluded=0;\nlet explanationMap=new Map();\nfetch('official-kansai/EXPLANATIONS_AUDITED_599.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(d=>{if(d?.count!==599||d.records?.length!==599||d.auditSummary?.PASS!==599||d.auditSummary?.HOLD!==0)throw Error('解説監査データの件数・状態が一致しません');explanationMap=new Map(d.records.map(x=>[x.id,x]));}).catch(()=>{explanationMap=new Map()});
+let records=[],subset=[],position=0,correct=0,denominator=0,selected=false,excluded=0;
+let explanationMap=new Map();\nfetch('official-kansai/EXPLANATIONS_AUDITED_599.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(d=>{if(d?.count!==599||d.records?.length!==599||d.auditSummary?.PASS!==599||d.auditSummary?.HOLD!==0)throw Error('解説監査データの件数・状態が一致しません');explanationMap=new Map(d.records.map(x=>[x.id,x]));}).catch(()=>{explanationMap=new Map()});
 const allowed=new Set(['NORMAL','OFFICIALLY_INVALID_ALL_CANDIDATES_CORRECT']);
 function sourceLink(url,label){const a=document.createElement('a');a.href=url;a.target='_blank';a.rel='noopener noreferrer';a.textContent=label;return a}
 function renderedText(parts){return parts.map(p=>Object.prototype.hasOwnProperty.call(p,'text')?p.text:p.rubyBase).join('')}
