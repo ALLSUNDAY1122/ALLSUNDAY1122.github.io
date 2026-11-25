@@ -93,7 +93,7 @@ function eligible(){return records.filter(q=>($('year').value==='all'||String(q.
 function updateCount(){$('count').textContent='この範囲で学べる問題：'+eligible().length+'問';$('start').disabled=!eligible().length}
 fetch(BANK,{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(d=>{
 if(!d||!Array.isArray(d.questions)||d.questions.length!==d.count||d.questions.some(q=>!verified(q)))throw Error('監査ゲートに通らない問題が含まれています');
-records=d.questions;
+records=d.questions;renderHome();
 [...new Set(records.map(q=>q.year))].sort().forEach(y=>{let o=document.createElement('option');o.value=String(y);o.textContent=y+'年度';$('year').append(o)});
 [...new Set(records.map(q=>q.chapter))].sort().forEach(c=>{let o=document.createElement('option');o.value=c;o.textContent=c;$('chapter').append(o)});
 $('available').textContent='現在、原典と照合済みの公式問題は'+records.length+'問です。候補600問を監査済みと表示しません。';
