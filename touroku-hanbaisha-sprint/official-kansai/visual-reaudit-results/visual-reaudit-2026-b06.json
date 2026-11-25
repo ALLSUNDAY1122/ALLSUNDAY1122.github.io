@@ -1,0 +1,801 @@
+{
+  "batch": "visual-reaudit-2026-b06",
+  "repository": "ALLSUNDAY1122/ALLSUNDAY1122.github.io",
+  "branch": "main",
+  "auditType": "manual_visual_reaudit",
+  "source": {
+    "candidateAttachment": "visual-reaudit-2026-b06.candidates.json",
+    "renderedOfficialQuestionPdfAttachment": "visual-reaudit-2026-b06.pdf",
+    "issuer": "関西広域連合",
+    "title": "令和8年度登録販売者試験",
+    "sourceUrls": [
+      "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
+      "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_kouhan.pdf"
+    ],
+    "answerSourceUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+    "answerPdfInspected": false,
+    "bankBlobShaBefore": "8741e2675af6f41f7fba2afdc89566f48b8258e7"
+  },
+  "method": {
+    "description": "添付PDFのレンダリング画像7ページを目視し、指定10問の問題文・全選択肢・ルビ・表の行列とセル対応・記号を照合。PDF文字データ、自動照合、候補JSON内の既存audit.statusを合否判定の代替にしていない。添付PDF第3ページは全面が「#」状の画像で判読不能のため、該当ページを含む問60はHOLD。",
+    "pagesReviewed": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "pageMapping": [
+      {
+        "bundlePdfPage": 1,
+        "officialPdf": "2026-first_half",
+        "officialPdfPage": 49
+      },
+      {
+        "bundlePdfPage": 2,
+        "officialPdf": "2026-first_half",
+        "officialPdfPage": 50
+      },
+      {
+        "bundlePdfPage": 3,
+        "officialPdf": "2026-first_half",
+        "officialPdfPage": 51,
+        "visualStatus": "UNREADABLE_RENDER"
+      },
+      {
+        "bundlePdfPage": 4,
+        "officialPdf": "2026-second_half",
+        "officialPdfPage": 3
+      },
+      {
+        "bundlePdfPage": 5,
+        "officialPdf": "2026-second_half",
+        "officialPdfPage": 4
+      },
+      {
+        "bundlePdfPage": 6,
+        "officialPdf": "2026-second_half",
+        "officialPdfPage": 5
+      },
+      {
+        "bundlePdfPage": 7,
+        "officialPdf": "2026-second_half",
+        "officialPdfPage": 6
+      }
+    ],
+    "answerHandling": "answerNumberOfficialは添付候補JSONの値を転記。正答PDFは直接確認していないため全件answerPDFChecked=false。",
+    "failRule": "原典画像と文字列・空白・ルビ・表・記号が一致しない場合はFAIL。表は全セル位置まで確認。画像判読不能で全ページの確認を完了できない場合はHOLD。"
+  },
+  "scope": {
+    "questionIds": [
+      "KSAI-2026-059",
+      "KSAI-2026-060",
+      "KSAI-2026-061",
+      "KSAI-2026-062",
+      "KSAI-2026-063",
+      "KSAI-2026-064",
+      "KSAI-2026-065",
+      "KSAI-2026-066",
+      "KSAI-2026-067",
+      "KSAI-2026-068"
+    ],
+    "count": 10
+  },
+  "summary": {
+    "total": 10,
+    "pass": 7,
+    "fail": 2,
+    "hold": 1,
+    "failReasons": [
+      {
+        "id": "KSAI-2026-064",
+        "reason": "「血漿 に含まれる」となっており、原典「血漿に含まれる」に対してルビ「しょう」の後に余分な空白がある。"
+      },
+      {
+        "id": "KSAI-2026-066",
+        "reason": "「膀胱 まで」「膀胱 や尿道」となっており、原典「膀胱まで」「膀胱や尿道」に対して余分な空白がある。"
+      }
+    ],
+    "holdReasons": [
+      {
+        "id": "KSAI-2026-060",
+        "reason": "対象bundlePdfPagesの3ページ目（公式PDF第51頁）が全面「#」状の破損画像で判読不能。第2ページで確認できる内容は一致するが、指定された全ページの目視確認を完了できない。"
+      }
+    ]
+  },
+  "results": [
+    {
+      "id": "KSAI-2026-059",
+      "questionNo": 59,
+      "status": "PASS",
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "bundlePdfPages": [
+        1
+      ],
+      "officialPdfPages": [
+        49
+      ],
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "NOT_APPLICABLE",
+        "tableOrChoiceLayout": "PASS",
+        "symbols": "PASS"
+      },
+      "officialChoices": [
+        "正  誤  正  正",
+        "正  正  正  誤",
+        "正  正  誤  誤",
+        "誤  正  誤  正",
+        "誤  誤  正  正"
+      ],
+      "table": {
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rows": [
+          [
+            "正",
+            "誤",
+            "正",
+            "正"
+          ],
+          [
+            "正",
+            "正",
+            "正",
+            "誤"
+          ],
+          [
+            "正",
+            "正",
+            "誤",
+            "誤"
+          ],
+          [
+            "誤",
+            "正",
+            "誤",
+            "正"
+          ],
+          [
+            "誤",
+            "誤",
+            "正",
+            "正"
+          ]
+        ]
+      },
+      "notes": "添付PDF第1ページ（公式問題PDF第49頁）で本文a〜d、5択の正誤組合せ表を目視照合。5行×4列の全セルが候補choicesと一致。"
+    },
+    {
+      "id": "KSAI-2026-060",
+      "questionNo": 60,
+      "status": "HOLD",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "bundlePdfPages": [
+        2,
+        3
+      ],
+      "officialPdfPages": [
+        50
+      ],
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tableOrChoiceLayout": "PASS",
+        "symbols": "PASS",
+        "pageCompleteness": "HOLD"
+      },
+      "officialChoices": [
+        "正  誤  正  正",
+        "正  正  正  誤",
+        "正  正  誤  誤",
+        "誤  正  誤  正",
+        "誤  誤  正  正"
+      ],
+      "table": {
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rows": [
+          [
+            "正",
+            "誤",
+            "正",
+            "正"
+          ],
+          [
+            "正",
+            "正",
+            "正",
+            "誤"
+          ],
+          [
+            "正",
+            "正",
+            "誤",
+            "誤"
+          ],
+          [
+            "誤",
+            "正",
+            "誤",
+            "正"
+          ],
+          [
+            "誤",
+            "誤",
+            "正",
+            "正"
+          ]
+        ]
+      },
+      "rubyReadings": [
+        {
+          "base": "糞",
+          "reading": "ふん",
+          "sourcePdfPage": 50
+        }
+      ],
+      "notes": "添付PDF第2ページ（公式問題PDF第50頁）で本文a〜d、選択肢表、糞のルビ「ふん」を確認。候補と一致。ただし添付PDF第3ページ（候補bundlePdfPagesに含まれる公式PDF第51頁）はページ全面が「#」状の破損画像で判読不能。第51頁に追加内容がないことを確認できないため、全ページ確認要件を満たさずHOLD。"
+    },
+    {
+      "id": "KSAI-2026-061",
+      "questionNo": 61,
+      "status": "PASS",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "bundlePdfPages": [
+        4
+      ],
+      "officialPdfPages": [
+        3
+      ],
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "NOT_APPLICABLE",
+        "tableOrChoiceLayout": "PASS",
+        "symbols": "PASS"
+      },
+      "officialChoices": [
+        "正  正  誤  誤",
+        "正  誤  正  正",
+        "誤  正  誤  誤",
+        "正  誤  正  誤",
+        "誤  誤  正  正"
+      ],
+      "table": {
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rows": [
+          [
+            "正",
+            "正",
+            "誤",
+            "誤"
+          ],
+          [
+            "正",
+            "誤",
+            "正",
+            "正"
+          ],
+          [
+            "誤",
+            "正",
+            "誤",
+            "誤"
+          ],
+          [
+            "正",
+            "誤",
+            "正",
+            "誤"
+          ],
+          [
+            "誤",
+            "誤",
+            "正",
+            "正"
+          ]
+        ]
+      },
+      "notes": "添付PDF第4ページ（公式問題PDF第3頁）で本文a〜dと5行×4列の正誤表を目視照合。全セル一致。"
+    },
+    {
+      "id": "KSAI-2026-062",
+      "questionNo": 62,
+      "status": "PASS",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "bundlePdfPages": [
+        4
+      ],
+      "officialPdfPages": [
+        3
+      ],
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tableOrChoiceLayout": "PASS",
+        "symbols": "PASS"
+      },
+      "officialChoices": [
+        "正  正  誤  誤",
+        "誤  正  正  誤",
+        "誤  誤  正  正",
+        "誤  誤  誤  正",
+        "正  誤  誤  誤"
+      ],
+      "table": {
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rows": [
+          [
+            "正",
+            "正",
+            "誤",
+            "誤"
+          ],
+          [
+            "誤",
+            "正",
+            "正",
+            "誤"
+          ],
+          [
+            "誤",
+            "誤",
+            "正",
+            "正"
+          ],
+          [
+            "誤",
+            "誤",
+            "誤",
+            "正"
+          ],
+          [
+            "正",
+            "誤",
+            "誤",
+            "誤"
+          ]
+        ]
+      },
+      "rubyReadings": [
+        {
+          "base": "鼻腔",
+          "reading": "くう"
+        },
+        {
+          "base": "口腔",
+          "reading": "くう"
+        }
+      ],
+      "notes": "添付PDF第4ページ（公式問題PDF第3頁）で本文a〜d、鼻腔・口腔の「くう」ルビ2箇所、5行×4列の正誤表を目視照合。全て一致。"
+    },
+    {
+      "id": "KSAI-2026-063",
+      "questionNo": 63,
+      "status": "PASS",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "bundlePdfPages": [
+        5
+      ],
+      "officialPdfPages": [
+        4
+      ],
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "NOT_APPLICABLE",
+        "tableOrChoiceLayout": "PASS",
+        "symbols": "PASS"
+      },
+      "officialChoices": [
+        "正  正  誤  誤",
+        "正  誤  正  誤",
+        "誤  正  正  正",
+        "正  誤  誤  正",
+        "誤  正  誤  正"
+      ],
+      "table": {
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rows": [
+          [
+            "正",
+            "正",
+            "誤",
+            "誤"
+          ],
+          [
+            "正",
+            "誤",
+            "正",
+            "誤"
+          ],
+          [
+            "誤",
+            "正",
+            "正",
+            "正"
+          ],
+          [
+            "正",
+            "誤",
+            "誤",
+            "正"
+          ],
+          [
+            "誤",
+            "正",
+            "誤",
+            "正"
+          ]
+        ]
+      },
+      "notes": "添付PDF第5ページ（公式問題PDF第4頁）で本文a〜dと5行×4列の正誤表を目視照合。全セル一致。"
+    },
+    {
+      "id": "KSAI-2026-064",
+      "questionNo": 64,
+      "status": "FAIL",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "bundlePdfPages": [
+        5
+      ],
+      "officialPdfPages": [
+        4
+      ],
+      "checks": {
+        "questionText": "FAIL",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tableOrChoiceLayout": "PASS",
+        "symbols": "PASS"
+      },
+      "officialChoices": [
+        "正  誤  正  誤",
+        "正  誤  誤  正",
+        "誤  正  正  正",
+        "誤  正  誤  正",
+        "誤  誤  正  正"
+      ],
+      "table": {
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rows": [
+          [
+            "正",
+            "誤",
+            "正",
+            "誤"
+          ],
+          [
+            "正",
+            "誤",
+            "誤",
+            "正"
+          ],
+          [
+            "誤",
+            "正",
+            "正",
+            "正"
+          ],
+          [
+            "誤",
+            "正",
+            "誤",
+            "正"
+          ],
+          [
+            "誤",
+            "誤",
+            "正",
+            "正"
+          ]
+        ]
+      },
+      "rubyReadings": [
+        {
+          "base": "漿",
+          "reading": "しょう",
+          "sourcePdfPage": 4
+        }
+      ],
+      "notes": "添付PDF第5ページ（公式問題PDF第4頁）で「血漿」の「漿」に付くルビ「しょう」と選択肢表を確認。原典は「血漿に含まれる」だが候補question/questionPartsは「血漿 に含まれる」となり、ルビ後に余分な空白が挿入されているためFAIL。原典どおりの文字列は「血漿に含まれるアルブミンには、血液の浸透圧を保持する働きがある。」"
+    },
+    {
+      "id": "KSAI-2026-065",
+      "questionNo": 65,
+      "status": "PASS",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "bundlePdfPages": [
+        6
+      ],
+      "officialPdfPages": [
+        5
+      ],
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tableOrChoiceLayout": "PASS",
+        "symbols": "PASS"
+      },
+      "officialChoices": [
+        "正  正  誤  正",
+        "誤  誤  正  誤",
+        "正  正  正  誤",
+        "正  誤  正  誤",
+        "誤  正  誤  正"
+      ],
+      "table": {
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rows": [
+          [
+            "正",
+            "正",
+            "誤",
+            "正"
+          ],
+          [
+            "誤",
+            "誤",
+            "正",
+            "誤"
+          ],
+          [
+            "正",
+            "正",
+            "正",
+            "誤"
+          ],
+          [
+            "正",
+            "誤",
+            "正",
+            "誤"
+          ],
+          [
+            "誤",
+            "正",
+            "誤",
+            "正"
+          ]
+        ]
+      },
+      "rubyReadings": [
+        {
+          "base": "濾",
+          "reading": "ろ",
+          "sourcePdfPage": 5
+        }
+      ],
+      "notes": "添付PDF第6ページ（公式問題PDF第5頁）で本文a〜d、「濾」のルビ「ろ」、5行×4列の正誤表を目視照合。全て一致。"
+    },
+    {
+      "id": "KSAI-2026-066",
+      "questionNo": 66,
+      "status": "FAIL",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "bundlePdfPages": [
+        6
+      ],
+      "officialPdfPages": [
+        5
+      ],
+      "checks": {
+        "questionText": "FAIL",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tableOrChoiceLayout": "PASS",
+        "symbols": "PASS"
+      },
+      "officialChoices": [
+        "正  誤  正  誤",
+        "正  誤  正  正",
+        "正  正  誤  誤",
+        "誤  正  正  正",
+        "誤  正  誤  正"
+      ],
+      "table": {
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rows": [
+          [
+            "正",
+            "誤",
+            "正",
+            "誤"
+          ],
+          [
+            "正",
+            "誤",
+            "正",
+            "正"
+          ],
+          [
+            "正",
+            "正",
+            "誤",
+            "誤"
+          ],
+          [
+            "誤",
+            "正",
+            "正",
+            "正"
+          ],
+          [
+            "誤",
+            "正",
+            "誤",
+            "正"
+          ]
+        ]
+      },
+      "rubyReadings": [
+        "ぼうこう",
+        "せつ",
+        "ぼうこう",
+        "ぼうこう",
+        "ぼうこう",
+        "ぼうこう",
+        "ぼうこう",
+        "ぼうこう"
+      ],
+      "notes": "添付PDF第6ページ（公式問題PDF第5頁）で本文a〜d、ルビの出現順（ぼうこう、せつ、ぼうこう×6）、5行×4列の正誤表を確認。候補questionでは「膀胱 まで」「膀胱 や尿道」となっているが、原典画像はいずれも空白なく「膀胱まで」「膀胱や尿道」。ルビ読みの順序表示とは別に本文に余分な空白があるためFAIL。原典どおりの該当表記は「膀胱まで」「膀胱や尿道」。"
+    },
+    {
+      "id": "KSAI-2026-067",
+      "questionNo": 67,
+      "status": "PASS",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "bundlePdfPages": [
+        7
+      ],
+      "officialPdfPages": [
+        6
+      ],
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tableOrChoiceLayout": "PASS",
+        "symbols": "PASS"
+      },
+      "officialChoices": [
+        "ａ、ｂ",
+        "ａ、ｃ",
+        "ｂ、ｃ",
+        "ｂ、ｄ",
+        "ｃ、ｄ"
+      ],
+      "rubyReadings": [
+        "けん",
+        "けん"
+      ],
+      "notes": "添付PDF第7ページ（公式問題PDF第6頁）で本文a〜d、涙腺・眼瞼のルビ「けん」2箇所、選択肢5件を目視照合。全て一致。"
+    },
+    {
+      "id": "KSAI-2026-068",
+      "questionNo": 68,
+      "status": "PASS",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "bundlePdfPages": [
+        7
+      ],
+      "officialPdfPages": [
+        6
+      ],
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tableOrChoiceLayout": "PASS",
+        "symbols": "PASS"
+      },
+      "officialChoices": [
+        "正  誤  正  誤",
+        "正  誤  正  正",
+        "正  正  誤  誤",
+        "誤  正  正  正",
+        "誤  正  誤  正"
+      ],
+      "table": {
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rows": [
+          [
+            "正",
+            "誤",
+            "正",
+            "誤"
+          ],
+          [
+            "正",
+            "誤",
+            "正",
+            "正"
+          ],
+          [
+            "正",
+            "正",
+            "誤",
+            "誤"
+          ],
+          [
+            "誤",
+            "正",
+            "正",
+            "正"
+          ],
+          [
+            "誤",
+            "正",
+            "誤",
+            "正"
+          ]
+        ]
+      },
+      "rubyReadings": [
+        "くう",
+        "くう"
+      ],
+      "notes": "添付PDF第7ページ（公式問題PDF第6頁）で本文a〜d、鼻腔のルビ「くう」2箇所、5行×4列の正誤表を目視照合。全て一致。"
+    }
+  ]
+}
