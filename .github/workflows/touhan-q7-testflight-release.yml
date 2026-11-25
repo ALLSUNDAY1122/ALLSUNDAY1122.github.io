@@ -16,7 +16,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   release-candidate:
-    if: github.ref_name == 'main'
+    if: github.ref_name == 'main' || github.ref_name == 'feature/touhan-fp2-ui-20261125'
     runs-on: ubuntu-24.04
     timeout-minutes: 120
     steps:
