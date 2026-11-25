@@ -1,0 +1,181 @@
+{
+  "batch": "visual-reaudit-fix2-b01",
+  "repository": "ALLSUNDAY1122/ALLSUNDAY1122.github.io",
+  "source": "添付された公式問題PDFのページ画像（180dpi）と添付 candidates JSON の現行バンクレコード",
+  "method": "DIRECT_VISUAL_PAGE_IMAGE_TO_RECORD_COMPARISON",
+  "scope": {
+    "ids": [
+      "KSAI-2026-020",
+      "KSAI-2026-022",
+      "KSAI-2026-024",
+      "KSAI-2026-026",
+      "KSAI-2026-029",
+      "KSAI-2026-043",
+      "KSAI-2026-051",
+      "KSAI-2026-052"
+    ],
+    "questionCount": 8,
+    "bundlePages": 8,
+    "officialPdf": "2026-first_half",
+    "officialPdfPages": [19, 20, 22, 24, 25, 35, 43, 44]
+  },
+  "summary": {
+    "PASS": 8,
+    "FAIL": 0,
+    "HOLD": 0
+  },
+  "decisionCriteria": "問題文・全選択肢・ルビ・表・記号を添付された原典ページ画像と目視照合。選択肢表の行列対応が崩れている場合、または原典と異なる文字・ルビ・記号がある場合はFAIL。必要な画像が判読できない場合はHOLD。推測によるPASS判定は行わない。",
+  "scopeNotes": [
+    "KSAI-2026-020の添付JSONはbundlePdfPages=[1,2]およびsourcePdfPages=[19,20]としているが、添付PDF p.1（原典p.19）に問20の問題文・全選択肢表が完結しており、添付PDF p.2（原典p.20）は章見出しと問21・問22の掲載ページである。問20の内容はp.1で全て目視確認できたため、内容判定はPASSとした。ページ対応メタデータは別途確認対象として記録する。",
+    "正答PDFは添付されておらず直接確認していない。全問でanswerNumberOfficialは添付JSONの値を転記し、answerPDFChecked:falseとした。"
+  ],
+  "results": [
+    {
+      "id": "KSAI-2026-020",
+      "questionNo": 20,
+      "bundlePdfPages": [1, 2],
+      "officialPdfPages": [19, 20],
+      "status": "PASS",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": true,
+        "allChoices": true,
+        "ruby": true,
+        "tables": true,
+        "symbols": true
+      },
+      "evidence": "添付PDF p.1（原典p.19）。CJDに関するa〜dの問題文全文を確認。選択肢表5行×4列の全20セルを確認し、行順・a〜dの列順・正誤の配置が現行レコードと一致。問20はp.1内で完結している。添付PDF p.2は問21・問22のページであり、問20の本文・選択肢の続きはない。",
+      "discrepancies": []
+    },
+    {
+      "id": "KSAI-2026-022",
+      "questionNo": 22,
+      "bundlePdfPages": [2],
+      "officialPdfPages": [20],
+      "status": "PASS",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": true,
+        "allChoices": true,
+        "ruby": true,
+        "tables": true,
+        "symbols": true
+      },
+      "evidence": "添付PDF p.2（原典p.20）。漢方処方製剤を選ぶ問題文全文と選択肢5件を確認。選択肢は香蘇散、半夏厚朴湯、安中散、小柴胡湯、桂枝加芍薬湯。originalRubyReadingsの5件（こうそさん、はんげこうぼくとう、あんちゅうさん、しょうさいことう、けいしかしゃくやくとう）は、画像上の各選択肢のルビと順序・読みが一致。表形式の選択肢はない。",
+      "discrepancies": []
+    },
+    {
+      "id": "KSAI-2026-024",
+      "questionNo": 24,
+      "bundlePdfPages": [3],
+      "officialPdfPages": [22],
+      "status": "PASS",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": true,
+        "allChoices": true,
+        "ruby": true,
+        "tables": true,
+        "symbols": true
+      },
+      "evidence": "添付PDF p.3（原典p.22）。45歳女性と13歳の息子に関する相談内容、a〜dの説明文、成分・分量表を目視照合。6錠中の8成分と分量（750mg、450mg、1.34mg、12mg、60mg、24mg、25mg、12mg）が現行レコードと一致。表の列見出し・各行・単位を確認。dℓ－メチルエフェドリン塩酸塩の表記も画像と一致。選択肢表5行×4列の全セル・列対応も一致。",
+      "discrepancies": []
+    },
+    {
+      "id": "KSAI-2026-026",
+      "questionNo": 26,
+      "bundlePdfPages": [4],
+      "officialPdfPages": [24],
+      "status": "PASS",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": true,
+        "allChoices": true,
+        "ruby": true,
+        "tables": true,
+        "symbols": true
+      },
+      "evidence": "添付PDF p.4（原典p.24）。筋肉の痙攣を伴う痛み等の問題文と「症状があるときのみの服用にとどめ、連用は避ける」の記述を確認。痙攣のルビ「けいれん」2箇所、および5つの漢方処方名と各ルビ（ちょうとうさん、そけいかっけつとう、まきょうよくかんとう、けいしかじゅつぶとう、しゃくやくかんぞうとう）が現行レコードのoriginalRubyReadingsと順序・読みで一致。",
+      "discrepancies": []
+    },
+    {
+      "id": "KSAI-2026-029",
+      "questionNo": 29,
+      "bundlePdfPages": [5],
+      "officialPdfPages": [25],
+      "status": "PASS",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": true,
+        "allChoices": true,
+        "ruby": true,
+        "tables": true,
+        "symbols": true
+      },
+      "evidence": "添付PDF p.5（原典p.25）。小児の夜泣きに用いる漢方処方製剤の問題文、a〜dの4処方名、組合せ選択肢5件を確認。酸棗仁湯、桂枝加竜骨牡蛎湯、加味帰脾湯、抑肝散の4つのルビ（さんそうにんとう、けいしかりゅうこつぼれいとう、かみきひとう、よくかんさん）が原典の読み・出現順と一致。選択肢の組合せも一致。",
+      "discrepancies": []
+    },
+    {
+      "id": "KSAI-2026-043",
+      "questionNo": 43,
+      "bundlePdfPages": [6],
+      "officialPdfPages": [35],
+      "status": "PASS",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": true,
+        "allChoices": true,
+        "ruby": true,
+        "tables": true,
+        "symbols": true
+      },
+      "evidence": "添付PDF p.6（原典p.35）。体力中等度以下の症状説明、悪心・嘔吐等の副作用、重篤な副作用の記述を確認。本文中の「嘔吐」のルビ「おう」と、5つの選択肢（五積散、桂枝茯苓丸、加味逍遙散、温清飲、柴胡桂枝乾姜湯）のルビを目視確認。originalRubyReadingsの6件は本文・選択肢に現れる順序と読みが一致。特に最後の選択肢の読み「さいこけいしかんきょうとう」も原典画像で確認。",
+      "discrepancies": []
+    },
+    {
+      "id": "KSAI-2026-051",
+      "questionNo": 51,
+      "bundlePdfPages": [7],
+      "officialPdfPages": [43],
+      "status": "PASS",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": true,
+        "allChoices": true,
+        "ruby": true,
+        "tables": true,
+        "symbols": true
+      },
+      "evidence": "添付PDF p.7（原典p.43）。外皮用薬に関するa〜dの全文を確認。灼熱感・痒みのルビを含む表記と文章が現行レコードに一致。選択肢表5行×4列の全20セルについて、行番号・a〜dの列順・正誤の配置が一致。",
+      "discrepancies": []
+    },
+    {
+      "id": "KSAI-2026-052",
+      "questionNo": 52,
+      "bundlePdfPages": [8],
+      "officialPdfPages": [44],
+      "status": "PASS",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": true,
+        "allChoices": true,
+        "ruby": true,
+        "tables": true,
+        "symbols": true
+      },
+      "evidence": "添付PDF p.8（原典p.44）。抗真菌作用を有する外皮用薬に関するa〜dの全文と選択肢表5行×4列の全20セルを確認。湿疹の「疹」に対応するルビ「しん」の位置・読みが原典画像と一致。questionPartsのrubyBase「疹」、rubyText「しん」の対応も一致。選択肢表の行列対応・正誤・記号に相違なし。",
+      "discrepancies": []
+    }
+  ],
+  "answerKeyNote": "answerNumberOfficialは添付JSONの値を記録。正答PDFは本バッチの添付資料に含まれず直接確認していないため、全問answerPDFChecked:false。",
+  "bankMutation": false,
+  "stateFileMutation": false
+}
