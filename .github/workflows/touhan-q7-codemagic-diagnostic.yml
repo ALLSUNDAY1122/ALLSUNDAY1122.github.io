@@ -1,0 +1,47 @@
+name: Touhan Q7 Codemagic Exact Build Diagnostic
+on:
+  push:
+    paths:
+      - '.github/workflows/touhan-q7-codemagic-diagnostic.yml'
+      - 'touroku-hanbaisha-ios/scripts/q7_codemechanics_diagnostic.py'
+      - 'touroku-hanbaisha-ios/Q7_CODEMAGIC_SIGNING_BUILD_20261125.json'
+permissions:
+  contents: write
+concurrency:
+  group: touhan-q7-diagnostic-${{ github.ref_name }}
+  cancel-in-progress: false
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 70
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Inspect exact Codemagic build ID without side effects
+        id: inspect
+        continue-on-error: true
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        run: python touroku-hanbaisha-ios/scripts/q7_codemechanics_diagnostic.py
+      - name: Save diagnostic on this PR branch only
+        if: always()
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF_NAME" != "main"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add touroku-hanbaisha-ios/Q7_CODEMAGIC_DIAGNOSTIC_20261125.json
+          git commit -m 'audit(touhan): record exact Codemagic build diagnostic' || true
+          for attempt in 1 2 3; do
+            git pull --rebase origin "$GITHUB_REF_NAME"
+            if git push origin "HEAD:$GITHUB_REF_NAME"; then exit 0; fi
+          done
+          exit 1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: touhan-q7-codemagic-diagnostic
+          path: touroku-hanbaisha-ios/Q7_CODEMAGIC_DIAGNOSTIC_20261125.json
+          if-no-files-found: ignore
