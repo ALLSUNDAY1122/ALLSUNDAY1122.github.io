@@ -18,14 +18,20 @@ document.getElementById('settingsPremium').onclick=requestPremium;
 const attributionNode=$('attribution');
 const renderQuestionBase=show;
 show=function(...args){
-  $('quiz').querySelector('article.card').append(attributionNode);
+  const card=$('quiz').querySelector('article.card');
+  card.append(attributionNode);
   const result=renderQuestionBase(...args);
+  // A new question must never retain the previous judgement card's attribution.
+  $('feedback').querySelector('#attribution')?.remove();
+  card.append(attributionNode);
   attributionNode.classList.add('hidden');
   return result;
 };
 const renderJudgementBase=renderAnswer;
 renderAnswer=function(i){
   const result=renderJudgementBase(i);
+  // Keep the source links inside the judgement card until the next question.
+  $('feedback').append(attributionNode);
   attributionNode.classList.remove('hidden');
   return result;
 };
