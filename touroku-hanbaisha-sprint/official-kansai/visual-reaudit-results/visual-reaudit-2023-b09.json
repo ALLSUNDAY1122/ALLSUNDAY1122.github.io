@@ -1,0 +1,275 @@
+{
+  "batch": "visual-reaudit-2023-b09",
+  "auditType": "FULL_QUESTION_VISUAL_REAUDIT",
+  "source": {
+    "officialPdf": "2023-second_half",
+    "attachedPdf": "visual-reaudit-2023-b09.pdf",
+    "attachedCandidateFile": "visual-reaudit-2023-b09.candidates.json",
+    "visualInspection": "Rendered page images inspected directly; PDF text extraction and automated comparison were not used as substitutes.",
+    "bundlePages": [
+      {
+        "bundlePage": 1,
+        "officialPdfPage": 15,
+        "printedPage": 13
+      },
+      {
+        "bundlePage": 2,
+        "officialPdfPage": 16,
+        "printedPage": 14
+      },
+      {
+        "bundlePage": 3,
+        "officialPdfPage": 17,
+        "printedPage": 15
+      },
+      {
+        "bundlePage": 4,
+        "officialPdfPage": 18,
+        "printedPage": 16
+      },
+      {
+        "bundlePage": 5,
+        "officialPdfPage": 19,
+        "printedPage": 17
+      },
+      {
+        "bundlePage": 6,
+        "officialPdfPage": 20,
+        "printedPage": 18
+      }
+    ]
+  },
+  "totals": {
+    "pass": 8,
+    "fail": 2,
+    "hold": 0
+  },
+  "results": [
+    {
+      "id": "KSAI-2023-084",
+      "questionNo": 84,
+      "bundlePdfPages": [
+        1
+      ],
+      "status": "PASS",
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "observation": "問題文・a〜dの記述および5行4列の正誤表を画像と照合。一致。",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false
+    },
+    {
+      "id": "KSAI-2023-085",
+      "questionNo": 85,
+      "bundlePdfPages": [
+        2
+      ],
+      "status": "PASS",
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "observation": "空欄a〜cの説明文と5行の組合せ表を照合。植物／微生物、医薬部外品等の列、感染症／副作用の対応を含め一致。",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false
+    },
+    {
+      "id": "KSAI-2023-086",
+      "questionNo": 86,
+      "bundlePdfPages": [
+        2
+      ],
+      "status": "PASS",
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "observation": "法第50条に関する本文および選択肢1〜5（a,b／a,c／b,c／b,d／c,d）を照合。一致。",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false
+    },
+    {
+      "id": "KSAI-2023-087",
+      "questionNo": 87,
+      "bundlePdfPages": [
+        3
+      ],
+      "status": "FAIL",
+      "checks": {
+        "questionText": "FAIL",
+        "allChoices": "PASS",
+        "ruby": "FAIL",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "discrepancies": [
+        {
+          "field": "questionParts[0].text / questionParts[2].text",
+          "current": "表示・標榜 することが認められている。",
+          "official": "表示・標榜することが認められている。",
+          "reason": "原典画像では「榜」の直後に空白はなく、語が連続している。現行レコードのruby分割後テキストに先頭空白があり、連結表示で不要な空白が入る。"
+        },
+        {
+          "field": "ruby",
+          "current": "rubyBase=榜, rubyText=ぼう",
+          "official": "榜（ぼう）",
+          "reason": "読みと対象字は正しいが、ルビ直後の不要な空白により原典の連続表記を再現できていない。"
+        }
+      ],
+      "officialCorrection": {
+        "text": "表示・標榜することが認められている。",
+        "ruby": {
+          "base": "榜",
+          "reading": "ぼう"
+        }
+      },
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false
+    },
+    {
+      "id": "KSAI-2023-088",
+      "questionNo": 88,
+      "bundlePdfPages": [
+        3
+      ],
+      "status": "FAIL",
+      "checks": {
+        "questionText": "FAIL",
+        "allChoices": "PASS",
+        "ruby": "FAIL",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "discrepancies": [
+        {
+          "field": "questionParts[0].text / questionParts[2].text",
+          "current": "化粧品の効能効果として表示・標榜 することが認められている範囲に関する",
+          "official": "化粧品の効能効果として表示・標榜することが認められている範囲に関する",
+          "reason": "原典画像では「榜」の直後に空白はなく、語が連続している。現行レコードのruby分割後テキストに先頭空白があり、連結表示で不要な空白が入る。"
+        },
+        {
+          "field": "ruby",
+          "current": "rubyBase=榜, rubyText=ぼう",
+          "official": "榜（ぼう）",
+          "reason": "読みと対象字は正しいが、ルビ直後の不要な空白により原典の連続表記を再現できていない。"
+        }
+      ],
+      "officialCorrection": {
+        "text": "化粧品の効能効果として表示・標榜することが認められている範囲に関する",
+        "ruby": {
+          "base": "榜",
+          "reading": "ぼう"
+        }
+      },
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false
+    },
+    {
+      "id": "KSAI-2023-089",
+      "questionNo": 89,
+      "bundlePdfPages": [
+        4
+      ],
+      "status": "PASS",
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "observation": "食品の定義等に関するa〜dの本文および5行4列の正誤表を照合。一致。",
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false
+    },
+    {
+      "id": "KSAI-2023-091",
+      "questionNo": 91,
+      "bundlePdfPages": [
+        5
+      ],
+      "status": "PASS",
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "observation": "薬局に関するa〜dの本文および選択肢1〜5の組合せを照合。一致。",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false
+    },
+    {
+      "id": "KSAI-2023-092",
+      "questionNo": 92,
+      "bundlePdfPages": [
+        5
+      ],
+      "status": "PASS",
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "observation": "情報提供等に関するa〜dの本文および5行4列の正誤表を照合。一致。",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false
+    },
+    {
+      "id": "KSAI-2023-093",
+      "questionNo": 93,
+      "bundlePdfPages": [
+        6
+      ],
+      "status": "PASS",
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "observation": "医薬品の陳列方法に関するa〜dの本文および5行4列の正誤表を照合。一致。",
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false
+    },
+    {
+      "id": "KSAI-2023-094",
+      "questionNo": 94,
+      "bundlePdfPages": [
+        6
+      ],
+      "status": "PASS",
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "observation": "薬局の掲示事項に関するa〜dの本文および5行4列の正誤表を照合。一致。",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false
+    }
+  ],
+  "answerKeyPolicy": "answerNumberOfficial is recorded from the candidate bank only. The answer PDF was not visually inspected; answerPDFChecked is false for every record.",
+  "scopeConstraints": {
+    "officialBankModified": false,
+    "stateFilesModified": false,
+    "onlyNewAuditResultFile": true
+  }
+}
