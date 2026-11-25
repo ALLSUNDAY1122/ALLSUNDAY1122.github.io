@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Exercise packaged file URLs with networking disabled and all official questions."""
-import json,hashlib
+import json,hashlib,re
 from pathlib import Path
 from playwright.sync_api import sync_playwright, expect
 ROOT=Path(__file__).resolve().parents[2]
@@ -54,6 +54,8 @@ with sync_playwright() as pw:
         page.locator('#start').click()
         for q in bank['questions']:
             assert page.locator('#question').inner_text().strip()
+            rendered_question=page.locator('#question').evaluate("el=>Array.from(el.childNodes).map(n=>n.textContent||'').join('')")
+            assert not re.search(r'(?<!\\n)\\n(?!\\n)',rendered_question),q['id']
             assert page.locator('#choices button').count()==len(q['choices'])
             for img in page.locator('#sourceFigure img').all():
                 img.scroll_into_view_if_needed()
