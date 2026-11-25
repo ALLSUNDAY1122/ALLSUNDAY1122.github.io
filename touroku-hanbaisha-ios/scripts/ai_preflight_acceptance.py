@@ -102,7 +102,7 @@ def main():
         and "offlineExplanations" in prepare and "explanationsCount" in prepare)
     offline_runtime=(q4data.get("status")=="PASS" and q4data.get("nativeSimulatorOfflineBundleVerified") is True
         and q4data.get("bankCount")==599 and q4data.get("explanationsCount")==599
-        and q4data.get("externalRequests")==0 and q4data.get("pageErrors")==0)
+        and q4data.get("externalRequests")==[] and q4data.get("pageErrors")==[])
     gate("Q4_OFFLINE_RESILIENCE","PASS" if offline_static and offline_runtime else "NOT_VERIFIED",
         f"native local bundle/static CSP={offline_static}; simulator packaged offline proof={offline_runtime}; report={q4data.get('githubRunId','MISSING')}",
         ["touroku-hanbaisha-ios/native-ios/Sources/TouhanSprintApp.swift","touroku-hanbaisha-ios/OFFLINE_Q4_20261125.json"])
@@ -136,7 +136,8 @@ def main():
     q7file=IOS/"Q7_TESTFLIGHT_READBACK_20261125.json"
     q7=json.loads(q7file.read_text()) if q7file.is_file() else {}
     q7ok=(q7.get("status")=="PASS" and q7.get("signedIpaVerified") is True
-        and q7.get("ascProcessingState")=="VALID" and q7.get("testFlightAvailable") is True)
+        and q7.get("ascProcessingState")=="VALID" and q7.get("testFlightAvailable") is True
+        and q7.get("testFlightDistributed") is True)
     gate("Q7_TESTFLIGHT_READY","PASS" if q7ok else "BLOCKED",
         f"signed IPA and App Store Connect/TestFlight processing readback={q7ok}; state={q7.get('ascProcessingState','MISSING')}; no App Review submission",
         ["touroku-hanbaisha-ios/Q7_TESTFLIGHT_READBACK_20261125.json"])
