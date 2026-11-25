@@ -9,8 +9,8 @@ from urllib.parse import urlsplit
 from playwright.sync_api import sync_playwright
 
 ROOT=Path(__file__).resolve().parents[2]
-WEB=IOS/"native-ios/OfflineWeb"
 IOS=ROOT/"touroku-hanbaisha-ios"
+WEB=IOS/"native-ios/OfflineWeb"
 REPORT=IOS/"PRIVACY_Q5_AUDIT_20261124.json"
 class Handler(SimpleHTTPRequestHandler):
     def __init__(self,*a,**kwargs):super().__init__(*a,directory=str(WEB),**kwargs)
