@@ -81,6 +81,9 @@ html=html.replace('body.textContent=explanation.explanation','body.textContent=d
 html=html.replace("$('unknown').classList.add('hidden');$('next').classList.remove('hidden');", "$('feedback').append($('attribution'));$('unknown').classList.add('hidden');$('next').classList.remove('hidden');")
 
 html=html.replace('<section class="card" id="setup">',shell+'<p id="saveWarning" class="saveWarning" role="alert"></p><section class="card hidden" id="setup">',1)
+html,footer_removed=re.subn(r'<footer>.*?</footer>','',html,count=1,flags=re.S)
+assert footer_removed==1, 'legacy footer must be removed from the native shell to avoid duplicate privacy/support links'
+assert html.count('href="./privacy.html"')==1 and html.count('href="./support.html"')==1, 'native settings must expose exactly one privacy and support link'
 html=html.replace("let records=[],subset=[],position=0,correct=0,denominator=0,selected=false,excluded=0;","let records=[],subset=[],position=0,correct=0,denominator=0,selected=false,excluded=0;"+logic+"\nif($('headerHome'))$('headerHome').onclick=showHome;")
 html=html.replace("$('chapter').onchange=updateCount;updateCount();","$('chapter').onchange=updateCount;updateCount();showHome();")
 html=html.replace("subset=eligible();if(!subset.length)return;position=0;correct=0;denominator=0;excluded=0;","subset=eligible();if(!subset.length)return;sessionScope={year:$('year').value,chapter:$('chapter').value};position=0;correct=0;denominator=0;excluded=0;lastAnswer=null;")
