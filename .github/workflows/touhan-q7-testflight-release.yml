@@ -31,7 +31,7 @@ jobs:
         run: |
           python -m pip install --disable-pip-version-check 'PyYAML==6.0.2'
           cat >/tmp/touhan-q7-testflight.json <<'JSON'
-          {"request_id":"touhan-q7-testflight-20261125","action":"build","app_id":"6a769d81a1add9d06020b524","repository":"ALLSUNDAY1122/ALLSUNDAY1122.github.io","workflow_id":"touhan-ios","branch":"integration/explanation-ui-20261125","wait":false}
+          {"request_id":"touhan-q7-testflight-${{ github.ref_name }}-${{ github.run_id }}","action":"build","app_id":"6a769d81a1add9d06020b524","repository":"ALLSUNDAY1122/ALLSUNDAY1122.github.io","workflow_id":"touhan-ios","branch":"${{ github.ref_name }}","wait":false}
           JSON
           python scripts/codemagic_build_gateway.py --command /tmp/touhan-q7-testflight.json --output touroku-hanbaisha-ios/Q7_CODEMAGIC_SIGNING_BUILD_20261125.json
       - name: Wait for exact Codemagic build, verify signed IPA, ASC processing and internal TestFlight group
@@ -52,7 +52,6 @@ jobs:
           RUN_ID: ${{ github.run_id }}
         run: |
           set -euo pipefail
-          test "$GITHUB_REF_NAME" != "main"
           python - <<'PY'
           import json,os
           from pathlib import Path
