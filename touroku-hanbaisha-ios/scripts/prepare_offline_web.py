@@ -91,7 +91,7 @@ html=html.replace("$('unknown').classList.add('hidden');$('next').classList.remo
 html,footer_removed=re.subn(r'<footer>.*?</footer>','',html,count=1,flags=re.S)
 assert footer_removed==1, 'legacy footer must be removed from the native shell to avoid duplicate privacy/support links'
 assert 'href="./privacy.html"' not in html and 'href="./support.html"' not in html, 'legacy footer links must be removed before native settings are inserted'
-html=html.replace('<section class="card" id="setup">',shell+'<p id="saveWarning" class="saveWarning" role="alert"></p><section class="card hidden" id="setup">',1)
+html=html.replace('<section class="card hidden" id="setup">',shell+'<p id="saveWarning" class="saveWarning" role="alert"></p><section class="card hidden" id="setup">',1)
 assert 'href="./privacy.html"' in html and 'href="./support.html"' in html, 'native settings must expose privacy and support links'
 html=html.replace("let records=[],subset=[],position=0,correct=0,denominator=0,selected=false,excluded=0;","let records=[],subset=[],position=0,correct=0,denominator=0,selected=false,excluded=0;"+logic+"\nif($('headerHome'))$('headerHome').onclick=showHome;")
 html=html.replace("$('chapter').onchange=updateCount;updateCount();","$('chapter').onchange=updateCount;updateCount();showHome();")
