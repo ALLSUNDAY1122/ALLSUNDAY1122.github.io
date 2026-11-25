@@ -546,7 +546,7 @@ for q in prior_questions:
     method=audit.get("method")
     latest=latest_visual_results.get(q["id"])
     if method=="MANUAL_VISUAL_REAUDIT":
-        if not prior_common(q) or not manual_visual_reaudit_ok(q,audit):
+        if not prior_common(q) or not manual_visual_reaudit_ok(q,audit.get("record")):
             raise RuntimeError("latest manual visual re-audit evidence mismatch: "+q["id"])
         was_accepted=q["id"] in accepted
         if not was_accepted:
