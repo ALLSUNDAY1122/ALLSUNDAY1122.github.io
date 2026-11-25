@@ -74,16 +74,14 @@ jobs:
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
         run: python touroku-hanbaisha-ios/scripts/configure_asc_monthly_trial.py
-      - name: Update editable draft App Store metadata and read back Q3 (no submission)
+      - name: Read back owner-saved App Store metadata Q3 (read-only; no writes or submission)
         id: q3
         continue-on-error: true
         env:
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
-        run: |
-          python touroku-hanbaisha-ios/scripts/update_asc_metadata_q3.py
-          python touroku-hanbaisha-ios/scripts/readback_asc_metadata_q3.py
+        run: python touroku-hanbaisha-ios/scripts/readback_asc_metadata_q3.py
       - name: Audit packaged offline privacy behavior and read back ASC privacy URL
         id: q5
         continue-on-error: true
