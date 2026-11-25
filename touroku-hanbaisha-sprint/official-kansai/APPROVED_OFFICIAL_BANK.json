@@ -1721,11 +1721,11 @@
       "chapter": "第3章",
       "question": "かぜ薬の配合成分に関する記述について、（   ）の中に入れるべき字句の\n正しい組合せを一つ選べ。\n\n\n  かぜ薬とは、かぜの諸症状の緩和を目的として使用される医薬品の総称で\n\n ある。その中には、鼻粘膜の充血を和らげ、気管・気管支を拡げる成分として\n\n （ ａ ）、咳を抑える成分として（ ｂ ）、及びくしゃみや鼻汁を抑える成\n\n 分として（ ｃ ）が配合されているものがある。\n\n\n       ａ          ｂ          ｃ\n                イソプロピル",
       "choices": [
-        "グアイフェネシン               エテンザミド\n                アンチピリン",
-        "グアイフェネシン     ノスカピン      エテンザミド\n\n   メチルエフェドリン    イソプロピル",
-        "エテンザミド\n      塩酸塩       アンチピリン\n\n   メチルエフェドリン    イソプロピル",
-        "ヨウ化イソプロパミド\n      塩酸塩       アンチピリン\n\n   メチルエフェドリン",
-        "ノスカピン    ヨウ化イソプロパミド\n      塩酸塩"
+        "グアイフェネシン　イソプロピルアンチピリン　エテンザミド",
+        "グアイフェネシン　ノスカピン　エテンザミド",
+        "メチルエフェドリン塩酸塩　イソプロピルアンチピリン　エテンザミド",
+        "メチルエフェドリン塩酸塩　イソプロピルアンチピリン　ヨウ化イソプロパミド",
+        "メチルエフェドリン塩酸塩　ノスカピン　ヨウ化イソプロパミド"
       ],
       "answer": 4,
       "answerNumberOfficial": 5,
@@ -1741,14 +1741,12 @@
       "excludeFromAccuracyDenominator": false,
       "modificationDisclosureDisplay": "PDFからテキスト抽出（改行・表の配置は原典と異なる場合があります）",
       "verbatimCertified": true,
-      "needsVisualReview": false,
-      "renderReady": true,
+      "needsVisualReview": true,
+      "renderReady": false,
       "audit": {
-        "status": "PASS",
-        "method": "AUTO_PDF_GLYPH_XY_RUBY_DOM_RECONSTRUCTION",
-        "record": "RUBY_RECON_2022.json",
-        "sourcePdfSha256": "49b359de22d4495a1eb95c7f4923d43e67b7acd6943ca4ba734df8ab9231fcf9",
-        "glyphCount": 1
+        "status": "PENDING_VISUAL_REAUDIT",
+        "method": "CENTRAL_CORRECTION_FROM_VISUAL_REAUDIT_RESULT",
+        "record": "RUBY_RECON_2022.json"
       },
       "questionParts": [
         {
@@ -1766,30 +1764,124 @@
       "choicesParts": [
         [
           {
-            "text": "グアイフェネシン               エテンザミド\n                アンチピリン"
+            "text": "グアイフェネシン"
+          },
+          {
+            "text": "　"
+          },
+          {
+            "text": "イソプロピルアンチピリン"
+          },
+          {
+            "text": "　"
+          },
+          {
+            "text": "エテンザミド"
           }
         ],
         [
           {
-            "text": "グアイフェネシン     ノスカピン      エテンザミド\n\n   メチルエフェドリン    イソプロピル"
+            "text": "グアイフェネシン"
+          },
+          {
+            "text": "　"
+          },
+          {
+            "text": "ノスカピン"
+          },
+          {
+            "text": "　"
+          },
+          {
+            "text": "エテンザミド"
           }
         ],
         [
           {
-            "text": "エテンザミド\n      塩酸塩       アンチピリン\n\n   メチルエフェドリン    イソプロピル"
+            "text": "メチルエフェドリン塩酸塩"
+          },
+          {
+            "text": "　"
+          },
+          {
+            "text": "イソプロピルアンチピリン"
+          },
+          {
+            "text": "　"
+          },
+          {
+            "text": "エテンザミド"
           }
         ],
         [
           {
-            "text": "ヨウ化イソプロパミド\n      塩酸塩       アンチピリン\n\n   メチルエフェドリン"
+            "text": "メチルエフェドリン塩酸塩"
+          },
+          {
+            "text": "　"
+          },
+          {
+            "text": "イソプロピルアンチピリン"
+          },
+          {
+            "text": "　"
+          },
+          {
+            "text": "ヨウ化イソプロパミド"
           }
         ],
         [
           {
-            "text": "ノスカピン    ヨウ化イソプロパミド\n      塩酸塩"
+            "text": "メチルエフェドリン塩酸塩"
+          },
+          {
+            "text": "　"
+          },
+          {
+            "text": "ノスカピン"
+          },
+          {
+            "text": "　"
+          },
+          {
+            "text": "ヨウ化イソプロパミド"
           }
         ]
-      ]
+      ],
+      "choiceTable": {
+        "columns": [
+          "a",
+          "b",
+          "c"
+        ],
+        "rows": [
+          [
+            "グアイフェネシン",
+            "イソプロピルアンチピリン",
+            "エテンザミド"
+          ],
+          [
+            "グアイフェネシン",
+            "ノスカピン",
+            "エテンザミド"
+          ],
+          [
+            "メチルエフェドリン塩酸塩",
+            "イソプロピルアンチピリン",
+            "エテンザミド"
+          ],
+          [
+            "メチルエフェドリン塩酸塩",
+            "イソプロピルアンチピリン",
+            "ヨウ化イソプロパミド"
+          ],
+          [
+            "メチルエフェドリン塩酸塩",
+            "ノスカピン",
+            "ヨウ化イソプロパミド"
+          ]
+        ]
+      }
     },
     {
       "id": "KSAI-2022-022",
@@ -2257,64 +2349,63 @@
       ],
       "question": "次の記述にあてはまる漢方処方製剤として、最も適切なものを一つ選べ。\n\n\n  体力中等度以下で、心身が疲れ、血色が悪く、ときに熱感を伴うものの貧血、\n 不眠症、精神不安、神経症に適すとされる。\n\n\n\n\n      か み き ひ とう",
       "choices": [
-        "加味帰脾湯\n      けい し か りゅうこつ ぼ れいとう",
-        "桂枝加 竜 骨 牡蛎湯\n",
-        "抑肝散\n      さい こ か りゅうこつ ぼ れいとう",
-        "柴胡加 竜 骨 牡蛎湯\n\n",
-        "小建中 湯"
+        "加味帰脾湯",
+        "桂枝加竜骨牡蛎湯",
+        "抑肝散",
+        "柴胡加竜骨牡蛎湯",
+        "小建中湯"
       ],
       "originalRubyReadings": [
         "かみきひとう",
+        "けいしかりゅうこつぼれいとう",
         "よくかんさん",
+        "さいこかりゅうこつぼれいとう",
         "しょうけんちゅうとう"
       ],
-      "rubyDisplayMode": "SOURCE_ORDER_UNATTACHED",
+      "rubyDisplayMode": "POSITIONALLY_ATTACHED",
       "rubySourceVerified": true,
       "rubySourcePdfSha256": "49b359de22d4495a1eb95c7f4923d43e67b7acd6943ca4ba734df8ab9231fcf9",
       "verbatimCertified": true,
-      "needsVisualReview": false,
-      "renderReady": true,
+      "needsVisualReview": true,
+      "renderReady": false,
       "modificationDisclosureDisplay": "公式PDFのふりがなを原典出現順に独立表示（漢字への対応付けを行わない加工）",
       "audit": {
-        "status": "PASS",
-        "method": "SOURCE_ORDER_UNATTACHED_PDF_RAWDICT",
-        "record": "RUBY_102_SOURCE_ORDER_PROMOTION_20261124.json",
-        "sourcePdfSha256": "49b359de22d4495a1eb95c7f4923d43e67b7acd6943ca4ba734df8ab9231fcf9",
-        "sourceNormalizedSha256": "e589f4f530832cf531e44bec8c8e5a259ad45d2bc7a501dbab8786f33586dac9",
-        "readingsOrder": [
+        "status": "PENDING_VISUAL_REAUDIT",
+        "method": "CENTRAL_CORRECTION_FROM_VISUAL_REAUDIT_RESULT",
+        "record": "RUBY_102_SOURCE_ORDER_PROMOTION_20261124.json"
+      },
+      "choicesParts": [
+        [
           {
-            "page": 17,
-            "bbox": [
-              124.0999984741211,
-              186.50596618652344,
-              181.10000610351562,
-              192.50596618652344
-            ],
-            "reading": "かみきひとう"
-          },
-          {
-            "page": 17,
-            "bbox": [
-              121.0999984741211,
-              226.5859832763672,
-              157.10000610351562,
-              232.5859832763672
-            ],
-            "reading": "よくかんさん"
-          },
-          {
-            "page": 17,
-            "bbox": [
-              121.0999984741211,
-              267.5059814453125,
-              181.10000610351562,
-              273.5059814453125
-            ],
-            "reading": "しょうけんちゅうとう"
+            "rubyBase": "加味帰脾湯",
+            "rubyText": "かみきひとう"
           }
         ],
-        "originalCandidateQuestionSha256": "b7de2fd016e3c9f14994caa702c1ff45b8ed660a584c5bb463509f6f5b4187bc"
-      }
+        [
+          {
+            "rubyBase": "桂枝加竜骨牡蛎湯",
+            "rubyText": "けいしかりゅうこつぼれいとう"
+          }
+        ],
+        [
+          {
+            "rubyBase": "抑肝散",
+            "rubyText": "よくかんさん"
+          }
+        ],
+        [
+          {
+            "rubyBase": "柴胡加竜骨牡蛎湯",
+            "rubyText": "さいこかりゅうこつぼれいとう"
+          }
+        ],
+        [
+          {
+            "rubyBase": "小建中湯",
+            "rubyText": "しょうけんちゅうとう"
+          }
+        ]
+      ]
     },
     {
       "id": "KSAI-2022-027",
@@ -3843,11 +3934,11 @@
       ],
       "question": "次の記述にあてはまる漢方処方製剤として、最も適切なものを一つ選べ。\n\n\n\n  体力中等度以下で、冷え症、貧血気味、神経過敏で、動悸、息切れ、ときに\n\n ねあせ、頭部の発汗、口の渇きがあるものの更年期障害、血の道症、不眠症、\n\n 神経症、動悸、息切れ、かぜの後期の症状、気管支炎に適すとされる。\n  まれに重篤な副作用として、間質性肺炎、肝機能障害を生じることが知られ\n ている。\n\n\n\n",
       "choices": [
-        "温経湯\n      とう き しゃくやくさん",
-        "当帰 芍 薬散\n\n",
-        "桂枝茯苓丸\n      し もつとう",
-        "四物湯\n\n     さいこ けいし かんきょう とう",
-        "柴胡桂枝 乾姜 湯"
+        "温経湯",
+        "当帰芍薬散",
+        "桂枝茯苓丸",
+        "四物湯",
+        "柴胡桂枝乾姜湯"
       ],
       "originalRubyReadings": [
         "き",
@@ -3855,85 +3946,53 @@
         "うんけいとう",
         "とうきしゃくやくさん",
         "けいしぶくりょうがん",
-        "しもつとう"
+        "しもつとう",
+        "さいこけいしかんきょうとう"
       ],
-      "rubyDisplayMode": "SOURCE_ORDER_UNATTACHED",
+      "rubyDisplayMode": "POSITIONALLY_ATTACHED",
       "rubySourceVerified": true,
       "rubySourcePdfSha256": "49b359de22d4495a1eb95c7f4923d43e67b7acd6943ca4ba734df8ab9231fcf9",
       "verbatimCertified": true,
-      "needsVisualReview": false,
-      "renderReady": true,
+      "needsVisualReview": true,
+      "renderReady": false,
       "modificationDisclosureDisplay": "公式PDFのふりがなを原典出現順に独立表示（漢字への対応付けを行わない加工）",
       "audit": {
-        "status": "PASS",
-        "method": "SOURCE_ORDER_UNATTACHED_PDF_RAWDICT",
-        "record": "RUBY_102_SOURCE_ORDER_PROMOTION_20261124.json",
-        "sourcePdfSha256": "49b359de22d4495a1eb95c7f4923d43e67b7acd6943ca4ba734df8ab9231fcf9",
-        "sourceNormalizedSha256": "620ed0673ff4effd7cd10b4ddbd27fc5e1064b45e91b45ada1add5ec4ffd8645",
-        "readingsOrder": [
+        "status": "PENDING_VISUAL_REAUDIT",
+        "method": "CENTRAL_CORRECTION_FROM_VISUAL_REAUDIT_RESULT",
+        "record": "RUBY_102_SOURCE_ORDER_PROMOTION_20261124.json"
+      },
+      "choicesParts": [
+        [
           {
-            "page": 28,
-            "bbox": [
-              407.7099914550781,
-              134.90599060058594,
-              413.7099914550781,
-              140.90599060058594
-            ],
-            "reading": "き"
-          },
-          {
-            "page": 28,
-            "bbox": [
-              160.10000610351562,
-              174.86595153808594,
-              166.10000610351562,
-              180.86595153808594
-            ],
-            "reading": "き"
-          },
-          {
-            "page": 28,
-            "bbox": [
-              121.0999984741211,
-              243.74595642089844,
-              157.10000610351562,
-              249.74595642089844
-            ],
-            "reading": "うんけいとう"
-          },
-          {
-            "page": 28,
-            "bbox": [
-              121.0999984741211,
-              262.82598876953125,
-              187.10000610351562,
-              269.7860107421875
-            ],
-            "reading": "とうきしゃくやくさん"
-          },
-          {
-            "page": 28,
-            "bbox": [
-              121.0999984741211,
-              283.85601806640625,
-              181.10000610351562,
-              289.85601806640625
-            ],
-            "reading": "けいしぶくりょうがん"
-          },
-          {
-            "page": 28,
-            "bbox": [
-              124.0999984741211,
-              302.81597900390625,
-              157.10000610351562,
-              308.81597900390625
-            ],
-            "reading": "しもつとう"
+            "rubyBase": "温経湯",
+            "rubyText": "うんけいとう"
           }
         ],
-        "originalCandidateQuestionSha256": "4f27c797fcf2004c21aeaa84e0d9b6340272d1eb42dbe352d574041122289bfc"
-      }
+        [
+          {
+            "rubyBase": "当帰芍薬散",
+            "rubyText": "とうきしゃくやくさん"
+          }
+        ],
+        [
+          {
+            "rubyBase": "桂枝茯苓丸",
+            "rubyText": "けいしぶくりょうがん"
+          }
+        ],
+        [
+          {
+            "rubyBase": "四物湯",
+            "rubyText": "しもつとう"
+          }
+        ],
+        [
+          {
+            "rubyBase": "柴胡桂枝乾姜湯",
+            "rubyText": "さいこけいしかんきょうとう"
+          }
+        ]
+      ]
     },
     {
       "id": "KSAI-2022-042",
@@ -4619,7 +4678,7 @@
               217.13,
               293.82
             ],
-            "fontSize": 6.0,
+            "fontSize": 6,
             "baseText": "痺"
           },
           {
@@ -4639,7 +4698,7 @@
               510.34,
               373.86
             ],
-            "fontSize": 6.0,
+            "fontSize": 6,
             "baseText": "痒"
           }
         ]
@@ -5617,7 +5676,7 @@
       "year": 2022,
       "questionNo": 60,
       "chapter": "第3章",
-      "question": "一般用検査薬の妊娠検査薬に関する記述の正誤について、正しい組合せを一\nつ選べ。\n\n\n ａ 妊娠検査薬は、通常、実際に妊娠が成立してから４週目前後の尿中のヒト\n  じゅう毛性性腺刺激ホルモン濃度を検出感度としている。絨\n ｂ 一般的な妊娠検査薬は、月経予定日を過ぎて概ね１週目以降に検査する\n  ことが推奨されている。\n ｃ 妊娠検査薬の検出反応は、検出対象となる物質と特異的に反応する抗体\n  や酵素を用いたものであるため、検査操作を行う場所の室温が極端に高温\n  の場合には影響を受けるが、室温が極端に低温の場合には影響を受けにく\n  い。\n ｄ 経口避妊薬や更年期障害治療薬などのホルモン剤を使用している人では、\n  妊娠していなくても検査結果が陽性となることがある。\n\n\n              ａ  ｂ  ｃ  ｄ",
+      "question": "一般用検査薬の妊娠検査薬に関する記述の正誤について、正しい組合せを一\nつ選べ。\n\n\n ａ 妊娠検査薬は、通常、実際に妊娠が成立してから４週目前後の尿中のヒト\n  絨毛性性腺刺激ホルモン濃度を検出感度としている。\n ｂ 一般的な妊娠検査薬は、月経予定日を過ぎて概ね１週目以降に検査する\n  ことが推奨されている。\n ｃ 妊娠検査薬の検出反応は、検出対象となる物質と特異的に反応する抗体\n  や酵素を用いたものであるため、検査操作を行う場所の室温が極端に高温\n  の場合には影響を受けるが、室温が極端に低温の場合には影響を受けにく\n  い。\n ｄ 経口避妊薬や更年期障害治療薬などのホルモン剤を使用している人では、\n  妊娠していなくても検査結果が陽性となることがある。\n\n\n              ａ  ｂ  ｃ  ｄ",
       "choices": [
         "誤  正  正  誤",
         "正  正  誤  正",
@@ -5639,107 +5698,25 @@
       "excludeFromAccuracyDenominator": false,
       "modificationDisclosureDisplay": "PDFからテキスト抽出（改行・表の配置は原典と異なる場合があります）",
       "verbatimCertified": true,
-      "needsVisualReview": false,
-      "renderReady": true,
+      "needsVisualReview": true,
+      "renderReady": false,
       "audit": {
-        "status": "PASS",
-        "method": "AUTO_SHA_PINNED_TABLE_XY_CELL_ALIGNMENT",
-        "record": "GEOMETRY_AUDIT_2022.json",
-        "sourcePdfSha256": "49b359de22d4495a1eb95c7f4923d43e67b7acd6943ca4ba734df8ab9231fcf9",
-        "normalizedTextSha256": "52286f89f933e645f32a4ce81fef4844896c2416471fe0cb037079261046baa3",
-        "table": {
-          "status": "PASS",
-          "method": "PHYSICAL_CELL_XY_AND_TEXT_MATCH",
-          "rows": [
-            {
-              "number": 1,
-              "page": 41,
-              "y": 368.58197021484375,
-              "x": [
-                262.61,
-                296.69,
-                330.67,
-                364.63
-              ],
-              "cells": [
-                "誤",
-                "正",
-                "正",
-                "誤"
-              ]
-            },
-            {
-              "number": 2,
-              "page": 41,
-              "y": 384.9019775390625,
-              "x": [
-                262.61,
-                296.69,
-                330.67,
-                364.63
-              ],
-              "cells": [
-                "正",
-                "正",
-                "誤",
-                "正"
-              ]
-            },
-            {
-              "number": 3,
-              "page": 41,
-              "y": 401.2219543457031,
-              "x": [
-                262.61,
-                296.69,
-                330.67,
-                364.63
-              ],
-              "cells": [
-                "正",
-                "誤",
-                "正",
-                "誤"
-              ]
-            },
-            {
-              "number": 4,
-              "page": 41,
-              "y": 417.4219665527344,
-              "x": [
-                262.61,
-                296.69,
-                330.67,
-                364.63
-              ],
-              "cells": [
-                "誤",
-                "正",
-                "誤",
-                "正"
-              ]
-            },
-            {
-              "number": 5,
-              "page": 41,
-              "y": 433.7419738769531,
-              "x": [
-                262.61,
-                296.69,
-                330.67,
-                364.63
-              ],
-              "cells": [
-                "正",
-                "誤",
-                "正",
-                "正"
-              ]
-            }
-          ],
-          "columns": 4
+        "status": "PENDING_VISUAL_REAUDIT",
+        "method": "CENTRAL_CORRECTION_FROM_VISUAL_REAUDIT_RESULT",
+        "record": "GEOMETRY_AUDIT_2022.json"
+      },
+      "questionParts": [
+        {
+          "text": "一般用検査薬の妊娠検査薬に関する記述の正誤について、正しい組合せを一\nつ選べ。\n\n\n ａ 妊娠検査薬は、通常、実際に妊娠が成立してから４週目前後の尿中のヒト\n  "
+        },
+        {
+          "rubyBase": "絨",
+          "rubyText": "じゅう"
+        },
+        {
+          "text": "毛性性腺刺激ホルモン濃度を検出感度としている。\n ｂ 一般的な妊娠検査薬は、月経予定日を過ぎて概ね１週目以降に検査する\n  ことが推奨されている。\n ｃ 妊娠検査薬の検出反応は、検出対象となる物質と特異的に反応する抗体\n  や酵素を用いたものであるため、検査操作を行う場所の室温が極端に高温\n  の場合には影響を受けるが、室温が極端に低温の場合には影響を受けにく\n  い。\n ｄ 経口避妊薬や更年期障害治療薬などのホルモン剤を使用している人では、\n  妊娠していなくても検査結果が陽性となることがある。\n\n\n              ａ  ｂ  ｃ  ｄ"
         }
-      }
+      ]
     },
     {
       "id": "KSAI-2022-061",
@@ -6029,7 +6006,7 @@
               145.08,
               137.53
             ],
-            "fontSize": 6.0,
+            "fontSize": 6,
             "baseText": "腔"
           },
           {
@@ -6049,7 +6026,7 @@
               406.56,
               258.97
             ],
-            "fontSize": 6.0,
+            "fontSize": 6,
             "baseText": "肋"
           }
         ]
@@ -7631,7 +7608,7 @@
           {
             "page": 11,
             "bbox": [
-              243.0,
+              243,
               136.0859832763672,
               254.9998779296875,
               142.0859832763672
@@ -9516,7 +9493,7 @@
         "正  正  誤  正",
         "正  誤  正  誤",
         "誤  正  誤  正",
-        "正  誤  正  正\n\n\n\n\n\n［医薬品の適正使用と安全対策］"
+        "正  誤  正  正"
       ],
       "answer": 4,
       "answerNumberOfficial": 5,
@@ -9533,13 +9510,12 @@
       "excludeFromAccuracyDenominator": false,
       "modificationDisclosureDisplay": "PDFからテキスト抽出（改行・表の配置は原典と異なる場合があります）",
       "verbatimCertified": true,
-      "needsVisualReview": false,
-      "renderReady": true,
+      "needsVisualReview": true,
+      "renderReady": false,
       "audit": {
-        "status": "PASS",
-        "method": "AUTO_PDF_LAYOUT_FALSE_POSITIVE_TRIAGE",
-        "record": "LAYOUT_TRIAGE_2022.json",
-        "sourcePdfSha256": "fdd8b77781e61b1a978eac5e94884c2a8f82bd45d23eb08bfad4c6d92830b11e"
+        "status": "PENDING_VISUAL_REAUDIT",
+        "method": "CENTRAL_CORRECTION_FROM_VISUAL_REAUDIT_RESULT",
+        "record": "LAYOUT_TRIAGE_2022.json"
       }
     },
     {
@@ -13185,13 +13161,13 @@
       "year": 2023,
       "questionNo": 18,
       "chapter": "第1章",
-      "question": "厚生省（当時）は、悲惨な被害を再び発生させることのないように、その決意\nを銘記した「誓いの碑」を建立した。この「誓いの碑」の記述について、（ ）\nの中に入れるべき字句の正しい組合せを一つ選べ。\n\n\n 「誓いの碑」には、\n 「命の尊さを心に刻みサリドマイド、スモン、（ ａ ）のような（ ｂ ）\n による悲惨な被害を再び発生させることのないよう（ ｃ ）の確保に最善の\n 努力を重ねていくことをここに銘記する 千数百名もの感染者を出した\n 『（ ｄ ）』事件 このような事件の発生を反省しこの碑を建立した\n 平成１１年８月 厚生省」\n と刻まれている。\n\n\n      ａ       ｂ       ｃ       ｄ\n\n                     医薬品の",
+      "question": "厚生省（当時）は、悲惨な被害を再び発生させることのないように、その決意\nを銘記した「誓いの碑」を建立した。この「誓いの碑」の記述について、（ ）\nの中に入れるべき字句の正しい組合せを一つ選べ。\n\n\n 「誓いの碑」には、\n 「命の尊さを心に刻みサリドマイド、スモン、（ ａ ）のような（ ｂ ）\n による悲惨な被害を再び発生させることのないよう（ ｃ ）の確保に最善の\n 努力を重ねていくことをここに銘記する 千数百名もの感染者を出した\n 『（ ｄ ）』事件 このような事件の発生を反省しこの碑を建立した\n 平成１１年８月 厚生省」\n と刻まれている。\n\n\n      ａ       ｂ       ｃ       ｄ",
       "choices": [
-        "Ｏ１５７感染    医薬品             薬害肝炎\n                    安全性・有効性",
-        "Ｏ１５７感染  毒物及び劇物   医療の安全    薬害肝炎\n\n                     医薬品の",
-        "ＨＩＶ感染    医薬品             薬害エイズ\n                    安全性・有効性",
-        "ＨＩＶ感染    医薬品    医療の安全    薬害肝炎\n\n                     医薬品の",
-        "ＨＩＶ感染   毒物及び劇物           薬害エイズ\n                    安全性・有効性\n\n\nＨＩＶ：ヒト免疫不全ウイルス\nＯ１５７：腸管出血性大腸菌Ｏ１５７"
+        "Ｏ１５７感染　医薬品　医薬品の安全性・有効性　薬害肝炎",
+        "Ｏ１５７感染　毒物及び劇物　医療の安全　薬害肝炎",
+        "ＨＩＶ感染　医薬品　医薬品の安全性・有効性　薬害エイズ",
+        "ＨＩＶ感染　医薬品　医療の安全　薬害肝炎",
+        "ＨＩＶ感染　毒物及び劇物　医薬品の安全性・有効性　薬害エイズ"
       ],
       "answer": 2,
       "answerNumberOfficial": 3,
@@ -13207,15 +13183,125 @@
       "excludeFromAccuracyDenominator": false,
       "modificationDisclosureDisplay": "PDFからテキスト抽出（改行・表の配置は原典と異なる場合があります）",
       "verbatimCertified": true,
-      "needsVisualReview": false,
-      "renderReady": true,
+      "needsVisualReview": true,
+      "renderReady": false,
       "audit": {
-        "status": "PASS",
-        "method": "AUTO_SHA_PINNED_PDF_NFC_WHITESPACE_DIFF",
-        "record": "AUTO_DIFF_2023.json",
-        "sourcePdfSha256": "839f5d8105ad2c5a3383072a4c5c45d2d2f7156a2142b66c38deaf6d02841e2e",
-        "normalizedTextSha256": "7d07ec96090e39c1e2834ff3bfd4aff9316e3d4f5cf5b3fba55ababd17eb8e1f"
-      }
+        "status": "PENDING_VISUAL_REAUDIT",
+        "method": "CENTRAL_CORRECTION_FROM_VISUAL_REAUDIT_RESULT",
+        "record": "AUTO_DIFF_2023.json"
+      },
+      "choiceTable": {
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rows": [
+          [
+            "Ｏ１５７感染",
+            "医薬品",
+            "医薬品の安全性・有効性",
+            "薬害肝炎"
+          ],
+          [
+            "Ｏ１５７感染",
+            "毒物及び劇物",
+            "医療の安全",
+            "薬害肝炎"
+          ],
+          [
+            "ＨＩＶ感染",
+            "医薬品",
+            "医薬品の安全性・有効性",
+            "薬害エイズ"
+          ],
+          [
+            "ＨＩＶ感染",
+            "医薬品",
+            "医療の安全",
+            "薬害肝炎"
+          ],
+          [
+            "ＨＩＶ感染",
+            "毒物及び劇物",
+            "医薬品の安全性・有効性",
+            "薬害エイズ"
+          ]
+        ]
+      },
+      "choicesParts": [
+        [
+          {
+            "text": "Ｏ１５７感染"
+          },
+          {
+            "text": "　医薬品"
+          },
+          {
+            "text": "　医薬品の安全性・有効性"
+          },
+          {
+            "text": "　薬害肝炎"
+          }
+        ],
+        [
+          {
+            "text": "Ｏ１５７感染"
+          },
+          {
+            "text": "　毒物及び劇物"
+          },
+          {
+            "text": "　医療の安全"
+          },
+          {
+            "text": "　薬害肝炎"
+          }
+        ],
+        [
+          {
+            "text": "ＨＩＶ感染"
+          },
+          {
+            "text": "　医薬品"
+          },
+          {
+            "text": "　医薬品の安全性・有効性"
+          },
+          {
+            "text": "　薬害エイズ"
+          }
+        ],
+        [
+          {
+            "text": "ＨＩＶ感染"
+          },
+          {
+            "text": "　医薬品"
+          },
+          {
+            "text": "　医療の安全"
+          },
+          {
+            "text": "　薬害肝炎"
+          }
+        ],
+        [
+          {
+            "text": "ＨＩＶ感染"
+          },
+          {
+            "text": "　毒物及び劇物"
+          },
+          {
+            "text": "　医薬品の安全性・有効性"
+          },
+          {
+            "text": "　薬害エイズ"
+          }
+        ]
+      ]
     },
     {
       "id": "KSAI-2023-019",
@@ -13307,7 +13393,7 @@
         "正  正  誤  正",
         "正  誤  正  正",
         "誤  正  正  正",
-        "正  正  正  正\n\n\n\n［主な医薬品とその作用］"
+        "正  正  正  正"
       ],
       "answer": 3,
       "answerNumberOfficial": 4,
@@ -13324,13 +13410,52 @@
       "excludeFromAccuracyDenominator": false,
       "modificationDisclosureDisplay": "PDFからテキスト抽出（改行・表の配置は原典と異なる場合があります）",
       "verbatimCertified": true,
-      "needsVisualReview": false,
-      "renderReady": true,
+      "needsVisualReview": true,
+      "renderReady": false,
       "audit": {
-        "status": "PASS",
-        "method": "AUTO_PDF_LAYOUT_FALSE_POSITIVE_TRIAGE",
-        "record": "LAYOUT_TRIAGE_2023.json",
-        "sourcePdfSha256": "839f5d8105ad2c5a3383072a4c5c45d2d2f7156a2142b66c38deaf6d02841e2e"
+        "status": "PENDING_VISUAL_REAUDIT",
+        "method": "CENTRAL_CORRECTION_FROM_VISUAL_REAUDIT_RESULT",
+        "record": "LAYOUT_TRIAGE_2023.json"
+      },
+      "choiceTable": {
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rows": [
+          [
+            "正",
+            "正",
+            "正",
+            "誤"
+          ],
+          [
+            "正",
+            "正",
+            "誤",
+            "正"
+          ],
+          [
+            "正",
+            "誤",
+            "正",
+            "正"
+          ],
+          [
+            "誤",
+            "正",
+            "正",
+            "正"
+          ],
+          [
+            "正",
+            "正",
+            "正",
+            "正"
+          ]
+        ]
       }
     },
     {
@@ -13561,7 +13686,7 @@
               332.28,
               585.61
             ],
-            "fontSize": 6.0,
+            "fontSize": 6,
             "baseText": "咳"
           },
           {
@@ -13581,7 +13706,7 @@
               332.28,
               606.13
             ],
-            "fontSize": 6.0,
+            "fontSize": 6,
             "baseText": "痰"
           }
         ]
@@ -14727,13 +14852,13 @@
       "year": 2023,
       "questionNo": 36,
       "chapter": "第3章",
-      "question": "次の記述にあてはまる漢方処方製剤として、最も適切なものを一つ選べ。\n\n\n  体力中程度以下で、ときに便が硬く塊状なものの便秘、便秘に伴う頭重、の\n          しん                                                        じ\n ぼせ、湿疹・皮膚炎、ふきでもの、食欲不振、腹部膨満、腸内異常醗酵、痔 な\n\n どの症状の緩和に適すとされる。\n\n\n\n\n      りっ くん し とう",
+      "question": "次の記述にあてはまる漢方処方製剤として、最も適切なものを一つ選べ。\n\n\n  体力中程度以下で、ときに便が硬く塊状なものの便秘、便秘に伴う頭重、の\n          しん                                                        じ\n ぼせ、湿疹・皮膚炎、ふきでもの、食欲不振、腹部膨満、腸内異常醗酵、痔な\n\n どの症状の緩和に適すとされる。",
       "choices": [
-        "六 君 子 湯\n      だいおう ぼ たん ぴ とう",
-        "大黄 牡 丹 皮 湯\n      にんじん とう",
-        "人参 湯\n       ま し にん がん",
-        "麻子 仁 丸\n      けい し か しゃく やくとう",
-        "桂 枝 加 芍 薬湯"
+        "六君子湯",
+        "大黄牡丹皮湯",
+        "人参湯",
+        "麻子仁丸",
+        "桂枝加芍薬湯"
       ],
       "answer": 3,
       "answerNumberOfficial": 4,
@@ -14749,15 +14874,64 @@
       "excludeFromAccuracyDenominator": false,
       "modificationDisclosureDisplay": "PDFからテキスト抽出（改行・表の配置は原典と異なる場合があります）",
       "verbatimCertified": true,
-      "needsVisualReview": false,
-      "renderReady": true,
+      "needsVisualReview": true,
+      "renderReady": false,
       "audit": {
-        "status": "PASS",
-        "method": "AUTO_SHA_PINNED_PDF_NFC_WHITESPACE_DIFF",
-        "record": "AUTO_DIFF_2023.json",
-        "sourcePdfSha256": "839f5d8105ad2c5a3383072a4c5c45d2d2f7156a2142b66c38deaf6d02841e2e",
-        "normalizedTextSha256": "9dbbbe314ead9d2dd10b49f1c5dbef401851ff63cd7d8a66c40e9d7781b46a3f"
-      }
+        "status": "PENDING_VISUAL_REAUDIT",
+        "method": "CENTRAL_CORRECTION_FROM_VISUAL_REAUDIT_RESULT",
+        "record": "AUTO_DIFF_2023.json"
+      },
+      "questionParts": [
+        {
+          "text": "次の記述にあてはまる漢方処方製剤として、最も適切なものを一つ選べ。\n\n\n  体力中程度以下で、ときに便が硬く塊状なものの便秘、便秘に伴う頭重、の\n          しん                                                        じ\n ぼせ、湿"
+        },
+        {
+          "rubyBase": "疹",
+          "rubyText": "しん"
+        },
+        {
+          "text": "・皮膚炎、ふきでもの、食欲不振、腹部膨満、腸内異常醗酵、"
+        },
+        {
+          "rubyBase": "痔",
+          "rubyText": "じ"
+        },
+        {
+          "text": "な\n\n どの症状の緩和に適すとされる。"
+        }
+      ],
+      "choicesParts": [
+        [
+          {
+            "rubyBase": "六君子湯",
+            "rubyText": "りっくんしとう"
+          }
+        ],
+        [
+          {
+            "rubyBase": "大黄牡丹皮湯",
+            "rubyText": "だいおうぼたんぴとう"
+          }
+        ],
+        [
+          {
+            "rubyBase": "人参湯",
+            "rubyText": "にんじんとう"
+          }
+        ],
+        [
+          {
+            "rubyBase": "麻子仁丸",
+            "rubyText": "ましにんがん"
+          }
+        ],
+        [
+          {
+            "rubyBase": "桂枝加芍薬湯",
+            "rubyText": "けいしかしゃくやくとう"
+          }
+        ]
+      ]
     },
     {
       "id": "KSAI-2023-037",
@@ -15698,7 +15872,7 @@
       "year": 2023,
       "questionNo": 48,
       "chapter": "第3章",
-      "question": "３０歳女性が、目の充血があるため、次の成分の一般用医薬品の一般点眼薬を\n購入する目的で店舗を訪れた。\n\n\n    １００ｍＬ中：\n         成分                分量\n    テトラヒドロゾリン塩酸塩           ０.０５ ｇ\n    グリチルリチン酸二カリウム          ０.２５ ｇ\n    クロルフェニラミンマレイン酸塩       ０.０３ ｇ\n    パンテノール                   ０.１  ｇ\n    アスパラギン酸カリウム             １.０  ｇ\n   （添加物として、ベンザルコニウム塩化物、ｐＨ調整剤等を含む。）\n\n\n この点眼薬に関する記述の正誤について、正しい組合せを一つ選べ。\n\n\n ａ この医薬品には、結膜を通っている血管を収縮させて目の充血を除去す\n  ることを目的としてテトラヒドロゾリン塩酸塩が配合されている。\n ｂ この医薬品に配合されるアスパラギン酸カリウムは、新陳代謝を促し、目\n  の疲れを改善する効果を期待して配合されているアミノ酸成分である。\n                                                けん            しょう\n ｃ この医薬品を点眼する際には、容器の先端が眼瞼（まぶた）や睫 毛（ま\n\n  つげ）に触れないようにする。\n ｄ この医薬品は、ソフトコンタクトレンズを装着したまま点眼することが\n  できる。\n\n\n              ａ  ｂ  ｃ  ｄ",
+      "question": "３０歳女性が、目の充血があるため、次の成分の一般用医薬品の一般点眼薬を\n購入する目的で店舗を訪れた。\n\n\n    １００ｍＬ中：\n         成分                分量\n    テトラヒドロゾリン塩酸塩           ０.０５ ｇ\n    グリチルリチン酸二カリウム          ０.２５ ｇ\n    クロルフェニラミンマレイン酸塩       ０.０３ ｇ\n    パンテノール                   ０.１  ｇ\n    アスパラギン酸カリウム             １.０  ｇ\n   （添加物として、ベンザルコニウム塩化物、ｐＨ調整剤等を含む。）\n\n\n この点眼薬に関する記述の正誤について、正しい組合せを一つ選べ。\n\n\n ａ この医薬品には、結膜を通っている血管を収縮させて目の充血を除去す\n  ることを目的としてテトラヒドロゾリン塩酸塩が配合されている。\n ｂ この医薬品に配合されるアスパラギン酸カリウムは、新陳代謝を促し、目\n  の疲れを改善する効果を期待して配合されているアミノ酸成分である。\n                                                ｃ この医薬品を点眼する際には、容器の先端が眼瞼（まぶた）や睫毛（ま\n\n  つげ）に触れないようにする。\n ｄ この医薬品は、ソフトコンタクトレンズを装着したまま点眼することが\n  できる。\n\n\n              ａ  ｂ  ｃ  ｄ",
       "choices": [
         "正  誤  正  正",
         "正  正  正  誤",
@@ -15720,106 +15894,99 @@
       "excludeFromAccuracyDenominator": false,
       "modificationDisclosureDisplay": "PDFからテキスト抽出（改行・表の配置は原典と異なる場合があります）",
       "verbatimCertified": true,
-      "needsVisualReview": false,
-      "renderReady": true,
+      "needsVisualReview": true,
+      "renderReady": false,
       "audit": {
-        "status": "PASS",
-        "method": "AUTO_SHA_PINNED_TABLE_XY_CELL_ALIGNMENT",
-        "record": "GEOMETRY_AUDIT_2023.json",
-        "sourcePdfSha256": "839f5d8105ad2c5a3383072a4c5c45d2d2f7156a2142b66c38deaf6d02841e2e",
-        "normalizedTextSha256": "f85512539c834468c11364794c4711117a9265e1878283a09db15380f9c8866c",
-        "table": {
-          "status": "PASS",
-          "method": "PHYSICAL_CELL_XY_AND_TEXT_MATCH",
-          "rows": [
-            {
-              "number": 1,
-              "page": 31,
-              "y": 510.1320037841797,
-              "x": [
-                262.56,
-                296.64,
-                330.6,
-                364.56
-              ],
-              "cells": [
-                "正",
-                "誤",
-                "正",
-                "正"
-              ]
-            },
-            {
-              "number": 2,
-              "page": 31,
-              "y": 526.4520263671875,
-              "x": [
-                262.56,
-                296.64,
-                330.6,
-                364.56
-              ],
-              "cells": [
-                "正",
-                "正",
-                "正",
-                "誤"
-              ]
-            },
-            {
-              "number": 3,
-              "page": 31,
-              "y": 542.7720336914062,
-              "x": [
-                262.56,
-                296.64,
-                330.6,
-                364.56
-              ],
-              "cells": [
-                "正",
-                "正",
-                "誤",
-                "誤"
-              ]
-            },
-            {
-              "number": 4,
-              "page": 31,
-              "y": 558.9720458984375,
-              "x": [
-                262.56,
-                296.64,
-                330.6,
-                364.56
-              ],
-              "cells": [
-                "誤",
-                "正",
-                "誤",
-                "正"
-              ]
-            },
-            {
-              "number": 5,
-              "page": 31,
-              "y": 575.2919921875,
-              "x": [
-                262.56,
-                296.64,
-                330.6,
-                364.56
-              ],
-              "cells": [
-                "誤",
-                "誤",
-                "正",
-                "正"
-              ]
-            }
-          ],
-          "columns": 4
+        "status": "PENDING_VISUAL_REAUDIT",
+        "method": "CENTRAL_CORRECTION_FROM_VISUAL_REAUDIT_RESULT",
+        "record": "GEOMETRY_AUDIT_2023.json"
+      },
+      "questionParts": [
+        {
+          "text": "３０歳女性が、目の充血があるため、次の成分の一般用医薬品の一般点眼薬を\n購入する目的で店舗を訪れた。\n\n\n    １００ｍＬ中：\n         成分                分量\n    テトラヒドロゾリン塩酸塩           ０.０５ ｇ\n    グリチルリチン酸二カリウム          ０.２５ ｇ\n    クロルフェニラミンマレイン酸塩       ０.０３ ｇ\n    パンテノール                   ０.１  ｇ\n    アスパラギン酸カリウム             １.０  ｇ\n   （添加物として、ベンザルコニウム塩化物、ｐＨ調整剤等を含む。）\n\n\n この点眼薬に関する記述の正誤について、正しい組合せを一つ選べ。\n\n\n ａ この医薬品には、結膜を通っている血管を収縮させて目の充血を除去す\n  ることを目的としてテトラヒドロゾリン塩酸塩が配合されている。\n ｂ この医薬品に配合されるアスパラギン酸カリウムは、新陳代謝を促し、目\n  の疲れを改善する効果を期待して配合されているアミノ酸成分である。\n                                                ｃ この医薬品を点眼する際には、容器の先端が眼"
+        },
+        {
+          "rubyBase": "瞼",
+          "rubyText": "けん"
+        },
+        {
+          "text": "（まぶた）や睫"
+        },
+        {
+          "rubyBase": "毛",
+          "rubyText": "しょう"
+        },
+        {
+          "text": "（ま\n\n  つげ）に触れないようにする。\n ｄ この医薬品は、ソフトコンタクトレンズを装着したまま点眼することが\n  できる。\n\n\n              ａ  ｂ  ｃ  ｄ"
         }
+      ],
+      "questionTable": {
+        "columns": [
+          "成分",
+          "分量"
+        ],
+        "rows": [
+          [
+            "テトラヒドロゾリン塩酸塩",
+            "0.05 g"
+          ],
+          [
+            "グリチルリチン酸二カリウム",
+            "0.25 g"
+          ],
+          [
+            "クロルフェニラミンマレイン酸塩",
+            "0.03 g"
+          ],
+          [
+            "パンテノール",
+            "0.1 g"
+          ],
+          [
+            "アスパラギン酸カリウム",
+            "1.0 g"
+          ]
+        ]
+      },
+      "choiceTable": {
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rows": [
+          [
+            "正",
+            "誤",
+            "正",
+            "正"
+          ],
+          [
+            "正",
+            "正",
+            "正",
+            "誤"
+          ],
+          [
+            "正",
+            "正",
+            "誤",
+            "誤"
+          ],
+          [
+            "誤",
+            "正",
+            "誤",
+            "正"
+          ],
+          [
+            "誤",
+            "誤",
+            "正",
+            "正"
+          ]
+        ]
       }
     },
     {
@@ -16322,7 +16489,7 @@
       "sourcePdfPages": [
         34
       ],
-      "question": " 歯痛・歯槽膿 漏薬の配合成分とその配合目的としての作用に関する記述の正\n\n誤について、正しい組合せを一つ選べ。\n\n\n     配合成分         配合目的としての作用\n                            う しょく\n              齲 蝕（むし歯）で露出した歯髄の知覚神経の\n ａ ジブカイン塩酸塩\n              伝達を遮断して痛みを鎮める。\n              歯肉炎、歯周炎（歯槽膿 漏）の症状である口臭\n ｂ カルバゾクロム\n              を抑える。\n\n\n                            う しょく\n ｃ オイゲノール    齲 蝕 （むし歯）部分での細菌の繁殖を抑える。\n\n   銅クロロフィリン\n ｄ           炎症を起こした歯周組織の修復を促す。\n    ナトリウム\n\n\n\n              ａ  ｂ  ｃ  ｄ",
+      "question": " 歯痛・歯槽膿漏薬の配合成分とその配合目的としての作用に関する記述の正\n\n誤について、正しい組合せを一つ選べ。\n\n\n     配合成分         配合目的としての作用\n\n              齲蝕（むし歯）で露出した歯髄の知覚神経の\n ａ ジブカイン塩酸塩\n              伝達を遮断して痛みを鎮める。\n              歯肉炎、歯周炎（歯槽膿漏）の症状である口臭\n ｂ カルバゾクロム\n              を抑える。\n\n\n\n ｃ オイゲノール    齲蝕 （むし歯）部分での細菌の繁殖を抑える。\n\n   銅クロロフィリン\n ｄ           炎症を起こした歯周組織の修復を促す。\n    ナトリウム\n\n\n\n              ａ  ｂ  ｃ  ｄ",
       "choices": [
         "誤  正  正  誤",
         "正  誤  正  正",
@@ -16333,65 +16500,113 @@
       "originalRubyReadings": [
         "のう",
         "うしょく",
-        "のう",
         "うしょく"
       ],
-      "rubyDisplayMode": "SOURCE_ORDER_UNATTACHED",
+      "rubyDisplayMode": "POSITIONALLY_ATTACHED",
       "rubySourceVerified": true,
       "rubySourcePdfSha256": "839f5d8105ad2c5a3383072a4c5c45d2d2f7156a2142b66c38deaf6d02841e2e",
       "verbatimCertified": true,
-      "needsVisualReview": false,
-      "renderReady": true,
+      "needsVisualReview": true,
+      "renderReady": false,
       "modificationDisclosureDisplay": "公式PDFのふりがなを原典出現順に独立表示（漢字への対応付けを行わない加工）",
       "audit": {
-        "status": "PASS",
-        "method": "SOURCE_ORDER_UNATTACHED_PDF_RAWDICT",
-        "record": "RUBY_102_SOURCE_ORDER_PROMOTION_20261124.json",
-        "sourcePdfSha256": "839f5d8105ad2c5a3383072a4c5c45d2d2f7156a2142b66c38deaf6d02841e2e",
-        "sourceNormalizedSha256": "f8ab5d053472d2b532acc16d70476f6a2b1852c95434a7559645ff1a6197879d",
-        "readingsOrder": [
-          {
-            "page": 34,
-            "bbox": [
-              157.9199981689453,
-              101.28600311279297,
-              169.9198760986328,
-              107.28600311279297
-            ],
-            "reading": "のう"
-          },
-          {
-            "page": 34,
-            "bbox": [
-              252.36000061035156,
-              183.2460174560547,
-              279.35986328125,
-              189.2460174560547
-            ],
-            "reading": "うしょく"
-          },
-          {
-            "page": 34,
-            "bbox": [
-              369.0,
-              222.9659881591797,
-              380.9998779296875,
-              228.9659881591797
-            ],
-            "reading": "のう"
-          },
-          {
-            "page": 34,
-            "bbox": [
-              252.36000061035156,
-              272.2860107421875,
-              279.35986328125,
-              278.2860107421875
-            ],
-            "reading": "うしょく"
-          }
+        "status": "PENDING_VISUAL_REAUDIT",
+        "method": "CENTRAL_CORRECTION_FROM_VISUAL_REAUDIT_RESULT",
+        "record": "RUBY_102_SOURCE_ORDER_PROMOTION_20261124.json"
+      },
+      "questionParts": [
+        {
+          "text": " 歯痛・歯槽"
+        },
+        {
+          "rubyBase": "膿",
+          "rubyText": "のう"
+        },
+        {
+          "text": "漏薬の配合成分とその配合目的としての作用に関する記述の正\n\n誤について、正しい組合せを一つ選べ。\n\n\n     配合成分         配合目的としての作用\n\n              "
+        },
+        {
+          "rubyBase": "齲",
+          "rubyText": "うしょく"
+        },
+        {
+          "text": "蝕（むし歯）で露出した歯髄の知覚神経の\n ａ ジブカイン塩酸塩\n              伝達を遮断して痛みを鎮める。\n              歯肉炎、歯周炎（歯槽膿漏）の症状である口臭\n ｂ カルバゾクロム\n              を抑える。\n\n\n\n ｃ オイゲノール    "
+        },
+        {
+          "rubyBase": "齲",
+          "rubyText": "うしょく"
+        },
+        {
+          "text": "蝕 （むし歯）部分での細菌の繁殖を抑える。\n\n   銅クロロフィリン\n ｄ           炎症を起こした歯周組織の修復を促す。\n    ナトリウム\n\n\n\n              ａ  ｂ  ｃ  ｄ"
+        }
+      ],
+      "questionTable": {
+        "columns": [
+          "配合成分",
+          "配合目的としての作用"
         ],
-        "originalCandidateQuestionSha256": "171ecc901e711ce782f1ff6aa3cff9ab6c619a374dc574ed52b1682a1618744a"
+        "rows": [
+          [
+            "a",
+            "ジブカイン塩酸塩",
+            "齲蝕（むし歯）で露出した歯髄の知覚神経の伝達を遮断して痛みを鎮める。"
+          ],
+          [
+            "b",
+            "カルバゾクロム",
+            "歯肉炎、歯周炎（歯槽膿漏）の症状である口臭を抑える。"
+          ],
+          [
+            "c",
+            "オイゲノール",
+            "齲蝕（むし歯）部分での細菌の繁殖を抑える。"
+          ],
+          [
+            "d",
+            "銅クロロフィリンナトリウム",
+            "炎症を起こした歯周組織の修復を促す。"
+          ]
+        ]
+      },
+      "choiceTable": {
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rows": [
+          [
+            "誤",
+            "正",
+            "正",
+            "誤"
+          ],
+          [
+            "正",
+            "誤",
+            "正",
+            "正"
+          ],
+          [
+            "正",
+            "正",
+            "正",
+            "正"
+          ],
+          [
+            "正",
+            "誤",
+            "正",
+            "誤"
+          ],
+          [
+            "誤",
+            "正",
+            "誤",
+            "正"
+          ]
+        ]
       }
     },
     {
@@ -16667,7 +16882,7 @@
       "sourcePdfPages": [
         37
       ],
-      "question": "ぼうふう つう しょう さん\n 一般用医薬品の防風 通 聖 散 に関する記述の正誤について、正しい組合せを一\n\nつ選べ。\n\n\n ａ 体力が充実して、脇腹からみぞおちあたりにかけて苦しく、便秘の傾向が\n  あるものの胃炎、常習便秘、高血圧や肥満に伴う肩こり・頭痛・便秘、神経\n  症、肥満症に適すとされる。\n ｂ 構成生薬としてマオウは含まれない。\n ｃ 便秘に用いられる場合には、漫然と長期の使用は避け、１週間位使用して\n  も症状の改善がみられないときは、いったん使用を中止して専門家に相談\n  するなどの対応が必要である。\n ｄ 肥満症又は肥胖 症に用いられる場合、医薬品の販売等に従事する専門家\n\n  においては、生活習慣の改善が重要であることを説明する等、正しい理解を\n\n  促すことが重要である。\n\n\n              ａ  ｂ  ｃ  ｄ",
+      "question": "\n 一般用医薬品の防風 通 聖 散 に関する記述の正誤について、正しい組合せを一\n\nつ選べ。\n\n\n ａ 体力が充実して、脇腹からみぞおちあたりにかけて苦しく、便秘の傾向が\n  あるものの胃炎、常習便秘、高血圧や肥満に伴う肩こり・頭痛・便秘、神経\n  症、肥満症に適すとされる。\n ｂ 構成生薬としてマオウは含まれない。\n ｃ 便秘に用いられる場合には、漫然と長期の使用は避け、１週間位使用して\n  も症状の改善がみられないときは、いったん使用を中止して専門家に相談\n  するなどの対応が必要である。\n ｄ 肥満症又は肥胖症に用いられる場合、医薬品の販売等に従事する専門家\n\n  においては、生活習慣の改善が重要であることを説明する等、正しい理解を\n\n  促すことが重要である。\n\n\n              ａ  ｂ  ｃ  ｄ",
       "choices": [
         "正  正  正  正",
         "誤  誤  正  正",
@@ -16676,46 +16891,32 @@
         "正  誤  正  誤"
       ],
       "originalRubyReadings": [
-        "ぼうふうつうしょうさん",
         "はん"
       ],
-      "rubyDisplayMode": "SOURCE_ORDER_UNATTACHED",
+      "rubyDisplayMode": "POSITIONALLY_ATTACHED",
       "rubySourceVerified": true,
       "rubySourcePdfSha256": "839f5d8105ad2c5a3383072a4c5c45d2d2f7156a2142b66c38deaf6d02841e2e",
       "verbatimCertified": true,
-      "needsVisualReview": false,
-      "renderReady": true,
+      "needsVisualReview": true,
+      "renderReady": false,
       "modificationDisclosureDisplay": "公式PDFのふりがなを原典出現順に独立表示（漢字への対応付けを行わない加工）",
       "audit": {
-        "status": "PASS",
-        "method": "SOURCE_ORDER_UNATTACHED_PDF_RAWDICT",
-        "record": "RUBY_102_SOURCE_ORDER_PROMOTION_20261124.json",
-        "sourcePdfSha256": "839f5d8105ad2c5a3383072a4c5c45d2d2f7156a2142b66c38deaf6d02841e2e",
-        "sourceNormalizedSha256": "d54cedd40bd0813806f224e0db035bd0d7d0cd1f58bfc2e56bd9d4b78716a760",
-        "readingsOrder": [
-          {
-            "page": 37,
-            "bbox": [
-              181.0800018310547,
-              101.28600311279297,
-              247.0798797607422,
-              107.28600311279297
-            ],
-            "reading": "ぼうふうつうしょうさん"
-          },
-          {
-            "page": 37,
-            "bbox": [
-              194.39999389648438,
-              272.64599609375,
-              206.39987182617188,
-              278.64599609375
-            ],
-            "reading": "はん"
-          }
-        ],
-        "originalCandidateQuestionSha256": "835f579a499205265432f90100d6f8fe8bddcc403e1281b4a8b4adcd1a29175b"
-      }
+        "status": "PENDING_VISUAL_REAUDIT",
+        "method": "CENTRAL_CORRECTION_FROM_VISUAL_REAUDIT_RESULT",
+        "record": "RUBY_102_SOURCE_ORDER_PROMOTION_20261124.json"
+      },
+      "questionParts": [
+        {
+          "text": "\n 一般用医薬品の防風 通 聖 散 に関する記述の正誤について、正しい組合せを一\n\nつ選べ。\n\n\n ａ 体力が充実して、脇腹からみぞおちあたりにかけて苦しく、便秘の傾向が\n  あるものの胃炎、常習便秘、高血圧や肥満に伴う肩こり・頭痛・便秘、神経\n  症、肥満症に適すとされる。\n ｂ 構成生薬としてマオウは含まれない。\n ｃ 便秘に用いられる場合には、漫然と長期の使用は避け、１週間位使用して\n  も症状の改善がみられないときは、いったん使用を中止して専門家に相談\n  するなどの対応が必要である。\n ｄ 肥満症又は肥"
+        },
+        {
+          "rubyBase": "胖",
+          "rubyText": "はん"
+        },
+        {
+          "text": "症に用いられる場合、医薬品の販売等に従事する専門家\n\n  においては、生活習慣の改善が重要であることを説明する等、正しい理解を\n\n  促すことが重要である。\n\n\n              ａ  ｂ  ｃ  ｄ"
+        }
+      ]
     },
     {
       "id": "KSAI-2023-058",
@@ -17347,7 +17548,7 @@
       "year": 2023,
       "questionNo": 65,
       "chapter": "第2章",
-      "question": "血液に関する記述の正誤について、正しい組合せを一つ選べ。\n\n\n\n              ちゅう                しょう\n ａ 血液の粘稠 性は、主として血漿 の水分量や白血球の量で決まる。\n ｂ アルブミンは、血液の浸透圧を保持する働きがある。\n ｃ 赤血球は、中央部がくぼんだ円盤状の細胞で、血液全体の約１０％を占める。\n ｄ リンパ球は、血管壁を通り抜けて組織の中に入り込むと、マクロファージ\n  と呼ばれる。\n\n\n              ａ  ｂ  ｃ  ｄ",
+      "question": "血液に関する記述の正誤について、正しい組合せを一つ選べ。\n\n\n\n\n ａ 血液の粘稠性は、主として血漿の水分量や白血球の量で決まる。\n ｂ アルブミンは、血液の浸透圧を保持する働きがある。\n ｃ 赤血球は、中央部がくぼんだ円盤状の細胞で、血液全体の約１０％を占める。\n ｄ リンパ球は、血管壁を通り抜けて組織の中に入り込むと、マクロファージ\n  と呼ばれる。\n\n\n              ａ  ｂ  ｃ  ｄ",
       "choices": [
         "正  正  誤  誤",
         "正  誤  正  正",
@@ -17369,107 +17570,37 @@
       "excludeFromAccuracyDenominator": false,
       "modificationDisclosureDisplay": "PDFからテキスト抽出（改行・表の配置は原典と異なる場合があります）",
       "verbatimCertified": true,
-      "needsVisualReview": false,
-      "renderReady": true,
+      "needsVisualReview": true,
+      "renderReady": false,
       "audit": {
-        "status": "PASS",
-        "method": "AUTO_SHA_PINNED_TABLE_XY_CELL_ALIGNMENT",
-        "record": "GEOMETRY_AUDIT_2023.json",
-        "sourcePdfSha256": "185ce926f2b8baee9a52e189d2d6903b431c83f9e1707616e2debd496de9583f",
-        "normalizedTextSha256": "2a549db36d45f0f6bd73f898e976eef32965e879a5d2254fd88fbf5bd9582ace",
-        "table": {
-          "status": "PASS",
-          "method": "PHYSICAL_CELL_XY_AND_TEXT_MATCH",
-          "rows": [
-            {
-              "number": 1,
-              "page": 5,
-              "y": 249.97203063964844,
-              "x": [
-                262.56,
-                296.64,
-                330.6,
-                364.56
-              ],
-              "cells": [
-                "正",
-                "正",
-                "誤",
-                "誤"
-              ]
-            },
-            {
-              "number": 2,
-              "page": 5,
-              "y": 266.2920227050781,
-              "x": [
-                262.56,
-                296.64,
-                330.6,
-                364.56
-              ],
-              "cells": [
-                "正",
-                "誤",
-                "正",
-                "正"
-              ]
-            },
-            {
-              "number": 3,
-              "page": 5,
-              "y": 282.6120300292969,
-              "x": [
-                262.56,
-                296.64,
-                330.6,
-                364.56
-              ],
-              "cells": [
-                "誤",
-                "正",
-                "誤",
-                "誤"
-              ]
-            },
-            {
-              "number": 4,
-              "page": 5,
-              "y": 298.8119812011719,
-              "x": [
-                262.56,
-                296.64,
-                330.6,
-                364.56
-              ],
-              "cells": [
-                "正",
-                "誤",
-                "正",
-                "誤"
-              ]
-            },
-            {
-              "number": 5,
-              "page": 5,
-              "y": 315.1319885253906,
-              "x": [
-                262.56,
-                296.64,
-                330.6,
-                364.56
-              ],
-              "cells": [
-                "誤",
-                "誤",
-                "正",
-                "正"
-              ]
-            }
-          ],
-          "columns": 4
+        "status": "PENDING_VISUAL_REAUDIT",
+        "method": "CENTRAL_CORRECTION_FROM_VISUAL_REAUDIT_RESULT",
+        "record": "GEOMETRY_AUDIT_2023.json"
+      },
+      "originalRubyReadings": [
+        "ちゅう",
+        "しょう"
+      ],
+      "questionParts": [
+        {
+          "text": "血液に関する記述の正誤について、正しい組合せを一つ選べ。\n\n\n\n\n ａ 血液の粘"
+        },
+        {
+          "rubyBase": "稠",
+          "rubyText": "ちゅう"
+        },
+        {
+          "text": "性は、主として血"
+        },
+        {
+          "rubyBase": "漿",
+          "rubyText": "しょう"
+        },
+        {
+          "text": "の水分量や白血球の量で決まる。\n ｂ アルブミンは、血液の浸透圧を保持する働きがある。\n ｃ 赤血球は、中央部がくぼんだ円盤状の細胞で、血液全体の約１０％を占める。\n ｄ リンパ球は、血管壁を通り抜けて組織の中に入り込むと、マクロファージ\n  と呼ばれる。\n\n\n              ａ  ｂ  ｃ  ｄ"
         }
-      }
+      ],
+      "rubyDisplayMode": "POSITIONALLY_ATTACHED"
     },
     {
       "id": "KSAI-2023-066",
@@ -17570,7 +17701,7 @@
               145.08,
               438.85
             ],
-            "fontSize": 6.0,
+            "fontSize": 6,
             "baseText": "瞼"
           },
           {
@@ -17590,7 +17721,7 @@
               309.72,
               495.13
             ],
-            "fontSize": 6.0,
+            "fontSize": 6,
             "baseText": "曝"
           }
         ]
@@ -18124,7 +18255,7 @@
       "sourcePdfPages": [
         8
       ],
-      "question": " 薬の代謝、排泄 に関する記述の正誤について、正しい組合せを一つ選べ。\n\n\n ａ 有効成分が体内で代謝を受けると、作用を失ったり、作用が現れたり、あ\n  るいは体外へ排泄 されやすい水溶性の物質に変化する。\n ｂ 経口投与後、消化管で吸収された有効成分は、全身循環に入る前に門脈を\n  経由して肝臓を通過するため、まず肝臓で代謝を受ける。\n ｃ 肝機能が低下した人では、正常な人に比べて全身循環に到達する有効成\n  分の量が多くなり、効き目が過剰に現れることがある。\n\n                    しょう                                 ろ\n ｄ 有効成分と血漿 タンパク質との複合体は、腎臓で濾 過されやすくなり、\n  尿中へ速やかに排泄 される。\n\n\n              ａ  ｂ  ｃ  ｄ",
+      "question": " 薬の代謝、排泄 に関する記述の正誤について、正しい組合せを一つ選べ。\n\n\n ａ 有効成分が体内で代謝を受けると、作用を失ったり、作用が現れたり、あ\n  るいは体外へ排泄 されやすい水溶性の物質に変化する。\n ｂ 経口投与後、消化管で吸収された有効成分は、全身循環に入る前に門脈を\n  経由して肝臓を通過するため、まず肝臓で代謝を受ける。\n ｃ 肝機能が低下した人では、正常な人に比べて全身循環に到達する有効成\n  分の量が多くなり、効き目が過剰に現れることがある。\n\n\n ｄ 有効成分と血漿タンパク質との複合体は、腎臓で濾過されやすくなり、\n  尿中へ速やかに排泄される。\n\n\n              ａ  ｂ  ｃ  ｄ",
       "choices": [
         "正  正  正  誤",
         "正  正  誤  正",
@@ -18139,73 +18270,58 @@
         "ろ",
         "せつ"
       ],
-      "rubyDisplayMode": "SOURCE_ORDER_UNATTACHED",
+      "rubyDisplayMode": "POSITIONALLY_ATTACHED",
       "rubySourceVerified": true,
       "rubySourcePdfSha256": "185ce926f2b8baee9a52e189d2d6903b431c83f9e1707616e2debd496de9583f",
       "verbatimCertified": true,
-      "needsVisualReview": false,
-      "renderReady": true,
+      "needsVisualReview": true,
+      "renderReady": false,
       "modificationDisclosureDisplay": "公式PDFのふりがなを原典出現順に独立表示（漢字への対応付けを行わない加工）",
       "audit": {
-        "status": "PASS",
-        "method": "SOURCE_ORDER_UNATTACHED_PDF_RAWDICT",
-        "record": "RUBY_102_SOURCE_ORDER_PROMOTION_20261124.json",
-        "sourcePdfSha256": "185ce926f2b8baee9a52e189d2d6903b431c83f9e1707616e2debd496de9583f",
-        "sourceNormalizedSha256": "c9ba653db4d2bb8465fa50d0f498be9b4bf82f14998dd5211cfb76f97a2f0eff",
-        "readingsOrder": [
-          {
-            "page": 8,
-            "bbox": [
-              169.0800018310547,
-              454.4460144042969,
-              181.0798797607422,
-              460.4460144042969
-            ],
-            "reading": "せつ"
-          },
-          {
-            "page": 8,
-            "bbox": [
-              193.0800018310547,
-              510.72601318359375,
-              205.0798797607422,
-              516.7260131835938
-            ],
-            "reading": "せつ"
-          },
-          {
-            "page": 8,
-            "bbox": [
-              193.1999969482422,
-              597.29833984375,
-              209.7598876953125,
-              602.818359375
-            ],
-            "reading": "しょう"
-          },
-          {
-            "page": 8,
-            "bbox": [
-              393.4800109863281,
-              597.29833984375,
-              398.9999084472656,
-              602.818359375
-            ],
-            "reading": "ろ"
-          },
-          {
-            "page": 8,
-            "bbox": [
-              205.0800018310547,
-              615.9660034179688,
-              217.0798797607422,
-              621.9660034179688
-            ],
-            "reading": "せつ"
-          }
-        ],
-        "originalCandidateQuestionSha256": "f94b58364e3cb43345c7436de06c7804204ca88e97b3be1f618a720ff2402047"
-      }
+        "status": "PENDING_VISUAL_REAUDIT",
+        "method": "CENTRAL_CORRECTION_FROM_VISUAL_REAUDIT_RESULT",
+        "record": "RUBY_102_SOURCE_ORDER_PROMOTION_20261124.json"
+      },
+      "questionParts": [
+        {
+          "text": " 薬の代謝、排"
+        },
+        {
+          "rubyBase": "泄",
+          "rubyText": "せつ"
+        },
+        {
+          "text": " に関する記述の正誤について、正しい組合せを一つ選べ。\n\n\n ａ 有効成分が体内で代謝を受けると、作用を失ったり、作用が現れたり、あ\n  るいは体外へ排"
+        },
+        {
+          "rubyBase": "泄",
+          "rubyText": "せつ"
+        },
+        {
+          "text": " されやすい水溶性の物質に変化する。\n ｂ 経口投与後、消化管で吸収された有効成分は、全身循環に入る前に門脈を\n  経由して肝臓を通過するため、まず肝臓で代謝を受ける。\n ｃ 肝機能が低下した人では、正常な人に比べて全身循環に到達する有効成\n  分の量が多くなり、効き目が過剰に現れることがある。\n\n\n ｄ 有効成分と血"
+        },
+        {
+          "rubyBase": "漿",
+          "rubyText": "しょう"
+        },
+        {
+          "text": "タンパク質との複合体は、腎臓で"
+        },
+        {
+          "rubyBase": "濾",
+          "rubyText": "ろ"
+        },
+        {
+          "text": "過されやすくなり、\n  尿中へ速やかに排"
+        },
+        {
+          "rubyBase": "泄",
+          "rubyText": "せつ"
+        },
+        {
+          "text": "される。\n\n\n              ａ  ｂ  ｃ  ｄ"
+        }
+      ]
     },
     {
       "id": "KSAI-2023-073",
@@ -18353,7 +18469,7 @@
       "sourcePdfPages": [
         9
       ],
-      "question": "外用薬の剤形及びその一般的な特徴に関する記述の正誤について、正しい組\n合せを一つ選べ。\n\n\n\n ａ 軟膏 剤は、油性基剤に水分を加えたもので、患部を水で洗い流したい場合\n\n  に用いる。\n ｂ クリーム剤は、油性の基剤で皮膚への刺激が弱く、適用部位を水から遮断\n  したい場合に用いる。\n ｃ 外用液剤は、軟膏 剤やクリーム剤に比べて、適用部位が乾きにくいという\n\n  特徴がある。\n ｄ 貼付剤は、適用部位に有効成分が一定時間留まるため、薬効の持続が期待\n  できる。\n\n\n              ａ  ｂ  ｃ  ｄ",
+      "question": "外用薬の剤形及びその一般的な特徴に関する記述の正誤について、正しい組\n合せを一つ選べ。\n\n\n\n ａ 軟膏剤は、油性基剤に水分を加えたもので、患部を水で洗い流したい場合\n\n  に用いる。\n ｂ クリーム剤は、油性の基剤で皮膚への刺激が弱く、適用部位を水から遮断\n  したい場合に用いる。\n ｃ 外用液剤は、軟膏剤やクリーム剤に比べて、適用部位が乾きにくいという\n\n  特徴がある。\n ｄ 貼付剤は、適用部位に有効成分が一定時間留まるため、薬効の持続が期待\n  できる。\n\n\n              ａ  ｂ  ｃ  ｄ",
       "choices": [
         "正  正  誤  誤",
         "誤  正  正  誤",
@@ -18365,43 +18481,37 @@
         "こう",
         "こう"
       ],
-      "rubyDisplayMode": "SOURCE_ORDER_UNATTACHED",
+      "rubyDisplayMode": "POSITIONALLY_ATTACHED",
       "rubySourceVerified": true,
       "rubySourcePdfSha256": "185ce926f2b8baee9a52e189d2d6903b431c83f9e1707616e2debd496de9583f",
       "verbatimCertified": true,
-      "needsVisualReview": false,
-      "renderReady": true,
+      "needsVisualReview": true,
+      "renderReady": false,
       "modificationDisclosureDisplay": "公式PDFのふりがなを原典出現順に独立表示（漢字への対応付けを行わない加工）",
       "audit": {
-        "status": "PASS",
-        "method": "SOURCE_ORDER_UNATTACHED_PDF_RAWDICT",
-        "record": "RUBY_102_SOURCE_ORDER_PROMOTION_20261124.json",
-        "sourcePdfSha256": "185ce926f2b8baee9a52e189d2d6903b431c83f9e1707616e2debd496de9583f",
-        "sourceNormalizedSha256": "f6afd8d1f43319e812c301e14af0f4fef180a98b0ec25a00717dc20f183afad3",
-        "readingsOrder": [
-          {
-            "page": 9,
-            "bbox": [
-              133.0800018310547,
-              495.12603759765625,
-              145.0798797607422,
-              501.12603759765625
-            ],
-            "reading": "こう"
-          },
-          {
-            "page": 9,
-            "bbox": [
-              201.72000122070312,
-              567.7260131835938,
-              213.71987915039062,
-              573.7260131835938
-            ],
-            "reading": "こう"
-          }
-        ],
-        "originalCandidateQuestionSha256": "4eb96a50a1244214422081897baac3cb5e37c25a23ede5700d67faf30b52a1a5"
-      }
+        "status": "PENDING_VISUAL_REAUDIT",
+        "method": "CENTRAL_CORRECTION_FROM_VISUAL_REAUDIT_RESULT",
+        "record": "RUBY_102_SOURCE_ORDER_PROMOTION_20261124.json"
+      },
+      "questionParts": [
+        {
+          "text": "外用薬の剤形及びその一般的な特徴に関する記述の正誤について、正しい組\n合せを一つ選べ。\n\n\n\n ａ 軟"
+        },
+        {
+          "rubyBase": "膏",
+          "rubyText": "こう"
+        },
+        {
+          "text": "剤は、油性基剤に水分を加えたもので、患部を水で洗い流したい場合\n\n  に用いる。\n ｂ クリーム剤は、油性の基剤で皮膚への刺激が弱く、適用部位を水から遮断\n  したい場合に用いる。\n ｃ 外用液剤は、軟"
+        },
+        {
+          "rubyBase": "膏",
+          "rubyText": "こう"
+        },
+        {
+          "text": "剤やクリーム剤に比べて、適用部位が乾きにくいという\n\n  特徴がある。\n ｄ 貼付剤は、適用部位に有効成分が一定時間留まるため、薬効の持続が期待\n  できる。\n\n\n              ａ  ｂ  ｃ  ｄ"
+        }
+      ]
     },
     {
       "id": "KSAI-2023-075",
@@ -18700,7 +18810,7 @@
               181.08,
               226.45
             ],
-            "fontSize": 6.0,
+            "fontSize": 6,
             "baseText": "糞"
           }
         ]
@@ -19544,7 +19654,7 @@
       "year": 2023,
       "questionNo": 87,
       "chapter": "第4章",
-      "question": "医薬部外品に関する記述の正誤について、正しい組合せを一つ選べ。\n\n\n ａ 一般小売店では、医薬品の販売業の許可がなくても医薬部外品を販売す\n  ることができる。\n ｂ 人又は動物の保健のために、ねずみ、はえ、蚊、のみ、その他これらに類\n  する生物の防除の目的のために使用される物であり、機械器具等を含む。\n\n ｃ 効能効果があらかじめ定められた範囲内であって、成分や用法等に照ら\n\n  して人体に対する作用が緩和であることを要件として、医薬品的な効能効\n\n  果を表示・標榜 することが認められている。\n ｄ 医薬部外品の直接の容器又は直接の被包には、「医薬部外品」の文字の表\n  示が義務付けられている。\n\n\n              ａ  ｂ  ｃ  ｄ",
+      "question": "医薬部外品に関する記述の正誤について、正しい組合せを一つ選べ。\n\n\n ａ 一般小売店では、医薬品の販売業の許可がなくても医薬部外品を販売す\n  ることができる。\n ｂ 人又は動物の保健のために、ねずみ、はえ、蚊、のみ、その他これらに類\n  する生物の防除の目的のために使用される物であり、機械器具等を含む。\n\n ｃ 効能効果があらかじめ定められた範囲内であって、成分や用法等に照ら\n\n  して人体に対する作用が緩和であることを要件として、医薬品的な効能効\n\n  果を表示・標榜することが認められている。\n ｄ 医薬部外品の直接の容器又は直接の被包には、「医薬部外品」の文字の表\n  示が義務付けられている。\n\n\n              ａ  ｂ  ｃ  ｄ",
       "choices": [
         "正  正  誤  誤",
         "正  誤  正  正",
@@ -19566,14 +19676,12 @@
       "excludeFromAccuracyDenominator": false,
       "modificationDisclosureDisplay": "PDFからテキスト抽出（改行・表の配置は原典と異なる場合があります）",
       "verbatimCertified": true,
-      "needsVisualReview": false,
-      "renderReady": true,
+      "needsVisualReview": true,
+      "renderReady": false,
       "audit": {
-        "status": "PASS",
-        "method": "AUTO_PDF_GLYPH_XY_RUBY_DOM_RECONSTRUCTION",
-        "record": "RUBY_RECON_2023.json",
-        "sourcePdfSha256": "185ce926f2b8baee9a52e189d2d6903b431c83f9e1707616e2debd496de9583f",
-        "glyphCount": 1
+        "status": "PENDING_VISUAL_REAUDIT",
+        "method": "CENTRAL_CORRECTION_FROM_VISUAL_REAUDIT_RESULT",
+        "record": "RUBY_RECON_2023.json"
       },
       "questionParts": [
         {
@@ -19633,7 +19741,7 @@
       "sourcePdfPages": [
         17
       ],
-      "question": "\n 化粧品の効能効果として表示・標榜 することが認められている範囲に関する\n\n記述の正誤について、正しい組合せを一つ選べ。\n\n\n ａ 乾燥による小ジワを目立たなくする。\n ｂ 日やけによるシミ、ソバカスを防ぐ。\n ｃ 脱毛を防止する。\n ｄ 芳香を与える。\n\n\n              ａ  ｂ  ｃ  ｄ",
+      "question": "\n 化粧品の効能効果として表示・標榜することが認められている範囲に関する\n\n記述の正誤について、正しい組合せを一つ選べ。\n\n\n ａ 乾燥による小ジワを目立たなくする。\n ｂ 日やけによるシミ、ソバカスを防ぐ。\n ｃ 脱毛を防止する。\n ｄ 芳香を与える。\n\n\n              ａ  ｂ  ｃ  ｄ",
       "choices": [
         "正  正  正  誤",
         "正  正  誤  正",
@@ -19682,41 +19790,13 @@
         ]
       ],
       "verbatimCertified": true,
-      "needsVisualReview": false,
-      "renderReady": true,
+      "needsVisualReview": true,
+      "renderReady": false,
       "modificationDisclosureDisplay": "原典PDFのルビ位置・読みを目視照合し、ruby/rtで表示用に加工",
       "audit": {
-        "status": "PASS",
-        "method": "DIRECT_VISUAL_PDF_JP_RUBY_RT_COMPARED_V2",
-        "evidence": "RUBY_VISUAL_REAUDIT_V2_20261124.json",
-        "sourceImage": "ruby-font-review/KSAI-2023-088-source.png",
-        "sourceImageSha256": "aaf530a0e2568aac360970eb8b5cdfe8433a4b17118f67016df247bbe3558751",
-        "candidateScreenshot": "ruby-font-review/KSAI-2023-088-candidate-375-v2.png",
-        "candidateScreenshotSha256": "9b9e0242433186abb64a91dced837fae47816b1860d79668254117ba438b270e",
-        "glyphMappings": [
-          {
-            "fieldIndex": 0,
-            "base": "榜",
-            "reading": "ぼう",
-            "page": 17,
-            "glyphBBox": [
-              279.48,
-              478.93,
-              291.48,
-              490.93
-            ],
-            "rubyBBox": [
-              279.48,
-              473.17,
-              291.48,
-              479.17
-            ],
-            "method": "PDF_RAW_GLYPH_VERTICAL_XY"
-          }
-        ],
-        "font": "Noto Sans CJK JP",
-        "rubyElementCount": 1,
-        "visualSource": "8 high-resolution side-by-side contact sheets independently inspected"
+        "status": "PENDING_VISUAL_REAUDIT",
+        "method": "CENTRAL_CORRECTION_FROM_VISUAL_REAUDIT_RESULT",
+        "record": null
       }
     },
     {
@@ -20517,41 +20597,13 @@
         ]
       ],
       "verbatimCertified": true,
-      "needsVisualReview": false,
-      "renderReady": true,
+      "needsVisualReview": true,
+      "renderReady": false,
       "modificationDisclosureDisplay": "原典PDFのルビ位置・読みを目視照合し、ruby/rtで表示用に加工",
       "audit": {
-        "status": "PASS",
-        "method": "DIRECT_VISUAL_PDF_JP_RUBY_RT_COMPARED_V2",
-        "evidence": "RUBY_VISUAL_REAUDIT_V2_20261124.json",
-        "sourceImage": "ruby-font-review/KSAI-2023-097-source.png",
-        "sourceImageSha256": "e1ef47ce2631905f29c95b172b085ee04ef5f5366a08957f724792318dfbd45b",
-        "candidateScreenshot": "ruby-font-review/KSAI-2023-097-candidate-375-v2.png",
-        "candidateScreenshotSha256": "18b0bbb8b4c2a38eb2b0ed28c5979c540a8e00bef3c303085ddac99322adf640",
-        "glyphMappings": [
-          {
-            "fieldIndex": 0,
-            "base": "榜",
-            "reading": "ぼう",
-            "page": 23,
-            "glyphBBox": [
-              206.28,
-              275.89,
-              218.28,
-              287.89
-            ],
-            "rubyBBox": [
-              206.28,
-              270.13,
-              218.28,
-              276.13
-            ],
-            "method": "PDF_RAW_GLYPH_VERTICAL_XY"
-          }
-        ],
-        "font": "Noto Sans CJK JP",
-        "rubyElementCount": 1,
-        "visualSource": "8 high-resolution side-by-side contact sheets independently inspected"
+        "status": "PENDING_VISUAL_REAUDIT",
+        "method": "CENTRAL_CORRECTION_FROM_VISUAL_REAUDIT_RESULT",
+        "record": null
       }
     },
     {
@@ -21005,15 +21057,14 @@
       "excludeFromAccuracyDenominator": false,
       "modificationDisclosureDisplay": "PDFからテキスト抽出（改行・表の配置は原典と異なる場合があります）",
       "verbatimCertified": true,
-      "needsVisualReview": false,
-      "renderReady": true,
+      "needsVisualReview": true,
+      "renderReady": false,
       "audit": {
-        "status": "PASS",
-        "method": "AUTO_SHA_PINNED_PDF_NFC_WHITESPACE_DIFF",
-        "record": "AUTO_DIFF_2023.json",
-        "sourcePdfSha256": "185ce926f2b8baee9a52e189d2d6903b431c83f9e1707616e2debd496de9583f",
-        "normalizedTextSha256": "476fb34bc55f494cf5eedff0e1b9fe687e176d2f4d1d69daf822ee344b0f1a8e"
-      }
+        "status": "PENDING_VISUAL_REAUDIT",
+        "method": "CENTRAL_CORRECTION_FROM_VISUAL_REAUDIT_RESULT",
+        "record": "AUTO_DIFF_2023.json"
+      },
+      "underlinedText": "誤っているものを一つ選べ。"
     },
     {
       "id": "KSAI-2023-103",
@@ -21967,7 +22018,7 @@
       "year": 2023,
       "questionNo": 113,
       "chapter": "第5章",
-      "question": "一般用医薬品の安全対策に関する記述の正誤について、正しい組合せを一つ\n選べ。\n\n\n ａ アンプル入りかぜ薬の使用による重篤な副作用（ショック）で死亡例が発\n  生したことから、１９６５年に厚生省（当時）は関係製薬企業に対し、アン\n  プル入りかぜ薬製品の回収を要請した。\n ｂ 塩酸フェニルプロパノールアミンが配合された一般用医薬品による脳出\n  血等の副作用症例が複数報告されたことから、厚生労働省は、代替成分とし\n  てプソイドエフェドリン塩酸塩等への速やかな切替えを指示した。\n                    しょうさい こ とう\n ｃ 慢性肝炎患者が小柴 胡 湯 を使用して間質性肺炎を発症し、死亡を含む重\n\n  篤な転帰に至った例もあったことから、１９９６年に厚生省（当時）は関係\n\n  製薬企業に対して緊急安全性情報の配布を指示した。\n ｄ 一般用かぜ薬の使用によると疑われる肝機能障害の発生事例が報告され\n  たことを受けて、２００３年に厚生労働省は一般用かぜ薬全般につき使用\n  上の注意の改訂を指示した。\n\n\n              ａ  ｂ  ｃ  ｄ",
+      "question": "一般用医薬品の安全対策に関する記述の正誤について、正しい組合せを一つ\n選べ。\n\n\n ａ アンプル入りかぜ薬の使用による重篤な副作用（ショック）で死亡例が発\n  生したことから、１９６５年に厚生省（当時）は関係製薬企業に対し、アン\n  プル入りかぜ薬製品の回収を要請した。\n ｂ 塩酸フェニルプロパノールアミンが配合された一般用医薬品による脳出\n  血等の副作用症例が複数報告されたことから、厚生労働省は、代替成分とし\n  てプソイドエフェドリン塩酸塩等への速やかな切替えを指示した。\n\n ｃ 慢性肝炎患者が小柴胡湯 を使用して間質性肺炎を発症し、死亡を含む重\n\n  篤な転帰に至った例もあったことから、１９９６年に厚生省（当時）は関係\n\n  製薬企業に対して緊急安全性情報の配布を指示した。\n ｄ 一般用かぜ薬の使用によると疑われる肝機能障害の発生事例が報告され\n  たことを受けて、２００３年に厚生労働省は一般用かぜ薬全般につき使用\n  上の注意の改訂を指示した。\n\n\n              ａ  ｂ  ｃ  ｄ",
       "choices": [
         "正  正  正  誤",
         "正  正  誤  正",
@@ -21989,107 +22040,29 @@
       "excludeFromAccuracyDenominator": false,
       "modificationDisclosureDisplay": "PDFからテキスト抽出（改行・表の配置は原典と異なる場合があります）",
       "verbatimCertified": true,
-      "needsVisualReview": false,
-      "renderReady": true,
+      "needsVisualReview": true,
+      "renderReady": false,
       "audit": {
-        "status": "PASS",
-        "method": "AUTO_SHA_PINNED_TABLE_XY_CELL_ALIGNMENT",
-        "record": "GEOMETRY_AUDIT_2023.json",
-        "sourcePdfSha256": "185ce926f2b8baee9a52e189d2d6903b431c83f9e1707616e2debd496de9583f",
-        "normalizedTextSha256": "de58183c19f38be9843f6f46fabb178f3f275e65cd3c31f9810547db3758773c",
-        "table": {
-          "status": "PASS",
-          "method": "PHYSICAL_CELL_XY_AND_TEXT_MATCH",
-          "rows": [
-            {
-              "number": 1,
-              "page": 32,
-              "y": 687.85205078125,
-              "x": [
-                262.2,
-                296.28,
-                330.24,
-                364.2
-              ],
-              "cells": [
-                "正",
-                "正",
-                "正",
-                "誤"
-              ]
-            },
-            {
-              "number": 2,
-              "page": 32,
-              "y": 704.1719970703125,
-              "x": [
-                262.2,
-                296.28,
-                330.24,
-                364.2
-              ],
-              "cells": [
-                "正",
-                "正",
-                "誤",
-                "正"
-              ]
-            },
-            {
-              "number": 3,
-              "page": 32,
-              "y": 720.4920654296875,
-              "x": [
-                262.2,
-                296.28,
-                330.24,
-                364.2
-              ],
-              "cells": [
-                "正",
-                "誤",
-                "正",
-                "正"
-              ]
-            },
-            {
-              "number": 4,
-              "page": 32,
-              "y": 736.81201171875,
-              "x": [
-                262.2,
-                296.28,
-                330.24,
-                364.2
-              ],
-              "cells": [
-                "誤",
-                "正",
-                "正",
-                "正"
-              ]
-            },
-            {
-              "number": 5,
-              "page": 32,
-              "y": 753.01220703125,
-              "x": [
-                262.2,
-                296.28,
-                330.24,
-                364.2
-              ],
-              "cells": [
-                "正",
-                "正",
-                "正",
-                "正"
-              ]
-            }
-          ],
-          "columns": 4
+        "status": "PENDING_VISUAL_REAUDIT",
+        "method": "CENTRAL_CORRECTION_FROM_VISUAL_REAUDIT_RESULT",
+        "record": "GEOMETRY_AUDIT_2023.json"
+      },
+      "originalRubyReadings": [
+        "しょうさいことう"
+      ],
+      "questionParts": [
+        {
+          "text": "一般用医薬品の安全対策に関する記述の正誤について、正しい組合せを一つ\n選べ。\n\n\n ａ アンプル入りかぜ薬の使用による重篤な副作用（ショック）で死亡例が発\n  生したことから、１９６５年に厚生省（当時）は関係製薬企業に対し、アン\n  プル入りかぜ薬製品の回収を要請した。\n ｂ 塩酸フェニルプロパノールアミンが配合された一般用医薬品による脳出\n  血等の副作用症例が複数報告されたことから、厚生労働省は、代替成分とし\n  てプソイドエフェドリン塩酸塩等への速やかな切替えを指示した。\n\n ｃ 慢性肝炎患者が"
+        },
+        {
+          "rubyBase": "小柴胡湯",
+          "rubyText": "しょうさいことう"
+        },
+        {
+          "text": " を使用して間質性肺炎を発症し、死亡を含む重\n\n  篤な転帰に至った例もあったことから、１９９６年に厚生省（当時）は関係\n\n  製薬企業に対して緊急安全性情報の配布を指示した。\n ｄ 一般用かぜ薬の使用によると疑われる肝機能障害の発生事例が報告され\n  たことを受けて、２００３年に厚生労働省は一般用かぜ薬全般につき使用\n  上の注意の改訂を指示した。\n\n\n              ａ  ｂ  ｃ  ｄ"
         }
-      }
+      ],
+      "rubyDisplayMode": "POSITIONALLY_ATTACHED"
     },
     {
       "id": "KSAI-2023-114",
@@ -22161,52 +22134,68 @@
       "question": "次硝酸ビスマスが配合された内服用の一般用医薬品の添付文書等において、\n「相談すること」の項目中に「胃・十二指腸潰瘍の診断を受けた人」と記載され\nる主な理由について、最も適切なものを一つ選べ。",
       "choices": [
         "下痢症状の副作用が発現するおそれがあるため。\n",
-        "ナトリウム、カルシウム、マグネシウム等の無機塩類の排泄 が遅れること\n\n  で、副作用が発現するおそれがあるため。",
+        "ナトリウム、カルシウム、マグネシウム等の無機塩類の排泄が遅れること\n\n  で、副作用が発現するおそれがあるため。",
         "本剤の吸収が高まり、血中に移行する量が多くなり、本剤による精神神経\n  障害等が発現するおそれがあるため。\n",
-        "胃液の分泌が亢 進し、胃・十二指腸潰瘍の症状を悪化させるおそれがある\n\n  ため。",
+        "胃液の分泌が亢進し、胃・十二指腸潰瘍の症状を悪化させるおそれがある\n\n  ため。",
         "消化管粘膜の防御機能が低下し、胃・十二指腸潰瘍の症状を悪化させるお\n  それがあるため。"
       ],
       "originalRubyReadings": [
         "せつ",
         "こう"
       ],
-      "rubyDisplayMode": "SOURCE_ORDER_UNATTACHED",
+      "rubyDisplayMode": "POSITIONALLY_ATTACHED",
       "rubySourceVerified": true,
       "rubySourcePdfSha256": "185ce926f2b8baee9a52e189d2d6903b431c83f9e1707616e2debd496de9583f",
       "verbatimCertified": true,
-      "needsVisualReview": false,
-      "renderReady": true,
+      "needsVisualReview": true,
+      "renderReady": false,
       "modificationDisclosureDisplay": "公式PDFのふりがなを原典出現順に独立表示（漢字への対応付けを行わない加工）",
       "audit": {
-        "status": "PASS",
-        "method": "SOURCE_ORDER_UNATTACHED_PDF_RAWDICT",
-        "record": "RUBY_102_SOURCE_ORDER_PROMOTION_20261124.json",
-        "sourcePdfSha256": "185ce926f2b8baee9a52e189d2d6903b431c83f9e1707616e2debd496de9583f",
-        "sourceNormalizedSha256": "ece73d91da428ed9d7e82756721fcde3d948c027d05775c311d91a2c17d9ceee",
-        "readingsOrder": [
+        "status": "PENDING_VISUAL_REAUDIT",
+        "method": "CENTRAL_CORRECTION_FROM_VISUAL_REAUDIT_RESULT",
+        "record": "RUBY_102_SOURCE_ORDER_PROMOTION_20261124.json"
+      },
+      "choicesParts": [
+        [
           {
-            "page": 34,
-            "bbox": [
-              426.3599853515625,
-              168.6060028076172,
-              438.35986328125,
-              174.6060028076172
-            ],
-            "reading": "せつ"
-          },
-          {
-            "page": 34,
-            "bbox": [
-              193.0800018310547,
-              241.2059783935547,
-              205.0798797607422,
-              247.2059783935547
-            ],
-            "reading": "こう"
+            "text": "下痢症状の副作用が発現するおそれがあるため。\n"
           }
         ],
-        "originalCandidateQuestionSha256": "47c7a68192a36415b05a841692831786dc37bb5f70c46781e55f81a31de5d9c8"
-      }
+        [
+          {
+            "text": "ナトリウム、カルシウム、マグネシウム等の無機塩類の排"
+          },
+          {
+            "rubyBase": "泄",
+            "rubyText": "せつ"
+          },
+          {
+            "text": "が遅れること\n\n  で、副作用が発現するおそれがあるため。"
+          }
+        ],
+        [
+          {
+            "text": "本剤の吸収が高まり、血中に移行する量が多くなり、本剤による精神神経\n  障害等が発現するおそれがあるため。\n"
+          }
+        ],
+        [
+          {
+            "text": "胃液の分泌が"
+          },
+          {
+            "rubyBase": "亢",
+            "rubyText": "こう"
+          },
+          {
+            "text": "進し、胃・十二指腸潰瘍の症状を悪化させるおそれがある\n\n  ため。"
+          }
+        ],
+        [
+          {
+            "text": "消化管粘膜の防御機能が低下し、胃・十二指腸潰瘍の症状を悪化させるお\n  それがあるため。"
+          }
+        ]
+      ]
     },
     {
       "id": "KSAI-2023-116",
@@ -22280,7 +22269,7 @@
           "sourcePage": 35
         },
         {
-          "text": " 吐の症状がある人\n ｄ 前立腺肥大による排尿困難の症状がある人\n\n\n              ａ  ｂ  ｃ  ｄ"
+          "text": "吐の症状がある人\n ｄ 前立腺肥大による排尿困難の症状がある人\n\n\n              ａ  ｂ  ｃ  ｄ"
         }
       ],
       "choicesParts": [
@@ -22311,35 +22300,13 @@
         ]
       ],
       "verbatimCertified": true,
-      "needsVisualReview": false,
-      "renderReady": true,
+      "needsVisualReview": true,
+      "renderReady": false,
       "modificationDisclosureDisplay": "原典PDF座標からルビを照合してruby要素で再配置",
       "audit": {
-        "status": "PASS",
-        "method": "PDF_RAW_FONT_CLUSTER_RUBY",
-        "record": "RUBY_FONT_CLUSTER_ALL_20261124.json",
-        "placements": [
-          {
-            "field": 0,
-            "reading": "おう",
-            "base": "嘔",
-            "page": 35,
-            "rubyBBox": [
-              169.08,
-              184.93,
-              181.08,
-              190.93
-            ],
-            "baseBBox": [
-              169.08,
-              190.69,
-              181.08,
-              202.69
-            ],
-            "fontSize": 6.0,
-            "baseText": "嘔"
-          }
-        ]
+        "status": "PENDING_VISUAL_REAUDIT",
+        "method": "CENTRAL_CORRECTION_FROM_VISUAL_REAUDIT_RESULT",
+        "record": "RUBY_FONT_CLUSTER_ALL_20261124.json"
       }
     },
     {
@@ -22488,7 +22455,7 @@
       "sourcePdfPages": [
         36
       ],
-      "question": "一般用医薬品の添付文書等において、「相談すること」の項目中に「次の診断\nを受けた人」として記載することとされている基礎疾患等と医薬品成分・薬効群\n等との関係の正誤について、正しい組合せを一つ選べ。\n\n\n\n     基礎疾患等        医薬品成分・薬効群等\n\n ａ 肝臓病       アセトアミノフェンを含む解熱鎮痛薬\n\n ｂ 高血圧       スクラルファートを含む胃腸薬\n                                                          がい  たん\n ｃ 甲状腺機能障害   メトキシフェナミン塩酸塩を含む鎮咳 去痰 薬\n ｄ 腎臓病       酸化マグネシウムを含む瀉 下薬\n\n\n              ａ  ｂ  ｃ  ｄ",
+      "question": "一般用医薬品の添付文書等において、「相談すること」の項目中に「次の診断\nを受けた人」として記載することとされている基礎疾患等と医薬品成分・薬効群\n等との関係の正誤について、正しい組合せを一つ選べ。\n\n\n\n     基礎疾患等        医薬品成分・薬効群等\n\n ａ 肝臓病       アセトアミノフェンを含む解熱鎮痛薬\n\n ｂ 高血圧       スクラルファートを含む胃腸薬\n\n ｃ 甲状腺機能障害   メトキシフェナミン塩酸塩を含む鎮咳去痰薬\n ｄ 腎臓病       酸化マグネシウムを含む瀉下薬\n\n\n              ａ  ｂ  ｃ  ｄ",
       "choices": [
         "誤  正  正  誤",
         "正  誤  正  正",
@@ -22501,52 +22468,111 @@
         "たん",
         "しゃ"
       ],
-      "rubyDisplayMode": "SOURCE_ORDER_UNATTACHED",
+      "rubyDisplayMode": "POSITIONALLY_ATTACHED",
       "rubySourceVerified": true,
       "rubySourcePdfSha256": "185ce926f2b8baee9a52e189d2d6903b431c83f9e1707616e2debd496de9583f",
       "verbatimCertified": true,
-      "needsVisualReview": false,
-      "renderReady": true,
+      "needsVisualReview": true,
+      "renderReady": false,
       "modificationDisclosureDisplay": "公式PDFのふりがなを原典出現順に独立表示（漢字への対応付けを行わない加工）",
       "audit": {
-        "status": "PASS",
-        "method": "SOURCE_ORDER_UNATTACHED_PDF_RAWDICT",
-        "record": "RUBY_102_SOURCE_ORDER_PROMOTION_20261124.json",
-        "sourcePdfSha256": "185ce926f2b8baee9a52e189d2d6903b431c83f9e1707616e2debd496de9583f",
-        "sourceNormalizedSha256": "27b3710442af6ced3bef9ec07a9ee3bd37c80885f3a62d75fb84e798595edcf0",
-        "readingsOrder": [
-          {
-            "page": 36,
-            "bbox": [
-              433.44000244140625,
-              220.56602478027344,
-              445.43988037109375,
-              226.56602478027344
-            ],
-            "reading": "がい"
-          },
-          {
-            "page": 36,
-            "bbox": [
-              457.44000244140625,
-              220.56602478027344,
-              469.43988037109375,
-              226.56602478027344
-            ],
-            "reading": "たん"
-          },
-          {
-            "page": 36,
-            "bbox": [
-              373.44000244140625,
-              240.3660125732422,
-              385.43988037109375,
-              246.3660125732422
-            ],
-            "reading": "しゃ"
-          }
+        "status": "PENDING_VISUAL_REAUDIT",
+        "method": "CENTRAL_CORRECTION_FROM_VISUAL_REAUDIT_RESULT",
+        "record": "RUBY_102_SOURCE_ORDER_PROMOTION_20261124.json"
+      },
+      "questionParts": [
+        {
+          "text": "一般用医薬品の添付文書等において、「相談すること」の項目中に「次の診断\nを受けた人」として記載することとされている基礎疾患等と医薬品成分・薬効群\n等との関係の正誤について、正しい組合せを一つ選べ。\n\n\n\n     基礎疾患等        医薬品成分・薬効群等\n\n ａ 肝臓病       アセトアミノフェンを含む解熱鎮痛薬\n\n ｂ 高血圧       スクラルファートを含む胃腸薬\n\n ｃ 甲状腺機能障害   メトキシフェナミン塩酸塩を含む鎮"
+        },
+        {
+          "rubyBase": "咳",
+          "rubyText": "がい"
+        },
+        {
+          "text": "去"
+        },
+        {
+          "rubyBase": "痰",
+          "rubyText": "たん"
+        },
+        {
+          "text": "薬\n ｄ 腎臓病       酸化マグネシウムを含む"
+        },
+        {
+          "rubyBase": "瀉",
+          "rubyText": "しゃ"
+        },
+        {
+          "text": "下薬\n\n\n              ａ  ｂ  ｃ  ｄ"
+        }
+      ],
+      "questionTable": {
+        "columns": [
+          "基礎疾患等",
+          "医薬品成分・薬効群等"
         ],
-        "originalCandidateQuestionSha256": "f52537de6f809004b07021f7aad3131783665c5ae1b941adec044e8630ec2588"
+        "rows": [
+          [
+            "a",
+            "肝臓病",
+            "アセトアミノフェンを含む解熱鎮痛薬"
+          ],
+          [
+            "b",
+            "高血圧",
+            "スクラルファートを含む胃腸薬"
+          ],
+          [
+            "c",
+            "甲状腺機能障害",
+            "メトキシフェナミン塩酸塩を含む鎮咳去痰薬"
+          ],
+          [
+            "d",
+            "腎臓病",
+            "酸化マグネシウムを含む瀉下薬"
+          ]
+        ]
+      },
+      "choiceTable": {
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rows": [
+          [
+            "誤",
+            "正",
+            "正",
+            "誤"
+          ],
+          [
+            "正",
+            "誤",
+            "正",
+            "正"
+          ],
+          [
+            "正",
+            "正",
+            "正",
+            "正"
+          ],
+          [
+            "正",
+            "誤",
+            "正",
+            "誤"
+          ],
+          [
+            "誤",
+            "正",
+            "誤",
+            "正"
+          ]
+        ]
       }
     },
     {
@@ -22558,8 +22584,8 @@
       "choices": [
         "スコポラミン臭化水素酸塩水和物",
         "イブプロフェン",
-        "メチルエフェドリン塩酸塩\n      しゃくやくかん ぞう とう",
-        "芍薬甘 草 湯",
+        "メチルエフェドリン塩酸塩",
+        "芍薬甘草湯",
         "ビサコジル"
       ],
       "answer": 0,
@@ -22576,15 +22602,41 @@
       "excludeFromAccuracyDenominator": false,
       "modificationDisclosureDisplay": "PDFからテキスト抽出（改行・表の配置は原典と異なる場合があります）",
       "verbatimCertified": true,
-      "needsVisualReview": false,
-      "renderReady": true,
+      "needsVisualReview": true,
+      "renderReady": false,
       "audit": {
-        "status": "PASS",
-        "method": "AUTO_SHA_PINNED_PDF_NFC_WHITESPACE_DIFF",
-        "record": "AUTO_DIFF_2023.json",
-        "sourcePdfSha256": "185ce926f2b8baee9a52e189d2d6903b431c83f9e1707616e2debd496de9583f",
-        "normalizedTextSha256": "f6a07c4882d0ad3525d3ff53aad44b014ba54c4fceb19dea307356067ed5887b"
-      }
+        "status": "PENDING_VISUAL_REAUDIT",
+        "method": "CENTRAL_CORRECTION_FROM_VISUAL_REAUDIT_RESULT",
+        "record": "AUTO_DIFF_2023.json"
+      },
+      "choicesParts": [
+        [
+          {
+            "text": "スコポラミン臭化水素酸塩水和物"
+          }
+        ],
+        [
+          {
+            "text": "イブプロフェン"
+          }
+        ],
+        [
+          {
+            "text": "メチルエフェドリン塩酸塩"
+          }
+        ],
+        [
+          {
+            "rubyBase": "芍薬甘草湯",
+            "rubyText": "しゃくやくかんぞうとう"
+          }
+        ],
+        [
+          {
+            "text": "ビサコジル"
+          }
+        ]
+      ]
     },
     {
       "id": "KSAI-2024-001",
@@ -22670,11 +22722,11 @@
       "chapter": "第1章",
       "question": "医薬品の効果とリスク評価に関する記述の正誤について、正しい組合せを選べ。\n\n\n ａ 医薬品は、少量の投与であれば、長期投与された場合でも毒性が発現する\n  ことはない。\n ｂ 医薬品の投与量が治療量上限を超えると、やがて効果よりも有害反応が\n  強く発現する「中毒量」となり、「最小致死量」を経て、「致死量」に至る。\n ｃ 医薬品の効果とリスクは、用量と作用強度の関係（用量-反応関係）に基\n  づいて評価される。\n ｄ ＬＤ５０とは動物実験における最小致死量のことであり、薬物の毒性の指\n  標として用いられる。\n\n\n              ａ  ｂ  ｃ  ｄ",
       "choices": [
-        "正  正  誤  正",
-        "正  正  誤  誤",
-        "誤  正  正  誤",
-        "誤  正  誤  正",
-        "誤  誤  正  誤"
+        "正　正　誤　正",
+        "正　誤　誤　誤",
+        "誤　正　正　誤",
+        "誤　正　誤　正",
+        "誤　誤　正　誤"
       ],
       "answer": 2,
       "answerNumberOfficial": 3,
@@ -22690,107 +22742,80 @@
       "excludeFromAccuracyDenominator": false,
       "modificationDisclosureDisplay": "PDFからテキスト抽出（改行・表の配置は原典と異なる場合があります）",
       "verbatimCertified": true,
-      "needsVisualReview": false,
-      "renderReady": true,
+      "needsVisualReview": true,
+      "renderReady": false,
       "audit": {
-        "status": "PASS",
-        "method": "AUTO_SHA_PINNED_TABLE_XY_CELL_ALIGNMENT",
-        "record": "GEOMETRY_AUDIT_2024.json",
-        "sourcePdfSha256": "961723dc28b419a2ec8dc8d359e63aa29ebc4ee8f8e8f523dfdb78473c3c69bc",
-        "normalizedTextSha256": "1dd67664457cbe471e4db611548f54a3ec14a66236b568d42f91308cb1cecad4",
-        "table": {
-          "status": "PASS",
-          "method": "PHYSICAL_CELL_XY_AND_TEXT_MATCH",
-          "rows": [
-            {
-              "number": 1,
-              "page": 3,
-              "y": 690.0120239257812,
-              "x": [
-                262.2,
-                296.28,
-                330.24,
-                364.2
-              ],
-              "cells": [
-                "正",
-                "正",
-                "誤",
-                "正"
-              ]
-            },
-            {
-              "number": 2,
-              "page": 3,
-              "y": 706.33203125,
-              "x": [
-                262.2,
-                296.28,
-                330.24,
-                364.2
-              ],
-              "cells": [
-                "正",
-                "正",
-                "誤",
-                "誤"
-              ]
-            },
-            {
-              "number": 3,
-              "page": 3,
-              "y": 722.6520385742188,
-              "x": [
-                262.2,
-                296.28,
-                330.24,
-                364.2
-              ],
-              "cells": [
-                "誤",
-                "正",
-                "正",
-                "誤"
-              ]
-            },
-            {
-              "number": 4,
-              "page": 3,
-              "y": 738.9722290039062,
-              "x": [
-                262.2,
-                296.28,
-                330.24,
-                364.2
-              ],
-              "cells": [
-                "誤",
-                "正",
-                "誤",
-                "正"
-              ]
-            },
-            {
-              "number": 5,
-              "page": 3,
-              "y": 755.292236328125,
-              "x": [
-                262.2,
-                296.28,
-                330.24,
-                364.2
-              ],
-              "cells": [
-                "誤",
-                "誤",
-                "正",
-                "誤"
-              ]
-            }
+        "status": "PENDING_VISUAL_REAUDIT",
+        "method": "CENTRAL_CORRECTION_FROM_VISUAL_REAUDIT_RESULT",
+        "record": "GEOMETRY_AUDIT_2024.json"
+      },
+      "choiceTable": {
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rows": [
+          [
+            "正",
+            "正",
+            "誤",
+            "正"
           ],
-          "columns": 4
-        }
-      }
+          [
+            "正",
+            "誤",
+            "誤",
+            "誤"
+          ],
+          [
+            "誤",
+            "正",
+            "正",
+            "誤"
+          ],
+          [
+            "誤",
+            "正",
+            "誤",
+            "正"
+          ],
+          [
+            "誤",
+            "誤",
+            "正",
+            "誤"
+          ]
+        ]
+      },
+      "choicesParts": [
+        [
+          {
+            "text": "正　正　誤　正"
+          }
+        ],
+        [
+          {
+            "text": "正　誤　誤　誤"
+          }
+        ],
+        [
+          {
+            "text": "誤　正　正　誤"
+          }
+        ],
+        [
+          {
+            "text": "誤　正　誤　正"
+          }
+        ],
+        [
+          {
+            "text": "誤　誤　正　誤"
+          }
+        ]
+      ]
     },
     {
       "id": "KSAI-2024-003",
@@ -24503,7 +24528,7 @@
               169.08,
               173.77
             ],
-            "fontSize": 6.0,
+            "fontSize": 6,
             "baseText": "罹"
           }
         ]
@@ -24520,7 +24545,7 @@
         "アルブミン製剤    国及び医療機関  厚生労働省",
         "フィブリノゲン製剤  国及び医療機関  議員立法",
         "フィブリノゲン製剤  国及び製薬企業  厚生労働省",
-        "フィブリノゲン製剤  国及び製薬企業  議員立法\n\n\n\n\n\n［主な医薬品とその作用］"
+        "フィブリノゲン製剤  国及び製薬企業  議員立法"
       ],
       "answer": 4,
       "answerNumberOfficial": 5,
@@ -24537,14 +24562,12 @@
       "excludeFromAccuracyDenominator": false,
       "modificationDisclosureDisplay": "PDFからテキスト抽出（改行・表の配置は原典と異なる場合があります）",
       "verbatimCertified": true,
-      "needsVisualReview": false,
-      "renderReady": true,
+      "needsVisualReview": true,
+      "renderReady": false,
       "audit": {
-        "status": "PASS",
-        "method": "AUTO_SHA_PINNED_PDF_NFC_WHITESPACE_DIFF",
-        "record": "AUTO_DIFF_2024.json",
-        "sourcePdfSha256": "961723dc28b419a2ec8dc8d359e63aa29ebc4ee8f8e8f523dfdb78473c3c69bc",
-        "normalizedTextSha256": "d21eb10eb3fa38c505cca9dd1ab6eb94a1ddfdcd01b616fa2098d4ca280518b4"
+        "status": "PENDING_VISUAL_REAUDIT",
+        "method": "CENTRAL_CORRECTION_FROM_VISUAL_REAUDIT_RESULT",
+        "record": "AUTO_DIFF_2024.json"
       }
     },
     {
@@ -24614,7 +24637,7 @@
       "sourcePdfPages": [
         17
       ],
-      "question": "かぜ薬（総合感冒薬）の配合成分とその配合目的との関係について、正しいも\nのの組合せを選べ。\n\n\n      配合成分             配合目的\n\n   メチルエフェドリン\n ａ            鼻粘膜の充血を和らげ、気管・気管支を拡げる。\n   塩酸塩\n\n ｂ メキタジン     熱を下げる。\n\n   ブロムヘキシン      たん\n ｃ            痰 の切れを良くする。\n   塩酸塩\n\n ｄ ノスカピン     炎症による腫れを和らげる。",
+      "question": "かぜ薬（総合感冒薬）の配合成分とその配合目的との関係について、正しいも\nのの組合せを選べ。\n\n\n      配合成分             配合目的\n\n   メチルエフェドリン塩酸塩\n ａ            鼻粘膜の充血を和らげ、気管・気管支を拡げる。\n \n\n ｂ メキタジン     熱を下げる。\n\n   ブロムヘキシン塩酸塩      たん\n ｃ            痰 の切れを良くする。\n \n\n ｄ ノスカピン     炎症による腫れを和らげる。",
       "choices": [
         "ａ、ｂ",
         "ａ、ｃ",
@@ -24629,28 +24652,41 @@
       "rubySourceVerified": true,
       "rubySourcePdfSha256": "961723dc28b419a2ec8dc8d359e63aa29ebc4ee8f8e8f523dfdb78473c3c69bc",
       "verbatimCertified": true,
-      "needsVisualReview": false,
-      "renderReady": true,
+      "needsVisualReview": true,
+      "renderReady": false,
       "modificationDisclosureDisplay": "公式PDFのふりがなを原典出現順に独立表示（漢字への対応付けを行わない加工）",
       "audit": {
-        "status": "PASS",
-        "method": "SOURCE_ORDER_UNATTACHED_PDF_RAWDICT",
-        "record": "RUBY_102_SOURCE_ORDER_PROMOTION_20261124.json",
-        "sourcePdfSha256": "961723dc28b419a2ec8dc8d359e63aa29ebc4ee8f8e8f523dfdb78473c3c69bc",
-        "sourceNormalizedSha256": "dfd4593c13c5ca5ff41e501841fb5f9028325ed422f41d59bfa1ba8f5b32566d",
-        "readingsOrder": [
-          {
-            "page": 17,
-            "bbox": [
-              242.63999938964844,
-              609.3660278320312,
-              254.63987731933594,
-              615.3660278320312
-            ],
-            "reading": "たん"
-          }
+        "status": "PENDING_VISUAL_REAUDIT",
+        "method": "CENTRAL_CORRECTION_FROM_VISUAL_REAUDIT_RESULT",
+        "record": "RUBY_102_SOURCE_ORDER_PROMOTION_20261124.json"
+      },
+      "questionTable": {
+        "columns": [
+          "配合成分",
+          "配合目的"
         ],
-        "originalCandidateQuestionSha256": "4d89d9d96a471013492f6e8a232645137fbd5a41d043123a74295137b67da823"
+        "rows": [
+          [
+            "a",
+            "メチルエフェドリン塩酸塩",
+            "鼻粘膜の充血を和らげ、気管・気管支を拡げる。"
+          ],
+          [
+            "b",
+            "メキタジン",
+            "熱を下げる。"
+          ],
+          [
+            "c",
+            "ブロムヘキシン塩酸塩",
+            "痰の切れを良くする。"
+          ],
+          [
+            "d",
+            "ノスカピン",
+            "炎症による腫れを和らげる。"
+          ]
+        ]
       }
     },
     {
@@ -25199,99 +25235,86 @@
       "sourcePdfPages": [
         22
       ],
-      "question": "次の記述にあてはまる漢方処方製剤として、最も適切なものを選べ。\n\n\n\n  体力虚弱で疲労しやすく腹痛があり、血色がすぐれず、ときに動悸 、手足の\n\n ほてり、冷え、ねあせ、鼻血、頻尿及び多尿などを伴うものの小児虚弱体質、\n 疲労倦 怠、慢性胃腸炎、腹痛、神経質、小児夜尿症、夜なきに適すとされる。\n\n\n\n\n      さい こ か りゅう こつ ぼ れい とう",
+      "question": "次の記述にあてはまる漢方処方製剤として、最も適切なものを選べ。\n\n\n\n  体力虚弱で疲労しやすく腹痛があり、血色がすぐれず、ときに動悸 、手足の\n\n ほてり、冷え、ねあせ、鼻血、頻尿及び多尿などを伴うものの小児虚弱体質、\n 疲労倦 怠、慢性胃腸炎、腹痛、神経質、小児夜尿症、夜なきに適すとされる。\n\n\n\n\n",
       "choices": [
-        "柴 胡 加 竜 骨 牡 蛎 湯\n      けい し か しゃく やく とう",
-        "桂 枝 加 芍 薬 湯\n      しょう けん ちゅう とう",
-        "小 建 中 湯\n      よく かん さん",
-        "抑 肝 散\n      びゃっ こ か にん じん とう",
-        "白 虎 加 人 参 湯"
+        "柴胡加竜骨牡蛎湯",
+        "桂枝加芍薬湯",
+        "小建中湯",
+        "抑肝散",
+        "白虎加人参湯"
       ],
       "originalRubyReadings": [
         "き",
         "けん",
+        "さいこかりゅうこつぼれいとう",
         "けいしかしゃくやくとう",
         "しょうけんちゅうとう",
         "よくかんさん",
         "びゃっこかにんじんとう"
       ],
-      "rubyDisplayMode": "SOURCE_ORDER_UNATTACHED",
+      "rubyDisplayMode": "POSITIONALLY_ATTACHED",
       "rubySourceVerified": true,
       "rubySourcePdfSha256": "961723dc28b419a2ec8dc8d359e63aa29ebc4ee8f8e8f523dfdb78473c3c69bc",
       "verbatimCertified": true,
-      "needsVisualReview": false,
-      "renderReady": true,
+      "needsVisualReview": true,
+      "renderReady": false,
       "modificationDisclosureDisplay": "公式PDFのふりがなを原典出現順に独立表示（漢字への対応付けを行わない加工）",
       "audit": {
-        "status": "PASS",
-        "method": "SOURCE_ORDER_UNATTACHED_PDF_RAWDICT",
-        "record": "RUBY_102_SOURCE_ORDER_PROMOTION_20261124.json",
-        "sourcePdfSha256": "961723dc28b419a2ec8dc8d359e63aa29ebc4ee8f8e8f523dfdb78473c3c69bc",
-        "sourceNormalizedSha256": "7407bdd0d2e5dc1d8863cea1e2c1c0311d031a65c009a1d79fc40700d0d98fc5",
-        "readingsOrder": [
+        "status": "PENDING_VISUAL_REAUDIT",
+        "method": "CENTRAL_CORRECTION_FROM_VISUAL_REAUDIT_RESULT",
+        "record": "RUBY_102_SOURCE_ORDER_PROMOTION_20261124.json"
+      },
+      "questionParts": [
+        {
+          "text": "次の記述にあてはまる漢方処方製剤として、最も適切なものを選べ。\n\n\n\n  体力虚弱で疲労しやすく腹痛があり、血色がすぐれず、ときに動"
+        },
+        {
+          "rubyBase": "悸",
+          "rubyText": "き"
+        },
+        {
+          "text": " 、手足の\n\n ほてり、冷え、ねあせ、鼻血、頻尿及び多尿などを伴うものの小児虚弱体質、\n 疲労倦 "
+        },
+        {
+          "rubyBase": "怠",
+          "rubyText": "けん"
+        },
+        {
+          "text": "、慢性胃腸炎、腹痛、神経質、小児夜尿症、夜なきに適すとされる。\n\n\n\n\n"
+        }
+      ],
+      "choicesParts": [
+        [
           {
-            "page": 22,
-            "bbox": [
-              455.5199890136719,
-              123.48601531982422,
-              461.5198669433594,
-              129.4860076904297
-            ],
-            "reading": "き"
-          },
-          {
-            "page": 22,
-            "bbox": [
-              121.08000183105469,
-              163.44602966308594,
-              133.0798797607422,
-              169.44602966308594
-            ],
-            "reading": "けん"
-          },
-          {
-            "page": 22,
-            "bbox": [
-              121.08000183105469,
-              223.44602966308594,
-              199.0798797607422,
-              229.44602966308594
-            ],
-            "reading": "けいしかしゃくやくとう"
-          },
-          {
-            "page": 22,
-            "bbox": [
-              118.08000183105469,
-              243.4860076904297,
-              178.0798797607422,
-              249.4860076904297
-            ],
-            "reading": "しょうけんちゅうとう"
-          },
-          {
-            "page": 22,
-            "bbox": [
-              121.08000183105469,
-              263.406005859375,
-              157.0798797607422,
-              269.406005859375
-            ],
-            "reading": "よくかんさん"
-          },
-          {
-            "page": 22,
-            "bbox": [
-              118.08000183105469,
-              283.446044921875,
-              196.0798797607422,
-              289.446044921875
-            ],
-            "reading": "びゃっこかにんじんとう"
+            "rubyBase": "柴胡加竜骨牡蛎湯",
+            "rubyText": "さいこかりゅうこつぼれいとう"
           }
         ],
-        "originalCandidateQuestionSha256": "8574724667282e506d5cafd55709436c4d58d9dac69f731be34fbce4f5afdb5e"
-      }
+        [
+          {
+            "rubyBase": "桂枝加芍薬湯",
+            "rubyText": "けいしかしゃくやくとう"
+          }
+        ],
+        [
+          {
+            "rubyBase": "小建中湯",
+            "rubyText": "しょうけんちゅうとう"
+          }
+        ],
+        [
+          {
+            "rubyBase": "抑肝散",
+            "rubyText": "よくかんさん"
+          }
+        ],
+        [
+          {
+            "rubyBase": "白虎加人参湯",
+            "rubyText": "びゃっこかにんじんとう"
+          }
+        ]
+      ]
     },
     {
       "id": "KSAI-2024-031",
@@ -27755,11 +27778,11 @@
       "chapter": "第3章",
       "question": "次の記述にあてはまる漢方処方製剤として、最も適切なものを選べ。\n\n\n  体力中等度以下で、疲れやすく、汗のかきやすい傾向があるものの肥満に伴\n\n う関節の腫れや痛み、むくみ、多汗症、肥満症（筋肉にしまりのない、いわゆる\n\n 水ぶとり）に適すとされる。\n\n\n\n      おう れん げ どく とう",
       "choices": [
-        "黄 連 解 毒 湯\n      ぼう い おう ぎ とう",
-        "防 已 黄 耆 湯\n      ぼう ふう つう しょう さん",
-        "防 風 通 聖 散\n      だい さい こ とう",
-        "大 柴 胡 湯\n      せい じょう ぼう ふう とう",
-        "清 上 防 風 湯"
+        "黄連解毒湯",
+        "防已黄耆湯",
+        "防風通聖散",
+        "大柴胡湯",
+        "清上防風湯"
       ],
       "answer": 1,
       "answerNumberOfficial": 2,
@@ -27775,15 +27798,45 @@
       "excludeFromAccuracyDenominator": false,
       "modificationDisclosureDisplay": "PDFからテキスト抽出（改行・表の配置は原典と異なる場合があります）",
       "verbatimCertified": true,
-      "needsVisualReview": false,
-      "renderReady": true,
+      "needsVisualReview": true,
+      "renderReady": false,
       "audit": {
-        "status": "PASS",
-        "method": "AUTO_SHA_PINNED_PDF_NFC_WHITESPACE_DIFF",
-        "record": "AUTO_DIFF_2024.json",
-        "sourcePdfSha256": "961723dc28b419a2ec8dc8d359e63aa29ebc4ee8f8e8f523dfdb78473c3c69bc",
-        "normalizedTextSha256": "48716afa6a5806726c5a777ab67f52998d4706363cf4d0362a17c581e84d8d57"
-      }
+        "status": "PENDING_VISUAL_REAUDIT",
+        "method": "CENTRAL_CORRECTION_FROM_VISUAL_REAUDIT_RESULT",
+        "record": "AUTO_DIFF_2024.json"
+      },
+      "choicesParts": [
+        [
+          {
+            "rubyBase": "黄連解毒湯",
+            "rubyText": "おうれんげどくとう"
+          }
+        ],
+        [
+          {
+            "rubyBase": "防已黄耆湯",
+            "rubyText": "ぼういおうぎとう"
+          }
+        ],
+        [
+          {
+            "rubyBase": "防風通聖散",
+            "rubyText": "ぼうふうつうしょうさん"
+          }
+        ],
+        [
+          {
+            "rubyBase": "大柴胡湯",
+            "rubyText": "だいさいことう"
+          }
+        ],
+        [
+          {
+            "rubyBase": "清上防風湯",
+            "rubyText": "せいじょうぼうふうとう"
+          }
+        ]
+      ]
     },
     {
       "id": "KSAI-2024-057",
@@ -29366,7 +29419,7 @@
           {
             "page": 8,
             "bbox": [
-              243.0,
+              243,
               503.2860107421875,
               254.9998779296875,
               509.2860107421875
@@ -31548,7 +31601,7 @@
         "正  正  誤  正",
         "正  正  誤  誤",
         "誤  誤  正  誤",
-        "誤  正  誤  正\n\n\n\n\n\n［医薬品の適正使用と安全対策］"
+        "誤  正  誤  正"
       ],
       "answer": 1,
       "answerNumberOfficial": 2,
@@ -31565,13 +31618,12 @@
       "excludeFromAccuracyDenominator": false,
       "modificationDisclosureDisplay": "PDFからテキスト抽出（改行・表の配置は原典と異なる場合があります）",
       "verbatimCertified": true,
-      "needsVisualReview": false,
-      "renderReady": true,
+      "needsVisualReview": true,
+      "renderReady": false,
       "audit": {
-        "status": "PASS",
-        "method": "AUTO_PDF_LAYOUT_FALSE_POSITIVE_TRIAGE",
-        "record": "LAYOUT_TRIAGE_2024.json",
-        "sourcePdfSha256": "c67ce3b5f9648503da65d6af7eb4a555bbfb6d2e227c725a485ff29938a3098c"
+        "status": "PENDING_VISUAL_REAUDIT",
+        "method": "CENTRAL_CORRECTION_FROM_VISUAL_REAUDIT_RESULT",
+        "record": "LAYOUT_TRIAGE_2024.json"
       }
     },
     {
@@ -32779,7 +32831,7 @@
       "sourcePdfPages": [
         38
       ],
-      "question": "一般用医薬品の添付文書等において、「次の人は使用（服用）しないこと」\n\nの項目中に、「本剤又は本剤の成分、牛乳によるアレルギー症状を起こしたこ\n\nとがある人」と記載することとされている成分の正誤について、正しい組合せ\n\nを選べ。\n\n\n ａ オキセサゼイン\n\n ｂ 次没食子 酸ビスマス\n\n ｃ ケイ酸アルミン酸マグネシウム\n\n ｄ タンニン酸アルブミン\n\n\n              ａ  ｂ  ｃ  ｄ",
+      "question": "一般用医薬品の添付文書等において、「次の人は使用（服用）しないこと」\n\nの項目中に、「本剤又は本剤の成分、牛乳によるアレルギー症状を起こしたこ\n\nとがある人」と記載することとされている成分の正誤について、正しい組合せ\n\nを選べ。\n\n\n ａ オキセサゼイン\n\n ｂ 次没食子酸ビスマス\n\n ｃ ケイ酸アルミン酸マグネシウム\n\n ｄ タンニン酸アルブミン\n\n\n              ａ  ｂ  ｃ  ｄ",
       "choices": [
         "正  正  誤  誤",
         "誤  正  正  誤",
@@ -32790,40 +32842,37 @@
       "originalRubyReadings": [
         "もっしょくし"
       ],
-      "rubyDisplayMode": "SOURCE_ORDER_UNATTACHED",
+      "rubyDisplayMode": "POSITIONALLY_ATTACHED",
       "rubySourceVerified": true,
       "rubySourcePdfSha256": "c67ce3b5f9648503da65d6af7eb4a555bbfb6d2e227c725a485ff29938a3098c",
       "verbatimCertified": true,
-      "needsVisualReview": false,
-      "renderReady": true,
+      "needsVisualReview": true,
+      "renderReady": false,
       "modificationDisclosureDisplay": "公式PDFのふりがなを原典出現順に独立表示（漢字への対応付けを行わない加工）",
       "audit": {
-        "status": "PASS",
-        "method": "SOURCE_ORDER_UNATTACHED_PDF_RAWDICT",
-        "record": "RUBY_102_SOURCE_ORDER_PROMOTION_20261124.json",
-        "sourcePdfSha256": "c67ce3b5f9648503da65d6af7eb4a555bbfb6d2e227c725a485ff29938a3098c",
-        "sourceNormalizedSha256": "8bbc6423feeb9f46f0fd83fe7307f685950df7f7e5123d7153af5e6a05bcd65d",
-        "readingsOrder": [
-          {
-            "page": 38,
-            "bbox": [
-              133.32000732421875,
-              208.49830627441406,
-              168.8398895263672,
-              214.018310546875
-            ],
-            "reading": "もっしょくし"
-          }
-        ],
-        "originalCandidateQuestionSha256": "cb63b23f82f14efa501dace541c3fa09273ff3f55c416aefbdeb765c210c24e4"
-      }
+        "status": "PENDING_VISUAL_REAUDIT",
+        "method": "CENTRAL_CORRECTION_FROM_VISUAL_REAUDIT_RESULT",
+        "record": "RUBY_102_SOURCE_ORDER_PROMOTION_20261124.json"
+      },
+      "questionParts": [
+        {
+          "text": "一般用医薬品の添付文書等において、「次の人は使用（服用）しないこと」\n\nの項目中に、「本剤又は本剤の成分、牛乳によるアレルギー症状を起こしたこ\n\nとがある人」と記載することとされている成分の正誤について、正しい組合せ\n\nを選べ。\n\n\n ａ オキセサゼイン\n\n ｂ 次"
+        },
+        {
+          "rubyBase": "没",
+          "rubyText": "もっしょくし"
+        },
+        {
+          "text": "食子酸ビスマス\n\n ｃ ケイ酸アルミン酸マグネシウム\n\n ｄ タンニン酸アルブミン\n\n\n              ａ  ｂ  ｃ  ｄ"
+        }
+      ]
     },
     {
       "id": "KSAI-2024-116",
       "year": 2024,
       "questionNo": 116,
       "chapter": "第5章",
-      "question": "一般用医薬品の添付文書等において、「次の人は使用（服用）しないこと」\n\nの項目中に「次の診断を受けた人」として記載することとされている基礎疾患\n\n等と医薬品成分等との関係の正誤について、正しい組合せを選べ。\n\n\n\n        基礎疾患等         医薬品成分等\n                                しゃくやくかん ぞう とう\n   ａ 心臓病       芍薬甘 草 湯\n\n   ｂ 糖尿病        アセトアミノフェン\n\n   ｃ 高血圧        プソイドエフェドリン塩酸塩\n\n   ｄ 肝臓病        メチルエフェドリン塩酸塩\n\n\n              ａ  ｂ  ｃ  ｄ",
+      "question": "一般用医薬品の添付文書等において、「次の人は使用（服用）しないこと」\n\nの項目中に「次の診断を受けた人」として記載することとされている基礎疾患\n\n等と医薬品成分等との関係の正誤について、正しい組合せを選べ。\n\n\n\n        基礎疾患等         医薬品成分等\n\n   ａ 心臓病       芍薬甘草湯\n\n   ｂ 糖尿病        アセトアミノフェン\n\n   ｃ 高血圧        プソイドエフェドリン塩酸塩\n\n   ｄ 肝臓病        メチルエフェドリン塩酸塩\n\n\n              ａ  ｂ  ｃ  ｄ",
       "choices": [
         "正  誤  正  正",
         "正  誤  正  誤",
@@ -32845,106 +32894,56 @@
       "excludeFromAccuracyDenominator": false,
       "modificationDisclosureDisplay": "PDFからテキスト抽出（改行・表の配置は原典と異なる場合があります）",
       "verbatimCertified": true,
-      "needsVisualReview": false,
-      "renderReady": true,
+      "needsVisualReview": true,
+      "renderReady": false,
       "audit": {
-        "status": "PASS",
-        "method": "AUTO_SHA_PINNED_TABLE_XY_CELL_ALIGNMENT",
-        "record": "GEOMETRY_AUDIT_2024.json",
-        "sourcePdfSha256": "c67ce3b5f9648503da65d6af7eb4a555bbfb6d2e227c725a485ff29938a3098c",
-        "normalizedTextSha256": "73928d7a0fb5c927a79580871022f67737efbceb83cdc8c459abf4b79ca484fb",
-        "table": {
-          "status": "PASS",
-          "method": "PHYSICAL_CELL_XY_AND_TEXT_MATCH",
-          "rows": [
-            {
-              "number": 1,
-              "page": 38,
-              "y": 680.6520385742188,
-              "x": [
-                262.56,
-                296.64,
-                330.6,
-                364.56
-              ],
-              "cells": [
-                "正",
-                "誤",
-                "正",
-                "正"
-              ]
-            },
-            {
-              "number": 2,
-              "page": 38,
-              "y": 696.9720458984375,
-              "x": [
-                262.56,
-                296.64,
-                330.6,
-                364.56
-              ],
-              "cells": [
-                "正",
-                "誤",
-                "正",
-                "誤"
-              ]
-            },
-            {
-              "number": 3,
-              "page": 38,
-              "y": 713.1719970703125,
-              "x": [
-                262.56,
-                296.64,
-                330.6,
-                364.56
-              ],
-              "cells": [
-                "誤",
-                "正",
-                "正",
-                "誤"
-              ]
-            },
-            {
-              "number": 4,
-              "page": 38,
-              "y": 729.4920654296875,
-              "x": [
-                262.56,
-                296.64,
-                330.6,
-                364.56
-              ],
-              "cells": [
-                "誤",
-                "誤",
-                "誤",
-                "正"
-              ]
-            },
-            {
-              "number": 5,
-              "page": 38,
-              "y": 745.812255859375,
-              "x": [
-                262.56,
-                296.64,
-                330.6,
-                364.56
-              ],
-              "cells": [
-                "正",
-                "正",
-                "誤",
-                "正"
-              ]
-            }
-          ],
-          "columns": 4
+        "status": "PENDING_VISUAL_REAUDIT",
+        "method": "CENTRAL_CORRECTION_FROM_VISUAL_REAUDIT_RESULT",
+        "record": "GEOMETRY_AUDIT_2024.json"
+      },
+      "originalRubyReadings": [
+        "しゃくやくかんぞうとう"
+      ],
+      "questionParts": [
+        {
+          "text": "一般用医薬品の添付文書等において、「次の人は使用（服用）しないこと」\n\nの項目中に「次の診断を受けた人」として記載することとされている基礎疾患\n\n等と医薬品成分等との関係の正誤について、正しい組合せを選べ。\n\n\n\n        基礎疾患等         医薬品成分等\n\n   ａ 心臓病       "
+        },
+        {
+          "rubyBase": "芍薬甘草湯",
+          "rubyText": "しゃくやくかんぞうとう"
+        },
+        {
+          "text": "\n\n   ｂ 糖尿病        アセトアミノフェン\n\n   ｃ 高血圧        プソイドエフェドリン塩酸塩\n\n   ｄ 肝臓病        メチルエフェドリン塩酸塩\n\n\n              ａ  ｂ  ｃ  ｄ"
         }
+      ],
+      "rubyDisplayMode": "POSITIONALLY_ATTACHED",
+      "questionTable": {
+        "columns": [
+          "基礎疾患等",
+          "医薬品成分等"
+        ],
+        "rows": [
+          [
+            "a",
+            "心臓病",
+            "芍薬甘草湯"
+          ],
+          [
+            "b",
+            "糖尿病",
+            "アセトアミノフェン"
+          ],
+          [
+            "c",
+            "高血圧",
+            "プソイドエフェドリン塩酸塩"
+          ],
+          [
+            "d",
+            "肝臓病",
+            "メチルエフェドリン塩酸塩"
+          ]
+        ]
       }
     },
     {
@@ -32992,7 +32991,7 @@
               "y": 308.4120178222656,
               "x": [
                 263.04,
-                297.0,
+                297,
                 330.96,
                 365.04
               ],
@@ -33009,7 +33008,7 @@
               "y": 324.7320251464844,
               "x": [
                 263.04,
-                297.0,
+                297,
                 330.96,
                 365.04
               ],
@@ -33026,7 +33025,7 @@
               "y": 341.052001953125,
               "x": [
                 263.04,
-                297.0,
+                297,
                 330.96,
                 365.04
               ],
@@ -33043,7 +33042,7 @@
               "y": 357.37200927734375,
               "x": [
                 263.04,
-                297.0,
+                297,
                 330.96,
                 365.04
               ],
@@ -33060,7 +33059,7 @@
               "y": 373.6919860839844,
               "x": [
                 263.04,
-                297.0,
+                297,
                 330.96,
                 365.04
               ],
@@ -33327,7 +33326,7 @@
         "ＧＬＰ   ＧＣＰ   ＧＶＰ",
         "ＧＣＰ   ＧＬＰ   ＧＶＰ",
         "ＧＶＰ   ＧＬＰ   ＧＰＳＰ",
-        "ＧＶＰ   ＧＣＰ   ＧＰＳＰ\n\n\n\n         ＧＣＰ：Good Clinical Practice\n\n         ＧＬＰ：Good Laboratory Practice\n\n         ＧＰＳＰ：Good Post-marketing Study Practice\n\n         ＧＶＰ：Good Vigilance Practice"
+        "ＧＶＰ   ＧＣＰ   ＧＰＳＰ"
       ],
       "answer": 0,
       "answerNumberOfficial": 1,
@@ -33343,15 +33342,19 @@
       "excludeFromAccuracyDenominator": false,
       "modificationDisclosureDisplay": "PDFからテキスト抽出（改行・表の配置は原典と異なる場合があります）",
       "verbatimCertified": true,
-      "needsVisualReview": false,
-      "renderReady": true,
+      "needsVisualReview": true,
+      "renderReady": false,
       "audit": {
-        "status": "PASS",
-        "method": "AUTO_SHA_PINNED_PDF_NFC_WHITESPACE_DIFF",
-        "record": "AUTO_DIFF_2025.json",
-        "sourcePdfSha256": "a277785add1961bc8260433ba8419b16a87596dbbb171f41a7d5b07c9d4a6156",
-        "normalizedTextSha256": "647ec8bf6912dbde2243abae147923478138515aea7ccb962b972ddfba0753d5"
-      }
+        "status": "PENDING_VISUAL_REAUDIT",
+        "method": "CENTRAL_CORRECTION_FROM_VISUAL_REAUDIT_RESULT",
+        "record": "AUTO_DIFF_2025.json"
+      },
+      "choiceFootnotes": [
+        "ＧＣＰ：Good Clinical Practice",
+        "ＧＬＰ：Good Laboratory Practice",
+        "ＧＰＳＰ：Good Post-marketing Study Practice",
+        "ＧＶＰ：Good Vigilance Practice"
+      ]
     },
     {
       "id": "KSAI-2025-003",
@@ -35496,11 +35499,11 @@
       "chapter": "第3章",
       "question": "次の記述にあてはまる漢方処方製剤として、最も適切なものを選べ。\n\n\n  体力中等度で、慢性に経過する頭痛、めまい、肩こりなどがあるものの慢性\n\n 頭痛、神経症、高血圧の傾向のあるものに適すとされる。\n\n\n\n\n       ご しゅ ゆ とう",
       "choices": [
-        "呉 茱 萸 湯\n      こう そ さん",
-        "香 蘇 散\n       ま おう とう",
-        "麻 黄 湯\n      ちょう とう さん",
-        "釣 藤 散\n      しゃく やく かん ぞう とう",
-        "芍 薬 甘 草 湯"
+        "呉茱萸湯",
+        "香蘇散",
+        "麻黄湯",
+        "釣藤散",
+        "芍薬甘草湯"
       ],
       "answer": 3,
       "answerNumberOfficial": 4,
@@ -35516,15 +35519,45 @@
       "excludeFromAccuracyDenominator": false,
       "modificationDisclosureDisplay": "PDFからテキスト抽出（改行・表の配置は原典と異なる場合があります）",
       "verbatimCertified": true,
-      "needsVisualReview": false,
-      "renderReady": true,
+      "needsVisualReview": true,
+      "renderReady": false,
       "audit": {
-        "status": "PASS",
-        "method": "AUTO_SHA_PINNED_PDF_NFC_WHITESPACE_DIFF",
-        "record": "AUTO_DIFF_2025.json",
-        "sourcePdfSha256": "a277785add1961bc8260433ba8419b16a87596dbbb171f41a7d5b07c9d4a6156",
-        "normalizedTextSha256": "5e449108e46d414e0c26013f070e2bcade4214b4697429bcb4f191bb4be218e1"
-      }
+        "status": "PENDING_VISUAL_REAUDIT",
+        "method": "CENTRAL_CORRECTION_FROM_VISUAL_REAUDIT_RESULT",
+        "record": "AUTO_DIFF_2025.json"
+      },
+      "choicesParts": [
+        [
+          {
+            "rubyBase": "呉茱萸湯",
+            "rubyText": "ごしゅゆとう"
+          }
+        ],
+        [
+          {
+            "rubyBase": "香蘇散",
+            "rubyText": "こうそさん"
+          }
+        ],
+        [
+          {
+            "rubyBase": "麻黄湯",
+            "rubyText": "まおうとう"
+          }
+        ],
+        [
+          {
+            "rubyBase": "釣藤散",
+            "rubyText": "ちょうとうさん"
+          }
+        ],
+        [
+          {
+            "rubyBase": "芍薬甘草湯",
+            "rubyText": "しゃくやくかんぞうとう"
+          }
+        ]
+      ]
     },
     {
       "id": "KSAI-2025-027",
@@ -35672,7 +35705,7 @@
       "sourcePdfPages": [
         23
       ],
-      "question": "次の漢方処方製剤に関する記述の正誤について、正しい組合せを選べ。\n\n\n\n\n      さん そう にん とう\n ａ 酸 棗 仁 湯 は、体力中等度以下で、心身が疲れ、精神不安、不眠などがある\n\n  ものの不眠症、神経症に適すとされる。\n       か み き ひ とう\n ｂ 加 味 帰 脾 湯 は、体力中等度をめやすとして、神経がたかぶり、怒りやすい、\n  イライラなどがあるものの神経症、不眠症、小児夜なき、小児疳 症、歯ぎし\n\n  り、更年期障害、血の道症に適すとされる。\n      さい こ か りゅう こつ ぼ れい とう                                          き\n ｃ 柴 胡 加 竜 骨 牡 蛎 湯 は、体力中等度以上で、精神不安があって、動悸 、不\n\n  眠、便秘などを伴う高血圧の随伴症状、神経症、更年期神経症、小児夜なき、\n\n  便秘に適すとされる。\n      しょう けん ちゅう とう\n ｄ 小 建 中 湯 は、体力虚弱で疲労しやすく腹痛があり、血色がすぐれず、と\n  きに動悸 、手足のほてり、冷え、ねあせ、鼻血、頻尿及び多尿などを伴うも\n  のの小児虚弱体質、疲労倦 怠、慢性胃腸炎、腹痛、神経質、小児夜尿症、夜\n\n  なきに適すとされる。\n\n\n              ａ  ｂ  ｃ  ｄ",
+      "question": "次の漢方処方製剤に関する記述の正誤について、正しい組合せを選べ。\n\n\n\n\n\n ａ 酸棗仁湯 は、体力中等度以下で、心身が疲れ、精神不安、不眠などがある\n\n  ものの不眠症、神経症に適すとされる。\n\n ｂ 加味帰脾湯 は、体力中等度をめやすとして、神経がたかぶり、怒りやすい、\n  イライラなどがあるものの神経症、不眠症、小児夜なき、小児疳 症、歯ぎし\n\n  り、更年期障害、血の道症に適すとされる。\n\n ｃ 柴胡加竜骨牡蛎湯 は、体力中等度以上で、精神不安があって、動悸 、不\n\n  眠、便秘などを伴う高血圧の随伴症状、神経症、更年期神経症、小児夜なき、\n\n  便秘に適すとされる。\n\n ｄ 小建中湯 は、体力虚弱で疲労しやすく腹痛があり、血色がすぐれず、と\n  きに動悸 、手足のほてり、冷え、ねあせ、鼻血、頻尿及び多尿などを伴うも\n  のの小児虚弱体質、疲労倦 怠、慢性胃腸炎、腹痛、神経質、小児夜尿症、夜\n\n  なきに適すとされる。\n\n\n              ａ  ｂ  ｃ  ｄ",
       "choices": [
         "正  正  正  誤",
         "正  正  誤  正",
@@ -35684,98 +35717,85 @@
         "さんそうにんとう",
         "かみきひとう",
         "かん",
+        "さいこかりゅうこつぼれいとう",
         "き",
         "しょうけんちゅうとう",
         "き",
         "けん"
       ],
-      "rubyDisplayMode": "SOURCE_ORDER_UNATTACHED",
+      "rubyDisplayMode": "POSITIONALLY_ATTACHED",
       "rubySourceVerified": true,
       "rubySourcePdfSha256": "a277785add1961bc8260433ba8419b16a87596dbbb171f41a7d5b07c9d4a6156",
       "verbatimCertified": true,
-      "needsVisualReview": false,
-      "renderReady": true,
+      "needsVisualReview": true,
+      "renderReady": false,
       "modificationDisclosureDisplay": "公式PDFのふりがなを原典出現順に独立表示（漢字への対応付けを行わない加工）",
       "audit": {
-        "status": "PASS",
-        "method": "SOURCE_ORDER_UNATTACHED_PDF_RAWDICT",
-        "record": "RUBY_102_SOURCE_ORDER_PROMOTION_20261124.json",
-        "sourcePdfSha256": "a277785add1961bc8260433ba8419b16a87596dbbb171f41a7d5b07c9d4a6156",
-        "sourceNormalizedSha256": "f81f08b28ac4fa7a03ec938255c7167e6ae31b814bf5f4fd3775fe2ecea0e5fa",
-        "readingsOrder": [
-          {
-            "page": 23,
-            "bbox": [
-              121.08000183105469,
-              130.80601501464844,
-              169.0798797607422,
-              136.80601501464844
-            ],
-            "reading": "さんそうにんとう"
-          },
-          {
-            "page": 23,
-            "bbox": [
-              124.08000183105469,
-              170.8860321044922,
-              181.0798797607422,
-              176.8860321044922
-            ],
-            "reading": "かみきひとう"
-          },
-          {
-            "page": 23,
-            "bbox": [
-              440.0400085449219,
-              190.80601501464844,
-              452.0398864746094,
-              196.80601501464844
-            ],
-            "reading": "かん"
-          },
-          {
-            "page": 23,
-            "bbox": [
-              477.3599853515625,
-              230.8860321044922,
-              483.35986328125,
-              236.8860321044922
-            ],
-            "reading": "き"
-          },
-          {
-            "page": 23,
-            "bbox": [
-              121.08000183105469,
-              290.88604736328125,
-              181.0798797607422,
-              296.88604736328125
-            ],
-            "reading": "しょうけんちゅうとう"
-          },
-          {
-            "page": 23,
-            "bbox": [
-              148.0800018310547,
-              310.8060302734375,
-              154.0798797607422,
-              316.8060302734375
-            ],
-            "reading": "き"
-          },
-          {
-            "page": 23,
-            "bbox": [
-              240.0,
-              330.84600830078125,
-              251.9998779296875,
-              336.84600830078125
-            ],
-            "reading": "けん"
-          }
-        ],
-        "originalCandidateQuestionSha256": "bcc120d18a1536954f51a7290ea53250310f9e63bece4b21156c16da04191e3f"
-      }
+        "status": "PENDING_VISUAL_REAUDIT",
+        "method": "CENTRAL_CORRECTION_FROM_VISUAL_REAUDIT_RESULT",
+        "record": "RUBY_102_SOURCE_ORDER_PROMOTION_20261124.json"
+      },
+      "questionParts": [
+        {
+          "text": "次の漢方処方製剤に関する記述の正誤について、正しい組合せを選べ。\n\n\n\n\n\n ａ "
+        },
+        {
+          "rubyBase": "酸棗仁湯",
+          "rubyText": "さんそうにんとう"
+        },
+        {
+          "text": " は、体力中等度以下で、心身が疲れ、精神不安、不眠などがある\n\n  ものの不眠症、神経症に適すとされる。\n\n ｂ "
+        },
+        {
+          "rubyBase": "加味帰脾湯",
+          "rubyText": "かみきひとう"
+        },
+        {
+          "text": " は、体力中等度をめやすとして、神経がたかぶり、怒りやすい、\n  イライラなどがあるものの神経症、不眠症、小児夜なき、小児"
+        },
+        {
+          "rubyBase": "疳",
+          "rubyText": "かん"
+        },
+        {
+          "text": " 症、歯ぎし\n\n  り、更年期障害、血の道症に適すとされる。\n\n ｃ "
+        },
+        {
+          "rubyBase": "柴胡加竜骨牡蛎湯",
+          "rubyText": "さいこかりゅうこつぼれいとう"
+        },
+        {
+          "text": " は、体力中等度以上で、精神不安があって、動"
+        },
+        {
+          "rubyBase": "悸",
+          "rubyText": "き"
+        },
+        {
+          "text": " 、不\n\n  眠、便秘などを伴う高血圧の随伴症状、神経症、更年期神経症、小児夜なき、\n\n  便秘に適すとされる。\n\n ｄ "
+        },
+        {
+          "rubyBase": "小建中湯",
+          "rubyText": "しょうけんちゅうとう"
+        },
+        {
+          "text": " は、体力虚弱で疲労しやすく腹痛があり、血色がすぐれず、と\n  きに動"
+        },
+        {
+          "rubyBase": "悸",
+          "rubyText": "き"
+        },
+        {
+          "text": " 、手足のほてり、冷え、ねあせ、鼻血、頻尿及び多尿などを伴うも\n  のの小児虚弱体質、疲労倦 "
+        },
+        {
+          "rubyBase": "怠",
+          "rubyText": "けん"
+        },
+        {
+          "text": "、慢性胃腸炎、腹痛、神経質、小児夜尿症、夜\n\n  なきに適すとされる。\n\n\n              ａ  ｂ  ｃ  ｄ"
+        }
+      ]
     },
     {
       "id": "KSAI-2025-029",
@@ -36333,9 +36353,9 @@
               228.61
             ],
             "rubyBBox": [
-              330.0,
+              330,
               210.85,
-              342.0,
+              342,
               216.85
             ],
             "method": "PDF_RAW_GLYPH_VERTICAL_XY"
@@ -37160,11 +37180,11 @@
       ],
       "question": "次の記述にあてはまる漢方処方製剤として、最も適切なものを選べ。\n\n\n   体力中等度以下で、疲れやすくて、四肢が冷えやすく、尿量減少又は多尿\n  でときに口渇があるものの下肢痛、腰痛、しびれ、高齢者のかすみ目、痒 み、\n\n  排尿困難、残尿感、夜間尿、頻尿、むくみ、高血圧に伴う随伴症状の改善（肩\n\n  こり､頭重､耳鳴り）、軽い尿漏れに適すとされる。\n\n\n\n      きゅう き きょう がい とう",
       "choices": [
-        "芎 帰 膠 艾 湯\n      おつ じ とう",
-        "乙 字 湯\n      りゅうたん しゃ かん とう",
-        "竜胆 瀉 肝 湯\n      はち み じ おう がん",
-        "八 味 地 黄 丸\n      りょう けい じゅつ かん とう",
-        "苓 桂 朮 甘 湯"
+        "芎帰膠艾湯",
+        "乙字湯",
+        "竜胆瀉肝湯",
+        "八味地黄丸",
+        "苓桂朮甘湯"
       ],
       "originalRubyReadings": [
         "かゆ",
@@ -37178,79 +37198,46 @@
       "rubySourceVerified": true,
       "rubySourcePdfSha256": "a277785add1961bc8260433ba8419b16a87596dbbb171f41a7d5b07c9d4a6156",
       "verbatimCertified": true,
-      "needsVisualReview": false,
-      "renderReady": true,
+      "needsVisualReview": true,
+      "renderReady": false,
       "modificationDisclosureDisplay": "公式PDFのふりがなを原典出現順に独立表示（漢字への対応付けを行わない加工）",
       "audit": {
-        "status": "PASS",
-        "method": "SOURCE_ORDER_UNATTACHED_PDF_RAWDICT",
-        "record": "RUBY_102_SOURCE_ORDER_PROMOTION_20261124.json",
-        "sourcePdfSha256": "a277785add1961bc8260433ba8419b16a87596dbbb171f41a7d5b07c9d4a6156",
-        "sourceNormalizedSha256": "fde5d234c3ae1de88649a7a5b5c339d3bf4aa1f35b9d13ba9f754a52a880f52a",
-        "readingsOrder": [
+        "status": "PENDING_VISUAL_REAUDIT",
+        "method": "CENTRAL_CORRECTION_FROM_VISUAL_REAUDIT_RESULT",
+        "record": "RUBY_102_SOURCE_ORDER_PROMOTION_20261124.json"
+      },
+      "choicesParts": [
+        [
           {
-            "page": 32,
-            "bbox": [
-              474.3599853515625,
-              538.0859985351562,
-              486.35986328125,
-              544.0859985351562
-            ],
-            "reading": "かゆ"
-          },
-          {
-            "page": 32,
-            "bbox": [
-              121.08000183105469,
-              614.406005859375,
-              193.0798797607422,
-              620.406005859375
-            ],
-            "reading": "きゅうききょうがいとう"
-          },
-          {
-            "page": 32,
-            "bbox": [
-              121.08000183105469,
-              634.3259887695312,
-              157.0798797607422,
-              640.3259887695312
-            ],
-            "reading": "おつじとう"
-          },
-          {
-            "page": 32,
-            "bbox": [
-              121.08000183105469,
-              654.3660278320312,
-              187.0798797607422,
-              660.3660278320312
-            ],
-            "reading": "りゅうたんしゃかんとう"
-          },
-          {
-            "page": 32,
-            "bbox": [
-              121.08000183105469,
-              674.406005859375,
-              181.0798797607422,
-              680.406005859375
-            ],
-            "reading": "はちみじおうがん"
-          },
-          {
-            "page": 32,
-            "bbox": [
-              121.08000183105469,
-              694.3259887695312,
-              193.0798797607422,
-              700.3259887695312
-            ],
-            "reading": "りょうけいじゅつかんとう"
+            "rubyBase": "芎帰膠艾湯",
+            "rubyText": "きゅうききょうがいとう"
           }
         ],
-        "originalCandidateQuestionSha256": "653f03e3456b19a692a081dc72518a9a4c9ad2975b70784e66fa8693c050db66"
-      }
+        [
+          {
+            "rubyBase": "乙字湯",
+            "rubyText": "おつじとう"
+          }
+        ],
+        [
+          {
+            "rubyBase": "竜胆瀉肝湯",
+            "rubyText": "りゅうたんしゃかんとう"
+          }
+        ],
+        [
+          {
+            "rubyBase": "八味地黄丸",
+            "rubyText": "はちみじおうがん"
+          }
+        ],
+        [
+          {
+            "rubyBase": "苓桂朮甘湯",
+            "rubyText": "りょうけいじゅつかんとう"
+          }
+        ]
+      ]
     },
     {
       "id": "KSAI-2025-042",
@@ -37369,7 +37356,7 @@
           {
             "page": 33,
             "bbox": [
-              231.0,
+              231,
               482.5783386230469,
               242.51988220214844,
               488.09832763671875
@@ -37775,7 +37762,7 @@
       "year": 2025,
       "questionNo": 49,
       "chapter": "第3章",
-      "question": "きず口等の殺菌消毒成分に関する記述について、正しいものの組合せを選べ。\n\n\n ａ アクリノ－ルは、真菌、結核菌、ウイルスに対して殺菌消毒作用を示す。\n\n ｂ オキシドールの作用は、過酸化水素の分解に伴って発生する活性酸素に\n\n  よる酸化、及び発生する酸素の泡立ちによる物理的な洗浄効果による。\n\n ｃ レゾルシンは、細菌や真菌類のタンパク質を変性させることにより殺菌\n\n  消毒作用を示し、にきび用薬などに配合されている場合がある。\n\n ｄ ポビドンヨードは、ヨウ素及びヨウ化カリウムをエタノールに溶解させ\n\n  たもので、皮膚刺激性が強く、粘膜や目の周りへ使用は避ける必要がある。",
+      "question": "きず口等の殺菌消毒成分に関する記述について、正しいものの組合せを選べ。\n\n\n ａ アクリノールは、真菌、結核菌、ウイルスに対して殺菌消毒作用を示す。\n\n ｂ オキシドールの作用は、過酸化水素の分解に伴って発生する活性酸素に\n\n  よる酸化、及び発生する酸素の泡立ちによる物理的な洗浄効果による。\n\n ｃ レゾルシンは、細菌や真菌類のタンパク質を変性させることにより殺菌\n\n  消毒作用を示し、にきび用薬などに配合されている場合がある。\n\n ｄ ポビドンヨードは、ヨウ素及びヨウ化カリウムをエタノールに溶解させ\n\n  たもので、皮膚刺激性が強く、粘膜や目の周りへ使用は避ける必要がある。",
       "choices": [
         "ａ、ｂ",
         "ａ、ｃ",
@@ -37797,14 +37784,12 @@
       "excludeFromAccuracyDenominator": false,
       "modificationDisclosureDisplay": "PDFからテキスト抽出（改行・表の配置は原典と異なる場合があります）",
       "verbatimCertified": true,
-      "needsVisualReview": false,
-      "renderReady": true,
+      "needsVisualReview": true,
+      "renderReady": false,
       "audit": {
-        "status": "PASS",
-        "method": "AUTO_SHA_PINNED_PDF_NFC_WHITESPACE_DIFF",
-        "record": "AUTO_DIFF_2025.json",
-        "sourcePdfSha256": "a277785add1961bc8260433ba8419b16a87596dbbb171f41a7d5b07c9d4a6156",
-        "normalizedTextSha256": "ad1f20be9d1348becf047198d924ec4f8af7aecfec524b65df1e416e9142a805"
+        "status": "PENDING_VISUAL_REAUDIT",
+        "method": "CENTRAL_CORRECTION_FROM_VISUAL_REAUDIT_RESULT",
+        "record": "AUTO_DIFF_2025.json"
       }
     },
     {
@@ -37898,7 +37883,7 @@
               109.08,
               408.61
             ],
-            "fontSize": 6.0,
+            "fontSize": 6,
             "baseText": "痒"
           }
         ]
@@ -39541,7 +39526,7 @@
           {
             "page": 5,
             "bbox": [
-              297.0,
+              297,
               609.1260375976562,
               308.9998779296875,
               615.1260375976562
@@ -39986,7 +39971,7 @@
               145.08,
               208.57
             ],
-            "fontSize": 6.0,
+            "fontSize": 6,
             "baseText": "閾"
           },
           {
@@ -40006,7 +39991,7 @@
               320.52,
               248.65
             ],
-            "fontSize": 6.0,
+            "fontSize": 6,
             "baseText": "泄"
           }
         ]
@@ -40713,13 +40698,13 @@
       "year": 2025,
       "questionNo": 80,
       "chapter": "第2章",
-      "question": "皮膚に現れる医薬品の副作用に関する記述の正誤について、正しい組合せを\n\n選べ。\n\n\n ａ アレルギー性皮膚炎は、医薬品が接触した皮膚の部位にのみ生じる。\n\n ｂ 光線過敏症は、医薬品が触れた部分だけでなく、全身へ広がって重篤化す\n\n  る場合がある。\n                            しん                         しん\n ｃ 医薬品を使用した後に発疹・発赤等が現れた場合は、薬疹 の可能性を考慮\n\n  し、原因と考えられる医薬品の使用を直ちに中止する。\n\n ｄ 接触性皮膚炎は、外用薬の副作用で生じることはない。\n\n\n              ａ  ｂ  ｃ  ｄ",
+      "question": "皮膚に現れる医薬品の副作用に関する記述の正誤について、正しい組合せを\n\n選べ。\n\n\n ａ アレルギー性皮膚炎は、医薬品が接触した皮膚の部位にのみ生じる。\n\n ｂ 光線過敏症は、医薬品が触れた部分だけでなく、全身へ広がって重篤化す\n\n  る場合がある。\n\n ｃ 医薬品を使用した後に発疹・発赤等が現れた場合は、薬疹の可能性を考慮\n\n  し、原因と考えられる医薬品の使用を直ちに中止する。\n\n ｄ 接触性皮膚炎は、外用薬の副作用で生じることはない。\n\n\n              ａ  ｂ  ｃ  ｄ",
       "choices": [
         "正  誤  正  誤",
         "誤  正  正  誤",
         "誤  誤  正  正",
         "正  正  誤  誤",
-        "正  誤  誤  正\n\n\n\n［薬事に関する法規と制度］"
+        "正  誤  誤  正"
       ],
       "answer": 1,
       "answerNumberOfficial": 2,
@@ -40736,13 +40721,76 @@
       "excludeFromAccuracyDenominator": false,
       "modificationDisclosureDisplay": "PDFからテキスト抽出（改行・表の配置は原典と異なる場合があります）",
       "verbatimCertified": true,
-      "needsVisualReview": false,
-      "renderReady": true,
+      "needsVisualReview": true,
+      "renderReady": false,
       "audit": {
-        "status": "PASS",
-        "method": "AUTO_PDF_LAYOUT_FALSE_POSITIVE_TRIAGE",
-        "record": "LAYOUT_TRIAGE_2025.json",
-        "sourcePdfSha256": "9e24049f58689aa346163962e0b140df3ba1b5ad9917b4e2a2a7350b02e295ba"
+        "status": "PENDING_VISUAL_REAUDIT",
+        "method": "CENTRAL_CORRECTION_FROM_VISUAL_REAUDIT_RESULT",
+        "record": "LAYOUT_TRIAGE_2025.json"
+      },
+      "questionParts": [
+        {
+          "text": "皮膚に現れる医薬品の副作用に関する記述の正誤について、正しい組合せを\n\n選べ。\n\n\n ａ アレルギー性皮膚炎は、医薬品が接触した皮膚の部位にのみ生じる。\n\n ｂ 光線過敏症は、医薬品が触れた部分だけでなく、全身へ広がって重篤化す\n\n  る場合がある。\n\n ｃ 医薬品を使用した後に発"
+        },
+        {
+          "rubyBase": "疹",
+          "rubyText": "しん"
+        },
+        {
+          "text": "・発赤等が現れた場合は、薬"
+        },
+        {
+          "rubyBase": "疹",
+          "rubyText": "しん"
+        },
+        {
+          "text": "の可能性を考慮\n\n  し、原因と考えられる医薬品の使用を直ちに中止する。\n\n ｄ 接触性皮膚炎は、外用薬の副作用で生じることはない。\n\n\n              ａ  ｂ  ｃ  ｄ"
+        }
+      ],
+      "originalRubyReadings": [
+        "しん",
+        "しん"
+      ],
+      "rubyDisplayMode": "POSITIONALLY_ATTACHED",
+      "choiceTable": {
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rows": [
+          [
+            "正",
+            "誤",
+            "正",
+            "誤"
+          ],
+          [
+            "誤",
+            "正",
+            "正",
+            "誤"
+          ],
+          [
+            "誤",
+            "誤",
+            "正",
+            "正"
+          ],
+          [
+            "正",
+            "正",
+            "誤",
+            "誤"
+          ],
+          [
+            "正",
+            "誤",
+            "誤",
+            "正"
+          ]
+        ]
       }
     },
     {
@@ -42381,7 +42429,7 @@
         "正  正  誤  正",
         "正  誤  正  誤",
         "誤  正  誤  正",
-        "正  誤  正  正\n\n\n\n\n\n［医薬品の適正使用と安全対策］"
+        "正  誤  正  正"
       ],
       "answer": 3,
       "answerNumberOfficial": 4,
@@ -42398,13 +42446,52 @@
       "excludeFromAccuracyDenominator": false,
       "modificationDisclosureDisplay": "PDFからテキスト抽出（改行・表の配置は原典と異なる場合があります）",
       "verbatimCertified": true,
-      "needsVisualReview": false,
-      "renderReady": true,
+      "needsVisualReview": true,
+      "renderReady": false,
       "audit": {
-        "status": "PASS",
-        "method": "AUTO_PDF_LAYOUT_FALSE_POSITIVE_TRIAGE",
-        "record": "LAYOUT_TRIAGE_2025.json",
-        "sourcePdfSha256": "9e24049f58689aa346163962e0b140df3ba1b5ad9917b4e2a2a7350b02e295ba"
+        "status": "PENDING_VISUAL_REAUDIT",
+        "method": "CENTRAL_CORRECTION_FROM_VISUAL_REAUDIT_RESULT",
+        "record": "LAYOUT_TRIAGE_2025.json"
+      },
+      "choiceTable": {
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rows": [
+          [
+            "誤",
+            "正",
+            "正",
+            "誤"
+          ],
+          [
+            "正",
+            "正",
+            "誤",
+            "正"
+          ],
+          [
+            "正",
+            "誤",
+            "正",
+            "誤"
+          ],
+          [
+            "誤",
+            "正",
+            "誤",
+            "正"
+          ],
+          [
+            "正",
+            "誤",
+            "正",
+            "正"
+          ]
+        ]
       }
     },
     {
@@ -47230,9 +47317,9 @@
           {
             "page": 27,
             "bbox": [
-              243.0,
+              243,
               448.68603515625,
-              255.0,
+              255,
               454.68603515625
             ],
             "reading": "たん"
@@ -48029,7 +48116,7 @@
             "bbox": [
               498.4800109863281,
               192.17835998535156,
-              510.0,
+              510,
               197.6983642578125
             ],
             "reading": "こう"
@@ -48037,9 +48124,9 @@
           {
             "page": 34,
             "bbox": [
-              246.0,
+              246,
               230.8860321044922,
-              252.0,
+              252,
               236.8860321044922
             ],
             "reading": "じ"
@@ -48526,7 +48613,7 @@
             "bbox": [
               498.4800109863281,
               252.17835998535156,
-              510.0,
+              510,
               257.6983642578125
             ],
             "reading": "かゆ"
@@ -51121,7 +51208,7 @@
               133.08,
               288.61
             ],
-            "fontSize": 6.0,
+            "fontSize": 6,
             "baseText": "坐"
           }
         ]
