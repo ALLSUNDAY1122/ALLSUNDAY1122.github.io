@@ -1,0 +1,653 @@
+{
+  "batch": "visual-reaudit-2025-b04",
+  "auditType": "manual_visual_reaudit",
+  "repository": "ALLSUNDAY1122/ALLSUNDAY1122.github.io",
+  "branch": "main",
+  "source": {
+    "candidateAttachment": "visual-reaudit-2025-b04.candidates.json",
+    "pdfAttachment": "visual-reaudit-2025-b04.pdf",
+    "attachedPdfPages": 7,
+    "officialPdf": "関西広域連合「令和7年度登録販売者試験」前半",
+    "officialPdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R7tourokuhannbaisyashiken_zennhan.pdf",
+    "officialPdfPages": [
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34
+    ],
+    "answerPdfInspected": false
+  },
+  "method": {
+    "description": "添付PDFの7ページ分のレンダリング画像を目視し、候補JSONのidsにある10問について問題文、全選択肢、ルビ、表の行列・セル対応、記号を照合した。PDF文字データ抽出や既存自動監査結果を目視判定の代替根拠としていない。",
+    "imageBackedQuestion": "問44は候補JSONのsourceFiguresが指すGitHub main上のPNGをbase64で読み戻して表示し、添付PDF画像と直接照合した。",
+    "answerHandling": "answerNumberOfficialのみ記録。正答PDFは確認していないため全件answerPDFChecked=false。",
+    "failRule": "原典画像と候補レコードの問題文・選択肢・ルビ・表・記号の対応が一致しない場合はFAIL。原典で確認できる正しい選択肢とルビの対応を記録した。"
+  },
+  "scope": {
+    "questionIds": [
+      "KSAI-2025-035",
+      "KSAI-2025-036",
+      "KSAI-2025-037",
+      "KSAI-2025-038",
+      "KSAI-2025-039",
+      "KSAI-2025-040",
+      "KSAI-2025-041",
+      "KSAI-2025-042",
+      "KSAI-2025-043",
+      "KSAI-2025-044"
+    ],
+    "questionNumbers": [
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44
+    ],
+    "bundlePdfPages": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ]
+  },
+  "results": [
+    {
+      "id": "KSAI-2025-035",
+      "questionNo": 35,
+      "bundlePdfPages": [
+        1
+      ],
+      "officialPdfPages": [
+        28
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "rubyReadingsInSourceOrder": [
+        "あんちゅうさん",
+        "おう",
+        "ましにんがん",
+        "おう",
+        "けいしかしゃくやくとう",
+        "りっくんしとう",
+        "おう"
+      ],
+      "choiceTable": [
+        [
+          "正",
+          "正",
+          "誤",
+          "誤"
+        ],
+        [
+          "正",
+          "誤",
+          "正",
+          "誤"
+        ],
+        [
+          "誤",
+          "正",
+          "正",
+          "正"
+        ],
+        [
+          "正",
+          "誤",
+          "誤",
+          "正"
+        ],
+        [
+          "誤",
+          "正",
+          "誤",
+          "正"
+        ]
+      ],
+      "notes": "問35の本文a〜d、漢方処方名のルビ7件、正誤表5行×4列を原典画像で照合。本文・ルビ出現順・全セルが候補と一致。"
+    },
+    {
+      "id": "KSAI-2025-036",
+      "questionNo": 36,
+      "bundlePdfPages": [
+        2
+      ],
+      "officialPdfPages": [
+        29
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "rubyReadingsInSourceOrder": [
+        "けい",
+        "けい",
+        "けい"
+      ],
+      "choiceTable": [
+        [
+          "誤",
+          "正",
+          "正",
+          "誤"
+        ],
+        [
+          "正",
+          "誤",
+          "正",
+          "誤"
+        ],
+        [
+          "正",
+          "正",
+          "誤",
+          "正"
+        ],
+        [
+          "正",
+          "誤",
+          "誤",
+          "誤"
+        ],
+        [
+          "誤",
+          "誤",
+          "誤",
+          "誤"
+        ]
+      ],
+      "notes": "問36の本文a〜dと「鎮痙薬」「鎮痙効果」等の「痙」に付されたルビ3件を照合。正誤表5行×4列も候補と一致。"
+    },
+    {
+      "id": "KSAI-2025-037",
+      "questionNo": 37,
+      "bundlePdfPages": [
+        3
+      ],
+      "officialPdfPages": [
+        30
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "rubyReadingsInSourceOrder": [
+        "しゃ",
+        "しゃ",
+        "けい",
+        "しゃ"
+      ],
+      "choiceTable": [
+        [
+          "誤",
+          "正",
+          "正",
+          "誤"
+        ],
+        [
+          "正",
+          "正",
+          "誤",
+          "正"
+        ],
+        [
+          "正",
+          "誤",
+          "正",
+          "誤"
+        ],
+        [
+          "誤",
+          "正",
+          "誤",
+          "正"
+        ],
+        [
+          "正",
+          "誤",
+          "正",
+          "正"
+        ]
+      ],
+      "notes": "問37の本文a〜d、瀉下・鎮痙・止瀉に付されたルビ4件、正誤表5行×4列を照合。候補と一致。"
+    },
+    {
+      "id": "KSAI-2025-038",
+      "questionNo": 38,
+      "bundlePdfPages": [
+        4
+      ],
+      "officialPdfPages": [
+        31
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "該当なし",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "choiceTable": [
+        [
+          "正",
+          "正",
+          "誤",
+          "誤"
+        ],
+        [
+          "正",
+          "正",
+          "誤",
+          "正"
+        ],
+        [
+          "正",
+          "誤",
+          "誤",
+          "誤"
+        ],
+        [
+          "誤",
+          "誤",
+          "正",
+          "正"
+        ],
+        [
+          "誤",
+          "誤",
+          "正",
+          "誤"
+        ]
+      ],
+      "notes": "問38の本文a〜d、センソの「5mg」表記を含む記載、正誤表5行×4列を照合。本文・表とも候補と一致。"
+    },
+    {
+      "id": "KSAI-2025-039",
+      "questionNo": 39,
+      "bundlePdfPages": [
+        4
+      ],
+      "officialPdfPages": [
+        31
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "該当なし",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "choiceTable": [
+        [
+          "正",
+          "誤",
+          "正",
+          "誤"
+        ],
+        [
+          "正",
+          "誤",
+          "正",
+          "正"
+        ],
+        [
+          "正",
+          "正",
+          "誤",
+          "誤"
+        ],
+        [
+          "誤",
+          "正",
+          "正",
+          "正"
+        ],
+        [
+          "誤",
+          "正",
+          "誤",
+          "正"
+        ]
+      ],
+      "notes": "問39の本文a〜d、ビタミンB6・B12等の表記、正誤表5行×4列を照合。候補と一致。"
+    },
+    {
+      "id": "KSAI-2025-040",
+      "questionNo": 40,
+      "bundlePdfPages": [
+        5
+      ],
+      "officialPdfPages": [
+        32
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "rubyReadingsInSourceOrder": [
+        "じ",
+        "じ",
+        "じ",
+        "こう",
+        "じ",
+        "こう",
+        "こう",
+        "じ",
+        "かゆ"
+      ],
+      "choiceTable": [
+        [
+          "正",
+          "誤",
+          "正",
+          "正"
+        ],
+        [
+          "正",
+          "正",
+          "正",
+          "誤"
+        ],
+        [
+          "正",
+          "正",
+          "誤",
+          "誤"
+        ],
+        [
+          "誤",
+          "正",
+          "誤",
+          "正"
+        ],
+        [
+          "誤",
+          "誤",
+          "正",
+          "正"
+        ]
+      ],
+      "notes": "問40の本文a〜d、「痔」「肛門」「痒み」等に付されたルビ9件、正誤表5行×4列を照合。候補と一致。"
+    },
+    {
+      "id": "KSAI-2025-041",
+      "questionNo": 41,
+      "bundlePdfPages": [
+        5
+      ],
+      "officialPdfPages": [
+        32
+      ],
+      "status": "FAIL",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "FAIL",
+        "ruby": "FAIL",
+        "tables": "該当なし",
+        "symbols": "PASS"
+      },
+      "discrepancies": [
+        "候補choicesの各要素に、当該選択肢ではなく次の選択肢に付されたルビが混入している。候補の第1選択肢「芎帰膠艾湯」には第2選択肢の「おつじとう」、第2選択肢「乙字湯」には第3選択肢の「りゅうたんしゃかんとう」、第3選択肢「竜胆瀉肝湯」には第4選択肢の「はちみじおうがん」、第4選択肢「八味地黄丸」には第5選択肢の「りょうけいじゅつかんとう」が連結されている。",
+        "原典では各ルビはそれぞれ対応する選択肢の漢方処方名の上に表示される。originalRubyReadings配列の出現順自体は原典と一致するが、choices文字列内の格納位置が誤っているため、選択肢レコード全体としては原典画像と不一致。"
+      ],
+      "originalChoices": [
+        {
+          "number": 1,
+          "text": "芎帰膠艾湯",
+          "ruby": "きゅうききょうがいとう"
+        },
+        {
+          "number": 2,
+          "text": "乙字湯",
+          "ruby": "おつじとう"
+        },
+        {
+          "number": 3,
+          "text": "竜胆瀉肝湯",
+          "ruby": "りゅうたんしゃかんとう"
+        },
+        {
+          "number": 4,
+          "text": "八味地黄丸",
+          "ruby": "はちみじおうがん"
+        },
+        {
+          "number": 5,
+          "text": "苓桂朮甘湯",
+          "ruby": "りょうけいじゅつかんとう"
+        }
+      ],
+      "bodyRubyReadings": [
+        "かゆ"
+      ],
+      "notes": "問41の本文および選択肢5件を目視。本文「痒み」のルビ「かゆ」、5つの処方名の読みそのものは原典と一致するが、候補choices内のルビの対応先が1つずつ後ろへずれている。上記originalChoicesに原典どおりの選択肢・ルビ対応を記録。"
+    },
+    {
+      "id": "KSAI-2025-042",
+      "questionNo": 42,
+      "bundlePdfPages": [
+        6
+      ],
+      "officialPdfPages": [
+        33
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tables": "該当なし",
+        "symbols": "PASS"
+      },
+      "rubyReadingsInSourceOrder": [
+        "けいしぶくりょうがん",
+        "しもつとう",
+        "とうかくじょうきとう",
+        "とうきしゃくやくさん"
+      ],
+      "visuallyVerifiedChoices": [
+        "1（a、b）",
+        "2（a、c）",
+        "3（b、c）",
+        "4（b、d）",
+        "5（c、d）"
+      ],
+      "notes": "問42の本文、a〜dの漢方処方名とルビ4件、選択肢1〜5の組合せを照合。すべて候補と一致。"
+    },
+    {
+      "id": "KSAI-2025-043",
+      "questionNo": 43,
+      "bundlePdfPages": [
+        6
+      ],
+      "officialPdfPages": [
+        33
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "rubyReadingsInSourceOrder": [
+        "じん",
+        "しん",
+        "こう",
+        "ぜん",
+        "じん",
+        "しん"
+      ],
+      "choiceTable": [
+        [
+          "正",
+          "誤",
+          "正",
+          "誤"
+        ],
+        [
+          "正",
+          "誤",
+          "正",
+          "正"
+        ],
+        [
+          "正",
+          "正",
+          "誤",
+          "誤"
+        ],
+        [
+          "誤",
+          "正",
+          "正",
+          "正"
+        ],
+        [
+          "誤",
+          "正",
+          "誤",
+          "正"
+        ]
+      ],
+      "notes": "問43の本文a〜d、「蕁麻疹」「亢進」「喘息」等に付されたルビ6件、正誤表5行×4列を照合。候補と一致。"
+    },
+    {
+      "id": "KSAI-2025-044",
+      "questionNo": 44,
+      "bundlePdfPages": [
+        7
+      ],
+      "officialPdfPages": [
+        34
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "sourceImage": {
+        "path": "touroku-hanbaisha-sprint/official-kansai/layout-crops/KSAI-2025-044-p34-1.png",
+        "gitBlobSha": "c3d379e7225ba62882be3b0ddeda5c74333f4ca0",
+        "visualInspection": "GitHub mainから画像をbase64で読み戻して表示し、添付PDFの7ページ目と目視照合。設問文、3カプセル中の成分・分量表5行、a〜dの記述、正誤表5行×4列が一致。"
+      },
+      "choiceTable": [
+        [
+          "正",
+          "誤",
+          "正",
+          "正"
+        ],
+        [
+          "正",
+          "誤",
+          "正",
+          "誤"
+        ],
+        [
+          "誤",
+          "正",
+          "正",
+          "誤"
+        ],
+        [
+          "誤",
+          "誤",
+          "誤",
+          "正"
+        ],
+        [
+          "正",
+          "正",
+          "誤",
+          "正"
+        ]
+      ],
+      "notes": "候補question/choicesは画像表示用のプレースホルダーだが、候補のsourceFiguresが指定する実際の公式画像素材をGitHub mainから読み戻して照合した。画像素材は添付原典画像と一致するためPASS。"
+    }
+  ],
+  "summary": {
+    "total": 10,
+    "pass": 9,
+    "fail": 1,
+    "hold": 0,
+    "passIds": [
+      "KSAI-2025-035",
+      "KSAI-2025-036",
+      "KSAI-2025-037",
+      "KSAI-2025-038",
+      "KSAI-2025-039",
+      "KSAI-2025-040",
+      "KSAI-2025-042",
+      "KSAI-2025-043",
+      "KSAI-2025-044"
+    ],
+    "failIds": [
+      "KSAI-2025-041"
+    ],
+    "holdIds": [],
+    "failReasons": {
+      "KSAI-2025-041": "choices内で各漢方処方名のルビが次の選択肢にずれて格納されている。正しい選択肢とルビ対応を監査結果に記録。"
+    },
+    "answerPDFCheckedCount": 0
+  },
+  "constraints": {
+    "approvedOfficialBankModified": false,
+    "statusFilesModified": false,
+    "onlyNewAuditResultFile": true
+  }
+}
