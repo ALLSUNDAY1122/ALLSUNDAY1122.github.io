@@ -26,6 +26,7 @@ function todayAttempts(){return (study.history||[]).filter(x=>String(x.at||'').s
 function weakQuestions(){return records.filter(q=>{const s=study.stats[q.id];return s&&s.attempts>s.correct})}
 function showHome(){
   if(!records.length)return;
+  setScreen('home');
   const s=statsFor(records),goal=[4,8,16].includes(Number(study.settings.goal))?Number(study.settings.goal):8,today=todayAttempts();
   $('homeProgress').textContent=s.done+' / '+s.total;$('homeAccuracy').textContent=rate(s);$('homeBar').value=s.done;
   $('resume').disabled=!validSession(study.session);
