@@ -1,0 +1,690 @@
+{
+  "batch": "visual-reaudit-2025-b06",
+  "auditType": "manual_visual_reaudit",
+  "repository": "ALLSUNDAY1122/ALLSUNDAY1122.github.io",
+  "branch": "main",
+  "source": {
+    "candidateAttachment": "visual-reaudit-2025-b06.candidates.json",
+    "pdfAttachment": "visual-reaudit-2025-b06.pdf",
+    "attachedPdfPages": 7,
+    "officialPdfSources": [
+      {
+        "officialPdf": "2025-first_half",
+        "issuer": "関西広域連合",
+        "title": "令和7年度登録販売者試験 前半",
+        "url": "https://www.kouiki-kansai.jp/material/files/group/12/R7tourokuhannbaisyashiken_zennhan.pdf",
+        "officialPdfPages": [
+          40,
+          41,
+          42,
+          43,
+          44
+        ]
+      },
+      {
+        "officialPdf": "2025-second_half",
+        "issuer": "関西広域連合",
+        "title": "令和7年度登録販売者試験 後半",
+        "url": "https://www.kouiki-kansai.jp/material/files/group/12/R7tourokuhannbaisyashiken_kouhan.pdf",
+        "officialPdfPages": [
+          2,
+          3
+        ]
+      }
+    ],
+    "answerPdfInspected": false
+  },
+  "method": {
+    "description": "添付PDFの7ページを高解像度画像として目視し、候補JSONのidsにある10問について、問題文、全選択肢、ルビ、表の行列・セル対応、記号を原典画像と照合した。PDF文字データ抽出や自動照合結果を目視判定の代替根拠としていない。",
+    "visualPagesReviewed": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "pageMapping": [
+      {
+        "bundlePdfPage": 1,
+        "officialPdf": "2025-first_half",
+        "officialPdfPage": 40
+      },
+      {
+        "bundlePdfPage": 2,
+        "officialPdf": "2025-first_half",
+        "officialPdfPage": 41
+      },
+      {
+        "bundlePdfPage": 3,
+        "officialPdf": "2025-first_half",
+        "officialPdfPage": 42
+      },
+      {
+        "bundlePdfPage": 4,
+        "officialPdf": "2025-first_half",
+        "officialPdfPage": 43
+      },
+      {
+        "bundlePdfPage": 5,
+        "officialPdf": "2025-first_half",
+        "officialPdfPage": 44
+      },
+      {
+        "bundlePdfPage": 6,
+        "officialPdf": "2025-second_half",
+        "officialPdfPage": 2
+      },
+      {
+        "bundlePdfPage": 7,
+        "officialPdf": "2025-second_half",
+        "officialPdfPage": 3
+      }
+    ],
+    "answerHandling": "answerNumberOfficialのみ記録。正答PDFは直接確認していないため全件answerPDFChecked=false。",
+    "failRule": "原典画像と候補レコードの問題文・全選択肢・ルビ・表・記号の対応が一致しない場合はFAIL。原典で確認できる正しい内容をcorrectionsに記録する。"
+  },
+  "scope": {
+    "questionIds": [
+      "KSAI-2025-055",
+      "KSAI-2025-056",
+      "KSAI-2025-057",
+      "KSAI-2025-058",
+      "KSAI-2025-059",
+      "KSAI-2025-060",
+      "KSAI-2025-061",
+      "KSAI-2025-062",
+      "KSAI-2025-063",
+      "KSAI-2025-064"
+    ],
+    "questionNumbers": [
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64
+    ],
+    "bundlePdfPages": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ]
+  },
+  "summary": {
+    "total": 10,
+    "pass": 10,
+    "fail": 0,
+    "hold": 0
+  },
+  "results": [
+    {
+      "id": "KSAI-2025-055",
+      "questionNo": 55,
+      "bundlePdfPages": [
+        1
+      ],
+      "officialPdf": "2025-first_half",
+      "officialPdfPages": [
+        40
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "該当なし",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "choiceTable": [
+        [
+          "誤",
+          "誤",
+          "誤",
+          "正"
+        ],
+        [
+          "誤",
+          "誤",
+          "正",
+          "誤"
+        ],
+        [
+          "誤",
+          "正",
+          "誤",
+          "誤"
+        ],
+        [
+          "正",
+          "誤",
+          "誤",
+          "誤"
+        ],
+        [
+          "誤",
+          "誤",
+          "誤",
+          "誤"
+        ]
+      ],
+      "notes": "本文a〜dと5選択肢の全文を原典画像で照合。正誤表5行×4列の各セルと候補の選択肢順が一致。ルビなし。"
+    },
+    {
+      "id": "KSAI-2025-056",
+      "questionNo": 56,
+      "bundlePdfPages": [
+        2
+      ],
+      "officialPdf": "2025-first_half",
+      "officialPdfPages": [
+        41
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "rubyReadingsInSourceOrder": [
+        "せいじょうぼうふうとう",
+        "しん",
+        "ぼうふうつうしょうさん",
+        "だいさいことう",
+        "ぼういおうぎとう",
+        "き",
+        "のう",
+        "しん"
+      ],
+      "choiceTable": [
+        [
+          "正",
+          "正",
+          "誤",
+          "誤"
+        ],
+        [
+          "正",
+          "正",
+          "誤",
+          "正"
+        ],
+        [
+          "正",
+          "誤",
+          "誤",
+          "誤"
+        ],
+        [
+          "誤",
+          "誤",
+          "正",
+          "正"
+        ],
+        [
+          "誤",
+          "誤",
+          "正",
+          "誤"
+        ]
+      ],
+      "notes": "本文a〜d、漢方処方名4件と本文中のルビ計8件を出現順で照合。正誤表5行×4列の全セルも一致。"
+    },
+    {
+      "id": "KSAI-2025-057",
+      "questionNo": 57,
+      "bundlePdfPages": [
+        3
+      ],
+      "officialPdf": "2025-first_half",
+      "officialPdfPages": [
+        42
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "該当なし",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "choiceTable": [
+        [
+          "正",
+          "正",
+          "誤",
+          "誤"
+        ],
+        [
+          "正",
+          "誤",
+          "正",
+          "誤"
+        ],
+        [
+          "正",
+          "誤",
+          "誤",
+          "正"
+        ],
+        [
+          "誤",
+          "誤",
+          "正",
+          "正"
+        ],
+        [
+          "誤",
+          "誤",
+          "正",
+          "誤"
+        ]
+      ],
+      "notes": "本文a〜dの全文、「５０処方」表記を含む記載、正誤表5行×4列を照合。候補と一致。ルビなし。"
+    },
+    {
+      "id": "KSAI-2025-058",
+      "questionNo": 58,
+      "bundlePdfPages": [
+        4
+      ],
+      "officialPdf": "2025-first_half",
+      "officialPdfPages": [
+        43
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "該当なし",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "choiceTable": [
+        [
+          "正",
+          "正",
+          "正",
+          "誤"
+        ],
+        [
+          "正",
+          "正",
+          "誤",
+          "正"
+        ],
+        [
+          "正",
+          "正",
+          "誤",
+          "誤"
+        ],
+        [
+          "誤",
+          "誤",
+          "正",
+          "誤"
+        ],
+        [
+          "誤",
+          "正",
+          "誤",
+          "正"
+        ]
+      ],
+      "notes": "本文a〜dの全文、括弧「（消毒薬）」を含む記号・表記、正誤表5行×4列を照合。候補と一致。"
+    },
+    {
+      "id": "KSAI-2025-059",
+      "questionNo": 59,
+      "bundlePdfPages": [
+        5
+      ],
+      "officialPdf": "2025-first_half",
+      "officialPdfPages": [
+        44
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "rubyReadingsInSourceOrder": [
+        "かゆ"
+      ],
+      "choiceTable": [
+        [
+          "正",
+          "正",
+          "誤",
+          "誤"
+        ],
+        [
+          "正",
+          "誤",
+          "正",
+          "誤"
+        ],
+        [
+          "誤",
+          "正",
+          "正",
+          "正"
+        ],
+        [
+          "正",
+          "誤",
+          "誤",
+          "正"
+        ],
+        [
+          "誤",
+          "正",
+          "誤",
+          "正"
+        ]
+      ],
+      "notes": "本文a〜dの全文と「痒」のルビ「かゆ」を照合。正誤表5行×4列の全セルが候補と一致。"
+    },
+    {
+      "id": "KSAI-2025-060",
+      "questionNo": 60,
+      "bundlePdfPages": [
+        5
+      ],
+      "officialPdf": "2025-first_half",
+      "officialPdfPages": [
+        44
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "該当なし",
+        "tables": "該当なし",
+        "symbols": "PASS"
+      },
+      "combinationChoices": [
+        [
+          "a",
+          "b"
+        ],
+        [
+          "a",
+          "c"
+        ],
+        [
+          "b",
+          "c"
+        ],
+        [
+          "b",
+          "d"
+        ],
+        [
+          "c",
+          "d"
+        ]
+      ],
+      "notes": "本文a〜dの全文と組合せ選択肢1〜5（a,b／a,c／b,c／b,d／c,d）を照合。記号・読点・括弧を含め一致。"
+    },
+    {
+      "id": "KSAI-2025-061",
+      "questionNo": 61,
+      "bundlePdfPages": [
+        6
+      ],
+      "officialPdf": "2025-second_half",
+      "officialPdfPages": [
+        2
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "rubyReadingsInSourceOrder": [
+        "じゅう"
+      ],
+      "choiceTable": [
+        [
+          "正",
+          "正",
+          "誤",
+          "誤"
+        ],
+        [
+          "正",
+          "正",
+          "誤",
+          "正"
+        ],
+        [
+          "正",
+          "誤",
+          "誤",
+          "誤"
+        ],
+        [
+          "誤",
+          "誤",
+          "正",
+          "正"
+        ],
+        [
+          "誤",
+          "誤",
+          "正",
+          "誤"
+        ]
+      ],
+      "notes": "本文a〜dの全文と「絨」のルビ「じゅう」を照合。正誤表5行×4列の全セルが候補と一致。"
+    },
+    {
+      "id": "KSAI-2025-062",
+      "questionNo": 62,
+      "bundlePdfPages": [
+        6
+      ],
+      "officialPdf": "2025-second_half",
+      "officialPdfPages": [
+        2
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "rubyReadingsInSourceOrder": [
+        "すい",
+        "すい",
+        "のう"
+      ],
+      "choiceTable": [
+        [
+          "正",
+          "誤",
+          "正",
+          "誤"
+        ],
+        [
+          "正",
+          "誤",
+          "誤",
+          "正"
+        ],
+        [
+          "誤",
+          "正",
+          "正",
+          "正"
+        ],
+        [
+          "誤",
+          "正",
+          "誤",
+          "正"
+        ],
+        [
+          "誤",
+          "誤",
+          "正",
+          "正"
+        ]
+      ],
+      "notes": "本文a〜d、膵臓・膵液・胆嚢に付されたルビ3件を原典の出現順で照合。正誤表5行×4列も一致。"
+    },
+    {
+      "id": "KSAI-2025-063",
+      "questionNo": 63,
+      "bundlePdfPages": [
+        7
+      ],
+      "officialPdf": "2025-second_half",
+      "officialPdfPages": [
+        3
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "rubyReadingsInSourceOrder": [
+        "くう",
+        "くう"
+      ],
+      "choiceTable": [
+        [
+          "正",
+          "正",
+          "誤",
+          "正"
+        ],
+        [
+          "誤",
+          "誤",
+          "正",
+          "誤"
+        ],
+        [
+          "正",
+          "正",
+          "正",
+          "誤"
+        ],
+        [
+          "正",
+          "誤",
+          "正",
+          "誤"
+        ],
+        [
+          "誤",
+          "正",
+          "誤",
+          "正"
+        ]
+      ],
+      "notes": "本文a〜d、鼻腔に付されたルビ2件を原典の出現順で照合。正誤表5行×4列の全セルも一致。"
+    },
+    {
+      "id": "KSAI-2025-064",
+      "questionNo": 64,
+      "bundlePdfPages": [
+        7
+      ],
+      "officialPdf": "2025-second_half",
+      "officialPdfPages": [
+        3
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "rubyReadingsInSourceOrder": [
+        "ちゅう",
+        "しょう"
+      ],
+      "choiceTable": [
+        [
+          "正",
+          "誤",
+          "正",
+          "誤"
+        ],
+        [
+          "正",
+          "誤",
+          "正",
+          "正"
+        ],
+        [
+          "正",
+          "正",
+          "誤",
+          "誤"
+        ],
+        [
+          "誤",
+          "正",
+          "正",
+          "正"
+        ],
+        [
+          "誤",
+          "正",
+          "誤",
+          "正"
+        ]
+      ],
+      "notes": "本文a〜d、粘稠性・血漿のルビ2件を原典の出現順で照合。正誤表5行×4列の全セルが候補と一致。"
+    }
+  ]
+}
