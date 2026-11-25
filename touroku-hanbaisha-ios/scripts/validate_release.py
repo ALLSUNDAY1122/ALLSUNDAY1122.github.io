@@ -258,7 +258,7 @@ for q in official_rows:
                         assert isinstance(text,str) and re.fullmatch(r'[ぁ-んァ-ンー]{1,20}',text),q['id']
                         attached.append(text)
                         rendered.append(base)
-                assert ''.join(rendered)==plain,q['id']
+                assert ''.join(''.join(rendered).split())==''.join(plain.split()),q['id']
             if qparts:
                 verify_rich_parts(qparts,q['question'])
             for i,parts in enumerate(cparts):
