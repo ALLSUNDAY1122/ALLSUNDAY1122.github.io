@@ -1,0 +1,156 @@
+{
+  "batch": "visual-reaudit-fix1-b01",
+  "repository": "ALLSUNDAY1122/ALLSUNDAY1122.github.io",
+  "branch": "main",
+  "source": {
+    "candidateFile": "visual-reaudit-fix1-b01.candidates.json",
+    "visualSource": "添付PDFの各ページ画像。bundlePdfPagesで指定されたページを目視確認。",
+    "answerPdfChecked": false,
+    "method": "問題文・全選択肢・ルビ・表・記号をPDFページ画像と候補レコードの各フィールドで照合。PDF文字データや自動照合を合格根拠としていない。"
+  },
+  "summary": {
+    "total": 10,
+    "PASS": 9,
+    "FAIL": 1,
+    "HOLD": 0
+  },
+  "results": [
+    {
+      "id": "KSAI-2022-021",
+      "questionNo": 21,
+      "bundlePdfPages": [1],
+      "status": "FAIL",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "findings": [
+        "PDF 1ページの設問本文は「かぜ薬とは、かぜの諸症状の緩和を目的として使用される医薬品の総称である。その中には、鼻粘膜の充血を和らげ、気管・気管支を拡げる成分として（ａ）、咳を抑える成分として（ｂ）、及びくしゃみや鼻汁を抑える成分として（ｃ）が配合されているものがある。」で終わる。",
+        "候補のquestionおよびquestionPartsには、設問本文の後に表のセル由来とみられる「イソプロピル」が残存している。原典ではこの文字列は選択肢1のb欄「イソプロピルアンチピリン」の一部であり、設問本文には存在しない。",
+        "choiceTable、choices、choicesPartsの5行×3列の対応は原典画像と一致。各行は、(1) グアイフェネシン／イソプロピルアンチピリン／エテンザミド、(2) グアイフェネシン／ノスカピン／エテンザミド、(3) メチルエフェドリン塩酸塩／イソプロピルアンチピリン／エテンザミド、(4) メチルエフェドリン塩酸塩／イソプロピルアンチピリン／ヨウ化イソプロパミド、(5) メチルエフェドリン塩酸塩／ノスカピン／ヨウ化イソプロパミド。",
+        "「咳」のルビ「せき」は原典画像と一致。"
+      ],
+      "requiredCorrection": {
+        "fields": ["question", "questionParts"],
+        "action": "設問本文末尾に混入した表セル由来の「イソプロピル」を除去する。選択肢表およびchoicesParts内の「イソプロピルアンチピリン」は変更しない。"
+      }
+    },
+    {
+      "id": "KSAI-2022-026",
+      "questionNo": 26,
+      "bundlePdfPages": [2],
+      "status": "PASS",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "findings": [
+        "設問文・5つの選択肢の表記と順序を画像で照合し一致。",
+        "選択肢のルビは、かみきひとう／けいしかりゅうこつぼれいとう／よくかんさん／さいこかりゅうこつぼれいとう／しょうけんちゅうとう。choicesPartsおよびoriginalRubyReadingsと一致。"
+      ]
+    },
+    {
+      "id": "KSAI-2022-041",
+      "questionNo": 41,
+      "bundlePdfPages": [3],
+      "status": "PASS",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "findings": [
+        "設問本文および5つの漢方処方製剤名を画像で照合し一致。",
+        "設問中の「動悸」に付された部分ルビ「き」2箇所、および選択肢のルビ（うんけいとう／とうきしゃくやくさん／けいしぶくりょうがん／しもつとう／さいこけいしかんきょうとう）を目視確認。候補のルビ情報と一致。"
+      ]
+    },
+    {
+      "id": "KSAI-2022-060",
+      "questionNo": 60,
+      "bundlePdfPages": [4],
+      "status": "PASS",
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "findings": [
+        "設問a〜dの全文を画像で照合し一致。「絨毛性」の「絨」に付されたルビ「じゅう」も一致。",
+        "正誤組合せ表の5行×4列を照合し、各行の正・誤の位置関係がchoicesと一致。"
+      ]
+    },
+    {
+      "id": "KSAI-2022-100",
+      "questionNo": 100,
+      "bundlePdfPages": [5, 6],
+      "status": "PASS",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "findings": [
+        "PDF 5ページに掲載された設問文の注記を含む全文、a〜dの各記述を画像で照合し一致。",
+        "正誤組合せ表の5行×4列を照合し、各行の正・誤の位置関係がchoicesと一致。",
+        "bundlePdfPagesの6ページ目は問101・問102の掲載ページであり、問100自体は5ページ目で完結している。問100の内容照合は5ページ目で実施し、6ページ目の隣接問題を問100の本文として扱っていない。"
+      ],
+      "pageMappingNote": "bundlePdfPagesに隣接する別問題のページ6が含まれている。問100の本文・選択肢の照合結果には影響しないが、ページ対応メタデータは別途整理が必要。"
+    },
+    {
+      "id": "KSAI-2023-018",
+      "questionNo": 18,
+      "bundlePdfPages": [7],
+      "status": "PASS",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "findings": [
+        "誓いの碑の引用を含む設問文および5つの組合せ選択肢を画像で照合し一致。",
+        "choiceTableの5行×4列は原典のa〜d各欄と行単位で一致。HIV・O157の注記も原典画像と一致。"
+      ]
+    },
+    {
+      "id": "KSAI-2023-020",
+      "questionNo": 20,
+      "bundlePdfPages": [8, 9],
+      "status": "PASS",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "findings": [
+        "問20はPDF 9ページに掲載され、設問文a〜dの全文を画像で照合し一致。",
+        "正誤組合せ表の5行×4列を照合し、各行の正・誤の位置関係がchoicesおよびchoiceTableと一致。",
+        "bundlePdfPagesの8ページ目は問19の掲載ページであり、問20は9ページ目で完結している。8ページ目の問19を問20の内容として扱っていない。"
+      ],
+      "pageMappingNote": "bundlePdfPagesに直前の別問題のページ8が含まれている。問20の内容照合は9ページ目で完結しており、内容の判定には影響しないが、ページ対応メタデータは別途整理が必要。"
+    },
+    {
+      "id": "KSAI-2023-036",
+      "questionNo": 36,
+      "bundlePdfPages": [10],
+      "status": "PASS",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "findings": [
+        "設問本文を画像で照合し一致。「湿疹」のルビ「しん」、「痔」のルビ「じ」を確認。",
+        "5つの選択肢の名称・順序および各ルビ（りっくんしとう／だいおうぼたんぴとう／にんじんとう／ましにんがん／けいしかしゃくやくとう）がchoicesPartsと一致。"
+      ]
+    },
+    {
+      "id": "KSAI-2023-048",
+      "questionNo": 48,
+      "bundlePdfPages": [11],
+      "status": "PASS",
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "findings": [
+        "設問本文、100mL中の5成分・分量表、添加物の注記、a〜dの全文を画像で照合し一致。",
+        "成分・分量表はテトラヒドロゾリン塩酸塩0.05g、グリチルリチン酸二カリウム0.25g、クロルフェニラミンマレイン酸塩0.03g、パンテノール0.1g、アスパラギン酸カリウム1.0g。questionTableの行対応と一致。",
+        "「眼瞼」の「瞼」に付された「けん」、「睫毛」の「毛」に付された「しょう」のルビを確認。正誤組合せ表の5行×4列もchoiceTableと一致。"
+      ]
+    },
+    {
+      "id": "KSAI-2023-053",
+      "questionNo": 53,
+      "bundlePdfPages": [12],
+      "status": "PASS",
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "findings": [
+        "設問文および配合成分・配合目的の4行を画像で照合し一致。表の行対応は、a ジブカイン塩酸塩、b カルバゾクロム、c オイゲノール、d 銅クロロフィリンナトリウム。",
+        "「歯槽膿漏」の「膿」に付された「のう」、「齲蝕」の「齲」に付された「うしょく」2箇所を確認し、questionPartsおよびoriginalRubyReadingsと一致。",
+        "正誤組合せ表の5行×4列はchoiceTableと一致。"
+      ]
+    }
+  ],
+  "limitations": [
+    "添付資料に正答PDFは含まれていないため、全問answerPDFCheckedはfalse。answerNumberOfficialは候補レコードの値を記録したものであり、正答の独立検証はしていない。",
+    "本監査は問題PDF画像との表示照合であり、設問内容の医学・薬学的妥当性や公式正答の正しさは評価していない。",
+    "KSAI-2022-100およびKSAI-2023-020はbundlePdfPagesに隣接する別問題のページが含まれる。対象問題が掲載されたページを特定して照合したが、ページ対応メタデータの不整合は注記した。"
+  ]
+}
