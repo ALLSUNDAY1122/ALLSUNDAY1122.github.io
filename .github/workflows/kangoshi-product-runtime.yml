@@ -9,6 +9,7 @@ on:
       - 'kangoshi-sprint/product-content/enriched-draft/set2-draft.json'
       - 'kangoshi-sprint/product-content/enriched-draft/set3-draft.json'
       - 'kangoshi-sprint/product-content/situation-audit/expert-review-queue.json'
+      - 'kangoshi-sprint/product-content/release-quarantine-20261125.json'
       - 'kangoshi-sprint/media/**'
       - '.github/workflows/kangoshi-product-runtime.yml'
 
@@ -38,15 +39,18 @@ jobs:
           assert audit.get('pass') is True
           assert audit['canonicalTotal']==720
           assert audit['runtimeEligible']==720-len(audit['blockedIds'])
-          assert set(audit['blockedIds']).issubset({'K115-AM103','K115-AM114'})
-          assert audit['mediaResolved']==38 and not audit['mediaMissingAssets']
+          quarantine=json.loads((root/'release-quarantine-20261125.json').read_text(encoding='utf-8'))
+          qids={x['id'] for x in quarantine['items']}
+          assert qids.issubset(set(audit['blockedIds']))
+          assert set(audit['blockedIds']).issubset({'K115-AM103','K115-AM114'}|qids)
+          assert not audit['mediaMissingAssets']
           assert 'window.KANGOSHI_QUESTIONS=ALL.filter' in js
           sets={int(s['sourceExam']):s for s in manifest['sets']}
           for exam in (115,114,113):
             expected=240-sum(1 for qid in audit['blockedIds'] if qid.startswith(f'K{exam}-'))
             assert sets[exam]['runtimeEligibleCount']==expected
-            assert sets[exam]['status']==('ready' if expected==240 else 'pending_expert_review')
-          print({'runtime':audit['runtimeEligible'],'blocked':audit['blockedIds'],'media':38,'pass':True})
+            assert sets[exam]['status']==('ready' if expected==240 else 'pending_release_review')
+          print({'runtime':audit['runtimeEligible'],'blocked':len(audit['blockedIds']),'eligibleMedia':audit.get('eligibleMediaCount'),'pass':True})
           PY
       - name: Commit runtime and manifest
         shell: bash
@@ -57,7 +61,7 @@ jobs:
                   kangoshi-sprint/product-content/product-runtime-audit.json \
                   kangoshi-sprint/product-content/manifest.json
           if ! git diff --cached --quiet; then
-            git commit -m 'kangoshi: materialize canonical 720-question runtime'
+            git commit -m 'kangoshi: materialize canonical runtime (official-PDF verified, quarantine applied)'
             pushed=0
             for attempt in 1 2 3 4 5; do
               git pull --rebase origin main

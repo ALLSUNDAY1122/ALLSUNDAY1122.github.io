@@ -8,6 +8,7 @@ on:
       - 'kangoshi-sprint/product-content/product-runtime-audit.json'
       - 'kangoshi-sprint/product-content/enriched-draft/release-queue-ids.json'
       - 'kangoshi-sprint/product-content/manifest.json'
+      - 'kangoshi-sprint/product-content/release-quarantine-20261125.json'
       - 'kangoshi-sprint/questions-runtime.js'
       - 'kangoshi-sprint/app-v03.js'
       - 'kangoshi-sprint/media-runtime.js'
@@ -41,12 +42,17 @@ jobs:
           node - <<'JS'
           global.window={};
           require('./kangoshi-sprint/questions-runtime.js');
+          const quarantine=require('./kangoshi-sprint/product-content/release-quarantine-20261125.json');
           const q=window.KANGOSHI_QUESTIONS||[];
-          if(q.length!==720) throw new Error(`runtime questions ${q.length}`);
+          const all=window.KANGOSHI_ALL_QUESTIONS||[];
+          if(all.length!==720) throw new Error(`canonical questions ${all.length}`);
+          if(q.length!==quarantine.releaseEligibleCount) throw new Error(`runtime questions ${q.length}`);
           const counts={}; for(const x of q){counts[x.sourceExam]=(counts[x.sourceExam]||0)+1}
-          for(const e of [115,114,113]) if(counts[e]!==240) throw new Error(`exam ${e}: ${counts[e]}`);
-          const media=q.filter(x=>x.mediaReleaseStatus==='resolved');
-          if(media.length!==38) throw new Error(`media resolved ${media.length}`);
+          for(const e of [115,114,113]) if(counts[e]!==quarantine.byExam[String(e)].releaseEligible) throw new Error(`exam ${e}: ${counts[e]}`);
+          const qset=new Set(quarantine.items.map(x=>x.id));
+          if(q.some(x=>qset.has(x.id))) throw new Error('quarantined question leaked into runtime pool');
+          const media=q.filter(x=>x.mediaAssets&&x.mediaAssets.length);
+          if(media.some(x=>x.mediaRightsStatus!=='verified_pdl1')) throw new Error('non-PDL media in runtime pool');
           console.log({questions:q.length,counts,media:media.length});
           JS
       - name: Final static/runtime audit
