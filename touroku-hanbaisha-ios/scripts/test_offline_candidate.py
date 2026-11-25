@@ -97,5 +97,5 @@ with sync_playwright() as pw:
         browser.close()
 assert report['count']==1198 and report['browserEngines']=={'chromium':599,'webkit':599} and not report['externalRequests'] and not report['pageErrors'],report
 report.update({'status':'PASS','bankCount':599,'explanationsCount':599,'nativeSimulatorOfflineBundleVerified':False,'scope':'Packaged OfflineWeb file:// browser tests with all HTTP(S) requests blocked; simulator native bundle verification follows in Q6 workflow.'})
-(ROOT/'touroku-hanbaisha-ios/OFFLINE_Q4_BROWSER_20261125.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\\n')
+(ROOT/'touroku-hanbaisha-ios/OFFLINE_Q4_BROWSER_20261125.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n')
 print(json.dumps(report,ensure_ascii=False))
