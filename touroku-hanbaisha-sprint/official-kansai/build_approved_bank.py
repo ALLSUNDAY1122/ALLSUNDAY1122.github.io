@@ -486,31 +486,30 @@ def auto113_ok(q,a):
 preserve_prior("PDF_RAWDICT_GEOMETRY_AND_CHROMIUM_DOM_AUTO_V1","RUBY_113_AUTO_REBUILD_20261124.json",
     set(auto_records),auto113_ok,"ruby113Auto")
 
-# Preserve later, individually recorded visual re-audits. Each record must
-# point to an existing result ledger, have a direct visual PASS, retain the
-# recorded official answer number (without claiming answer-PDF verification),
-# and carry page/evidence details. These are confirmations of already reviewed
-# records, not a blanket approval of unreviewed candidates.
-manual_visual_ledgers={}
+# Preserve the latest direct visual re-audit result for any previously approved
+# record it covers. This lets later visual corrections (including source page
+# mapping and ruby anchors) supersede older machine reconstruction without
+# changing the approved ID set or accepting any non-PASS ledger row.
+latest_visual_results={}
 visual_dir=B/"visual-reaudit-results"
 for ledger_path in sorted(visual_dir.glob("*.json")):
     ledger=json.loads(ledger_path.read_text())
     rows=ledger.get("results") or ledger.get("records") or []
     if not isinstance(rows,list):
         raise RuntimeError("invalid visual re-audit result rows: "+ledger_path.name)
+    seen=set()
     for row in rows:
         id=row.get("id")
         if not id: continue
-        key=(ledger_path.name,id)
-        if key in manual_visual_ledgers:
-            raise RuntimeError("duplicate visual re-audit result: "+str(key))
-        manual_visual_ledgers[key]=(ledger,row)
+        if id in seen: raise RuntimeError("duplicate ID in visual re-audit ledger: "+ledger_path.name+" / "+id)
+        seen.add(id)
+        latest_visual_results[id]=(ledger_path.name,ledger,row)
 
-def manual_visual_reaudit_ok(q,audit):
-    name=audit.get("record","")
-    pair=manual_visual_ledgers.get((name,q["id"]))
+def manual_visual_reaudit_ok(q,expected_record=None):
+    pair=latest_visual_results.get(q["id"])
     if pair is None: return False
-    ledger,row=pair
+    name,ledger,row=pair
+    if expected_record and name!=expected_record: return False
     source_meta=ledger.get("source") or {}
     method=str(ledger.get("method") or ledger.get("auditMethod") or source_meta.get("method") or "")
     if "VISUAL" not in method.upper() and not source_meta.get("visualSource"): return False
@@ -525,26 +524,29 @@ def manual_visual_reaudit_ok(q,audit):
     if checks is not None and not all(checks.get(k) is True for k in ("questionText","allChoices","ruby","tables","symbols")):
         return False
     if row.get("discrepancies") not in (None,[]): return False
+    source_pages=row.get("officialPdfPages") or row.get("sourcePdfPages")
+    if source_pages is not None and q.get("sourcePdfPages")!=source_pages: return False
     return True
 
 for q in prior_questions:
     audit=q.get("audit",{})
-    if audit.get("method")!="MANUAL_VISUAL_REAUDIT": continue
-    id=q["id"]
-    if not prior_common(q) or not manual_visual_reaudit_ok(q,audit):
-        raise RuntimeError("manual visual re-audit evidence mismatch: "+id)
-    if id in accepted:
-        # The later direct visual re-audit is the stronger record-level
-        # evidence and may correct text/ruby layout in an older reconstruction.
-        # Preserve that already-approved canonical record verbatim.
-        accepted[id]=q
-        continue
-    stat=status_by_year[str(q["year"])]
-    if stat.get("hold",0)<=0:
-        raise RuntimeError("manual visual re-audit has no unresolved source hold: "+id)
-    accepted[id]=q
-    stat["manualVisualReaudit"]=stat.get("manualVisualReaudit",0)+1
-    stat["hold"]-=1
+    method=audit.get("method")
+    latest=latest_visual_results.get(q["id"])
+    if latest and latest[2].get("status")=="PASS":
+        expected=audit.get("record") if method=="MANUAL_VISUAL_REAUDIT" else None
+        if not prior_common(q) or not manual_visual_reaudit_ok(q,expected):
+            raise RuntimeError("latest manual visual re-audit evidence mismatch: "+q["id"])
+        # Keep the exact record already certified against the latest visual
+        # evidence, including corrected sourcePdfPages and ruby rich parts.
+        accepted[q["id"]]=q
+        if method=="MANUAL_VISUAL_REAUDIT" and q["id"] not in accepted:
+            stat=status_by_year[str(q["year"])]
+            if stat.get("hold",0)<=0:
+                raise RuntimeError("manual visual re-audit has no unresolved source hold: "+q["id"])
+            stat["manualVisualReaudit"]=stat.get("manualVisualReaudit",0)+1
+            stat["hold"]-=1
+    elif method=="MANUAL_VISUAL_REAUDIT":
+        raise RuntimeError("manual visual re-audit is not latest PASS: "+q["id"])
 
 # The reconstructed set must be exactly the previously approved canonical set.
 if prior_bank:
