@@ -18,7 +18,7 @@ document.getElementById('settingsPremium').onclick=requestPremium;
 const attributionNode=$('attribution');
 const renderQuestionBase=show;
 show=function(...args){
-  if(!attributionNode.isConnected||attributionNode.parentElement?.id==='feedback')$('quiz').querySelector('article.card').append(attributionNode);
+  $('quiz').querySelector('article.card').append(attributionNode);
   const result=renderQuestionBase(...args);
   attributionNode.classList.add('hidden');
   return result;
