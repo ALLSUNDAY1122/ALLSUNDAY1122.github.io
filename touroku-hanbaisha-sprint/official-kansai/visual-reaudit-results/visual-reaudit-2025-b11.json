@@ -1,0 +1,741 @@
+{
+  "batch": "visual-reaudit-2025-b11",
+  "auditType": "manual_visual_reaudit",
+  "repository": "ALLSUNDAY1122/ALLSUNDAY1122.github.io",
+  "branch": "main",
+  "source": {
+    "candidateAttachment": "visual-reaudit-2025-b11.candidates.json",
+    "pdfAttachment": "visual-reaudit-2025-b11.pdf",
+    "sourceIssuer": "関西広域連合",
+    "sourceTitle": "令和7年度登録販売者試験（後半）",
+    "sourceUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R7tourokuhannbaisyashiken_kouhan.pdf",
+    "answerSourceUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R7touhan_kaitou.pdf",
+    "answerPdfInspected": false,
+    "bankBlobShaBefore": "8741e2675af6f41f7fba2afdc89566f48b8258e7"
+  },
+  "method": {
+    "description": "添付された公式問題PDF全9ページのレンダリング画像を直接目視し、候補JSONのidsで指定された10問について問題文、全選択肢、ルビ、表の行列・各セル対応、記号を照合した。PDF文字データ抽出や自動照合結果を目視判定の代替としていない。",
+    "visualPagesReviewed": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "pageMapping": [
+      {
+        "bundlePdfPage": 1,
+        "officialPdfPage": 35
+      },
+      {
+        "bundlePdfPage": 2,
+        "officialPdfPage": 36
+      },
+      {
+        "bundlePdfPage": 3,
+        "officialPdfPage": 37
+      },
+      {
+        "bundlePdfPage": 4,
+        "officialPdfPage": 38
+      },
+      {
+        "bundlePdfPage": 5,
+        "officialPdfPage": 39
+      },
+      {
+        "bundlePdfPage": 6,
+        "officialPdfPage": 40
+      },
+      {
+        "bundlePdfPage": 7,
+        "officialPdfPage": 41
+      },
+      {
+        "bundlePdfPage": 8,
+        "officialPdfPage": 42
+      },
+      {
+        "bundlePdfPage": 9,
+        "officialPdfPage": 43
+      }
+    ],
+    "answerHandling": "answerNumberOfficialのみ候補JSONの値を記録。正答PDFは直接確認していないため全件answerPDFChecked=false。",
+    "failRule": "原典画像と候補レコードの問題文・全選択肢・ルビ・表・記号に不一致があればFAIL。表は行と列の対応を含めて判定する。"
+  },
+  "scope": {
+    "questionIds": [
+      "KSAI-2025-105",
+      "KSAI-2025-106",
+      "KSAI-2025-107",
+      "KSAI-2025-108",
+      "KSAI-2025-110",
+      "KSAI-2025-111",
+      "KSAI-2025-112",
+      "KSAI-2025-114",
+      "KSAI-2025-115",
+      "KSAI-2025-116"
+    ],
+    "questionNumbers": [
+      105,
+      106,
+      107,
+      108,
+      110,
+      111,
+      112,
+      114,
+      115,
+      116
+    ],
+    "bundlePdfPages": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "excludedQuestions": [
+      109,
+      113
+    ],
+    "excludedReason": "添付JSONのidsに含まれないため対象外。"
+  },
+  "summary": {
+    "total": 10,
+    "pass": 10,
+    "fail": 0,
+    "hold": 0,
+    "failReasons": [],
+    "holdReasons": []
+  },
+  "results": [
+    {
+      "id": "KSAI-2025-105",
+      "questionNo": 105,
+      "bundlePdfPages": [
+        1
+      ],
+      "officialPdfPages": [
+        35
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "該当なし",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "choices": [
+        "正  正  正  誤",
+        "正  正  誤  正",
+        "正  正  誤  誤",
+        "誤  誤  正  誤",
+        "誤  正  誤  正"
+      ],
+      "notes": "PDF1ページ（原典35頁）。設問a〜dと表5行×4列を目視照合。全セルが候補choicesの順と一致。",
+      "table": {
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rows": [
+          {
+            "row": 1,
+            "cells": [
+              "正",
+              "正",
+              "正",
+              "誤"
+            ]
+          },
+          {
+            "row": 2,
+            "cells": [
+              "正",
+              "正",
+              "誤",
+              "正"
+            ]
+          },
+          {
+            "row": 3,
+            "cells": [
+              "正",
+              "正",
+              "誤",
+              "誤"
+            ]
+          },
+          {
+            "row": 4,
+            "cells": [
+              "誤",
+              "誤",
+              "正",
+              "誤"
+            ]
+          },
+          {
+            "row": 5,
+            "cells": [
+              "誤",
+              "正",
+              "誤",
+              "正"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "KSAI-2025-106",
+      "questionNo": 106,
+      "bundlePdfPages": [
+        2
+      ],
+      "officialPdfPages": [
+        36
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "該当なし",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "choices": [
+        "正  正  誤  正",
+        "誤  誤  正  誤",
+        "正  正  正  誤",
+        "正  誤  正  誤",
+        "誤  正  誤  正"
+      ],
+      "notes": "PDF2ページ（原典36頁）。緊急安全性情報に関する設問a〜dと表5行×4列を目視照合。全セル一致。",
+      "table": {
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rows": [
+          {
+            "row": 1,
+            "cells": [
+              "正",
+              "正",
+              "誤",
+              "正"
+            ]
+          },
+          {
+            "row": 2,
+            "cells": [
+              "誤",
+              "誤",
+              "正",
+              "誤"
+            ]
+          },
+          {
+            "row": 3,
+            "cells": [
+              "正",
+              "正",
+              "正",
+              "誤"
+            ]
+          },
+          {
+            "row": 4,
+            "cells": [
+              "正",
+              "誤",
+              "正",
+              "誤"
+            ]
+          },
+          {
+            "row": 5,
+            "cells": [
+              "誤",
+              "正",
+              "誤",
+              "正"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "KSAI-2025-107",
+      "questionNo": 107,
+      "bundlePdfPages": [
+        3
+      ],
+      "officialPdfPages": [
+        37
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "該当なし",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "choices": [
+        "正  正  誤  誤",
+        "正  誤  正  正",
+        "誤  正  誤  誤",
+        "正  誤  正  誤",
+        "誤  誤  正  正"
+      ],
+      "notes": "PDF3ページ（原典37頁）。法第68条の10第1項に関する設問全文と表5行×4列を目視照合。全セル一致。",
+      "table": {
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rows": [
+          {
+            "row": 1,
+            "cells": [
+              "正",
+              "正",
+              "誤",
+              "誤"
+            ]
+          },
+          {
+            "row": 2,
+            "cells": [
+              "正",
+              "誤",
+              "正",
+              "正"
+            ]
+          },
+          {
+            "row": 3,
+            "cells": [
+              "誤",
+              "正",
+              "誤",
+              "誤"
+            ]
+          },
+          {
+            "row": 4,
+            "cells": [
+              "正",
+              "誤",
+              "正",
+              "誤"
+            ]
+          },
+          {
+            "row": 5,
+            "cells": [
+              "誤",
+              "誤",
+              "正",
+              "正"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "KSAI-2025-108",
+      "questionNo": 108,
+      "bundlePdfPages": [
+        4
+      ],
+      "officialPdfPages": [
+        38
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "該当なし",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "choices": [
+        "正  誤  正  正",
+        "正  正  正  誤",
+        "正  正  誤  誤",
+        "誤  正  誤  正",
+        "誤  誤  正  正"
+      ],
+      "notes": "PDF4ページ（原典38頁）。法第68条の10第2項に関する設問全文と表5行×4列を目視照合。全セル一致。",
+      "table": {
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rows": [
+          {
+            "row": 1,
+            "cells": [
+              "正",
+              "誤",
+              "正",
+              "正"
+            ]
+          },
+          {
+            "row": 2,
+            "cells": [
+              "正",
+              "正",
+              "正",
+              "誤"
+            ]
+          },
+          {
+            "row": 3,
+            "cells": [
+              "正",
+              "正",
+              "誤",
+              "誤"
+            ]
+          },
+          {
+            "row": 4,
+            "cells": [
+              "誤",
+              "正",
+              "誤",
+              "正"
+            ]
+          },
+          {
+            "row": 5,
+            "cells": [
+              "誤",
+              "誤",
+              "正",
+              "正"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "KSAI-2025-110",
+      "questionNo": 110,
+      "bundlePdfPages": [
+        5
+      ],
+      "officialPdfPages": [
+        39
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "該当なし",
+        "tables": "該当なし",
+        "symbols": "PASS"
+      },
+      "choices": [
+        "ａ、ｂ",
+        "ａ、ｃ",
+        "ｂ、ｃ",
+        "ｂ、ｄ",
+        "ｃ、ｄ"
+      ],
+      "notes": "PDF5ページ（原典39頁）下半分。問110の設問a〜dと組合せ選択肢5件を照合。問109は今回のidsに含まれないため判定対象外。"
+    },
+    {
+      "id": "KSAI-2025-111",
+      "questionNo": 111,
+      "bundlePdfPages": [
+        6
+      ],
+      "officialPdfPages": [
+        40
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "該当なし",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "choices": [
+        "正  正  正  誤",
+        "正  正  誤  正",
+        "正  正  誤  誤",
+        "誤  誤  正  誤",
+        "誤  正  誤  正"
+      ],
+      "notes": "PDF6ページ（原典40頁）。一般用医薬品の安全対策に関する設問a〜dと表5行×4列を目視照合。全セル一致。",
+      "table": {
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rows": [
+          {
+            "row": 1,
+            "cells": [
+              "正",
+              "正",
+              "正",
+              "誤"
+            ]
+          },
+          {
+            "row": 2,
+            "cells": [
+              "正",
+              "正",
+              "誤",
+              "正"
+            ]
+          },
+          {
+            "row": 3,
+            "cells": [
+              "正",
+              "正",
+              "誤",
+              "誤"
+            ]
+          },
+          {
+            "row": 4,
+            "cells": [
+              "誤",
+              "誤",
+              "正",
+              "誤"
+            ]
+          },
+          {
+            "row": 5,
+            "cells": [
+              "誤",
+              "正",
+              "誤",
+              "正"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "KSAI-2025-112",
+      "questionNo": 112,
+      "bundlePdfPages": [
+        7
+      ],
+      "officialPdfPages": [
+        41
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "choices": [
+        "間質性肺炎／インターフェロン製剤／緊急安全性情報",
+        "間質性肺炎／インターフェロン製剤／安全性速報",
+        "間質性肺炎／塩酸フェニルプロパノールアミン／安全性速報",
+        "出血性脳卒中／塩酸フェニルプロパノールアミン／安全性速報",
+        "出血性脳卒中／インターフェロン製剤／緊急安全性情報"
+      ],
+      "notes": "PDF7ページ（原典41頁）。小柴胡湯の設問本文、表5行×3列の全セル、ふりがな4出現（しょうさいことう、しょうさいことう、しょうさい、ことう）を照合。候補のoriginalRubyReadingsの順序と一致。",
+      "table": {
+        "columns": [
+          "a",
+          "b",
+          "c"
+        ],
+        "rows": [
+          {
+            "row": 1,
+            "cells": [
+              "間質性肺炎",
+              "インターフェロン製剤",
+              "緊急安全性情報"
+            ]
+          },
+          {
+            "row": 2,
+            "cells": [
+              "間質性肺炎",
+              "インターフェロン製剤",
+              "安全性速報"
+            ]
+          },
+          {
+            "row": 3,
+            "cells": [
+              "間質性肺炎",
+              "塩酸フェニルプロパノールアミン",
+              "安全性速報"
+            ]
+          },
+          {
+            "row": 4,
+            "cells": [
+              "出血性脳卒中",
+              "塩酸フェニルプロパノールアミン",
+              "安全性速報"
+            ]
+          },
+          {
+            "row": 5,
+            "cells": [
+              "出血性脳卒中",
+              "インターフェロン製剤",
+              "緊急安全性情報"
+            ]
+          }
+        ]
+      },
+      "ruby": [
+        "しょうさいことう",
+        "しょうさいことう",
+        "しょうさい",
+        "ことう"
+      ]
+    },
+    {
+      "id": "KSAI-2025-114",
+      "questionNo": 114,
+      "bundlePdfPages": [
+        8
+      ],
+      "officialPdfPages": [
+        42
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tables": "該当なし",
+        "symbols": "PASS"
+      },
+      "choices": [
+        "フェルビナクが配合された外用鎮痛消炎薬",
+        "タンニン酸アルブミンが配合された止瀉薬",
+        "センノシドが配合された瀉下薬",
+        "アルジオキサが配合された胃腸薬",
+        "ピレンゼピン塩酸塩水和物が配合された胃腸薬"
+      ],
+      "notes": "PDF8ページ（原典42頁）下半分。喘息の「ぜん」、止瀉薬・瀉下薬の「しゃ」のルビ3出現と選択肢5件を照合。候補のoriginalRubyReadingsの順序と一致。PDF8ページ上部の問113は今回のidsに含まれないため判定対象外。",
+      "ruby": [
+        "ぜん",
+        "しゃ",
+        "しゃ"
+      ]
+    },
+    {
+      "id": "KSAI-2025-115",
+      "questionNo": 115,
+      "bundlePdfPages": [
+        9
+      ],
+      "officialPdfPages": [
+        43
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "該当なし",
+        "tables": "該当なし",
+        "symbols": "PASS"
+      },
+      "choices": [
+        "サザピリン",
+        "ロペラミド",
+        "オキセサゼイン",
+        "プロメタジンメチレンジサリチル酸塩",
+        "アセトアミノフェン"
+      ],
+      "notes": "PDF9ページ（原典43頁）上半分。15歳未満の小児に関する設問と5成分名を照合。全て一致。"
+    },
+    {
+      "id": "KSAI-2025-116",
+      "questionNo": 116,
+      "bundlePdfPages": [
+        9
+      ],
+      "officialPdfPages": [
+        43
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tables": "該当なし",
+        "symbols": "PASS"
+      },
+      "choices": [
+        "ａ、ｂ",
+        "ａ、ｃ",
+        "ｂ、ｃ",
+        "ｂ、ｄ",
+        "ｃ、ｄ"
+      ],
+      "notes": "PDF9ページ（原典43頁）下半分。心悸亢進の「き」「こう」のルビ、設問a〜d、組合せ選択肢5件を照合。候補question文字列の読みの記載と原典画像が一致。",
+      "ruby": [
+        "き",
+        "こう"
+      ]
+    }
+  ]
+}
