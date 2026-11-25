@@ -1,0 +1,225 @@
+{
+  "batch": "visual-reaudit-2022-b03",
+  "repository": "ALLSUNDAY1122/ALLSUNDAY1122.github.io",
+  "branch": "main",
+  "source": {
+    "uploadedPdf": "visual-reaudit-2022-b03.pdf",
+    "uploadedCandidates": "visual-reaudit-2022-b03.candidates.json",
+    "method": "添付PDFのbundlePdfPagesに対応するページ画像を目視し、問題文・全選択肢・ルビ・表・記号を候補レコードと照合。PDF文字データや自動照合による合否判定は行っていない。",
+    "answerPolicy": "answerNumberOfficialは添付候補JSONの値を転記。正答PDFは直接確認していないため、全件answerPDFChecked=false。",
+    "answerPDFChecked": false
+  },
+  "summary": {
+    "total": 10,
+    "pass": 9,
+    "fail": 1,
+    "hold": 0
+  },
+  "results": [
+    {
+      "id": "KSAI-2022-035",
+      "questionNo": 35,
+      "bundlePdfPage": 1,
+      "officialPdfPage": 22,
+      "status": "PASS",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "checked": [
+        "問題文",
+        "選択肢1〜5全文",
+        "選択肢内のルビ出現（瀉・糞便）"
+      ],
+      "differences": [],
+      "notes": "画像下半分の問35を確認。問題文、5選択肢の文言と順序、糞便等のルビの出現が候補レコードと一致。"
+    },
+    {
+      "id": "KSAI-2022-036",
+      "questionNo": 36,
+      "bundlePdfPage": 2,
+      "officialPdfPage": 23,
+      "status": "PASS",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "checked": [
+        "問題文",
+        "a〜d全文",
+        "選択肢1〜5の正誤組合せ",
+        "鎮痛鎮痙のルビ"
+      ],
+      "differences": [],
+      "notes": "問題文とa〜dの全文、5行4列の正誤組合せを画像で照合。痙に対応する「けい」のルビ3箇所もquestionPartsの記録と一致。"
+    },
+    {
+      "id": "KSAI-2022-037",
+      "questionNo": 37,
+      "bundlePdfPage": 3,
+      "officialPdfPage": 24,
+      "status": "PASS",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "checked": [
+        "問題文",
+        "成分・作用の4行表",
+        "選択肢1〜5の正誤組合せ"
+      ],
+      "differences": [],
+      "notes": "成分名と説明文の対応を表の各行で確認。リュウノウ／ゴオウ／ジャコウ／センソの行対応および5行4列の組合せ表が候補レコードと一致。"
+    },
+    {
+      "id": "KSAI-2022-038",
+      "questionNo": 38,
+      "bundlePdfPage": 4,
+      "officialPdfPage": 25,
+      "status": "PASS",
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "checked": [
+        "問題文",
+        "a〜d全文",
+        "選択肢1〜5の正誤組合せ",
+        "異化排泄のルビ"
+      ],
+      "differences": [],
+      "notes": "a〜dの全文と5行4列の組合せ表を画像で照合。異化排泄の「泄」に付く「せつ」のルビもquestionPartsの記録と一致。"
+    },
+    {
+      "id": "KSAI-2022-039",
+      "questionNo": 39,
+      "bundlePdfPage": 5,
+      "officialPdfPage": 26,
+      "status": "PASS",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "checked": [
+        "問題文",
+        "1錠中の成分・分量・内訳表",
+        "a〜d全文",
+        "選択肢1〜5の正誤組合せ"
+      ],
+      "differences": [],
+      "notes": "1錠中の5成分、各分量、溶性ピロリン酸第二鉄の内訳（鉄10mg）を含む表を確認。a〜dおよび5行4列の組合せ表も候補レコードと一致。"
+    },
+    {
+      "id": "KSAI-2022-040",
+      "questionNo": 40,
+      "bundlePdfPage": 6,
+      "officialPdfPage": 27,
+      "status": "PASS",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "checked": [
+        "問題文",
+        "1個（1.4g）中の成分・分量表",
+        "a〜d全文",
+        "選択肢1〜5の正誤組合せ",
+        "痔のルビ"
+      ],
+      "differences": [],
+      "notes": "成分7項目と分量、a〜d全文、5行4列の組合せ表を画像で照合。痔に付く「じ」のルビ3箇所も候補のoriginalRubyReadingsと一致。"
+    },
+    {
+      "id": "KSAI-2022-041",
+      "questionNo": 41,
+      "bundlePdfPage": 7,
+      "officialPdfPage": 28,
+      "status": "FAIL",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "checked": [
+        "問題文全文",
+        "選択肢1〜5の漢方処方名",
+        "選択肢ごとのルビ",
+        "問題文中のルビ"
+      ],
+      "differences": [
+        {
+          "field": "choices",
+          "detail": "候補choicesのルビ文字列が選択肢間で誤って混入・ずれ込んでいる。原典画像の選択肢は、1「温経湯」、2「当帰芍薬散」、3「桂枝茯苓丸」、4「四物湯」、5「柴胡桂枝乾姜湯」。原典のルビは各選択肢にそれぞれ「うんけいとう」「とうきしゃくやくさん」「けいしぶくりょうがん」「しもつとう」「さいこけいしかんきょうとう」。一方、候補choicesは1に「とうきしゃくやくさん」、3に「しもつとう」、4に「さいこけいしかんきょうとう」を含み、2と5には対応するルビが記録されていない。",
+          "sourceObservedChoices": [
+            {
+              "number": 1,
+              "text": "温経湯",
+              "ruby": "うんけいとう"
+            },
+            {
+              "number": 2,
+              "text": "当帰芍薬散",
+              "ruby": "とうきしゃくやくさん"
+            },
+            {
+              "number": 3,
+              "text": "桂枝茯苓丸",
+              "ruby": "けいしぶくりょうがん"
+            },
+            {
+              "number": 4,
+              "text": "四物湯",
+              "ruby": "しもつとう"
+            },
+            {
+              "number": 5,
+              "text": "柴胡桂枝乾姜湯",
+              "ruby": "さいこけいしかんきょうとう"
+            }
+          ]
+        },
+        {
+          "field": "originalRubyReadings",
+          "detail": "候補のoriginalRubyReadingsは「き」「き」「うんけいとう」「とうきしゃくやくさん」「けいしぶくりょうがん」「しもつとう」の6件。原典画像では問題文中の「き」2件に加え、選択肢1〜5のルビ5件が確認でき、最後の「さいこけいしかんきょうとう」が欠落している。"
+        }
+      ],
+      "notes": "原典画像では5つの漢方処方名と各ルビを個別に確認できる。候補choicesのルビが誤った選択肢に付随し、最後のルビも欠落するためFAIL。修正時は上記sourceObservedChoicesを基準に各選択肢のルビを正しい位置へ戻すこと。"
+    },
+    {
+      "id": "KSAI-2022-042",
+      "questionNo": 42,
+      "bundlePdfPage": 8,
+      "officialPdfPage": 29,
+      "status": "PASS",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "checked": [
+        "問題文全文",
+        "60mL中の成分・分量表",
+        "a〜d全文",
+        "選択肢1〜5の正誤組合せ",
+        "咳・鎮咳・去痰のルビ"
+      ],
+      "differences": [],
+      "notes": "60mL中の4成分と分量、a〜d全文、5行4列の組合せ表を画像で照合。咳・鎮咳・去痰に関する6件のルビの読みと出現順も候補レコードと一致。"
+    },
+    {
+      "id": "KSAI-2022-043",
+      "questionNo": 43,
+      "bundlePdfPage": 9,
+      "officialPdfPage": 30,
+      "status": "PASS",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "checked": [
+        "問題文",
+        "a〜d全文",
+        "選択肢1〜5の正誤組合せ",
+        "鼻腔のルビ"
+      ],
+      "differences": [],
+      "notes": "a〜d全文および5行4列の組合せ表を画像で照合。鼻腔の「腔」に付く「くう」のルビがquestionPartsに正しく記録されている。"
+    },
+    {
+      "id": "KSAI-2022-045",
+      "questionNo": 45,
+      "bundlePdfPage": 10,
+      "officialPdfPage": 32,
+      "status": "PASS",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "checked": [
+        "問題文",
+        "a〜d全文",
+        "選択肢1〜5の正誤組合せ"
+      ],
+      "differences": [],
+      "notes": "a〜d全文と5行4列の組合せ表を画像で照合。クロモグリク酸ナトリウム等の成分名、説明文、選択肢の各セルに不一致なし。"
+    }
+  ]
+}
