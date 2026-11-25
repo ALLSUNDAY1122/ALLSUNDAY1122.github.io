@@ -1,0 +1,108 @@
+{
+  "batch": "visual-reaudit-fix5-b01",
+  "repository": "ALLSUNDAY1122/ALLSUNDAY1122.github.io",
+  "source": "添付された公式問題PDFのページ画像（180dpi）と添付 candidates JSON の現行バンクレコード",
+  "method": "DIRECT_VISUAL_PAGE_IMAGE_TO_RECORD_COMPARISON",
+  "scope": {
+    "ids": [
+      "KSAI-2026-060",
+      "KSAI-2026-111",
+      "KSAI-2026-120"
+    ],
+    "questionCount": 3,
+    "bundlePages": 3,
+    "officialPdfs": [
+      "2026-first_half",
+      "2026-second_half"
+    ],
+    "officialPdfPages": [
+      50,
+      42,
+      50
+    ]
+  },
+  "summary": {
+    "PASS": 3,
+    "FAIL": 0,
+    "HOLD": 0
+  },
+  "decisionCriteria": "問題文・全選択肢・ルビ・表・記号を添付された原典ページ画像と目視照合。選択肢表の行列対応が崩れている場合、または原典と異なる文字・ルビ・記号がある場合はFAIL。必要な画像が判読できない場合はHOLD。推測によるPASS判定は行わない。",
+  "scopeNotes": [
+    "3問とも添付PDFの該当ページ画像を拡大して目視照合した。PDFの文字データや自動照合による代用はしていない。",
+    "正答PDFは添付されておらず直接確認していない。全問でanswerNumberOfficialは添付JSONの値を記録し、answerPDFChecked:falseとした。"
+  ],
+  "results": [
+    {
+      "id": "KSAI-2026-060",
+      "questionNo": 60,
+      "bundlePdfPages": [
+        1
+      ],
+      "officialPdf": "2026-first_half",
+      "officialPdfPages": [
+        50
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": true,
+        "allChoices": true,
+        "ruby": true,
+        "tables": true,
+        "symbols": true
+      },
+      "evidence": "添付PDF p.1（2026-first_half 原典PDF p.50）。一般用検査薬に関するa〜dの問題文全文を目視照合。cの検体列挙「尿、糞便、鼻汁、唾液、涙液、採血した血液など」の「糞」に付されたルビ「ふん」の位置・読みがquestionPartsのrubyBase「糞」、rubyText「ふん」と一致。選択肢表5行×4列の全セルを確認。各行は、1「正／誤／正／正」、2「正／正／正／誤」、3「正／正／誤／誤」、4「誤／正／誤／正」、5「誤／誤／正／正」で、現行レコードのchoicesと列a〜dの対応・行順が一致。本文の句読点、英字記号a〜dにも相違なし。",
+      "discrepancies": []
+    },
+    {
+      "id": "KSAI-2026-111",
+      "questionNo": 111,
+      "bundlePdfPages": [
+        2
+      ],
+      "officialPdf": "2026-second_half",
+      "officialPdfPages": [
+        42
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": true,
+        "allChoices": true,
+        "ruby": true,
+        "tables": true,
+        "symbols": true
+      },
+      "evidence": "添付PDF p.2（2026-second_half 原典PDF p.42）。一般用医薬品の安全対策に関するa〜dの全文を目視照合。aおよびbの「小柴胡湯」2箇所に付されたルビはいずれも「しょうさいことう」で、questionPartsのrubyBase「小柴胡湯」・rubyText「しょうさいことう」の2組と位置・読みが一致。選択肢表5行×4列の全セルを確認。各行の正誤配置は、1「正／正／正／誤」、2「正／正／誤／正」、3「正／誤／正／正」、4「誤／正／正／正」、5「正／正／正／正」で、現行レコードのchoicesと一致。本文の年次、薬剤名、句読点、a〜d記号にも相違なし。",
+      "discrepancies": []
+    },
+    {
+      "id": "KSAI-2026-120",
+      "questionNo": 120,
+      "bundlePdfPages": [
+        3
+      ],
+      "officialPdf": "2026-second_half",
+      "officialPdfPages": [
+        50
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": true,
+        "allChoices": true,
+        "ruby": true,
+        "tables": true,
+        "symbols": true
+      },
+      "evidence": "添付PDF p.3（2026-second_half 原典PDF p.50）。一般用医薬品の添付文書等に関する前提文とa〜dの全記述を目視照合。cの「大黄甘草湯」の上に付された読み「だい・おう・かん・ぞう・とう」は、添付JSON question欄に記録されたルビ文字列「だい おう かん ぞう とう」と一致し、配置も対象語に対応している。選択肢表5行×4列の全セルを確認。各行は、1「正／正／誤／誤」、2「誤／正／正／誤」、3「誤／誤／正／正」、4「誤／誤／誤／正」、5「正／誤／誤／誤」で、現行レコードのchoicesと列a〜dの対応・行順が一致。本文の薬剤名、括弧、句読点、記号にも相違なし。",
+      "discrepancies": []
+    }
+  ],
+  "answerKeyNote": "answerNumberOfficialは添付JSONの値を記録。正答PDFは本バッチの添付資料に含まれず直接確認していないため、全問answerPDFChecked:false。",
+  "bankMutation": false,
+  "stateFileMutation": false
+}
