@@ -1,0 +1,213 @@
+{
+  "batch": "visual-reaudit-2024-b01",
+  "auditType": "MANUAL_VISUAL_SOURCE_IMAGE_REAUDIT",
+  "auditedAt": "2026-11-25T16:55:00+09:00",
+  "repository": "ALLSUNDAY1122/ALLSUNDAY1122.github.io",
+  "source": {
+    "issuer": "関西広域連合",
+    "title": "令和6年度登録販売者試験（前半）",
+    "questionPdf": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_zennhan.pdf",
+    "attachedBundle": "visual-reaudit-2024-b01.pdf",
+    "attachedCandidates": "visual-reaudit-2024-b01.candidates.json"
+  },
+  "method": "添付された公式問題PDFのページ画像を目視し、現行バンク候補の問題文・全選択肢・ルビ・表・記号を照合。PDF文字データや自動照合は判定根拠に使用していない。",
+  "scope": [
+    "KSAI-2024-001",
+    "KSAI-2024-002",
+    "KSAI-2024-003",
+    "KSAI-2024-004",
+    "KSAI-2024-006",
+    "KSAI-2024-007",
+    "KSAI-2024-008",
+    "KSAI-2024-009",
+    "KSAI-2024-010",
+    "KSAI-2024-011"
+  ],
+  "summary": {
+    "total": 10,
+    "pass": 9,
+    "fail": 1,
+    "hold": 0
+  },
+  "answerPolicy": "answerNumberOfficialは候補JSONの値を転記。正答PDFは直接確認していないため全件answerPDFChecked=false。",
+  "results": [
+    {
+      "id": "KSAI-2024-001",
+      "questionNo": 1,
+      "bundlePdfPage": 1,
+      "officialPdfPage": 3,
+      "status": "PASS",
+      "questionTextMatch": true,
+      "choicesMatch": true,
+      "rubyMatch": true,
+      "ruby": [
+        {
+          "base": "曝",
+          "reading": "さら"
+        }
+      ],
+      "tableMatch": true,
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "reason": "問題文・全5選択肢・表の各セル・ルビ「曝（さら）」を画像で照合し一致。"
+    },
+    {
+      "id": "KSAI-2024-002",
+      "questionNo": 2,
+      "bundlePdfPage": 1,
+      "officialPdfPage": 3,
+      "status": "FAIL",
+      "questionTextMatch": true,
+      "choicesMatch": false,
+      "rubyMatch": true,
+      "ruby": [],
+      "tableMatch": false,
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "reason": "選択肢2の第2列が不一致。原典は「正・誤・誤・誤」、現行レコードは「正・正・誤・誤」。表の原典行を以下に記録。",
+      "officialChoices": [
+        "正　正　誤　正",
+        "正　誤　誤　誤",
+        "誤　正　正　誤",
+        "誤　正　誤　正",
+        "誤　誤　正　誤"
+      ]
+    },
+    {
+      "id": "KSAI-2024-003",
+      "questionNo": 3,
+      "bundlePdfPage": 2,
+      "officialPdfPage": 4,
+      "status": "PASS",
+      "questionTextMatch": true,
+      "choicesMatch": true,
+      "rubyMatch": true,
+      "ruby": [],
+      "tableMatch": true,
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "reason": "問題文・全5選択肢・表の各セルを画像で照合し一致。"
+    },
+    {
+      "id": "KSAI-2024-004",
+      "questionNo": 4,
+      "bundlePdfPage": 2,
+      "officialPdfPage": 4,
+      "status": "PASS",
+      "questionTextMatch": true,
+      "choicesMatch": true,
+      "rubyMatch": true,
+      "ruby": [
+        {
+          "base": "罹",
+          "reading": "り"
+        }
+      ],
+      "tableMatch": true,
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "reason": "問題文・全5選択肢・表の各セル・ルビ「罹（り）」を画像で照合し一致。"
+    },
+    {
+      "id": "KSAI-2024-006",
+      "questionNo": 6,
+      "bundlePdfPage": 3,
+      "officialPdfPage": 5,
+      "status": "PASS",
+      "questionTextMatch": true,
+      "choicesMatch": true,
+      "rubyMatch": true,
+      "ruby": [],
+      "tableMatch": true,
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "reason": "問題文・全5選択肢・表の各セルを画像で照合し一致。"
+    },
+    {
+      "id": "KSAI-2024-007",
+      "questionNo": 7,
+      "bundlePdfPage": 4,
+      "officialPdfPage": 6,
+      "status": "PASS",
+      "questionTextMatch": true,
+      "choicesMatch": true,
+      "rubyMatch": true,
+      "ruby": [],
+      "tableMatch": true,
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "reason": "問題文・全5選択肢・表の各セルを画像で照合し一致。"
+    },
+    {
+      "id": "KSAI-2024-008",
+      "questionNo": 8,
+      "bundlePdfPage": 4,
+      "officialPdfPage": 6,
+      "status": "PASS",
+      "questionTextMatch": true,
+      "choicesMatch": true,
+      "rubyMatch": true,
+      "ruby": [],
+      "tableMatch": true,
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "reason": "問題文・全5選択肢・表の各セルを画像で照合し一致。"
+    },
+    {
+      "id": "KSAI-2024-009",
+      "questionNo": 9,
+      "bundlePdfPage": 5,
+      "officialPdfPage": 7,
+      "status": "PASS",
+      "questionTextMatch": true,
+      "choicesMatch": true,
+      "rubyMatch": true,
+      "ruby": [],
+      "tableMatch": true,
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "reason": "問題文・全5選択肢・表の各セルを画像で照合し一致。"
+    },
+    {
+      "id": "KSAI-2024-010",
+      "questionNo": 10,
+      "bundlePdfPage": 6,
+      "officialPdfPage": 8,
+      "status": "PASS",
+      "questionTextMatch": true,
+      "choicesMatch": true,
+      "rubyMatch": true,
+      "ruby": [
+        {
+          "base": "咳",
+          "reading": "せ"
+        }
+      ],
+      "tableMatch": true,
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "reason": "問題文・全5選択肢・表の各セル・ルビ「咳（せ）」を画像で照合し一致。"
+    },
+    {
+      "id": "KSAI-2024-011",
+      "questionNo": 11,
+      "bundlePdfPage": 7,
+      "officialPdfPage": 9,
+      "status": "PASS",
+      "questionTextMatch": true,
+      "choicesMatch": true,
+      "rubyMatch": true,
+      "ruby": [
+        {
+          "base": "嚥",
+          "reading": "えん"
+        }
+      ],
+      "tableMatch": true,
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "reason": "問題文・全5選択肢・表の各セル・ルビ「嚥（えん）」を画像で照合し一致。"
+    }
+  ],
+  "constraints": "正式バンク本体および状態ファイルは変更していない。"
+}
