@@ -1,11 +1,20 @@
 # AppIcon canonical source
 
 - Product: 新ITパスポート｜学びスプリント
-- Canonical source: Google Drive `ITパスポート.png`
-- Google Drive file ID: `1Cej-mIkRG1NVjajSK8PI1xCE4vI17cXl`
-- Source dimensions: 1254×1254
-- Source mode: RGB / no alpha
+- Canonical source: `ios/tools/ITPassport-canonical.png` (original PNG bytes, stored directly in the repository without re-encoding).
+- Original provenance: Google Drive `ITパスポート.png`, file ID `1Cej-mIkRG1NVjajSK8PI1xCE4vI17cXl`; not accessed at build time.
+- Source dimensions: 1254×1254; RGB / no alpha.
 - Source SHA-256: `a1c5fc063d443de17c8a498c132ccaad961dfa353a372756cd4e79ce4023f288`
-- Submission materialization: preserve full square artwork, resize only to Apple-required 1024×1024, RGB, no alpha. No crop, no redraw, no substitution.
+- Source RGB pixel SHA-256: `7ecad6e7e195da9be52b2b75f2afd3dbfd199c1134fb737207abdd808ebc0403`
+- Output SHA-256: `be4b5e7a38909ce702065c660cc18f6401b9ae2a560e71b342d8204f5067e677`
+- Pillow: 12.3.0; LANCZOS resize to 1024×1024, RGB, PNG optimize=True, compress_level=9.
 
-`tools/materialize_appicon.sh` is the only permitted materialization path for submission builds. It verifies the downloaded canonical source before producing `AppIcon-1024.png`. A failed integrity or format check must stop the build rather than fall back to a placeholder/black icon.
+`ios/tools/materialize_appicon.sh` reads the repository-local canonical PNG directly, verifies both source hashes and format, then generates and verifies the output before replacing `AppIcon-1024.png`.
+
+All three hashes are mandatory on every run, even if output already exists.
+
+The canonical PNG must be stored byte-for-byte unchanged. No Base64 encoding, source re-encoding, crop, redraw, substitution, or Drive fallback is permitted.
+
+A missing canonical source or any integrity or format failure stops the build. The existing output is not replaced unless all integrity and format checks pass.
+
+Pillow installation may require package-index access if the pinned version is not installed.
