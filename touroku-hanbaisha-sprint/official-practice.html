@@ -71,7 +71,11 @@ function answer(i){
 if(selected)return;selected=true;const q=subset[position],exclude=q.excludeFromAccuracyDenominator===true;
 if(exclude)excluded++;else{denominator++;if(i===q.answer)correct++}
 Array.from($('choices').children).forEach((el,n)=>{el.disabled=true;if(!exclude&&n===q.answer)el.classList.add('good');else if(n===i&&!exclude&&i!==q.answer)el.classList.add('bad')});
-const f=$('feedback');f.classList.remove('hidden');const p=document.createElement('p');p.className='result';p.textContent=exclude?'公式不適切問題：全員正解扱い（正答率の分母から除外）':i===q.answer?'正解':'正解は '+(q.answer+1)+' 番';f.append(p);\nconst key=q.id||('KSAI-'+q.year+'-'+String(q.questionNo).padStart(3,'0'));\nconst explanation=explanationMap.get(key);\nif(explanation){const section=document.createElement('div');section.className='explanation';const heading=document.createElement('strong');heading.textContent='解説';const body=document.createElement('div');body.textContent=explanation.explanation;section.append(heading,body);f.append(section)}\n$('unknown').classList.add('hidden');$('next').classList.remove('hidden');$('next').textContent=position===subset.length-1?'結果を見る':'次へ';$('score').textContent=correct+' / '+denominator+'（採点対象）';
+const f=$('feedback');f.classList.remove('hidden');const p=document.createElement('p');p.className='result';p.textContent=exclude?'公式不適切問題：全員正解扱い（正答率の分母から除外）':i===q.answer?'正解':'正解は '+(q.answer+1)+' 番';f.append(p);
+const key=q.id||('KSAI-'+q.year+'-'+String(q.questionNo).padStart(3,'0'));
+const explanation=explanationMap.get(key);
+if(explanation){const section=document.createElement('div');section.className='explanation';const heading=document.createElement('strong');heading.textContent='解説';const body=document.createElement('div');body.textContent=explanation.explanation;section.append(heading,body);f.append(section)}
+$('unknown').classList.add('hidden');$('next').classList.remove('hidden');$('next').textContent=position===subset.length-1?'結果を見る':'次へ';$('score').textContent=correct+' / '+denominator+'（採点対象）';
 }
 $('unknown').onclick=()=>answer(-1);
 $('next').onclick=()=>{if(!selected)return;if(++position<subset.length){show();window.scrollTo(0,0)}else finish()};
