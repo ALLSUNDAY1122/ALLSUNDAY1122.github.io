@@ -49,7 +49,7 @@ qb.update({"verified_official_imported":total,"official_question_text_imported":
 gate=existing.setdefault("gates",{})
 gate["normalized_pdf_auto_diff"]=f"COMPLETE_{600-sum(x['notYetDiffed'] for x in by_year.values())}_OF_600"
 gate["official_source_import"]=f"PARTIAL_APPROVED_{total}_OF_600"
-gate["verbatim_and_answer_audit"]=f"AUTO_{auto}_GEOMETRY_{geometry}_RUBY_{ruby}_ORDERED_{ruby_ordered}_LAYOUT_{layout}_VISUAL_{visual}_CROP_{method_totals['cropImage']}_FONT_RUBY_{method_totals['rubyFontCluster']}_VISUAL_RUBY_V2_{method_totals['visualRubyV2']}_IMAGE_V3_{method_totals['imageV3']}_DIRECT_RUBY_V3_{method_totals['directRubyV3']}_SOURCE_ORDER_{method_totals['sourceOrderUnattached']}_RUBY113_{method_totals['ruby113Auto']}_REMAINING_{600-total}"
+gate["verbatim_and_answer_audit"]=f"AUTO_{auto}_GEOMETRY_{geometry}_RUBY_{ruby}_ORDERED_{ruby_ordered}_LAYOUT_{layout}_VISUAL_{visual}_CROP_{method_totals['cropImage']}_FONT_RUBY_{method_totals['rubyFontCluster']}_VISUAL_RUBY_V2_{method_totals['visualRubyV2']}_IMAGE_V3_{method_totals['imageV3']}_DIRECT_RUBY_V3_{method_totals['directRubyV3']}_SOURCE_ORDER_{method_totals['sourceOrderUnattached']}_RUBY113_{method_totals['ruby113Auto']}_MANUAL_REAUDIT_{method_totals['manualVisualReaudit']}_REMAINING_{600-total}"
 gate["content_complete"]="PASS" if total==600 else "BLOCKED"
 gate["official_release_readiness"]="BLOCKED_UNTIL_CONTENT_AND_APP_REVIEW"
 existing["release_gate"]="BLOCKED"
