@@ -1,0 +1,301 @@
+{
+  "batch": "visual-reaudit-2023-b04",
+  "repository": "ALLSUNDAY1122/ALLSUNDAY1122.github.io",
+  "source": "関西広域連合「令和5年度登録販売者試験」2023-first_half",
+  "method": "添付PDFの各該当ページのレンダリング画像を目視し、候補JSONの対象レコードと問題文・全選択肢・ルビ・表・記号を照合した。PDFの文字データ抽出や自動照合結果を判定根拠としていない。",
+  "sourceFiles": {
+    "pdf": {
+      "name": "visual-reaudit-2023-b04.pdf",
+      "sha256": "71259c02e0180b8bfdd4e88fa05320690b97ab1baa8fc5245ccd2c9430140c7d",
+      "pages": 7
+    },
+    "candidateJson": {
+      "name": "visual-reaudit-2023-b04.candidates.json",
+      "sha256": "2eff252f01d0b4a995bcfc580828f2beb008d0cd8ae57bb9c4ad0bb39f61a0b5"
+    }
+  },
+  "scope": [
+    "KSAI-2023-033",
+    "KSAI-2023-034",
+    "KSAI-2023-035",
+    "KSAI-2023-036",
+    "KSAI-2023-037",
+    "KSAI-2023-038",
+    "KSAI-2023-039",
+    "KSAI-2023-040",
+    "KSAI-2023-041",
+    "KSAI-2023-042"
+  ],
+  "summary": {
+    "total": 10,
+    "PASS": 9,
+    "FAIL": 1,
+    "HOLD": 0
+  },
+  "results": [
+    {
+      "id": "KSAI-2023-033",
+      "questionNo": 33,
+      "status": "PASS",
+      "bundlePdfPages": [1],
+      "officialPdf": "2023-first_half",
+      "officialPdfPages": [22],
+      "questionTextVerified": true,
+      "choicesVerified": true,
+      "tableVerified": true,
+      "tableHeaders": ["a", "b", "c", "d"],
+      "tableRows": [
+        ["正", "正", "誤", "誤"],
+        ["誤", "正", "正", "誤"],
+        ["誤", "誤", "正", "正"],
+        ["誤", "誤", "誤", "正"],
+        ["正", "誤", "誤", "誤"]
+      ],
+      "rubyVerified": true,
+      "ruby": [],
+      "symbolsVerified": true,
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "findings": []
+    },
+    {
+      "id": "KSAI-2023-034",
+      "questionNo": 34,
+      "status": "PASS",
+      "bundlePdfPages": [2],
+      "officialPdf": "2023-first_half",
+      "officialPdfPages": [23],
+      "questionTextVerified": true,
+      "choicesVerified": true,
+      "tableVerified": true,
+      "tableHeaders": ["a", "b", "c", "d"],
+      "tableRows": [
+        ["正", "正", "誤", "正"],
+        ["誤", "誤", "正", "誤"],
+        ["正", "正", "正", "誤"],
+        ["正", "誤", "正", "誤"],
+        ["誤", "正", "誤", "正"]
+      ],
+      "rubyVerified": true,
+      "rubyDisplayMode": "原典出現順（漢字への個別対応付けなし）",
+      "rubyReadingsInOrder": ["しゃ", "しゃ", "しゃ"],
+      "symbolsVerified": true,
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "findings": []
+    },
+    {
+      "id": "KSAI-2023-035",
+      "questionNo": 35,
+      "status": "PASS",
+      "bundlePdfPages": [3],
+      "officialPdf": "2023-first_half",
+      "officialPdfPages": [24],
+      "questionTextVerified": true,
+      "choicesVerified": true,
+      "tableVerified": true,
+      "tableHeaders": ["a", "b", "c", "d"],
+      "tableRows": [
+        ["正", "正", "誤", "誤"],
+        ["正", "誤", "正", "誤"],
+        ["誤", "正", "正", "正"],
+        ["正", "誤", "誤", "正"],
+        ["誤", "正", "誤", "正"]
+      ],
+      "rubyVerified": true,
+      "rubyDisplayMode": "原典出現順（漢字への個別対応付けなし）",
+      "rubyReadingsInOrder": ["しゃ", "ふん", "しゃ", "ふん", "しゃ"],
+      "symbolsVerified": true,
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "findings": []
+    },
+    {
+      "id": "KSAI-2023-036",
+      "questionNo": 36,
+      "status": "FAIL",
+      "bundlePdfPages": [3],
+      "officialPdf": "2023-first_half",
+      "officialPdfPages": [24],
+      "questionTextVerified": true,
+      "choicesVerified": false,
+      "tableVerified": true,
+      "rubyVerified": false,
+      "rubyInQuestion": [
+        {"base": "疹", "reading": "しん", "context": "湿疹"},
+        {"base": "痔", "reading": "じ", "context": "痔など"}
+      ],
+      "choiceTexts": ["六君子湯", "大黄牡丹皮湯", "人参湯", "麻子仁丸", "桂枝加芍薬湯"],
+      "correctChoiceRuby": [
+        {"choice": 1, "reading": "りっくんしとう"},
+        {"choice": 2, "reading": "だいおうぼたんぴとう"},
+        {"choice": 3, "reading": "にんじんとう"},
+        {"choice": 4, "reading": "ましにんがん"},
+        {"choice": 5, "reading": "けいしかしゃくやくとう"}
+      ],
+      "symbolsVerified": true,
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "findings": [
+        {
+          "type": "RUBY_ASSOCIATION_AND_PLACEMENT",
+          "detail": "候補JSONでは選択肢1の「六君子湯」の読み「りっくんしとう」が問題文末尾に置かれ、選択肢のchoices配列では各選択肢の読みが次の選択肢の行に1つずつずれている。原典PDFのbundle page 3では各読みが該当する漢方処方名の直上に付されている。問題文中の「湿疹」の「しん」と「痔」の「じ」も、候補文字列では漢字への対応位置が保持されていない。"
+        },
+        {
+          "type": "CORRECT_SOURCE_TEXT",
+          "detail": "選択肢1 六君子湯（りっくんしとう）、2 大黄牡丹皮湯（だいおうぼたんぴとう）、3 人参湯（にんじんとう）、4 麻子仁丸（ましにんがん）、5 桂枝加芍薬湯（けいしかしゃくやくとう）。問題文のルビは「湿疹」の疹＝しん、「痔」＝じ。"
+        }
+      ]
+    },
+    {
+      "id": "KSAI-2023-037",
+      "questionNo": 37,
+      "status": "PASS",
+      "bundlePdfPages": [4],
+      "officialPdf": "2023-first_half",
+      "officialPdfPages": [25],
+      "questionTextVerified": true,
+      "choicesVerified": true,
+      "tableVerified": true,
+      "tableHeaders": ["a", "b", "c", "d"],
+      "tableRows": [
+        ["正", "正", "誤", "正"],
+        ["誤", "誤", "正", "誤"],
+        ["正", "正", "正", "誤"],
+        ["正", "誤", "正", "誤"],
+        ["誤", "正", "誤", "正"]
+      ],
+      "rubyVerified": true,
+      "ruby": [{"base": "痙", "reading": "けい", "context": "胃腸鎮痛鎮痙薬"}],
+      "symbolsVerified": true,
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "findings": []
+    },
+    {
+      "id": "KSAI-2023-038",
+      "questionNo": 38,
+      "status": "PASS",
+      "bundlePdfPages": [4],
+      "officialPdf": "2023-first_half",
+      "officialPdfPages": [25],
+      "questionTextVerified": true,
+      "choicesVerified": true,
+      "tableVerified": true,
+      "choicePairs": ["a,b", "a,d", "b,c", "b,d", "c,d"],
+      "rubyVerified": true,
+      "ruby": [],
+      "symbolsVerified": true,
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "findings": []
+    },
+    {
+      "id": "KSAI-2023-039",
+      "questionNo": 39,
+      "status": "PASS",
+      "bundlePdfPages": [5],
+      "officialPdf": "2023-first_half",
+      "officialPdfPages": [26],
+      "questionTextVerified": true,
+      "choicesVerified": true,
+      "tableVerified": true,
+      "tableHeaders": ["a", "b", "c", "d"],
+      "tableRows": [
+        ["正", "正", "誤", "正"],
+        ["誤", "誤", "正", "誤"],
+        ["正", "正", "正", "誤"],
+        ["正", "誤", "正", "誤"],
+        ["誤", "正", "誤", "正"]
+      ],
+      "rubyVerified": true,
+      "rubyDisplayMode": "原典出現順（漢字への個別対応付けなし）",
+      "rubyReadingsInOrder": ["りょうけいじゅつかんとう", "き", "き"],
+      "symbolsVerified": true,
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "findings": []
+    },
+    {
+      "id": "KSAI-2023-040",
+      "questionNo": 40,
+      "status": "PASS",
+      "bundlePdfPages": [6],
+      "officialPdf": "2023-first_half",
+      "officialPdfPages": [27],
+      "questionTextVerified": true,
+      "choicesVerified": true,
+      "tableVerified": true,
+      "ingredientTable": [
+        {"ingredient": "パンテチン", "amount": "375 mg"},
+        {"ingredient": "大豆油不けん化物", "amount": "600 mg"},
+        {"ingredient": "トコフェロール酢酸エステル", "amount": "100 mg"}
+      ],
+      "rubyVerified": true,
+      "ruby": [],
+      "symbolsVerified": true,
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "findings": []
+    },
+    {
+      "id": "KSAI-2023-041",
+      "questionNo": 41,
+      "status": "PASS",
+      "bundlePdfPages": [6],
+      "officialPdf": "2023-first_half",
+      "officialPdfPages": [27],
+      "questionTextVerified": true,
+      "choicesVerified": true,
+      "tableVerified": true,
+      "tableHeaders": ["a", "b", "c", "d"],
+      "tableRows": [
+        ["正", "正", "誤", "誤"],
+        ["正", "誤", "正", "正"],
+        ["誤", "正", "誤", "誤"],
+        ["正", "誤", "正", "誤"],
+        ["誤", "誤", "正", "正"]
+      ],
+      "rubyVerified": true,
+      "ruby": [],
+      "symbolsVerified": true,
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "findings": []
+    },
+    {
+      "id": "KSAI-2023-042",
+      "questionNo": 42,
+      "status": "PASS",
+      "bundlePdfPages": [7],
+      "officialPdf": "2023-first_half",
+      "officialPdfPages": [28],
+      "questionTextVerified": true,
+      "choicesVerified": true,
+      "tableVerified": true,
+      "ingredientTable": [
+        {"ingredient": "リドカイン", "amount": "60 mg"},
+        {"ingredient": "グリチルレチン酸", "amount": "30 mg"},
+        {"ingredient": "アラントイン", "amount": "20 mg"},
+        {"ingredient": "トコフェロール酢酸エステル", "amount": "50 mg"}
+      ],
+      "tableHeaders": ["a", "b", "c", "d"],
+      "tableRows": [
+        ["正", "正", "誤", "誤"],
+        ["正", "誤", "正", "正"],
+        ["誤", "正", "誤", "誤"],
+        ["正", "誤", "正", "誤"],
+        ["誤", "誤", "正", "正"]
+      ],
+      "rubyVerified": true,
+      "ruby": [
+        {"base": "痔", "reading": "じ", "context": "外用痔疾用薬"},
+        {"base": "痒", "reading": "かゆ", "context": "痒み"}
+      ],
+      "symbolsVerified": true,
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "findings": []
+    }
+  ]
+}
