@@ -12,6 +12,7 @@ rows=bank['questions']
 explanation_path=WEB/'official-kansai/EXPLANATIONS_AUDITED_599.json'
 explanation_raw=explanation_path.read_bytes()
 explanation_data=json.loads(explanation_raw)
+assert explanation_data['schema']=='touroku-hanbaisha-audited-explanations-v1'
 explanation_records=explanation_data['records']
 assert explanation_data['count']==len(explanation_records)==599
 assert explanation_data['auditSummary']=={'PASS':599,'HOLD':0,'PENDING':0}
