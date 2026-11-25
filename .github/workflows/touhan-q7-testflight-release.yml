@@ -80,12 +80,18 @@ jobs:
               start.write_text(json.dumps({'ok':False,'error':'Codemagic start step did not produce a result',
                 'githubActionsRunId':int(os.environ['RUN_ID']),'githubActionStepResult':os.environ['START_RESULT']},ensure_ascii=False,indent=2)+'\n')
           p=b/'Q7_TESTFLIGHT_READBACK_20261125.json'
-          if not p.exists():
-              p.write_text(json.dumps({'schema':'touhan-q7-testflight-readback-v1','status':'BLOCKED',
+          if os.environ['START_RESULT']!='success' or os.environ['VERIFY_RESULT']!='success':
+              d={'schema':'touhan-q7-testflight-readback-v1','status':'BLOCKED',
+                'error':'Fresh Q7 build/upload/readback did not complete in this workflow run; prior results are not reused.',
+                'signedIpaVerified':False,'ascProcessingState':'NOT_VERIFIED',
+                'testFlightAvailable':False,'testFlightDistributed':False,'appReviewSubmitted':False}
+          elif not p.exists():
+              d={'schema':'touhan-q7-testflight-readback-v1','status':'BLOCKED',
                 'error':'Q7 verifier did not produce a readback result','signedIpaVerified':False,
                 'ascProcessingState':'NOT_VERIFIED','testFlightAvailable':False,'testFlightDistributed':False,
-                'appReviewSubmitted':False},ensure_ascii=False,indent=2)+'\n')
-          d=json.loads(p.read_text())
+                'appReviewSubmitted':False}
+          else:
+              d=json.loads(p.read_text())
           d['githubActionsRunId']=int(os.environ['RUN_ID'])
           d['startStepResult']=os.environ['START_RESULT']
           d['verifyStepResult']=os.environ['VERIFY_RESULT']
