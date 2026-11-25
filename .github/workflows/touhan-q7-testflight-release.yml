@@ -60,20 +60,20 @@ jobs:
           start=b/'Q7_CODEMAGIC_SIGNING_BUILD_20261125.json'
           if not start.exists():
               start.write_text(json.dumps({'ok':False,'error':'Codemagic start step did not produce a result',
-                'githubActionsRunId':int(os.environ['RUN_ID']),'githubActionStepResult':os.environ['START_RESULT']},ensure_ascii=False,indent=2)+'\\n')
+                'githubActionsRunId':int(os.environ['RUN_ID']),'githubActionStepResult':os.environ['START_RESULT']},ensure_ascii=False,indent=2)+'\n')
           p=b/'Q7_TESTFLIGHT_READBACK_20261125.json'
           if not p.exists():
               p.write_text(json.dumps({'schema':'touhan-q7-testflight-readback-v1','status':'BLOCKED',
                 'error':'Q7 verifier did not produce a readback result','signedIpaVerified':False,
                 'ascProcessingState':'NOT_VERIFIED','testFlightAvailable':False,'testFlightDistributed':False,
-                'appReviewSubmitted':False},ensure_ascii=False,indent=2)+'\\n')
+                'appReviewSubmitted':False},ensure_ascii=False,indent=2)+'\n')
           d=json.loads(p.read_text())
           d['githubActionsRunId']=int(os.environ['RUN_ID'])
           d['startStepResult']=os.environ['START_RESULT']
           d['verifyStepResult']=os.environ['VERIFY_RESULT']
-          p.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\\n')
+          p.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n')
           md=b/'RELEASE_STATUS.md'
-          md.write_text(md.read_text()+f"\\n\\n## Q7 署名付きIPA・TestFlight配信（2026-11-25）\\n- Codemagic開始: {os.environ['START_RESULT']}、検証: {os.environ['VERIFY_RESULT']}、総合: **{d.get('status')}**。\\n- ASC処理: {d.get('ascProcessingState')}、TestFlight利用可能: {d.get('testFlightAvailable')}、内部グループ配信: {d.get('testFlightDistributed')}。\\n- App Review提出: **未実施**。証跡: Q7_TESTFLIGHT_READBACK_20261125.json。\\n")
+          md.write_text(md.read_text()+f"\n\n## Q7 署名付きIPA・TestFlight配信（2026-11-25）\n- Codemagic開始: {os.environ['START_RESULT']}、検証: {os.environ['VERIFY_RESULT']}、総合: **{d.get('status')}**。\n- ASC処理: {d.get('ascProcessingState')}、TestFlight利用可能: {d.get('testFlightAvailable')}、内部グループ配信: {d.get('testFlightDistributed')}。\n- App Review提出: **未実施**。証跡: Q7_TESTFLIGHT_READBACK_20261125.json。\n")
           PY
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
