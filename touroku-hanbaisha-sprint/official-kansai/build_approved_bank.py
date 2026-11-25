@@ -264,9 +264,17 @@ if crop_audit_path.exists() and crop_mobile_path.exists():
             # the same record without lowering the visual/rights/mobile criteria.
             # Duplicate records already present in accepted were skipped above.
             # The historical flag does not waive any of the evidence checks below.
-            assets=meta.get("displayAssets") or meta["assets"]
-            if len(assets)!=1 or rec.get("effectiveCropAssets")!=[assets[0]["webPath"]]:
+            manifest_assets=meta.get("displayAssets") or meta["assets"]
+            effective_paths=rec.get("effectiveCropAssets") or []
+            if len(effective_paths)!=1:
+                raise RuntimeError("crop effective display asset must be unique: "+id)
+            assets=[a for a in manifest_assets if a.get("webPath") in effective_paths]
+            if len(assets)!=1:
                 raise RuntimeError("crop display source drift: "+id)
+            correction=rec.get("scopeCorrection")
+            if correction:
+                if correction.get("retainedPath")!=effective_paths[0] or correction.get("excludedPath") in effective_paths:
+                    raise RuntimeError("crop scope correction does not match effective asset: "+id)
             asset=assets[0]
             binary=(B/asset["relativePath"]).read_bytes()
             if hashlib.sha256(binary).hexdigest()!=asset["sha256"]:
