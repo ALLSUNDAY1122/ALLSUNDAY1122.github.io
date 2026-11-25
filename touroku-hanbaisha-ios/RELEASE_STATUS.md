@@ -1616,3 +1616,25 @@ Apple固定識別子: Bundle `com.allsunday1122.tourokuhanbaisha`、ASC `6802119
 - Run `45561986493` のGitHub Actions総合結果は、証拠3ファイルの同時更新時にrebase競合が発生したためFAIL。ただし同Run内のCodemagic・ASC検証ステップはSUCCESS。競合後、Build 21の実測結果を再構成して証拠ファイルへ保存済み。
 - 最新証跡：`Q7_CODEMAGIC_SIGNING_BUILD_20261125.json`、`Q7_TESTFLIGHT_READBACK_20261125.json`。Build 21を最新の正式記録とする。
 - App Review提出：**未実施**。外部ベータ配信・本審査提出・一般公開は実施していない。
+
+## 2026-11-25｜PR #5741 Build 21・Q2〜Q6最新証拠（追補）
+
+確認HEAD：`17e848830fb8a41d104cb980c70c170dc36b3d62`（本追補作成時点）。PR #5741の現HEADを基準とし、過去HEADの証拠は履歴として区別する。
+
+| Gate | 最新判定 | 根拠・限界 |
+|---|---|---|
+| Q2 Native WebView / UI | **PASS（端末スモーク・購入）** | Build 21 TestFlight配信済み。ユーザー実機確認：アプリ起動、解説表示、買い切り購入。購入復元は未確認。 |
+| Q3 ASC Metadata | **PASS（読戻し）** | ASCメタデータ読戻し証跡あり。本審査提出なし。 |
+| Q4 Offline | **未完了** | Chromium/WebKitのブラウザオフライン検証はPASS。実機の機内モード・オフライン動作は未確認。 |
+| Q5 Privacy | **未完了** | ソース／ブラウザ監査PASS。ASC App Privacy質問票の照合、ホスティング事業者ログの保持・利用目的、実機通信取得は未確認。 |
+| Q6 iOS Build / Launch | **PASS（Build 21実機基本確認）** | 署名済IPA、ASC VALID、内部TestFlight配信済み。実機起動・解説表示・買い切り購入をユーザー確認。機内モードと購入復元は対象外。 |
+
+### Q7 Build 21の配信証拠
+- Codemagic Build ID：`6b06836d0bc59f03bf0c02e3`。GitHub Actions Run：`45561986493`。
+- ASC Build UUID：`095c6fe1-6999-4f6e-9049-08fd860a63c6`、処理状態VALID、内部TestFlightグループ`sum`へ配信。
+- 署名済IPA内599問・解説・Privacy Manifest検証PASS。
+- 実機の起動・解説表示・買い切り購入はユーザーからの確認情報。端末動画や自動実機ログを取得したとは扱わない。
+- 未確認：機内モードでの起動・学習・解説表示、購入復元、ASC App Privacy質問票の最終照合。
+- App Review未提出。外部ベータ配信・一般公開なし。
+
+最新の機械可読証拠：`Q2_Q6_EVIDENCE_20261125.json`、`Q7_CODEMAGIC_SIGNING_BUILD_20261125.json`、`Q7_TESTFLIGHT_READBACK_20261125.json`。総合リリース判定は引き続き**BLOCKED**。
