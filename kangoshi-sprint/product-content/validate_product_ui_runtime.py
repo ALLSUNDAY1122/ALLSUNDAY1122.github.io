@@ -10,6 +10,9 @@ def need(cond,msg):
     if not cond: errors.append(msg)
 
 runtime=json.loads((ROOT/'product-runtime-audit.json').read_text(encoding='utf-8'))
+quarantine=json.loads((ROOT/'release-quarantine-20261125.json').read_text(encoding='utf-8'))
+qids=sorted(x['id'] for x in quarantine.get('items') or [])
+expected_eligible=720-len(qids)
 manifest=json.loads((ROOT/'manifest.json').read_text(encoding='utf-8'))
 queue=json.loads((ROOT/'enriched-draft'/'release-queue-ids.json').read_text(encoding='utf-8'))
 index=(APP/'index.html').read_text(encoding='utf-8')
@@ -21,22 +24,28 @@ questions=(APP/'questions-runtime.js').read_text(encoding='utf-8')
 scoring=(APP/'scoring-overrides.js').read_text(encoding='utf-8')
 
 need(runtime.get('pass') is True,'product runtime audit not PASS')
-need(runtime.get('canonicalTotal')==720 and runtime.get('runtimeEligible')==720,'runtime is not 720/720')
-need(runtime.get('blockedIds')==[],'runtime still has blocked ids')
-need(runtime.get('mediaResolved')==38 and not runtime.get('mediaMissingAssets'),'media runtime is not 38/38')
+need(runtime.get('canonicalTotal')==720 and runtime.get('runtimeEligible')==expected_eligible,f'runtime is not {expected_eligible}/720')
+need(runtime.get('blockedIds')==qids,'runtime blocked ids must equal the official-PDF release quarantine exactly')
+need(quarantine.get('releaseEligibleCount')==expected_eligible,'quarantine summary count mismatch')
+need(not runtime.get('mediaMissingAssets'),'runtime media asset missing')
+need(isinstance(runtime.get('eligibleMediaQuestions'),list),'runtime audit lacks eligible media list')
 summary=queue.get('summary') or {}
-for key in ('textPending','mediaPending','dynamicPending','contentConcerns','scoringExceptionPending','expertReviewPending','releaseQuarantined'):
+for key in ('textPending','dynamicPending','contentConcerns','scoringExceptionPending','expertReviewPending'):
     need(summary.get(key)==0,f'queue {key} is not zero: {summary.get(key)}')
+# Media still pending rights review / specialist quarantine must be inside the release quarantine.
+for key in ('mediaPending','releaseQuarantined'):
+    need(set(queue.get(key) or [])<=set(qids),f'queue {key} ids are not all release-quarantined')
 need(summary.get('explained')==720,'explained is not 720')
 
 sets={int(s.get('sourceExam')):s for s in manifest.get('sets') or []}
 need(set(sets)=={115,114,113},'manifest exam set mismatch')
 for exam in (115,114,113):
     s=sets.get(exam,{})
-    need(s.get('status')=='ready',f'exam {exam} not ready')
-    need(s.get('questionCount')==240 and s.get('runtimeEligibleCount')==240,f'exam {exam} runtime not 240/240')
-    need(s.get('releaseEligibleCount')==240,f'exam {exam} release eligibility not 240/240')
-    need(s.get('releaseBlockedIds')==[],f'exam {exam} still release-blocked')
+    eq=[i for i in qids if i.startswith(f'K{exam}-')]
+    need(s.get('status')==('ready' if not eq else 'pending_release_review'),f'exam {exam} status mismatch')
+    need(s.get('questionCount')==240 and s.get('runtimeEligibleCount')==240-len(eq),f'exam {exam} runtime not {240-len(eq)}/240')
+    need(s.get('releaseEligibleCount')==240-len(eq),f'exam {exam} release eligibility not {240-len(eq)}/240')
+    need(s.get('releaseBlockedIds')==eq,f'exam {exam} release-blocked ids differ from quarantine')
     need('expertReviewedCount' not in s,f'exam {exam} contains misleading expertReviewedCount')
 need((manifest.get('releaseGate') or {}).get('primarySourceAuditRequired') is True,'primary source audit gate missing')
 need((manifest.get('releaseGate') or {}).get('humanReviewAtPrototypeAndTestFlight') is True,'human review gate does not match canonical procedure')
@@ -51,11 +60,11 @@ for name in scripts:
 need(pos==sorted(pos),'runtime script order is incorrect')
 need(index.find('scoring-overrides.js') < index.find('questions-runtime.js'),'scoring overrides must load before runtime/app')
 
-need('kangoshi-sprint-v25-20260814-canonical-runtime1' in sw,'service worker cache version not canonical-runtime1')
+need('kangoshi-sprint-v26-20261125-canonical-runtime2' in sw,'service worker cache version not canonical-runtime2')
 for name in ('scoring-overrides.js','questions-runtime.js','media-runtime.js','product-availability.js'):
     need(f"'./{name}'" in sw,f'service worker does not precache {name}')
 need('window.KANGOSHI_QUESTIONS=ALL.filter' in questions,'questions runtime does not replace legacy pool')
-need('runtimeEligible":720' in questions or '"runtimeEligible":720' in questions,'questions runtime metadata is not 720')
+need(f'"runtimeEligible":{expected_eligible}' in questions,f'questions runtime metadata is not {expected_eligible}')
 need('new MutationObserver(apply)' in media and "className='question-media'" in media,'media renderer markers missing')
 need("q.mediaReleaseStatus!=='resolved'" in media,'media renderer does not enforce resolved status')
 need("const examNo=[115,114,113][round]" in app,'mock pool is not keyed by source exam')
@@ -72,10 +81,12 @@ report={
     'examSetsReady':sorted([e for e,s in sets.items() if s.get('status')=='ready'],reverse=True),
     'releaseEligibleByExam':{str(e):sets[e].get('releaseEligibleCount') for e in sorted(sets,reverse=True)},
     'mediaResolved':runtime.get('mediaResolved'),
+    'eligibleMediaCount':runtime.get('eligibleMediaCount'),
     'pendingQueues':{k:summary.get(k) for k in ('textPending','mediaPending','dynamicPending','contentConcerns','scoringExceptionPending','expertReviewPending','releaseQuarantined')},
     'reviewPolicy':'ai_ci_primary_source_audit_plus_human_prototype_testflight',
     'scriptOrder':scripts,
-    'cacheVersion':'kangoshi-sprint-v25-20260814-canonical-runtime1',
+    'cacheVersion':'kangoshi-sprint-v26-20261125-canonical-runtime2',
+    'releaseQuarantined':len(qids),
     'pass':not errors,
     'errors':errors
 }

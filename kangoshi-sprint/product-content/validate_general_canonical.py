@@ -4,6 +4,8 @@ from pathlib import Path
 
 ROOT=Path(__file__).resolve().parent
 RAW=ROOT/'raw'
+import sys; sys.path.insert(0,str(ROOT))
+from official_pdf_repairs import apply_repairs
 QROOT=ROOT/'questions'
 EXAMS={115:'set1',114:'set2',113:'set3'}
 errors=[]
@@ -17,7 +19,7 @@ def load(path):
 
 for exam,set_id in EXAMS.items():
     raw=load(RAW/f'{set_id}-raw.json')
-    raw_map={q['id']:q for q in raw.get('questions',[]) if q.get('category')=='一般'}
+    raw_map={q['id']:apply_repairs(q) for q in raw.get('questions',[]) if q.get('category')=='一般'}
     can=load(QROOT/f'exam-{exam}'/'general.json')
     qs=can.get('questions') or []
     if len(raw_map)!=130: errors.append(f'{exam}: raw general {len(raw_map)}/130')

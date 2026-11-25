@@ -1,16 +1,7 @@
 import SwiftUI
 import LearningSprintCore
 
-private struct MockCategoryRow: Identifiable {
-    let id: String
-    let count: Int
-}
-
-private let mockCategories = [
-    MockCategoryRow(id: "必修", count: 50),
-    MockCategoryRow(id: "一般", count: 130),
-    MockCategoryRow(id: "状況設定", count: 60)
-]
+private let mockCategories = ["必修", "一般", "状況設定"]
 
 struct MockView: View {
     @EnvironmentObject var purchase: PurchaseController
@@ -49,7 +40,7 @@ private struct MockPremiumNotice: View {
                     PremiumBadge()
                     Text("本番形式はプレミアム").font(.headline)
                 }
-                Text("3試験回×240問の公式構成と特殊採点ルールを反映します。")
+                Text("3試験回の区分構成と公式特殊採点を反映します（公式PDFと照合できた問題のみ収録）。")
                     .font(.caption)
                     .foregroundStyle(KSTheme.secondary)
                 Button("プレミアムを見る") { showPaywall = true }
@@ -72,13 +63,13 @@ private struct MockExamSection: View {
             HStack {
                 Text("第\(exam)回").font(.headline)
                 Spacer()
-                Text("240問").font(.caption).foregroundStyle(KSTheme.tertiary)
+                Text("\(model.questionCount(exam: exam))問").font(.caption).foregroundStyle(KSTheme.tertiary)
             }
-            ForEach(mockCategories) { item in
+            ForEach(mockCategories, id: \.self) { category in
                 MockCategoryButton(
                     exam: exam,
-                    category: item.id,
-                    count: item.count,
+                    category: category,
+                    count: model.questionCount(exam: exam, category: category),
                     showPaywall: $showPaywall
                 )
             }

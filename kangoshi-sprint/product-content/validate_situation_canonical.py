@@ -7,6 +7,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 RAW = ROOT / 'raw'
+import sys; sys.path.insert(0, str(ROOT))
+from official_pdf_repairs import apply_repairs
 QROOT = ROOT / 'questions'
 EXAMS = {115: 'set1', 114: 'set2', 113: 'set3'}
 URL = re.compile(r'^https://', re.I)
@@ -24,7 +26,7 @@ def load(path):
 for exam, set_id in EXAMS.items():
     raw = load(RAW / f'{set_id}-raw.json')
     raw_rows = [q for q in raw.get('questions') or [] if q.get('category') == '状況設定']
-    raw_map = {q.get('id'): q for q in raw_rows if q.get('id')}
+    raw_map = {q.get('id'): apply_repairs(q) for q in raw_rows if q.get('id')}
     can = load(QROOT / f'exam-{exam}' / 'situation.json')
     qs = can.get('questions') or []
     counts = {

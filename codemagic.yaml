@@ -983,16 +983,18 @@ workflows:
         submit_to_app_store: false
 
   kangoshi-ios:
-    name: 看護師国家試験 - iOS App Store Submission
+    name: 看護師国家試験 - iOS Internal TestFlight (sun)
     max_build_duration: 60
     instance_type: mac_mini_m2
+    integrations:
+      app_store_connect: "Codemagic Shiwake Swipe"
     environment:
-      groups:
-        - app2_010_touhan_signing
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: jp.allsunday1122.kangoshi
       vars:
         BUNDLE_ID: jp.allsunday1122.kangoshi
         APP_STORE_CONNECT_APP_ID: "6801792293"
-        CODEMAGIC_PROFILE_REF: kangoshi_appstore_20260822
         IAP_PRODUCT_ID: jp.allsunday1122.kangoshi.monthly
         IAP_LIFETIME_PRODUCT_ID: jp.allsunday1122.kangoshi.lifetime
         APPICON_SHA256: 6afe16483852c98e0e030874ce7829f0e1a42fe017bb2f854eee1d9410f8ee80
@@ -1008,19 +1010,29 @@ workflows:
         script: |
           set -euo pipefail
           cd "$CM_BUILD_DIR"
-          test -n "${CERTIFICATE_PRIVATE_KEY:-}"
-          test -n "${APP_STORE_CONNECT_PRIVATE_KEY:-}"
-          test -n "${APP_STORE_CONNECT_KEY_IDENTIFIER:-}"
-          test -n "${APP_STORE_CONNECT_ISSUER_ID:-}"
           test "$BUNDLE_ID" = "jp.allsunday1122.kangoshi"
           test "$IAP_PRODUCT_ID" = "jp.allsunday1122.kangoshi.monthly"
           test "$IAP_LIFETIME_PRODUCT_ID" = "jp.allsunday1122.kangoshi.lifetime"
+          grep -q 'jp.allsunday1122.kangoshi.monthly' kangoshi-sprint/ios/Sources/KangoshiSprintApp.swift
+          grep -q 'TARGETED_DEVICE_FAMILY: "1"' kangoshi-sprint/ios/project.yml
+          grep -q 'INFOPLIST_KEY_UIRequiresFullScreen: YES' kangoshi-sprint/ios/project.yml
+          node kangoshi-sprint/audit-official-exam-difficulty.mjs
           node kangoshi-sprint/audit-official-difficulty.mjs
           python3 kangoshi-sprint/ios/tools/normalize_swift_numeric_literals.py
           python3 kangoshi-sprint/ios/tools/prepare_native_content.py
           test -f kangoshi-sprint/ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png
           echo "$APPICON_SHA256  kangoshi-sprint/ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png" | shasum -a 256 -c -
-          python3 -c "import json;d=json.load(open('kangoshi-sprint/ios/GeneratedResources/native-content-audit.json',encoding='utf-8'));assert d['pass'] and d['questions']==720 and d['byExam']=={'115':240,'114':240,'113':240};print('PASS: canonical 720-question payload')"
+          python3 kangoshi-sprint/ios/tools/bind_canonical_appicon.py
+          grep -q 'ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon' kangoshi-sprint/ios/project.yml
+          python3 - <<'PYAUDIT'
+          import json
+          a=json.load(open('kangoshi-sprint/ios/GeneratedResources/native-content-audit.json',encoding='utf-8'))
+          q=json.load(open('kangoshi-sprint/product-content/release-quarantine-20261125.json',encoding='utf-8'))
+          assert a['pass'] and a['questions']==q['releaseEligibleCount'] and a['questions']+a['releaseQuarantined']==720
+          assert a['byExam']=={e:v['releaseEligible'] for e,v in q['byExam'].items()}
+          assert a['svgRedrawsRasterized']==0
+          print(f"PASS: official-PDF verified payload {a['questions']}/720 (quarantined {a['releaseQuarantined']})")
+          PYAUDIT
       - name: Set CI build number and generate native project
         script: |
           set -euo pipefail
@@ -1036,19 +1048,7 @@ workflows:
           p.write_text(text,encoding='utf-8')
           PYBUILD
           xcodegen generate
-      - name: Initialize signing keychain
-        script: |
-          set -euo pipefail
-          keychain initialize
-      - name: Fetch managed App Store signing files
-        script: |
-          set -euo pipefail
-          app-store-connect fetch-signing-files "$BUNDLE_ID" --type IOS_APP_STORE
-      - name: Add signing certificate to keychain
-        script: |
-          set -euo pipefail
-          keychain add-certificates
-      - name: Apply App Store signing profile
+      - name: Apply App Store signing profiles
         script: |
           set -euo pipefail
           cd "$CM_BUILD_DIR/kangoshi-sprint/ios"
@@ -1057,15 +1057,28 @@ workflows:
         script: |
           set -euo pipefail
           xcode-project build-ipa --project "$CM_BUILD_DIR/$XCODE_PROJECT" --scheme "$XCODE_SCHEME"
-      - name: Upload signed IPA to App Store Connect
+      - name: Verify IPA Info.plist (iPhone only, full screen)
         script: |
           set -euo pipefail
           IPA_PATH="$(find "$CM_BUILD_DIR/build/ios/ipa" -maxdepth 1 -type f -name '*.ipa' -print -quit)"
           test -n "$IPA_PATH"
-          app-store-connect publish --path "$IPA_PATH" --altool-retries 3 --altool-retry-wait 2
+          rm -rf /tmp/kangoshi-ipa && mkdir -p /tmp/kangoshi-ipa && unzip -q "$IPA_PATH" -d /tmp/kangoshi-ipa
+          PLIST="$(find /tmp/kangoshi-ipa/Payload -maxdepth 2 -name Info.plist -path '*.app/*' -print -quit)"
+          /usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$PLIST" | grep -qx 'jp.allsunday1122.kangoshi'
+          /usr/libexec/PlistBuddy -c 'Print :UIRequiresFullScreen' "$PLIST" | grep -qx 'true'
+          /usr/libexec/PlistBuddy -c 'Print :UIDeviceFamily' "$PLIST" | tee /tmp/kangoshi-family.txt
+          if grep -q '2' /tmp/kangoshi-family.txt; then echo 'iPad device family must not be enabled'; exit 1; fi
+          /usr/libexec/PlistBuddy -c 'Print :CFBundleIconName' "$PLIST" | grep -qx 'AppIcon'
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+        beta_groups:
+          - sun
+        submit_to_app_store: false
   touhan-q7-signing-preflight:
     name: 登録販売者 - Q7 Signed IPA TestFlight Preflight (No Upload)
     max_build_duration: 60

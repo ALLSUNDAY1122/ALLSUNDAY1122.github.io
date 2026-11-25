@@ -1,0 +1,4591 @@
+{
+ "schemaVersion": 1,
+ "checkedDate": "2026-11-25",
+ "scope": "看護師国家試験 第113〜115回 runtime 720問（enriched-draft set1-3）",
+ "problem": "公式PDFの埋め込みサブセットフォント（RyuminPr6-Regular / FutoGoB101Pr6-Bold 系）のToUnicodeが壊れており、数字・括弧（）〈〉『』・一部漢字（疼腿梢穿扁倦鞘溢牙）がU+FFFD/制御文字/誤文字（! ? C u x V Z ¹ ¼ 等）として抽出されていた。従来の監査は同じ壊れたテキスト層同士を比較していたため検出できなかった。",
+ "method": [
+  "PyMuPDF get_texttrace で不正グリフ位置（1,613箇所）を特定し、4倍レンダリングした字形画像をハッシュで38クラスタに分類、目視で各クラスタの文字を確定（glyphMap）。",
+  "確定した字形で公式PDFのページテキストを再構成（sorted/unsorted 両順序）。",
+  "ドラフト本文を再構成ページと照合し、許可する編集は「壊れ文字→確定字形」「確定字形の欠落挿入」「壊れ文字の削除」のみ。英語併記（gloss）の位置ずれは日本語部分の連続一致＋英単語のページ存在で検証。",
+  "修正後の各フィールドは、英字を除いた正規化テキストが公式ページ上で連続一致し、かつ前後境界に欠落数字/括弧がないこと（選択肢番号・問題番号トークンで検証）を必須とした。",
+  "検証できなかったフィールドを含む問題は release-quarantine-20261125.json で隔離（本文の推測補完は一切しない）。"
+ ],
+ "officialPdfSha256": {
+  "tp260424-05a_01.pdf": "24ee4a497b9d4b04035f5feed2cac0242bfc95b2cae00e2df69ad31e44994ef1",
+  "tp260424-05c_01.pdf": "077b98c37e858176f02e133376ac33bef18682199b5160c556a2464f1531cf48",
+  "tp250428-05a_01.pdf": "03733e97bcbc54eb6ea74727daf57aaf8a094d1746879d10b4451efc361a981f",
+  "tp250428-05c_01.pdf": "3c55c7bc2b88612a57afa2b5c1a58dc7dd36b00ca7693d56c7cc44c706ce5adb",
+  "tp240424-05a_01.pdf": "52c63fdf1c57059969db71c57813e16021666f84cc6f961eeceed84dc6299628",
+  "tp240424-05c_01.pdf": "e50d5bb3161bfde77acd8b9703438480b94f2cf09057b545f4f2a9561d42025b"
+ },
+ "glyphMap": [
+  {
+   "cluster": "f83c304f4c",
+   "label": "）",
+   "occurrences": 249,
+   "fonts": {
+    "RyuminPr6-Regular": 249
+   },
+   "sample": {
+    "exam": 114,
+    "session": "AM",
+    "page": 1,
+    "bbox4x": [
+     617,
+     889,
+     641,
+     940
+    ]
+   }
+  },
+  {
+   "cluster": "947b4de7a2",
+   "label": "（",
+   "occurrences": 246,
+   "fonts": {
+    "RyuminPr6-Regular": 246
+   },
+   "sample": {
+    "exam": 114,
+    "session": "AM",
+    "page": 1,
+    "bbox4x": [
+     497,
+     889,
+     521,
+     940
+    ]
+   }
+  },
+  {
+   "cluster": "5995b7a5da",
+   "label": "1",
+   "occurrences": 202,
+   "fonts": {
+    "RyuminPr6-Regular.": 202
+   },
+   "sample": {
+    "exam": 114,
+    "session": "AM",
+    "page": 1,
+    "bbox4x": [
+     569,
+     889,
+     617,
+     940
+    ]
+   }
+  },
+  {
+   "cluster": "e31eef78bd",
+   "label": "〈",
+   "occurrences": 142,
+   "fonts": {
+    "RyuminPr6-Regular": 142
+   },
+   "sample": {
+    "exam": 114,
+    "session": "AM",
+    "page": 9,
+    "bbox4x": [
+     613,
+     407,
+     637,
+     458
+    ]
+   }
+  },
+  {
+   "cluster": "c6fbf6e844",
+   "label": "〉",
+   "occurrences": 141,
+   "fonts": {
+    "RyuminPr6-Regular": 141
+   },
+   "sample": {
+    "exam": 114,
+    "session": "AM",
+    "page": 9,
+    "bbox4x": [
+     781,
+     407,
+     805,
+     458
+    ]
+   }
+  },
+  {
+   "cluster": "ecdcc9af34",
+   "label": "2",
+   "occurrences": 131,
+   "fonts": {
+    "RyuminPr6-Regular.": 131
+   },
+   "sample": {
+    "exam": 114,
+    "session": "AM",
+    "page": 1,
+    "bbox4x": [
+     1316,
+     696,
+     1364,
+     747
+    ]
+   }
+  },
+  {
+   "cluster": "4db8c937bc",
+   "label": "3",
+   "occurrences": 108,
+   "fonts": {
+    "RyuminPr6-Regular.": 108
+   },
+   "sample": {
+    "exam": 114,
+    "session": "AM",
+    "page": 1,
+    "bbox4x": [
+     1003,
+     889,
+     1051,
+     940
+    ]
+   }
+  },
+  {
+   "cluster": "d199e19298",
+   "label": "5",
+   "occurrences": 59,
+   "fonts": {
+    "RyuminPr6-Regular.": 59
+   },
+   "sample": {
+    "exam": 114,
+    "session": "AM",
+    "page": 1,
+    "bbox4x": [
+     647,
+     985,
+     696,
+     1036
+    ]
+   }
+  },
+  {
+   "cluster": "90f74930be",
+   "label": "4",
+   "occurrences": 58,
+   "fonts": {
+    "RyuminPr6-Regular.": 58
+   },
+   "sample": {
+    "exam": 114,
+    "session": "AM",
+    "page": 1,
+    "bbox4x": [
+     1460,
+     889,
+     1509,
+     940
+    ]
+   }
+  },
+  {
+   "cluster": "032f259258",
+   "label": "2",
+   "occurrences": 42,
+   "fonts": {
+    "FutoGoB101Pr6-Bold.": 42
+   },
+   "sample": {
+    "exam": 114,
+    "session": "AM",
+    "page": 2,
+    "bbox4x": [
+     1364,
+     1785,
+     1412,
+     1835
+    ]
+   }
+  },
+  {
+   "cluster": "1276a58837",
+   "label": "6",
+   "occurrences": 40,
+   "fonts": {
+    "RyuminPr6-Regular.": 40
+   },
+   "sample": {
+    "exam": 114,
+    "session": "AM",
+    "page": 3,
+    "bbox4x": [
+     762,
+     1684,
+     810,
+     1735
+    ]
+   }
+  },
+  {
+   "cluster": "e45e37693e",
+   "label": "9",
+   "occurrences": 32,
+   "fonts": {
+    "RyuminPr6-Regular.": 32
+   },
+   "sample": {
+    "exam": 114,
+    "session": "AM",
+    "page": 1,
+    "bbox4x": [
+     1509,
+     407,
+     1557,
+     458
+    ]
+   }
+  },
+  {
+   "cluster": "38f185000d",
+   "label": "0",
+   "occurrences": 32,
+   "fonts": {
+    "RyuminPr6-Regular.": 32
+   },
+   "sample": {
+    "exam": 114,
+    "session": "AM",
+    "page": 3,
+    "bbox4x": [
+     762,
+     1199,
+     810,
+     1250
+    ]
+   }
+  },
+  {
+   "cluster": "bd39c96e1c",
+   "label": "8",
+   "occurrences": 25,
+   "fonts": {
+    "RyuminPr6-Regular.": 25
+   },
+   "sample": {
+    "exam": 114,
+    "session": "AM",
+    "page": 3,
+    "bbox4x": [
+     762,
+     1846,
+     810,
+     1896
+    ]
+   }
+  },
+  {
+   "cluster": "0f4ad38652",
+   "label": "7",
+   "occurrences": 24,
+   "fonts": {
+    "RyuminPr6-Regular.": 24
+   },
+   "sample": {
+    "exam": 114,
+    "session": "AM",
+    "page": 1,
+    "bbox4x": [
+     1147,
+     407,
+     1195,
+     458
+    ]
+   }
+  },
+  {
+   "cluster": "7315928c4b",
+   "label": "疼",
+   "occurrences": 9,
+   "fonts": {
+    "RyuminPr6-Regular..": 9
+   },
+   "sample": {
+    "exam": 114,
+    "session": "AM",
+    "page": 21,
+    "bbox4x": [
+     641,
+     2527,
+     689,
+     2578
+    ]
+   }
+  },
+  {
+   "cluster": "f0102dca73",
+   "label": "腿",
+   "occurrences": 8,
+   "fonts": {
+    "RyuminPr6-Regular": 8
+   },
+   "sample": {
+    "exam": 114,
+    "session": "AM",
+    "page": 40,
+    "bbox4x": [
+     400,
+     600,
+     448,
+     650
+    ]
+   }
+  },
+  {
+   "cluster": "9058f4eed9",
+   "label": "梢",
+   "occurrences": 7,
+   "fonts": {
+    "RyuminPr6-Regular": 7
+   },
+   "sample": {
+    "exam": 114,
+    "session": "AM",
+    "page": 21,
+    "bbox4x": [
+     545,
+     2720,
+     593,
+     2771
+    ]
+   }
+  },
+  {
+   "cluster": "daa5b51613",
+   "label": "3",
+   "occurrences": 6,
+   "fonts": {
+    "RyuminPr6-Regular.": 6
+   },
+   "sample": {
+    "exam": 114,
+    "session": "AM",
+    "page": 1,
+    "bbox4x": [
+     1399,
+     1997,
+     1448,
+     2048
+    ]
+   }
+  },
+  {
+   "cluster": "6d86486db3",
+   "label": "『",
+   "occurrences": 5,
+   "fonts": {
+    "RyuminPr6-Regular": 5
+   },
+   "sample": {
+    "exam": 114,
+    "session": "AM",
+    "page": 50,
+    "bbox4x": [
+     1364,
+     696,
+     1388,
+     747
+    ]
+   }
+  },
+  {
+   "cluster": "67dc5135d6",
+   "label": "』",
+   "occurrences": 5,
+   "fonts": {
+    "RyuminPr6-Regular": 5
+   },
+   "sample": {
+    "exam": 114,
+    "session": "AM",
+    "page": 50,
+    "bbox4x": [
+     1677,
+     696,
+     1701,
+     747
+    ]
+   }
+  },
+  {
+   "cluster": "f63ce33545",
+   "label": "（",
+   "occurrences": 4,
+   "fonts": {
+    "RyuminPr6-Regular": 4
+   },
+   "sample": {
+    "exam": 114,
+    "session": "AM",
+    "page": 1,
+    "bbox4x": [
+     930,
+     889,
+     954,
+     940
+    ]
+   }
+  },
+  {
+   "cluster": "94bfb4a8e5",
+   "label": "1",
+   "occurrences": 4,
+   "fonts": {
+    "RyuminPr6-Regular.": 4
+   },
+   "sample": {
+    "exam": 114,
+    "session": "AM",
+    "page": 2,
+    "bbox4x": [
+     1546,
+     2363,
+     1594,
+     2414
+    ]
+   }
+  },
+  {
+   "cluster": "b9dd09af8f",
+   "label": "5",
+   "occurrences": 4,
+   "fonts": {
+    "RyuminPr6-Regular.": 4
+   },
+   "sample": {
+    "exam": 114,
+    "session": "AM",
+    "page": 2,
+    "bbox4x": [
+     1713,
+     2363,
+     1761,
+     2414
+    ]
+   }
+  },
+  {
+   "cluster": "f852ec0954",
+   "label": "9",
+   "occurrences": 4,
+   "fonts": {
+    "RyuminPr6-Regular.": 4
+   },
+   "sample": {
+    "exam": 114,
+    "session": "AM",
+    "page": 3,
+    "bbox4x": [
+     1541,
+     2007,
+     1590,
+     2058
+    ]
+   }
+  },
+  {
+   "cluster": "087d2ee93b",
+   "label": "0",
+   "occurrences": 4,
+   "fonts": {
+    "RyuminPr6-Regular.": 4
+   },
+   "sample": {
+    "exam": 114,
+    "session": "AM",
+    "page": 3,
+    "bbox4x": [
+     1807,
+     2007,
+     1856,
+     2058
+    ]
+   }
+  },
+  {
+   "cluster": "495ddb23ad",
+   "label": "穿",
+   "occurrences": 4,
+   "fonts": {
+    "RyuminPr6-Regular.": 4
+   },
+   "sample": {
+    "exam": 114,
+    "session": "AM",
+    "page": 23,
+    "bbox4x": [
+     786,
+     985,
+     834,
+     1036
+    ]
+   }
+  },
+  {
+   "cluster": "028be5320c",
+   "label": "扁",
+   "occurrences": 3,
+   "fonts": {
+    "RyuminPr6-Regular.": 3
+   },
+   "sample": {
+    "exam": 114,
+    "session": "AM",
+    "page": 22,
+    "bbox4x": [
+     1370,
+     1082,
+     1418,
+     1132
+    ]
+   }
+  },
+  {
+   "cluster": "d6fa5567e5",
+   "label": "倦",
+   "occurrences": 3,
+   "fonts": {
+    "RyuminPr6-Regular": 3
+   },
+   "sample": {
+    "exam": 113,
+    "session": "PM",
+    "page": 40,
+    "bbox4x": [
+     954,
+     1949,
+     1002,
+     2000
+    ]
+   }
+  },
+  {
+   "cluster": "736d40a394",
+   "label": "4",
+   "occurrences": 2,
+   "fonts": {
+    "RyuminPr6-Regular.": 2
+   },
+   "sample": {
+    "exam": 114,
+    "session": "PM",
+    "page": 1,
+    "bbox4x": [
+     1399,
+     1949,
+     1448,
+     2000
+    ]
+   }
+  },
+  {
+   "cluster": "d430739383",
+   "label": "〉",
+   "occurrences": 2,
+   "fonts": {
+    "RyuminPr6-Regular": 2
+   },
+   "sample": {
+    "exam": 114,
+    "session": "PM",
+    "page": 14,
+    "bbox4x": [
+     1455,
+     2527,
+     1479,
+     2578
+    ]
+   }
+  },
+  {
+   "cluster": "a458eaeb81",
+   "label": "鞘",
+   "occurrences": 2,
+   "fonts": {
+    "RyuminPr6-Regular": 2
+   },
+   "sample": {
+    "exam": 113,
+    "session": "AM",
+    "page": 13,
+    "bbox4x": [
+     737,
+     1756,
+     786,
+     1807
+    ]
+   }
+  },
+  {
+   "cluster": "6e363de87f",
+   "label": "溢",
+   "occurrences": 1,
+   "fonts": {
+    "RyuminPr6-Regular": 1
+   },
+   "sample": {
+    "exam": 114,
+    "session": "AM",
+    "page": 11,
+    "bbox4x": [
+     497,
+     2431,
+     545,
+     2482
+    ]
+   }
+  },
+  {
+   "cluster": "ce1ea3d4b0",
+   "label": "〈",
+   "occurrences": 1,
+   "fonts": {
+    "RyuminPr6-Regular": 1
+   },
+   "sample": {
+    "exam": 114,
+    "session": "AM",
+    "page": 28,
+    "bbox4x": [
+     690,
+     359,
+     706,
+     392
+    ]
+   }
+  },
+  {
+   "cluster": "87164557c3",
+   "label": "〉",
+   "occurrences": 1,
+   "fonts": {
+    "RyuminPr6-Regular": 1
+   },
+   "sample": {
+    "exam": 114,
+    "session": "AM",
+    "page": 28,
+    "bbox4x": [
+     969,
+     359,
+     985,
+     392
+    ]
+   }
+  },
+  {
+   "cluster": "366d411179",
+   "label": "〈",
+   "occurrences": 1,
+   "fonts": {
+    "RyuminPr6-Regular": 1
+   },
+   "sample": {
+    "exam": 114,
+    "session": "PM",
+    "page": 14,
+    "bbox4x": [
+     1027,
+     2527,
+     1051,
+     2578
+    ]
+   }
+  },
+  {
+   "cluster": "4898db64f4",
+   "label": "）",
+   "occurrences": 1,
+   "fonts": {
+    "RyuminPr6-Regular": 1
+   },
+   "sample": {
+    "exam": 114,
+    "session": "PM",
+    "page": 49,
+    "bbox4x": [
+     624,
+     1564,
+     648,
+     1614
+    ]
+   }
+  },
+  {
+   "cluster": "87e9930548",
+   "label": "牙",
+   "occurrences": 1,
+   "fonts": {
+    "RyuminPr6-Regular.": 1
+   },
+   "sample": {
+    "exam": 113,
+    "session": "AM",
+    "page": 23,
+    "bbox4x": [
+     545,
+     1853,
+     593,
+     1903
+    ]
+   }
+  }
+ ],
+ "editCount": {
+  "questions": 250,
+  "fields": 390
+ },
+ "questions": [
+  {
+   "id": "K114-AM003",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "令和元年 2019 年!の国民健康・栄養調査で、運動習慣のある割合が最も高いの はどれか。",
+     "after": "令和元年 （2019 年）の国民健康・栄養調査で、運動習慣のある割合が最も高いの はどれか。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM009",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "choices[0]",
+     "before": "Kaup?カウプC指数",
+     "after": "Kaup〈カウプ〉指数",
+     "method": "repaired"
+    },
+    {
+     "field": "choices[1]",
+     "before": "Rohrer?ローレルC指数",
+     "after": "Rohrer〈ローレル〉指数",
+     "method": "repaired"
+    },
+    {
+     "field": "choices[2]",
+     "before": "Tanner?タナーCの分類",
+     "after": "Tanner〈タナー〉の分類",
+     "method": "repaired"
+    },
+    {
+     "field": "choices[3]",
+     "before": "Scammon?スキャモンCの発育曲線",
+     "after": "Scammon〈スキャモン〉の発育曲線",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM013",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "心電図波形 別冊No. 1!を別に示す。 心室頻拍はどれか。 ventricular tachycardia",
+     "after": "心電図波形 （別冊No. 1）を別に示す。 心室頻拍はどれか。 ventricular tachycardia",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM018",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "抗癌薬の副作用 有害事象!で骨髄抑制によるものはどれか。",
+     "after": "抗癌薬の副作用 （有害事象）で骨髄抑制によるものはどれか。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM019",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "choices[0]",
+     "before": "É流性尿失禁 overflow incontinence of urine",
+     "after": "溢流性尿失禁 overflow incontinence of urine",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM022",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "空気感染 飛沫核感染!の予防策はどれか。",
+     "after": "空気感染 （飛沫核感染）の予防策はどれか。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM027",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "規則的な日常生活を送っている成人で、血中濃度が日のうち起床時に最も高く なるのはどれか。",
+     "after": "規則的な日常生活を送っている成人で、血中濃度が1日のうち起床時に最も高く なるのはどれか。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM030",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "胎生週の発生過程にある胚子の横断面を図に示す。 A から分化するのはどれか。",
+     "after": "胎生3週の発生過程にある胚子の横断面を図に示す。 A から分化するのはどれか。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM032",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "令和年 2020 年!の患者調査における入院医療で正しいのはどれか。",
+     "after": "令和2年 （2020 年）の患者調査における入院医療で正しいのはどれか。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM033",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "令和元年 2019 年!の国民健康・栄養調査で正しいのはどれか。",
+     "after": "令和元年 （2019 年）の国民健康・栄養調査で正しいのはどれか。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM037",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "choices[2]",
+     "before": "分間に 20 回のペースで行う。",
+     "after": "1分間に 20 回のペースで行う。",
+     "method": "edge_repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM038",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "choices[3]",
+     "before": "慢性閉塞性肺疾患?COPDC chronic obstructive pulmonary disease",
+     "after": "慢性閉塞性肺疾患〈COPD〉 chronic obstructive pulmonary disease",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM041",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "一次救命処置?BLSCで回復体位はどれか。",
+     "after": "一次救命処置〈BLS〉で回復体位はどれか。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM043",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "choices[0]",
+     "before": "地域生活支援事業のつとして位置付けられる。",
+     "after": "地域生活支援事業の1つとして位置付けられる。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM045",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "A さん 78 歳、女性!は認知症があり、認知症高齢者の日常生活自立度判定基準 dementia Ⅰである。人で暮らしており、かかりつけの医師から処方された複数の内服薬を 日回服用している。嚥下障害はない。A さんは｢薬がたくさんあって、余る薬 もあるのよ｣と訪問看護師に話した。 このときの服薬管理で適切なのはどれか。",
+     "after": "A さん （78 歳、女性）は認知症があり、認知症高齢者の日常生活自立度判定基準 dementia Ⅰである。1人で暮らしており、かかりつけの医師から処方された複数の内服薬を 1日3回服用している。嚥下障害はない。A さんは｢薬がたくさんあって、余る薬 もあるのよ｣と訪問看護師に話した。 このときの服薬管理で適切なのはどれか。",
+     "method": "segment_ok"
+    },
+    {
+     "field": "choices[3]",
+     "before": "複数の内服薬をつの箱にまとめて保管する。",
+     "after": "複数の内服薬を1つの箱にまとめて保管する。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM047",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "choices[3]",
+     "before": "抗利尿ホルモン?ADHCの分泌が低下する。",
+     "after": "抗利尿ホルモン〈ADH〉の分泌が低下する。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM049",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "choices[1]",
+     "before": "がん性痛",
+     "after": "がん性疼痛",
+     "method": "repaired"
+    },
+    {
+     "field": "choices[3]",
+     "before": "末ç神経障害",
+     "after": "末梢神経障害",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM051",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "A さん 27 歳、男性!は、突然の胸痛と呼吸困難があり、救急外来を受診した。 意識は清明。身長 179 cm、体重 63 kg、胸郭は平である。20 歳から日 50 本の 喫煙をしている。バイタルサインは、体温 36.1 ℃、呼吸数 22/分、経皮的動脈血 酸素飽和度 SpO2!96 % room air!である。 胸部 CT 別冊No. 2!を示す。 A さんの所見から考えられるのはどれか。",
+     "after": "A さん （27 歳、男性）は、突然の胸痛と呼吸困難があり、救急外来を受診した。 意識は清明。身長 179 cm、体重 63 kg、胸郭は扁平である。20 歳から1日 50 本の 喫煙をしている。バイタルサインは、体温 36.1 ℃、呼吸数 22/分、経皮的動脈血 酸素飽和度 （SpO2）96 % （room air）である。 胸部 CT （別冊No. 2）を示す。 A さんの所見から考えられるのはどれか。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM052",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "choices[0]",
+     "before": "Magendie?マジャンディーC孔",
+     "after": "Magendie〈マジャンディー〉孔",
+     "method": "repaired"
+    },
+    {
+     "field": "choices[1]",
+     "before": "Winslow?ウインスローC孔",
+     "after": "Winslow〈ウインスロー〉孔",
+     "method": "repaired"
+    },
+    {
+     "field": "choices[2]",
+     "before": "Luschka?ルシュカC孔",
+     "after": "Luschka〈ルシュカ〉孔",
+     "method": "repaired"
+    },
+    {
+     "field": "choices[3]",
+     "before": "Monro?モンローC孔",
+     "after": "Monro〈モンロー〉孔",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM054",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "成人の骨髄検査の刺部位を図に示す。 正しいのはどれか。",
+     "after": "成人の骨髄検査の穿刺部位を図に示す。 正しいのはどれか。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM057",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "令和年度 2021 年度!の高齢者虐待の防止、高齢者の養護者に対する支援等に 関する法律に基づく対応状況等に関する調査で、養介護施設従事者等による高齢者 虐待について正しいのはどれか。",
+     "after": "令和3年度 （2021 年度）の高齢者虐待の防止、高齢者の養護者に対する支援等に 関する法律に基づく対応状況等に関する調査で、養介護施設従事者等による高齢者 虐待について正しいのはどれか。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM058",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "choices[3]",
+     "before": "認知症対応型共同生活介護?グループホームC",
+     "after": "認知症対応型共同生活介護〈グループホーム〉",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM060",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "choices[1]",
+     "before": "入所対象者は要介護以上である。",
+     "after": "入所対象者は要介護3以上である。",
+     "method": "repaired"
+    },
+    {
+     "field": "choices[3]",
+     "before": "看護職員数は入所者 100 人当たり人である。",
+     "after": "看護職員数は入所者 100 人当たり3人である。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM062",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "一次性の夜尿症で通院中の歳の女児。 nocturnal enuresis 保護者への生活のアドバイスで適切なのはどれか。",
+     "after": "一次性の夜尿症で通院中の7歳の女児。 nocturnal enuresis 保護者への生活のアドバイスで適切なのはどれか。",
+     "method": "segment_ok"
+    },
+    {
+     "field": "choices[0]",
+     "before": "｢日に飲む水分の量を減らしましょう｣",
+     "after": "｢1日に飲む水分の量を減らしましょう｣",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM063",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "生後 〜 か月ころの乳児で、親などの特定の人が自分の傍から離れたときに泣 いたり後追いをしたりするのはどれか。",
+     "after": "生後 6〜 8か月ころの乳児で、親などの特定の人が自分の傍から離れたときに泣 いたり後追いをしたりするのはどれか。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM064",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "A 君 歳、男児!は腹痛のため来院し、ネフローゼ症候群と診断され入院した。 nephrotic syndrome ステロイド治療が開始され、本日が日目である。尿量の増加がみられ浮腫が軽減 し、血圧は 128/80 mmHg、尿蛋白袷であった。 A 君に説明する必要があるのはどれか。",
+     "after": "A 君 （6歳、男児）は腹痛のため来院し、ネフローゼ症候群と診断され入院した。 nephrotic syndrome ステロイド治療が開始され、本日が7日目である。尿量の増加がみられ浮腫が軽減 し、血圧は 128/80 mmHg、尿蛋白袷であった。 A 君に説明する必要があるのはどれか。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM066",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "choices[2]",
+     "before": "国際連合?UNCによって提唱されている。",
+     "after": "国際連合〈UN〉によって提唱されている。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM067",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "正期産の時期のノンストレステスト?NSTCで正常なのはどれか。",
+     "after": "正期産の時期のノンストレステスト〈NST〉で正常なのはどれか。",
+     "method": "repaired"
+    },
+    {
+     "field": "choices[0]",
+     "before": "20 分に回以上の一過性頻脈がある。",
+     "after": "20 分に2回以上の一過性頻脈がある。",
+     "method": "repaired"
+    },
+    {
+     "field": "choices[2]",
+     "before": "基線細変動がbpm である。",
+     "after": "基線細変動がbpm 5である。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM068",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "choices[0]",
+     "before": "胎児発育不全?FGRC fetal growth restriction",
+     "after": "胎児発育不全〈FGR〉 fetal growth restriction",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM071",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "choices[1]",
+     "before": "退行現象のつである。",
+     "after": "退行現象の1つである。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM072",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "社会生活技能訓練?SSTCについて正しいのはどれか。",
+     "after": "社会生活技能訓練〈SST〉について正しいのはどれか。",
+     "method": "segment_ok"
+    },
+    {
+     "field": "choices[0]",
+     "before": "認知行動療法のつである。",
+     "after": "認知行動療法の1つである。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM080",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "choices[4]",
+     "before": "特発性血小板減少性紫斑病?ITPC idiopathic thrombocytopenic purpura",
+     "after": "特発性血小板減少性紫斑病〈ITP〉 idiopathic thrombocytopenic purpura",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM082",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "口渇、多飲、多尿を主訴とする患者が、夜間の排尿が頻回で不眠を訴えている。 日の尿量はL ほどで、尿比重は 1.005、尿浸透圧は 110 mOsm/kg であった。 この症状の原因と考えられるホルモンの内分泌器官はどれか。",
+     "after": "口渇、多飲、多尿を主訴とする患者が、夜間の排尿が頻回で不眠を訴えている。 1日の尿量は5L ほどで、尿比重は 1.005、尿浸透圧は 110 mOsm/kg であった。 この症状の原因と考えられるホルモンの内分泌器官はどれか。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM087",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "障害者の日常生活及び社会生活を総合的に支援するための法律?障害者総合支援 法Cに基づく障害福祉サービスはどれか。2つ選べ。",
+     "after": "障害者の日常生活及び社会生活を総合的に支援するための法律〈障害者総合支援 法〉に基づく障害福祉サービスはどれか。2つ選べ。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM088",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "choices[0]",
+     "before": "ポリオ?急性灰白髄炎C poliomyelitis",
+     "after": "ポリオ〈急性灰白髄炎〉 poliomyelitis",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM091",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "scenario",
+     "before": "A さん 73 歳、女性!は\u0004人で暮らしており、脳梗塞で入院 した。A さんは左半身 cerebral infarction に麻痺があり、認知機能障害はない。\u0006点杖を使用して歩行が可能となり、住宅改修 をして自宅に退院した。退院後は、降圧薬と抗血栓薬が処方され、服薬管理と健康管 理の目的で訪問看護を週\u0004回、調理と買い物代行の目的で訪問介護を週\u0004回利用して いる。A さんは｢昨日、退院して初めて\u0004人で買い物に行ったら転びそうになって、 横にいた人に支えてもらったんです｣と訪問看護師に話した。",
+     "after": "A さん （73 歳、女性）は1人で暮らしており、脳梗塞で入院 した。A さんは左半身 cerebral infarction に麻痺があり、認知機能障害はない。4点杖を使用して歩行が可能となり、住宅改修 をして自宅に退院した。退院後は、降圧薬と抗血栓薬が処方され、服薬管理と健康管 理の目的で訪問看護を週1回、調理と買い物代行の目的で訪問介護を週1回利用して いる。A さんは｢昨日、退院して初めて1人で買い物に行ったら転びそうになって、 横にいた人に支えてもらったんです｣と訪問看護師に話した。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM092",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "退院からか月後、A さんは杖歩行が安定し、時間をかけて調理や買い物を自 分で行うようになった。看護師が訪問したとき、A さんから｢最近トイレに間に合 わずに尿が漏れてしまうことがあるんです。恥ずかしいので排泄だけは人の世話に なりたくないんです。良い方法があれば教えてください｣と相談された。 このときの訪問看護師の A さんへの助言で最も適切なのはどれか。",
+     "after": "退院から2か月後、A さんは杖歩行が安定し、時間をかけて調理や買い物を自 分で行うようになった。看護師が訪問したとき、A さんから｢最近トイレに間に合 わずに尿が漏れてしまうことがあるんです。恥ずかしいので排泄だけは人の世話に なりたくないんです。良い方法があれば教えてください｣と相談された。 このときの訪問看護師の A さんへの助言で最も適切なのはどれか。",
+     "method": "repaired"
+    },
+    {
+     "field": "scenario",
+     "before": "A さん 73 歳、女性!は\u0004人で暮らしており、脳梗塞で入院 した。A さんは左半身 cerebral infarction に麻痺があり、認知機能障害はない。\u0006点杖を使用して歩行が可能となり、住宅改修 をして自宅に退院した。退院後は、降圧薬と抗血栓薬が処方され、服薬管理と健康管 理の目的で訪問看護を週\u0004回、調理と買い物代行の目的で訪問介護を週\u0004回利用して いる。A さんは｢昨日、退院して初めて\u0004人で買い物に行ったら転びそうになって、 横にいた人に支えてもらったんです｣と訪問看護師に話した。",
+     "after": "A さん （73 歳、女性）は1人で暮らしており、脳梗塞で入院 した。A さんは左半身 cerebral infarction に麻痺があり、認知機能障害はない。4点杖を使用して歩行が可能となり、住宅改修 をして自宅に退院した。退院後は、降圧薬と抗血栓薬が処方され、服薬管理と健康管 理の目的で訪問看護を週1回、調理と買い物代行の目的で訪問介護を週1回利用して いる。A さんは｢昨日、退院して初めて1人で買い物に行ったら転びそうになって、 横にいた人に支えてもらったんです｣と訪問看護師に話した。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM093",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "退院からか月後、A さんはテレビを見て過ごす時間が多くなった。｢買い物や 調理が面倒になって、同じものばかり作っています｣と言い｢退院したころは毎日排 便があったのに、最近便秘気味ですっきりしないんです｣と訴えた。 訪問看護師の対応で最も適切なのはどれか。",
+     "after": "退院から3か月後、A さんはテレビを見て過ごす時間が多くなった。｢買い物や 調理が面倒になって、同じものばかり作っています｣と言い｢退院したころは毎日排 便があったのに、最近便秘気味ですっきりしないんです｣と訴えた。 訪問看護師の対応で最も適切なのはどれか。",
+     "method": "repaired"
+    },
+    {
+     "field": "scenario",
+     "before": "A さん 73 歳、女性!は\u0004人で暮らしており、脳梗塞で入院 した。A さんは左半身 cerebral infarction に麻痺があり、認知機能障害はない。\u0006点杖を使用して歩行が可能となり、住宅改修 をして自宅に退院した。退院後は、降圧薬と抗血栓薬が処方され、服薬管理と健康管 理の目的で訪問看護を週\u0004回、調理と買い物代行の目的で訪問介護を週\u0004回利用して いる。A さんは｢昨日、退院して初めて\u0004人で買い物に行ったら転びそうになって、 横にいた人に支えてもらったんです｣と訪問看護師に話した。",
+     "after": "A さん （73 歳、女性）は1人で暮らしており、脳梗塞で入院 した。A さんは左半身 cerebral infarction に麻痺があり、認知機能障害はない。4点杖を使用して歩行が可能となり、住宅改修 をして自宅に退院した。退院後は、降圧薬と抗血栓薬が処方され、服薬管理と健康管 理の目的で訪問看護を週1回、調理と買い物代行の目的で訪問介護を週1回利用して いる。A さんは｢昨日、退院して初めて1人で買い物に行ったら転びそうになって、 横にいた人に支えてもらったんです｣と訪問看護師に話した。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM094",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "scenario",
+     "before": "A さん 56 歳、女性、主婦!は、食後に冷汗を伴う腹痛があり外来を受診した。腹 部超音波検査の結果、胆石症と診断され、腹腔鏡下胆囊摘出術の目的で入院した。 cholelithiasis 看護師は手術オリエンテーションで、術後の入院期間は\u0002日と説明した。A さん は、同じ手術を受けた妹が合併症で\u0005週間以上食事もできなかったので、自分も同じ 合併症を発症するかもしれないと心配そうに話した。",
+     "after": "A さん （56 歳、女性、主婦）は、食後に冷汗を伴う腹痛があり外来を受診した。腹 部超音波検査の結果、胆石症と診断され、腹腔鏡下胆囊摘出術の目的で入院した。 cholelithiasis 看護師は手術オリエンテーションで、術後の入院期間は2日と説明した。A さん は、同じ手術を受けた妹が合併症で3週間以上食事もできなかったので、自分も同じ 合併症を発症するかもしれないと心配そうに話した。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM095",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "choices[3]",
+     "before": "動脈血二酸化炭素分圧?PaCO2Cの上昇",
+     "after": "動脈血二酸化炭素分圧〈PaCO2〉の上昇",
+     "method": "repaired"
+    },
+    {
+     "field": "scenario",
+     "before": "A さん 56 歳、女性、主婦!は、食後に冷汗を伴う腹痛があり外来を受診した。腹 部超音波検査の結果、胆石症と診断され、腹腔鏡下胆囊摘出術の目的で入院した。 cholelithiasis 看護師は手術オリエンテーションで、術後の入院期間は\u0002日と説明した。A さん は、同じ手術を受けた妹が合併症で\u0005週間以上食事もできなかったので、自分も同じ 合併症を発症するかもしれないと心配そうに話した。",
+     "after": "A さん （56 歳、女性、主婦）は、食後に冷汗を伴う腹痛があり外来を受診した。腹 部超音波検査の結果、胆石症と診断され、腹腔鏡下胆囊摘出術の目的で入院した。 cholelithiasis 看護師は手術オリエンテーションで、術後の入院期間は2日と説明した。A さん は、同じ手術を受けた妹が合併症で3週間以上食事もできなかったので、自分も同じ 合併症を発症するかもしれないと心配そうに話した。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM096",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "scenario",
+     "before": "A さん 56 歳、女性、主婦!は、食後に冷汗を伴う腹痛があり外来を受診した。腹 部超音波検査の結果、胆石症と診断され、腹腔鏡下胆囊摘出術の目的で入院した。 cholelithiasis 看護師は手術オリエンテーションで、術後の入院期間は\u0002日と説明した。A さん は、同じ手術を受けた妹が合併症で\u0005週間以上食事もできなかったので、自分も同じ 合併症を発症するかもしれないと心配そうに話した。",
+     "after": "A さん （56 歳、女性、主婦）は、食後に冷汗を伴う腹痛があり外来を受診した。腹 部超音波検査の結果、胆石症と診断され、腹腔鏡下胆囊摘出術の目的で入院した。 cholelithiasis 看護師は手術オリエンテーションで、術後の入院期間は2日と説明した。A さん は、同じ手術を受けた妹が合併症で3週間以上食事もできなかったので、自分も同じ 合併症を発症するかもしれないと心配そうに話した。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM097",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "A さんの意識レベルは、ジャパン・コーマ・スケール?JCSCで評価するとどれ か。",
+     "after": "A さんの意識レベルは、ジャパン・コーマ・スケール〈JCS〉で評価するとどれ か。",
+     "method": "repaired"
+    },
+    {
+     "field": "scenario",
+     "before": "A さん 50 歳、女性、会社員!は、職場で激しい頭痛を訴えて倒れ、意識を失って、 救急搬送された。救命救急センター到着時のバイタルサインは、体温 36.7 ℃、呼吸 数 20/分、脈 拍 88/分、血 圧 168/88 mmHg、経 皮 的 動 脈 血 酸 素 飽 和 度 ?SpO2C 98 % room air!であった。閉眼していたので、大声で話しかけると開眼したが、すぐに閉 眼して眠り込んでしまう。",
+     "after": "A さん （50 歳、女性、会社員）は、職場で激しい頭痛を訴えて倒れ、意識を失って、 救急搬送された。救命救急センター到着時のバイタルサインは、体温 36.7 ℃、呼吸 数 20/分、脈 拍 88/分、血 圧 168/88 mmHg、経 皮 的 動 脈 血 酸 素 飽 和 度 〈SpO2〉 98 % （room air）であった。閉眼していたので、大声で話しかけると開眼したが、すぐに閉 眼して眠り込んでしまう。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM098",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "scenario",
+     "before": "A さん 50 歳、女性、会社員!は、職場で激しい頭痛を訴えて倒れ、意識を失って、 救急搬送された。救命救急センター到着時のバイタルサインは、体温 36.7 ℃、呼吸 数 20/分、脈 拍 88/分、血 圧 168/88 mmHg、経 皮 的 動 脈 血 酸 素 飽 和 度 ?SpO2C 98 % room air!であった。閉眼していたので、大声で話しかけると開眼したが、すぐに閉 眼して眠り込んでしまう。",
+     "after": "A さん （50 歳、女性、会社員）は、職場で激しい頭痛を訴えて倒れ、意識を失って、 救急搬送された。救命救急センター到着時のバイタルサインは、体温 36.7 ℃、呼吸 数 20/分、脈 拍 88/分、血 圧 168/88 mmHg、経 皮 的 動 脈 血 酸 素 飽 和 度 〈SpO2〉 98 % （room air）であった。閉眼していたので、大声で話しかけると開眼したが、すぐに閉 眼して眠り込んでしまう。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM099",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "A さんの回復は順調で、後遺症なく退院した。退院か月後の外来で、A さん に生活状況を聞くと、会話に対する反応は鈍く｢この間、尿を漏らしてしまいまし た｣と話した。家族は｢最近物忘れが激しく、歩くのも遅くなりました｣と話した。 看護師が A さんに書類を渡すと、スムーズに受け取り、きれいな文字で名前を書 いた。家族は｢入院前と変わらない字で書けています｣と言った。 A さんに起こっている可能性が高いのはどれか。",
+     "after": "A さんの回復は順調で、後遺症なく退院した。退院1か月後の外来で、A さん に生活状況を聞くと、会話に対する反応は鈍く｢この間、尿を漏らしてしまいまし た｣と話した。家族は｢最近物忘れが激しく、歩くのも遅くなりました｣と話した。 看護師が A さんに書類を渡すと、スムーズに受け取り、きれいな文字で名前を書 いた。家族は｢入院前と変わらない字で書けています｣と言った。 A さんに起こっている可能性が高いのはどれか。",
+     "method": "repaired"
+    },
+    {
+     "field": "choices[3]",
+     "before": "Parkinson?パーキンソンC病 Parkinson disease",
+     "after": "Parkinson〈パーキンソン〉病 Parkinson disease",
+     "method": "repaired"
+    },
+    {
+     "field": "scenario",
+     "before": "A さん 50 歳、女性、会社員!は、職場で激しい頭痛を訴えて倒れ、意識を失って、 救急搬送された。救命救急センター到着時のバイタルサインは、体温 36.7 ℃、呼吸 数 20/分、脈 拍 88/分、血 圧 168/88 mmHg、経 皮 的 動 脈 血 酸 素 飽 和 度 ?SpO2C 98 % room air!であった。閉眼していたので、大声で話しかけると開眼したが、すぐに閉 眼して眠り込んでしまう。",
+     "after": "A さん （50 歳、女性、会社員）は、職場で激しい頭痛を訴えて倒れ、意識を失って、 救急搬送された。救命救急センター到着時のバイタルサインは、体温 36.7 ℃、呼吸 数 20/分、脈 拍 88/分、血 圧 168/88 mmHg、経 皮 的 動 脈 血 酸 素 飽 和 度 〈SpO2〉 98 % （room air）であった。閉眼していたので、大声で話しかけると開眼したが、すぐに閉 眼して眠り込んでしまう。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM100",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "術後日。朝 時の A さんのバイタルサインは、体温 36.5 ℃、呼吸数 18/分、 脈拍 64/分、血圧 120/82 mmHg、経皮的動脈血酸素飽和度?SpO2C97 % room air! であった。膀胱留置カテーテルが挿入されていて夜間の尿の流出は良好であった。 腸蠕動音が確認できたため朝食が開始された。食事時に A さんが顔をしかめてい たため、夜勤の看護師が鎮痛薬の内服を勧めたが A さんは｢痛みはそれほど強くな い｣と言った。朝食後に点滴静脈内注射と吸引式ドレーンが抜去された。 午前 時の看護師の観察項目で優先度が高いのはどれか。",
+     "after": "術後1日。朝 6時の A さんのバイタルサインは、体温 36.5 ℃、呼吸数 18/分、 脈拍 64/分、血圧 120/82 mmHg、経皮的動脈血酸素飽和度〈SpO2〉97 % （room air） であった。膀胱留置カテーテルが挿入されていて夜間の尿の流出は良好であった。 腸蠕動音が確認できたため朝食が開始された。食事時に A さんが顔をしかめてい たため、夜勤の看護師が鎮痛薬の内服を勧めたが A さんは｢痛みはそれほど強くな い｣と言った。朝食後に点滴静脈内注射と吸引式ドレーンが抜去された。 午前 9時の看護師の観察項目で優先度が高いのはどれか。",
+     "method": "repaired"
+    },
+    {
+     "field": "scenario",
+     "before": "A さん 87 歳、女性!は\u0004人で暮らしている。難聴のため補聴器を使用している。 自宅で転倒して痛みで起き上がれなくなり、救急搬送され入院した。搬送先の病院で 右大ô骨頸部骨折と診断され、全身麻酔下で人工骨頭置換術を受けた。術後は前腕部 femoral neck fracture に点滴静脈内注射と右大ôの創部に吸引式ドレーンが一本挿入されている。 手術直後の検査所見：赤血球 410 万/μL、白血球 7800/μL、Hb 12.0 g/dL、総蛋白 6.5 g/dL、ア ル ブ ミ ン 4.0 g/dL、尿 素 窒 素 20 mg/dL、Na 145 mEq/L、K 3.8 mEq/L。 術後のドレーン出血量は少量である。創部痛に対して非ステロイド性抗炎症薬の坐薬 と内服が処方され、手術当日の 21 時に坐薬を使用した。",
+     "after": "A さん （87 歳、女性）は1人で暮らしている。難聴のため補聴器を使用している。 自宅で転倒して痛みで起き上がれなくなり、救急搬送され入院した。搬送先の病院で 右大腿骨頸部骨折と診断され、全身麻酔下で人工骨頭置換術を受けた。術後は前腕部 femoral neck fracture に点滴静脈内注射と右大腿の創部に吸引式ドレーンが一本挿入されている。 手術直後の検査所見：赤血球 410 万/μL、白血球 7800/μL、Hb 12.0 g/dL、総蛋白 6.5 g/dL、ア ル ブ ミ ン 4.0 g/dL、尿 素 窒 素 20 mg/dL、Na 145 mEq/L、K 3.8 mEq/L。 術後のドレーン出血量は少量である。創部痛に対して非ステロイド性抗炎症薬の坐薬 と内服が処方され、手術当日の 21 時に坐薬を使用した。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM101",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "scenario",
+     "before": "A さん 87 歳、女性!は\u0004人で暮らしている。難聴のため補聴器を使用している。 自宅で転倒して痛みで起き上がれなくなり、救急搬送され入院した。搬送先の病院で 右大ô骨頸部骨折と診断され、全身麻酔下で人工骨頭置換術を受けた。術後は前腕部 femoral neck fracture に点滴静脈内注射と右大ôの創部に吸引式ドレーンが一本挿入されている。 手術直後の検査所見：赤血球 410 万/μL、白血球 7800/μL、Hb 12.0 g/dL、総蛋白 6.5 g/dL、ア ル ブ ミ ン 4.0 g/dL、尿 素 窒 素 20 mg/dL、Na 145 mEq/L、K 3.8 mEq/L。 術後のドレーン出血量は少量である。創部痛に対して非ステロイド性抗炎症薬の坐薬 と内服が処方され、手術当日の 21 時に坐薬を使用した。",
+     "after": "A さん （87 歳、女性）は1人で暮らしている。難聴のため補聴器を使用している。 自宅で転倒して痛みで起き上がれなくなり、救急搬送され入院した。搬送先の病院で 右大腿骨頸部骨折と診断され、全身麻酔下で人工骨頭置換術を受けた。術後は前腕部 femoral neck fracture に点滴静脈内注射と右大腿の創部に吸引式ドレーンが一本挿入されている。 手術直後の検査所見：赤血球 410 万/μL、白血球 7800/μL、Hb 12.0 g/dL、総蛋白 6.5 g/dL、ア ル ブ ミ ン 4.0 g/dL、尿 素 窒 素 20 mg/dL、Na 145 mEq/L、K 3.8 mEq/L。 術後のドレーン出血量は少量である。創部痛に対して非ステロイド性抗炎症薬の坐薬 と内服が処方され、手術当日の 21 時に坐薬を使用した。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM102",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "術後週。A さんは杖歩行の練習をしている。見守りをする看護師に｢早く家に 帰りたいけど、また転びそうで怖いし、元のように歩ける自信がない｣と話した。 A さんへの声かけで最も適切なのはどれか。",
+     "after": "術後2週。A さんは杖歩行の練習をしている。見守りをする看護師に｢早く家に 帰りたいけど、また転びそうで怖いし、元のように歩ける自信がない｣と話した。 A さんへの声かけで最も適切なのはどれか。",
+     "method": "repaired"
+    },
+    {
+     "field": "scenario",
+     "before": "A さん 87 歳、女性!は\u0004人で暮らしている。難聴のため補聴器を使用している。 自宅で転倒して痛みで起き上がれなくなり、救急搬送され入院した。搬送先の病院で 右大ô骨頸部骨折と診断され、全身麻酔下で人工骨頭置換術を受けた。術後は前腕部 femoral neck fracture に点滴静脈内注射と右大ôの創部に吸引式ドレーンが一本挿入されている。 手術直後の検査所見：赤血球 410 万/μL、白血球 7800/μL、Hb 12.0 g/dL、総蛋白 6.5 g/dL、ア ル ブ ミ ン 4.0 g/dL、尿 素 窒 素 20 mg/dL、Na 145 mEq/L、K 3.8 mEq/L。 術後のドレーン出血量は少量である。創部痛に対して非ステロイド性抗炎症薬の坐薬 と内服が処方され、手術当日の 21 時に坐薬を使用した。",
+     "after": "A さん （87 歳、女性）は1人で暮らしている。難聴のため補聴器を使用している。 自宅で転倒して痛みで起き上がれなくなり、救急搬送され入院した。搬送先の病院で 右大腿骨頸部骨折と診断され、全身麻酔下で人工骨頭置換術を受けた。術後は前腕部 femoral neck fracture に点滴静脈内注射と右大腿の創部に吸引式ドレーンが一本挿入されている。 手術直後の検査所見：赤血球 410 万/μL、白血球 7800/μL、Hb 12.0 g/dL、総蛋白 6.5 g/dL、ア ル ブ ミ ン 4.0 g/dL、尿 素 窒 素 20 mg/dL、Na 145 mEq/L、K 3.8 mEq/L。 術後のドレーン出血量は少量である。創部痛に対して非ステロイド性抗炎症薬の坐薬 と内服が処方され、手術当日の 21 時に坐薬を使用した。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM103",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "入院日、A さんは全身状態が落ち着いてきたため、主治医から離床開始の指 示があった。 A さんの離床開始時の観察項目で優先度が高いのはどれか。",
+     "after": "入院2日、A さんは全身状態が落ち着いてきたため、主治医から離床開始の指 示があった。 A さんの離床開始時の観察項目で優先度が高いのはどれか。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM104",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "入院日。A さんは座位訓練の後、車椅子に座って食事を摂取することになっ た。食事動作は自助具を使用すれば少しずつ自分で摂取できるようになったが、時 間が経過すると上体が右側に傾くため、体幹の右側にクッションを入れて食事をし ている。 A さんが安定して食事ができるための援助で適切なのはどれか。",
+     "after": "入院5日。A さんは座位訓練の後、車椅子に座って食事を摂取することになっ た。食事動作は自助具を使用すれば少しずつ自分で摂取できるようになったが、時 間が経過すると上体が右側に傾くため、体幹の右側にクッションを入れて食事をし ている。 A さんが安定して食事ができるための援助で適切なのはどれか。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM105",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "入院週、A さんは自宅への退院を目指し、回復期リハビリテーション病棟へ 転棟することになった。A さんは、座位姿勢での右側への傾きが徐々に改善され、 食事や作業療法の時間は車椅子での座位保持が可能になってきた。A さんは看護 師の介助で車椅子に移乗が可能となり、車椅子でトイレに移動できるようになっ た。看護師は A さんの ADL の拡大を目標に、看護計画を修正することにした。 障害高齢者の日常生活自立度 寝たきり度!判定基準における評価で、A さんの 生活状況はどれか。",
+     "after": "入院2週、A さんは自宅への退院を目指し、回復期リハビリテーション病棟へ 転棟することになった。A さんは、座位姿勢での右側への傾きが徐々に改善され、 食事や作業療法の時間は車椅子での座位保持が可能になってきた。A さんは看護 師の介助で車椅子に移乗が可能となり、車椅子でトイレに移動できるようになっ た。看護師は A さんの ADL の拡大を目標に、看護計画を修正することにした。 障害高齢者の日常生活自立度 （寝たきり度）判定基準における評価で、A さんの 生活状況はどれか。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM106",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "scenario",
+     "before": "A ちゃん \u0004歳\u0006か月、女児!は、午前 時ころ、ポータブル型のゲーム機用の直 径 10 mm のボタン型電池を誤飲し、午前 10 時に両親に付き添われ外来を受診した。 看護師が A ちゃんを観察すると、機嫌は良くバイタルサインも安定していた。A ちゃんに成長や発達の遅れはない。 待合室には A ちゃんの他に\u0005人の患児が診察を待っていた。それぞれは以下のと おりである。 B 君 \u0004歳\u0005か月、男児!：今朝、カーペットの敷かれたフロアで歩行中に転倒。バイ タルサインは正常、顔色良好。母親に抱っこされて遊んで いる。 C ちゃん \u0005歳、女児!：体温 39.5 ℃、呼吸数 23/分、脈拍 100/分、鼻汁多量、機嫌 良好、顔色良好。 D 君 か月、男児!：自宅で痙攣したため受診。初めての痙攣で、\u0007分間継続した が、受診時には止まっている。待合室にて\u0005回の嘔吐。体温 38.7 ℃。声かけで開眼するが、すぐにうとうとする。",
+     "after": "A ちゃん （1歳4か月、女児）は、午前 9時ころ、ポータブル型のゲーム機用の直 径 10 mm のボタン型電池を誤飲し、午前 10 時に両親に付き添われ外来を受診した。 看護師が A ちゃんを観察すると、機嫌は良くバイタルサインも安定していた。A ちゃんに成長や発達の遅れはない。 待合室には A ちゃんの他に3人の患児が診察を待っていた。それぞれは以下のと おりである。 B 君 （1歳3か月、男児）：今朝、カーペットの敷かれたフロアで歩行中に転倒。バイ タルサインは正常、顔色良好。母親に抱っこされて遊んで いる。 C ちゃん （3歳、女児）：体温 39.5 ℃、呼吸数 23/分、脈拍 100/分、鼻汁多量、機嫌 良好、顔色良好。 D 君 （9か月、男児）：自宅で痙攣したため受診。初めての痙攣で、5分間継続した が、受診時には止まっている。待合室にて3回の嘔吐。体温 38.7 ℃。声かけで開眼するが、すぐにうとうとする。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM107",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "A ちゃんは、腹部エックス線撮影で胃内にボタン型電池が認められ、全身麻酔 下での内視鏡でボタン型電池を摘出し、消化管粘膜に大きな問題はなかった。摘出 後、小児病棟に泊入院した。小児病棟に入院時間後、看護師が訪室すると A ちゃんは覚醒しており、図 別冊No. 3!のように｢ママー、ママー｣と言いながら大 声で泣き、ベッドから両親の方に手を伸ばしている。両親は戸惑った様子で、ベッ ドの傍に立っている。 このときの看護師による安全な療養環境の整備で適切なのはどれか。2つ選べ。",
+     "after": "A ちゃんは、腹部エックス線撮影で胃内にボタン型電池が認められ、全身麻酔 下での内視鏡でボタン型電池を摘出し、消化管粘膜に大きな問題はなかった。摘出 後、小児病棟に1泊入院した。小児病棟に入院1時間後、看護師が訪室すると A ちゃんは覚醒しており、図 （別冊No. 3）のように｢ママー、ママー｣と言いながら大 声で泣き、ベッドから両親の方に手を伸ばしている。両親は戸惑った様子で、ベッ ドの傍に立っている。 このときの看護師による安全な療養環境の整備で適切なのはどれか。2つ選べ。",
+     "method": "repaired"
+    },
+    {
+     "field": "scenario",
+     "before": "A ちゃん \u0004歳\u0006か月、女児!は、午前 時ころ、ポータブル型のゲーム機用の直 径 10 mm のボタン型電池を誤飲し、午前 10 時に両親に付き添われ外来を受診した。 看護師が A ちゃんを観察すると、機嫌は良くバイタルサインも安定していた。A ちゃんに成長や発達の遅れはない。 待合室には A ちゃんの他に\u0005人の患児が診察を待っていた。それぞれは以下のと おりである。 B 君 \u0004歳\u0005か月、男児!：今朝、カーペットの敷かれたフロアで歩行中に転倒。バイ タルサインは正常、顔色良好。母親に抱っこされて遊んで いる。 C ちゃん \u0005歳、女児!：体温 39.5 ℃、呼吸数 23/分、脈拍 100/分、鼻汁多量、機嫌 良好、顔色良好。 D 君 か月、男児!：自宅で痙攣したため受診。初めての痙攣で、\u0007分間継続した が、受診時には止まっている。待合室にて\u0005回の嘔吐。体温 38.7 ℃。声かけで開眼するが、すぐにうとうとする。",
+     "after": "A ちゃん （1歳4か月、女児）は、午前 9時ころ、ポータブル型のゲーム機用の直 径 10 mm のボタン型電池を誤飲し、午前 10 時に両親に付き添われ外来を受診した。 看護師が A ちゃんを観察すると、機嫌は良くバイタルサインも安定していた。A ちゃんに成長や発達の遅れはない。 待合室には A ちゃんの他に3人の患児が診察を待っていた。それぞれは以下のと おりである。 B 君 （1歳3か月、男児）：今朝、カーペットの敷かれたフロアで歩行中に転倒。バイ タルサインは正常、顔色良好。母親に抱っこされて遊んで いる。 C ちゃん （3歳、女児）：体温 39.5 ℃、呼吸数 23/分、脈拍 100/分、鼻汁多量、機嫌 良好、顔色良好。 D 君 （9か月、男児）：自宅で痙攣したため受診。初めての痙攣で、5分間継続した が、受診時には止まっている。待合室にて3回の嘔吐。体温 38.7 ℃。声かけで開眼するが、すぐにうとうとする。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM108",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "choices[3]",
+     "before": "大きさがcm よりも小さいものは A ちゃんの手が届かないところに置くこ と",
+     "after": "大きさが4cm よりも小さいものは A ちゃんの手が届かないところに置くこ と",
+     "method": "repaired"
+    },
+    {
+     "field": "scenario",
+     "before": "A ちゃん \u0004歳\u0006か月、女児!は、午前 時ころ、ポータブル型のゲーム機用の直 径 10 mm のボタン型電池を誤飲し、午前 10 時に両親に付き添われ外来を受診した。 看護師が A ちゃんを観察すると、機嫌は良くバイタルサインも安定していた。A ちゃんに成長や発達の遅れはない。 待合室には A ちゃんの他に\u0005人の患児が診察を待っていた。それぞれは以下のと おりである。 B 君 \u0004歳\u0005か月、男児!：今朝、カーペットの敷かれたフロアで歩行中に転倒。バイ タルサインは正常、顔色良好。母親に抱っこされて遊んで いる。 C ちゃん \u0005歳、女児!：体温 39.5 ℃、呼吸数 23/分、脈拍 100/分、鼻汁多量、機嫌 良好、顔色良好。 D 君 か月、男児!：自宅で痙攣したため受診。初めての痙攣で、\u0007分間継続した が、受診時には止まっている。待合室にて\u0005回の嘔吐。体温 38.7 ℃。声かけで開眼するが、すぐにうとうとする。",
+     "after": "A ちゃん （1歳4か月、女児）は、午前 9時ころ、ポータブル型のゲーム機用の直 径 10 mm のボタン型電池を誤飲し、午前 10 時に両親に付き添われ外来を受診した。 看護師が A ちゃんを観察すると、機嫌は良くバイタルサインも安定していた。A ちゃんに成長や発達の遅れはない。 待合室には A ちゃんの他に3人の患児が診察を待っていた。それぞれは以下のと おりである。 B 君 （1歳3か月、男児）：今朝、カーペットの敷かれたフロアで歩行中に転倒。バイ タルサインは正常、顔色良好。母親に抱っこされて遊んで いる。 C ちゃん （3歳、女児）：体温 39.5 ℃、呼吸数 23/分、脈拍 100/分、鼻汁多量、機嫌 良好、顔色良好。 D 君 （9か月、男児）：自宅で痙攣したため受診。初めての痙攣で、5分間継続した が、受診時には止まっている。待合室にて3回の嘔吐。体温 38.7 ℃。声かけで開眼するが、すぐにうとうとする。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM109",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "choices[2]",
+     "before": "｢週回バスケットボールをやりましょう｣",
+     "after": "｢週1回バスケットボールをやりましょう｣",
+     "method": "repaired"
+    },
+    {
+     "field": "scenario",
+     "before": "A さん 41 歳、初妊婦、会社員!は夫 42 歳、会社員!と\u0002人で暮らしている。身長 は 158 cm、非妊時体重 55 kg である。A さんは妊娠 16 週\u0005日に妊婦健康診査を受診 し順調な経過と診断された。妊婦健康診査後｢夫から、高齢妊娠だから安静にするよ う言われ、夫が家事をしてくれています。妊娠前はバスケットボールを週に\u0005回、毎 日夕方に夫とウォーキングをしていました。今は仕事に行く以外は、家でなるべく動 かないようにしています｣と A さんが看護師に話した。",
+     "after": "A さん （41 歳、初妊婦、会社員）は夫 （42 歳、会社員）と2人で暮らしている。身長 は 158 cm、非妊時体重 55 kg である。A さんは妊娠 16 週3日に妊婦健康診査を受診 し順調な経過と診断された。妊婦健康診査後｢夫から、高齢妊娠だから安静にするよ う言われ、夫が家事をしてくれています。妊娠前はバスケットボールを週に3回、毎 日夕方に夫とウォーキングをしていました。今は仕事に行く以外は、家でなるべく動 かないようにしています｣と A さんが看護師に話した。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM110",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "A さんは妊娠 24 週 日に妊婦健康診査を受けた。体重 60 kg 妊娠 20 週の体重 は 58 kg!。血 圧 138/88 mmHg、Hb 10.1 g/dL、Ht 31 %、尿 蛋 白 安!、尿 糖 案! であった。A さんは｢足が重い気がします｣と話すが、脛骨上の圧痕は認めなかっ た。 このときのアセスメントで適切なのはどれか。",
+     "after": "A さんは妊娠 24 週 0日に妊婦健康診査を受けた。体重 60 kg （妊娠 20 週の体重 は 58 kg）。血 圧 138/88 mmHg、Hb 10.1 g/dL、Ht 31 %、尿 蛋 白 （安）、尿 糖 （案） であった。A さんは｢足が重い気がします｣と話すが、脛骨上の圧痕は認めなかっ た。 このときのアセスメントで適切なのはどれか。",
+     "method": "repaired"
+    },
+    {
+     "field": "scenario",
+     "before": "A さん 41 歳、初妊婦、会社員!は夫 42 歳、会社員!と\u0002人で暮らしている。身長 は 158 cm、非妊時体重 55 kg である。A さんは妊娠 16 週\u0005日に妊婦健康診査を受診 し順調な経過と診断された。妊婦健康診査後｢夫から、高齢妊娠だから安静にするよ う言われ、夫が家事をしてくれています。妊娠前はバスケットボールを週に\u0005回、毎 日夕方に夫とウォーキングをしていました。今は仕事に行く以外は、家でなるべく動 かないようにしています｣と A さんが看護師に話した。",
+     "after": "A さん （41 歳、初妊婦、会社員）は夫 （42 歳、会社員）と2人で暮らしている。身長 は 158 cm、非妊時体重 55 kg である。A さんは妊娠 16 週3日に妊婦健康診査を受診 し順調な経過と診断された。妊婦健康診査後｢夫から、高齢妊娠だから安静にするよ う言われ、夫が家事をしてくれています。妊娠前はバスケットボールを週に3回、毎 日夕方に夫とウォーキングをしていました。今は仕事に行く以外は、家でなるべく動 かないようにしています｣と A さんが看護師に話した。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM111",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "A さんは夫に付き添われ、妊娠 35 週日に妊婦健康診査を受けた。妊婦健康診 査では、体重 65 kg、血圧 126/76 mmHg。尿蛋白 安!、尿糖 安!。浮腫 案!。子 宮底長 30 cm、腹囲 88 cm で異常を認めなかった。その後、A さんは看護師に｢夕 方になると足がだるくなり、膝の裏を見たら、血管が膨らんで、青く浮き出ていま した｣と言う。 A さんへの指導で適切なのはどれか。",
+     "after": "A さんは夫に付き添われ、妊娠 35 週4日に妊婦健康診査を受けた。妊婦健康診 査では、体重 65 kg、血圧 126/76 mmHg。尿蛋白 （安）、尿糖 （安）。浮腫 （案）。子 宮底長 30 cm、腹囲 88 cm で異常を認めなかった。その後、A さんは看護師に｢夕 方になると足がだるくなり、膝の裏を見たら、血管が膨らんで、青く浮き出ていま した｣と言う。 A さんへの指導で適切なのはどれか。",
+     "method": "repaired"
+    },
+    {
+     "field": "scenario",
+     "before": "A さん 41 歳、初妊婦、会社員!は夫 42 歳、会社員!と\u0002人で暮らしている。身長 は 158 cm、非妊時体重 55 kg である。A さんは妊娠 16 週\u0005日に妊婦健康診査を受診 し順調な経過と診断された。妊婦健康診査後｢夫から、高齢妊娠だから安静にするよ う言われ、夫が家事をしてくれています。妊娠前はバスケットボールを週に\u0005回、毎 日夕方に夫とウォーキングをしていました。今は仕事に行く以外は、家でなるべく動 かないようにしています｣と A さんが看護師に話した。",
+     "after": "A さん （41 歳、初妊婦、会社員）は夫 （42 歳、会社員）と2人で暮らしている。身長 は 158 cm、非妊時体重 55 kg である。A さんは妊娠 16 週3日に妊婦健康診査を受診 し順調な経過と診断された。妊婦健康診査後｢夫から、高齢妊娠だから安静にするよ う言われ、夫が家事をしてくれています。妊娠前はバスケットボールを週に3回、毎 日夕方に夫とウォーキングをしていました。今は仕事に行く以外は、家でなるべく動 かないようにしています｣と A さんが看護師に話した。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM112",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "scenario",
+     "before": "A さん 36 歳、経産婦!は、夫 35 歳!、男児 \u0005歳!と\u0005人で暮らしている。妊娠、 分娩経過は順調で、妊娠 39 週\u0007日で 3,200 g の女児を経腟分娩で出産した。\u0004分後 の Apgar?アプガーCスコア 点、\u0007分後の Apgar?アプガーCスコア 10 点であった。 産褥\u0004日、A さんの子宮底は臍下\u0002横指、硬度良好、悪露は赤色であった。｢\u0004人 目の出産後よりもお腹が痛くて眠れませんでした｣と看護師に話す。",
+     "after": "A さん （36 歳、経産婦）は、夫 （35 歳）、男児 （3歳）と3人で暮らしている。妊娠、 分娩経過は順調で、妊娠 39 週5日で 3,200 g の女児を経腟分娩で出産した。1分後 の Apgar〈アプガー〉スコア 9点、5分後の Apgar〈アプガー〉スコア 10 点であった。 産褥1日、A さんの子宮底は臍下2横指、硬度良好、悪露は赤色であった。｢1人 目の出産後よりもお腹が痛くて眠れませんでした｣と看護師に話す。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM113",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "産褥日、乳房は緊満、乳管開通は左右とも、 本、射乳がある。日 回授 乳をしている。児の体重は 3,080 g で前日よりも 20 g 減少している。｢母乳で育て たいと思っていたけど、乳房が張って授乳がうまくできないです｣と話す。 このときの A さんへの説明で適切なのはどれか。",
+     "after": "産褥3日、乳房は緊満、乳管開通は左右とも5、 6本、射乳がある。1日 8回授 乳をしている。児の体重は 3,080 g で前日よりも 20 g 減少している。｢母乳で育て たいと思っていたけど、乳房が張って授乳がうまくできないです｣と話す。 このときの A さんへの説明で適切なのはどれか。",
+     "method": "repaired"
+    },
+    {
+     "field": "choices[2]",
+     "before": "｢乳房の張りは週間程度続きます｣",
+     "after": "｢乳房の張りは2週間程度続きます｣",
+     "method": "repaired"
+    },
+    {
+     "field": "scenario",
+     "before": "A さん 36 歳、経産婦!は、夫 35 歳!、男児 \u0005歳!と\u0005人で暮らしている。妊娠、 分娩経過は順調で、妊娠 39 週\u0007日で 3,200 g の女児を経腟分娩で出産した。\u0004分後 の Apgar?アプガーCスコア 点、\u0007分後の Apgar?アプガーCスコア 10 点であった。 産褥\u0004日、A さんの子宮底は臍下\u0002横指、硬度良好、悪露は赤色であった。｢\u0004人 目の出産後よりもお腹が痛くて眠れませんでした｣と看護師に話す。",
+     "after": "A さん （36 歳、経産婦）は、夫 （35 歳）、男児 （3歳）と3人で暮らしている。妊娠、 分娩経過は順調で、妊娠 39 週5日で 3,200 g の女児を経腟分娩で出産した。1分後 の Apgar〈アプガー〉スコア 9点、5分後の Apgar〈アプガー〉スコア 10 点であった。 産褥1日、A さんの子宮底は臍下2横指、硬度良好、悪露は赤色であった。｢1人 目の出産後よりもお腹が痛くて眠れませんでした｣と看護師に話す。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM114",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "日 齢 、A さ ん の 児 の 体 重 は 3,100 g。体 温 37.1 ℃、呼 吸 数 48/分、心 拍 数 130/分。経皮ビリルビン 10.0 mg/dL。排尿 回/日、排便 回/日。 児のアセスメントで正しいのはどれか。",
+     "after": "日 齢 4、A さ ん の 児 の 体 重 は 3,100 g。体 温 37.1 ℃、呼 吸 数 48/分、心 拍 数 130/分。経皮ビリルビン 10.0 mg/dL。排尿 9回/日、排便 8回/日。 児のアセスメントで正しいのはどれか。",
+     "method": "repaired"
+    },
+    {
+     "field": "scenario",
+     "before": "A さん 36 歳、経産婦!は、夫 35 歳!、男児 \u0005歳!と\u0005人で暮らしている。妊娠、 分娩経過は順調で、妊娠 39 週\u0007日で 3,200 g の女児を経腟分娩で出産した。\u0004分後 の Apgar?アプガーCスコア 点、\u0007分後の Apgar?アプガーCスコア 10 点であった。 産褥\u0004日、A さんの子宮底は臍下\u0002横指、硬度良好、悪露は赤色であった。｢\u0004人 目の出産後よりもお腹が痛くて眠れませんでした｣と看護師に話す。",
+     "after": "A さん （36 歳、経産婦）は、夫 （35 歳）、男児 （3歳）と3人で暮らしている。妊娠、 分娩経過は順調で、妊娠 39 週5日で 3,200 g の女児を経腟分娩で出産した。1分後 の Apgar〈アプガー〉スコア 9点、5分後の Apgar〈アプガー〉スコア 10 点であった。 産褥1日、A さんの子宮底は臍下2横指、硬度良好、悪露は赤色であった。｢1人 目の出産後よりもお腹が痛くて眠れませんでした｣と看護師に話す。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM117",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "入院か月、A さんは夜間、眠れるようになり、妄想や幻聴の症状が軽減した。 看護師が A さんに薬を自己中断した理由を尋ねたところ｢いろいろとストレスが溜 まると何もしたくなくなり、薬を飲むことも面倒でした。今回の入院で飲み続けた ら嫌な症状もなくなってきました。薬は飲んだほうがよいですね。これからはスト レスを感じても乗り越えていけそうです｣と話した。 A さんの考えに当てはまる概念はどれか。",
+     "after": "入院1か月、A さんは夜間、眠れるようになり、妄想や幻聴の症状が軽減した。 看護師が A さんに薬を自己中断した理由を尋ねたところ｢いろいろとストレスが溜 まると何もしたくなくなり、薬を飲むことも面倒でした。今回の入院で飲み続けた ら嫌な症状もなくなってきました。薬は飲んだほうがよいですね。これからはスト レスを感じても乗り越えていけそうです｣と話した。 A さんの考えに当てはまる概念はどれか。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM118",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "scenario",
+     "before": "A さん 64 歳、男性、外国籍!は、\u0004年前に日本に移住し、娘 36 歳、会社員!と娘 の夫 42 歳、会社員、日本人!と\u0005人家族である。娘の夫は海外に長期出張中で、娘 は日本語での簡単な日常会話はできるが、A さんはほとんど日本語が理解できない。 A さんは、\u0002か月前から時々腰痛があり、市販薬で様子を見ていたが、徐々に腰 痛が強くなり、娘に付き添われて受診した。検査の結果、肺癌と診断され、胸膜と腰 lung cancer 椎への転移が見つかり、\u0002痛コントロールの目的で入院した。",
+     "after": "A さん （64 歳、男性、外国籍）は、1年前に日本に移住し、娘 （36 歳、会社員）と娘 の夫 （42 歳、会社員、日本人）と3人家族である。娘の夫は海外に長期出張中で、娘 は日本語での簡単な日常会話はできるが、A さんはほとんど日本語が理解できない。 A さんは、2か月前から時々腰痛があり、市販薬で様子を見ていたが、徐々に腰 痛が強くなり、娘に付き添われて受診した。検査の結果、肺癌と診断され、胸膜と腰 lung cancer 椎への転移が見つかり、疼痛コントロールの目的で入院した。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM119",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "入院後、医療従事者との日常会話は、電子端末による翻訳を活用している。痛 に対しては、モルヒネ徐放製剤の内服が開始され、レスキュードーズとして、モル ヒネ速放製剤の内服が指示されている。激しい腰痛が日に数回あるが、レス キュードーズを使いたくないと話し痛みを我慢している。 看護師の対応で優先度が高いのはどれか。",
+     "after": "入院後、医療従事者との日常会話は、電子端末による翻訳を活用している。疼痛 に対しては、モルヒネ徐放製剤の内服が開始され、レスキュードーズとして、モル ヒネ速放製剤の内服が指示されている。激しい腰痛が1日に数回あるが、レス キュードーズを使いたくないと話し痛みを我慢している。 看護師の対応で優先度が高いのはどれか。",
+     "method": "repaired"
+    },
+    {
+     "field": "choices[3]",
+     "before": "痛スケールの記載を勧める。",
+     "after": "疼痛スケールの記載を勧める。",
+     "method": "edge_repaired"
+    },
+    {
+     "field": "scenario",
+     "before": "A さん 64 歳、男性、外国籍!は、\u0004年前に日本に移住し、娘 36 歳、会社員!と娘 の夫 42 歳、会社員、日本人!と\u0005人家族である。娘の夫は海外に長期出張中で、娘 は日本語での簡単な日常会話はできるが、A さんはほとんど日本語が理解できない。 A さんは、\u0002か月前から時々腰痛があり、市販薬で様子を見ていたが、徐々に腰 痛が強くなり、娘に付き添われて受診した。検査の結果、肺癌と診断され、胸膜と腰 lung cancer 椎への転移が見つかり、\u0002痛コントロールの目的で入院した。",
+     "after": "A さん （64 歳、男性、外国籍）は、1年前に日本に移住し、娘 （36 歳、会社員）と娘 の夫 （42 歳、会社員、日本人）と3人家族である。娘の夫は海外に長期出張中で、娘 は日本語での簡単な日常会話はできるが、A さんはほとんど日本語が理解できない。 A さんは、2か月前から時々腰痛があり、市販薬で様子を見ていたが、徐々に腰 痛が強くなり、娘に付き添われて受診した。検査の結果、肺癌と診断され、胸膜と腰 lung cancer 椎への転移が見つかり、疼痛コントロールの目的で入院した。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K114-AM120",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "入院 日、痛がコントロールされてきた A さんは｢家に帰りたい｣と希望して いるが、娘は｢仕事もあるし、もう少し病院にいてほしい｣と話している。そこで、 看護師の提案により A さんのアドバンス・ケア・プランニングが行われることに なった。 A さんのアドバンス・ケア・プランニングで適切なのはどれか。",
+     "after": "入院 8日、疼痛がコントロールされてきた A さんは｢家に帰りたい｣と希望して いるが、娘は｢仕事もあるし、もう少し病院にいてほしい｣と話している。そこで、 看護師の提案により A さんのアドバンス・ケア・プランニングが行われることに なった。 A さんのアドバンス・ケア・プランニングで適切なのはどれか。",
+     "method": "repaired"
+    },
+    {
+     "field": "scenario",
+     "before": "A さん 64 歳、男性、外国籍!は、\u0004年前に日本に移住し、娘 36 歳、会社員!と娘 の夫 42 歳、会社員、日本人!と\u0005人家族である。娘の夫は海外に長期出張中で、娘 は日本語での簡単な日常会話はできるが、A さんはほとんど日本語が理解できない。 A さんは、\u0002か月前から時々腰痛があり、市販薬で様子を見ていたが、徐々に腰 痛が強くなり、娘に付き添われて受診した。検査の結果、肺癌と診断され、胸膜と腰 lung cancer 椎への転移が見つかり、\u0002痛コントロールの目的で入院した。",
+     "after": "A さん （64 歳、男性、外国籍）は、1年前に日本に移住し、娘 （36 歳、会社員）と娘 の夫 （42 歳、会社員、日本人）と3人家族である。娘の夫は海外に長期出張中で、娘 は日本語での簡単な日常会話はできるが、A さんはほとんど日本語が理解できない。 A さんは、2か月前から時々腰痛があり、市販薬で様子を見ていたが、徐々に腰 痛が強くなり、娘に付き添われて受診した。検査の結果、肺癌と診断され、胸膜と腰 lung cancer 椎への転移が見つかり、疼痛コントロールの目的で入院した。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM002",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "choices[3]",
+     "before": "悪性新生物¹腫瘍¼ malignant neoplasm",
+     "after": "悪性新生物〈腫瘍〉 malignant neoplasm",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM017",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "choices[3]",
+     "before": "2型糖尿病の治療法として必須である。",
+     "after": "2型糖尿病の治2療法として必須である。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM026",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "choices[2]",
+     "before": "重篤な型糖尿病 type1diabetes mellitus",
+     "after": "重篤な1型糖尿病 type1diabetes mellitus",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM027",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "A 君 15 歳、男子!は、蒸し暑い夏の午後に行われたサッカーの試合に出ていた。 A 君は試合中に大量の汗をかいて、気分が悪くなったので多量の水道水を飲み、 日陰で休んでいたが、突然、意識消失して倒れた。このときの A 君の細胞外液の ナトリウムイオン濃度と水分量の正常時に対する割合を図に示す。 このときの A 君の体液の状態で正しいのはどれか。",
+     "after": "A 君 （15 歳、男子）は、蒸し暑い夏の午後に行われたサッカーの試合に出ていた。 A 君は試合中に大量の汗をかいて、気分が悪くなったので多量の水道水を飲み、 日陰で休んでいたが、突然、意識消失して倒れた。このときの A 君の細胞外液の ナトリウムイオン濃度と水分量の正常時に対する割合を図に示す。 このときの A 君の体液の状態で正しいのはどれか。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM029",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "高齢者虐待の防止、高齢者の養護者に対する支援等に関する法律¹高齢者虐待防 止法¼で保護された高齢者が入所する社会福祉施設はどれか。",
+     "after": "高齢者虐待の防止、高齢者の養護者に対する支援等に関する法律〈高齢者虐待防 止法〉で保護された高齢者が入所する社会福祉施設はどれか。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM030",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "難病の患者に対する医療等に関する法律¹難病法¼に規定されているのはどれか。",
+     "after": "難病の患者に対する医療等に関する法律〈難病法〉に規定されているのはどれか。",
+     "method": "repaired"
+    },
+    {
+     "field": "choices[2]",
+     "before": "令和年度 2022 年度!の指定難病数は 56 疾病である。",
+     "after": "令和4年度 （2022 年度）の指定難病数は 56 疾病である。",
+     "method": "repaired"
+    },
+    {
+     "field": "choices[3]",
+     "before": "特定医療費 指定難病!の支給認定は居住地の都道府県・指定都市が行う。",
+     "after": "特定医療費 （指定難病）の支給認定は居住地の都道府県・指定都市が行う。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM039",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "Holter¹ホルター¼心電図検査の説明で正しいのはどれか。",
+     "after": "Holter〈ホルター〉心電図検査の説明で正しいのはどれか。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM040",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "choices[2]",
+     "before": "特定非営利活動法人¹NPO¼は事業所を開設できる。",
+     "after": "特定非営利活動法人〈NPO〉は事業所を開設できる。",
+     "method": "repaired"
+    },
+    {
+     "field": "choices[3]",
+     "before": "従事する看護師は臨床経験年以上と定められている。",
+     "after": "従事する看護師は臨床経験5年以上と定められている。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM042",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "choices[0]",
+     "before": "流動 ミキサー!食は注入できる。",
+     "after": "流動 （ミキサー）食は注入できる。",
+     "method": "repaired"
+    },
+    {
+     "field": "choices[2]",
+     "before": "胃瘻カテーテルは週に回交換する。",
+     "after": "胃瘻カテーテルは週に1回交換する。",
+     "method": "repaired"
+    },
+    {
+     "field": "choices[3]",
+     "before": "注入中は体位を 15 度の Fowler¹ファウラー¼位にする。",
+     "after": "注入中は体位を 15 度の Fowler〈ファウラー〉位にする。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM048",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "choices[2]",
+     "before": "Kussmaul¹クスマウル¼呼吸",
+     "after": "Kussmaul〈クスマウル〉呼吸",
+     "method": "repaired"
+    },
+    {
+     "field": "choices[3]",
+     "before": "Cheyne-Stokes¹チェーン-ストークス¼呼吸",
+     "after": "Cheyne-Stokes〈チェーン-ストークス〉呼吸",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM050",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "A さん 42 歳、男性!は、同僚との飲酒中に上腹部から背部の激しい痛みと嘔吐 があり、救急搬送された。搬送時の心電図には異常を認めない。 A さんの状態をアセスメントするための血液検査項目で優先度が高いのはどれ か。",
+     "after": "A さん （42 歳、男性）は、同僚との飲酒中に上腹部から背部の激しい痛みと嘔吐 があり、救急搬送された。搬送時の心電図には異常を認めない。 A さんの状態をアセスメントするための血液検査項目で優先度が高いのはどれ か。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM051",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "choices[1]",
+     "before": "鼓膜孔は原因となる。",
+     "after": "鼓膜穿孔は原因となる。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM055",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "日本の令和年 2021 年!の人口動態統計に基づく、65 歳以上 85 歳未満における 不慮の事故による死亡状況をグラフに示す。 D はどれか。",
+     "after": "日本の令和3年 （2021 年）の人口動態統計に基づく、65 歳以上 85 歳未満における 不慮の事故による死亡状況をグラフに示す。 D はどれか。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM056",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "A さん 81 歳、男性!は、大腸内視鏡検査を受けることになった。 検査前に A さんへ看護師が確認する項目で最も優先されるのはどれか。",
+     "after": "A さん （81 歳、男性）は、大腸内視鏡検査を受けることになった。 検査前に A さんへ看護師が確認する項目で最も優先されるのはどれか。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM058",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "要支援の認定を受けた高齢者が、介護予防通所リハビリテーションの利用を開 始した。｢普段からトイレに何度も行く｣と頻尿を気にしている。 施設にいる看護師の援助で適切なのはどれか。",
+     "after": "要支援1の認定を受けた高齢者が、介護予防通所リハビリテーションの利用を開 始した。｢普段からトイレに何度も行く｣と頻尿を気にしている。 施設にいる看護師の援助で適切なのはどれか。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM059",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "標準的な成長・発達をしている歳の男児に対して採血を行う。看護師が男児に 採血についてのプレパレーションを実施した。 その後に伝えることで適切なのはどれか。",
+     "after": "標準的な成長・発達をしている4歳の男児に対して採血を行う。看護師が男児に 採血についてのプレパレーションを実施した。 その後に伝えることで適切なのはどれか。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM061",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "choices[1]",
+     "before": "聴診ではⅠ音とⅡ音で心拍である。",
+     "after": "聴診ではⅠ音とⅡ音で2心拍である。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM063",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "choices[2]",
+     "before": "雇用の分野における男女の均等な機会及び待遇の確保等に関する法律¹男女 雇用機会均等法¼",
+     "after": "雇用の分野における男女の均等な機会及び待遇の確保等に関する法律〈男女 雇用機会均等法〉",
+     "method": "segment_ok"
+    },
+    {
+     "field": "choices[3]",
+     "before": "育児休業、介護休業等育児又は家族介護を行う労働者の福祉に関する法律 ¹育児・介護休業法¼",
+     "after": "育児休業、介護休業等育児又は家族介護を行う労働者の福祉に関する法律 〈育児・介護休業法〉",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM064",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "Leopold¹レオポルド¼触診法で分かるのはどれか。",
+     "after": "Leopold〈レオポルド〉触診法で分かるのはどれか。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM069",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "精神疾患の治療を受けている人との共同創造¹コプロダクション¼で正しいのはど れか。",
+     "after": "精神疾患の治療を受けている人との共同創造〈コプロダクション〉で正しいのはど れか。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM070",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "choices[1]",
+     "before": "入院か月以上の患者が支援対象である。",
+     "after": "入院3か月以上の患者が支援対象である。",
+     "method": "segment_ok"
+    },
+    {
+     "field": "choices[3]",
+     "before": "担当できるのは精神保健福祉士と社会福祉士の職種である。",
+     "after": "担当できるのは精神保健福祉士と社会福祉士の2職種である。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM072",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "choices[2]",
+     "before": "人の看護師が人の患者の入院から退院まで一貫して責任をもつ。",
+     "after": "1人の看護師が1人の患者の入院から退院まで一貫して責任をもつ。",
+     "method": "edge_repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM074",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "choices[1]",
+     "before": "災害派遣精神医療チーム DPAT!は航空機事故が発生したときにも活動す る。",
+     "after": "災害派遣精神医療チーム （DPAT）は航空機事故が発生したときにも活動す る。",
+     "method": "repaired"
+    },
+    {
+     "field": "choices[3]",
+     "before": "サイコロジカルファーストエイド¹Psychological First Aid：PFA¼は発災 か月後に精神科医が行う。",
+     "after": "サイコロジカルファーストエイド〈Psychological First Aid：PFA〉は発災 1か月後に精神科医が行う。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM075",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "生後か月の乳児健康診査の際、外国籍の両親から子どもの予防接種について質 問があった。父親は長期に日本で就労するため、子どもは定期予防接種を受けるこ とができる。両親は｢日本語が難しく、予防接種のスケジュールがよく分からない｣ と看護師に言った。 看護師の対応で適切なのはどれか。",
+     "after": "生後1か月の乳児健康診査の際、外国籍の両親から子どもの予防接種について質 問があった。父親は長期に日本で就労するため、子どもは定期予防接種を受けるこ とができる。両親は｢日本語が難しく、予防接種のスケジュールがよく分からない｣ と看護師に言った。 看護師の対応で適切なのはどれか。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM076",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "choices[3]",
+     "before": "His¹ヒス¼束",
+     "after": "His〈ヒス〉束",
+     "method": "repaired"
+    },
+    {
+     "field": "choices[4]",
+     "before": "Purkinje¹プルキンエ¼線維",
+     "after": "Purkinje〈プルキンエ〉線維",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM080",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "choices[4]",
+     "before": "悪性新生物¹腫瘍¼ malignant neoplasm",
+     "after": "悪性新生物〈腫瘍〉 malignant neoplasm",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM081",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "第〜第腰髄の障害の有無を把握するために確認するのはどれか。",
+     "after": "第2〜第4腰髄の障害の有無を把握するために確認するのはどれか。",
+     "method": "repaired"
+    },
+    {
+     "field": "choices[3]",
+     "before": "Trousseau¹トルソー¼徴候",
+     "after": "Trousseau〈トルソー〉徴候",
+     "method": "repaired"
+    },
+    {
+     "field": "choices[4]",
+     "before": "Blumberg¹ブルンベルグ¼徴候",
+     "after": "Blumberg〈ブルンベルグ〉徴候",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM083",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "choices[3]",
+     "before": "黄体形成ホルモン¹LH¼",
+     "after": "黄体形成ホルモン〈LH〉",
+     "method": "segment_ok"
+    },
+    {
+     "field": "choices[4]",
+     "before": "卵胞刺激ホルモン¹FSH¼",
+     "after": "卵胞刺激ホルモン〈FSH〉",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM085",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "choices[3]",
+     "before": "腹囲¹ウエスト周囲長¼",
+     "after": "腹囲〈ウエスト周囲長〉",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM086",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "choices[2]",
+     "before": "閉塞性動脈硬化症¹ASO¼ arteriosclerosis obliterans",
+     "after": "閉塞性動脈硬化症〈ASO〉 arteriosclerosis obliterans",
+     "method": "repaired"
+    },
+    {
+     "field": "choices[4]",
+     "before": "後天性免疫不全症候群¹AIDS¼ acquired immunodeficiency syndrome",
+     "after": "後天性免疫不全症候群〈AIDS〉 acquired immunodeficiency syndrome",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM089",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "choices[0]",
+     "before": "基本的な運動発達は末âから中枢へ向かう。",
+     "after": "基本的な運動発達は末梢から中枢へ向かう。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM090",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "身長 160 cm、体重 60 kg の成人の体格指数¹BMI¼を求めよ。 ただし、小数点以下の数値が得られた場合には、小数点以下第位を四捨五入す ること。",
+     "after": "身長 160 cm、体重 60 kg の成人の体格指数〈BMI〉を求めよ。 ただし、小数点以下の数値が得られた場合には、小数点以下第2位を四捨五入す ること。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM091",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "choices[0]",
+     "before": "体位変換を時間ごとに行う。",
+     "after": "体位変換を2時間ごとに行う。",
+     "method": "repaired"
+    },
+    {
+     "field": "choices[1]",
+     "before": "関節可動域訓練を週間に回行う。",
+     "after": "関節可動域訓練を1週間に1回行う。",
+     "method": "repaired"
+    },
+    {
+     "field": "choices[2]",
+     "before": "ペースト食を食べる回数を日回にする。",
+     "after": "ペースト食を食べる回数を1日3回にする。",
+     "method": "repaired"
+    },
+    {
+     "field": "scenario",
+     "before": "A さん 88 歳、男性!は妻 82 歳!と\u0002人で暮らしている。息子\u0002人は独立して生活 している。要介護度は\u0007で、エアマットレスを使用している。食事は妻の介助で\u0004日 \u0004回ペースト食を食べているがむせることもあり、食事が全くとれない日もある。排 泄はオムツを使用し、毎日訪問介護サービスを利用して、オムツ交換と陰部洗浄を受 けている。訪問看護は週\u0005回利用している。A さんは妻が話しかけると返事はする が自発的な会話はない。着替えをするときに上肢を動かすと苦痛表情がある。",
+     "after": "A さん （88 歳、男性）は妻 （82 歳）と2人で暮らしている。息子2人は独立して生活 している。要介護度は5で、エアマットレスを使用している。食事は妻の介助で1日 1回ペースト食を食べているがむせることもあり、食事が全くとれない日もある。排 泄はオムツを使用し、毎日訪問介護サービスを利用して、オムツ交換と陰部洗浄を受 けている。訪問看護は週3回利用している。A さんは妻が話しかけると返事はする が自発的な会話はない。着替えをするときに上肢を動かすと苦痛表情がある。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM092",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "か月後、A さんは食事を口から食べることができなくなり、かかりつけの医 師から家族へ、そろそろ看取りの時期であり、看取りの場所を決めるように説明が あった。息子たちから｢父が長年住んだ家で最期まで過ごさせてあげたいと母とも 話していますが、母が人でみるのは大変だと思い心配しています｣と訪問看護師 に話があった。 このときの訪問看護師の対応で適切なのはどれか。",
+     "after": "2か月後、A さんは食事を口から食べることができなくなり、かかりつけの医 師から家族へ、そろそろ看取りの時期であり、看取りの場所を決めるように説明が あった。息子たちから｢父が長年住んだ家で最期まで過ごさせてあげたいと母とも 話していますが、母が1人でみるのは大変だと思い心配しています｣と訪問看護師 に話があった。 このときの訪問看護師の対応で適切なのはどれか。",
+     "method": "edge_repaired"
+    },
+    {
+     "field": "scenario",
+     "before": "A さん 88 歳、男性!は妻 82 歳!と\u0002人で暮らしている。息子\u0002人は独立して生活 している。要介護度は\u0007で、エアマットレスを使用している。食事は妻の介助で\u0004日 \u0004回ペースト食を食べているがむせることもあり、食事が全くとれない日もある。排 泄はオムツを使用し、毎日訪問介護サービスを利用して、オムツ交換と陰部洗浄を受 けている。訪問看護は週\u0005回利用している。A さんは妻が話しかけると返事はする が自発的な会話はない。着替えをするときに上肢を動かすと苦痛表情がある。",
+     "after": "A さん （88 歳、男性）は妻 （82 歳）と2人で暮らしている。息子2人は独立して生活 している。要介護度は5で、エアマットレスを使用している。食事は妻の介助で1日 1回ペースト食を食べているがむせることもあり、食事が全くとれない日もある。排 泄はオムツを使用し、毎日訪問介護サービスを利用して、オムツ交換と陰部洗浄を受 けている。訪問看護は週3回利用している。A さんは妻が話しかけると返事はする が自発的な会話はない。着替えをするときに上肢を動かすと苦痛表情がある。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM093",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "scenario",
+     "before": "A さん 88 歳、男性!は妻 82 歳!と\u0002人で暮らしている。息子\u0002人は独立して生活 している。要介護度は\u0007で、エアマットレスを使用している。食事は妻の介助で\u0004日 \u0004回ペースト食を食べているがむせることもあり、食事が全くとれない日もある。排 泄はオムツを使用し、毎日訪問介護サービスを利用して、オムツ交換と陰部洗浄を受 けている。訪問看護は週\u0005回利用している。A さんは妻が話しかけると返事はする が自発的な会話はない。着替えをするときに上肢を動かすと苦痛表情がある。",
+     "after": "A さん （88 歳、男性）は妻 （82 歳）と2人で暮らしている。息子2人は独立して生活 している。要介護度は5で、エアマットレスを使用している。食事は妻の介助で1日 1回ペースト食を食べているがむせることもあり、食事が全くとれない日もある。排 泄はオムツを使用し、毎日訪問介護サービスを利用して、オムツ交換と陰部洗浄を受 けている。訪問看護は週3回利用している。A さんは妻が話しかけると返事はする が自発的な会話はない。着替えをするときに上肢を動かすと苦痛表情がある。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM094",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "scenario",
+     "before": "A さん 55 歳、男性、会社員!。激しい胸痛で救急搬送され、心筋梗塞と診断 され myocardial infarction た。冠動脈バイパス術¹CABG¼を受け、ICU に入室した。 手術中の輸液量 2,700 mL、輸血量 400 mL、出血量 280 mL、尿量 200 mL であっ た。手術から 時間が経過し、人工呼吸器が装着され、心囊ドレーンと、胸腔ドレー ンが留置中である。 身体所見：体温 37.1 ℃、脈拍 63/分、血圧 126/62 mmHg、末â冷感はなし。肺野全 体に湿性ラ音を聴取、漿液性の気道分泌物を認める。 検査所見：吸入酸素濃度 40 %、動脈血酸素分圧¹PaO2¼95 Torr、動脈血炭酸ガス分圧 ¹PaCO2¼36 Torr、中心静脈圧 12 cmH2O、心エコー検査では左室駆出率 ¹LVEF¼45 %、心囊液の貯留なし。胸部エックス線写真では両肺野の広範 に透過性の低下を認める。",
+     "after": "A さん （55 歳、男性、会社員）。激しい胸痛で救急搬送され、心筋梗塞と診断 され myocardial infarction た。冠動脈バイパス術〈CABG〉を受け、ICU に入室した。 手術中の輸液量 2,700 mL、輸血量 400 mL、出血量 280 mL、尿量 200 mL であっ た。手術から 6時間が経過し、人工呼吸器が装着され、心囊ドレーンと、胸腔ドレー ンが留置中である。 身体所見：体温 37.1 ℃、脈拍 63/分、血圧 126/62 mmHg、末梢冷感はなし。肺野全 体に湿性ラ音を聴取、漿液性の気道分泌物を認める。 検査所見：吸入酸素濃度 40 %、動脈血酸素分圧〈PaO2〉95 Torr、動脈血炭酸ガス分圧 〈PaCO2〉36 Torr、中心静脈圧 12 cmH2O、心エコー検査では左室駆出率 〈LVEF〉45 %、心囊液の貯留なし。胸部エックス線写真では両肺野の広範 に透過性の低下を認める。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM095",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "術後日、A さんは人工呼吸管理を離脱し、離床が検討されたが中止となった。 看護師が A さんの離床中止を判断した指標はどれか。2つ選べ。",
+     "after": "術後2日、A さんは人工呼吸管理を離脱し、離床が検討されたが中止となった。 看護師が A さんの離床中止を判断した指標はどれか。2つ選べ。",
+     "method": "repaired"
+    },
+    {
+     "field": "choices[3]",
+     "before": "新たな不整脈 心房細動!が発生している。 arrhythmia atrial fibrillation",
+     "after": "新たな不整脈 （心房細動）が発生している。 arrhythmia atrial fibrillation",
+     "method": "segment_ok"
+    },
+    {
+     "field": "choices[4]",
+     "before": "時間尿量 0.5 mL/kg/時が時間持続している。",
+     "after": "時間尿量 0.5 mL/kg/時が3時間持続している。",
+     "method": "repaired"
+    },
+    {
+     "field": "scenario",
+     "before": "A さん 55 歳、男性、会社員!。激しい胸痛で救急搬送され、心筋梗塞と診断 され myocardial infarction た。冠動脈バイパス術¹CABG¼を受け、ICU に入室した。 手術中の輸液量 2,700 mL、輸血量 400 mL、出血量 280 mL、尿量 200 mL であっ た。手術から 時間が経過し、人工呼吸器が装着され、心囊ドレーンと、胸腔ドレー ンが留置中である。 身体所見：体温 37.1 ℃、脈拍 63/分、血圧 126/62 mmHg、末â冷感はなし。肺野全 体に湿性ラ音を聴取、漿液性の気道分泌物を認める。 検査所見：吸入酸素濃度 40 %、動脈血酸素分圧¹PaO2¼95 Torr、動脈血炭酸ガス分圧 ¹PaCO2¼36 Torr、中心静脈圧 12 cmH2O、心エコー検査では左室駆出率 ¹LVEF¼45 %、心囊液の貯留なし。胸部エックス線写真では両肺野の広範 に透過性の低下を認める。",
+     "after": "A さん （55 歳、男性、会社員）。激しい胸痛で救急搬送され、心筋梗塞と診断 され myocardial infarction た。冠動脈バイパス術〈CABG〉を受け、ICU に入室した。 手術中の輸液量 2,700 mL、輸血量 400 mL、出血量 280 mL、尿量 200 mL であっ た。手術から 6時間が経過し、人工呼吸器が装着され、心囊ドレーンと、胸腔ドレー ンが留置中である。 身体所見：体温 37.1 ℃、脈拍 63/分、血圧 126/62 mmHg、末梢冷感はなし。肺野全 体に湿性ラ音を聴取、漿液性の気道分泌物を認める。 検査所見：吸入酸素濃度 40 %、動脈血酸素分圧〈PaO2〉95 Torr、動脈血炭酸ガス分圧 〈PaCO2〉36 Torr、中心静脈圧 12 cmH2O、心エコー検査では左室駆出率 〈LVEF〉45 %、心囊液の貯留なし。胸部エックス線写真では両肺野の広範 に透過性の低下を認める。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM096",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "術後日、心臓リハビリテーションが開始された。 A さんは｢傷の痛みはありますが、血管をつないだから安心ですね。落ちついた ら、家族と温泉に行きたいです｣と看護師に話した。 A さんの生活指導で適切なのはどれか。",
+     "after": "術後3日、心臓リハビリテーションが開始された。 A さんは｢傷の痛みはありますが、血管をつないだから安心ですね。落ちついた ら、家族と温泉に行きたいです｣と看護師に話した。 A さんの生活指導で適切なのはどれか。",
+     "method": "repaired"
+    },
+    {
+     "field": "choices[2]",
+     "before": "｢食後時間以上経過してから入浴しましょう｣",
+     "after": "｢食後1時間以上経過してから入浴しましょう｣",
+     "method": "repaired"
+    },
+    {
+     "field": "scenario",
+     "before": "A さん 55 歳、男性、会社員!。激しい胸痛で救急搬送され、心筋梗塞と診断 され myocardial infarction た。冠動脈バイパス術¹CABG¼を受け、ICU に入室した。 手術中の輸液量 2,700 mL、輸血量 400 mL、出血量 280 mL、尿量 200 mL であっ た。手術から 時間が経過し、人工呼吸器が装着され、心囊ドレーンと、胸腔ドレー ンが留置中である。 身体所見：体温 37.1 ℃、脈拍 63/分、血圧 126/62 mmHg、末â冷感はなし。肺野全 体に湿性ラ音を聴取、漿液性の気道分泌物を認める。 検査所見：吸入酸素濃度 40 %、動脈血酸素分圧¹PaO2¼95 Torr、動脈血炭酸ガス分圧 ¹PaCO2¼36 Torr、中心静脈圧 12 cmH2O、心エコー検査では左室駆出率 ¹LVEF¼45 %、心囊液の貯留なし。胸部エックス線写真では両肺野の広範 に透過性の低下を認める。",
+     "after": "A さん （55 歳、男性、会社員）。激しい胸痛で救急搬送され、心筋梗塞と診断 され myocardial infarction た。冠動脈バイパス術〈CABG〉を受け、ICU に入室した。 手術中の輸液量 2,700 mL、輸血量 400 mL、出血量 280 mL、尿量 200 mL であっ た。手術から 6時間が経過し、人工呼吸器が装着され、心囊ドレーンと、胸腔ドレー ンが留置中である。 身体所見：体温 37.1 ℃、脈拍 63/分、血圧 126/62 mmHg、末梢冷感はなし。肺野全 体に湿性ラ音を聴取、漿液性の気道分泌物を認める。 検査所見：吸入酸素濃度 40 %、動脈血酸素分圧〈PaO2〉95 Torr、動脈血炭酸ガス分圧 〈PaCO2〉36 Torr、中心静脈圧 12 cmH2O、心エコー検査では左室駆出率 〈LVEF〉45 %、心囊液の貯留なし。胸部エックス線写真では両肺野の広範 に透過性の低下を認める。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM097",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "scenario",
+     "before": "A さん 57 歳、男性!は、芳香族アミンを扱う化学工場に 39 年勤務している。 現病歴：ここ数か月で次第に尿の色が濃くなった。いきまないと排尿できなくなり、 泌尿器科を受診し、採血および尿検査を受けた。 既往歴：特記すべき点なし。 生活歴：喫煙 40 本/日を 36 年間、焼酎 120 mL の飲酒をほぼ毎日、20 年間続けてい る。 身体所見：顔面、四肢に浮腫なし、黒色便なし、血便なし。 検査所見：赤血球 308 万/μL、Hb 9.9 g/dL、血清アルブミン 4.2 g/dL、血清総ビリ ルビン 0.2 mg/dL、血糖 102 mg/dL、ヘモグロビン A1c¹HbA1c¼ 5.4 %。",
+     "after": "A さん （57 歳、男性）は、芳香族アミンを扱う化学工場に 39 年勤務している。 現病歴：ここ数か月で次第に尿の色が濃くなった。いきまないと排尿できなくなり、 泌尿器科を受診し、採血および尿検査を受けた。 既往歴：特記すべき点なし。 生活歴：喫煙 40 本/日を 36 年間、焼酎 120 mL の飲酒をほぼ毎日、20 年間続けてい る。 身体所見：顔面、四肢に浮腫なし、黒色便なし、血便なし。 検査所見：赤血球 308 万/μL、Hb 9.9 g/dL、血清アルブミン 4.2 g/dL、血清総ビリ ルビン 0.2 mg/dL、血糖 102 mg/dL、ヘモグロビン A1c〈HbA1c〉 5.4 %。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM098",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "scenario",
+     "before": "A さん 57 歳、男性!は、芳香族アミンを扱う化学工場に 39 年勤務している。 現病歴：ここ数か月で次第に尿の色が濃くなった。いきまないと排尿できなくなり、 泌尿器科を受診し、採血および尿検査を受けた。 既往歴：特記すべき点なし。 生活歴：喫煙 40 本/日を 36 年間、焼酎 120 mL の飲酒をほぼ毎日、20 年間続けてい る。 身体所見：顔面、四肢に浮腫なし、黒色便なし、血便なし。 検査所見：赤血球 308 万/μL、Hb 9.9 g/dL、血清アルブミン 4.2 g/dL、血清総ビリ ルビン 0.2 mg/dL、血糖 102 mg/dL、ヘモグロビン A1c¹HbA1c¼ 5.4 %。",
+     "after": "A さん （57 歳、男性）は、芳香族アミンを扱う化学工場に 39 年勤務している。 現病歴：ここ数か月で次第に尿の色が濃くなった。いきまないと排尿できなくなり、 泌尿器科を受診し、採血および尿検査を受けた。 既往歴：特記すべき点なし。 生活歴：喫煙 40 本/日を 36 年間、焼酎 120 mL の飲酒をほぼ毎日、20 年間続けてい る。 身体所見：顔面、四肢に浮腫なし、黒色便なし、血便なし。 検査所見：赤血球 308 万/μL、Hb 9.9 g/dL、血清アルブミン 4.2 g/dL、血清総ビリ ルビン 0.2 mg/dL、血糖 102 mg/dL、ヘモグロビン A1c〈HbA1c〉 5.4 %。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM099",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "A さんは術後から、これまでにはなかった勃起障害が出現した。A さんのテス トステロン値は 13.5 pg/mL 50 歳代の基準値：4.6〜19.6 pg/mL!であった。 A さんの勃起不全の原因で考えられるのはどれか。 erectile dysfunction",
+     "after": "A さんは術後から、これまでにはなかった勃起障害が出現した。A さんのテス トステロン値は 13.5 pg/mL （50 歳代の基準値：4.6〜19.6 pg/mL）であった。 A さんの勃起不全の原因で考えられるのはどれか。 erectile dysfunction",
+     "method": "segment_ok"
+    },
+    {
+     "field": "scenario",
+     "before": "A さん 57 歳、男性!は、芳香族アミンを扱う化学工場に 39 年勤務している。 現病歴：ここ数か月で次第に尿の色が濃くなった。いきまないと排尿できなくなり、 泌尿器科を受診し、採血および尿検査を受けた。 既往歴：特記すべき点なし。 生活歴：喫煙 40 本/日を 36 年間、焼酎 120 mL の飲酒をほぼ毎日、20 年間続けてい る。 身体所見：顔面、四肢に浮腫なし、黒色便なし、血便なし。 検査所見：赤血球 308 万/μL、Hb 9.9 g/dL、血清アルブミン 4.2 g/dL、血清総ビリ ルビン 0.2 mg/dL、血糖 102 mg/dL、ヘモグロビン A1c¹HbA1c¼ 5.4 %。",
+     "after": "A さん （57 歳、男性）は、芳香族アミンを扱う化学工場に 39 年勤務している。 現病歴：ここ数か月で次第に尿の色が濃くなった。いきまないと排尿できなくなり、 泌尿器科を受診し、採血および尿検査を受けた。 既往歴：特記すべき点なし。 生活歴：喫煙 40 本/日を 36 年間、焼酎 120 mL の飲酒をほぼ毎日、20 年間続けてい る。 身体所見：顔面、四肢に浮腫なし、黒色便なし、血便なし。 検査所見：赤血球 308 万/μL、Hb 9.9 g/dL、血清アルブミン 4.2 g/dL、血清総ビリ ルビン 0.2 mg/dL、血糖 102 mg/dL、ヘモグロビン A1c〈HbA1c〉 5.4 %。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM100",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "scenario",
+     "before": "A さん 80 歳、女性!は、アパートの\u0004階に\u0004人で暮らしている。半年前に軽度の Alzheimer¹アルツハイマー¼型認知症 と診断され、抗認知症薬の内服治療を開始し Alzheimer disease た。要支援\u0002の認定を受けている。 A さんが屋内でぐったりしているのを訪問した近所の人が発見し、救急搬送され た。来 院 時 の バ イ タ ル サ イ ン は、体 温 36.5 ℃、呼 吸 数 20/分、脈 拍 92/分、血 圧 130/82 mmHg で、皮膚に軽度の発汗がみられた。頭痛や吐き気はなかった。看護師 が A さんに状況を聞くと、最近は食欲がなく、食べたり飲んだりしていなかったし、 昨日は排尿回数も普段より少なかったと話した。",
+     "after": "A さん （80 歳、女性）は、アパートの1階に1人で暮らしている。半年前に軽度の Alzheimer〈アルツハイマー〉型認知症 と診断され、抗認知症薬の内服治療を開始し Alzheimer disease た。要支援2の認定を受けている。 A さんが屋内でぐったりしているのを訪問した近所の人が発見し、救急搬送され た。来 院 時 の バ イ タ ル サ イ ン は、体 温 36.5 ℃、呼 吸 数 20/分、脈 拍 92/分、血 圧 130/82 mmHg で、皮膚に軽度の発汗がみられた。頭痛や吐き気はなかった。看護師 が A さんに状況を聞くと、最近は食欲がなく、食べたり飲んだりしていなかったし、 昨日は排尿回数も普段より少なかったと話した。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM101",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "A さんは、経過を観察するため入院となった。入院日、A さんの全身状態は 改善し、食事が開始された。A さんは歩行時にふらつきがあるため、看護師が見 守ることになった。看護師はベッドから離れるときは、ナースコールを押すように A さんに説明した。そのとき A さんは｢忘れずにできるかしら｣と呟いた。しばら くすると、A さんが人で移動しているところを看護師が発見した。 A さんへの対応で適切なのはどれか。",
+     "after": "A さんは、経過を観察するため入院となった。入院2日、A さんの全身状態は 改善し、食事が開始された。A さんは歩行時にふらつきがあるため、看護師が見 守ることになった。看護師はベッドから離れるときは、ナースコールを押すように A さんに説明した。そのとき A さんは｢忘れずにできるかしら｣と呟いた。しばら くすると、A さんが1人で移動しているところを看護師が発見した。 A さんへの対応で適切なのはどれか。",
+     "method": "repaired"
+    },
+    {
+     "field": "scenario",
+     "before": "A さん 80 歳、女性!は、アパートの\u0004階に\u0004人で暮らしている。半年前に軽度の Alzheimer¹アルツハイマー¼型認知症 と診断され、抗認知症薬の内服治療を開始し Alzheimer disease た。要支援\u0002の認定を受けている。 A さんが屋内でぐったりしているのを訪問した近所の人が発見し、救急搬送され た。来 院 時 の バ イ タ ル サ イ ン は、体 温 36.5 ℃、呼 吸 数 20/分、脈 拍 92/分、血 圧 130/82 mmHg で、皮膚に軽度の発汗がみられた。頭痛や吐き気はなかった。看護師 が A さんに状況を聞くと、最近は食欲がなく、食べたり飲んだりしていなかったし、 昨日は排尿回数も普段より少なかったと話した。",
+     "after": "A さん （80 歳、女性）は、アパートの1階に1人で暮らしている。半年前に軽度の Alzheimer〈アルツハイマー〉型認知症 と診断され、抗認知症薬の内服治療を開始し Alzheimer disease た。要支援2の認定を受けている。 A さんが屋内でぐったりしているのを訪問した近所の人が発見し、救急搬送され た。来 院 時 の バ イ タ ル サ イ ン は、体 温 36.5 ℃、呼 吸 数 20/分、脈 拍 92/分、血 圧 130/82 mmHg で、皮膚に軽度の発汗がみられた。頭痛や吐き気はなかった。看護師 が A さんに状況を聞くと、最近は食欲がなく、食べたり飲んだりしていなかったし、 昨日は排尿回数も普段より少なかったと話した。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM102",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "入院日。A さんは明日の退院が決まった。看護師が朝食後に抗認知症薬の配 薬に行くと、A さんが｢もう薬の時間ですか｣と言った。また、自分の病室を間違 えることが数回あった。 A さんが退院後の在宅療養を継続するために、看護師が担当の介護支援専門員 へ伝える情報で最も適切なのはどれか。",
+     "after": "入院3日。A さんは明日の退院が決まった。看護師が朝食後に抗認知症薬の配 薬に行くと、A さんが｢もう薬の時間ですか｣と言った。また、自分の病室を間違 えることが数回あった。 A さんが退院後の在宅療養を継続するために、看護師が担当の介護支援専門員 へ伝える情報で最も適切なのはどれか。",
+     "method": "repaired"
+    },
+    {
+     "field": "scenario",
+     "before": "A さん 80 歳、女性!は、アパートの\u0004階に\u0004人で暮らしている。半年前に軽度の Alzheimer¹アルツハイマー¼型認知症 と診断され、抗認知症薬の内服治療を開始し Alzheimer disease た。要支援\u0002の認定を受けている。 A さんが屋内でぐったりしているのを訪問した近所の人が発見し、救急搬送され た。来 院 時 の バ イ タ ル サ イ ン は、体 温 36.5 ℃、呼 吸 数 20/分、脈 拍 92/分、血 圧 130/82 mmHg で、皮膚に軽度の発汗がみられた。頭痛や吐き気はなかった。看護師 が A さんに状況を聞くと、最近は食欲がなく、食べたり飲んだりしていなかったし、 昨日は排尿回数も普段より少なかったと話した。",
+     "after": "A さん （80 歳、女性）は、アパートの1階に1人で暮らしている。半年前に軽度の Alzheimer〈アルツハイマー〉型認知症 と診断され、抗認知症薬の内服治療を開始し Alzheimer disease た。要支援2の認定を受けている。 A さんが屋内でぐったりしているのを訪問した近所の人が発見し、救急搬送され た。来 院 時 の バ イ タ ル サ イ ン は、体 温 36.5 ℃、呼 吸 数 20/分、脈 拍 92/分、血 圧 130/82 mmHg で、皮膚に軽度の発汗がみられた。頭痛や吐き気はなかった。看護師 が A さんに状況を聞くと、最近は食欲がなく、食べたり飲んだりしていなかったし、 昨日は排尿回数も普段より少なかったと話した。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM103",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "A 君の肥満度 %!に最も近いのはどれか。",
+     "after": "A 君の肥満度 （%）に最も近いのはどれか。",
+     "method": "repaired"
+    },
+    {
+     "field": "scenario",
+     "before": "A 君 12 歳、男児!は、肥満を心配した保護者に連れられて来院した。A 君と保護 者は、医師から｢\u0004日の食事内容を毎日記録し、\u0004週後に再診してください｣と説明さ れた。 既往歴と家族歴：特記すべきことはない。 生活歴：スナック菓子などの間食を好む。時間があればポータブル型のゲーム機で サッカーゲームばかりして、就寝時刻は毎晩午前 時を過ぎる。A 君は、 学校生活は楽しく思っているが朝起きられず遅刻して登校することが多い。 また、運動することが嫌いなため運動の習慣はない。 身体所見： 身 長 153.0 cm 標 準 152.4 cm!、体 重 61.7 kg 標 準 44.1 kg!。血 圧 100/60 mmHg。心音と呼吸音に異常はない。腹部は平坦、軟で、肝臓と 脾臓を触知しない。",
+     "after": "A 君 （12 歳、男児）は、肥満を心配した保護者に連れられて来院した。A 君と保護 者は、医師から｢1日の食事内容を毎日記録し、1週後に再診してください｣と説明さ れた。 既往歴と家族歴：特記すべきことはない。 生活歴：スナック菓子などの間食を好む。時間があればポータブル型のゲーム機で サッカーゲームばかりして、就寝時刻は毎晩午前 0時を過ぎる。A 君は、 学校生活は楽しく思っているが朝起きられず遅刻して登校することが多い。 また、運動することが嫌いなため運動の習慣はない。 身体所見： 身 長 153.0 cm （標 準 152.4 cm）、体 重 61.7 kg （標 準 44.1 kg）。血 圧 100/60 mmHg。心音と呼吸音に異常はない。腹部は平坦、軟で、肝臓と 脾臓を触知しない。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM104",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "A 君の週間の食事内容の記録によると、野菜が不足し、高カロリーな菓子類 や甘い飲み物を好んで摂取していることが判明した。A 君と保護者は｢食事内容を 見直し、体重を減らすことが大切です｣と医師から説明され、食事摂取基準のパン フレットを渡された。パンフレットには、学童期の脂質エネルギー比率 % エネル ギー!は 20〜30 % と記載されている。A 君が診療を終えて帰宅する際、保護者は 看護師に｢痩せるために脂質は可能な限り % にしないとだめですね｣と話した。 脂質エネルギー比率 % エネルギー!に関する看護師の助言で適切なのはどれか。",
+     "after": "A 君の1週間の食事内容の記録によると、野菜が不足し、高カロリーな菓子類 や甘い飲み物を好んで摂取していることが判明した。A 君と保護者は｢食事内容を 見直し、体重を減らすことが大切です｣と医師から説明され、食事摂取基準のパン フレットを渡された。パンフレットには、学童期の脂質エネルギー比率 （% エネル ギー）は 20〜30 % と記載されている。A 君が診療を終えて帰宅する際、保護者は 看護師に｢痩せるために脂質は可能な限り 0% にしないとだめですね｣と話した。 脂質エネルギー比率 （% エネルギー）に関する看護師の助言で適切なのはどれか。",
+     "method": "repaired"
+    },
+    {
+     "field": "choices[2]",
+     "before": "｢その通りです。 % に近づける努力をしましょう｣",
+     "after": "｢その通りです。 0% に近づける努力をしましょう｣",
+     "method": "repaired"
+    },
+    {
+     "field": "scenario",
+     "before": "A 君 12 歳、男児!は、肥満を心配した保護者に連れられて来院した。A 君と保護 者は、医師から｢\u0004日の食事内容を毎日記録し、\u0004週後に再診してください｣と説明さ れた。 既往歴と家族歴：特記すべきことはない。 生活歴：スナック菓子などの間食を好む。時間があればポータブル型のゲーム機で サッカーゲームばかりして、就寝時刻は毎晩午前 時を過ぎる。A 君は、 学校生活は楽しく思っているが朝起きられず遅刻して登校することが多い。 また、運動することが嫌いなため運動の習慣はない。 身体所見： 身 長 153.0 cm 標 準 152.4 cm!、体 重 61.7 kg 標 準 44.1 kg!。血 圧 100/60 mmHg。心音と呼吸音に異常はない。腹部は平坦、軟で、肝臓と 脾臓を触知しない。",
+     "after": "A 君 （12 歳、男児）は、肥満を心配した保護者に連れられて来院した。A 君と保護 者は、医師から｢1日の食事内容を毎日記録し、1週後に再診してください｣と説明さ れた。 既往歴と家族歴：特記すべきことはない。 生活歴：スナック菓子などの間食を好む。時間があればポータブル型のゲーム機で サッカーゲームばかりして、就寝時刻は毎晩午前 0時を過ぎる。A 君は、 学校生活は楽しく思っているが朝起きられず遅刻して登校することが多い。 また、運動することが嫌いなため運動の習慣はない。 身体所見： 身 長 153.0 cm （標 準 152.4 cm）、体 重 61.7 kg （標 準 44.1 kg）。血 圧 100/60 mmHg。心音と呼吸音に異常はない。腹部は平坦、軟で、肝臓と 脾臓を触知しない。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM105",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "scenario",
+     "before": "A 君 12 歳、男児!は、肥満を心配した保護者に連れられて来院した。A 君と保護 者は、医師から｢\u0004日の食事内容を毎日記録し、\u0004週後に再診してください｣と説明さ れた。 既往歴と家族歴：特記すべきことはない。 生活歴：スナック菓子などの間食を好む。時間があればポータブル型のゲーム機で サッカーゲームばかりして、就寝時刻は毎晩午前 時を過ぎる。A 君は、 学校生活は楽しく思っているが朝起きられず遅刻して登校することが多い。 また、運動することが嫌いなため運動の習慣はない。 身体所見： 身 長 153.0 cm 標 準 152.4 cm!、体 重 61.7 kg 標 準 44.1 kg!。血 圧 100/60 mmHg。心音と呼吸音に異常はない。腹部は平坦、軟で、肝臓と 脾臓を触知しない。",
+     "after": "A 君 （12 歳、男児）は、肥満を心配した保護者に連れられて来院した。A 君と保護 者は、医師から｢1日の食事内容を毎日記録し、1週後に再診してください｣と説明さ れた。 既往歴と家族歴：特記すべきことはない。 生活歴：スナック菓子などの間食を好む。時間があればポータブル型のゲーム機で サッカーゲームばかりして、就寝時刻は毎晩午前 0時を過ぎる。A 君は、 学校生活は楽しく思っているが朝起きられず遅刻して登校することが多い。 また、運動することが嫌いなため運動の習慣はない。 身体所見： 身 長 153.0 cm （標 準 152.4 cm）、体 重 61.7 kg （標 準 44.1 kg）。血 圧 100/60 mmHg。心音と呼吸音に異常はない。腹部は平坦、軟で、肝臓と 脾臓を触知しない。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM106",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "scenario",
+     "before": "A 君 \u0007歳 か月、男児!は、二分脊椎 のため、繰り返し使用できるカテーテルに spina bifida よる間欠的自己導尿を両親が実施している。現在、間欠的自己導尿は、保育所での実 施を含めて\u0004日 回行うよう医師が指示しており、自宅では両親が導尿している。A 君は下肢の運動機能障害があるが、自分で車椅子からトイレに移動でき、指先の微細 な動きもできる。 外来受診の際に母親から｢地元の小学校に入学予定です。小学生になったら自分で 導尿できたほうが良いと聞きました。A も間欠的自己導尿をやってみたい、と言っ ています。どのように進めたらよいか分からず、焦っています｣と看護師に相談が あった。",
+     "after": "A 君 （5歳 6か月、男児）は、二分脊椎 のため、繰り返し使用できるカテーテルに spina bifida よる間欠的自己導尿を両親が実施している。現在、間欠的自己導尿は、保育所での実 施を含めて1日 6回行うよう医師が指示しており、自宅では両親が導尿している。A 君は下肢の運動機能障害があるが、自分で車椅子からトイレに移動でき、指先の微細 な動きもできる。 外来受診の際に母親から｢地元の小学校に入学予定です。小学生になったら自分で 導尿できたほうが良いと聞きました。A も間欠的自己導尿をやってみたい、と言っ ています。どのように進めたらよいか分からず、焦っています｣と看護師に相談が あった。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM107",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "choices[1]",
+     "before": "｢カテーテルの先はピンセット¹鑷子¼で持つよ｣",
+     "after": "｢カテーテルの先はピンセット〈鑷子〉で持つよ｣",
+     "method": "repaired"
+    },
+    {
+     "field": "scenario",
+     "before": "A 君 \u0007歳 か月、男児!は、二分脊椎 のため、繰り返し使用できるカテーテルに spina bifida よる間欠的自己導尿を両親が実施している。現在、間欠的自己導尿は、保育所での実 施を含めて\u0004日 回行うよう医師が指示しており、自宅では両親が導尿している。A 君は下肢の運動機能障害があるが、自分で車椅子からトイレに移動でき、指先の微細 な動きもできる。 外来受診の際に母親から｢地元の小学校に入学予定です。小学生になったら自分で 導尿できたほうが良いと聞きました。A も間欠的自己導尿をやってみたい、と言っ ています。どのように進めたらよいか分からず、焦っています｣と看護師に相談が あった。",
+     "after": "A 君 （5歳 6か月、男児）は、二分脊椎 のため、繰り返し使用できるカテーテルに spina bifida よる間欠的自己導尿を両親が実施している。現在、間欠的自己導尿は、保育所での実 施を含めて1日 6回行うよう医師が指示しており、自宅では両親が導尿している。A 君は下肢の運動機能障害があるが、自分で車椅子からトイレに移動でき、指先の微細 な動きもできる。 外来受診の際に母親から｢地元の小学校に入学予定です。小学生になったら自分で 導尿できたほうが良いと聞きました。A も間欠的自己導尿をやってみたい、と言っ ています。どのように進めたらよいか分からず、焦っています｣と看護師に相談が あった。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM108",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "11 歳になった A 君は間欠的自己導尿を自分で実施している。本日の定期受診時 の尿検査で、尿蛋白袷、赤血球 安!、白血球袷、尿の混濁袷の所見がみられた。 受診に付き添った父親から｢最近、A は親の言うことを聞かないし、あまり口を きいてくれません。家では自立して間欠的自己導尿を行っていますが、学校でも やっているのか心配です｣と発言があった。A 君の水分摂取や運動の状況は以前と 変わらない。 外来看護師の対応で最も適切なのはどれか。",
+     "after": "11 歳になった A 君は間欠的自己導尿を自分で実施している。本日の定期受診時 の尿検査で、尿蛋白袷、赤血球 （安）、白血球2袷、尿の混濁袷の所見がみられた。 受診に付き添った父親から｢最近、A は親の言うことを聞かないし、あまり口を きいてくれません。家では自立して間欠的自己導尿を行っていますが、学校でも やっているのか心配です｣と発言があった。A 君の水分摂取や運動の状況は以前と 変わらない。 外来看護師の対応で最も適切なのはどれか。",
+     "method": "repaired"
+    },
+    {
+     "field": "scenario",
+     "before": "A 君 \u0007歳 か月、男児!は、二分脊椎 のため、繰り返し使用できるカテーテルに spina bifida よる間欠的自己導尿を両親が実施している。現在、間欠的自己導尿は、保育所での実 施を含めて\u0004日 回行うよう医師が指示しており、自宅では両親が導尿している。A 君は下肢の運動機能障害があるが、自分で車椅子からトイレに移動でき、指先の微細 な動きもできる。 外来受診の際に母親から｢地元の小学校に入学予定です。小学生になったら自分で 導尿できたほうが良いと聞きました。A も間欠的自己導尿をやってみたい、と言っ ています。どのように進めたらよいか分からず、焦っています｣と看護師に相談が あった。",
+     "after": "A 君 （5歳 6か月、男児）は、二分脊椎 のため、繰り返し使用できるカテーテルに spina bifida よる間欠的自己導尿を両親が実施している。現在、間欠的自己導尿は、保育所での実 施を含めて1日 6回行うよう医師が指示しており、自宅では両親が導尿している。A 君は下肢の運動機能障害があるが、自分で車椅子からトイレに移動でき、指先の微細 な動きもできる。 外来受診の際に母親から｢地元の小学校に入学予定です。小学生になったら自分で 導尿できたほうが良いと聞きました。A も間欠的自己導尿をやってみたい、と言っ ています。どのように進めたらよいか分からず、焦っています｣と看護師に相談が あった。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM109",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "scenario",
+     "before": "A さん 30 歳、初産婦!は妊娠 39 週\u0005日で陣痛発来した。その後、陣痛が増強して 順調な分娩進行と診断され、入院後に分娩した。 A さんの分娩経過を以下に示す。 2 時 00 分 陣痛周期 10 分 5 時 30 分 入院 15 時 00 分 分娩室入室 15 時 30 分 子宮口全開大 15 時 40 分 自然破水 16 時 20 分 児娩出 16 時 30 分 胎盤娩出 18 時 30 分 帰室",
+     "after": "A さん （30 歳、初産婦）は妊娠 39 週3日で陣痛発来した。その後、陣痛が増強して 順調な分娩進行と診断され、入院後に分娩した。 A さんの分娩経過を以下に示す。 2 時 00 分 陣痛周期 10 分 5 時 30 分 入院 15 時 00 分 分娩室入室 15 時 30 分 子宮口全開大 15 時 40 分 自然破水 16 時 20 分 児娩出 16 時 30 分 胎盤娩出 18 時 30 分 帰室",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM110",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "分娩直後の出血量は 300 mL であった。分娩後時間の出血量 20 mL、子宮底は 臍下横指で硬度良好、脈拍 75/分、血圧 100/74 mmHg であった。分娩後時間 の 出 血 は 20 mL、子 宮 底 は 臍 下 横 指 で 硬 度 良 好。脈 拍 75/分、血 圧 126/56 mmHg であった。児への早期授乳後に下腹部の痛みを訴えている。尿意があり少 量の排尿があった。 A さんのアセスメントで適切なのはどれか。",
+     "after": "分娩直後の出血量は 300 mL であった。分娩後1時間の出血量 20 mL、子宮底は 臍下2横指で硬度良好、脈拍 75/分、血圧 100/74 mmHg であった。分娩後2時間 の 出 血 は 20 mL、子 宮 底 は 臍 下 1横 指 で 硬 度 良 好。脈 拍 75/分、血 圧 126/56 mmHg であった。児への早期授乳後に下腹部の痛みを訴えている。尿意があり少 量の排尿があった。 A さんのアセスメントで適切なのはどれか。",
+     "method": "repaired"
+    },
+    {
+     "field": "scenario",
+     "before": "A さん 30 歳、初産婦!は妊娠 39 週\u0005日で陣痛発来した。その後、陣痛が増強して 順調な分娩進行と診断され、入院後に分娩した。 A さんの分娩経過を以下に示す。 2 時 00 分 陣痛周期 10 分 5 時 30 分 入院 15 時 00 分 分娩室入室 15 時 30 分 子宮口全開大 15 時 40 分 自然破水 16 時 20 分 児娩出 16 時 30 分 胎盤娩出 18 時 30 分 帰室",
+     "after": "A さん （30 歳、初産婦）は妊娠 39 週3日で陣痛発来した。その後、陣痛が増強して 順調な分娩進行と診断され、入院後に分娩した。 A さんの分娩経過を以下に示す。 2 時 00 分 陣痛周期 10 分 5 時 30 分 入院 15 時 00 分 分娩室入室 15 時 30 分 子宮口全開大 15 時 40 分 自然破水 16 時 20 分 児娩出 16 時 30 分 胎盤娩出 18 時 30 分 帰室",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM111",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "児は出生時間後、寝衣を着用しコットに収容された。児のバイタルサインは、 体温 腋窩温!36.4 ℃、呼吸数 40/分、心拍数 120/分であった。また末âの冷感は あるが、チアノーゼは認めなかった。排尿、排便はない。児の頰を軽く突くと刺激 の方向を向き、口を開ける動作がみられる。また、腋窩と鼠径部に胎脂が付着して いる。 このときに必要なケアはどれか。",
+     "after": "児は出生2時間後、寝衣を着用しコットに収容された。児のバイタルサインは、 体温 （腋窩温）36.4 ℃、呼吸数 40/分、心拍数 120/分であった。また末梢の冷感は あるが、チアノーゼは認めなかった。排尿、排便はない。児の頰を軽く突くと刺激 の方向を向き、口を開ける動作がみられる。また、腋窩と鼠径部に胎脂が付着して いる。 このときに必要なケアはどれか。",
+     "method": "repaired"
+    },
+    {
+     "field": "scenario",
+     "before": "A さん 30 歳、初産婦!は妊娠 39 週\u0005日で陣痛発来した。その後、陣痛が増強して 順調な分娩進行と診断され、入院後に分娩した。 A さんの分娩経過を以下に示す。 2 時 00 分 陣痛周期 10 分 5 時 30 分 入院 15 時 00 分 分娩室入室 15 時 30 分 子宮口全開大 15 時 40 分 自然破水 16 時 20 分 児娩出 16 時 30 分 胎盤娩出 18 時 30 分 帰室",
+     "after": "A さん （30 歳、初産婦）は妊娠 39 週3日で陣痛発来した。その後、陣痛が増強して 順調な分娩進行と診断され、入院後に分娩した。 A さんの分娩経過を以下に示す。 2 時 00 分 陣痛周期 10 分 5 時 30 分 入院 15 時 00 分 分娩室入室 15 時 30 分 子宮口全開大 15 時 40 分 自然破水 16 時 20 分 児娩出 16 時 30 分 胎盤娩出 18 時 30 分 帰室",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM112",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "choices[2]",
+     "before": "有害な使用¹乱用¼である。",
+     "after": "有害な使用〈乱用〉である。",
+     "method": "repaired"
+    },
+    {
+     "field": "scenario",
+     "before": "A さん 21 歳、女性、大学生!は、\u0004人で暮らしている。友人関係のトラブルでう つ状態になり、\u0005か月前から精神科クリニックへの通院を開始した。頓用の抗不安薬 を処方され不安が高まったときに服用していたが、徐々に酩酊や陶酔感を得るために 服用するようになった。最近は指示された抗不安薬の量では酩酊や陶酔感が得られな くなってきたため、数日分の薬を溜めて一度に大量に服用するようになった。抗不安 薬を大量に使用した翌日は大学を休むことが続いていた。",
+     "after": "A さん （21 歳、女性、大学生）は、1人で暮らしている。友人関係のトラブルでう つ状態になり、3か月前から精神科クリニックへの通院を開始した。頓用の抗不安薬 を処方され不安が高まったときに服用していたが、徐々に酩酊や陶酔感を得るために 服用するようになった。最近は指示された抗不安薬の量では酩酊や陶酔感が得られな くなってきたため、数日分の薬を溜めて一度に大量に服用するようになった。抗不安 薬を大量に使用した翌日は大学を休むことが続いていた。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM113",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "scenario",
+     "before": "A さん 21 歳、女性、大学生!は、\u0004人で暮らしている。友人関係のトラブルでう つ状態になり、\u0005か月前から精神科クリニックへの通院を開始した。頓用の抗不安薬 を処方され不安が高まったときに服用していたが、徐々に酩酊や陶酔感を得るために 服用するようになった。最近は指示された抗不安薬の量では酩酊や陶酔感が得られな くなってきたため、数日分の薬を溜めて一度に大量に服用するようになった。抗不安 薬を大量に使用した翌日は大学を休むことが続いていた。",
+     "after": "A さん （21 歳、女性、大学生）は、1人で暮らしている。友人関係のトラブルでう つ状態になり、3か月前から精神科クリニックへの通院を開始した。頓用の抗不安薬 を処方され不安が高まったときに服用していたが、徐々に酩酊や陶酔感を得るために 服用するようになった。最近は指示された抗不安薬の量では酩酊や陶酔感が得られな くなってきたため、数日分の薬を溜めて一度に大量に服用するようになった。抗不安 薬を大量に使用した翌日は大学を休むことが続いていた。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM114",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "入院後日、物質使用障害¹依存症¼の診断を受け、治療によって状態が安定した substance use disorders A さんは退院の準備をすることになった。A さんは人暮らしを続けながら復学 を希望している。 A さんに利用を勧める社会資源はどれか。",
+     "after": "入院後5日、物質使用障害〈依存症〉の診断を受け、治療によって状態が安定した substance use disorders A さんは退院の準備をすることになった。A さんは1人暮らしを続けながら復学 を希望している。 A さんに利用を勧める社会資源はどれか。",
+     "method": "segment_ok"
+    },
+    {
+     "field": "choices[3]",
+     "before": "共同生活援助¹グループホーム¼",
+     "after": "共同生活援助〈グループホーム〉",
+     "method": "segment_ok"
+    },
+    {
+     "field": "scenario",
+     "before": "A さん 21 歳、女性、大学生!は、\u0004人で暮らしている。友人関係のトラブルでう つ状態になり、\u0005か月前から精神科クリニックへの通院を開始した。頓用の抗不安薬 を処方され不安が高まったときに服用していたが、徐々に酩酊や陶酔感を得るために 服用するようになった。最近は指示された抗不安薬の量では酩酊や陶酔感が得られな くなってきたため、数日分の薬を溜めて一度に大量に服用するようになった。抗不安 薬を大量に使用した翌日は大学を休むことが続いていた。",
+     "after": "A さん （21 歳、女性、大学生）は、1人で暮らしている。友人関係のトラブルでう つ状態になり、3か月前から精神科クリニックへの通院を開始した。頓用の抗不安薬 を処方され不安が高まったときに服用していたが、徐々に酩酊や陶酔感を得るために 服用するようになった。最近は指示された抗不安薬の量では酩酊や陶酔感が得られな くなってきたため、数日分の薬を溜めて一度に大量に服用するようになった。抗不安 薬を大量に使用した翌日は大学を休むことが続いていた。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM115",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "scenario",
+     "before": "A さん 65 歳、女性!は、夫と\u0002人で暮らしている。友人の死去後、食事量が減り、 \u0004か月前から気分の落ち込みが強くなった。夫が積極的に散歩に誘っても、A さん は｢体がだるい｣｢何をしても意味がない｣と話し、寝つきも悪くなり、日中ほとんどの 時間を臥床して過ごすようになった。心配した夫に連れられて精神科外来を受診した ところ、うつ病と 診断され、選択的セロトニン再取り込み阻害薬¹SSRI¼と不眠時の depression 睡眠薬が処方された。夫から精神科外来の看護師に｢日常生活で気を付けることはあ りますか｣と質問があった。",
+     "after": "A さん （65 歳、女性）は、夫と2人で暮らしている。友人の死去後、食事量が減り、 1か月前から気分の落ち込みが強くなった。夫が積極的に散歩に誘っても、A さん は｢体がだるい｣｢何をしても意味がない｣と話し、寝つきも悪くなり、日中ほとんどの 時間を臥床して過ごすようになった。心配した夫に連れられて精神科外来を受診した ところ、うつ病と 診断され、選択的セロトニン再取り込み阻害薬〈SSRI〉と不眠時の depression 睡眠薬が処方された。夫から精神科外来の看護師に｢日常生活で気を付けることはあ りますか｣と質問があった。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM116",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "A さんの症状は半年ほどで落ち着き、夫との散歩や料理を楽しみ、特に問題な く過ごせるようになった。精神科受診を終了して年後、A さんは再び家にこも りがちになった。夫の話では、急に料理の作り方や人の名前を何度も確認するな ど、家事に時間がかかるようになった。A さんは｢何もできないと思っているで しょ｣と、ささいなことに怒ったり、急に泣き出すことが増え、夫と一緒に精神科 外来を再受診した。 頭部 MRI 検査の結果、多発性脳梗塞がみられ、血管性認知症 と診断された。A vascular dementia さんは｢自分が認知症なんて信じられない。もう治らない｣と話した。 dementia A さんに認められるのはどれか。2つ選べ。",
+     "after": "A さんの症状は半年ほどで落ち着き、夫との散歩や料理を楽しみ、特に問題な く過ごせるようになった。精神科受診を終了して1年後、A さんは再び家にこも りがちになった。夫の話では、急に料理の作り方や人の名前を何度も確認するな ど、家事に時間がかかるようになった。A さんは｢何もできないと思っているで しょ｣と、ささいなことに怒ったり、急に泣き出すことが増え、夫と一緒に精神科 外来を再受診した。 頭部 MRI 検査の結果、多発性脳梗塞がみられ、血管性認知症 と診断された。A vascular dementia さんは｢自分が認知症なんて信じられない。もう治らない｣と話した。 dementia A さんに認められるのはどれか。2つ選べ。",
+     "method": "segment_ok"
+    },
+    {
+     "field": "scenario",
+     "before": "A さん 65 歳、女性!は、夫と\u0002人で暮らしている。友人の死去後、食事量が減り、 \u0004か月前から気分の落ち込みが強くなった。夫が積極的に散歩に誘っても、A さん は｢体がだるい｣｢何をしても意味がない｣と話し、寝つきも悪くなり、日中ほとんどの 時間を臥床して過ごすようになった。心配した夫に連れられて精神科外来を受診した ところ、うつ病と 診断され、選択的セロトニン再取り込み阻害薬¹SSRI¼と不眠時の depression 睡眠薬が処方された。夫から精神科外来の看護師に｢日常生活で気を付けることはあ りますか｣と質問があった。",
+     "after": "A さん （65 歳、女性）は、夫と2人で暮らしている。友人の死去後、食事量が減り、 1か月前から気分の落ち込みが強くなった。夫が積極的に散歩に誘っても、A さん は｢体がだるい｣｢何をしても意味がない｣と話し、寝つきも悪くなり、日中ほとんどの 時間を臥床して過ごすようになった。心配した夫に連れられて精神科外来を受診した ところ、うつ病と 診断され、選択的セロトニン再取り込み阻害薬〈SSRI〉と不眠時の depression 睡眠薬が処方された。夫から精神科外来の看護師に｢日常生活で気を付けることはあ りますか｣と質問があった。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM117",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "A さんは要介護の認定を受け、介護サービスを検討することになった。体調 が良いときは、夫の料理を手伝ったり散歩に出かけている。排泄や着替えは時間を かけて人で行えるが、入浴は夫の介助が必要である。夫は｢入浴のサポートを受 けたり、自分が不在のときに泊まれる場所はないか｣と話している。外来看護師が A さんの希望を聞くと｢人が多い場所は苦手です。家の近くで好きなときに通えた り、家に来てもらえると安心です｣と話した。 A さんに紹介するサービスで適切なのはどれか。",
+     "after": "A さんは要介護2の認定を受け、介護サービスを検討することになった。体調 が良いときは、夫の料理を手伝ったり散歩に出かけている。排泄や着替えは時間を かけて1人で行えるが、入浴は夫の介助が必要である。夫は｢入浴のサポートを受 けたり、自分が不在のときに泊まれる場所はないか｣と話している。外来看護師が A さんの希望を聞くと｢人が多い場所は苦手です。家の近くで好きなときに通えた り、家に来てもらえると安心です｣と話した。 A さんに紹介するサービスで適切なのはどれか。",
+     "method": "repaired"
+    },
+    {
+     "field": "scenario",
+     "before": "A さん 65 歳、女性!は、夫と\u0002人で暮らしている。友人の死去後、食事量が減り、 \u0004か月前から気分の落ち込みが強くなった。夫が積極的に散歩に誘っても、A さん は｢体がだるい｣｢何をしても意味がない｣と話し、寝つきも悪くなり、日中ほとんどの 時間を臥床して過ごすようになった。心配した夫に連れられて精神科外来を受診した ところ、うつ病と 診断され、選択的セロトニン再取り込み阻害薬¹SSRI¼と不眠時の depression 睡眠薬が処方された。夫から精神科外来の看護師に｢日常生活で気を付けることはあ りますか｣と質問があった。",
+     "after": "A さん （65 歳、女性）は、夫と2人で暮らしている。友人の死去後、食事量が減り、 1か月前から気分の落ち込みが強くなった。夫が積極的に散歩に誘っても、A さん は｢体がだるい｣｢何をしても意味がない｣と話し、寝つきも悪くなり、日中ほとんどの 時間を臥床して過ごすようになった。心配した夫に連れられて精神科外来を受診した ところ、うつ病と 診断され、選択的セロトニン再取り込み阻害薬〈SSRI〉と不眠時の depression 睡眠薬が処方された。夫から精神科外来の看護師に｢日常生活で気を付けることはあ りますか｣と質問があった。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM118",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "choices[1]",
+     "before": "使い捨て手袋を時間ごとに交換する。",
+     "after": "使い捨て手袋を1時間ごとに交換する。",
+     "method": "repaired"
+    },
+    {
+     "field": "scenario",
+     "before": "午後\u0004時に震度 強の地震が発生し、避難所が開設された。地震発生の\u0002時間後、 避難所に救護所が設置され、近隣の病院から医療救護班が派遣された。医療救護班が 複数の被災者に対応するなか、A さん 54 歳、男性!が搬送されてきた。A さんは右 大部に\u0006cm の切創があり出血部位をタオルで押さえている。すぐに看護師が切創 部の処置を介助することになった。",
+     "after": "午後1時に震度 6強の地震が発生し、避難所が開設された。地震発生の2時間後、 避難所に救護所が設置され、近隣の病院から医療救護班が派遣された。医療救護班が 複数の被災者に対応するなか、A さん （54 歳、男性）が搬送されてきた。A さんは右 大腿部に4cm の切創があり出血部位をタオルで押さえている。すぐに看護師が切創 部の処置を介助することになった。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM119",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "発災翌日、避難所には 150 名ほどの避難者が登録をしている。医療救護班の医師 から｢この数日間で、インフルエンザの患者が病院で増えている。避難所でも注意 influenza したほうがよい｣と看護師に助言があった。看護師は避難所運営者と連携して、避 難所でのインフルエンザの集団発生防止策を立てることにした。午前 時現在、避 influenza 難者の中には発熱や咳をしている有症者はいない。 避難所での集団感染を防止する対策で適切なのはどれか。",
+     "after": "発災翌日、避難所には 150 名ほどの避難者が登録をしている。医療救護班の医師 から｢この数日間で、インフルエンザの患者が病院で増えている。避難所でも注意 influenza したほうがよい｣と看護師に助言があった。看護師は避難所運営者と連携して、避 難所でのインフルエンザの集団発生防止策を立てることにした。午前 9時現在、避 influenza 難者の中には発熱や咳をしている有症者はいない。 避難所での集団感染を防止する対策で適切なのはどれか。",
+     "method": "segment_ok"
+    },
+    {
+     "field": "choices[2]",
+     "before": "避難所の居住スペースの換気を日回行う。",
+     "after": "避難所の居住スペースの換気を1日1回行う。",
+     "method": "repaired"
+    },
+    {
+     "field": "scenario",
+     "before": "午後\u0004時に震度 強の地震が発生し、避難所が開設された。地震発生の\u0002時間後、 避難所に救護所が設置され、近隣の病院から医療救護班が派遣された。医療救護班が 複数の被災者に対応するなか、A さん 54 歳、男性!が搬送されてきた。A さんは右 大部に\u0006cm の切創があり出血部位をタオルで押さえている。すぐに看護師が切創 部の処置を介助することになった。",
+     "after": "午後1時に震度 6強の地震が発生し、避難所が開設された。地震発生の2時間後、 避難所に救護所が設置され、近隣の病院から医療救護班が派遣された。医療救護班が 複数の被災者に対応するなか、A さん （54 歳、男性）が搬送されてきた。A さんは右 大腿部に4cm の切創があり出血部位をタオルで押さえている。すぐに看護師が切創 部の処置を介助することになった。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K114-PM120",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "発災日後、B さん 72 歳、男性!が救護所を訪れた。地震で自宅が半壊したた め、妻と避難所で生活している。B さんは、左胸部から左腋窩にかけてピリピリと した持続する痛みを訴えた。看護師が観察すると、痛みの部位に沿って水疱を伴う 浮腫性紅斑が確認できた。体温 36.5 ℃、呼吸数 12/分、脈拍 66/分、血圧 126/80 mmHg。 看護師が B さんに行う観察で優先度が高いのはどれか。",
+     "after": "発災3日後、B さん （72 歳、男性）が救護所を訪れた。地震で自宅が半壊したた め、妻と避難所で生活している。B さんは、左胸部から左腋窩にかけてピリピリと した持続する痛みを訴えた。看護師が観察すると、痛みの部位に沿って水疱を伴う 浮腫性紅斑が確認できた。体温 36.5 ℃、呼吸数 12/分、脈拍 66/分、血圧 126/80 mmHg。 看護師が B さんに行う観察で優先度が高いのはどれか。",
+     "method": "repaired"
+    },
+    {
+     "field": "choices[1]",
+     "before": "週間の睡眠状況を問診する。",
+     "after": "1週間の睡眠状況を問診する。",
+     "method": "edge_repaired"
+    },
+    {
+     "field": "scenario",
+     "before": "午後\u0004時に震度 強の地震が発生し、避難所が開設された。地震発生の\u0002時間後、 避難所に救護所が設置され、近隣の病院から医療救護班が派遣された。医療救護班が 複数の被災者に対応するなか、A さん 54 歳、男性!が搬送されてきた。A さんは右 大部に\u0006cm の切創があり出血部位をタオルで押さえている。すぐに看護師が切創 部の処置を介助することになった。",
+     "after": "午後1時に震度 6強の地震が発生し、避難所が開設された。地震発生の2時間後、 避難所に救護所が設置され、近隣の病院から医療救護班が派遣された。医療救護班が 複数の被災者に対応するなか、A さん （54 歳、男性）が搬送されてきた。A さんは右 大腿部に4cm の切創があり出血部位をタオルで押さえている。すぐに看護師が切創 部の処置を介助することになった。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM001",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "令和元年 2019 年!の国民生活基礎調査における平均世帯人数はどれか。",
+     "after": "令和元年 （2019 年）の国民生活基礎調査における平均世帯人数はどれか。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM006",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "令和元年 2019 年!の国民健康・栄養調査で 20 歳以上の男性における喫煙習慣者 の割合に最も近いのはどれか。",
+     "after": "令和元年 （2019 年）の国民健康・栄養調査で 20 歳以上の男性における喫煙習慣者 の割合に最も近いのはどれか。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM007",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "choices[3]",
+     "before": "自我同一性VアイデンティティZの確立",
+     "after": "自我同一性〈アイデンティティ〉の確立",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM010",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "医療法に規定されている診療所とは、患者を入院させるための施設を有しないも の又は !人以下の患者を入院させるための施設を有するものをいう。 !に入る数字はどれか。",
+     "after": "医療法に規定されている診療所とは、患者を入院させるための施設を有しないも の又は （）人以下の患者を入院させるための施設を有するものをいう。 （）に入る数字はどれか。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM018",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "choices[0]",
+     "before": "笛のような音V笛音Z",
+     "after": "笛のような音〈笛音〉",
+     "method": "segment_ok"
+    },
+    {
+     "field": "choices[1]",
+     "before": "いびきのような音V類鼾音Z",
+     "after": "いびきのような音〈類鼾音〉",
+     "method": "segment_ok"
+    },
+    {
+     "field": "choices[2]",
+     "before": "耳元で髪をねじるような音V捻髪音Z",
+     "after": "耳元で髪をねじるような音〈捻髪音〉",
+     "method": "segment_ok"
+    },
+    {
+     "field": "choices[3]",
+     "before": "ストローで水中に空気を吹き込むような音V水泡音Z",
+     "after": "ストローで水中に空気を吹き込むような音〈水泡音〉",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM023",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "トリアージタッグ 別冊No. 1!を別に示す。 待機的治療群となるトリアージタッグはどれか。",
+     "after": "トリアージタッグ （別冊No. 1）を別に示す。 待機的治療群となるトリアージタッグはどれか。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM025",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "choices[2]",
+     "before": "BiotVビオーZ呼吸",
+     "after": "Biot〈ビオー〉呼吸",
+     "method": "bracket_subst_ok"
+    },
+    {
+     "field": "choices[3]",
+     "before": "KussmaulVクスマウルZ呼吸",
+     "after": "Kussmaul〈クスマウル〉呼吸",
+     "method": "bracket_subst_ok"
+    },
+    {
+     "field": "choices[4]",
+     "before": "Cheyne-StokesVチェーン-ストークスZ呼吸",
+     "after": "Cheyne-Stokes〈チェーン-ストークス〉呼吸",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM028",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "労働力調査における平成 22 年 2010 年!と令和年 2021 年!の男性と女性の労働 力人口の比較で正しいのはどれか。",
+     "after": "労働力調査における平成 22 年 （2010 年）と令和3年 （2021 年）の男性と女性の労働 力人口の比較で正しいのはどれか。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM030",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "感染症の予防及び感染症の患者に対する医療に関する法律V感染症法Zにおいて、 診断した際に全数を届け出る疾患はどれか。",
+     "after": "感染症の予防及び感染症の患者に対する医療に関する法律〈感染症法〉において、 診断した際に全数を届け出る疾患はどれか。",
+     "method": "bracket_subst_ok"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM031",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "健やか親子 21 第次!の基盤課題 A｢切れ目ない妊産婦・乳幼児への保健対策｣ の目標はどれか。",
+     "after": "健やか親子 21 （第2次）の基盤課題 A｢切れ目ない妊産婦・乳幼児への保健対策｣ の目標はどれか。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM032",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "choices[1]",
+     "before": "令和元年 2019 年!の健康寿命は女性より男性の方が長い。",
+     "after": "令和元年 （2019 年）の健康寿命は女性より男性の方が長い。",
+     "method": "repaired"
+    },
+    {
+     "field": "choices[2]",
+     "before": "令和元年 2019 年!の健康寿命は平成 28 年 2016 年!よりも短い。",
+     "after": "令和元年 （2019 年）の健康寿命は平成 28 年 （2016 年）よりも短い。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM039",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "choices[3]",
+     "before": "持続的気道陽圧VCPAPZ療法",
+     "after": "持続的気道陽圧〈CPAP〉療法",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM040",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "choices[1]",
+     "before": "BellocqVベロックZタンポンを挿入する。",
+     "after": "Bellocq〈ベロック〉タンポンを挿入する。",
+     "method": "bracket_subst_ok"
+    },
+    {
+     "field": "choices[2]",
+     "before": "KiesselbachVキーゼルバッハZ部位を圧迫する。",
+     "after": "Kiesselbach〈キーゼルバッハ〉部位を圧迫する。",
+     "method": "bracket_subst_ok"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM042",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "肝切除術後日の患者のドレーンから黄褐色の排液がみられた。 考えられる原因はどれか。",
+     "after": "肝切除術後3日の患者のドレーンから黄褐色の排液がみられた。 考えられる原因はどれか。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM043",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "choices[0]",
+     "before": "｢治療期間はか月です｣",
+     "after": "｢治療期間は1か月です｣",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM047",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "A さん 47 歳、男性、会社員!は、尿管結石に よる疝痛発作で入院した。入院翌 ureterolithiasis 日、自然に排石され、痛は消失したものの、結石が残存している。入院前は、ほ ぼ毎日、飲酒を伴う外食をしていた。 A さんへの退院指導で適切なのはどれか。",
+     "after": "A さん （47 歳、男性、会社員）は、尿管結石に よる疝痛発作で入院した。入院翌 ureterolithiasis 日、自然に排石され、疼痛は消失したものの、結石が残存している。入院前は、ほ ぼ毎日、飲酒を伴う外食をしていた。 A さんへの退院指導で適切なのはどれか。",
+     "method": "segment_ok"
+    },
+    {
+     "field": "choices[1]",
+     "before": "｢日L 程度の水分を摂取しましょう｣",
+     "after": "｢1日2L 程度の水分を摂取しましょう｣",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM049",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "A さん 86 歳、女性!は、生まれ育った地域で、近所に住む友人と交流しながら 人で暮らしていた。買い物へ行く途中に転倒し、腰椎圧迫骨折で入院治療を受け lumbar compression fracture た。退院後は他県に住む長女夫婦と同居している。暮らし始めて間もなく、A さ んは｢私はここで暮らして、新しい友人ができるかしら｣と長女に訴えるようにな り、徐々に口数が少なくなった。 このときの A さんの状況はどれか。",
+     "after": "A さん （86 歳、女性）は、生まれ育った地域で、近所に住む友人と交流しながら 1人で暮らしていた。買い物へ行く途中に転倒し、腰椎圧迫骨折で入院治療を受け lumbar compression fracture た。退院後は他県に住む長女夫婦と同居している。暮らし始めて間もなく、A さ んは｢私はここで暮らして、新しい友人ができるかしら｣と長女に訴えるようにな り、徐々に口数が少なくなった。 このときの A さんの状況はどれか。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM050",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "choices[2]",
+     "before": "下三頭筋",
+     "after": "下腿三頭筋",
+     "method": "repaired"
+    },
+    {
+     "field": "choices[3]",
+     "before": "大四頭筋",
+     "after": "大腿四頭筋",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM051",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "choices[1]",
+     "before": "高齢者は一律割の医療費を自己負担する。",
+     "after": "高齢者は一律3割の医療費を自己負担する。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM052",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "choices[0]",
+     "before": "歯の欠損 言葉が出てこない。",
+     "after": "歯牙の欠損 言葉が出てこない。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM053",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "A さん 92 歳、女性!は重度の障害のため体を動かすことができないが、表情な どで意思表示はできる。A さんは食べることが好きで｢最期まで口から食べたい｣ と言っていた。最近は誤嚥性肺炎で入退院を繰り返しており、現在は入院中で終末 aspiration pneumonia 期である。同居している家族は積極的な治療をしないことを希望し、自宅で A さ んを看取ることを決めた。 家族への退院時の指導で適切なのはどれか。",
+     "after": "A さん （92 歳、女性）は重度の障害のため体を動かすことができないが、表情な どで意思表示はできる。A さんは食べることが好きで｢最期まで口から食べたい｣ と言っていた。最近は誤嚥性肺炎で入退院を繰り返しており、現在は入院中で終末 aspiration pneumonia 期である。同居している家族は積極的な治療をしないことを希望し、自宅で A さ んを看取ることを決めた。 家族への退院時の指導で適切なのはどれか。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM054",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "BowlbyVボウルビィZが提唱したアタッチメントの記述で正しいのはどれか。",
+     "after": "Bowlby〈ボウルビィ〉が提唱したアタッチメントの記述で正しいのはどれか。",
+     "method": "bracket_subst_ok"
+    },
+    {
+     "field": "choices[0]",
+     "before": "人見知りは、 か月の乳児に出現する。",
+     "after": "人見知りは6、 7か月の乳児に出現する。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM055",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "choices[3]",
+     "before": "FallotVファローZ四徴症 tetralogy of Fallot",
+     "after": "Fallot〈ファロー〉四徴症 tetralogy of Fallot",
+     "method": "bracket_subst_ok"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM057",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "乳児に対する一次救命処置VBLSZで正しいのはどれか。",
+     "after": "乳児に対する一次救命処置〈BLS〉で正しいのはどれか。",
+     "method": "segment_ok"
+    },
+    {
+     "field": "choices[2]",
+     "before": "救助者が名いる場合、胸骨圧迫と人工呼吸の回数の比率は 30：2 である。",
+     "after": "救助者が2名いる場合、胸骨圧迫と人工呼吸の回数の比率は 30：2 である。",
+     "method": "repaired"
+    },
+    {
+     "field": "choices[3]",
+     "before": "胸骨圧迫の速さ 回数!は 130〜150 回/分である。",
+     "after": "胸骨圧迫の速さ （回数）は 130〜150 回/分である。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM058",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "児童虐待の防止等に関する法律V児童虐待防止法Zに基づいて行う通告で正しいの はどれか。",
+     "after": "児童虐待の防止等に関する法律〈児童虐待防止法〉に基づいて行う通告で正しいの はどれか。",
+     "method": "bracket_subst_ok"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM059",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "choices[0]",
+     "before": "育児休業、介護休業等育児又は家族介護を行う労働者の福祉に関する法律 V育児・介護休業法Zに規定されている。",
+     "after": "育児休業、介護休業等育児又は家族介護を行う労働者の福祉に関する法律 〈育児・介護休業法〉に規定されている。",
+     "method": "segment_ok"
+    },
+    {
+     "field": "choices[1]",
+     "before": "請求できるのは子が歳か月に達するまでである。",
+     "after": "請求できるのは子が1歳6か月に達するまでである。",
+     "method": "repaired"
+    },
+    {
+     "field": "choices[3]",
+     "before": "日に回請求できる。",
+     "after": "1日に2回請求できる。",
+     "method": "edge_repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM062",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "choices[0]",
+     "before": "動脈血酸素分圧VPaO2Zの上昇によって閉鎖する。",
+     "after": "動脈血酸素分圧〈PaO2〉の上昇によって閉鎖する。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM065",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "A さん 30 歳、男性!は、昼間の過剰な眠気を主訴に来院した。会社の会議では いつも寝てしまい、居眠り運転で交通事故を起こしたこともある。笑ったときに脱 力してしまうことや、入眠時に誰もいないのに人影が見えたり、睡眠と覚醒の移行 期に体を動かせなくなることがある。 最も考えられる疾患はどれか。",
+     "after": "A さん （30 歳、男性）は、昼間の過剰な眠気を主訴に来院した。会社の会議では いつも寝てしまい、居眠り運転で交通事故を起こしたこともある。笑ったときに脱 力してしまうことや、入眠時に誰もいないのに人影が見えたり、睡眠と覚醒の移行 期に体を動かせなくなることがある。 最も考えられる疾患はどれか。",
+     "method": "repaired"
+    },
+    {
+     "field": "choices[3]",
+     "before": "レストレスレッグス症候群Vむずむず脚症候群Z restless legs syndrome",
+     "after": "レストレスレッグス症候群〈むずむず脚症候群〉 restless legs syndrome",
+     "method": "bracket_subst_ok"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM066",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "A さん 43 歳、男性!は統合失調症で通院していたが、服薬中断によって幻覚妄 schizophrenia 想状態が続いていた。ある日、A さんの父親に対する被害妄想が強くなり、父親 へ殴りかかろうとしたところを母親に制止された。その後、A さんは母親に促さ れて精神科病院を受診し｢薬は飲みたくないけど、父親が嫌がらせをするので、す ぐに入院して家から離れたい｣と訴えた。母親も入院治療を強く希望している。 A さんの入院形態はどれか。",
+     "after": "A さん （43 歳、男性）は統合失調症で通院していたが、服薬中断によって幻覚妄 schizophrenia 想状態が続いていた。ある日、A さんの父親に対する被害妄想が強くなり、父親 へ殴りかかろうとしたところを母親に制止された。その後、A さんは母親に促さ れて精神科病院を受診し｢薬は飲みたくないけど、父親が嫌がらせをするので、す ぐに入院して家から離れたい｣と訴えた。母親も入院治療を強く希望している。 A さんの入院形態はどれか。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM067",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "A さん 55 歳、男性!は筋萎縮性側索硬化症 VALSZで、経口摂取と胃瘻による経 amyotrophic lateral sclerosis 管栄養を併用し、在宅療養することになった。 A さんと家族介護者への指導内容で適切なのはどれか。",
+     "after": "A さん （55 歳、男性）は筋萎縮性側索硬化症 〈ALS〉で、経口摂取と胃瘻による経 amyotrophic lateral sclerosis 管栄養を併用し、在宅療養することになった。 A さんと家族介護者への指導内容で適切なのはどれか。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM068",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "令和元年 2019 年!の介護サービス施設・事業所調査において、介護保険制度に よる訪問看護の利用者の特徴で正しいのはどれか。",
+     "after": "令和元年 （2019 年）の介護サービス施設・事業所調査において、介護保険制度に よる訪問看護の利用者の特徴で正しいのはどれか。",
+     "method": "repaired"
+    },
+    {
+     "field": "choices[0]",
+     "before": "要介護の利用者が最も多い。",
+     "after": "要介護5の利用者が最も多い。",
+     "method": "repaired"
+    },
+    {
+     "field": "choices[3]",
+     "before": "要支援、の利用者は全体の利用者の割を占める。",
+     "after": "要支援1、2の利用者は全体の利用者の4割を占める。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM069",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "A さん 82 歳、女性、要介護!は人で暮らしている。認知症 と診断され、週 dementia 回の訪問看護を利用することになった。訪問看護師は、A さんが調理できなく なったので、配食サービスを導入したと介護支援専門員から情報を得た。初回訪問 時に、A さんは季節外れの服を着ており、今日の日付を答えられなかった。トイ レで排泄できている。 訪問看護師が収集した情報のうち、手段的日常生活動作VIADLZはどれか。",
+     "after": "A さん （82 歳、女性、要介護1）は1人で暮らしている。認知症 と診断され、週 dementia 1回の訪問看護を利用することになった。訪問看護師は、A さんが調理できなく なったので、配食サービスを導入したと介護支援専門員から情報を得た。初回訪問 時に、A さんは季節外れの服を着ており、今日の日付を答えられなかった。トイ レで排泄できている。 訪問看護師が収集した情報のうち、手段的日常生活動作〈IADL〉はどれか。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM070",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "A さん 90 歳、男性!は要介護となり、長男 60 歳!と同居することになった。 長男は｢親を介護することがこんなに大変だとは思わなかった。親が衰えてつらい と感じるのは自分だけだろうか｣と訪問看護師に話した。 訪問看護師の対応で最も適切なのはどれか。",
+     "after": "A さん （90 歳、男性）は要介護3となり、長男 （60 歳）と同居することになった。 長男は｢親を介護することがこんなに大変だとは思わなかった。親が衰えてつらい と感じるのは自分だけだろうか｣と訪問看護師に話した。 訪問看護師の対応で最も適切なのはどれか。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM071",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "choices[3]",
+     "before": "年回の年次有給休暇を取得させることが義務付けられている。",
+     "after": "年5回の年次有給休暇を取得させることが義務付けられている。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM072",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "A 君 歳、男児!は地震による災害のため体育館に両親と避難し、週後に仮 設住宅に移動した。その後か月経過したころから、A 君はわざと机や椅子をガ タガタ揺らしながら｢地震だ、逃げろ｣などと騒いで遊んでいた。母親は仮設住宅に 巡回に来ていた看護師に｢A の遊びにどのように対応したらよいでしょうか｣と相 談した。 看護師の母親への説明で適切なのはどれか。",
+     "after": "A 君 （4歳、男児）は地震による災害のため体育館に両親と避難し、2週後に仮 設住宅に移動した。その後1か月経過したころから、A 君はわざと机や椅子をガ タガタ揺らしながら｢地震だ、逃げろ｣などと騒いで遊んでいた。母親は仮設住宅に 巡回に来ていた看護師に｢A の遊びにどのように対応したらよいでしょうか｣と相 談した。 看護師の母親への説明で適切なのはどれか。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM073",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "choices[2]",
+     "before": "圧挫症候群Vクラッシュ症候群Z crush syndrome",
+     "after": "圧挫症候群〈クラッシュ症候群〉 crush syndrome",
+     "method": "segment_ok"
+    },
+    {
+     "field": "choices[3]",
+     "before": "心的外傷後ストレス障害VPTSDZ posttraumatic stress disorder",
+     "after": "心的外傷後ストレス障害〈PTSD〉 posttraumatic stress disorder",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM074",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "A ちゃん 歳!は、両親 外国籍!と人で暮らしている。来日してか月が 経った。日前に急性胃腸炎で個室に入院した。症状が改善し、経口での食事を再 acute gastroenteritis 開することになった。看護師が訪室すると、香辛料の香りが部屋に充満しており、 唐辛子の入った肉などのたくさんの料理が並べられていた。母親は看護師に気付く と｢A は日本食には慣れておらず、食べられないので家で作ってきました｣と話し た。 このときの母親への看護師の対応で適切なのはどれか。",
+     "after": "A ちゃん （3歳）は、両親 （外国籍）と3人で暮らしている。来日して1か月が 経った。2日前に急性胃腸炎で個室に入院した。症状が改善し、経口での食事を再 acute gastroenteritis 開することになった。看護師が訪室すると、香辛料の香りが部屋に充満しており、 唐辛子の入った肉などのたくさんの料理が並べられていた。母親は看護師に気付く と｢A は日本食には慣れておらず、食べられないので家で作ってきました｣と話し た。 このときの母親への看護師の対応で適切なのはどれか。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM077",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "choices[4]",
+     "before": "下行性の痛抑制",
+     "after": "下行性の疼痛抑制",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM079",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "大動脈解離で真腔と偽腔 解離腔!が形成される。 aortic dissection 偽腔が形成される大動脈壁の部位はどれか。",
+     "after": "大動脈解離で真腔と偽腔 （解離腔）が形成される。 aortic dissection 偽腔が形成される大動脈壁の部位はどれか。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM080",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "choices[1]",
+     "before": "致死率は% 以下である。",
+     "after": "致死率は2% 以下である。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM091",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "choices[0]",
+     "before": "CourvoisierVクールボアジェZ徴候",
+     "after": "Courvoisier〈クールボアジェ〉徴候",
+     "method": "bracket_subst_ok"
+    },
+    {
+     "field": "choices[1]",
+     "before": "BlumbergVブルンベルグZ徴候",
+     "after": "Blumberg〈ブルンベルグ〉徴候",
+     "method": "bracket_subst_ok"
+    },
+    {
+     "field": "choices[2]",
+     "before": "HomansVホーマンズZ徴候",
+     "after": "Homans〈ホーマンズ〉徴候",
+     "method": "bracket_subst_ok"
+    },
+    {
+     "field": "choices[3]",
+     "before": "RombergVロンベルグZ徴候",
+     "after": "Romberg〈ロンベルグ〉徴候",
+     "method": "bracket_subst_ok"
+    },
+    {
+     "field": "scenario",
+     "before": "A さん 49 歳、女性!は、これまで在宅勤務でほとんど外出することがなく、BMI 33 であった。A さんは久しぶりの出勤の際に転倒し、右大\u0013骨頸部骨折と診断され、 femoral neck fracture 右人工股関節置換術を受けることになった。",
+     "after": "A さん （49 歳、女性）は、これまで在宅勤務でほとんど外出することがなく、BMI 33 であった。A さんは久しぶりの出勤の際に転倒し、右大腿骨頸部骨折と診断され、 femoral neck fracture 右人工股関節置換術を受けることになった。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM092",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "scenario",
+     "before": "A さん 49 歳、女性!は、これまで在宅勤務でほとんど外出することがなく、BMI 33 であった。A さんは久しぶりの出勤の際に転倒し、右大\u0013骨頸部骨折と診断され、 femoral neck fracture 右人工股関節置換術を受けることになった。",
+     "after": "A さん （49 歳、女性）は、これまで在宅勤務でほとんど外出することがなく、BMI 33 であった。A さんは久しぶりの出勤の際に転倒し、右大腿骨頸部骨折と診断され、 femoral neck fracture 右人工股関節置換術を受けることになった。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM093",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "術後日、A さんの全身状態は改善し、読書をして過ごしている。 A さんの術後の合併症を予防する適切な肢位はどれか。",
+     "after": "術後3日、A さんの全身状態は改善し、読書をして過ごしている。 A さんの術後の合併症を予防する適切な肢位はどれか。",
+     "method": "repaired"
+    },
+    {
+     "field": "scenario",
+     "before": "A さん 49 歳、女性!は、これまで在宅勤務でほとんど外出することがなく、BMI 33 であった。A さんは久しぶりの出勤の際に転倒し、右大\u0013骨頸部骨折と診断され、 femoral neck fracture 右人工股関節置換術を受けることになった。",
+     "after": "A さん （49 歳、女性）は、これまで在宅勤務でほとんど外出することがなく、BMI 33 であった。A さんは久しぶりの出勤の際に転倒し、右大腿骨頸部骨折と診断され、 femoral neck fracture 右人工股関節置換術を受けることになった。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM094",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "choices[0]",
+     "before": "秒率",
+     "after": "1秒率",
+     "method": "edge_repaired"
+    },
+    {
+     "field": "choices[2]",
+     "before": "回換気量",
+     "after": "1回換気量",
+     "method": "edge_repaired"
+    },
+    {
+     "field": "scenario",
+     "before": "A さん 57 歳、男性!は、妻 50 歳!と\u0002人で暮らしている。21 歳から喫煙習慣があ り、\u0007年前に風邪で受診した際に肺気腫と診断された。最近は坂道や階段を昇ると息 pulmonary emphysema 切れを自覚するようになってきた。",
+     "after": "A さん （57 歳、男性）は、妻 （50 歳）と2人で暮らしている。21 歳から喫煙習慣があ り、5年前に風邪で受診した際に肺気腫と診断された。最近は坂道や階段を昇ると息 pulmonary emphysema 切れを自覚するようになってきた。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM095",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "scenario",
+     "before": "A さん 57 歳、男性!は、妻 50 歳!と\u0002人で暮らしている。21 歳から喫煙習慣があ り、\u0007年前に風邪で受診した際に肺気腫と診断された。最近は坂道や階段を昇ると息 pulmonary emphysema 切れを自覚するようになってきた。",
+     "after": "A さん （57 歳、男性）は、妻 （50 歳）と2人で暮らしている。21 歳から喫煙習慣があ り、5年前に風邪で受診した際に肺気腫と診断された。最近は坂道や階段を昇ると息 pulmonary emphysema 切れを自覚するようになってきた。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM096",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "scenario",
+     "before": "A さん 57 歳、男性!は、妻 50 歳!と\u0002人で暮らしている。21 歳から喫煙習慣があ り、\u0007年前に風邪で受診した際に肺気腫と診断された。最近は坂道や階段を昇ると息 pulmonary emphysema 切れを自覚するようになってきた。",
+     "after": "A さん （57 歳、男性）は、妻 （50 歳）と2人で暮らしている。21 歳から喫煙習慣があ り、5年前に風邪で受診した際に肺気腫と診断された。最近は坂道や階段を昇ると息 pulmonary emphysema 切れを自覚するようになってきた。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM098",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "診断からか月後、かかりつけの病院の看護師に A さんは｢50 年以上住んでい るこの土地で、できるだけ他人の迷惑にならず生活を続けたいと思って貯金もして きました。私は軽い認知症だと言われたのですが、これからも自分でお金の管理が dementia できるか心配です。どうしたらよいのでしょうか。私が使えるサービスがあれば知 りたいです｣と話した。 A さんが利用できるのはどれか。",
+     "after": "診断から2か月後、かかりつけの病院の看護師に A さんは｢50 年以上住んでい るこの土地で、できるだけ他人の迷惑にならず生活を続けたいと思って貯金もして きました。私は軽い認知症だと言われたのですが、これからも自分でお金の管理が dementia できるか心配です。どうしたらよいのでしょうか。私が使えるサービスがあれば知 りたいです｣と話した。 A さんが利用できるのはどれか。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM102",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "B 看護師は、A さんが処置室前の待合室で T 字杖を持ち、椅子から立ち上がろ うとしているのを見かけた。B 看護師が声をかけると、A さんは｢夫が会計をして いますが、急にトイレに行きたくなって｣と慌てていた。夫は A さんからm ほど 離れた所で会計をしているため、A さんの様子に気がついていない。待合室は患 者や家族で混雑しており、外来にある車椅子は別の患者が使用中だった。 A さんへの B 看護師の声かけで適切なのはどれか。",
+     "after": "B 看護師は、A さんが処置室前の待合室で T 字杖を持ち、椅子から立ち上がろ うとしているのを見かけた。B 看護師が声をかけると、A さんは｢夫が会計をして いますが、急にトイレに行きたくなって｣と慌てていた。夫は A さんから2m ほど 離れた所で会計をしているため、A さんの様子に気がついていない。待合室は患 者や家族で混雑しており、外来にある車椅子は別の患者が使用中だった。 A さんへの B 看護師の声かけで適切なのはどれか。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM103",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "scenario",
+     "before": "A ちゃんは出生前診断で羊水過多があり先天性食道閉鎖症の 疑いを指摘されてい congenital esophageal atresia た。在胎 37 週\u0007日に帝王切開で出生、出生体重 2,780 g、ApgarVアプガーZスコア\u0004 分後 点、\u0007分後 点である。出生後、A ちゃんは先天性食道閉鎖症と診断された。 congenital esophageal atresia",
+     "after": "A ちゃんは出生前診断で羊水過多があり先天性食道閉鎖症の 疑いを指摘されてい congenital esophageal atresia た。在胎 37 週5日に帝王切開で出生、出生体重 2,780 g、Apgar〈アプガー〉スコア 1分後 8点、5分後 9点である。出生後、A ちゃんは先天性食道閉鎖症と診断された。 congenital esophageal atresia",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM104",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "A ちゃんは、出生当日に胃瘻造設、気管食道瘻切断と食道端々吻合術を受け、 無事に終了した。術後日、人工呼吸器管理下で胸腔ドレーンが挿入されている。 このときの看護で適切なのはどれか。",
+     "after": "A ちゃんは、出生当日に胃瘻造設、気管食道瘻切断と食道端々吻合術を受け、 無事に終了した。術後2日、人工呼吸器管理下で胸腔ドレーンが挿入されている。 このときの看護で適切なのはどれか。",
+     "method": "repaired"
+    },
+    {
+     "field": "scenario",
+     "before": "A ちゃんは出生前診断で羊水過多があり先天性食道閉鎖症の 疑いを指摘されてい congenital esophageal atresia た。在胎 37 週\u0007日に帝王切開で出生、出生体重 2,780 g、ApgarVアプガーZスコア\u0004 分後 点、\u0007分後 点である。出生後、A ちゃんは先天性食道閉鎖症と診断された。 congenital esophageal atresia",
+     "after": "A ちゃんは出生前診断で羊水過多があり先天性食道閉鎖症の 疑いを指摘されてい congenital esophageal atresia た。在胎 37 週5日に帝王切開で出生、出生体重 2,780 g、Apgar〈アプガー〉スコア 1分後 8点、5分後 9点である。出生後、A ちゃんは先天性食道閉鎖症と診断された。 congenital esophageal atresia",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM105",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "A ちゃんは歳か月になった。現在は胃瘻を閉鎖し経口摂取をしているが、 吻合部の狭窄による嚥下困難が生じ、これまでに食道バルーン拡張術を回行っ た。現在も症状が残っていて、固形物の通過障害が軽度ある。身長 92.5 cm 25 パーセンタイル!、体重 11.5 kg パーセンタイル!で、半年後に保育所へ入園す る。両親が｢A はあまり体重が増えません。保育所ではみんなより食事に時間がか かるのではないかと心配です｣と外来看護師に話したため、今後の対応について両 親、看護師および医師で話し合った。 A ちゃんの摂食に関する対応で適切なのはどれか。",
+     "after": "A ちゃんは3歳6か月になった。現在は胃瘻を閉鎖し経口摂取をしているが、 吻合部の狭窄による嚥下困難が生じ、これまでに食道バルーン拡張術を2回行っ た。現在も症状が残っていて、固形物の通過障害が軽度ある。身長 92.5 cm （25 パーセンタイル）、体重 11.5 kg （3パーセンタイル）で、半年後に保育所へ入園す る。両親が｢A はあまり体重が増えません。保育所ではみんなより食事に時間がか かるのではないかと心配です｣と外来看護師に話したため、今後の対応について両 親、看護師および医師で話し合った。 A ちゃんの摂食に関する対応で適切なのはどれか。",
+     "method": "repaired"
+    },
+    {
+     "field": "scenario",
+     "before": "A ちゃんは出生前診断で羊水過多があり先天性食道閉鎖症の 疑いを指摘されてい congenital esophageal atresia た。在胎 37 週\u0007日に帝王切開で出生、出生体重 2,780 g、ApgarVアプガーZスコア\u0004 分後 点、\u0007分後 点である。出生後、A ちゃんは先天性食道閉鎖症と診断された。 congenital esophageal atresia",
+     "after": "A ちゃんは出生前診断で羊水過多があり先天性食道閉鎖症の 疑いを指摘されてい congenital esophageal atresia た。在胎 37 週5日に帝王切開で出生、出生体重 2,780 g、Apgar〈アプガー〉スコア 1分後 8点、5分後 9点である。出生後、A ちゃんは先天性食道閉鎖症と診断された。 congenital esophageal atresia",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM106",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "NaegeleVネーゲレZ概算法を用いて A さんの分娩予定日を求めよ。",
+     "after": "Naegele〈ネーゲレ〉概算法を用いて A さんの分娩予定日を求めよ。",
+     "method": "bracket_subst_ok"
+    },
+    {
+     "field": "scenario",
+     "before": "A さん 28 歳、会社員!は、夫 30 歳、会社員!と\u0002人で暮らしている。2023 年\u0002月 \u0007日からの月経を最後に無月経となり、妊娠の可能性を考えて受診した。医師の診察 の結果、妊娠と診断された。",
+     "after": "A さん （28 歳、会社員）は、夫 （30 歳、会社員）と2人で暮らしている。2023 年2月 5日からの月経を最後に無月経となり、妊娠の可能性を考えて受診した。医師の診察 の結果、妊娠と診断された。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM107",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "診察後、A さんから看護師に妊娠中の生活や体重の管理について質問があった。 A さんは｢缶ビール本を週に回、コーヒーを日に杯以上飲んでいます。友 人に勧められて半年前から日 240 μg の葉酸のサプリメントを飲んでいます｣と話 す。A さんは身長 160 cm、非妊時体重 62 kg である。 看護師のA さんへの説明で適切なのはどれか。",
+     "after": "診察後、A さんから看護師に妊娠中の生活や体重の管理について質問があった。 A さんは｢缶ビール2本を週に1回、コーヒーを1日に6杯以上飲んでいます。友 人に勧められて半年前から1日 240 μg の葉酸のサプリメントを飲んでいます｣と話 す。A さんは身長 160 cm、非妊時体重 62 kg である。 看護師のA さんへの説明で適切なのはどれか。",
+     "method": "repaired"
+    },
+    {
+     "field": "choices[1]",
+     "before": "｢妊娠中の体重増加は kg 未満にしましょう｣",
+     "after": "｢妊娠中の体重増加は 7kg 未満にしましょう｣",
+     "method": "repaired"
+    },
+    {
+     "field": "scenario",
+     "before": "A さん 28 歳、会社員!は、夫 30 歳、会社員!と\u0002人で暮らしている。2023 年\u0002月 \u0007日からの月経を最後に無月経となり、妊娠の可能性を考えて受診した。医師の診察 の結果、妊娠と診断された。",
+     "after": "A さん （28 歳、会社員）は、夫 （30 歳、会社員）と2人で暮らしている。2023 年2月 5日からの月経を最後に無月経となり、妊娠の可能性を考えて受診した。医師の診察 の結果、妊娠と診断された。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM108",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "妊娠 30 週日。A さんは妊婦健康診査を受け、妊娠経過に異常はなく児の発育 も順調と診断された。診察後、A さんから看護師に｢最近、腰が痛くなることがあ ります。腰痛への対処法はありますか｣と質問があった。 看護師のA さんへの説明内容で適切なのはどれか。",
+     "after": "妊娠 30 週2日。A さんは妊婦健康診査を受け、妊娠経過に異常はなく児の発育 も順調と診断された。診察後、A さんから看護師に｢最近、腰が痛くなることがあ ります。腰痛への対処法はありますか｣と質問があった。 看護師のA さんへの説明内容で適切なのはどれか。",
+     "method": "repaired"
+    },
+    {
+     "field": "choices[2]",
+     "before": "SimsVシムスZ位で休む。",
+     "after": "Sims〈シムス〉位で休む。",
+     "method": "bracket_subst_ok"
+    },
+    {
+     "field": "scenario",
+     "before": "A さん 28 歳、会社員!は、夫 30 歳、会社員!と\u0002人で暮らしている。2023 年\u0002月 \u0007日からの月経を最後に無月経となり、妊娠の可能性を考えて受診した。医師の診察 の結果、妊娠と診断された。",
+     "after": "A さん （28 歳、会社員）は、夫 （30 歳、会社員）と2人で暮らしている。2023 年2月 5日からの月経を最後に無月経となり、妊娠の可能性を考えて受診した。医師の診察 の結果、妊娠と診断された。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM109",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "scenario",
+     "before": "A さん 32 歳、初産婦!は妊娠 39 週\u0006日で男児を正常分娩した。出生体重 3,000 g、 身長 48.0 cm。出生直後、児に付着していた羊水を拭き取り、インファントラジアン トウォーマーの下で観察を行った。その後、温めておいた衣服を着せてコットに寝か せ、コットを空調の風が当たらない場所に配置した。",
+     "after": "A さん （32 歳、初産婦）は妊娠 39 週4日で男児を正常分娩した。出生体重 3,000 g、 身長 48.0 cm。出生直後、児に付着していた羊水を拭き取り、インファントラジアン トウォーマーの下で観察を行った。その後、温めておいた衣服を着せてコットに寝か せ、コットを空調の風が当たらない場所に配置した。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM110",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "産褥日。A さんは児の啼泣に合わせて横抱きで母乳を与えている。A さんの 乳房の型はⅢ型、熱感が出てきている。乳管は左右とも本開通している。｢抱き 方は色々あると聞きました。今の方法以外の授乳の仕方はありますか｣と相談を受 けた。 授乳の仕方を図に示す。 A さんに適した授乳の仕方はどれか。",
+     "after": "産褥3日。A さんは児の啼泣に合わせて横抱きで母乳を与えている。A さんの 乳房の型はⅢ型、熱感が出てきている。乳管は左右とも4本開通している。｢抱き 方は色々あると聞きました。今の方法以外の授乳の仕方はありますか｣と相談を受 けた。 授乳の仕方を図に示す。 A さんに適した授乳の仕方はどれか。",
+     "method": "repaired"
+    },
+    {
+     "field": "scenario",
+     "before": "A さん 32 歳、初産婦!は妊娠 39 週\u0006日で男児を正常分娩した。出生体重 3,000 g、 身長 48.0 cm。出生直後、児に付着していた羊水を拭き取り、インファントラジアン トウォーマーの下で観察を行った。その後、温めておいた衣服を着せてコットに寝か せ、コットを空調の風が当たらない場所に配置した。",
+     "after": "A さん （32 歳、初産婦）は妊娠 39 週4日で男児を正常分娩した。出生体重 3,000 g、 身長 48.0 cm。出生直後、児に付着していた羊水を拭き取り、インファントラジアン トウォーマーの下で観察を行った。その後、温めておいた衣服を着せてコットに寝か せ、コットを空調の風が当たらない場所に配置した。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM111",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "日齢。体重 2,760 g。児のバイタルサインは正常である。経皮ビリルビン 10 mg/dL。前日の排尿は日回、排便日回。母乳のみを哺乳している。回 の授乳に 30 分以上かかり、授乳後も児は啼泣している。児は音に反応して抱きつ くような動きをする。 新生児のアセスメントで適切なのはどれか。",
+     "after": "日齢4。体重 2,760 g。児のバイタルサインは正常である。経皮ビリルビン 10 mg/dL。前日の排尿は1日4回、排便1日1回。母乳のみを哺乳している。1回 の授乳に 30 分以上かかり、授乳後も児は啼泣している。児は音に反応して抱きつ くような動きをする。 新生児のアセスメントで適切なのはどれか。",
+     "method": "repaired"
+    },
+    {
+     "field": "scenario",
+     "before": "A さん 32 歳、初産婦!は妊娠 39 週\u0006日で男児を正常分娩した。出生体重 3,000 g、 身長 48.0 cm。出生直後、児に付着していた羊水を拭き取り、インファントラジアン トウォーマーの下で観察を行った。その後、温めておいた衣服を着せてコットに寝か せ、コットを空調の風が当たらない場所に配置した。",
+     "after": "A さん （32 歳、初産婦）は妊娠 39 週4日で男児を正常分娩した。出生体重 3,000 g、 身長 48.0 cm。出生直後、児に付着していた羊水を拭き取り、インファントラジアン トウォーマーの下で観察を行った。その後、温めておいた衣服を着せてコットに寝か せ、コットを空調の風が当たらない場所に配置した。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM112",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "scenario",
+     "before": "A さん 22 歳、男性!は、高校卒業後に就職したが、同僚との関係がうまく築けず、 転職を繰り返している。｢他の人と自分はどこか違う。自分の将来が不安だ｣と感じた A さんは精神科クリニックを受診し、自閉症スペクトラム障害と診断された。 autism spectrum disorder A さんは小学生のころから他人の気持ちが理解できないときがあり、対人関係を 築くことが苦手で、学校で孤立していた。また、偏食が強く、るいそうがみられたた めに、同級生から容姿のことでいじめられたことがあった。中学校や高校では忘れ物 が多く、集団生活になじめなかった。",
+     "after": "A さん （22 歳、男性）は、高校卒業後に就職したが、同僚との関係がうまく築けず、 転職を繰り返している。｢他の人と自分はどこか違う。自分の将来が不安だ｣と感じた A さんは精神科クリニックを受診し、自閉症スペクトラム障害と診断された。 autism spectrum disorder A さんは小学生のころから他人の気持ちが理解できないときがあり、対人関係を 築くことが苦手で、学校で孤立していた。また、偏食が強く、るいそうがみられたた めに、同級生から容姿のことでいじめられたことがあった。中学校や高校では忘れ物 が多く、集団生活になじめなかった。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM113",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "scenario",
+     "before": "A さん 22 歳、男性!は、高校卒業後に就職したが、同僚との関係がうまく築けず、 転職を繰り返している。｢他の人と自分はどこか違う。自分の将来が不安だ｣と感じた A さんは精神科クリニックを受診し、自閉症スペクトラム障害と診断された。 autism spectrum disorder A さんは小学生のころから他人の気持ちが理解できないときがあり、対人関係を 築くことが苦手で、学校で孤立していた。また、偏食が強く、るいそうがみられたた めに、同級生から容姿のことでいじめられたことがあった。中学校や高校では忘れ物 が多く、集団生活になじめなかった。",
+     "after": "A さん （22 歳、男性）は、高校卒業後に就職したが、同僚との関係がうまく築けず、 転職を繰り返している。｢他の人と自分はどこか違う。自分の将来が不安だ｣と感じた A さんは精神科クリニックを受診し、自閉症スペクトラム障害と診断された。 autism spectrum disorder A さんは小学生のころから他人の気持ちが理解できないときがあり、対人関係を 築くことが苦手で、学校で孤立していた。また、偏食が強く、るいそうがみられたた めに、同級生から容姿のことでいじめられたことがあった。中学校や高校では忘れ物 が多く、集団生活になじめなかった。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM114",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "scenario",
+     "before": "A さん 22 歳、男性!は、高校卒業後に就職したが、同僚との関係がうまく築けず、 転職を繰り返している。｢他の人と自分はどこか違う。自分の将来が不安だ｣と感じた A さんは精神科クリニックを受診し、自閉症スペクトラム障害と診断された。 autism spectrum disorder A さんは小学生のころから他人の気持ちが理解できないときがあり、対人関係を 築くことが苦手で、学校で孤立していた。また、偏食が強く、るいそうがみられたた めに、同級生から容姿のことでいじめられたことがあった。中学校や高校では忘れ物 が多く、集団生活になじめなかった。",
+     "after": "A さん （22 歳、男性）は、高校卒業後に就職したが、同僚との関係がうまく築けず、 転職を繰り返している。｢他の人と自分はどこか違う。自分の将来が不安だ｣と感じた A さんは精神科クリニックを受診し、自閉症スペクトラム障害と診断された。 autism spectrum disorder A さんは小学生のころから他人の気持ちが理解できないときがあり、対人関係を 築くことが苦手で、学校で孤立していた。また、偏食が強く、るいそうがみられたた めに、同級生から容姿のことでいじめられたことがあった。中学校や高校では忘れ物 が多く、集団生活になじめなかった。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM115",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "choices[2]",
+     "before": "医師の診察を月回に減らすこと",
+     "after": "医師の診察を月1回に減らすこと",
+     "method": "repaired"
+    },
+    {
+     "field": "scenario",
+     "before": "A さん 87 歳、女性、要介護\u0004!は\u0004人暮らしで、長女 52 歳、会社員!が同じマン ションの隣の部屋に住んでいる。\u0007年前に乳癌のため左乳房切除術を受けた。\u0004年前 breast cancer に肺への転移が確認され、胸水の貯留への対症療法のため入退院を繰り返していた。 退院後は、状態観察と体調管理のため大学病院の外来を月に\u0002回受診し、訪問介護と 訪問看護を週に\u0004回ずつ利用して在宅療養を続け｢これ以上の積極的な治療はせずに 自宅で最期まで過ごしたい｣と話している。 ある日、長女から｢最近、母は通院がつらそうで、先月は\u0004回しか受診していませ ん。医師の診察は大事だと思うので、受診を続けるために主治医に何を相談すればよ いでしょうか｣と訪問看護師に相談があった。",
+     "after": "A さん （87 歳、女性、要介護1）は1人暮らしで、長女 （52 歳、会社員）が同じマン ションの隣の部屋に住んでいる。5年前に乳癌のため左乳房切除術を受けた。1年前 breast cancer に肺への転移が確認され、胸水の貯留への対症療法のため入退院を繰り返していた。 退院後は、状態観察と体調管理のため大学病院の外来を月に2回受診し、訪問介護と 訪問看護を週に1回ずつ利用して在宅療養を続け｢これ以上の積極的な治療はせずに 自宅で最期まで過ごしたい｣と話している。 ある日、長女から｢最近、母は通院がつらそうで、先月は1回しか受診していませ ん。医師の診察は大事だと思うので、受診を続けるために主治医に何を相談すればよ いでしょうか｣と訪問看護師に相談があった。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM116",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "choices[3]",
+     "before": "｢A さんの回分の食事量を減らし回数を増やしましょう｣",
+     "after": "｢A さんの1回分の食事量を減らし回数を増やしましょう｣",
+     "method": "repaired"
+    },
+    {
+     "field": "scenario",
+     "before": "A さん 87 歳、女性、要介護\u0004!は\u0004人暮らしで、長女 52 歳、会社員!が同じマン ションの隣の部屋に住んでいる。\u0007年前に乳癌のため左乳房切除術を受けた。\u0004年前 breast cancer に肺への転移が確認され、胸水の貯留への対症療法のため入退院を繰り返していた。 退院後は、状態観察と体調管理のため大学病院の外来を月に\u0002回受診し、訪問介護と 訪問看護を週に\u0004回ずつ利用して在宅療養を続け｢これ以上の積極的な治療はせずに 自宅で最期まで過ごしたい｣と話している。 ある日、長女から｢最近、母は通院がつらそうで、先月は\u0004回しか受診していませ ん。医師の診察は大事だと思うので、受診を続けるために主治医に何を相談すればよ いでしょうか｣と訪問看護師に相談があった。",
+     "after": "A さん （87 歳、女性、要介護1）は1人暮らしで、長女 （52 歳、会社員）が同じマン ションの隣の部屋に住んでいる。5年前に乳癌のため左乳房切除術を受けた。1年前 breast cancer に肺への転移が確認され、胸水の貯留への対症療法のため入退院を繰り返していた。 退院後は、状態観察と体調管理のため大学病院の外来を月に2回受診し、訪問介護と 訪問看護を週に1回ずつ利用して在宅療養を続け｢これ以上の積極的な治療はせずに 自宅で最期まで過ごしたい｣と話している。 ある日、長女から｢最近、母は通院がつらそうで、先月は1回しか受診していませ ん。医師の診察は大事だと思うので、受診を続けるために主治医に何を相談すればよ いでしょうか｣と訪問看護師に相談があった。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM117",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "か月後、A さんは長女に見守られ自宅で最期を迎えた。週後、長女から｢私 なりに頑張りましたが、十分に介護してあげられなかった。もっとできることが あったのではと考えてしまいます｣と訪問看護師に連絡があった。 訪問看護師の長女への対応で適切なのはどれか。",
+     "after": "6か月後、A さんは長女に見守られ自宅で最期を迎えた。2週後、長女から｢私 なりに頑張りましたが、十分に介護してあげられなかった。もっとできることが あったのではと考えてしまいます｣と訪問看護師に連絡があった。 訪問看護師の長女への対応で適切なのはどれか。",
+     "method": "edge_repaired"
+    },
+    {
+     "field": "scenario",
+     "before": "A さん 87 歳、女性、要介護\u0004!は\u0004人暮らしで、長女 52 歳、会社員!が同じマン ションの隣の部屋に住んでいる。\u0007年前に乳癌のため左乳房切除術を受けた。\u0004年前 breast cancer に肺への転移が確認され、胸水の貯留への対症療法のため入退院を繰り返していた。 退院後は、状態観察と体調管理のため大学病院の外来を月に\u0002回受診し、訪問介護と 訪問看護を週に\u0004回ずつ利用して在宅療養を続け｢これ以上の積極的な治療はせずに 自宅で最期まで過ごしたい｣と話している。 ある日、長女から｢最近、母は通院がつらそうで、先月は\u0004回しか受診していませ ん。医師の診察は大事だと思うので、受診を続けるために主治医に何を相談すればよ いでしょうか｣と訪問看護師に相談があった。",
+     "after": "A さん （87 歳、女性、要介護1）は1人暮らしで、長女 （52 歳、会社員）が同じマン ションの隣の部屋に住んでいる。5年前に乳癌のため左乳房切除術を受けた。1年前 breast cancer に肺への転移が確認され、胸水の貯留への対症療法のため入退院を繰り返していた。 退院後は、状態観察と体調管理のため大学病院の外来を月に2回受診し、訪問介護と 訪問看護を週に1回ずつ利用して在宅療養を続け｢これ以上の積極的な治療はせずに 自宅で最期まで過ごしたい｣と話している。 ある日、長女から｢最近、母は通院がつらそうで、先月は1回しか受診していませ ん。医師の診察は大事だと思うので、受診を続けるために主治医に何を相談すればよ いでしょうか｣と訪問看護師に相談があった。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM119",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "午前 11 時、A さんの母親 B さん 80 歳!は、余震が続くため避難する途中で転倒 し、歩行が困難となった。B さんは、孫の C さん 14 歳、女子!に付き添われて救 急車で病院に搬送された。B さんは、意識は清明で、腰痛を訴えている。バイタル サインは、呼吸数 16/分、脈拍 90/分、血圧 135/80 mmHg で、排尿によって着衣 が濡れている。 外来で診察を待っている間に、B さんの隣にいる C さんがうずくまっているの を看護師が発見した。C さんのバイタルサインは、呼吸数 36/分、脈拍 110/分、血 圧 94/40 mmHg で、手のしびれ、動悸を訴えている。 看護師の初期対応で優先度が高いのはどれか。",
+     "after": "午前 11 時、A さんの母親 B さん （80 歳）は、余震が続くため避難する途中で転倒 し、歩行が困難となった。B さんは、孫の C さん （14 歳、女子）に付き添われて救 急車で病院に搬送された。B さんは、意識は清明で、腰痛を訴えている。バイタル サインは、呼吸数 16/分、脈拍 90/分、血圧 135/80 mmHg で、排尿によって着衣 が濡れている。 外来で診察を待っている間に、B さんの隣にいる C さんがうずくまっているの を看護師が発見した。C さんのバイタルサインは、呼吸数 36/分、脈拍 110/分、血 圧 94/40 mmHg で、手のしびれ、動悸を訴えている。 看護師の初期対応で優先度が高いのはどれか。",
+     "method": "repaired"
+    },
+    {
+     "field": "choices[3]",
+     "before": "C さんの経皮的動脈血酸素飽和度VSpO2Zの測定",
+     "after": "C さんの経皮的動脈血酸素飽和度〈SpO2〉の測定",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K113-AM120",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "B さんは、歩行が困難であったため入院したが、検査の結果、腰部の打撲のみで 他に身体的な問題を認めなかった。日中は眠っていることが多く、夕方になると落 ち着かなくなり、大声で家族を呼んだり、家に帰ろうとすることがあった。入院 日後、B さんは少しずつ歩けるようになり、退院が決まった。自宅が半壊状況のた め、福祉避難所に行くことになった。一緒に福祉避難所に行く A さんの妻 42 歳! は看護師に｢義母は、入院前は大声を出すことはありませんでした。避難所で人に 迷惑をかけるのではないかと心配です｣と相談した。 看護師の B さんに関する助言内容で適切なのはどれか。",
+     "after": "B さんは、歩行が困難であったため入院したが、検査の結果、腰部の打撲のみで 他に身体的な問題を認めなかった。日中は眠っていることが多く、夕方になると落 ち着かなくなり、大声で家族を呼んだり、家に帰ろうとすることがあった。入院 4日後、B さんは少しずつ歩けるようになり、退院が決まった。自宅が半壊状況のた め、福祉避難所に行くことになった。一緒に福祉避難所に行く A さんの妻 （42 歳） は看護師に｢義母は、入院前は大声を出すことはありませんでした。避難所で人に 迷惑をかけるのではないかと心配です｣と相談した。 看護師の B さんに関する助言内容で適切なのはどれか。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM002",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "日本人の食事摂取基準 2020 年版!に示されている、18〜49 歳女性 月経あり!の 鉄摂取推奨量はどれか。",
+     "after": "日本人の食事摂取基準 （2020 年版）に示されている、18〜49 歳女性 （月経あり）の 鉄摂取推奨量はどれか。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM004",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "平成 13 年 2001 年!の｢身体拘束ゼロの手引き｣において身体拘束の禁止対象とな る行為はどれか。",
+     "after": "平成 13 年 （2001 年）の｢身体拘束ゼロの手引き｣において身体拘束の禁止対象とな る行為はどれか。",
+     "method": "repaired"
+    },
+    {
+     "field": "choices[3]",
+     "before": "ベッドを柵 サイドレール!で囲んで降りられないようにする。",
+     "after": "ベッドを柵 （サイドレール）で囲んで降りられないようにする。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM012",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "膵管と合流して大十二指腸乳頭 Vateruファーターx乳頭!に開口するのはどれ か。",
+     "after": "膵管と合流して大十二指腸乳頭 （Vater〈ファーター〉乳頭）に開口するのはどれ か。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM014",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "choices[3]",
+     "before": "Guillain-Barréuギラン・バレーx症候群 Guillain-Barré syndrome",
+     "after": "Guillain-Barré〈ギラン・バレー〉症候群 Guillain-Barré syndrome",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM020",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "choices[2]",
+     "before": "Simsuシムスx位",
+     "after": "Sims〈シムス〉位",
+     "method": "repaired"
+    },
+    {
+     "field": "choices[3]",
+     "before": "Fowleruファウラーx位",
+     "after": "Fowler〈ファウラー〉位",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM022",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "成人の静脈血採血の刺部位で適切なのはどれか。",
+     "after": "成人の静脈血採血の穿刺部位で適切なのはどれか。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM023",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "自動体外式除細動器uAEDxを使用するときに、胸骨圧迫を中断するのはどれか。",
+     "after": "自動体外式除細動器〈AED〉を使用するときに、胸骨圧迫を中断するのはどれか。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM027",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "Ramsay Huntuラムゼイ・ハントx症候群は顔面神経麻痺症状を主症状とする。 Ramsay Hunt syndrome 原因となるウイルスはどれか。",
+     "after": "Ramsay Hunt〈ラムゼイ・ハント〉症候群は顔面神経麻痺症状を主症状とする。 Ramsay Hunt syndrome 原因となるウイルスはどれか。",
+     "method": "bracket_subst_ok"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM028",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "雇用の分野における男女の均等な機会及び待遇の確保等に関する法律u男女雇用 機会均等法xに規定されている母性保護はどれか。",
+     "after": "雇用の分野における男女の均等な機会及び待遇の確保等に関する法律〈男女雇用 機会均等法〉に規定されている母性保護はどれか。",
+     "method": "repaired"
+    },
+    {
+     "field": "choices[1]",
+     "before": "産後週間の就業禁止",
+     "after": "産後6週間の就業禁止",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM032",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "国際生活機能分類uICFxで｢生活機能｣の構成要素に含まれるのはどれか。",
+     "after": "国際生活機能分類〈ICF〉で｢生活機能｣の構成要素に含まれるのはどれか。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM033",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "Brocauブローカx失語のある患者とのコミュニケーションで適切なのはどれか。",
+     "after": "Broca〈ブローカ〉失語のある患者とのコミュニケーションで適切なのはどれか。",
+     "method": "repaired"
+    },
+    {
+     "field": "choices[0]",
+     "before": "閉じた質問uclosed questionxを活用する。",
+     "after": "閉じた質問〈closed question〉を活用する。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM040",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "午前 時から 24 時間蓄尿を開始することになった。 蓄尿の方法で正しいのはどれか。",
+     "after": "午前 8時から 24 時間蓄尿を開始することになった。 蓄尿の方法で正しいのはどれか。",
+     "method": "repaired"
+    },
+    {
+     "field": "choices[1]",
+     "before": "開始日の午前 時の尿は蓄尿する。",
+     "after": "開始日の午前 8時の尿は蓄尿する。",
+     "method": "repaired"
+    },
+    {
+     "field": "choices[2]",
+     "before": "終了日の午前 時の尿は蓄尿する。",
+     "after": "終了日の午前 8時の尿は蓄尿する。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM042",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "choices[1]",
+     "before": "推算糸球体濾過量ueGFRx 62 mL/分/1.73 m2",
+     "after": "推算糸球体濾過量〈eGFR〉 62 mL/分/1.73 m2",
+     "method": "repaired"
+    },
+    {
+     "field": "choices[3]",
+     "before": "ヘモグロビン A1cuHbA1cx 5.5 %",
+     "after": "ヘモグロビン A1c〈HbA1c〉 5.5 %",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM045",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "ヒト免疫不全ウイルスuHIVxに汚染された注射針による針刺し事故の感染率で正 しいのはどれか。",
+     "after": "ヒト免疫不全ウイルス〈HIV〉に汚染された注射針による針刺し事故の感染率で正 しいのはどれか。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM046",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "choices[3]",
+     "before": "腰椎刺直後は頭部を高くする。",
+     "after": "腰椎穿刺直後は頭部を高くする。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM053",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "新生児マススクリーニング検査 先天性代謝異常等検査!で正しいのはどれか。",
+     "after": "新生児マススクリーニング検査 （先天性代謝異常等検査）で正しいのはどれか。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM054",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "遊具を図に示す。 標準的な成長発達をしている歳か月の子どもの発達段階に適した遊具はどれ か。",
+     "after": "遊具を図に示す。 標準的な成長発達をしている1歳4か月の子どもの発達段階に適した遊具はどれ か。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM060",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "順調に分娩が進行している妊娠 40 週 日の初産婦から｢腟から水っぽいものが流 れ、下着が濡れた｣とナースコールがあった。看護師が流出したものを確認すると、 量は少量で、羊水特有の臭いを認めた。 このときの産婦への対応で優先度が高いのはどれか。",
+     "after": "順調に分娩が進行している妊娠 40 週 0日の初産婦から｢腟から水っぽいものが流 れ、下着が濡れた｣とナースコールがあった。看護師が流出したものを確認すると、 量は少量で、羊水特有の臭いを認めた。 このときの産婦への対応で優先度が高いのはどれか。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM063",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "choices[2]",
+     "before": "自立支援医療 精神通院医療!",
+     "after": "自立支援医療 （精神通院医療）",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM065",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "令和元年 2019 年!の国民生活基礎調査において、要介護者等のいる世帯に同居 している主な介護者の特徴で正しいのはどれか。",
+     "after": "令和元年 （2019 年）の国民生活基礎調査において、要介護者等のいる世帯に同居 している主な介護者の特徴で正しいのはどれか。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM066",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "A さん 73 歳、女性、要介護!は人で暮らしている。室内の家具や手すりな どの、左右にあるものにうまくつかまりながら、バランスをとって移動している。 A さんは｢腕の力も足の力も落ちてきた。両手を使って体を支えるものがないと屋 外の移動は不安だが、足の筋力が落ちないように近所の散歩を始めたい｣と訪問看 護師に相談があった。A さんの住居の廊下や玄関に段差はなく、住居周辺には坂 や段差のない舗装された歩道がある。 福祉用具を図に示す。 訪問看護師が A さんに勧める福祉用具で適切なのはどれか。",
+     "after": "A さん （73 歳、女性、要介護1）は1人で暮らしている。室内の家具や手すりな どの、左右にあるものにうまくつかまりながら、バランスをとって移動している。 A さんは｢腕の力も足の力も落ちてきた。両手を使って体を支えるものがないと屋 外の移動は不安だが、足の筋力が落ちないように近所の散歩を始めたい｣と訪問看 護師に相談があった。A さんの住居の廊下や玄関に段差はなく、住居周辺には坂 や段差のない舗装された歩道がある。 福祉用具を図に示す。 訪問看護師が A さんに勧める福祉用具で適切なのはどれか。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM067",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "A さん 78 歳、女性、要支援!は人で暮らしており、認知機能や嚥下機能の 低下はない。訪問看護師は、内科と整形外科から朝種類、夕種類の合計種類 の内服薬が処方されていることを確認し、夕方に飲む薬だけが減っていることに気 付いた。 訪問看護師の A さんへの対応で最も適切なのはどれか。",
+     "after": "A さん （78 歳、女性、要支援1）は1人で暮らしており、認知機能や嚥下機能の 低下はない。訪問看護師は、内科と整形外科から朝2種類、夕3種類の合計5種類 の内服薬が処方されていることを確認し、夕方に飲む薬だけが減っていることに気 付いた。 訪問看護師の A さんへの対応で最も適切なのはどれか。",
+     "method": "repaired"
+    },
+    {
+     "field": "choices[2]",
+     "before": "日に種類の薬を内服する必要があることを説明する。",
+     "after": "1日に5種類の薬を内服する必要があることを説明する。",
+     "method": "edge_repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM069",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "A さん 65 歳、男性!はうっ血性心不全 の急性増悪で入院し、治療を受けて自宅 congestive heart failure に退院した。退院後は月回の外来通院、週回の訪問看護で生活指導を受け、血 圧、体重、労作時の自覚症状について日誌に記録することになった。初回訪問時、 A さんは訪問看護師に｢庭で野菜を作るのが趣味です。野菜作りの作業をしている と夢中になって時間を忘れてしまいます｣と話した。 訪問看護師の A さんへの助言で適切なのはどれか。",
+     "after": "A さん （65 歳、男性）はうっ血性心不全 の急性増悪で入院し、治療を受けて自宅 congestive heart failure に退院した。退院後は月1回の外来通院、週1回の訪問看護で生活指導を受け、血 圧、体重、労作時の自覚症状について日誌に記録することになった。初回訪問時、 A さんは訪問看護師に｢庭で野菜を作るのが趣味です。野菜作りの作業をしている と夢中になって時間を忘れてしまいます｣と話した。 訪問看護師の A さんへの助言で適切なのはどれか。",
+     "method": "segment_ok"
+    },
+    {
+     "field": "choices[2]",
+     "before": "｢作業の後は 30 分以内にL 以上の水分を補給しましょう｣",
+     "after": "｢作業の後は 30 分以内に2L 以上の水分を補給しましょう｣",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM071",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "choices[1]",
+     "before": "類感染症の罹患情報は市区町村長に届け出る。",
+     "after": "2類感染症の罹患情報は市区町村長に届け出る。",
+     "method": "edge_repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM072",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "サイコロジカルファーストエイドuPsychological First Aid：PFAxについて正し いのはどれか。",
+     "after": "サイコロジカルファーストエイド〈Psychological First Aid：PFA〉について正し いのはどれか。",
+     "method": "repaired"
+    },
+    {
+     "field": "choices[1]",
+     "before": "災害発生から週間経過してから活動する。",
+     "after": "災害発生から1週間経過してから活動する。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM074",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "止血後の線維素溶解 線溶!に関係するのはどれか。",
+     "after": "止血後の線維素溶解 （線溶）に関係するのはどれか。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM077",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "外傷や風邪で発熱し、解熱するまでの体温のセットポイントと実際の体温 核心 温度!の変化の例を図に示す。 全身のふるえが起こるのはどれか。",
+     "after": "外傷や風邪で発熱し、解熱するまでの体温のセットポイントと実際の体温 （核心 温度）の変化の例を図に示す。 全身のふるえが起こるのはどれか。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM079",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "choices[4]",
+     "before": "Willisuウィリスx動脈輪への血栓閉塞で生じる。",
+     "after": "Willis〈ウィリス〉動脈輪への血栓閉塞で生じる。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM080",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "choices[1]",
+     "before": "咽頭結膜熱 ヒトパピローマウイルスuHPVx pharyngoconjunctival fever",
+     "after": "咽頭結膜熱 ヒトパピローマウイルス〈HPV〉 pharyngoconjunctival fever",
+     "method": "segment_ok"
+    },
+    {
+     "field": "choices[3]",
+     "before": "伝染性単核球症 Epstein-BarruEBxウイルス infectious mononucleosis",
+     "after": "伝染性単核球症 Epstein-Barr〈EB〉ウイルス infectious mononucleosis",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM085",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "choices[1]",
+     "before": "吸引圧は 安40 kPa 300 mmHg!に調整する。",
+     "after": "吸引圧は 安40 kPa （300 mmHg）に調整する。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM086",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "A さん 55 歳、男性、会社員!は 30 年の喫煙歴がある。会社の健康診断で高血圧 を指摘されて生活習慣の改善を勧められたが｢週末にスポーツジムで運動するよう になったけれど、仕事が忙しくてこれ以上生活を変える自信はありません｣と述べ た。 A さんの自己効力感を高める支援はどれか。2つ選べ。",
+     "after": "A さん （55 歳、男性、会社員）は 30 年の喫煙歴がある。会社の健康診断で高血圧 を指摘されて生活習慣の改善を勧められたが｢週末にスポーツジムで運動するよう になったけれど、仕事が忙しくてこれ以上生活を変える自信はありません｣と述べ た。 A さんの自己効力感を高める支援はどれか。2つ選べ。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM088",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "高齢者の基本的日常生活動作uBADLxで評価する内容はどれか。2つ選べ。",
+     "after": "高齢者の基本的日常生活動作〈BADL〉で評価する内容はどれか。2つ選べ。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM089",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "choices[2]",
+     "before": "インシデントの発生からか月後に提出する。",
+     "after": "インシデントの発生から1か月後に提出する。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM092",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "A さんは、入院日目に胸腔鏡下左下葉切除術を受ける予定である。A さんは 看護師に｢全身麻酔で手術を受けるのは初めてです。医師から手術の説明はあった けれど、合併症についてもう一度教えてもらえますか｣と質問した。 A さんに生じる可能性が高い合併症はどれか。",
+     "after": "A さんは、入院2日目に胸腔鏡下左下葉切除術を受ける予定である。A さんは 看護師に｢全身麻酔で手術を受けるのは初めてです。医師から手術の説明はあった けれど、合併症についてもう一度教えてもらえますか｣と質問した。 A さんに生じる可能性が高い合併症はどれか。",
+     "method": "repaired"
+    },
+    {
+     "field": "choices[2]",
+     "before": "Horneruホルネルx症候群 Hornerʼs syndrome",
+     "after": "Horner〈ホルネル〉症候群 Hornerʼs syndrome",
+     "method": "repaired"
+    },
+    {
+     "field": "choices[3]",
+     "before": "Pancoastuパンコーストx症候群 Pancoastʼs syndrome",
+     "after": "Pancoast〈パンコースト〉症候群 Pancoastʼs syndrome",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM095",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "A さんは R-CHOP 療法 リツキシマブ、シクロホスファミド、ドキソルビシン、 ビンクリスチン、プレドニゾロン!を受けた。 A さんの R-CHOP 療法の初日に生じる可能性がある合併症はどれか。",
+     "after": "A さんは R-CHOP 療法 （リツキシマブ、シクロホスファミド、ドキソルビシン、 ビンクリスチン、プレドニゾロン）を受けた。 A さんの R-CHOP 療法の初日に生じる可能性がある合併症はどれか。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM096",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "A さんは R-CHOP 療法終了後も嘔気・嘔吐が続き、制吐薬の追加投与を受け た。治療後日、｢やっと楽になって食事が摂れるようになったけど、やっぱりつ らかった。思い出すだけでも気持ち悪くなります｣と話している。 A さんの次回の R-CHOP 療法において、嘔気・嘔吐への対応で適切なのはどれ か。",
+     "after": "A さんは R-CHOP 療法終了後も嘔気・嘔吐が続き、制吐薬の追加投与を受け た。治療後3日、｢やっと楽になって食事が摂れるようになったけど、やっぱりつ らかった。思い出すだけでも気持ち悪くなります｣と話している。 A さんの次回の R-CHOP 療法において、嘔気・嘔吐への対応で適切なのはどれ か。",
+     "method": "repaired"
+    },
+    {
+     "field": "choices[0]",
+     "before": "日 1,000 mL の水分摂取",
+     "after": "1日 1,000 mL の水分摂取",
+     "method": "edge_repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM097",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "scenario",
+     "before": "A さん 71 歳、女性!は夫と 10 年前に死別し、\u0004人で暮らしている。息子は結婚し て他県に住んでいる。A さんは、\u0005か月前に脳梗塞を発症 して要介護\u0004となり、介 cerebral infarction 護老人保健施設に入所した。 A さんは老人性白内障があるが ADL に支障はなく、認知機能やコミュニケーショ senile cataract ンに問題はない。食事は自力で摂取できる。紅茶が好きで、毎日カップ\u0002、\u0005杯は飲 んでいる。我慢できない強い尿意があり尿が漏れてしまうため、下着に尿取りパッド を付けている。トイレには自力で移動でき、下着やズボンの上げ下ろしは自立してい る。排便は\u0002日に\u0004回である。",
+     "after": "A さん （71 歳、女性）は夫と 10 年前に死別し、1人で暮らしている。息子は結婚し て他県に住んでいる。A さんは、3か月前に脳梗塞を発症 して要介護1となり、介 cerebral infarction 護老人保健施設に入所した。 A さんは老人性白内障があるが ADL に支障はなく、認知機能やコミュニケーショ senile cataract ンに問題はない。食事は自力で摂取できる。紅茶が好きで、毎日カップ2、3杯は飲 んでいる。我慢できない強い尿意があり尿が漏れてしまうため、下着に尿取りパッド を付けている。トイレには自力で移動でき、下着やズボンの上げ下ろしは自立してい る。排便は2日に1回である。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM098",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "scenario",
+     "before": "A さん 71 歳、女性!は夫と 10 年前に死別し、\u0004人で暮らしている。息子は結婚し て他県に住んでいる。A さんは、\u0005か月前に脳梗塞を発症 して要介護\u0004となり、介 cerebral infarction 護老人保健施設に入所した。 A さんは老人性白内障があるが ADL に支障はなく、認知機能やコミュニケーショ senile cataract ンに問題はない。食事は自力で摂取できる。紅茶が好きで、毎日カップ\u0002、\u0005杯は飲 んでいる。我慢できない強い尿意があり尿が漏れてしまうため、下着に尿取りパッド を付けている。トイレには自力で移動でき、下着やズボンの上げ下ろしは自立してい る。排便は\u0002日に\u0004回である。",
+     "after": "A さん （71 歳、女性）は夫と 10 年前に死別し、1人で暮らしている。息子は結婚し て他県に住んでいる。A さんは、3か月前に脳梗塞を発症 して要介護1となり、介 cerebral infarction 護老人保健施設に入所した。 A さんは老人性白内障があるが ADL に支障はなく、認知機能やコミュニケーショ senile cataract ンに問題はない。食事は自力で摂取できる。紅茶が好きで、毎日カップ2、3杯は飲 んでいる。我慢できない強い尿意があり尿が漏れてしまうため、下着に尿取りパッド を付けている。トイレには自力で移動でき、下着やズボンの上げ下ろしは自立してい る。排便は2日に1回である。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM099",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "日後、A さんは解熱し、少しずつ食欲が出てきた。下腹部痛は消失し、尿失 禁の回数も少なくなった。 症状の再燃を防止するための A さんへの対応で適切なのはどれか。",
+     "after": "5日後、A さんは解熱し、少しずつ食欲が出てきた。下腹部痛は消失し、尿失 禁の回数も少なくなった。 症状の再燃を防止するための A さんへの対応で適切なのはどれか。",
+     "method": "edge_repaired"
+    },
+    {
+     "field": "choices[0]",
+     "before": "時間ごとに排尿誘導する。",
+     "after": "2時間ごとに排尿誘導する。",
+     "method": "edge_repaired"
+    },
+    {
+     "field": "scenario",
+     "before": "A さん 71 歳、女性!は夫と 10 年前に死別し、\u0004人で暮らしている。息子は結婚し て他県に住んでいる。A さんは、\u0005か月前に脳梗塞を発症 して要介護\u0004となり、介 cerebral infarction 護老人保健施設に入所した。 A さんは老人性白内障があるが ADL に支障はなく、認知機能やコミュニケーショ senile cataract ンに問題はない。食事は自力で摂取できる。紅茶が好きで、毎日カップ\u0002、\u0005杯は飲 んでいる。我慢できない強い尿意があり尿が漏れてしまうため、下着に尿取りパッド を付けている。トイレには自力で移動でき、下着やズボンの上げ下ろしは自立してい る。排便は\u0002日に\u0004回である。",
+     "after": "A さん （71 歳、女性）は夫と 10 年前に死別し、1人で暮らしている。息子は結婚し て他県に住んでいる。A さんは、3か月前に脳梗塞を発症 して要介護1となり、介 cerebral infarction 護老人保健施設に入所した。 A さんは老人性白内障があるが ADL に支障はなく、認知機能やコミュニケーショ senile cataract ンに問題はない。食事は自力で摂取できる。紅茶が好きで、毎日カップ2、3杯は飲 んでいる。我慢できない強い尿意があり尿が漏れてしまうため、下着に尿取りパッド を付けている。トイレには自力で移動でき、下着やズボンの上げ下ろしは自立してい る。排便は2日に1回である。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM100",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "choices[1]",
+     "before": "日回の血圧測定を行う。",
+     "after": "1日3回の血圧測定を行う。",
+     "method": "edge_repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM101",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "入院日。両眼瞼の浮腫と肉眼的血尿は続いていた。看護師が A ちゃんのベッ ドサイドを訪れると、A ちゃんは｢頭が痛い。気持ち悪い｣と訴えた。A ちゃんは 体温 36.6 ℃、呼吸数 20/分、心拍数 92/分、血圧 148/88 mmHg であった。 この状況から A ちゃんに起こりうる症状はどれか。",
+     "after": "入院3日。両眼瞼の浮腫と肉眼的血尿は続いていた。看護師が A ちゃんのベッ ドサイドを訪れると、A ちゃんは｢頭が痛い。気持ち悪い｣と訴えた。A ちゃんは 体温 36.6 ℃、呼吸数 20/分、心拍数 92/分、血圧 148/88 mmHg であった。 この状況から A ちゃんに起こりうる症状はどれか。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM102",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "入院して週が経過した。症状は軽快傾向にあるが床上安静は続いている。仲が 良かった同じ病室の児が退院して、A ちゃんはイライラしている。A ちゃんの母 親は、毎日昼食後から夕食まで面会をしている。 A ちゃんのストレスに対する看護師の発言で適切なのはどれか。",
+     "after": "入院して1週が経過した。症状は軽快傾向にあるが床上安静は続いている。仲が 良かった同じ病室の児が退院して、A ちゃんはイライラしている。A ちゃんの母 親は、毎日昼食後から夕食まで面会をしている。 A ちゃんのストレスに対する看護師の発言で適切なのはどれか。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM103",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "choices[3]",
+     "before": "｢看護師人で A 君をしっかりと抑えて採血します｣",
+     "after": "｢看護師3人で A 君をしっかりと抑えて採血します｣",
+     "method": "repaired"
+    },
+    {
+     "field": "scenario",
+     "before": "A 君 \u0007 歳、男 児! は 共 働 き の 両 親 と \u0005 人 で 暮 ら し て い る。\u0002 歳 \b か 月 で 自閉スペクトラム症と診断され、保育所と療育センターに通っている。保育所の健康 autism spectrum disorder 診断で低身長を指摘され、受診を勧められて両親と来院した。A 君は待合室を走っ たり診察室の扉を開けたりしていた。診察室に入ると｢頑張ろう｣と泣きながら叫び、 恐怖心を抑えている様子だった。母親は｢A は病院が苦手で、予防接種は A の手足と 体を看護師さん\u0005人で抑えて行ってきましたが、繰り返し説明することで、抑えなく ても注射ができるようになりました｣と話した。 診察の結果、\u0004週後に成長ホルモン分泌刺激試験を行うことになった。母親から ｢A が血液検査でパニックを起こすのではないかと心配です｣と発言があった。",
+     "after": "A 君  （5歳、男 児 ）は 共 働 き の 両 親 と  3人 で 暮 ら し て い る。 2歳  6か 月 で 自閉スペクトラム症と診断され、保育所と療育センターに通っている。保育所の健康 autism spectrum disorder 診断で低身長を指摘され、受診を勧められて両親と来院した。A 君は待合室を走っ たり診察室の扉を開けたりしていた。診察室に入ると｢頑張ろう｣と泣きながら叫び、 恐怖心を抑えている様子だった。母親は｢A は病院が苦手で、予防接種は A の手足と 体を看護師さん3人で抑えて行ってきましたが、繰り返し説明することで、抑えなく ても注射ができるようになりました｣と話した。 診察の結果、1週後に成長ホルモン分泌刺激試験を行うことになった。母親から ｢A が血液検査でパニックを起こすのではないかと心配です｣と発言があった。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM104",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "scenario",
+     "before": "A 君 \u0007 歳、男 児! は 共 働 き の 両 親 と \u0005 人 で 暮 ら し て い る。\u0002 歳 \b か 月 で 自閉スペクトラム症と診断され、保育所と療育センターに通っている。保育所の健康 autism spectrum disorder 診断で低身長を指摘され、受診を勧められて両親と来院した。A 君は待合室を走っ たり診察室の扉を開けたりしていた。診察室に入ると｢頑張ろう｣と泣きながら叫び、 恐怖心を抑えている様子だった。母親は｢A は病院が苦手で、予防接種は A の手足と 体を看護師さん\u0005人で抑えて行ってきましたが、繰り返し説明することで、抑えなく ても注射ができるようになりました｣と話した。 診察の結果、\u0004週後に成長ホルモン分泌刺激試験を行うことになった。母親から ｢A が血液検査でパニックを起こすのではないかと心配です｣と発言があった。",
+     "after": "A 君  （5歳、男 児 ）は 共 働 き の 両 親 と  3人 で 暮 ら し て い る。 2歳  6か 月 で 自閉スペクトラム症と診断され、保育所と療育センターに通っている。保育所の健康 autism spectrum disorder 診断で低身長を指摘され、受診を勧められて両親と来院した。A 君は待合室を走っ たり診察室の扉を開けたりしていた。診察室に入ると｢頑張ろう｣と泣きながら叫び、 恐怖心を抑えている様子だった。母親は｢A は病院が苦手で、予防接種は A の手足と 体を看護師さん3人で抑えて行ってきましたが、繰り返し説明することで、抑えなく ても注射ができるようになりました｣と話した。 診察の結果、1週後に成長ホルモン分泌刺激試験を行うことになった。母親から ｢A が血液検査でパニックを起こすのではないかと心配です｣と発言があった。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM105",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "か月後、自宅での A 君への成長ホルモン製剤の注射は順調に実施されている。 外来受診時に母親から看護師に｢A が通っている療育センターにも相談しました が、A は自閉スペクトラム症 であるだけでなく、注射もしているので就学のこと autism spectrum disorder を考えると心配です。通常の学級に通わせたいと考えているのですが、通常の学級 への就学について教えてください｣と相談があった。 看護師の説明で適切なのはどれか。",
+     "after": "3か月後、自宅での A 君への成長ホルモン製剤の注射は順調に実施されている。 外来受診時に母親から看護師に｢A が通っている療育センターにも相談しました が、A は自閉スペクトラム症 であるだけでなく、注射もしているので就学のこと autism spectrum disorder を考えると心配です。通常の学級に通わせたいと考えているのですが、通常の学級 への就学について教えてください｣と相談があった。 看護師の説明で適切なのはどれか。",
+     "method": "edge_repaired"
+    },
+    {
+     "field": "scenario",
+     "before": "A 君 \u0007 歳、男 児! は 共 働 き の 両 親 と \u0005 人 で 暮 ら し て い る。\u0002 歳 \b か 月 で 自閉スペクトラム症と診断され、保育所と療育センターに通っている。保育所の健康 autism spectrum disorder 診断で低身長を指摘され、受診を勧められて両親と来院した。A 君は待合室を走っ たり診察室の扉を開けたりしていた。診察室に入ると｢頑張ろう｣と泣きながら叫び、 恐怖心を抑えている様子だった。母親は｢A は病院が苦手で、予防接種は A の手足と 体を看護師さん\u0005人で抑えて行ってきましたが、繰り返し説明することで、抑えなく ても注射ができるようになりました｣と話した。 診察の結果、\u0004週後に成長ホルモン分泌刺激試験を行うことになった。母親から ｢A が血液検査でパニックを起こすのではないかと心配です｣と発言があった。",
+     "after": "A 君  （5歳、男 児 ）は 共 働 き の 両 親 と  3人 で 暮 ら し て い る。 2歳  6か 月 で 自閉スペクトラム症と診断され、保育所と療育センターに通っている。保育所の健康 autism spectrum disorder 診断で低身長を指摘され、受診を勧められて両親と来院した。A 君は待合室を走っ たり診察室の扉を開けたりしていた。診察室に入ると｢頑張ろう｣と泣きながら叫び、 恐怖心を抑えている様子だった。母親は｢A は病院が苦手で、予防接種は A の手足と 体を看護師さん3人で抑えて行ってきましたが、繰り返し説明することで、抑えなく ても注射ができるようになりました｣と話した。 診察の結果、1週後に成長ホルモン分泌刺激試験を行うことになった。母親から ｢A が血液検査でパニックを起こすのではないかと心配です｣と発言があった。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM106",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "帝王切開術後日、午前 時、子宮底は臍下横指、硬度良好、バイタルサイン は体温 36.9 ℃、呼吸数 18/分、脈拍 72/分、整、血圧 110/70 mmHg であった。夜 間に排ガスを認めた。A さんは｢痛み止めを使用した後は眠れましたが、また痛み が出てきました。こんな状態で動けるか心配です。この後の予定を知りたいです｣ と話した。 このときの A さんへの説明で適切なのはどれか。",
+     "after": "帝王切開術後1日、午前 9時、子宮底は臍下1横指、硬度良好、バイタルサイン は体温 36.9 ℃、呼吸数 18/分、脈拍 72/分、整、血圧 110/70 mmHg であった。夜 間に排ガスを認めた。A さんは｢痛み止めを使用した後は眠れましたが、また痛み が出てきました。こんな状態で動けるか心配です。この後の予定を知りたいです｣ と話した。 このときの A さんへの説明で適切なのはどれか。",
+     "method": "repaired"
+    },
+    {
+     "field": "scenario",
+     "before": "A さん 32 歳、初産婦!は、夫と\u0002人で暮らしている。骨盤位のために妊娠 38 週 日に予定帝王切開術で午前 11 時に男児を出産した。分娩時出血量は 480 mL であっ た。出生後、手術室で男児と面会をして｢無事に生まれてきてくれてありがとう｣と話 した。帰室後、子宮底は臍高、硬度良好、悪露は赤色で 20 g であった。後陣痛と創 部痛があり夜間に鎮痛薬を使用した。",
+     "after": "A さん （32 歳、初産婦）は、夫と2人で暮らしている。骨盤位のために妊娠 38 週 0日に予定帝王切開術で午前 11 時に男児を出産した。分娩時出血量は 480 mL であっ た。出生後、手術室で男児と面会をして｢無事に生まれてきてくれてありがとう｣と話 した。帰室後、子宮底は臍高、硬度良好、悪露は赤色で 20 g であった。後陣痛と創 部痛があり夜間に鎮痛薬を使用した。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM107",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "帝王切開術後日、子宮底は臍下横指、悪露は褐色であった。乳房に熱感があ り、乳管は左右とも本開通しており、移行乳の分泌を認める。看護師が訪室する と A さんは｢まだ、お腹の創が痛くて、動くのはつらいです｣と話す。慣れない手 付きで児に授乳をしながら｢上手にできなくてごめんね｣と児の顔を見て語りかけて いる。A さんと児の目と目が合う様子がみられる。 アセスメントで適切なのはどれか。",
+     "after": "帝王切開術後3日、子宮底は臍下3横指、悪露は褐色であった。乳房に熱感があ り、乳管は左右とも3本開通しており、移行乳の分泌を認める。看護師が訪室する と A さんは｢まだ、お腹の創が痛くて、動くのはつらいです｣と話す。慣れない手 付きで児に授乳をしながら｢上手にできなくてごめんね｣と児の顔を見て語りかけて いる。A さんと児の目と目が合う様子がみられる。 アセスメントで適切なのはどれか。",
+     "method": "repaired"
+    },
+    {
+     "field": "scenario",
+     "before": "A さん 32 歳、初産婦!は、夫と\u0002人で暮らしている。骨盤位のために妊娠 38 週 日に予定帝王切開術で午前 11 時に男児を出産した。分娩時出血量は 480 mL であっ た。出生後、手術室で男児と面会をして｢無事に生まれてきてくれてありがとう｣と話 した。帰室後、子宮底は臍高、硬度良好、悪露は赤色で 20 g であった。後陣痛と創 部痛があり夜間に鎮痛薬を使用した。",
+     "after": "A さん （32 歳、初産婦）は、夫と2人で暮らしている。骨盤位のために妊娠 38 週 0日に予定帝王切開術で午前 11 時に男児を出産した。分娩時出血量は 480 mL であっ た。出生後、手術室で男児と面会をして｢無事に生まれてきてくれてありがとう｣と話 した。帰室後、子宮底は臍高、硬度良好、悪露は赤色で 20 g であった。後陣痛と創 部痛があり夜間に鎮痛薬を使用した。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM108",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "帝王切開術後日、診察の結果、明日退院することになった。A さんの乳房は 緊満しており、乳管は左右とも、本開通している。母児同室を行い、児の哺乳 の欲求に合わせて日 10 回の授乳を行っている。｢母乳で育てたいと思っていま す。でもおっぱいが張ってつらいです。この子も上手に吸ってくれません｣と看護 師に話した。 このときの看護師の説明で適切なのはどれか。",
+     "after": "帝王切開術後5日、診察の結果、明日退院することになった。A さんの乳房は 緊満しており、乳管は左右とも5、6本開通している。母児同室を行い、児の哺乳 の欲求に合わせて1日 10 回の授乳を行っている。｢母乳で育てたいと思っていま す。でもおっぱいが張ってつらいです。この子も上手に吸ってくれません｣と看護 師に話した。 このときの看護師の説明で適切なのはどれか。",
+     "method": "repaired"
+    },
+    {
+     "field": "scenario",
+     "before": "A さん 32 歳、初産婦!は、夫と\u0002人で暮らしている。骨盤位のために妊娠 38 週 日に予定帝王切開術で午前 11 時に男児を出産した。分娩時出血量は 480 mL であっ た。出生後、手術室で男児と面会をして｢無事に生まれてきてくれてありがとう｣と話 した。帰室後、子宮底は臍高、硬度良好、悪露は赤色で 20 g であった。後陣痛と創 部痛があり夜間に鎮痛薬を使用した。",
+     "after": "A さん （32 歳、初産婦）は、夫と2人で暮らしている。骨盤位のために妊娠 38 週 0日に予定帝王切開術で午前 11 時に男児を出産した。分娩時出血量は 480 mL であっ た。出生後、手術室で男児と面会をして｢無事に生まれてきてくれてありがとう｣と話 した。帰室後、子宮底は臍高、硬度良好、悪露は赤色で 20 g であった。後陣痛と創 部痛があり夜間に鎮痛薬を使用した。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM109",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "scenario",
+     "before": "A さん 65 歳、男性!は、妻と自営業を営んでおり、\u0002人で暮らしている。\u0002か月 前に仕事で大きな失敗をし、謝罪と対応に追われ、あまり夜に眠れなくなり、食欲不 振が続いている。\u0004か月前から気分が落ち込み、仕事で妻から間違いを指摘されたこ とで自信をなくしていた。A さんは死んでしまいたいと思い、夜に自宅でロープを 使って自殺を図ろうとしたところを妻に見つけられた。妻に付き添われ、精神科病院 を受診し、うつ病 と診断された。受診当日に入院し、抗うつ薬の内服が開始された。 depression A さんは｢生きていても仕方がない。どうせ誰も分かってくれない｣と看護師に話し た。",
+     "after": "A さん （65 歳、男性）は、妻と自営業を営んでおり、2人で暮らしている。2か月 前に仕事で大きな失敗をし、謝罪と対応に追われ、あまり夜に眠れなくなり、食欲不 振が続いている。1か月前から気分が落ち込み、仕事で妻から間違いを指摘されたこ とで自信をなくしていた。A さんは死んでしまいたいと思い、夜に自宅でロープを 使って自殺を図ろうとしたところを妻に見つけられた。妻に付き添われ、精神科病院 を受診し、うつ病 と診断された。受診当日に入院し、抗うつ薬の内服が開始された。 depression A さんは｢生きていても仕方がない。どうせ誰も分かってくれない｣と看護師に話し た。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM110",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "A さんはその後しばらく会話をしたり、食事も少し食べられたりしていたが、 入院日から、臥床したままで日中全く動かず、昏迷状態になった。検査の結 果、軽度の脱水以外の異常はなかった。治療として修正型電気けいれん療法が開始 されることになり、実施後 20 分で A さんは覚醒し、その後の観察中にけいれん発 作は認めなかった。実施後 30 分、A さんは突然起き上がり興奮し、大きな声で ｢仕事に行く｣と言って病室から出ていこうとした。看護師が制止し、一緒に座って 話を聞いたところ、見当識障害、記憶障害、注意障害が認められた。 A さんの状態で正しいのはどれか。",
+     "after": "A さんはその後しばらく会話をしたり、食事も少し食べられたりしていたが、 入院3日から、臥床したままで1日中全く動かず、昏迷状態になった。検査の結 果、軽度の脱水以外の異常はなかった。治療として修正型電気けいれん療法が開始 されることになり、実施後 20 分で A さんは覚醒し、その後の観察中にけいれん発 作は認めなかった。実施後 30 分、A さんは突然起き上がり興奮し、大きな声で ｢仕事に行く｣と言って病室から出ていこうとした。看護師が制止し、一緒に座って 話を聞いたところ、見当識障害、記憶障害、注意障害が認められた。 A さんの状態で正しいのはどれか。",
+     "method": "repaired"
+    },
+    {
+     "field": "scenario",
+     "before": "A さん 65 歳、男性!は、妻と自営業を営んでおり、\u0002人で暮らしている。\u0002か月 前に仕事で大きな失敗をし、謝罪と対応に追われ、あまり夜に眠れなくなり、食欲不 振が続いている。\u0004か月前から気分が落ち込み、仕事で妻から間違いを指摘されたこ とで自信をなくしていた。A さんは死んでしまいたいと思い、夜に自宅でロープを 使って自殺を図ろうとしたところを妻に見つけられた。妻に付き添われ、精神科病院 を受診し、うつ病 と診断された。受診当日に入院し、抗うつ薬の内服が開始された。 depression A さんは｢生きていても仕方がない。どうせ誰も分かってくれない｣と看護師に話し た。",
+     "after": "A さん （65 歳、男性）は、妻と自営業を営んでおり、2人で暮らしている。2か月 前に仕事で大きな失敗をし、謝罪と対応に追われ、あまり夜に眠れなくなり、食欲不 振が続いている。1か月前から気分が落ち込み、仕事で妻から間違いを指摘されたこ とで自信をなくしていた。A さんは死んでしまいたいと思い、夜に自宅でロープを 使って自殺を図ろうとしたところを妻に見つけられた。妻に付き添われ、精神科病院 を受診し、うつ病 と診断された。受診当日に入院し、抗うつ薬の内服が開始された。 depression A さんは｢生きていても仕方がない。どうせ誰も分かってくれない｣と看護師に話し た。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM111",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "入院か月が経過し、A さんは夜間の睡眠がとれるようになり、食事は全量摂 取している。妻から間違いを指摘されたことを思い出し、｢何をやってもきっと失 敗するだけだ。今度はもっと大きな失敗をして仕事を辞めることになる。だから自 分はだめな人間だ。努力しても意味がない｣と看護師に言った。 A さんへの治療法で最も適切なのはどれか。",
+     "after": "入院1か月が経過し、A さんは夜間の睡眠がとれるようになり、食事は全量摂 取している。妻から間違いを指摘されたことを思い出し、｢何をやってもきっと失 敗するだけだ。今度はもっと大きな失敗をして仕事を辞めることになる。だから自 分はだめな人間だ。努力しても意味がない｣と看護師に言った。 A さんへの治療法で最も適切なのはどれか。",
+     "method": "repaired"
+    },
+    {
+     "field": "choices[3]",
+     "before": "社会生活技能訓練uSSTx",
+     "after": "社会生活技能訓練〈SST〉",
+     "method": "segment_ok"
+    },
+    {
+     "field": "scenario",
+     "before": "A さん 65 歳、男性!は、妻と自営業を営んでおり、\u0002人で暮らしている。\u0002か月 前に仕事で大きな失敗をし、謝罪と対応に追われ、あまり夜に眠れなくなり、食欲不 振が続いている。\u0004か月前から気分が落ち込み、仕事で妻から間違いを指摘されたこ とで自信をなくしていた。A さんは死んでしまいたいと思い、夜に自宅でロープを 使って自殺を図ろうとしたところを妻に見つけられた。妻に付き添われ、精神科病院 を受診し、うつ病 と診断された。受診当日に入院し、抗うつ薬の内服が開始された。 depression A さんは｢生きていても仕方がない。どうせ誰も分かってくれない｣と看護師に話し た。",
+     "after": "A さん （65 歳、男性）は、妻と自営業を営んでおり、2人で暮らしている。2か月 前に仕事で大きな失敗をし、謝罪と対応に追われ、あまり夜に眠れなくなり、食欲不 振が続いている。1か月前から気分が落ち込み、仕事で妻から間違いを指摘されたこ とで自信をなくしていた。A さんは死んでしまいたいと思い、夜に自宅でロープを 使って自殺を図ろうとしたところを妻に見つけられた。妻に付き添われ、精神科病院 を受診し、うつ病 と診断された。受診当日に入院し、抗うつ薬の内服が開始された。 depression A さんは｢生きていても仕方がない。どうせ誰も分かってくれない｣と看護師に話し た。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM112",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "内服を始めて週後、A さんは看護師に｢鍵を閉めたかどうかの確認が増え、睡 眠時間が減ってつらい｣と訴えている。 看護師の声かけで適切なのはどれか。",
+     "after": "内服を始めて1週後、A さんは看護師に｢鍵を閉めたかどうかの確認が増え、睡 眠時間が減ってつらい｣と訴えている。 看護師の声かけで適切なのはどれか。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM113",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "受診に同行していた母親からは｢A から私の代わりに鍵が閉まっているか見て きてほしいといった要望が多い。それに従わないとどうして私のつらさを分かっ てくれないのと大きな声を出す。どのように関わればよいか分からない｣と看護師 に相談があった。 母親への看護師の対応で適切なのはどれか。",
+     "after": "受診に同行していた母親からは｢A から『私の代わりに鍵が閉まっているか見て きてほしい』といった要望が多い。それに従わないと『どうして私のつらさを分かっ てくれないの』と大きな声を出す。どのように関わればよいか分からない｣と看護師 に相談があった。 母親への看護師の対応で適切なのはどれか。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM114",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "選択的セロトニン再取り込み阻害薬uSSRIxの内服を始めてからか月が経過し、 A さんは外出中に鍵を閉め忘れたかもしれないという考えが強くなり、外出から 予定より早く帰宅することがある。A さんは｢鍵を閉め忘れていないかの確認を減 らしたい｣と看護師に相談した。 A さんへの看護師の対応で適切なのはどれか。",
+     "after": "選択的セロトニン再取り込み阻害薬〈SSRI〉の内服を始めてから2か月が経過し、 A さんは外出中に鍵を閉め忘れたかもしれないという考えが強くなり、外出から 予定より早く帰宅することがある。A さんは｢鍵を閉め忘れていないかの確認を減 らしたい｣と看護師に相談した。 A さんへの看護師の対応で適切なのはどれか。",
+     "method": "repaired"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM115",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "scenario",
+     "before": "A さん 14 歳、男子、特別支援学校の中学生!は Duchenneuデュシェンヌx 型筋ジ Duchenne muscular dystrophy ストロフィーで両親、弟 歳!と\u0002階建ての家に\u0006人で暮らしている。呼吸障害が進 行したため非侵襲的陽圧換気療法を導入する目的で入院した。A さんの呼吸状態は 安定し、両親に対するバッグバルブマスクによる用手換気の指導が終了したため、自 宅に退院し訪問看護を毎日利用して療養生活を続けることになった。両親は｢日常の 呼吸管理について退院後に対応できるか心配です｣と病棟の看護師に話した。",
+     "after": "A さん （14 歳、男子、特別支援学校の中学生）は Duchenne〈デュシェンヌ 〉型筋ジ Duchenne muscular dystrophy ストロフィーで両親、弟 （7歳）と2階建ての家に4人で暮らしている。呼吸障害が進 行したため非侵襲的陽圧換気療法を導入する目的で入院した。A さんの呼吸状態は 安定し、両親に対するバッグバルブマスクによる用手換気の指導が終了したため、自 宅に退院し訪問看護を毎日利用して療養生活を続けることになった。両親は｢日常の 呼吸管理について退院後に対応できるか心配です｣と病棟の看護師に話した。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM116",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "退院後週。A さんの父親から｢最近、大雨や落雷、地震による被災の報道が多 くて、A は人工呼吸器を付けているし、弟もまだ小さいので不安です。災害に備 え何をすればよいでしょうか｣と訪問看護師に相談があった。 訪問看護師が A さんの父親に説明する内容で優先度が高いのはどれか。",
+     "after": "退院後1週。A さんの父親から｢最近、大雨や落雷、地震による被災の報道が多 くて、A は人工呼吸器を付けているし、弟もまだ小さいので不安です。災害に備 え何をすればよいでしょうか｣と訪問看護師に相談があった。 訪問看護師が A さんの父親に説明する内容で優先度が高いのはどれか。",
+     "method": "repaired"
+    },
+    {
+     "field": "scenario",
+     "before": "A さん 14 歳、男子、特別支援学校の中学生!は Duchenneuデュシェンヌx 型筋ジ Duchenne muscular dystrophy ストロフィーで両親、弟 歳!と\u0002階建ての家に\u0006人で暮らしている。呼吸障害が進 行したため非侵襲的陽圧換気療法を導入する目的で入院した。A さんの呼吸状態は 安定し、両親に対するバッグバルブマスクによる用手換気の指導が終了したため、自 宅に退院し訪問看護を毎日利用して療養生活を続けることになった。両親は｢日常の 呼吸管理について退院後に対応できるか心配です｣と病棟の看護師に話した。",
+     "after": "A さん （14 歳、男子、特別支援学校の中学生）は Duchenne〈デュシェンヌ 〉型筋ジ Duchenne muscular dystrophy ストロフィーで両親、弟 （7歳）と2階建ての家に4人で暮らしている。呼吸障害が進 行したため非侵襲的陽圧換気療法を導入する目的で入院した。A さんの呼吸状態は 安定し、両親に対するバッグバルブマスクによる用手換気の指導が終了したため、自 宅に退院し訪問看護を毎日利用して療養生活を続けることになった。両親は｢日常の 呼吸管理について退院後に対応できるか心配です｣と病棟の看護師に話した。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM117",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "question",
+     "before": "退院後か月。A さんは人工呼吸器を装着して特別支援学校に通学することに も慣れてきた。A さんの母親から｢弟がインフルエンザと診断された。弟は階の 子ども部屋、A は階のリビングで過ごしている。家族全員がインフルエンザの 予防接種を受けた。A にインフルエンザがうつらないか心配｣と訪問看護師に連絡 があった。 訪問看護師の対応で適切なのはどれか。",
+     "after": "退院後6か月。A さんは人工呼吸器を装着して特別支援学校に通学することに も慣れてきた。A さんの母親から｢弟がインフルエンザと診断された。弟は2階の 子ども部屋、A は1階のリビングで過ごしている。家族全員がインフルエンザの 予防接種を受けた。A にインフルエンザがうつらないか心配｣と訪問看護師に連絡 があった。 訪問看護師の対応で適切なのはどれか。",
+     "method": "repaired"
+    },
+    {
+     "field": "choices[0]",
+     "before": "A さんが特別支援学校を週間休むことを勧める。",
+     "after": "A さんが特別支援学校を2週間休むことを勧める。",
+     "method": "repaired"
+    },
+    {
+     "field": "scenario",
+     "before": "A さん 14 歳、男子、特別支援学校の中学生!は Duchenneuデュシェンヌx 型筋ジ Duchenne muscular dystrophy ストロフィーで両親、弟 歳!と\u0002階建ての家に\u0006人で暮らしている。呼吸障害が進 行したため非侵襲的陽圧換気療法を導入する目的で入院した。A さんの呼吸状態は 安定し、両親に対するバッグバルブマスクによる用手換気の指導が終了したため、自 宅に退院し訪問看護を毎日利用して療養生活を続けることになった。両親は｢日常の 呼吸管理について退院後に対応できるか心配です｣と病棟の看護師に話した。",
+     "after": "A さん （14 歳、男子、特別支援学校の中学生）は Duchenne〈デュシェンヌ 〉型筋ジ Duchenne muscular dystrophy ストロフィーで両親、弟 （7歳）と2階建ての家に4人で暮らしている。呼吸障害が進 行したため非侵襲的陽圧換気療法を導入する目的で入院した。A さんの呼吸状態は 安定し、両親に対するバッグバルブマスクによる用手換気の指導が終了したため、自 宅に退院し訪問看護を毎日利用して療養生活を続けることになった。両親は｢日常の 呼吸管理について退院後に対応できるか心配です｣と病棟の看護師に話した。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM118",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "scenario",
+     "before": "A さん 72 歳、男性!は、妻と\u0002人暮らしで子どもはいない。定年後は\u0002人で旅行 するのが趣味であった。A さんは、\u0004か月前から残尿感や夜間頻尿が気になり病院 を受診した結果、前立腺癌と診断され根治的前立腺摘出手術を受けた。退院後は、手 prostate cancer 術後の補助療法として、外来で放射線の外照射療法を行うことになっている。",
+     "after": "A さん （72 歳、男性）は、妻と2人暮らしで子どもはいない。定年後は2人で旅行 するのが趣味であった。A さんは、1か月前から残尿感や夜間頻尿が気になり病院 を受診した結果、前立腺癌と診断され根治的前立腺摘出手術を受けた。退院後は、手 prostate cancer 術後の補助療法として、外来で放射線の外照射療法を行うことになっている。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM119",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "scenario",
+     "before": "A さん 72 歳、男性!は、妻と\u0002人暮らしで子どもはいない。定年後は\u0002人で旅行 するのが趣味であった。A さんは、\u0004か月前から残尿感や夜間頻尿が気になり病院 を受診した結果、前立腺癌と診断され根治的前立腺摘出手術を受けた。退院後は、手 prostate cancer 術後の補助療法として、外来で放射線の外照射療法を行うことになっている。",
+     "after": "A さん （72 歳、男性）は、妻と2人暮らしで子どもはいない。定年後は2人で旅行 するのが趣味であった。A さんは、1か月前から残尿感や夜間頻尿が気になり病院 を受診した結果、前立腺癌と診断され根治的前立腺摘出手術を受けた。退院後は、手 prostate cancer 術後の補助療法として、外来で放射線の外照射療法を行うことになっている。",
+     "method": "segment_ok"
+    }
+   ]
+  },
+  {
+   "id": "K113-PM120",
+   "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+   "edits": [
+    {
+     "field": "scenario",
+     "before": "A さん 72 歳、男性!は、妻と\u0002人暮らしで子どもはいない。定年後は\u0002人で旅行 するのが趣味であった。A さんは、\u0004か月前から残尿感や夜間頻尿が気になり病院 を受診した結果、前立腺癌と診断され根治的前立腺摘出手術を受けた。退院後は、手 prostate cancer 術後の補助療法として、外来で放射線の外照射療法を行うことになっている。",
+     "after": "A さん （72 歳、男性）は、妻と2人暮らしで子どもはいない。定年後は2人で旅行 するのが趣味であった。A さんは、1か月前から残尿感や夜間頻尿が気になり病院 を受診した結果、前立腺癌と診断され根治的前立腺摘出手術を受けた。退院後は、手 prostate cancer 術後の補助療法として、外来で放射線の外照射療法を行うことになっている。",
+     "method": "segment_ok"
+    }
+   ]
+  }
+ ]
+}
