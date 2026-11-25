@@ -89,14 +89,14 @@ html=html.replace("$('chapter').onchange=updateCount;updateCount();","$('chapter
 html=html.replace("subset=eligible();if(!subset.length)return;position=0;correct=0;denominator=0;excluded=0;","subset=eligible();if(!subset.length)return;sessionScope={year:$('year').value,chapter:$('chapter').value};position=0;correct=0;denominator=0;excluded=0;lastAnswer=null;")
 html=html.replace("$('quiz').classList.remove('hidden');show()};","setScreen('quiz');show();checkpoint()};")
 html=html.replace("Array.from($('choices').children).forEach", "storeAnswer(q,i);renderAnswer(i);}\nfunction renderAnswer(i){const q=subset[position],exclude=q.excludeFromAccuracyDenominator===true;\nArray.from($('choices').children).forEach",1)
-html=html.replace("if(++position<subset.length){show();window.scrollTo(0,0)}else finish()", "if(++position<subset.length){const attribution=$('feedback').querySelector('#attribution');if(attribution){attribution.classList.add('hidden');$('quiz').querySelector('article.card').append(attribution)}lastAnswer=null;show();checkpoint();window.scrollTo(0,0)}else finish()")
+html=html.replace("if(++position<subset.length){show();window.scrollTo(0,0)}else finish()", "const attribution=$('feedback').querySelector('#attribution');if(attribution){attribution.classList.add('hidden');$('quiz').querySelector('article.card').append(attribution)}if(++position<subset.length){lastAnswer=null;show();checkpoint();window.scrollTo(0,0)}else finish()")
 html=html.replace("function finish(){$('quiz').classList.add('hidden');$('complete').classList.remove('hidden');","function finish(){study.session=null;persistStudy();setScreen('complete');")
 html=html.replace("$('complete').classList.add('hidden');$('setup').classList.remove('hidden')","setScreen('setup')")
 assert 'function renderAnswer(i)' in html and 'checkpoint()' in html and 'id="home"' in html
 assert "const attribution=$('feedback').querySelector('#attribution')" in html, 'next-question transition must move and hide the previous attribution before rendering the next question'
 html=html.replace('候補600問を監査済みと表示しません。','インターネット接続なしで学習できます。')
 assert 'fetch(BANK' not in html
-html=html.replace('</script></body></html>', "document.getElementById('next').addEventListener('click',()=>{if(position+1<subset.length){const attribution=$('feedback').querySelector('#attribution');if(attribution){attribution.classList.add('hidden');$('quiz').querySelector('article.card').append(attribution)} }},true);</script></body></html>")
+html=html.replace('</script></body></html>', "document.getElementById('next').addEventListener('click',()=>{const attribution=$('feedback').querySelector('#attribution');if(attribution){attribution.classList.add('hidden');$('quiz').querySelector('article.card').append(attribution)}},true);</script></body></html>")
 assert "addEventListener('click',()=>{if(position+1<subset.length)" in html, 'capture-phase next-question attribution cleanup must be present'
 (OUT/'official-practice.html').write_text(html,encoding='utf-8')
 for name in ['privacy.html','support.html']:
