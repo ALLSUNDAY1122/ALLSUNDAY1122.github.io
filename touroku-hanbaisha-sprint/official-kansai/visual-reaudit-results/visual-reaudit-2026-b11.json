@@ -1,0 +1,214 @@
+{
+  "batch": "visual-reaudit-2026-b11",
+  "repository": "ALLSUNDAY1122/ALLSUNDAY1122.github.io",
+  "source": "添付された公式問題PDFのページ画像（180dpi）と添付 candidates JSON の現行バンクレコード",
+  "method": "DIRECT_VISUAL_PAGE_IMAGE_TO_RECORD_COMPARISON",
+  "scope": {
+    "ids": [
+      "KSAI-2026-111",
+      "KSAI-2026-112",
+      "KSAI-2026-113",
+      "KSAI-2026-114",
+      "KSAI-2026-115",
+      "KSAI-2026-117",
+      "KSAI-2026-118",
+      "KSAI-2026-119",
+      "KSAI-2026-120"
+    ],
+    "questionCount": 9,
+    "bundlePages": 9,
+    "officialPdf": "2026-second_half",
+    "officialPdfPages": [42, 43, 44, 45, 47, 48, 49, 50, 51]
+  },
+  "summary": {
+    "PASS": 7,
+    "FAIL": 1,
+    "HOLD": 1
+  },
+  "decisionCriteria": "問題文・全選択肢・ルビ・表・記号を原典画像と照合。選択肢表の行列対応が崩れている場合、文字・ルビ等に原典と異なる内容がある場合はFAIL。対象原典ページの必要箇所を画像で確認できない場合はHOLD。推測によるPASS判定は行わない。",
+  "results": [
+    {
+      "id": "KSAI-2026-111",
+      "questionNo": 111,
+      "bundlePdfPages": [1],
+      "officialPdfPages": [42],
+      "status": "FAIL",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": false,
+        "allChoices": true,
+        "ruby": false,
+        "tables": true,
+        "symbols": true
+      },
+      "evidence": "添付PDF p.1（原典PDF p.42）。問題文a・bにある小柴胡湯のルビを拡大して確認。原典の読みは「しょうさいことう」で、本文表記は「小柴胡湯」。選択肢表は5行×4列で、全20セルの正誤と列順は現行レコードと一致。",
+      "discrepancies": [
+        {
+          "field": "question",
+          "type": "RUBY_AND_BASE_TEXT_SPACING",
+          "recordedValue": "しょうさい こ とう／小 柴胡湯（a・bの各箇所）",
+          "officialValue": "しょうさいことう／小柴胡湯",
+          "correction": "a・bの両箇所について、読みを「しょうさいことう」、本文を「小柴胡湯」として、原典のルビ対応どおりに修正する。",
+          "sourceLocation": "添付PDF p.1（原典PDF p.42）、a行およびb行の小柴胡湯表記。"
+        }
+      ]
+    },
+    {
+      "id": "KSAI-2026-112",
+      "questionNo": 112,
+      "bundlePdfPages": [2],
+      "officialPdfPages": [43],
+      "status": "PASS",
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": true,
+        "allChoices": true,
+        "ruby": true,
+        "tables": true,
+        "symbols": true
+      },
+      "evidence": "添付PDF p.2（原典PDF p.43）。問題文a〜dの全文・数字・句読点を確認。正誤表は5行×4列で、全セルの正誤とa〜dの列対応が現行レコードと一致。",
+      "discrepancies": []
+    },
+    {
+      "id": "KSAI-2026-113",
+      "questionNo": 113,
+      "bundlePdfPages": [3],
+      "officialPdfPages": [44],
+      "status": "PASS",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": true,
+        "allChoices": true,
+        "ruby": true,
+        "tables": true,
+        "symbols": true
+      },
+      "evidence": "添付PDF p.3（原典PDF p.44）上段。問題文・a〜dの記述と5つの組合せ選択肢が一致。喘息の「喘」のルビ「ぜん」も画像で確認。",
+      "discrepancies": []
+    },
+    {
+      "id": "KSAI-2026-114",
+      "questionNo": 114,
+      "bundlePdfPages": [3],
+      "officialPdfPages": [44],
+      "status": "PASS",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": true,
+        "allChoices": true,
+        "ruby": true,
+        "tables": true,
+        "symbols": true
+      },
+      "evidence": "添付PDF p.3（原典PDF p.44）下段。成分a〜dの名称と正誤表5行×4列の全セル・列対応が現行レコードと一致。",
+      "discrepancies": []
+    },
+    {
+      "id": "KSAI-2026-115",
+      "questionNo": 115,
+      "bundlePdfPages": [4],
+      "officialPdfPages": [45],
+      "status": "PASS",
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": true,
+        "allChoices": true,
+        "ruby": true,
+        "tables": true,
+        "symbols": true
+      },
+      "evidence": "添付PDF p.4（原典PDF p.45）。問題文、成分a〜dの名称、および正誤表5行×4列の全セル・列対応が現行レコードと一致。",
+      "discrepancies": []
+    },
+    {
+      "id": "KSAI-2026-117",
+      "questionNo": 117,
+      "bundlePdfPages": [5],
+      "officialPdfPages": [47],
+      "status": "PASS",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": true,
+        "allChoices": true,
+        "ruby": true,
+        "tables": true,
+        "symbols": true
+      },
+      "evidence": "添付PDF p.5（原典PDF p.47）。本文の空欄a〜cと、5行×3列の表の全セルを確認。抗コリン／コリン、狭く／広く、上昇／低下の各組合せ・行順が一致。",
+      "discrepancies": []
+    },
+    {
+      "id": "KSAI-2026-118",
+      "questionNo": 118,
+      "bundlePdfPages": [6],
+      "officialPdfPages": [48],
+      "status": "PASS",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": true,
+        "allChoices": true,
+        "ruby": true,
+        "tables": true,
+        "symbols": true
+      },
+      "evidence": "添付PDF p.6（原典PDF p.48）。成分と対象者の対応表a〜dの全4行、および正誤表5行×4列の全セル・列対応が現行レコードと一致。",
+      "discrepancies": []
+    },
+    {
+      "id": "KSAI-2026-119",
+      "questionNo": 119,
+      "bundlePdfPages": [7],
+      "officialPdfPages": [49],
+      "status": "PASS",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": true,
+        "allChoices": true,
+        "ruby": true,
+        "tables": true,
+        "symbols": true
+      },
+      "evidence": "添付PDF p.7（原典PDF p.49）。基礎疾患・医薬品成分の対応表a〜dと正誤表5行×4列の全セル・列対応が一致。甲状腺機能亢進症の「亢」のルビ「こう」も画像で確認。",
+      "discrepancies": []
+    },
+    {
+      "id": "KSAI-2026-120",
+      "questionNo": 120,
+      "bundlePdfPages": [8, 9],
+      "officialPdfPages": [50, 51],
+      "status": "HOLD",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": true,
+        "allChoices": true,
+        "ruby": true,
+        "tables": true,
+        "symbols": true
+      },
+      "evidence": "添付PDF p.8（原典PDF p.50）では、問題文a〜d、選択肢表5行×4列、および大黄甘草湯のルビを視認でき、現行レコードとの一致を確認。候補JSONのsourcePdfPagesとbundlePdfPagesは原典PDF p.51／添付PDF p.9も対象に含めるが、添付PDF p.9は全面が文字化け状の反復記号となっており、画像から内容を判読できない。p.8で問題全体は確認できるものの、指定されたp.9の画像を検証できないため、完全確認とはせずHOLD。",
+      "discrepancies": [
+        {
+          "field": "source_page_51_visual_verification",
+          "type": "UNREADABLE_SOURCE_IMAGE",
+          "recordedValue": "bundlePdfPages=[8,9]、sourcePdfPages=[50,51]",
+          "officialValue": "添付PDF p.9（原典PDF p.51）の画像内容を判読できず、確認不能",
+          "correction": "原典PDF p.51の正常なページ画像を再取得し、問120に関係する記載の有無と内容を目視確認してから判定を確定する。",
+          "sourceLocation": "添付PDF p.9（原典PDF p.51）。"
+        }
+      ]
+    }
+  ],
+  "answerKeyNote": "answerNumberOfficial は添付JSONの値を記録。正答PDFは本バッチの添付資料に含まれず直接確認していないため、全問 answerPDFChecked:false。",
+  "bankMutation": false,
+  "stateFileMutation": false
+}
