@@ -25,6 +25,7 @@ jobs:
           set -euo pipefail
           source_dir=touroku-hanbaisha-sprint/official-kansai
           tmp_dir="$(mktemp -d)"
+          canonical_sha="$(sha256sum "$source_dir/APPROVED_OFFICIAL_BANK.json" | awk '{print $1}')"
           cp -a "$source_dir" "$tmp_dir/official-kansai"
           python "$tmp_dir/official-kansai/build_approved_bank.py" | tee /tmp/touhan-approval-builder.log
           python - "$source_dir/APPROVED_OFFICIAL_BANK.json" "$tmp_dir/official-kansai/APPROVED_OFFICIAL_BANK.json" <<'PY'
@@ -47,7 +48,7 @@ jobs:
           ))==599
           print("PASS: isolated builder reproduces all 599 exact approved records; canonical bank is not touched")
           PY
-          cmp "$source_dir/APPROVED_OFFICIAL_BANK.json" "$source_dir/APPROVED_OFFICIAL_BANK.json"
+          test "$(sha256sum "$source_dir/APPROVED_OFFICIAL_BANK.json" | awk '{print $1}')" = "$canonical_sha"
       - name: Bank and UI safety gates
         run: |
           python - <<'PY'
