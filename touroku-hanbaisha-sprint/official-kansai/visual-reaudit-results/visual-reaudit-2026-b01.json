@@ -1,0 +1,897 @@
+{
+  "batch": "visual-reaudit-2026-b01",
+  "repository": "ALLSUNDAY1122/ALLSUNDAY1122.github.io",
+  "branch": "main",
+  "auditType": "manual_visual_reaudit",
+  "source": {
+    "candidateAttachment": "visual-reaudit-2026-b01.candidates.json",
+    "renderedOfficialQuestionPdfAttachment": "visual-reaudit-2026-b01.pdf",
+    "issuer": "関西広域連合",
+    "title": "令和8年度登録販売者試験（前半）",
+    "sourceUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
+    "answerSourceUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+    "answerPdfInspected": false,
+    "bankBlobShaBefore": "8741e2675af6f41f7fba2afdc89566f48b8258e7"
+  },
+  "method": {
+    "description": "添付された公式問題PDFのレンダリング画像8ページを目視し、候補JSONのidsで指定された10問について、問題文・全選択肢・ルビ・表の行列と各セル対応・記号を照合した。PDF文字データ抽出、自動照合、候補JSON内の既存audit.statusは目視判定の代替としていない。",
+    "pagesReviewed": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "pageMapping": [
+      {
+        "bundlePdfPage": 1,
+        "officialPdfPage": 3
+      },
+      {
+        "bundlePdfPage": 2,
+        "officialPdfPage": 5
+      },
+      {
+        "bundlePdfPage": 3,
+        "officialPdfPage": 6
+      },
+      {
+        "bundlePdfPage": 4,
+        "officialPdfPage": 7
+      },
+      {
+        "bundlePdfPage": 5,
+        "officialPdfPage": 8
+      },
+      {
+        "bundlePdfPage": 6,
+        "officialPdfPage": 10
+      },
+      {
+        "bundlePdfPage": 7,
+        "officialPdfPage": 11
+      },
+      {
+        "bundlePdfPage": 8,
+        "officialPdfPage": 12
+      }
+    ],
+    "answerHandling": "answerNumberOfficialは添付候補JSONの値を転記。正答PDFを直接確認していないため、全件answerPDFChecked=false。",
+    "failRule": "原典画像とレコードの問題文・全選択肢・ルビ・表・記号に不一致があればFAIL。正誤表は5行×4列の各セル位置まで照合し、行と列の対応が崩れている場合はFAIL。"
+  },
+  "scope": {
+    "questionIds": [
+      "KSAI-2026-001",
+      "KSAI-2026-003",
+      "KSAI-2026-004",
+      "KSAI-2026-005",
+      "KSAI-2026-006",
+      "KSAI-2026-007",
+      "KSAI-2026-010",
+      "KSAI-2026-011",
+      "KSAI-2026-012",
+      "KSAI-2026-013"
+    ],
+    "questionNumbers": [
+      1,
+      3,
+      4,
+      5,
+      6,
+      7,
+      10,
+      11,
+      12,
+      13
+    ],
+    "count": 10
+  },
+  "summary": {
+    "total": 10,
+    "pass": 10,
+    "fail": 0,
+    "hold": 0,
+    "failReasons": [],
+    "holdReasons": []
+  },
+  "results": [
+    {
+      "id": "KSAI-2026-001",
+      "status": "PASS",
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "bundlePdfPages": [
+        1
+      ],
+      "officialPdfPages": [
+        3
+      ],
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "NOT_APPLICABLE",
+        "tableOrChoiceLayout": "PASS",
+        "symbols": "PASS"
+      },
+      "choices": [
+        "正  正  正  誤",
+        "正  正  誤  正",
+        "正  正  誤  誤",
+        "誤  誤  正  誤",
+        "誤  正  誤  正"
+      ],
+      "table": {
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rows": [
+          {
+            "row": 1,
+            "cells": [
+              "正",
+              "正",
+              "正",
+              "誤"
+            ]
+          },
+          {
+            "row": 2,
+            "cells": [
+              "正",
+              "正",
+              "誤",
+              "正"
+            ]
+          },
+          {
+            "row": 3,
+            "cells": [
+              "正",
+              "正",
+              "誤",
+              "誤"
+            ]
+          },
+          {
+            "row": 4,
+            "cells": [
+              "誤",
+              "誤",
+              "正",
+              "誤"
+            ]
+          },
+          {
+            "row": 5,
+            "cells": [
+              "誤",
+              "正",
+              "誤",
+              "正"
+            ]
+          }
+        ],
+        "rowCount": 5,
+        "columnCount": 4
+      },
+      "visualNotes": "設問本文4記述とa〜dの正誤組合せ表5行×4列を照合。表の全セルが一致。"
+    },
+    {
+      "id": "KSAI-2026-003",
+      "status": "PASS",
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "bundlePdfPages": [
+        2
+      ],
+      "officialPdfPages": [
+        5
+      ],
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "NOT_APPLICABLE",
+        "tableOrChoiceLayout": "PASS",
+        "symbols": "PASS"
+      },
+      "choices": [
+        "正  誤  正  誤",
+        "正  誤  誤  正",
+        "誤  正  正  正",
+        "誤  正  誤  正",
+        "誤  誤  正  正"
+      ],
+      "table": {
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rows": [
+          {
+            "row": 1,
+            "cells": [
+              "正",
+              "誤",
+              "正",
+              "誤"
+            ]
+          },
+          {
+            "row": 2,
+            "cells": [
+              "正",
+              "誤",
+              "誤",
+              "正"
+            ]
+          },
+          {
+            "row": 3,
+            "cells": [
+              "誤",
+              "正",
+              "正",
+              "正"
+            ]
+          },
+          {
+            "row": 4,
+            "cells": [
+              "誤",
+              "正",
+              "誤",
+              "正"
+            ]
+          },
+          {
+            "row": 5,
+            "cells": [
+              "誤",
+              "誤",
+              "正",
+              "正"
+            ]
+          }
+        ],
+        "rowCount": 5,
+        "columnCount": 4
+      },
+      "visualNotes": "無作用量・最小有効量・治療量、GVP・GCPの表記を含む設問本文と正誤表5行×4列を照合。一致。"
+    },
+    {
+      "id": "KSAI-2026-004",
+      "status": "PASS",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "bundlePdfPages": [
+        3
+      ],
+      "officialPdfPages": [
+        6
+      ],
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "NOT_APPLICABLE",
+        "tableOrChoiceLayout": "PASS",
+        "symbols": "PASS"
+      },
+      "choices": [
+        "誤  正  正  誤",
+        "正  誤  正  正",
+        "誤  正  誤  正",
+        "正  誤  正  誤",
+        "正  正  誤  正"
+      ],
+      "table": {
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rows": [
+          {
+            "row": 1,
+            "cells": [
+              "誤",
+              "正",
+              "正",
+              "誤"
+            ]
+          },
+          {
+            "row": 2,
+            "cells": [
+              "正",
+              "誤",
+              "正",
+              "正"
+            ]
+          },
+          {
+            "row": 3,
+            "cells": [
+              "誤",
+              "正",
+              "誤",
+              "正"
+            ]
+          },
+          {
+            "row": 4,
+            "cells": [
+              "正",
+              "誤",
+              "正",
+              "誤"
+            ]
+          },
+          {
+            "row": 5,
+            "cells": [
+              "正",
+              "正",
+              "誤",
+              "正"
+            ]
+          }
+        ],
+        "rowCount": 5,
+        "columnCount": 4
+      },
+      "visualNotes": "健康食品、特定保健用食品、機能性表示食品に関するa〜dの全文と正誤表5行×4列を照合。一致。"
+    },
+    {
+      "id": "KSAI-2026-005",
+      "status": "PASS",
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "bundlePdfPages": [
+        4
+      ],
+      "officialPdfPages": [
+        7
+      ],
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "NOT_APPLICABLE",
+        "tableOrChoiceLayout": "PASS",
+        "symbols": "PASS"
+      },
+      "choices": [
+        "誤  正  正  誤",
+        "正  誤  正  正",
+        "正  正  正  正",
+        "正  誤  正  誤",
+        "誤  正  誤  正"
+      ],
+      "table": {
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rows": [
+          {
+            "row": 1,
+            "cells": [
+              "誤",
+              "正",
+              "正",
+              "誤"
+            ]
+          },
+          {
+            "row": 2,
+            "cells": [
+              "正",
+              "誤",
+              "正",
+              "正"
+            ]
+          },
+          {
+            "row": 3,
+            "cells": [
+              "正",
+              "正",
+              "正",
+              "正"
+            ]
+          },
+          {
+            "row": 4,
+            "cells": [
+              "正",
+              "誤",
+              "正",
+              "誤"
+            ]
+          },
+          {
+            "row": 5,
+            "cells": [
+              "誤",
+              "正",
+              "誤",
+              "正"
+            ]
+          }
+        ],
+        "rowCount": 5,
+        "columnCount": 4
+      },
+      "visualNotes": "WHOのセルフメディケーション定義、販売従事者・地域連携に関するa〜dと正誤表5行×4列を照合。一致。"
+    },
+    {
+      "id": "KSAI-2026-006",
+      "status": "PASS",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "bundlePdfPages": [
+        5
+      ],
+      "officialPdfPages": [
+        8
+      ],
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "NOT_APPLICABLE",
+        "tableOrChoiceLayout": "PASS",
+        "symbols": "PASS"
+      },
+      "choices": [
+        "正  正  誤  誤",
+        "正  正  誤  正",
+        "正  誤  誤  誤",
+        "誤  誤  正  正",
+        "誤  誤  正  誤"
+      ],
+      "table": {
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rows": [
+          {
+            "row": 1,
+            "cells": [
+              "正",
+              "正",
+              "誤",
+              "誤"
+            ]
+          },
+          {
+            "row": 2,
+            "cells": [
+              "正",
+              "正",
+              "誤",
+              "正"
+            ]
+          },
+          {
+            "row": 3,
+            "cells": [
+              "正",
+              "誤",
+              "誤",
+              "誤"
+            ]
+          },
+          {
+            "row": 4,
+            "cells": [
+              "誤",
+              "誤",
+              "正",
+              "正"
+            ]
+          },
+          {
+            "row": 5,
+            "cells": [
+              "誤",
+              "誤",
+              "正",
+              "誤"
+            ]
+          }
+        ],
+        "rowCount": 5,
+        "columnCount": 4
+      },
+      "visualNotes": "副作用の分類、複数疾病、適正使用、症状の自覚に関するa〜dと正誤表5行×4列を照合。一致。"
+    },
+    {
+      "id": "KSAI-2026-007",
+      "status": "PASS",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "bundlePdfPages": [
+        5
+      ],
+      "officialPdfPages": [
+        8
+      ],
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "NOT_APPLICABLE",
+        "tableOrChoiceLayout": "PASS",
+        "symbols": "PASS"
+      },
+      "choices": [
+        "正  正  誤  正",
+        "誤  誤  正  誤",
+        "正  正  正  誤",
+        "正  誤  正  誤",
+        "誤  正  誤  正"
+      ],
+      "table": {
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rows": [
+          {
+            "row": 1,
+            "cells": [
+              "正",
+              "正",
+              "誤",
+              "正"
+            ]
+          },
+          {
+            "row": 2,
+            "cells": [
+              "誤",
+              "誤",
+              "正",
+              "誤"
+            ]
+          },
+          {
+            "row": 3,
+            "cells": [
+              "正",
+              "正",
+              "正",
+              "誤"
+            ]
+          },
+          {
+            "row": 4,
+            "cells": [
+              "正",
+              "誤",
+              "正",
+              "誤"
+            ]
+          },
+          {
+            "row": 5,
+            "cells": [
+              "誤",
+              "正",
+              "誤",
+              "正"
+            ]
+          }
+        ],
+        "rowCount": 5,
+        "columnCount": 4
+      },
+      "visualNotes": "アレルギー、添加物、抵抗力低下時、外用薬に関するa〜dと正誤表5行×4列を照合。一致。"
+    },
+    {
+      "id": "KSAI-2026-010",
+      "status": "PASS",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "bundlePdfPages": [
+        6
+      ],
+      "officialPdfPages": [
+        10
+      ],
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "NOT_APPLICABLE",
+        "tableOrChoiceLayout": "PASS",
+        "symbols": "PASS"
+      },
+      "choices": [
+        "ａ、ｂ",
+        "ａ、ｃ",
+        "ｂ、ｃ",
+        "ｂ、ｄ",
+        "ｃ、ｄ"
+      ],
+      "visualNotes": "酒類、カフェイン、生薬成分・ハーブ、外用薬に関するa〜dの全文と5つの組合せ選択肢を照合。選択肢の順序・読点・記号を含め一致。"
+    },
+    {
+      "id": "KSAI-2026-011",
+      "status": "PASS",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "bundlePdfPages": [
+        6
+      ],
+      "officialPdfPages": [
+        10
+      ],
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tableOrChoiceLayout": "PASS",
+        "symbols": "PASS"
+      },
+      "choices": [
+        "正  正  正  誤",
+        "正  正  誤  正",
+        "正  誤  正  正",
+        "誤  正  正  正",
+        "正  正  正  正"
+      ],
+      "table": {
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rows": [
+          {
+            "row": 1,
+            "cells": [
+              "正",
+              "正",
+              "正",
+              "誤"
+            ]
+          },
+          {
+            "row": 2,
+            "cells": [
+              "正",
+              "正",
+              "誤",
+              "正"
+            ]
+          },
+          {
+            "row": 3,
+            "cells": [
+              "正",
+              "誤",
+              "正",
+              "正"
+            ]
+          },
+          {
+            "row": 4,
+            "cells": [
+              "誤",
+              "正",
+              "正",
+              "正"
+            ]
+          },
+          {
+            "row": 5,
+            "cells": [
+              "正",
+              "正",
+              "正",
+              "正"
+            ]
+          }
+        ],
+        "rowCount": 5,
+        "columnCount": 4
+      },
+      "ruby": [
+        {
+          "base": "咳",
+          "reading": "せ"
+        }
+      ],
+      "visualNotes": "小児等の使用に関するa〜dの全文、咳のルビ「せ」、正誤表5行×4列を照合。ページ画像で「咳きこんで」のルビを確認し、一致。"
+    },
+    {
+      "id": "KSAI-2026-012",
+      "status": "PASS",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "bundlePdfPages": [
+        7
+      ],
+      "officialPdfPages": [
+        11
+      ],
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tableOrChoiceLayout": "PASS",
+        "symbols": "PASS"
+      },
+      "choices": [
+        "正  正  誤  誤",
+        "誤  正  正  誤",
+        "誤  誤  正  正",
+        "誤  誤  誤  正",
+        "正  誤  誤  誤"
+      ],
+      "table": {
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rows": [
+          {
+            "row": 1,
+            "cells": [
+              "正",
+              "正",
+              "誤",
+              "誤"
+            ]
+          },
+          {
+            "row": 2,
+            "cells": [
+              "誤",
+              "正",
+              "正",
+              "誤"
+            ]
+          },
+          {
+            "row": 3,
+            "cells": [
+              "誤",
+              "誤",
+              "正",
+              "正"
+            ]
+          },
+          {
+            "row": 4,
+            "cells": [
+              "誤",
+              "誤",
+              "誤",
+              "正"
+            ]
+          },
+          {
+            "row": 5,
+            "cells": [
+              "正",
+              "誤",
+              "誤",
+              "誤"
+            ]
+          }
+        ],
+        "rowCount": 5,
+        "columnCount": 4
+      },
+      "ruby": [
+        {
+          "base": "嚥",
+          "reading": "えん"
+        }
+      ],
+      "visualNotes": "高齢者の使用に関するa〜dの全文、誤嚥の「嚥」のルビ「えん」、正誤表5行×4列を照合。ルビと各行のセル配置が一致。"
+    },
+    {
+      "id": "KSAI-2026-013",
+      "status": "PASS",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "bundlePdfPages": [
+        8
+      ],
+      "officialPdfPages": [
+        12
+      ],
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "NOT_APPLICABLE",
+        "tableOrChoiceLayout": "PASS",
+        "symbols": "PASS"
+      },
+      "choices": [
+        "正  正  誤  誤",
+        "正  誤  正  誤",
+        "誤  正  正  正",
+        "正  誤  誤  正",
+        "誤  正  誤  正"
+      ],
+      "table": {
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rows": [
+          {
+            "row": 1,
+            "cells": [
+              "正",
+              "正",
+              "誤",
+              "誤"
+            ]
+          },
+          {
+            "row": 2,
+            "cells": [
+              "正",
+              "誤",
+              "正",
+              "誤"
+            ]
+          },
+          {
+            "row": 3,
+            "cells": [
+              "誤",
+              "正",
+              "正",
+              "正"
+            ]
+          },
+          {
+            "row": 4,
+            "cells": [
+              "正",
+              "誤",
+              "誤",
+              "正"
+            ]
+          },
+          {
+            "row": 5,
+            "cells": [
+              "誤",
+              "正",
+              "誤",
+              "正"
+            ]
+          }
+        ],
+        "rowCount": 5,
+        "columnCount": 4
+      },
+      "visualNotes": "妊婦・授乳婦への医薬品使用に関するa〜dの全文と正誤表5行×4列を照合。一致。"
+    }
+  ]
+}
