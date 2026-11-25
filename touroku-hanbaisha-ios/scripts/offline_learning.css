@@ -14,3 +14,10 @@ body{background:var(--study-bg);color:var(--study-ink)}.app{max-width:520px;marg
 html.font-large{font-size:18px}html.font-xlarge{font-size:20px}
 @media(max-width:370px){.study-screen{padding-left:11px;padding-right:11px}.study-grid{gap:6px}}
 .choice-table-header{margin:8px 0 12px;padding:8px 12px;border:1px solid var(--study-line);border-radius:8px;background:var(--study-paper);font-weight:800;letter-spacing:.18em;text-align:center;color:var(--study-navy)}
+
+/* Official figure questions use the full device width for legibility. */
+#quiz .source-figure{width:100vw;max-width:100vw;margin:14px 0 16px calc(50% - 50vw)}
+#quiz .source-figure figure{margin:0 0 14px}
+#quiz .source-figure a{width:100%;max-width:100%;overflow:visible}
+#quiz .source-figure img{width:100%;max-width:100%;height:auto;border-radius:0;border-left:0;border-right:0}
+#quiz .choice{font-variant-numeric:tabular-nums}
