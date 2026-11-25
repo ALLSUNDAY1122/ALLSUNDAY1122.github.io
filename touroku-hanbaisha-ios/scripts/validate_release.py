@@ -209,8 +209,45 @@ for q in official_rows:
     assert q['verbatimCertified'] is True and q['renderReady'] is True and q['needsVisualReview'] is False,q['id']
     assert len(q['choices']) in (4,5) and q['answer'] == q['answerNumberOfficial'] - 1,q['id']
     if q.get('originalRubyReadings') is not None:
-        assert q['rubyDisplayMode'] == 'SOURCE_ORDER_UNATTACHED' and q['rubySourceVerified'] is True,q['id']
-        assert q['originalRubyReadings'] and not q.get('questionParts') and not q.get('choicesParts'),q['id']
+        readings=q['originalRubyReadings']
+        assert isinstance(readings,list) and 0<len(readings)<=100,q['id']
+        assert all(isinstance(x,str) and re.fullmatch(r'[ぁ-んァ-ンー]{1,20}',x) for x in readings),q['id']
+        assert q.get('rubySourceVerified') is True,q['id']
+        assert re.fullmatch(r'[a-f0-9]{64}',q.get('rubySourcePdfSha256','')),q['id']
+        mode=q.get('rubyDisplayMode')
+        if mode == 'SOURCE_ORDER_UNATTACHED':
+            assert not q.get('questionParts') and not q.get('choicesParts'),q['id']
+        elif mode == 'POSITIONALLY_ATTACHED':
+            qparts=q.get('questionParts') or []
+            cparts=q.get('choicesParts') or []
+            assert qparts or cparts,q['id']
+            assert isinstance(qparts,list),q['id']
+            assert isinstance(cparts,list) and (not cparts or len(cparts)==len(q['choices'])),q['id']
+            attached=[]
+            def verify_rich_parts(parts,plain):
+                assert isinstance(parts,list) and parts,q['id']
+                rendered=[]
+                for part in parts:
+                    assert isinstance(part,dict),q['id']
+                    if 'text' in part:
+                        assert set(part)=={'text'} and isinstance(part['text'],str),q['id']
+                        rendered.append(part['text'])
+                    else:
+                        assert set(part)=={'rubyBase','rubyText'},q['id']
+                        base,text=part['rubyBase'],part['rubyText']
+                        assert isinstance(base,str) and re.fullmatch(r'[\\u3400-\\u9fff々]+',base),q['id']
+                        assert isinstance(text,str) and re.fullmatch(r'[ぁ-んァ-ンー]{1,12}',text),q['id']
+                        attached.append(text)
+                        rendered.append(base)
+                assert ''.join(rendered)==plain,q['id']
+            if qparts:
+                verify_rich_parts(qparts,q['question'])
+            for i,parts in enumerate(cparts):
+                verify_rich_parts(parts,q['choices'][i])
+            assert attached and len(attached)<=len(readings),q['id']
+            assert readings[-len(attached):]==attached,q['id']
+        else:
+            raise AssertionError((q['id'],mode))
     for fig in q.get('sourceFigures',[]):
         assert (WEB / fig['webPath']).is_file(),(q['id'],fig['webPath'])
 official_html = (WEB/'official-practice.html').read_text(encoding='utf-8')
