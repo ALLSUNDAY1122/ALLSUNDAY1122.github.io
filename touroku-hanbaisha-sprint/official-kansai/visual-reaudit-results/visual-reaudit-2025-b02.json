@@ -1,0 +1,389 @@
+{
+  "batch": "visual-reaudit-2025-b02",
+  "auditType": "manual_visual_reaudit",
+  "repository": "ALLSUNDAY1122/ALLSUNDAY1122.github.io",
+  "baseBranch": "main",
+  "source": {
+    "candidateFile": "visual-reaudit-2025-b02.candidates.json",
+    "pdfFile": "visual-reaudit-2025-b02.pdf",
+    "pdfPages": 8,
+    "officialSource": "関西広域連合「令和7年度登録販売者試験」前半",
+    "officialPdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R7tourokuhannbaisyashiken_zennhan.pdf",
+    "answerPdfInspected": false
+  },
+  "scope": {
+    "questionIds": [
+      "KSAI-2025-012",
+      "KSAI-2025-013",
+      "KSAI-2025-014",
+      "KSAI-2025-016",
+      "KSAI-2025-017",
+      "KSAI-2025-019",
+      "KSAI-2025-021",
+      "KSAI-2025-022",
+      "KSAI-2025-023",
+      "KSAI-2025-024"
+    ],
+    "questionNumbers": [
+      12,
+      13,
+      14,
+      16,
+      17,
+      19,
+      21,
+      22,
+      23,
+      24
+    ],
+    "excludedQuestionNumbers": [
+      15,
+      18,
+      20
+    ]
+  },
+  "method": {
+    "description": "添付PDF全8ページのページ画像を目視し、添付候補JSONの各レコードと問題文、全選択肢、ルビ、表の行列・セル対応、記号を照合した。PDFテキスト抽出、既存自動監査の判定、推測を目視判定の代替根拠としていない。",
+    "pageMapping": "bundlePdfPagesは添付PDF内の1始まりページ。officialPdfPagesは候補JSONのbundlePages対応表に基づく原典PDFページ。",
+    "answerHandling": "answerNumberOfficialの値のみ記録。正答PDFは未確認のため全件answerPDFChecked=false。"
+  },
+  "results": [
+    {
+      "id": "KSAI-2025-012",
+      "questionNo": 12,
+      "bundlePdfPages": [
+        1
+      ],
+      "officialPdfPages": [
+        11
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "該当なし",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "visuallyVerifiedChoices": [
+        "正 正 正 誤",
+        "正 正 誤 正",
+        "正 誤 正 正",
+        "誤 正 正 正",
+        "正 正 正 正"
+      ],
+      "notes": "妊婦・授乳婦への医薬品使用に関する本文a〜dを照合。ページ下部の正誤表5行×4列は、候補choicesの5行と全セル一致。"
+    },
+    {
+      "id": "KSAI-2025-013",
+      "questionNo": 13,
+      "bundlePdfPages": [
+        2
+      ],
+      "officialPdfPages": [
+        12
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "該当なし",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "visuallyVerifiedChoices": [
+        "誤 正 正 誤",
+        "正 誤 正 誤",
+        "正 正 誤 正",
+        "正 誤 誤 誤",
+        "誤 誤 誤 誤"
+      ],
+      "notes": "プラセボ効果に関する本文a〜dを照合。ページ上部の正誤表5行×4列は候補choicesの全セルと一致。"
+    },
+    {
+      "id": "KSAI-2025-014",
+      "questionNo": 14,
+      "bundlePdfPages": [
+        2
+      ],
+      "officialPdfPages": [
+        12
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "該当なし",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "visuallyVerifiedChoices": [
+        "正 誤 正 誤",
+        "正 誤 誤 正",
+        "誤 誤 正 誤",
+        "正 正 誤 誤",
+        "誤 誤 誤 正"
+      ],
+      "notes": "医薬品の品質に関する本文a〜dを照合。ページ下部の正誤表5行×4列は候補choicesの全セルと一致。問13の表との取り違えもない。"
+    },
+    {
+      "id": "KSAI-2025-016",
+      "questionNo": 16,
+      "bundlePdfPages": [
+        3
+      ],
+      "officialPdfPages": [
+        14
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "該当なし",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "visuallyVerifiedChoices": [
+        "誤 正 正 誤",
+        "正 誤 正 正",
+        "正 正 正 正",
+        "正 誤 正 誤",
+        "誤 正 誤 正"
+      ],
+      "notes": "登録販売者の一般用医薬品販売時の姿勢に関する本文a〜dを照合。正誤表5行×4列の全セルが候補choicesと一致。"
+    },
+    {
+      "id": "KSAI-2025-017",
+      "questionNo": 17,
+      "bundlePdfPages": [
+        4
+      ],
+      "officialPdfPages": [
+        15
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "該当なし",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "visuallyVerifiedChoices": [
+        "正 正 誤 正",
+        "誤 誤 正 誤",
+        "正 正 正 誤",
+        "正 誤 正 誤",
+        "誤 正 誤 正"
+      ],
+      "notes": "薬害訴訟と対応措置の本文および罫線付き一覧表を照合。表のa〜d各行（スモン、HIV、CJD、C型肝炎）とHIV/CJDの略語説明が原典画像どおり。続く正誤表5行×4列も候補choicesと一致。"
+    },
+    {
+      "id": "KSAI-2025-019",
+      "questionNo": 19,
+      "bundlePdfPages": [
+        5
+      ],
+      "officialPdfPages": [
+        17
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "visuallyVerifiedChoices": [
+        "解熱鎮痛剤／亜急性脊髄視神経症／呼吸器",
+        "解熱鎮痛剤／中毒性表皮壊死融解症／呼吸器",
+        "整腸剤／中毒性表皮壊死融解症／消化器",
+        "整腸剤／亜急性脊髄視神経症／消化器",
+        "整腸剤／亜急性脊髄視神経症／呼吸器"
+      ],
+      "notes": "スモン訴訟の本文とa・b・cの3列×5行の選択肢表を照合。本文中「罹患」の「罹」に付されたルビ「り」を確認。候補questionPartsのrubyBase「罹」/rubyText「り」と一致。表の全セルも一致。"
+    },
+    {
+      "id": "KSAI-2025-021",
+      "questionNo": 21,
+      "bundlePdfPages": [
+        6
+      ],
+      "officialPdfPages": [
+        19
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "visuallyVerifiedChoices": [
+        "正 正 誤 誤",
+        "正 誤 正 正",
+        "誤 誤 誤 誤",
+        "正 誤 正 誤",
+        "誤 誤 正 正"
+      ],
+      "notes": "かぜ・総合感冒薬に関する本文a〜dを照合。本文bの「喘息」の「喘」に付されたルビ「ぜん」を確認。候補questionPartsのrubyBase「喘」/rubyText「ぜん」と一致。正誤表5行×4列も全セル一致。"
+    },
+    {
+      "id": "KSAI-2025-022",
+      "questionNo": 22,
+      "bundlePdfPages": [
+        6
+      ],
+      "officialPdfPages": [
+        19
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "visuallyVerifiedChoices": [
+        "1（a、b）",
+        "2（a、c）",
+        "3（b、c）",
+        "4（b、d）",
+        "5（c、d）"
+      ],
+      "visuallyVerifiedRubyReadingsInSourceOrder": [
+        "かっこんとう",
+        "さいこけいしとう",
+        "しょうせいりゅうとう",
+        "たん",
+        "せき",
+        "ぜん",
+        "はんげこうぼくとう"
+      ],
+      "notes": "漢方処方製剤の本文a〜d、処方名・本文中のルビ7件、選択肢1〜5を照合。ルビは原典の出現順（葛根湯、柴胡桂枝湯、小青竜湯、痰、咳、喘、半夏厚朴湯）で一致。候補はSOURCE_ORDER_UNATTACHED方式のため、漢字への独自の対応付けは追加せず、原典の出現順と表示を確認した。選択肢の組合せも一致。"
+    },
+    {
+      "id": "KSAI-2025-023",
+      "questionNo": 23,
+      "bundlePdfPages": [
+        7
+      ],
+      "officialPdfPages": [
+        20
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "該当なし",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "visuallyVerifiedIngredientTable": [
+        [
+          "ブロムヘキシン塩酸塩",
+          "4 mg"
+        ],
+        [
+          "デキストロメトルファン臭化水素酸塩水和物",
+          "16 mg"
+        ],
+        [
+          "dl－メチルエフェドリン塩酸塩",
+          "20 mg"
+        ],
+        [
+          "アセトアミノフェン",
+          "300 mg"
+        ],
+        [
+          "クロルフェニラミンマレイン酸塩",
+          "2.5 mg"
+        ],
+        [
+          "アスコルビン酸カルシウム",
+          "83.3 mg"
+        ],
+        [
+          "（ビタミンCカルシウム）",
+          "（9錠中250 mg）"
+        ],
+        [
+          "リボフラビン（ビタミンB2）",
+          "4 mg"
+        ]
+      ],
+      "visuallyVerifiedChoices": [
+        "正 正 誤 誤",
+        "正 誤 正 誤",
+        "誤 正 正 正",
+        "正 誤 誤 正",
+        "誤 正 誤 正"
+      ],
+      "notes": "35歳男性の事例本文、3錠中の成分・分量表8行、説明事項a〜dおよび正誤表5行×4列を照合。成分名、数値、単位、括弧内のビタミンCカルシウムの含量表記を含め候補レコードと一致。"
+    },
+    {
+      "id": "KSAI-2025-024",
+      "questionNo": 24,
+      "bundlePdfPages": [
+        8
+      ],
+      "officialPdfPages": [
+        21
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "該当なし",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "visuallyVerifiedChoices": [
+        "抑制／増加／減少",
+        "抑制／増加／増加",
+        "抑制／減少／増加",
+        "促進／減少／増加",
+        "促進／増加／減少"
+      ],
+      "notes": "化学的に合成された解熱鎮痛成分に関する本文を照合。同じアルファベットaの空欄が2か所にあること、およびa・b・cの3列×5行の選択肢表を確認。全セルが候補choicesと一致。"
+    }
+  ],
+  "summary": {
+    "total": 10,
+    "pass": 10,
+    "fail": 0,
+    "hold": 0,
+    "failIds": [],
+    "holdIds": [],
+    "answerPDFCheckedCount": 0
+  },
+  "constraints": {
+    "approvedOfficialBankModified": false,
+    "statusFilesModified": false,
+    "onlyNewAuditResultFile": true
+  }
+}
