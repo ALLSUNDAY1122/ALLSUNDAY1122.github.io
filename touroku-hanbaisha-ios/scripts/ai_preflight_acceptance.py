@@ -177,7 +177,7 @@ def main():
     q6file=IOS/"IOS_SIMULATOR_Q6_20261125.json"
     q6=json.loads(q6file.read_text()) if q6file.is_file() else {}
     offline_static=("webView.loadFileURL(home, allowingReadAccessTo: root)" in swift
-        and "path: OfflineWeb" in project and "connect-src \\'none\'" in prepare
+        and "path: OfflineWeb" in project and bool(re.search(r"connect-src \\*'none\\*'", prepare))
         and "offlineExplanations" in prepare and "explanationsCount" in prepare)
     offline_runtime=(q4data.get("status")=="PASS" and q4data.get("nativeSimulatorOfflineBundleVerified") is True
         and q4data.get("bankCount")==599 and q4data.get("explanationsCount")==599
