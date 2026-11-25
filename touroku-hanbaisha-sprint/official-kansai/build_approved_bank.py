@@ -485,6 +485,69 @@ def auto113_ok(q,a):
         and len(q.get("choicesParts",[]))==len(q.get("choices",[])))
 preserve_prior("PDF_RAWDICT_GEOMETRY_AND_CHROMIUM_DOM_AUTO_V1","RUBY_113_AUTO_REBUILD_20261124.json",
     set(auto_records),auto113_ok,"ruby113Auto")
+
+# Preserve later, individually recorded visual re-audits. Each record must
+# point to an existing result ledger, have a direct visual PASS, retain the
+# recorded official answer number (without claiming answer-PDF verification),
+# and carry page/evidence details. These are confirmations of already reviewed
+# records, not a blanket approval of unreviewed candidates.
+manual_visual_ledgers={}
+visual_dir=B/"visual-reaudit-results"
+for ledger_path in sorted(visual_dir.glob("*.json")):
+    ledger=json.loads(ledger_path.read_text())
+    rows=ledger.get("results") or ledger.get("records") or []
+    if not isinstance(rows,list):
+        raise RuntimeError("invalid visual re-audit result rows: "+ledger_path.name)
+    for row in rows:
+        id=row.get("id")
+        if not id: continue
+        key=(ledger_path.name,id)
+        if key in manual_visual_ledgers:
+            raise RuntimeError("duplicate visual re-audit result: "+str(key))
+        manual_visual_ledgers[key]=(ledger,row)
+
+def manual_visual_reaudit_ok(q,audit):
+    name=audit.get("record","")
+    pair=manual_visual_ledgers.get((name,q["id"]))
+    if pair is None: return False
+    ledger,row=pair
+    method=str(ledger.get("method") or ledger.get("auditMethod") or "")
+    if "VISUAL" not in method.upper(): return False
+    if ledger.get("repository") not in (None,"ALLSUNDAY1122/ALLSUNDAY1122.github.io"): return False
+    if row.get("status")!="PASS" or row.get("answerPDFChecked") is not False: return False
+    if row.get("answerNumberOfficial")!=q.get("answerNumberOfficial"): return False
+    pages=row.get("bundlePdfPages") or row.get("bundlePages") or []
+    if not isinstance(pages,list) or not pages: return False
+    evidence=row.get("evidence") or row.get("visualNotes") or row.get("findings")
+    if not evidence: return False
+    checks=row.get("checks")
+    if checks is not None and not all(checks.get(k) is True for k in ("questionText","allChoices","ruby","tables","symbols")):
+        return False
+    if row.get("discrepancies") not in (None,[]): return False
+    return True
+
+for q in prior_questions:
+    audit=q.get("audit",{})
+    if audit.get("method")!="MANUAL_VISUAL_REAUDIT": continue
+    id=q["id"]
+    if not prior_common(q) or not manual_visual_reaudit_ok(q,audit):
+        raise RuntimeError("manual visual re-audit evidence mismatch: "+id)
+    if id in accepted:
+        current=accepted[id]
+        for field in ("question","choices","answer","answerNumberOfficial"):
+            if current.get(field)!=q.get(field):
+                raise RuntimeError("manual visual re-audit conflicts with reconstructed content: "+id+" / "+field)
+        # Prefer the visually re-audited canonical record so its corrected
+        # ruby anchors and source-order metadata survive deterministic rebuild.
+        accepted[id]=q
+        continue
+    stat=status_by_year[str(q["year"])]
+    if stat.get("hold",0)<=0:
+        raise RuntimeError("manual visual re-audit has no unresolved source hold: "+id)
+    accepted[id]=q
+    stat["manualVisualReaudit"]=stat.get("manualVisualReaudit",0)+1
+    stat["hold"]-=1
+
 # The reconstructed set must be exactly the previously approved canonical set.
 if prior_bank:
     if len(accepted)!=prior_bank.get("count") or set(accepted)!=set(prior_byid):
