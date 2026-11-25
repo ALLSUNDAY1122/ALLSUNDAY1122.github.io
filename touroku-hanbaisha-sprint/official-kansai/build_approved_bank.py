@@ -528,28 +528,41 @@ def manual_visual_reaudit_ok(q,expected_record=None):
     if source_pages is not None and q.get("sourcePdfPages")!=source_pages: return False
     return True
 
+def source_page_reaudit_ok(q,row):
+    if row.get("status")!="PASS" or row.get("answerPDFChecked") is not False: return False
+    if row.get("answerNumberOfficial")!=q.get("answerNumberOfficial"): return False
+    pages=row.get("bundlePdfPages") or row.get("bundlePages") or []
+    if not isinstance(pages,list) or not pages: return False
+    source_pages=row.get("officialPdfPages") or row.get("sourcePdfPages")
+    if not isinstance(source_pages,list) or not source_pages or q.get("sourcePdfPages")!=source_pages: return False
+    checks=row.get("checks")
+    if checks is not None and not all(checks.get(k) is True for k in ("questionText","allChoices","ruby","tables","symbols")):
+        return False
+    if row.get("discrepancies") not in (None,[]): return False
+    return True
+
 for q in prior_questions:
     audit=q.get("audit",{})
     method=audit.get("method")
     latest=latest_visual_results.get(q["id"])
-    if latest and latest[2].get("status")=="PASS":
-        expected=audit.get("record") if method=="MANUAL_VISUAL_REAUDIT" else None
-        if not prior_common(q) or not manual_visual_reaudit_ok(q,expected):
+    if method=="MANUAL_VISUAL_REAUDIT":
+        if not prior_common(q) or not manual_visual_reaudit_ok(q,audit):
             raise RuntimeError("latest manual visual re-audit evidence mismatch: "+q["id"])
-        # Keep the exact record already certified against the latest visual
-        # evidence, including corrected sourcePdfPages and ruby rich parts.
         was_accepted=q["id"] in accepted
-        if not was_accepted and method!="MANUAL_VISUAL_REAUDIT":
-            raise RuntimeError("visual PASS record has no reconstructable source method: "+q["id"])
-        accepted[q["id"]]=q
         if not was_accepted:
             stat=status_by_year[str(q["year"])]
             if stat.get("hold",0)<=0:
                 raise RuntimeError("manual visual re-audit has no unresolved source hold: "+q["id"])
             stat["manualVisualReaudit"]=stat.get("manualVisualReaudit",0)+1
             stat["hold"]-=1
-    elif method=="MANUAL_VISUAL_REAUDIT":
-        raise RuntimeError("manual visual re-audit is not latest PASS: "+q["id"])
+        # Preserve the exact visually re-audited record, including corrected
+        # text, ruby anchors and source-page mapping.
+        accepted[q["id"]]=q
+    elif latest and latest[2].get("status")=="PASS":
+        # A later visual ledger may explicitly correct sourcePdfPages even when
+        # the record's primary approval method remains another certified path.
+        if source_page_reaudit_ok(q,latest[2]):
+            accepted[q["id"]]=q
 
 # The reconstructed set must be exactly the previously approved canonical set.
 if prior_bank:
