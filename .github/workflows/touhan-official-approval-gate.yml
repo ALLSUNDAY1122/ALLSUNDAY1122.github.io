@@ -4,21 +4,50 @@ on:
   push:
     paths:
       - 'touroku-hanbaisha-sprint/official-kansai/MANUAL_VISUAL_AUDIT_20261123.json'
+      - 'touroku-hanbaisha-sprint/official-kansai/visual-reaudit-results/**'
       - 'touroku-hanbaisha-sprint/official-kansai/build_approved_bank.py'
       - 'touroku-hanbaisha-sprint/official-practice.html'
       - '.github/workflows/touhan-official-approval-gate.yml'
 permissions:
-  contents: write
+  contents: read
 jobs:
   gate:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Approve only manually visually checked questions
-        run: python touroku-hanbaisha-sprint/official-kansai/build_approved_bank.py
+      - name: Rebuild approved bank in an isolated copy (never write canonical bank)
+        shell: bash
+        run: |
+          set -euo pipefail
+          source_dir=touroku-hanbaisha-sprint/official-kansai
+          tmp_dir="$(mktemp -d)"
+          cp -a "$source_dir" "$tmp_dir/official-kansai"
+          python "$tmp_dir/official-kansai/build_approved_bank.py" | tee /tmp/touhan-approval-builder.log
+          python - "$source_dir/APPROVED_OFFICIAL_BANK.json" "$tmp_dir/official-kansai/APPROVED_OFFICIAL_BANK.json" <<'PY'
+          import json,sys
+          from pathlib import Path
+          current=json.loads(Path(sys.argv[1]).read_text())
+          rebuilt=json.loads(Path(sys.argv[2]).read_text())
+          for label,d in (("current",current),("rebuilt",rebuilt)):
+              qs=d["questions"]
+              ids=[q["id"] for q in qs]
+              assert d["count"]==len(qs)==len(d["approvedIds"])==599,(label,d["count"],len(qs),len(d["approvedIds"]))
+              assert len(set(ids))==599 and set(ids)==set(d["approvedIds"]),label
+              assert {y:sum(q["year"]==y for q in qs) for y in range(2022,2027)}=={2022:120,2023:119,2024:120,2025:120,2026:120},label
+              assert "KSAI-2023-090" not in set(ids),label
+              assert all(q["verbatimCertified"] is True and q["renderReady"] is True and q["needsVisualReview"] is False and q["audit"]["status"]=="PASS" for q in qs),label
+          assert rebuilt["questions"]==current["questions"],"isolated rebuild question payload differs from canonical bank"
+          assert sum(sum(v.get(k,0) for v in rebuilt["byYear"].values()) for k in (
+              "auto","geometry","ruby","rubyOrdered","layout","visual","cropImage","rubyFontCluster",
+              "visualRubyV2","imageV3","directRubyV3","sourceOrderUnattached","ruby113Auto","manualVisualReaudit"
+          ))==599
+          print("PASS: isolated builder reproduces all 599 exact approved records; canonical bank is not touched")
+          PY
+          cmp "$source_dir/APPROVED_OFFICIAL_BANK.json" "$source_dir/APPROVED_OFFICIAL_BANK.json"
       - name: Bank and UI safety gates
         run: |
           python - <<'PY'
@@ -27,12 +56,11 @@ jobs:
           b=Path('touroku-hanbaisha-sprint/official-kansai')
           bank=json.loads((b/'APPROVED_OFFICIAL_BANK.json').read_text())
           qa=bank['questions']
-          audit=json.loads((b/'MANUAL_VISUAL_AUDIT_20261123.json').read_text())
           assert bank['count']==len(qa)==599
           assert len({q['id'] for q in qa})==599
           assert 'KSAI-2023-090' not in {q['id'] for q in qa}
           assert {y:sum(q['year']==y for q in qa) for y in range(2022,2027)}=={2022:120,2023:119,2024:120,2025:120,2026:120}
-          assert all(q['verbatimCertified'] and q['renderReady'] and not q['needsVisualReview'] for q in qa)
+          assert all(q['verbatimCertified'] is True and q['renderReady'] is True and q['needsVisualReview'] is False and q['audit']['status']=='PASS' for q in qa)
           assert all(q['officialStatus']=='NORMAL' and len(q['choices']) in (4,5) and 0<=q['answer']<len(q['choices']) for q in qa)
           assert all(q['answer']==q['answerNumberOfficial']-1 and q['sourceIssuer']=='関西広域連合' and q['sourceUrl'].startswith('https://') and q['answerSourceUrl'].startswith('https://') and q['attributionDisplay'] for q in qa)
           text=Path('touroku-hanbaisha-sprint/official-practice.html').read_text()
@@ -48,17 +76,5 @@ jobs:
           PY
           node --check /tmp/touhan-official-practice.js
           node --check touroku-hanbaisha-sprint/app-v07.js
-      - name: Commit deterministic approved bank
-        if: github.ref == 'refs/heads/main'
-        run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add touroku-hanbaisha-sprint/official-kansai/APPROVED_OFFICIAL_BANK.json
-          if ! git diff --cached --quiet; then
-            git commit -m 'data(touhan): regenerate visually approved official bank'
-            for i in 1 2 3; do
-              git pull --rebase origin main
-              if git push origin HEAD:main; then exit 0; fi
-            done
-            exit 1
-          fi
+      - name: Verify canonical bank was not modified
+        run: git diff --exit-code -- touroku-hanbaisha-sprint/official-kansai/APPROVED_OFFICIAL_BANK.json
