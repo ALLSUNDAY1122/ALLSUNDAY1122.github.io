@@ -1,0 +1,352 @@
+{
+  "batch": "visual-reaudit-2023-b10",
+  "repository": "ALLSUNDAY1122/ALLSUNDAY1122.github.io",
+  "branch": "main",
+  "auditType": "FULL_QUESTION_VISUAL_REAUDIT",
+  "source": {
+    "attachedPdf": "visual-reaudit-2023-b10.pdf",
+    "attachedCandidateFile": "visual-reaudit-2023-b10.candidates.json",
+    "officialPdf": "2023-second_half",
+    "inspectionMethod": "添付PDFの各ページ画像を直接目視し、候補JSONの各レコードと照合。PDF文字抽出・自動比較を目視の代替には使用していない。",
+    "pageMapping": [
+      {
+        "bundlePdfPage": 1,
+        "officialPdfPage": 21,
+        "printedPage": 19,
+        "questionIds": [
+          "KSAI-2023-095"
+        ]
+      },
+      {
+        "bundlePdfPage": 2,
+        "officialPdfPage": 23,
+        "printedPage": 21,
+        "questionIds": [
+          "KSAI-2023-097",
+          "KSAI-2023-098"
+        ]
+      },
+      {
+        "bundlePdfPage": 3,
+        "officialPdfPage": 24,
+        "printedPage": 22,
+        "questionIds": [
+          "KSAI-2023-099"
+        ]
+      },
+      {
+        "bundlePdfPage": 4,
+        "officialPdfPage": 25,
+        "printedPage": 23,
+        "questionIds": [
+          "KSAI-2023-100"
+        ]
+      },
+      {
+        "bundlePdfPage": 5,
+        "officialPdfPage": 26,
+        "printedPage": 24,
+        "questionIds": [
+          "KSAI-2023-101",
+          "KSAI-2023-102"
+        ]
+      },
+      {
+        "bundlePdfPage": 6,
+        "officialPdfPage": 27,
+        "printedPage": 25,
+        "questionIds": [
+          "KSAI-2023-103",
+          "KSAI-2023-104"
+        ]
+      },
+      {
+        "bundlePdfPage": 7,
+        "officialPdfPage": 28,
+        "printedPage": 26,
+        "questionIds": [
+          "KSAI-2023-105"
+        ]
+      }
+    ]
+  },
+  "totals": {
+    "pass": 8,
+    "fail": 2,
+    "hold": 0
+  },
+  "answerVerification": {
+    "answerNumberOfficial": "添付候補レコードの値を転記しただけで、正答の正誤は検証していない。",
+    "answerPDFChecked": false
+  },
+  "results": [
+    {
+      "id": "KSAI-2023-095",
+      "questionNo": 95,
+      "bundlePdfPages": [
+        1
+      ],
+      "officialPdfPages": [
+        21
+      ],
+      "status": "PASS",
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS_NOT_PRESENT",
+        "tablesAndChoiceAlignment": "PASS",
+        "symbolsAndNotation": "PASS"
+      },
+      "observation": "薬局における特定販売のa〜dの全文、5行4列の正誤表を画像照合。各行は順に「正正誤誤／正誤正誤／誤正正正／正誤誤正／誤正誤正」で、候補の選択肢と一致。",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false
+    },
+    {
+      "id": "KSAI-2023-097",
+      "questionNo": 97,
+      "bundlePdfPages": [
+        2
+      ],
+      "officialPdfPages": [
+        23
+      ],
+      "status": "FAIL",
+      "checks": {
+        "questionText": "FAIL",
+        "allChoices": "PASS",
+        "ruby": "FAIL",
+        "tablesAndChoiceAlignment": "PASS",
+        "symbolsAndNotation": "PASS"
+      },
+      "discrepancies": [
+        {
+          "field": "questionParts ruby分割前後の連結文字列",
+          "current": "効果をそのまま標榜 すれば、承認されている内容を正確に反映した広告といえる。",
+          "official": "効果をそのまま標榜すれば、承認されている内容を正確に反映した広告といえる。",
+          "reason": "添付原典画像では「榜」の直後に空白はなく、「標榜すれば」と連続している。候補JSONのルビ分割後テキストには先頭空白が含まれている。"
+        },
+        {
+          "field": "ruby",
+          "current": "rubyBase=榜, rubyText=ぼう（読み・対象字自体は一致）",
+          "official": "榜（ぼう）",
+          "reason": "ルビの対象字と読みは一致するが、ルビ直後の空白により原典表記を再現できない。"
+        }
+      ],
+      "officialCorrection": {
+        "text": "効果をそのまま標榜すれば、承認されている内容を正確に反映した広告といえる。",
+        "ruby": {
+          "base": "榜",
+          "reading": "ぼう"
+        }
+      },
+      "observation": "a〜dおよび5行4列の正誤表は一致。dの「標榜」のルビ分割後に不要な空白が入るためFAIL。",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false
+    },
+    {
+      "id": "KSAI-2023-098",
+      "questionNo": 98,
+      "bundlePdfPages": [
+        2
+      ],
+      "officialPdfPages": [
+        23
+      ],
+      "status": "PASS",
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS_NOT_PRESENT",
+        "tablesAndChoiceAlignment": "PASS",
+        "symbolsAndNotation": "PASS"
+      },
+      "observation": "医薬品の販売方法に関するa〜dの全文、5行4列の正誤表を画像照合。各行は順に「正正正誤／正正誤正／正正誤誤／誤誤正誤／誤正誤正」で、候補の選択肢と一致。",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false
+    },
+    {
+      "id": "KSAI-2023-099",
+      "questionNo": 99,
+      "bundlePdfPages": [
+        3
+      ],
+      "officialPdfPages": [
+        24
+      ],
+      "status": "PASS",
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS_NOT_PRESENT",
+        "tablesAndChoiceAlignment": "PASS",
+        "symbolsAndNotation": "PASS"
+      },
+      "observation": "行政庁による監視指導及び処分に関する問題文・注記・a〜dの全文と5行4列の正誤表を画像照合。各行は「正正誤誤／誤正正誤／誤誤正正／誤誤誤正／正誤誤誤」で、候補と一致。",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false
+    },
+    {
+      "id": "KSAI-2023-100",
+      "questionNo": 100,
+      "bundlePdfPages": [
+        4,
+        5
+      ],
+      "officialPdfPages": [
+        25,
+        26
+      ],
+      "status": "PASS",
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS_NOT_PRESENT",
+        "tablesAndChoiceAlignment": "PASS_NOT_APPLICABLE",
+        "symbolsAndNotation": "PASS"
+      },
+      "observation": "生活者からの苦情及び相談に関するa〜dの全文と、組合せ選択肢「1（a,b）／2（a,d）／3（b,c）／4（b,d）／5（c,d）」を画像照合。一致。問100の問題文・選択肢は添付画像のbundle page 4で確認。",
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false
+    },
+    {
+      "id": "KSAI-2023-101",
+      "questionNo": 101,
+      "bundlePdfPages": [
+        5
+      ],
+      "officialPdfPages": [
+        26
+      ],
+      "status": "PASS",
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS_NOT_PRESENT",
+        "tablesAndChoiceAlignment": "PASS",
+        "symbolsAndNotation": "PASS"
+      },
+      "observation": "添付文書等に関するa〜dの全文と5行4列の正誤表を画像照合。各行は「正誤正正／正正正誤／正正誤誤／誤正誤正／誤誤正正」で、候補と一致。",
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false
+    },
+    {
+      "id": "KSAI-2023-102",
+      "questionNo": 102,
+      "bundlePdfPages": [
+        5
+      ],
+      "officialPdfPages": [
+        26
+      ],
+      "status": "FAIL",
+      "checks": {
+        "questionText": "FAIL",
+        "allChoices": "PASS",
+        "ruby": "PASS_NOT_PRESENT",
+        "tablesAndChoiceAlignment": "PASS_NOT_APPLICABLE",
+        "symbolsAndNotation": "FAIL"
+      },
+      "discrepancies": [
+        {
+          "field": "questionの指示文の下線",
+          "current": "「一般用医薬品の添付文書等の『使用上の注意』に関する記述について、誤っているものを一つ選べ。」（候補レコードに下線情報なし）",
+          "official": "原典画像では「誤っているものを一つ選べ。」に下線が引かれている。",
+          "reason": "選択対象を示す原典上の下線が候補レコードに保持されていない。文言自体は一致するが、視覚的な指定記号・強調が欠落している。"
+        }
+      ],
+      "officialCorrection": {
+        "questionText": "一般用医薬品の添付文書等の「使用上の注意」に関する記述について、誤っているものを一つ選べ。",
+        "underline": "誤っているものを一つ選べ。"
+      },
+      "observation": "5つの選択肢本文は画像と一致。設問末尾の「誤っているものを一つ選べ。」に原典の下線があるが、候補レコードに下線表現がないためFAIL。",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false
+    },
+    {
+      "id": "KSAI-2023-103",
+      "questionNo": 103,
+      "bundlePdfPages": [
+        6
+      ],
+      "officialPdfPages": [
+        27
+      ],
+      "status": "PASS",
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS_NOT_PRESENT",
+        "tablesAndChoiceAlignment": "PASS_NOT_APPLICABLE",
+        "symbolsAndNotation": "PASS"
+      },
+      "observation": "医薬品の保管及び取扱いに関する設問文と選択肢1〜5の全文を画像照合。一致。",
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false
+    },
+    {
+      "id": "KSAI-2023-104",
+      "questionNo": 104,
+      "bundlePdfPages": [
+        6
+      ],
+      "officialPdfPages": [
+        27
+      ],
+      "status": "PASS",
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS_NOT_PRESENT",
+        "tablesAndChoiceAlignment": "PASS_NOT_APPLICABLE",
+        "symbolsAndNotation": "PASS"
+      },
+      "observation": "製品表示に関するa〜dの全文と組合せ選択肢5件を画像照合。数値「０.１ｍＬ」、記号・句読点を含め一致。",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false
+    },
+    {
+      "id": "KSAI-2023-105",
+      "questionNo": 105,
+      "bundlePdfPages": [
+        7
+      ],
+      "officialPdfPages": [
+        28
+      ],
+      "status": "PASS",
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS_NOT_PRESENT",
+        "tablesAndChoiceAlignment": "PASS",
+        "symbolsAndNotation": "PASS"
+      },
+      "observation": "緊急安全性情報に関するa〜dの全文と5行4列の正誤表を画像照合。各行は「正正誤誤／誤正正誤／誤誤正正／誤誤誤正／正誤誤誤」で、候補と一致。",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false
+    }
+  ],
+  "overallFindings": {
+    "failReasons": [
+      {
+        "id": "KSAI-2023-097",
+        "reason": "「標榜」のルビ分割後に余分な空白が入り、原典の「標榜すれば」を再現していない。"
+      },
+      {
+        "id": "KSAI-2023-102",
+        "reason": "設問末尾「誤っているものを一つ選べ。」にある原典の下線が候補レコードに保持されていない。"
+      }
+    ],
+    "holdReasons": [],
+    "answerPolicy": "answerNumberOfficialは候補JSONの値を記録しただけ。正答PDFを直接確認していないため全件answerPDFChecked=false。",
+    "nonChanges": [
+      "touroku-hanbaisha-sprint/official-kansai/APPROVED_OFFICIAL_BANK.json",
+      "状態ファイル"
+    ]
+  },
+  "scopeConstraints": {
+    "officialBankModified": false,
+    "stateFilesModified": false,
+    "onlyNewAuditResultFile": true
+  }
+}
