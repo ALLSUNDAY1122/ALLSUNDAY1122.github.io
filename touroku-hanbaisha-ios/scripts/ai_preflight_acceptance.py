@@ -17,6 +17,40 @@ checks=[]
 def gate(name, status, detail, evidence=None):
     checks.append({"id":name,"status":status,"detail":detail,"evidence":evidence or []})
 def is_file(p):return p.is_file() and p.stat().st_size>0
+def manual_visual_audit_pass(q):
+    audit=q.get("audit") or {}
+    if audit.get("method")!="MANUAL_VISUAL_REAUDIT" or audit.get("status")!="PASS":
+        return False
+    name=audit.get("record")
+    if not isinstance(name,str) or Path(name).name!=name:
+        return False
+    evidence_path=B/"visual-reaudit-results"/name
+    if not is_file(evidence_path):
+        return False
+    evidence=json.loads(evidence_path.read_text(encoding="utf-8"))
+    rows=evidence.get("results") or evidence.get("records") or []
+    record=next((r for r in rows if r.get("id")==q.get("id")),None)
+    return bool(record and record.get("status")=="PASS")
+def collect_ruby_text(value):
+    found=[]
+    if isinstance(value,dict):
+        if isinstance(value.get("rubyText"),str):
+            found.append(value["rubyText"])
+        for key,child in value.items():
+            if key!="rubyText":
+                found.extend(collect_ruby_text(child))
+    elif isinstance(value,list):
+        for child in value:
+            found.extend(collect_ruby_text(child))
+    return found
+def is_subsequence(items, sequence):
+    pos=0
+    for item in items:
+        try:
+            pos=sequence.index(item,pos)+1
+        except ValueError:
+            return False
+    return True
 def main():
     status=json.loads((IOS/"release-status.json").read_text())
     bank=json.loads((B/"APPROVED_OFFICIAL_BANK.json").read_text())
@@ -42,11 +76,20 @@ def main():
             invalid.append(x)
         if "originalRubyReadings" in q:
             ordered+=1
-            if not (q.get("rubyDisplayMode")=="SOURCE_ORDER_UNATTACHED"
-                    and q.get("rubySourceVerified") is True
-                    and q.get("originalRubyReadings")
-                    and all(re.fullmatch(r"[ぁ-んァ-ンー]{1,20}",z) for z in q["originalRubyReadings"])
-                    and q.get("questionParts") is None and q.get("choicesParts") is None):
+            readings=q.get("originalRubyReadings")
+            readings_ok=(isinstance(readings,list) and bool(readings)
+                and all(isinstance(z,str) and re.fullmatch(r"[ぁ-んァ-ンー]{1,20}",z) for z in readings))
+            mode=q.get("rubyDisplayMode")
+            if mode=="SOURCE_ORDER_UNATTACHED":
+                representation_ok=(q.get("rubySourceVerified") is True
+                    and q.get("questionParts") is None and q.get("choicesParts") is None)
+            elif mode=="POSITIONALLY_ATTACHED":
+                attached=collect_ruby_text(q.get("questionParts"))+collect_ruby_text(q.get("choicesParts"))
+                representation_ok=(bool(attached) and is_subsequence(attached,readings)
+                    and manual_visual_audit_pass(q))
+            else:
+                representation_ok=False
+            if not (readings_ok and representation_ok):
                 invalid.append(x+":RUBY")
         if q.get("questionParts") or q.get("choicesParts"):rich+=1
         for fig in q.get("sourceFigures",[]):
