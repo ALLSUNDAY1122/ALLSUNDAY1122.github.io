@@ -99,7 +99,7 @@ const key=q.id||('KSAI-'+q.year+'-'+String(q.questionNo).padStart(3,'0'));
 const explanation=explanationMap.get(key);
 if(explanation){const section=document.createElement('div');section.className='explanation';const heading=document.createElement('strong');heading.textContent='解説';const body=document.createElement('div');body.textContent=explanation.explanation;section.append(heading,body);f.append(section)}
 const attribution=document.createElement('div');attribution.className='source';attribution.id='attribution';attribution.append(document.createTextNode(q.attributionDisplay+'　'),sourceLink(q.sourceUrl,'公式問題PDF'),document.createTextNode('　'),sourceLink(q.answerSourceUrl,'公式正答PDF'),document.createElement('div'),document.createTextNode(q.modificationDisclosureDisplay||'表示配置はPDFと異なります'));f.append(attribution);
-$('unknown').classList.add('hidden');$('next').classList.remove('hidden');$('next').textContent=position===subset.length-1?'結果を見る':'次へ';$('score').textContent=correct+' / '+denominator+'（採点対象）';
+$('unknown').classList.add('hidden');$('next').classList.remove('hidden');$('next').textContent=position===subset.length-1?'結果を見る':'次の問題へ';$('score').textContent=correct+' / '+denominator+'（採点対象）';
 }
 $('unknown').onclick=()=>answer(-1);
 $('next').onclick=()=>{if(!selected)return;if(++position<subset.length){show();window.scrollTo(0,0)}else finish()};
