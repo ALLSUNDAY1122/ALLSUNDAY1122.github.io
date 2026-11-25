@@ -1608,4 +1608,11 @@ Apple固定識別子: Bundle `com.allsunday1122.tourokuhanbaisha`、ASC `6802119
 - 証拠JSON：`Q2_Q6_EVIDENCE_20261125.json`、`OFFLINE_Q4_20261125.json`、`IOS_SIMULATOR_Q6_20261125.json`。詳細は `release-status.json` の `q2_q6_evidence_20261125`。
 
 **結論：Q2静的確認とQ3 ASC読戻しはPASS。Q4はブラウザ範囲のみPASS、Q5 ASC質問票とQ6現HEADネイティブ検証が未完了。リリースゲートBLOCKEDを維持。**
-\n\n## Q7 署名付きIPA・TestFlight配信（2026-11-25）\n- Codemagic開始: success、検証: success、総合: **PASS**。\n- ASC処理: VALID、TestFlight利用可能: True、内部グループ配信: True。\n- App Review提出: **未実施**。証跡: Q7_TESTFLIGHT_READBACK_20261125.json。
+
+## Q7 署名付きIPA・TestFlight配信（2026-11-25）
+
+- **Build 20**：Codemagic `6b06821c03e7180a2f6a02a8`、GitHub Actions Run `45561913186`。署名IPA検証、599問・解説・Privacy Manifest検証、ASCアップロードすべて成功。ASC Build UUID `6b4beb1c-3f1c-4844-a90c-e36a444c4dfd`、version `20`、processingState `VALID`。内部グループ `sum`（テスター1名）への割当読戻し成功。
+- **Build 21（最新）**：Codemagic `6b06836d0bc59f03bf0c02e3`、GitHub Actions Run `45561986493`。署名IPA検証、599問・解説・Privacy Manifest検証、ASCアップロードすべて成功。ASC Build UUID `095c6fe1-6999-4f6e-9049-08fd860a63c6`、version `21`、processingState `VALID`。内部グループ `sum`（テスター1名）への割当読戻し成功。
+- Run `45561986493` のGitHub Actions総合結果は、証拠3ファイルの同時更新時にrebase競合が発生したためFAIL。ただし同Run内のCodemagic・ASC検証ステップはSUCCESS。競合後、Build 21の実測結果を再構成して証拠ファイルへ保存済み。
+- 最新証跡：`Q7_CODEMAGIC_SIGNING_BUILD_20261125.json`、`Q7_TESTFLIGHT_READBACK_20261125.json`。Build 21を最新の正式記録とする。
+- App Review提出：**未実施**。外部ベータ配信・本審査提出・一般公開は実施していない。
