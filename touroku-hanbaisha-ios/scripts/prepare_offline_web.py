@@ -72,7 +72,7 @@ html=html.replace("subset=eligible();if(!subset.length)return;sessionScope=", "s
 html=html.replace("$('counter').textContent=(position+1)+' / '+subset.length+'問';", "$('counter').textContent=(position+1)+' / '+subset.length+'問';$('qtag').textContent=q.chapter;$('progressBar').style.width=(position/subset.length*100)+'%';")
 html=html.replace("function appendRich(parent,parts,plain){if(!parts){parent.textContent=plain;return}", "function displayPdfText(value){return String(value||'').replace(/\\r\\n?/g,'\\n').replace(/(?<!\\n)\\n(?!\\n)/g,'')}\nfunction appendRich(parent,parts,plain){const sequence=$('rubySequence');if(!parts){parent.textContent=displayPdfText(plain);if(sequence)parent.append(sequence);return}")
 html=html.replace('document.createTextNode(piece.text)','document.createTextNode(displayPdfText(piece.text))')
-html=html.replace('parent.append(ruby)}}\\nfunction approvedFigures','parent.append(ruby)}if(sequence)parent.append(sequence)}\\nfunction approvedFigures')
+html=html.replace('parent.append(ruby)}}\nfunction approvedFigures','parent.append(ruby)}if(sequence)parent.append(sequence)}\nfunction approvedFigures')
 html=html.replace('body.textContent=explanation.explanation','body.textContent=displayPdfText(explanation.explanation)')
 html=html.replace("$('unknown').classList.add('hidden');$('next').classList.remove('hidden');", "$('feedback').append($('attribution'));$('unknown').classList.add('hidden');$('next').classList.remove('hidden');")
 
