@@ -60,7 +60,7 @@ manifest_ok=(plist.get("NSPrivacyTracking") is False
     and plist.get("NSPrivacyCollectedDataTypes")==[]
     and plist.get("NSPrivacyTrackingDomains")==[])
 metadata=(IOS/"APP_STORE_METADATA.md").read_text()
-metadata_ok=("privacy.html" in metadata and "通常学習は通信不要" in metadata)
+metadata_ok=("privacy.html" in metadata and "通常の学習に通信は不要" in metadata)
 runtime_ok=local_only and data_ok and link_visible and policy_ok and not errors and manifest_ok and metadata_ok
 now=datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=9))).isoformat()
 result={"schema":"touhan-q5-privacy-audit-v1","timestampJST":now,
