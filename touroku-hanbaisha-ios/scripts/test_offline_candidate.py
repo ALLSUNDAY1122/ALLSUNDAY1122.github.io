@@ -124,6 +124,8 @@ with sync_playwright() as pw:
         page.locator('#navHome').click()
         page.locator('#navSettings').click()
         expect(page.locator('#settings')).to_be_visible()
+        assert page.locator('#settings a[href="./privacy.html"]').count()==1
+        assert page.locator('#settings a[href="./support.html"]').count()==1
         expect(page.locator('.file-restore-title')).to_have_text('JSONから復元')
         expect(page.locator('label[for="importData"]')).to_have_text('バックアップファイルを選択')
         expect(page.locator('#importFileName')).to_have_text('未選択')
