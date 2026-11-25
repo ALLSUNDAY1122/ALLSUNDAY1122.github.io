@@ -74,6 +74,13 @@ with sync_playwright() as pw:
             assert page.locator('#feedback #attribution a').count()>=2
             assert page.locator('#choices button').nth(q['answer']).evaluate("el=>el.classList.contains('good')"), q['id']
             page.locator('#next').click()
+            debug=page.evaluate("""() => ({
+              feedbackCount:document.querySelectorAll('#feedback').length,
+              feedbackChildren:Array.from(document.querySelector('#feedback')?.children||[]).map(n=>({id:n.id,cls:n.className})),
+              attributionNodes:Array.from(document.querySelectorAll('#attribution')).map(n=>({parent:n.parentElement?.id,hidden:n.classList.contains('hidden')})),
+              nextHandler:document.querySelector('#next')?.onclick?.toString()
+            })""")
+            print('NEXT_STATE '+json.dumps(debug,ensure_ascii=False),flush=True)
             expect(page.locator('#feedback #attribution')).to_have_count(0)
             expect(page.locator('#attribution')).to_be_hidden()
             report['count']+=1
