@@ -1,0 +1,171 @@
+name: Kangoshi ASC Screenshots (Read-Only Artifact)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  screenshots:
+    runs-on: macos-15
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install tools and prepare canonical native payload
+        run: |
+          HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen cairo pango
+          python3 -m pip install --break-system-packages 'CairoSVG>=2.7,<3'
+          python3 kangoshi-sprint/ios/tools/normalize_swift_numeric_literals.py
+          python3 kangoshi-sprint/ios/tools/prepare_native_content.py
+
+      - name: Ensure Review.storekit is bundled in UITests and generate Xcode project
+        working-directory: kangoshi-sprint/ios
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('project.yml')
+          text = p.read_text(encoding='utf-8')
+          marker = '  KangoshiSprintUITests:\n'
+          needle = '      - path: UITests\n'
+          addition = '      - path: UITests\n      - path: Review.storekit\n        buildPhase: resources\n'
+          if 'Review.storekit\n        buildPhase: resources' not in text:
+              idx = text.index(marker)
+              sub = text[idx:]
+              if needle not in sub:
+                  raise SystemExit('Could not locate KangoshiSprintUITests sources in project.yml')
+              text = text[:idx] + sub.replace(needle, addition, 1)
+              p.write_text(text, encoding='utf-8')
+          PY
+          xcodegen generate
+          grep -q 'Review.storekit' KangoshiSprint.xcodeproj/xcshareddata/xcschemes/KangoshiSprint.xcscheme
+
+      - name: Select iPhone 16 Pro Max (6.9-inch) simulator
+        id: sim
+        run: |
+          python3 - <<'PY'
+          import json, os, subprocess
+          data = json.loads(subprocess.check_output(['xcrun', 'simctl', 'list', 'devices', 'available', '-j']))
+          iphones = []
+          for runtime, rows in data.get('devices', {}).items():
+              if 'iOS' not in runtime:
+                  continue
+              for row in rows:
+                  if row.get('isAvailable') and str(row.get('name', '')).startswith('iPhone'):
+                      iphones.append(row)
+          for preferred in ['iPhone 16 Pro Max', 'iPhone 16 Plus', 'iPhone 15 Pro Max', 'iPhone 16 Pro']:
+              hit = next((x for x in iphones if x['name'] == preferred), None)
+              if hit:
+                  break
+          else:
+              hit = None
+          if not hit:
+              raise SystemExit('No 6.9"/6.7" Dynamic Island iPhone simulator available')
+          with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as f:
+              f.write(f"udid={hit['udid']}\n")
+              f.write(f"device={hit['name']}\n")
+          print(f"Selected simulator: {hit['name']} ({hit['udid']})")
+          PY
+
+      - name: Boot clean simulator, set clean status bar, and run screenshot UITest
+        shell: bash
+        run: |
+          set -euo pipefail
+          udid="${{ steps.sim.outputs.udid }}"
+          xcrun simctl shutdown "$udid" 2>/dev/null || true
+          xcrun simctl erase "$udid"
+          xcrun simctl boot "$udid"
+          xcrun simctl bootstatus "$udid" -b
+          xcrun simctl status_bar "$udid" override \
+            --time "9:41" \
+            --dataNetwork wifi \
+            --wifiMode active \
+            --wifiBars 3 \
+            --cellularMode active \
+            --cellularBars 4 \
+            --batteryState charged \
+            --batteryLevel 100
+          rm -rf "$RUNNER_TEMP/KangoshiScreens.xcresult"
+          set -o pipefail
+          xcodebuild test \
+            -project kangoshi-sprint/ios/KangoshiSprint.xcodeproj \
+            -scheme KangoshiSprint \
+            -configuration Debug \
+            -destination "platform=iOS Simulator,id=$udid" \
+            -only-testing:KangoshiSprintUITests/KangoshiScreenshotUITests/testCaptureAppStoreScreens \
+            -resultBundlePath "$RUNNER_TEMP/KangoshiScreens.xcresult" \
+            CODE_SIGNING_ALLOWED=NO | tee "$RUNNER_TEMP/xcodebuild-screenshots.log"
+          xcrun simctl io "$udid" screenshot "$RUNNER_TEMP/simctl-booted-final.png" || true
+
+      - name: Export and verify 6.9-inch PNG screenshots
+        if: always()
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/raw-attachments" "$RUNNER_TEMP/asc-screenshots"
+          if [ -d "$RUNNER_TEMP/KangoshiScreens.xcresult" ]; then
+            xcrun xcresulttool export attachments \
+              --path "$RUNNER_TEMP/KangoshiScreens.xcresult" \
+              --output-path "$RUNNER_TEMP/raw-attachments"
+          fi
+          python3 - <<'PY'
+          import json, os, shutil, struct
+          from pathlib import Path
+
+          raw_dir = Path(os.environ['RUNNER_TEMP']) / 'raw-attachments'
+          out_dir = Path(os.environ['RUNNER_TEMP']) / 'asc-screenshots'
+          manifest_path = raw_dir / 'manifest.json'
+          if not manifest_path.is_file():
+              raise SystemExit('manifest.json missing in exported xcresult attachments')
+
+          manifest = json.loads(manifest_path.read_text(encoding='utf-8'))
+          required = ['01-home', '02-quiz', '03-explanation', '04-mock', '05-record', '06-paywall']
+          copied = {}
+
+          def png_dims(path: Path) -> tuple[int, int]:
+              data = path.read_bytes()
+              if data[:8] != b'\x89PNG\r\n\x1a\n':
+                  raise RuntimeError(f'{path} is not a PNG')
+              return struct.unpack('>II', data[16:24])
+
+          # Handle both xcresulttool v16+ nested test-attachments format and flat entries
+          def iter_attachments(node):
+              if isinstance(node, dict):
+                  if 'exportedFileName' in node and 'suggestedHumanReadableName' in node:
+                      yield node
+                  for v in node.values():
+                      yield from iter_attachments(v)
+              elif isinstance(node, list):
+                  for item in node:
+                      yield from iter_attachments(item)
+
+          for entry in iter_attachments(manifest):
+              exported = raw_dir / entry['exportedFileName']
+              human = entry['suggestedHumanReadableName']
+              stem = human.split('_')[0]
+              for key in required + ['07-settings']:
+                  if human.startswith(key) and exported.is_file():
+                      dst = out_dir / f'{key}.png'
+                      shutil.copy2(exported, dst)
+                      w, h = png_dims(dst)
+                      if (w, h) not in {(1320, 2868), (1290, 2796)}:
+                          raise RuntimeError(f'{dst.name} has unexpected dimensions {w}x{h}')
+                      copied[key] = f'{w}x{h}'
+
+          missing = [k for k in required if k not in copied]
+          if missing:
+              raise SystemExit(f'Missing required screenshots: {missing}; got={copied}')
+          print('Verified screenshots:', json.dumps(copied, ensure_ascii=False))
+          PY
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: kangoshi-asc-screenshots-69
+          path: |
+            ${{ runner.temp }}/asc-screenshots
+            ${{ runner.temp }}/raw-attachments
+            ${{ runner.temp }}/simctl-booted-final.png
+            ${{ runner.temp }}/xcodebuild-screenshots.log
+          if-no-files-found: warn
+          retention-days: 14
