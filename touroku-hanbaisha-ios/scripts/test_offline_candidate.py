@@ -6,7 +6,7 @@ from playwright.sync_api import sync_playwright, expect
 ROOT=Path(__file__).resolve().parents[2]
 OUT=ROOT/'touroku-hanbaisha-ios/native-ios/OfflineWeb'
 bank=json.loads((ROOT/'touroku-hanbaisha-sprint/official-kansai/APPROVED_OFFICIAL_BANK.json').read_text())
-report={'count':0,'figures':0,'externalRequests':[],'pageErrors':[],'browserEngines':{}}
+report={'count':0,'figures':0,'externalRequests':[],'pageErrors':[],'consoleErrors':[],'browserEngines':{}}
 with sync_playwright() as pw:
     for engine in [pw.chromium,pw.webkit]:
         browser=engine.launch()
@@ -21,9 +21,12 @@ with sync_playwright() as pw:
         page.add_init_script("""window.__touhanStudyState=null; window.webkit={messageHandlers:{studyRecord:{postMessage:s=>{window.__savedStudy=JSON.parse(s)}}}};""")
         page.on('request',lambda r:report['externalRequests'].append(r.url) if r.url.startswith(('http:','https:')) else None)
         page.on('pageerror',lambda e:report['pageErrors'].append(str(e)))
+        page.on('console',lambda m:report['consoleErrors'].append(m.text) if m.type=='error' else None)
         page.on('console',lambda m: print('BROWSER_CONSOLE '+m.type+' '+m.text,flush=True) if m.type=='error' else None)
         page.goto((OUT/'official-practice.html').as_uri())
         print('DEBUG offlineBank='+str(page.locator('#offlineBank').count())+' bankChars='+str(page.locator('#offlineBank').text_content() and len(page.locator('#offlineBank').text_content()))+' explanationChars='+str(page.locator('#offlineExplanations').text_content() and len(page.locator('#offlineExplanations').text_content()))+' available='+page.locator('#available').inner_text(),flush=True)
+        page.wait_for_timeout(1000)
+        print('DEBUG_STATE '+json.dumps(page.evaluate("({available:document.querySelector('#available')?.textContent,home:document.querySelector('#homeProgress')?.textContent,scriptCount:document.scripts.length,inline:document.querySelector('script:not([type])')?.textContent.includes('offlineBank'),recordType:typeof records})"),ensure_ascii=False)+' PAGE_ERRORS '+json.dumps(report['pageErrors'],ensure_ascii=False)+' CONSOLE_ERRORS '+json.dumps(report['consoleErrors'],ensure_ascii=False),flush=True)
         expect(page.locator('#available')).to_contain_text('599問')
         expect(page.locator('#homeProgress')).to_have_text('0 / 599')
         assert page.evaluate("JSON.parse(document.getElementById('offlineBank').textContent)") == bank
