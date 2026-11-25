@@ -16,13 +16,18 @@ document.getElementById('settingsPremium').onclick=requestPremium;
 
 // Keep the attribution element mounted between questions while showing it inside the judgement card.
 const attributionNode=$('attribution');
+function keepSingleAttribution(){
+  document.querySelectorAll('#attribution').forEach(node=>{if(node!==attributionNode)node.remove()});
+}
 const renderQuestionBase=show;
 show=function(...args){
+  keepSingleAttribution();
   const card=$('quiz').querySelector('article.card');
   card.append(attributionNode);
   const result=renderQuestionBase(...args);
   // A new question must never retain the previous judgement card's attribution.
   $('feedback').querySelector('#attribution')?.remove();
+  keepSingleAttribution();
   card.append(attributionNode);
   attributionNode.classList.add('hidden');
   return result;
@@ -30,6 +35,7 @@ show=function(...args){
 const renderJudgementBase=renderAnswer;
 renderAnswer=function(i){
   const result=renderJudgementBase(i);
+  keepSingleAttribution();
   // Keep the source links inside the judgement card until the next question.
   $('feedback').append(attributionNode);
   attributionNode.classList.remove('hidden');
