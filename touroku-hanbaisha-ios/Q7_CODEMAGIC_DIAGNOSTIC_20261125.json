@@ -1,6 +1,6 @@
 {
   "schema": "touhan-q7-codemagic-diagnostic-v1",
-  "timestampJST": "2026-11-25T14:35:47.921478+09:00",
+  "timestampJST": "2026-11-25T14:37:27.527085+09:00",
   "buildId": "6b0672669081e172f987e85b",
   "buildUrl": "https://codemagic.io/app/6a769d81a1add9d06020b524/build/6b0672669081e172f987e85b",
   "status": "failed",
@@ -11,8 +11,125 @@
   "message": "Step 11 script `Verify signed IPA contains offline 599 bank, explanations and privacy manifest` exited with status code 1",
   "startedAt": "2026-11-25T05:30:24.751000+00:00",
   "finishedAt": "2026-11-25T05:32:01.885000+00:00",
-  "actions": [],
-  "artifacts": [],
+  "actions": [
+    {
+      "name": "Preparing build machine",
+      "type": "preparing",
+      "status": "success",
+      "startedAt": "2026-11-25T05:30:25.053000+00:00",
+      "finishedAt": "2026-11-25T05:30:48.838000+00:00"
+    },
+    {
+      "name": "Fetching app sources",
+      "type": "fetching",
+      "status": "success",
+      "startedAt": "2026-11-25T05:30:48.838000+00:00",
+      "finishedAt": "2026-11-25T05:30:58.440000+00:00"
+    },
+    {
+      "name": "Install native build tools",
+      "status": "success",
+      "startedAt": "2026-11-25T05:30:58.440000+00:00",
+      "finishedAt": "2026-11-25T05:31:09.256000+00:00"
+    },
+    {
+      "name": "Audit registration seller release inputs",
+      "status": "success",
+      "startedAt": "2026-11-25T05:31:09.256000+00:00",
+      "finishedAt": "2026-11-25T05:31:11.165000+00:00"
+    },
+    {
+      "name": "Set CI build number and generate native project",
+      "status": "success",
+      "startedAt": "2026-11-25T05:31:11.165000+00:00",
+      "finishedAt": "2026-11-25T05:31:12.409000+00:00"
+    },
+    {
+      "name": "Verify native inputs before signing",
+      "status": "success",
+      "startedAt": "2026-11-25T05:31:12.409000+00:00",
+      "finishedAt": "2026-11-25T05:31:13.627000+00:00"
+    },
+    {
+      "name": "Initialize signing keychain",
+      "status": "success",
+      "startedAt": "2026-11-25T05:31:13.627000+00:00",
+      "finishedAt": "2026-11-25T05:31:15.300000+00:00"
+    },
+    {
+      "name": "Fetch managed App Store signing files",
+      "status": "success",
+      "startedAt": "2026-11-25T05:31:15.300000+00:00",
+      "finishedAt": "2026-11-25T05:31:18.082000+00:00"
+    },
+    {
+      "name": "Add signing certificate to keychain",
+      "status": "success",
+      "startedAt": "2026-11-25T05:31:18.082000+00:00",
+      "finishedAt": "2026-11-25T05:31:19.638000+00:00"
+    },
+    {
+      "name": "Apply App Store signing profiles for release candidate",
+      "status": "success",
+      "startedAt": "2026-11-25T05:31:19.638000+00:00",
+      "finishedAt": "2026-11-25T05:31:21.723000+00:00"
+    },
+    {
+      "name": "Build signed IPA",
+      "status": "success",
+      "startedAt": "2026-11-25T05:31:21.723000+00:00",
+      "finishedAt": "2026-11-25T05:31:55.379000+00:00"
+    },
+    {
+      "name": "Verify signed IPA contains offline 599 bank, explanations and privacy manifest",
+      "status": "failed",
+      "startedAt": "2026-11-25T05:31:55.379000+00:00",
+      "finishedAt": "2026-11-25T05:31:57.614000+00:00"
+    },
+    {
+      "name": "Upload signed release candidate IPA to App Store Connect",
+      "status": "skipped",
+      "startedAt": "2026-11-25T05:31:57.614000+00:00",
+      "finishedAt": "2026-11-25T05:31:58.017000+00:00"
+    },
+    {
+      "name": "Publishing",
+      "type": "publishing",
+      "status": "success",
+      "startedAt": "2026-11-25T05:31:58.017000+00:00",
+      "finishedAt": "2026-11-25T05:32:01.398000+00:00"
+    },
+    {
+      "name": "Cleaning up",
+      "type": "finishing",
+      "status": "success",
+      "startedAt": "2026-11-25T05:32:01.398000+00:00",
+      "finishedAt": "2026-11-25T05:32:01.885000+00:00"
+    }
+  ],
+  "artifacts": [
+    {
+      "name": "TouhanSprint.ipa",
+      "path": "5de7200a-39e7-4ecc-8368-41c58e982e39/ab91e595-c803-4337-951a-7c72108bc2cd/TouhanSprint.ipa",
+      "size": 5853564,
+      "type": "ipa",
+      "url": "https://api.codemagic.io/artifacts/5de7200a-39e7-4ecc-8368-41c58e982e39/ab91e595-c803-4337-951a-7c72108bc2cd/TouhanSprint.ipa"
+    },
+    {
+      "name": "TouhanSprint.app.dSYM.zip",
+      "path": "d31ff1c0-fc55-4ae0-bbe4-0fcc779822db/e9f98864-8df9-486a-bc0b-d1c51db36602/TouhanSprint.app.dSYM.zip",
+      "size": 578731,
+      "type": "dsym",
+      "url": "https://api.codemagic.io/artifacts/d31ff1c0-fc55-4ae0-bbe4-0fcc779822db/e9f98864-8df9-486a-bc0b-d1c51db36602/TouhanSprint.app.dSYM.zip"
+    },
+    {
+      "name": "ALLSUNDAY1122.github.io_18_artifacts.zip",
+      "path": "4600742a-9f51-474d-ae11-5774b8dc414a/82d28d74-4396-400c-ad10-6e22241ae571/ALLSUNDAY1122.github.io_18_artifacts.zip",
+      "size": 18234,
+      "type": "bundle",
+      "url": "https://api.codemagic.io/artifacts/4600742a-9f51-474d-ae11-5774b8dc414a/82d28d74-4396-400c-ad10-6e22241ae571/ALLSUNDAY1122.github.io_18_artifacts.zip"
+    }
+  ],
   "rawKeys": [
     "_id",
     "appId",
@@ -40,5 +157,6 @@
     "tag",
     "version",
     "workflowId"
-  ]
-}\n
+  ],
+  "buildDetailHttpStatus": 200
+}
