@@ -1,0 +1,138 @@
+{
+  "batch": "visual-reaudit-2023-b07",
+  "repository": "ALLSUNDAY1122/ALLSUNDAY1122.github.io",
+  "source": {
+    "candidateFile": "visual-reaudit-2023-b07.candidates.json",
+    "candidateFileSha256": "28c07907d1c63c052ae1d52c0052e4490b4b5e65aaa6c3d6b709b895dcfb9da7",
+    "officialQuestionPdf": "visual-reaudit-2023-b07.pdf",
+    "officialQuestionPdfSha256": "c2feff82677193c9c2b20edd482da635f9c18cee7b1e8a6b738276078a66c3c3",
+    "visualMethod": "添付PDFのページ画像を目視し、各レコードの問題文・全選択肢・ルビ・表・記号と照合。PDF文字データや自動照合のみでは判定していない。",
+    "pageMapping": "bundlePdfPagesは添付PDF内の1始まりページ。添付PDF 1〜6ページは公式問題PDF 2023-second_halfの4〜9ページに対応。"
+  },
+  "summary": {
+    "total": 10,
+    "pass": 8,
+    "fail": 2,
+    "hold": 0
+  },
+  "results": [
+    {
+      "id": "KSAI-2023-064",
+      "questionNo": 64,
+      "bundlePdfPages": [
+        1
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "reason": "問題文・選択肢5件・ルビ2箇所（腔＝くう、弛＝し）を画像と照合。組合せ選択肢1〜5も原典と一致。"
+    },
+    {
+      "id": "KSAI-2023-065",
+      "questionNo": 65,
+      "bundlePdfPages": [
+        2
+      ],
+      "status": "FAIL",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "reason": "問題文・選択肢表の内容は一致するが、原典のルビ2箇所（稠＝ちゅう、漿＝しょう）がレコードではquestion文字列中に独立した読みとして挿入され、漢字との対応付けがない。さらに「粘稠 性」と熟語内に空白が入り、原典の連続表記を再現できない。"
+    },
+    {
+      "id": "KSAI-2023-066",
+      "questionNo": 66,
+      "bundlePdfPages": [
+        2
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "reason": "問題文・選択肢表の5行4列・ルビ2箇所（瞼＝けん、曝＝さら）を画像と照合。表の各セルも原典と一致。"
+    },
+    {
+      "id": "KSAI-2023-067",
+      "questionNo": 67,
+      "bundlePdfPages": [
+        3
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "reason": "問題文・選択肢表の5行4列・ルビ2箇所（腔＝くう、蝸＝か）を画像と照合。表の各セルも原典と一致。"
+    },
+    {
+      "id": "KSAI-2023-068",
+      "questionNo": 68,
+      "bundlePdfPages": [
+        3
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "reason": "問題文・選択肢表の5行4列を画像と照合。皮膚の機能、皮下組織、メラニン色素、発汗に関する各記述と、表の全20セルが原典と一致。"
+    },
+    {
+      "id": "KSAI-2023-069",
+      "questionNo": 69,
+      "bundlePdfPages": [
+        4
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "reason": "穴埋め問題文と3列5行の選択肢表を画像と照合。骨吸収・骨代謝、骨の新陳代謝・造血、無機質・有機質の各セルの配置と文言が原典と一致。"
+    },
+    {
+      "id": "KSAI-2023-070",
+      "questionNo": 70,
+      "bundlePdfPages": [
+        4
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "reason": "問題文・選択肢表の5行4列を画像と照合。中枢神経系、脳の循環量、末梢神経系、自律神経系の記述および全20セルが原典と一致。"
+    },
+    {
+      "id": "KSAI-2023-071",
+      "questionNo": 71,
+      "bundlePdfPages": [
+        5
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "reason": "問題文・選択肢表の5行4列を画像と照合。吸収に関する4記述および全20セルが原典と一致。"
+    },
+    {
+      "id": "KSAI-2023-072",
+      "questionNo": 72,
+      "bundlePdfPages": [
+        5
+      ],
+      "status": "FAIL",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "reason": "問題文・選択肢表の内容は一致するが、原典のルビ5箇所（排泄の「せつ」2箇所、血漿の「しょう」、濾過の「ろ」、排泄の「せつ」）がレコードではSOURCE_ORDER_UNATTACHEDとして出現順のみ保存され、各漢字への対応付けがない。原典どおりのルビ表示を確認できないためFAIL。"
+    },
+    {
+      "id": "KSAI-2023-073",
+      "questionNo": 73,
+      "bundlePdfPages": [
+        6
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "reason": "問題文・選択肢表の5行4列を画像と照合。内服用医薬品の剤形に関する4記述および全20セルが原典と一致。"
+    }
+  ],
+  "limitations": [
+    "正答PDFは直接確認していないため、全件answerPDFChecked=false。answerNumberOfficialは添付候補JSONの値を記録したもので、正答の独立検証を意味しない。",
+    "FAILの問65・問72は正式バンク本体への修正を行っていない。"
+  ],
+  "protectedFiles": {
+    "officialBankModified": false,
+    "stateFilesModified": false
+  }
+}
