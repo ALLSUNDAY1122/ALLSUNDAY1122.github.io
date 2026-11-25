@@ -372,6 +372,10 @@ def prior_common(q):
         and q.get("answer")==q.get("answerNumberOfficial",0)-1
         and q.get("id")!="KSAI-2023-090")
 def sha_ok(rel,digest):
+    # Audit ledgers use web-root paths for figure assets and bank-relative paths
+    # for review screenshots; normalize the former to the official-kansai root.
+    if rel.startswith("official-kansai/"):
+        rel=rel[len("official-kansai/"):]
     p=B/rel
     return p.is_file() and hashlib.sha256(p.read_bytes()).hexdigest()==digest
 def preserve_prior(method, evidence_name, evidence_ids, validator, counter):
