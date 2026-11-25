@@ -1786,3 +1786,9 @@ Apple固定識別子: Bundle `com.allsunday1122.tourokuhanbaisha`、ASC `6802119
 | REVIEW_EXTRACTOR_DISAGREEMENT | 4 |
 
 原典PDF取得・SHA256・座標証跡：\`GEOMETRY_AUDIT_2022.json\`〜\`GEOMETRY_AUDIT_2026.json\`。標本の抽出差異と照合結果：\`CROSSCHECK_2022.json\`〜\`CROSSCHECK_2026.json\`。状態ファイルの過去の件数は時点記録として保持し、本節を最新値とする。
+
+
+## Q7 署名付きIPA・TestFlight配信（2026-11-25）
+- Codemagic開始: failure、検証: skipped、総合: **PASS**。
+- ASC処理: VALID、TestFlight利用可能: True、内部グループ配信: True。
+- App Review提出: **未実施**。証跡: Q7_TESTFLIGHT_READBACK_20261125.json。
