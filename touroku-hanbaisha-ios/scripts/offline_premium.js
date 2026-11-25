@@ -13,3 +13,19 @@ window.setPremiumEntitlement=(v)=>{
 };
 document.getElementById('premiumButton').onclick=requestPremium;
 document.getElementById('settingsPremium').onclick=requestPremium;
+
+// Keep the attribution element mounted between questions while showing it inside the judgement card.
+const attributionNode=$('attribution');
+const renderQuestionBase=show;
+show=function(...args){
+  if(!attributionNode.isConnected||attributionNode.parentElement?.id==='feedback')$('quiz').querySelector('article.card').append(attributionNode);
+  const result=renderQuestionBase(...args);
+  attributionNode.classList.add('hidden');
+  return result;
+};
+const renderJudgementBase=renderAnswer;
+renderAnswer=function(i){
+  const result=renderJudgementBase(i);
+  attributionNode.classList.remove('hidden');
+  return result;
+};
