@@ -27,6 +27,7 @@ with sync_playwright() as pw:
         expect(page.locator('#homeProgress')).to_have_text('0 / 599')
         assert page.evaluate("JSON.parse(document.getElementById('offlineBank').textContent)") == bank
         explanation_bundle=page.evaluate("JSON.parse(document.getElementById('offlineExplanations').textContent)")
+        assert explanation_bundle['schema']=='touroku-hanbaisha-audited-explanations-v1'
         assert explanation_bundle['count']==len(explanation_bundle['records'])==599
         assert explanation_bundle['auditSummary']=={'PASS':599,'HOLD':0,'PENDING':0}
         expect(page.locator('#home')).to_be_visible()
