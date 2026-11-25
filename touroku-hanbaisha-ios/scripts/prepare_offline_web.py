@@ -59,7 +59,7 @@ shell=Path(__file__).with_name('offline_learning_shell.html').read_text()
 logic="const freeIds=new Set("+json.dumps(free)+");\n"+Path(__file__).with_name('offline_learning.js').read_text()
 logic+=Path(__file__).with_name('offline_premium.js').read_text()
 assert "const attributionNode=$('attribution')" in logic, 'source attribution must remain mounted and reusable across question transitions'
-assert "$('quiz').querySelector('article.card').append(attributionNode)" in logic, 'source node must be restored before every question render'
+assert "const card=$('quiz').querySelector('article.card')" in logic and "$('feedback').querySelector('#attribution')?.remove()" in logic and "$('feedback').append(attributionNode)" in logic and "attributionNode.classList.add('hidden')" in logic, 'source attribution must move into judgement feedback, then be removed and hidden for the next question'
 assert "setScreen('home')" in Path(__file__).with_name('offline_learning.js').read_text(), 'home tab must restore the home screen after an active session'
 assert "if($('openRecords'))$('openRecords').onclick=showRecords" in logic and "if($('recordsHome'))$('recordsHome').onclick=showHome" in logic, 'new four-tab shell must not require removed legacy navigation nodes'
 html=html.replace("return records.filter(q=>($('year')","return records.filter(q=>canStudy(q)&&($('year')")
