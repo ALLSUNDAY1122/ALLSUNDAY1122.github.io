@@ -47,7 +47,7 @@ assert len(free)==len(set(free))==50 and set(free)<= {q['id'] for q in rows}
 assert all(sum(q['id'] in free and q['chapter']==c for q in rows)==10 for c in {q['chapter'] for q in rows})
 payload=raw.decode('utf-8').replace('<',r'\u003c')
 assert html.count('</main><script>')==1
-explanation_payload=explanation_raw.decode('utf-8').replace('<',r'\\u003c')
+explanation_payload=explanation_raw.decode('utf-8').replace('<',r'\u003c')
 html=html.replace('</main><script>','</main><script type="application/json" id="offlineBank">'+payload+'</script><script type="application/json" id="offlineExplanations">'+explanation_payload+'</script><script>')
 html=html.replace('<head>','<head><meta http-equiv="Content-Security-Policy" content="default-src \'none\'; script-src \'unsafe-inline\'; style-src \'unsafe-inline\'; img-src file: data:; connect-src \'none\'; base-uri \'none\'; form-action \'none\'">',1)
 html=html.replace('<a href="./index.html">‹ ホーム</a>','<button class="button" id="headerHome">‹ ホーム</button>')
