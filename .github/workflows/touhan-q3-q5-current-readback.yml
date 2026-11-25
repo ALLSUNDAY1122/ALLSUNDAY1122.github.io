@@ -101,7 +101,11 @@ jobs:
           git add touroku-hanbaisha-ios/PRIVACY_Q5_AUDIT_20261124.json
           git add touroku-hanbaisha-ios/ASC_Q5_PRIVACY_METADATA_READBACK_20261124.json
           git commit -m 'audit(touhan): record current ASC listing and privacy readbacks' || true
-          git push origin "HEAD:$GITHUB_REF_NAME"
+          for attempt in 1 2 3; do
+            git pull --rebase origin "$GITHUB_REF_NAME"
+            if git push origin "HEAD:$GITHUB_REF_NAME"; then exit 0; fi
+          done
+          exit 1
       - uses: actions/upload-artifact@v4
         if: always()
         with:
