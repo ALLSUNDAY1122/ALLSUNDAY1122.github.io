@@ -86,8 +86,9 @@ $('start').onclick=()=>{subset=eligible();if(!subset.length)return;position=0;co
 function show(){
 selected=false;const q=subset[position];$('counter').textContent=(position+1)+' / '+subset.length+'問';$('score').textContent=correct+' / '+denominator+'（採点対象）';$('questionTitle').textContent=q.year+'年度・問'+q.questionNo+'・'+q.chapter;appendRich($('question'),q.questionParts,q.question);renderRubySequence(q);renderFigures(q);
 $('feedback').classList.add('hidden');$('feedback').replaceChildren();$('unknown').classList.remove('hidden');$('next').classList.add('hidden');
-const choices=$('choices');choices.replaceChildren();q.choices.forEach((s,i)=>{const b=document.createElement('button');b.className='button choice';const n=document.createElement('span');n.className='num';n.textContent=i+1+'．';const t=document.createElement('span');appendRich(t,q.choicesParts?.[i],s);b.append(n,t);b.onclick=()=>answer(i);choices.append(b)});
 const attr=$('attribution');attr.replaceChildren();attr.append(document.createTextNode(q.attributionDisplay+'　'),sourceLink(q.sourceUrl,'公式問題PDF'),document.createTextNode('　'),sourceLink(q.answerSourceUrl,'公式正答PDF'),document.createElement('div'),document.createTextNode(q.modificationDisclosureDisplay||'表示配置はPDFと異なります'));
+const choices=$('choices');choices.replaceChildren();q.choices.forEach((s,i)=>{const b=document.createElement('button');b.className='button choice';const n=document.createElement('span');n.className='num';n.textContent=i+1+'．';const t=document.createElement('span');appendRich(t,q.choicesParts?.[i],s);b.append(n,t);b.onclick=()=>answer(i);choices.append(b)});
+
 }
 function answer(i){
 if(selected)return;selected=true;const q=subset[position],exclude=q.excludeFromAccuracyDenominator===true;
@@ -97,6 +98,7 @@ const f=$('feedback');f.classList.remove('hidden');const p=document.createElemen
 const key=q.id||('KSAI-'+q.year+'-'+String(q.questionNo).padStart(3,'0'));
 const explanation=explanationMap.get(key);
 if(explanation){const section=document.createElement('div');section.className='explanation';const heading=document.createElement('strong');heading.textContent='解説';const body=document.createElement('div');body.textContent=explanation.explanation;section.append(heading,body);f.append(section)}
+const attribution=document.createElement('div');attribution.className='source';attribution.id='attribution';attribution.append(document.createTextNode(q.attributionDisplay+'　'),sourceLink(q.sourceUrl,'公式問題PDF'),document.createTextNode('　'),sourceLink(q.answerSourceUrl,'公式正答PDF'),document.createElement('div'),document.createTextNode(q.modificationDisclosureDisplay||'表示配置はPDFと異なります'));f.append(attribution);
 $('unknown').classList.add('hidden');$('next').classList.remove('hidden');$('next').textContent=position===subset.length-1?'結果を見る':'次へ';$('score').textContent=correct+' / '+denominator+'（採点対象）';
 }
 $('unknown').onclick=()=>answer(-1);

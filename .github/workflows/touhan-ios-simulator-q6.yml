@@ -12,7 +12,7 @@ permissions:
   contents: write
 concurrency:
   group: touhan-ios-sim-q6
-  cancel-in-progress: false
+  cancel-in-progress: true
 jobs:
   simulator:
     runs-on: macos-15
@@ -172,3 +172,9 @@ jobs:
             ${{ runner.temp }}/touhan-simulator.log
           if-no-files-found: ignore
 
+
+# Current-branch validation trigger: keep offline 599 + native Simulator checks enabled.
+
+# Re-run after moving per-question attribution into the answer feedback card.
+
+# Re-run after explicit feedback-card attribution cleanup and reattachment fix.

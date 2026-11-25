@@ -1,3 +1,29 @@
-<section class="card" id="home"><div class="eyebrow">登録販売者｜学びスプリント</div><h2>学習ホーム</h2><p class="sub">関西広域連合 2022〜2026年度・公式過去問599問</p><div class="metrics"><div><span>学習済み</span><strong id="homeProgress">0 / 599</strong></div><div><span>通算正答率</span><strong id="homeAccuracy">—</strong></div></div><progress id="homeBar" max="599" value="0"></progress><div class="homeActions"><button class="button primary" id="homeStart">学習を始める</button><button class="button" id="resume">続きから</button><button class="button" id="openRecords">学習記録を見る</button></div><p class="sub" id="resumeInfo"></p><p id="premiumStatus">無料50問・追加549問はプレミアム</p><button class="button" id="premiumButton">プレミアム・購入復元</button></section>
-<section id="learningRecords" class="card hidden"><h2>学習記録</h2><p class="sub">進捗は回答済みの異なる問題数、正答率は全回答（わからないを含む）の正答割合です。</p><div id="recordTotal" class="metrics"></div><h2>年度別</h2><div id="yearRecords"></div><h2>分野別</h2><div id="chapterRecords"></div><h2>回答履歴（直近100件）</h2><div id="answerHistory"></div><button class="button" id="recordsHome">ホームへ戻る</button></section>
-<nav class="localnav" aria-label="学習ナビゲーション"><button id="navHome" class="button">ホーム</button><button id="navStudy" class="button">学習</button><button id="navRecords" class="button">記録</button></nav>
+<section class="study-screen" id="home">
+  <div class="study-top"><div class="study-brand">学びスプリント</div><div class="study-title">登録販売者</div><p class="study-tagline">今日も1問、力に変える。</p></div>
+  <section class="today-card"><svg class="today-ring" viewBox="0 0 82 82" aria-hidden="true"><circle cx="41" cy="41" r="35" fill="none" stroke="#efe8da" stroke-width="8"/><circle id="todayArc" cx="41" cy="41" r="35" fill="none" stroke="#a33d22" stroke-width="8" stroke-linecap="round" stroke-dasharray="219.91" stroke-dashoffset="219.91" transform="rotate(-90 41 41)"/></svg><div><strong id="todayCount">0 / 8問</strong><p class="study-note" id="todayMessage">まずは1問。</p></div></section>
+  <button class="study-action rust" id="todayStart"><span class="action-icon">学</span><span><strong>今日のスプリント</strong><small>1日の目標に合わせて学習</small></span></button>
+  <button class="study-action" id="resume"><span class="action-icon">続</span><span><strong>続きから</strong><small id="resumeInfo">中断中の学習はありません</small></span></button>
+  <button class="study-action" id="startWeak"><span class="action-icon">復</span><span><strong>苦手復習</strong><small id="weakInfo">誤答した問題を再確認</small></span></button>
+  <button class="study-action" id="homeStart"><span class="action-icon">模</span><span><strong>模擬試験</strong><small>年度別・分野別に学習</small></span></button>
+  <section class="study-section"><h2>分野から解く</h2><div class="study-grid" id="domainGrid"></div></section>
+  <section class="study-section"><h2>学習状況</h2><div class="study-stats"><div><strong id="homeProgress">0 / 599</strong><small>学習済み</small></div><div><strong id="homeAccuracy">—</strong><small>正答率</small></div><div><strong id="weakCount">0</strong><small>苦手</small></div></div><progress id="homeBar" max="599" value="0"></progress></section>
+  <div class="premium-home"><p id="premiumStatus">無料50問・追加549問はプレミアム</p><button class="button" id="premiumButton">Premium・購入と復元</button></div>
+</section>
+<section id="learningRecords" class="study-screen hidden">
+  <div class="study-top"><div class="study-brand">学びスプリント</div><div class="study-title">学習記録</div><p class="study-tagline">積み上げを見える化します。</p></div>
+  <div id="recordTotal" class="study-stats record-total"></div>
+  <section class="study-section"><h2>直近5週間の学習</h2><div id="heatmap" class="study-heatmap"></div></section>
+  <section class="study-section"><h2>年度別</h2><div id="yearRecords"></div></section>
+  <section class="study-section"><h2>分野別</h2><div id="chapterRecords"></div></section>
+  <section class="study-section"><h2>回答履歴（直近100件）</h2><div id="answerHistory"></div></section>
+</section>
+<section id="settings" class="study-screen hidden">
+  <div class="study-top"><div class="study-brand">学びスプリント</div><div class="study-title">設定</div><p class="study-tagline">学習環境を調整します。</p></div>
+  <section class="setting-card"><h2>Premium・購入と復元</h2><p class="study-note">無料：対象の50問。Premium：全599問を利用できます。</p><p class="study-note">買い切り980円／月額200円（対象者は初回1週間無料）</p><p class="study-note" id="settingsPremiumStatus">購入状況を確認中</p><button class="button primary" id="settingsPremium">購入・復元を開く</button></section>
+  <section class="setting-card"><h2>文字サイズ</h2><div class="setting-segments"><button class="button" data-font="normal">標準</button><button class="button" data-font="large">大</button><button class="button" data-font="xlarge">特大</button></div></section>
+  <section class="setting-card"><h2>1日の目標</h2><div class="setting-segments"><button class="button" data-goal="4">4問</button><button class="button" data-goal="8">8問</button><button class="button" data-goal="16">16問</button></div></section>
+  <section class="setting-card"><h2>試験日</h2><input type="date" id="examDate"><button class="button primary" id="saveExamDate">試験日を保存</button></section>
+  <section class="setting-card"><h2>学習データ</h2><button class="button" id="exportData">JSONを書き出す</button><label class="study-note" for="importData">JSONから復元</label><input type="file" id="importData" accept="application/json,.json"></section>
+  <section class="setting-card"><h2>教材情報</h2><p class="study-note">関西広域連合の公式問題を原典照合し、出典・加工情報を解答後に表示します。公式アプリではありません。</p><p class="study-note"><a href="./privacy.html">プライバシーポリシー</a>　<a href="./support.html">サポート</a></p></section>
+</section>
+<nav class="localnav" aria-label="学習ナビゲーション"><button id="navHome" class="button">ホーム</button><button id="navStudy" class="button">模試</button><button id="navRecords" class="button">記録</button><button id="navSettings" class="button">設定</button></nav>

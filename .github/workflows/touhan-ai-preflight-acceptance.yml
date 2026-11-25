@@ -11,6 +11,11 @@ on:
       - 'touroku-hanbaisha-ios/scripts/validate_release.py'
       - 'touroku-hanbaisha-ios/scripts/repair_official_figure_links.py'
       - 'touroku-hanbaisha-ios/scripts/ai_preflight_acceptance.py'
+      - 'touroku-hanbaisha-ios/scripts/update_asc_metadata_q3.py'
+      - 'touroku-hanbaisha-ios/scripts/configure_asc_monthly_trial.py'
+      - 'touroku-hanbaisha-ios/scripts/readback_asc_metadata_q3.py'
+      - 'touroku-hanbaisha-ios/scripts/audit_privacy_q5.py'
+      - 'touroku-hanbaisha-ios/scripts/readback_asc_privacy_q5.py'
       - 'touroku-hanbaisha-ios/native-ios/Sources/TouhanSprintApp.swift'
       - 'touroku-hanbaisha-ios/ASC_METADATA_Q3_READBACK_20261125.json'
       - 'touroku-hanbaisha-ios/Q5_CURRENT_20261125.json'
@@ -62,12 +67,64 @@ jobs:
         id: figure_repair
         continue-on-error: true
         run: python touroku-hanbaisha-ios/scripts/repair_official_figure_links.py
-      - name: Generate canonical AppIcon
+      - name: Generate canonical AppIcon and packaged OfflineWeb bundle
         id: icon_recovery
         continue-on-error: true
         run: |
           python -m pip install --disable-pip-version-check 'cairosvg==2.8.2'
           bash touroku-hanbaisha-ios/native-ios/prepare-ios.sh
+      - name: Ensure monthly subscription has a JPN one-week free trial and read it back
+        id: iap_trial
+        continue-on-error: true
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: python touroku-hanbaisha-ios/scripts/configure_asc_monthly_trial.py
+      - name: Read back owner-saved App Store metadata Q3 (read-only; no writes or submission)
+        id: q3
+        continue-on-error: true
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: python touroku-hanbaisha-ios/scripts/readback_asc_metadata_q3.py
+      - name: Audit packaged offline privacy behavior and read back ASC privacy URL
+        id: q5
+        continue-on-error: true
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: |
+          python -m pip install --disable-pip-version-check 'playwright==1.56.0'
+          python -m playwright install --with-deps chromium
+          python touroku-hanbaisha-ios/scripts/audit_privacy_q5.py
+          python touroku-hanbaisha-ios/scripts/readback_asc_privacy_q5.py
+          python - <<'PY'
+          import datetime,json,os
+          from pathlib import Path
+          b=Path('touroku-hanbaisha-ios')
+          privacy=json.loads((b/'PRIVACY_Q5_AUDIT_20261124.json').read_text())
+          asc=json.loads((b/'ASC_Q5_PRIVACY_METADATA_READBACK_20261124.json').read_text())
+          hosts=privacy.get('observedHosts',[])
+          external=[h for h in hosts if h not in ('127.0.0.1','localhost','::1')]
+          data={'schema':'touhan-q5-current-evidence-v1',
+            'timestampJST':datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=9))).isoformat(),
+            'testedHead':os.environ.get('GITHUB_SHA'),'githubRunId':int(os.environ['GITHUB_RUN_ID']),
+            'sourceAndBrowserAudit':privacy.get('sourceAndBrowserAudit'),
+            'observedHosts':hosts,'observedExternalHosts':external,
+            'privacyPolicyURLMatched':asc.get('privacyPolicyURLMatched') is True,
+            'questionnaireVerified':asc.get('questionnaireVerified') is True,
+            'questionnaireDataTypesReconciled':False,'hostingProviderLogsVerified':False,
+            'questionnaireAccess':'NOT_EXPOSED_BY_DOCUMENTED_READ_ONLY_ASC_API',
+            'submissionPerformed':False,
+            'limits':['App Store Connect App Privacy questionnaire requires authenticated UI/manual confirmation.',
+              'Hosting provider log retention and purpose are not independently verified.',
+              'Physical iOS device network capture not performed.']}
+          (b/'Q5_CURRENT_20261125.json').write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\\n')
+          print(json.dumps(data,ensure_ascii=False))
+          PY
       - name: Run existing legacy-360 release validator plus canonical-599 integration contract
         id: release_validation
         continue-on-error: true

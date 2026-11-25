@@ -52,11 +52,16 @@ explanation_payload=explanation_raw.decode('utf-8').replace('<',r'\u003c')
 html=html.replace('</main><script>','</main><script type="application/json" id="offlineBank">'+payload+'</script><script type="application/json" id="offlineExplanations">'+explanation_payload+'</script><script>')
 html=html.replace('<head>','<head><meta http-equiv="Content-Security-Policy" content="default-src \'none\'; script-src \'unsafe-inline\'; style-src \'unsafe-inline\'; img-src file: data:; connect-src \'none\'; base-uri \'none\'; form-action \'none\'">',1)
 html=html.replace('<a href="./index.html">‹ ホーム</a>','<button class="button" id="headerHome">‹ ホーム</button>')
+html=html.replace('<div id="question" class="question"></div><div id="rubySequence" class="ruby-sequence hidden"></div>','<div id="question" class="question"><span id="rubySequence" class="ruby-sequence hidden"></span></div>')
 # Apply only to the native bundle; keep the public legacy web page unchanged.
 from pathlib import Path
 shell=Path(__file__).with_name('offline_learning_shell.html').read_text()
 logic="const freeIds=new Set("+json.dumps(free)+");\n"+Path(__file__).with_name('offline_learning.js').read_text()
 logic+=Path(__file__).with_name('offline_premium.js').read_text()
+assert "const attributionNode=$('attribution')" in logic, 'source attribution must remain mounted and reusable across question transitions'
+assert "const card=$('quiz').querySelector('article.card')" in logic and "$('feedback').querySelector('#attribution')?.remove()" in logic and "$('feedback').append(attributionNode)" in logic and "attributionNode.classList.add('hidden')" in logic and "function keepSingleAttribution()" in logic and "document.querySelectorAll('#attribution')" in logic, 'source attribution must move into judgement feedback, then be removed and hidden for the next question'
+assert "setScreen('home')" in Path(__file__).with_name('offline_learning.js').read_text(), 'home tab must restore the home screen after an active session'
+assert "if($('openRecords'))$('openRecords').onclick=showRecords" in logic and "if($('recordsHome'))$('recordsHome').onclick=showHome" in logic, 'new four-tab shell must not require removed legacy navigation nodes'
 html=html.replace("return records.filter(q=>($('year')","return records.filter(q=>canStudy(q)&&($('year')")
 html=html.replace("if(selected)return;selected=true;const q=subset[position]","if(selected)return;if(!canStudy(subset[position])){beginSetup();return}selected=true;const q=subset[position]")
 html=html.replace("selected=false;const q=subset[position];","selected=false;const q=subset[position];if(!canStudy(q)){beginSetup();return;}")
@@ -64,18 +69,35 @@ assert html.count("correct+' / '+denominator+'（採点対象）'")==2
 html=html.replace("correct+' / '+denominator+'（採点対象）'","'正解 '+correct+'問 / 回答 '+denominator+'問'")
 
 html=html.replace('</style>',Path(__file__).with_name('offline_learning.css').read_text()+'</style>',1)
+html=html.replace('<section class="card hidden" id="setup">','<section class="card hidden" id="setup"><div class="mock-top"><div class="eyebrow">模擬試験</div><h2>本番形式</h2><p class="sub">年度・分野を選んで学習します。</p><div id="mockYears" class="mockYears"></div></div>',1)
+html=html.replace('<section id="quiz" class="hidden"><div class="meta"><span id="counter"></span><span id="score"></span></div>','<section id="quiz" class="hidden"><div class="quizhead"><button class="button" id="headerHome">‹ ホーム</button><div class="quizmeta"><b>登録販売者</b><span id="qtag"></span></div><div class="counter" id="counter"></div></div><div class="qbar"><div id="progressBar"></div></div><div class="meta"><span id="score"></span></div>')
+html=html.replace("function updateCount(){$('count').textContent='この範囲で学べる問題：'+eligible().length+'問';$('start').disabled=!eligible().length}", "function updateCount(){const total=records.filter(q=>($('year').value==='all'||String(q.year)===$('year').value)&&($('chapter').value==='all'||q.chapter===$('chapter').value)).length;const n=eligible().length;$('count').textContent=premiumUnlocked?'この範囲で学べる問題：'+n+'問':'無料で学べる問題：'+n+'問／全'+total+'問（Premiumで全599問）';$('start').disabled=!total}")
+html=html.replace("subset=eligible();if(!subset.length)return;sessionScope=", "subset=eligible();if(!subset.length){requestPremium();return}sessionScope=")
+html=html.replace("$('counter').textContent=(position+1)+' / '+subset.length+'問';", "$('counter').textContent=(position+1)+' / '+subset.length+'問';$('qtag').textContent=q.chapter;$('progressBar').style.width=(position/subset.length*100)+'%';")
+html=html.replace("function appendRich(parent,parts,plain){if(!parts){parent.textContent=plain;return}", "function displayPdfText(value){return String(value||'').replace(/\\r\\n?/g,'\\n').replace(/(?<!\\n)\\n(?!\\n)/g,'')}\nfunction appendRich(parent,parts,plain){const sequence=$('rubySequence');if(!parts){parent.textContent=displayPdfText(plain);if(sequence)parent.append(sequence);return}")
+html=html.replace('document.createTextNode(piece.text)','document.createTextNode(displayPdfText(piece.text))')
+html=html.replace('parent.append(ruby)}}\nfunction approvedFigures','parent.append(ruby)}if(sequence)parent.append(sequence)}\nfunction approvedFigures')
+html=html.replace('body.textContent=explanation.explanation','body.textContent=displayPdfText(explanation.explanation)')
+html=html.replace("$('unknown').classList.add('hidden');$('next').classList.remove('hidden');", "$('feedback').append($('attribution'));$('unknown').classList.add('hidden');$('next').classList.remove('hidden');")
+
 html=html.replace('<section class="card" id="setup">',shell+'<p id="saveWarning" class="saveWarning" role="alert"></p><section class="card hidden" id="setup">',1)
-html=html.replace("let records=[],subset=[],position=0,correct=0,denominator=0,selected=false,excluded=0;","let records=[],subset=[],position=0,correct=0,denominator=0,selected=false,excluded=0;"+logic+"\n$('headerHome').onclick=showHome;")
+html,footer_removed=re.subn(r'<footer>.*?</footer>','',html,count=1,flags=re.S)
+assert footer_removed==1, 'legacy footer must be removed from the native shell to avoid duplicate privacy/support links'
+assert html.count('href="./privacy.html"')==1 and html.count('href="./support.html"')==1, 'native settings must expose exactly one privacy and support link'
+html=html.replace("let records=[],subset=[],position=0,correct=0,denominator=0,selected=false,excluded=0;","let records=[],subset=[],position=0,correct=0,denominator=0,selected=false,excluded=0;"+logic+"\nif($('headerHome'))$('headerHome').onclick=showHome;")
 html=html.replace("$('chapter').onchange=updateCount;updateCount();","$('chapter').onchange=updateCount;updateCount();showHome();")
 html=html.replace("subset=eligible();if(!subset.length)return;position=0;correct=0;denominator=0;excluded=0;","subset=eligible();if(!subset.length)return;sessionScope={year:$('year').value,chapter:$('chapter').value};position=0;correct=0;denominator=0;excluded=0;lastAnswer=null;")
 html=html.replace("$('quiz').classList.remove('hidden');show()};","setScreen('quiz');show();checkpoint()};")
 html=html.replace("Array.from($('choices').children).forEach", "storeAnswer(q,i);renderAnswer(i);}\nfunction renderAnswer(i){const q=subset[position],exclude=q.excludeFromAccuracyDenominator===true;\nArray.from($('choices').children).forEach",1)
-html=html.replace("if(++position<subset.length){show();window.scrollTo(0,0)}else finish()", "if(++position<subset.length){lastAnswer=null;show();checkpoint();window.scrollTo(0,0)}else finish()")
+html=html.replace("if(++position<subset.length){show();window.scrollTo(0,0)}else finish()", "const attribution=$('feedback').querySelector('#attribution');if(attribution){attribution.classList.add('hidden');$('quiz').querySelector('article.card').append(attribution)}if(++position<subset.length){lastAnswer=null;show();checkpoint();window.scrollTo(0,0)}else finish()")
 html=html.replace("function finish(){$('quiz').classList.add('hidden');$('complete').classList.remove('hidden');","function finish(){study.session=null;persistStudy();setScreen('complete');")
 html=html.replace("$('complete').classList.add('hidden');$('setup').classList.remove('hidden')","setScreen('setup')")
 assert 'function renderAnswer(i)' in html and 'checkpoint()' in html and 'id="home"' in html
+assert "const attribution=$('feedback').querySelector('#attribution')" in html, 'next-question transition must move and hide the previous attribution before rendering the next question'
 html=html.replace('候補600問を監査済みと表示しません。','インターネット接続なしで学習できます。')
 assert 'fetch(BANK' not in html
+html=html.replace('</script></body></html>', "document.getElementById('next').addEventListener('click',()=>{const attribution=$('feedback').querySelector('#attribution');if(attribution){attribution.classList.add('hidden');$('quiz').querySelector('article.card').append(attribution)}},true);</script></body></html>")
+assert "addEventListener('click',()=>{const attribution=$('feedback').querySelector('#attribution')" in html, 'capture-phase next-question attribution cleanup must be present for every transition, including completion'
 (OUT/'official-practice.html').write_text(html,encoding='utf-8')
 for name in ['privacy.html','support.html']:
     text=(WEB/name).read_text()
@@ -83,3 +105,5 @@ for name in ['privacy.html','support.html']:
     (OUT/name).write_text(text,encoding='utf-8')
 (OUT/'manifest.json').write_text(json.dumps({'count':599,'bankSha256':hashlib.sha256(raw).hexdigest(),'explanationsCount':599,'explanationsSha256':hashlib.sha256(explanation_raw).hexdigest(),'figures':figures,'mode':'offline-inline-json'},indent=2)+'\n')
 print('PASS: generated offline bundle: 599 questions,',len(figures),'verified figures')
+
+# Q6 current-branch trigger: attribution cleanup is validated in the packaged OfflineWeb output.
