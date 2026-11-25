@@ -1,0 +1,556 @@
+{
+  "batch": "visual-reaudit-2022-b05",
+  "repository": "ALLSUNDAY1122/ALLSUNDAY1122.github.io",
+  "branch": "main",
+  "auditMethod": "添付公式問題PDFのページ画像を目視し、現行バンク候補JSONの問題文・全選択肢・ルビ・表・記号と照合。PDF文字データや自動照合結果は合否判定に使用していない。",
+  "sourceFiles": {
+    "questionPdf": "visual-reaudit-2022-b05.pdf",
+    "candidateJson": "visual-reaudit-2022-b05.candidates.json"
+  },
+  "pageMapping": [
+    {
+      "bundlePdfPage": 1,
+      "officialPdf": "2022-first_half",
+      "officialPdfPage": 39
+    },
+    {
+      "bundlePdfPage": 2,
+      "officialPdf": "2022-first_half",
+      "officialPdfPage": 40
+    },
+    {
+      "bundlePdfPage": 3,
+      "officialPdf": "2022-first_half",
+      "officialPdfPage": 41
+    },
+    {
+      "bundlePdfPage": 4,
+      "officialPdf": "2022-second_half",
+      "officialPdfPage": 2
+    },
+    {
+      "bundlePdfPage": 5,
+      "officialPdf": "2022-second_half",
+      "officialPdfPage": 3
+    },
+    {
+      "bundlePdfPage": 6,
+      "officialPdf": "2022-second_half",
+      "officialPdfPage": 4
+    }
+  ],
+  "summary": {
+    "total": 10,
+    "pass": 9,
+    "fail": 1,
+    "hold": 0
+  },
+  "answerPolicy": "answerNumberOfficialは添付候補JSONの値を転記。正答PDFは直接確認していないため全件answerPDFChecked=false。",
+  "results": [
+    {
+      "id": "KSAI-2022-056",
+      "questionNo": 56,
+      "bundlePdfPage": 1,
+      "officialPdf": "2022-first_half",
+      "officialPdfPage": 39,
+      "status": "PASS",
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "checked": [
+        "問題文全文",
+        "a〜d全文",
+        "選択肢1〜5",
+        "5行4列の正誤表"
+      ],
+      "visualDetails": {
+        "choiceRows": [
+          [
+            "正",
+            "正",
+            "正",
+            "正"
+          ],
+          [
+            "誤",
+            "誤",
+            "正",
+            "正"
+          ],
+          [
+            "誤",
+            "誤",
+            "誤",
+            "正"
+          ],
+          [
+            "正",
+            "正",
+            "誤",
+            "誤"
+          ],
+          [
+            "正",
+            "誤",
+            "正",
+            "誤"
+          ]
+        ]
+      },
+      "differences": [],
+      "notes": "画像の問56。問題文、a〜dの文言および正誤表の全20セルが候補レコードと一致。"
+    },
+    {
+      "id": "KSAI-2022-057",
+      "questionNo": 57,
+      "bundlePdfPage": 1,
+      "officialPdf": "2022-first_half",
+      "officialPdfPage": 39,
+      "status": "PASS",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "checked": [
+        "問題文全文",
+        "選択肢1〜5の漢方処方名",
+        "5選択肢のルビ出現順"
+      ],
+      "visualDetails": {
+        "choices": [
+          "黄連解毒湯",
+          "清上防風湯",
+          "防風通聖散",
+          "大柴胡湯",
+          "防已黄耆湯"
+        ],
+        "rubyReadingsInSourceOrder": [
+          "おうれんげどくとう",
+          "せいじょうぼうふうとう",
+          "ぼうふうつうしょうさん",
+          "だいさいことう",
+          "ぼういおうぎとう"
+        ]
+      },
+      "differences": [],
+      "notes": "画像の問57。5つの処方名とルビの出現順は候補レコードと一致。ルビは候補レコードに明記されたSOURCE_ORDER_UNATTACHED方式として独立した読み列で保持されている。"
+    },
+    {
+      "id": "KSAI-2022-058",
+      "questionNo": 58,
+      "bundlePdfPage": 2,
+      "officialPdf": "2022-first_half",
+      "officialPdfPage": 40,
+      "status": "PASS",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "checked": [
+        "問題文全文",
+        "a〜d全文",
+        "選択肢1〜5",
+        "5行4列の正誤表"
+      ],
+      "visualDetails": {
+        "choiceRows": [
+          [
+            "正",
+            "誤",
+            "正",
+            "誤"
+          ],
+          [
+            "正",
+            "誤",
+            "誤",
+            "正"
+          ],
+          [
+            "誤",
+            "誤",
+            "正",
+            "誤"
+          ],
+          [
+            "正",
+            "正",
+            "誤",
+            "誤"
+          ],
+          [
+            "誤",
+            "誤",
+            "誤",
+            "正"
+          ]
+        ]
+      },
+      "differences": [],
+      "notes": "画像の問58。消毒薬の注意事項を含むa〜d全文と正誤表の全20セルが候補レコードと一致。"
+    },
+    {
+      "id": "KSAI-2022-060",
+      "questionNo": 60,
+      "bundlePdfPage": 3,
+      "officialPdf": "2022-first_half",
+      "officialPdfPage": 41,
+      "status": "FAIL",
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "checked": [
+        "問題文全文",
+        "a〜d全文",
+        "選択肢1〜5",
+        "ルビ位置・本文文字列"
+      ],
+      "visualDetails": {
+        "sourceRuby": {
+          "base": "絨",
+          "reading": "じゅう",
+          "position": "「ヒト」の直後、「毛性」の直前"
+        },
+        "sourceText": "尿中のヒト絨毛性性腺刺激ホルモン濃度を検出感度としている。",
+        "candidateExcerpt": "尿中のヒト\n  じゅう毛性性腺刺激ホルモン濃度を検出感度としている。絨",
+        "choiceRows": [
+          [
+            "誤",
+            "正",
+            "正",
+            "誤"
+          ],
+          [
+            "正",
+            "正",
+            "誤",
+            "正"
+          ],
+          [
+            "正",
+            "誤",
+            "正",
+            "誤"
+          ],
+          [
+            "誤",
+            "正",
+            "誤",
+            "正"
+          ],
+          [
+            "正",
+            "誤",
+            "正",
+            "正"
+          ]
+        ]
+      },
+      "differences": [
+        {
+          "field": "question / ruby",
+          "issue": "原典では「絨」に付くルビ「じゅう」が本文中の正しい字位置に配置されている。候補レコードでは「じゅう」が本文文字列として「ヒト」の後に挿入され、さらに文末に「絨」が残っているため、原典の文字・ルビ配置と一致しない。",
+          "correction": "本文を「尿中のヒト絨毛性性腺刺激ホルモン濃度を検出感度としている。」とし、「絨」にルビ「じゅう」を付与する。"
+        }
+      ],
+      "notes": "画像の問60。a〜dおよび5行4列の正誤表は一致するが、本文中の「絨」のルビが文字列として誤配置され、余分な「絨」も末尾に残るため、問題文全体の目視一致基準ではFAIL。"
+    },
+    {
+      "id": "KSAI-2022-061",
+      "questionNo": 61,
+      "bundlePdfPage": 4,
+      "officialPdf": "2022-second_half",
+      "officialPdfPage": 2,
+      "status": "PASS",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "checked": [
+        "問題文全文",
+        "a〜d全文",
+        "選択肢1〜5",
+        "ルビ4件"
+      ],
+      "visualDetails": {
+        "rubyReadingsInSourceOrder": [
+          "し",
+          "こう",
+          "くう",
+          "そしゃく"
+        ],
+        "choiceRows": [
+          [
+            "正",
+            "正",
+            "誤",
+            "誤"
+          ],
+          [
+            "誤",
+            "正",
+            "正",
+            "誤"
+          ],
+          [
+            "誤",
+            "誤",
+            "正",
+            "正"
+          ],
+          [
+            "誤",
+            "誤",
+            "誤",
+            "正"
+          ],
+          [
+            "正",
+            "誤",
+            "誤",
+            "誤"
+          ]
+        ]
+      },
+      "differences": [],
+      "notes": "画像の問61。残滓・肛門・口腔・咀嚼に関するルビ4件の出現順、本文および正誤表の全セルが候補レコードと一致。"
+    },
+    {
+      "id": "KSAI-2022-062",
+      "questionNo": 62,
+      "bundlePdfPage": 4,
+      "officialPdf": "2022-second_half",
+      "officialPdfPage": 2,
+      "status": "PASS",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "checked": [
+        "問題文全文",
+        "a〜d全文",
+        "選択肢1〜5",
+        "ルビ5件"
+      ],
+      "visualDetails": {
+        "rubyReadingsInSourceOrder": [
+          "わん",
+          "わん",
+          "すい",
+          "すい",
+          "じゅう"
+        ],
+        "choiceRows": [
+          [
+            "正",
+            "誤",
+            "正",
+            "誤"
+          ],
+          [
+            "正",
+            "誤",
+            "正",
+            "正"
+          ],
+          [
+            "正",
+            "正",
+            "誤",
+            "誤"
+          ],
+          [
+            "誤",
+            "正",
+            "正",
+            "正"
+          ],
+          [
+            "誤",
+            "正",
+            "誤",
+            "正"
+          ]
+        ]
+      },
+      "differences": [],
+      "notes": "画像の問62。彎曲2件、膵管・膵液の「すい」2件、絨毛の「じゅう」のルビ順と正誤表の全20セルが候補レコードと一致。"
+    },
+    {
+      "id": "KSAI-2022-063",
+      "questionNo": 63,
+      "bundlePdfPage": 5,
+      "officialPdf": "2022-second_half",
+      "officialPdfPage": 3,
+      "status": "PASS",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "checked": [
+        "問題文全文",
+        "a〜d全文",
+        "選択肢1〜5",
+        "ルビ2件",
+        "ruby要素の基字・読み"
+      ],
+      "visualDetails": {
+        "rubyMappings": [
+          {
+            "base": "腔",
+            "reading": "くう"
+          },
+          {
+            "base": "肋",
+            "reading": "ろっ"
+          }
+        ],
+        "choiceRows": [
+          [
+            "正",
+            "誤",
+            "正",
+            "誤"
+          ],
+          [
+            "正",
+            "誤",
+            "正",
+            "正"
+          ],
+          [
+            "正",
+            "正",
+            "誤",
+            "誤"
+          ],
+          [
+            "誤",
+            "正",
+            "正",
+            "正"
+          ],
+          [
+            "誤",
+            "正",
+            "誤",
+            "正"
+          ]
+        ]
+      },
+      "differences": [],
+      "notes": "画像の問63。鼻腔の「腔＝くう」、肋間筋の「肋＝ろっ」の位置と読み、本文および正誤表の全セルが候補レコードと一致。"
+    },
+    {
+      "id": "KSAI-2022-064",
+      "questionNo": 64,
+      "bundlePdfPage": 5,
+      "officialPdf": "2022-second_half",
+      "officialPdfPage": 3,
+      "status": "PASS",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "checked": [
+        "問題文全文",
+        "a〜d全文",
+        "選択肢1〜4の組合せ表記"
+      ],
+      "visualDetails": {
+        "choices": [
+          "1（a、b）",
+          "2（a、d）",
+          "3（b、c）",
+          "4（c、d）"
+        ]
+      },
+      "differences": [],
+      "notes": "画像の問64。循環器系のa〜d全文と4つの組合せ選択肢の記号・順序が候補レコードと一致。"
+    },
+    {
+      "id": "KSAI-2022-065",
+      "questionNo": 65,
+      "bundlePdfPage": 6,
+      "officialPdf": "2022-second_half",
+      "officialPdfPage": 4,
+      "status": "PASS",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "checked": [
+        "問題文全文",
+        "a〜d全文",
+        "選択肢1〜4の組合せ表記",
+        "ルビ7件"
+      ],
+      "visualDetails": {
+        "rubyReadingsInSourceOrder": [
+          "のう",
+          "しょう",
+          "ろ",
+          "ぼうこう",
+          "ぼうこう",
+          "ぼうこう",
+          "し"
+        ],
+        "choices": [
+          "1（a、b）",
+          "2（a、d）",
+          "3（b、c）",
+          "4（c、d）"
+        ]
+      },
+      "differences": [],
+      "notes": "画像の問65。ボウマン嚢・血漿・濾過・膀胱3箇所・弛緩のルビ7件の出現順と4つの組合せ選択肢が候補レコードと一致。"
+    },
+    {
+      "id": "KSAI-2022-066",
+      "questionNo": 66,
+      "bundlePdfPage": 6,
+      "officialPdf": "2022-second_half",
+      "officialPdfPage": 4,
+      "status": "PASS",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "checked": [
+        "問題文全文",
+        "a〜d全文",
+        "選択肢1〜5",
+        "ルビ2件",
+        "ruby要素の基字・読み"
+      ],
+      "visualDetails": {
+        "rubyMappings": [
+          {
+            "base": "弛",
+            "reading": "し"
+          },
+          {
+            "base": "瞼",
+            "reading": "けん"
+          }
+        ],
+        "choiceRows": [
+          [
+            "正",
+            "正",
+            "誤",
+            "誤"
+          ],
+          [
+            "正",
+            "誤",
+            "正",
+            "誤"
+          ],
+          [
+            "誤",
+            "正",
+            "正",
+            "正"
+          ],
+          [
+            "正",
+            "誤",
+            "誤",
+            "正"
+          ],
+          [
+            "誤",
+            "正",
+            "誤",
+            "正"
+          ]
+        ]
+      },
+      "differences": [],
+      "notes": "画像の問66。弛緩の「弛＝し」、眼瞼の「瞼＝けん」の位置と読み、本文および正誤表の全20セルが候補レコードと一致。"
+    }
+  ]
+}
