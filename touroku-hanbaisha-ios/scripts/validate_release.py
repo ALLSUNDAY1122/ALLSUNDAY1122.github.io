@@ -218,7 +218,7 @@ for q in official_rows:
         if not pinned_source:
             record=audit.get('record','')
             assert audit.get('status')=='PASS' and audit.get('method')=='MANUAL_VISUAL_REAUDIT',q['id']
-            assert re.fullmatch(r'visual-reaudit-fix[0-9]+-b[0-9]+\\.json',record),q['id']
+            assert re.fullmatch(r'visual-reaudit-fix[0-9]+-b[0-9]+\.json',record),q['id']
             ledger_path=WEB/'official-kansai'/'visual-reaudit-results'/record
             assert ledger_path.is_file(),(q['id'],record)
             ledger=json.loads(ledger_path.read_text(encoding='utf-8'))
