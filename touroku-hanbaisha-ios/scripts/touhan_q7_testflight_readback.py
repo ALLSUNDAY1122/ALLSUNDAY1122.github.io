@@ -9,7 +9,7 @@ OUT=IOS/"Q7_TESTFLIGHT_READBACK_20261125.json"
 CM_APP="6a769d81a1add9d06020b524"
 ASC_APP="6802119268"
 BUNDLE="com.allsunday1122.tourokuhanbaisha"
-BRANCH="integration/explanation-ui-20261125"
+BRANCH=os.environ.get("GITHUB_REF_NAME","integration/explanation-ui-20261125")
 sys.path.insert(0,str(ROOT/"scripts"))
 from app_store_connect_api import api_get,api_request,load_private_key,make_token
 
