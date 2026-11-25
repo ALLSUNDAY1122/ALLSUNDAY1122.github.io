@@ -1,0 +1,277 @@
+{
+  "batch": "visual-reaudit-2025-b01",
+  "auditType": "manual_visual_reaudit",
+  "repository": "ALLSUNDAY1122/ALLSUNDAY1122.github.io",
+  "baseBranch": "main",
+  "source": {
+    "candidateFile": "visual-reaudit-2025-b01.candidates.json",
+    "pdfFile": "visual-reaudit-2025-b01.pdf",
+    "pdfPages": 8,
+    "officialSource": "関西広域連合「令和7年度登録販売者試験」前半",
+    "officialPdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R7tourokuhannbaisyashiken_zennhan.pdf",
+    "bankBlobShaAtAudit": "8741e2675af6f41f7fba2afdc89566f48b8258e7",
+    "answerPdfInspected": false
+  },
+  "scope": {
+    "questionIds": [
+      "KSAI-2025-001",
+      "KSAI-2025-002",
+      "KSAI-2025-003",
+      "KSAI-2025-004",
+      "KSAI-2025-005",
+      "KSAI-2025-006",
+      "KSAI-2025-008",
+      "KSAI-2025-009",
+      "KSAI-2025-010",
+      "KSAI-2025-011"
+    ],
+    "questionNumbers": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      8,
+      9,
+      10,
+      11
+    ],
+    "excludedQuestionNumbers": [
+      7
+    ]
+  },
+  "method": {
+    "description": "添付PDFの各ページ画像を目視し、添付候補JSONの該当レコードと問題文、全選択肢、ルビ、表の行列・セル対応、記号を照合。PDFテキスト抽出や既存の自動監査PASSを目視判定の代替根拠にしていない。",
+    "pageMapping": "bundlePdfPagesは添付PDF内の1始まりページ。officialPdfPageは候補JSONのbundlePages対応表による原典PDFページ。",
+    "answerHandling": "answerNumberOfficialの値を転記。正答PDFは目視していないため全件answerPDFChecked=false。"
+  },
+  "results": [
+    {
+      "id": "KSAI-2025-001",
+      "questionNo": 1,
+      "bundlePdfPages": [
+        1
+      ],
+      "officialPdfPages": [
+        2
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "該当なし",
+        "tables": "該当なし",
+        "symbols": "PASS"
+      },
+      "notes": "問題文a〜dおよび組合せ選択肢1〜5を画像と照合。選択肢は原典の「1（a、b）2（a、c）3（b、c）4（b、d）5（c、d）」と一致。"
+    },
+    {
+      "id": "KSAI-2025-002",
+      "questionNo": 2,
+      "bundlePdfPages": [
+        2
+      ],
+      "officialPdfPages": [
+        3
+      ],
+      "status": "FAIL",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "FAIL",
+        "ruby": "該当なし",
+        "tables": "FAIL",
+        "symbols": "PASS"
+      },
+      "notes": "問題文は一致。原典の選択肢表は、1: GLP/GCP/GPSP、2: GLP/GCP/GVP、3: GCP/GLP/GVP、4: GVP/GLP/GPSP、5: GVP/GCP/GPSP。候補JSONのchoices[4]（第5選択肢）に「GVP GCP GPSP」に続けてGCP/GLP/GPSP/GVPの正式名称説明4行が連結されており、選択肢データと表下の注記が混在している。表の第5行そのものは読めるが、選択肢フィールドが原典の選択肢1行に一致せず、注記が第5選択肢の一部として誤収録されているためFAIL。原典どおりの選択肢は上記5行。正式名称説明は表外の注記として分離すべき。"
+    },
+    {
+      "id": "KSAI-2025-003",
+      "questionNo": 3,
+      "bundlePdfPages": [
+        3
+      ],
+      "officialPdfPages": [
+        4
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "notes": "問題文a〜d、機能性表示食品の「罹患」のルビ「り」、正誤組合せ表の5行×4列を照合。候補questionPartsのrubyBase「罹」/rubyText「り」と一致。表の各行も候補choicesPartsと一致。"
+    },
+    {
+      "id": "KSAI-2025-004",
+      "questionNo": 4,
+      "bundlePdfPages": [
+        4
+      ],
+      "officialPdfPages": [
+        5
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "該当なし",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "notes": "問題文a〜dおよび正誤組合せ表の5行×4列を照合。各セルの正・誤の位置は候補choicesと一致。平成29年、令和4年、スイッチOTC等の表記も画像と一致。"
+    },
+    {
+      "id": "KSAI-2025-005",
+      "questionNo": 5,
+      "bundlePdfPages": [
+        5
+      ],
+      "officialPdfPages": [
+        6
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "notes": "問題文a〜d、アレルギー症状の「蕁麻疹」「湿疹」に付されたルビ、および正誤組合せ表5行×4列を照合。本文・選択肢の文字と表のセル配置は候補レコードと一致。"
+    },
+    {
+      "id": "KSAI-2025-006",
+      "questionNo": 6,
+      "bundlePdfPages": [
+        5
+      ],
+      "officialPdfPages": [
+        6
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "該当なし",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "notes": "問6の問題文a〜dおよび正誤組合せ表5行×4列を照合。問5の表と混同せず、ページ下部の問6の表を確認。各行の正・誤の配置は候補choicesと一致。"
+    },
+    {
+      "id": "KSAI-2025-008",
+      "questionNo": 8,
+      "bundlePdfPages": [
+        6
+      ],
+      "officialPdfPages": [
+        8
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "notes": "問題文a〜d、a文中の「排泄」のルビ「せつ」、正誤組合せ表5行×4列を照合。候補questionPartsのrubyBase「泄」/rubyText「せつ」と一致し、表の各セルも一致。"
+    },
+    {
+      "id": "KSAI-2025-009",
+      "questionNo": 9,
+      "bundlePdfPages": [
+        7
+      ],
+      "officialPdfPages": [
+        9
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "該当なし",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "notes": "アルコールと医薬品の相互作用に関する問題文、およびa・b・cの3列からなる選択肢表5行を照合。各行の語句の組合せは候補choicesと一致。"
+    },
+    {
+      "id": "KSAI-2025-010",
+      "questionNo": 10,
+      "bundlePdfPages": [
+        8
+      ],
+      "officialPdfPages": [
+        10
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "該当なし",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "notes": "小児等への医薬品使用に関する問題文a〜dおよび正誤組合せ表5行×4列を照合。各セルの正・誤の配置は候補choicesと一致。"
+    },
+    {
+      "id": "KSAI-2025-011",
+      "questionNo": 11,
+      "bundlePdfPages": [
+        8
+      ],
+      "officialPdfPages": [
+        10
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "checks": {
+        "questionText": "PASS",
+        "allChoices": "PASS",
+        "ruby": "PASS",
+        "tables": "PASS",
+        "symbols": "PASS"
+      },
+      "notes": "高齢者への医薬品使用に関する問題文a〜d、c文中の「嚥下障害」の「嚥」に付されたルビ「えん」、正誤組合せ表5行×4列を照合。候補questionPartsのrubyBase「嚥」/rubyText「えん」と一致し、表の各セルも一致。"
+    }
+  ],
+  "summary": {
+    "total": 10,
+    "pass": 9,
+    "fail": 1,
+    "hold": 0,
+    "failIds": [
+      "KSAI-2025-002"
+    ],
+    "holdIds": [],
+    "answerPDFCheckedCount": 0
+  },
+  "constraints": {
+    "approvedOfficialBankModified": false,
+    "statusFilesModified": false,
+    "onlyNewAuditResultFile": true
+  }
+}
