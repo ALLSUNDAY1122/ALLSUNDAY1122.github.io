@@ -1053,6 +1053,11 @@ workflows:
           p.write_text(text,encoding='utf-8')
           PYBUILD
           xcodegen generate
+          plutil -lint Info.plist
+          /usr/libexec/PlistBuddy -c 'Print :CFBundleIconName' Info.plist | grep -qx 'AppIcon'
+          /usr/libexec/PlistBuddy -c 'Print :UIRequiresFullScreen' Info.plist | grep -qx 'true'
+          /usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' Info.plist | grep -Eq '^(\$\(PRODUCT_BUNDLE_IDENTIFIER\)|jp\.allsunday1122\.kangoshi)$'
+          grep -Eq 'ASSETCATALOG_COMPILER_APPICON_NAME = "?AppIcon"?;' KangoshiSprint.xcodeproj/project.pbxproj
       - name: Initialize signing keychain
         script: |
           set -euo pipefail
