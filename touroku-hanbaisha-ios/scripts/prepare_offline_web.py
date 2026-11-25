@@ -39,9 +39,8 @@ html=(WEB/'official-practice.html').read_text()
 old="fetch(BANK,{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(d=>{"
 assert html.count(old)==1
 html=html.replace(old,"Promise.resolve().then(()=>JSON.parse(document.getElementById('offlineBank').textContent)).then(d=>{")
-explanation_fetch=re.compile(r"fetch\('official-kansai/EXPLANATIONS_AUDITED_599\\.json'.*?\\.catch\\(\\(\\)=>\\{explanationMap=new Map\\(\\)\\}\\);",re.S)
-assert len(explanation_fetch.findall(html))==1
-html=explanation_fetch.sub("const offlineExplanationData=JSON.parse(document.getElementById('offlineExplanations').textContent);if(offlineExplanationData.count!==599||offlineExplanationData.records?.length!==599||offlineExplanationData.auditSummary?.PASS!==599||offlineExplanationData.auditSummary?.HOLD!==0)throw Error('offline explanation bundle integrity failure');explanationMap=new Map(offlineExplanationData.records.map(x=>[x.id,x]));",html)
+assert html.count("fetch('official-kansai/EXPLANATIONS_AUDITED_599.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(d=>{if(d?.count!==599||d.records?.length!==599||d.auditSummary?.PASS!==599||d.auditSummary?.HOLD!==0)throw Error('解説監査データの件数・状態が一致しません');explanationMap=new Map(d.records.map(x=>[x.id,x]));}).catch(()=>{explanationMap=new Map()});")==1
+html=html.replace("fetch('official-kansai/EXPLANATIONS_AUDITED_599.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(d=>{if(d?.count!==599||d.records?.length!==599||d.auditSummary?.PASS!==599||d.auditSummary?.HOLD!==0)throw Error('解説監査データの件数・状態が一致しません');explanationMap=new Map(d.records.map(x=>[x.id,x]));}).catch(()=>{explanationMap=new Map()});","const offlineExplanationData=JSON.parse(document.getElementById('offlineExplanations').textContent);if(offlineExplanationData.count!==599||offlineExplanationData.records?.length!==599||offlineExplanationData.auditSummary?.PASS!==599||offlineExplanationData.auditSummary?.HOLD!==0)throw Error('offline explanation bundle integrity failure');explanationMap=new Map(offlineExplanationData.records.map(x=>[x.id,x]));")
 premium=json.loads((ROOT/'touroku-hanbaisha-ios/IAP_POLICY.json').read_text())
 free= premium['freeIds']
 assert len(free)==len(set(free))==50 and set(free)<= {q['id'] for q in rows}
