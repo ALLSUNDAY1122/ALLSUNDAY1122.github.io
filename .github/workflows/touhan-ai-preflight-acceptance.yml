@@ -115,7 +115,7 @@ jobs:
             'limits':['App Store Connect App Privacy questionnaire requires authenticated UI/manual confirmation.',
               'Hosting provider log retention and purpose are not independently verified.',
               'Physical iOS device network capture not performed.']}
-          (b/'Q5_CURRENT_20261125.json').write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\\n')
+          (b/'Q5_CURRENT_20261125.json').write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n')
           print(json.dumps(data,ensure_ascii=False))
           PY
       - name: Run existing legacy-360 release validator plus canonical-599 integration contract
