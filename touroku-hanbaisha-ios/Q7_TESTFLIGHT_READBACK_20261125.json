@@ -1,109 +1,13 @@
 {
   "schema": "touhan-q7-testflight-readback-v1",
-  "startedAtJST": "2026-11-26T06:41:24.138528+09:00",
-  "status": "PASS",
-  "signedIpaVerified": true,
-  "ascProcessingState": "VALID",
-  "testFlightAvailable": true,
-  "testFlightDistributed": true,
+  "status": "BLOCKED",
+  "error": "Fresh Q7 build/upload/readback did not complete in this workflow run; prior results are not reused.",
+  "signedIpaVerified": false,
+  "ascProcessingState": "NOT_VERIFIED",
+  "testFlightAvailable": false,
+  "testFlightDistributed": false,
   "appReviewSubmitted": false,
-  "branch": "feature/touhan-fp2-ui-20261125",
-  "bundleId": "com.allsunday1122.tourokuhanbaisha",
-  "codemagicAppId": "6a769d81a1add9d06020b524",
-  "codemagicBuildId": "6b075604b4fa3a459ac29984",
-  "codemagicBuildUrl": "https://codemagic.io/app/6a769d81a1add9d06020b524/build/6b075604b4fa3a459ac29984",
-  "codemagicStatus": "finished",
-  "codemagicBranch": "feature/touhan-fp2-ui-20261125",
-  "codemagicBuildNumber": "24",
-  "codemagicSteps": [
-    {
-      "name": "Preparing build machine",
-      "status": "success"
-    },
-    {
-      "name": "Fetching app sources",
-      "status": "success"
-    },
-    {
-      "name": "Install native build tools",
-      "status": "success"
-    },
-    {
-      "name": "Audit registration seller release inputs",
-      "status": "success"
-    },
-    {
-      "name": "Set CI build number and generate native project",
-      "status": "success"
-    },
-    {
-      "name": "Verify native inputs before signing",
-      "status": "success"
-    },
-    {
-      "name": "Initialize signing keychain",
-      "status": "success"
-    },
-    {
-      "name": "Fetch managed App Store signing files",
-      "status": "success"
-    },
-    {
-      "name": "Add signing certificate to keychain",
-      "status": "success"
-    },
-    {
-      "name": "Apply App Store signing profiles for release candidate",
-      "status": "success"
-    },
-    {
-      "name": "Build signed IPA",
-      "status": "success"
-    },
-    {
-      "name": "Verify signed IPA contains offline 599 bank, explanations and privacy manifest",
-      "status": "success"
-    },
-    {
-      "name": "Upload signed release candidate IPA to App Store Connect",
-      "status": "success"
-    },
-    {
-      "name": "Publishing",
-      "status": "success"
-    },
-    {
-      "name": "Cleaning up",
-      "status": "success"
-    }
-  ],
-  "artifactNames": [
-    "TouhanSprint.ipa",
-    "TouhanSprint.app.dSYM.zip",
-    "ALLSUNDAY1122.github.io_24_artifacts.zip"
-  ],
-  "artifactTypes": [
-    "ipa",
-    "dsym",
-    "bundle"
-  ],
-  "codemagicDetailHttpStatus": 200,
-  "ascBuildId": "edfea4e7-3d69-4fc8-9799-7697148a71d6",
-  "ascBuildVersion": "24",
-  "ascUploadedDate": "2026-11-25T13:49:27-08:00",
-  "internalGroupsWithTesters": [
-    {
-      "id": "cdd5f083-c442-46ff-95fe-a4ef7c7072ef",
-      "name": "sum",
-      "testerCount": 1
-    }
-  ],
-  "assignedInternalGroup": {
-    "name": "sum",
-    "testerCount": 1
-  },
-  "completedAtJST": "2026-11-26T06:50:34.457388+09:00",
-  "githubActionsRunId": 45708289558,
+  "githubActionsRunId": 45708791428,
   "startStepResult": "skipped",
   "verifyStepResult": "skipped"
 }
