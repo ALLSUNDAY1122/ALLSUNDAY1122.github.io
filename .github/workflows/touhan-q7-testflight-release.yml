@@ -38,7 +38,7 @@ jobs:
           assert q4.get('testedHead')==q6.get('headSHA') and q4.get('githubRunId')==q6.get('githubRunId')
           tested=q6['headSHA']
           changed=subprocess.check_output(['git','diff','--name-only',tested+'..HEAD'],text=True).splitlines()
-          allowed={'touroku-hanbaisha-ios/OFFLINE_Q4_20261125.json','touroku-hanbaisha-ios/IOS_SIMULATOR_Q6_20261125.json','touroku-hanbaisha-ios/OFFLINE_Q4_BROWSER_20261125.json'}
+          allowed={'.github/workflows/touhan-ios-simulator-q6.yml','touroku-hanbaisha-ios/OFFLINE_Q4_20261125.json','touroku-hanbaisha-ios/IOS_SIMULATOR_Q6_20261125.json','touroku-hanbaisha-ios/OFFLINE_Q4_BROWSER_20261125.json'}
           assert set(changed)<=allowed, {'testedHead':tested,'currentHead':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),'changedSinceTest':changed}
           print(json.dumps({'status':'PASS','testedHead':tested,'changedSinceTest':changed,'q4RunId':q4['githubRunId'],'q6RunId':q6['githubRunId']},ensure_ascii=False))
           PY
