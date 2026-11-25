@@ -1,0 +1,211 @@
+{
+  "batch": "visual-reaudit-fix1-b02",
+  "repository": "ALLSUNDAY1122/ALLSUNDAY1122.github.io",
+  "branch": "main",
+  "targetFile": "touroku-hanbaisha-sprint/official-kansai/visual-reaudit-results/visual-reaudit-fix1-b02.json",
+  "auditMethod": "ATTACHED_OFFICIAL_PDF_PAGE_IMAGES_MANUAL_VISUAL_REVIEW",
+  "sourceFiles": {
+    "pdf": "visual-reaudit-fix1-b02.pdf",
+    "candidates": "visual-reaudit-fix1-b02.candidates.json"
+  },
+  "scope": {
+    "questionCount": 10,
+    "ids": [
+      "KSAI-2023-057",
+      "KSAI-2023-065",
+      "KSAI-2023-072",
+      "KSAI-2023-074",
+      "KSAI-2023-087",
+      "KSAI-2023-088",
+      "KSAI-2023-097",
+      "KSAI-2023-102",
+      "KSAI-2023-113",
+      "KSAI-2023-115"
+    ],
+    "bundlePdfPages": "各recordのbundlePdfPagesは添付PDFの1-basedページ番号"
+  },
+  "summary": {
+    "pass": 9,
+    "fail": 1,
+    "hold": 0
+  },
+  "answerPolicy": "answerNumberOfficialのみを記録。添付資料に正答PDFは含まれず、正答PDFの直接確認は行っていないため全件answerPDFChecked=false。",
+  "records": [
+    {
+      "id": "KSAI-2023-057",
+      "year": 2023,
+      "questionNo": 57,
+      "bundlePdfPages": [
+        1
+      ],
+      "officialPdf": "2023-first_half",
+      "sourcePdfPages": [
+        37
+      ],
+      "status": "FAIL",
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "findings": [
+        {
+          "field": "originalRubyReadings/questionParts",
+          "issue": "原典画像の設問冒頭「防風通聖散」には「ぼうふうつうしょうさん」のルビが付されているが、現行レコードのoriginalRubyReadingsは「はん」のみで、questionPartsにも「防風通聖散」のルビ要素がない。",
+          "expected": "防風通聖散（ぼうふうつうしょうさん）のルビを記録・表示要素に反映する。既存の「胖（はん）」も維持する。"
+        }
+      ],
+      "visualNotes": "設問本文、a〜dの各記述、5行×4列（a〜d）の正誤組合せ表は画像と一致。FAIL理由は防風通聖散のルビ欠落。"
+    },
+    {
+      "id": "KSAI-2023-065",
+      "year": 2023,
+      "questionNo": 65,
+      "bundlePdfPages": [
+        2
+      ],
+      "officialPdf": "2023-second_half",
+      "sourcePdfPages": [
+        5
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "findings": [],
+      "visualNotes": "設問本文・a〜dの記述、粘稠性「ちゅう」・血漿「しょう」のルビ、5行×4列の正誤組合せ表が一致。"
+    },
+    {
+      "id": "KSAI-2023-072",
+      "year": 2023,
+      "questionNo": 72,
+      "bundlePdfPages": [
+        3
+      ],
+      "officialPdf": "2023-second_half",
+      "sourcePdfPages": [
+        8
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "findings": [],
+      "visualNotes": "設問本文・a〜dの記述、排泄（せつ）2箇所・血漿（しょう）・濾（ろ）・排泄（せつ）のルビ順序、5行×4列の正誤組合せ表が一致。"
+    },
+    {
+      "id": "KSAI-2023-074",
+      "year": 2023,
+      "questionNo": 74,
+      "bundlePdfPages": [
+        4
+      ],
+      "officialPdf": "2023-second_half",
+      "sourcePdfPages": [
+        9
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "findings": [],
+      "visualNotes": "設問本文・a〜dの記述、軟膏の「膏（こう）」2箇所のルビ、5行×4列の正誤組合せ表が一致。"
+    },
+    {
+      "id": "KSAI-2023-087",
+      "year": 2023,
+      "questionNo": 87,
+      "bundlePdfPages": [
+        5
+      ],
+      "officialPdf": "2023-second_half",
+      "sourcePdfPages": [
+        17
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "findings": [],
+      "visualNotes": "設問本文・a〜dの記述、標榜の「榜（ぼう）」のルビ、5行×4列の正誤組合せ表およびchoicesPartsの各行が一致。"
+    },
+    {
+      "id": "KSAI-2023-088",
+      "year": 2023,
+      "questionNo": 88,
+      "bundlePdfPages": [
+        5
+      ],
+      "officialPdf": "2023-second_half",
+      "sourcePdfPages": [
+        17
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "findings": [],
+      "visualNotes": "設問本文・a〜dの各記述、標榜の「榜（ぼう）」のルビ、5行×4列の正誤組合せ表およびchoicesPartsの各行が一致。"
+    },
+    {
+      "id": "KSAI-2023-097",
+      "year": 2023,
+      "questionNo": 97,
+      "bundlePdfPages": [
+        6
+      ],
+      "officialPdf": "2023-second_half",
+      "sourcePdfPages": [
+        23
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "findings": [],
+      "visualNotes": "設問本文・a〜dの記述、標榜の「榜（ぼう）」のルビ、5行×4列の正誤組合せ表およびchoicesPartsの各行が一致。"
+    },
+    {
+      "id": "KSAI-2023-102",
+      "year": 2023,
+      "questionNo": 102,
+      "bundlePdfPages": [
+        7
+      ],
+      "officialPdf": "2023-second_half",
+      "sourcePdfPages": [
+        26
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "findings": [],
+      "visualNotes": "設問本文、番号1〜5の全選択肢、設問末尾「誤っているものを一つ選べ。」の下線が一致。表形式ではない。"
+    },
+    {
+      "id": "KSAI-2023-113",
+      "year": 2023,
+      "questionNo": 113,
+      "bundlePdfPages": [
+        8
+      ],
+      "officialPdf": "2023-second_half",
+      "sourcePdfPages": [
+        32
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "findings": [],
+      "visualNotes": "設問本文・a〜dの記述、小柴胡湯（しょうさいことう）のルビ、5行×4列の正誤組合せ表が一致。"
+    },
+    {
+      "id": "KSAI-2023-115",
+      "year": 2023,
+      "questionNo": 115,
+      "bundlePdfPages": [
+        9
+      ],
+      "officialPdf": "2023-second_half",
+      "sourcePdfPages": [
+        34
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "findings": [],
+      "visualNotes": "設問本文、番号1〜5の全選択肢、排泄（せつ）および亢進（こう）のルビが一致。表形式ではない。"
+    }
+  ]
+}
