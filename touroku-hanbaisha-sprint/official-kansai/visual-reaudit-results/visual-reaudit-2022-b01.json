@@ -1,0 +1,216 @@
+{
+  "batch": "visual-reaudit-2022-b01",
+  "repository": "ALLSUNDAY1122/ALLSUNDAY1122.github.io",
+  "branch": "main",
+  "source": {
+    "uploadedPdf": "visual-reaudit-2022-b01.pdf",
+    "uploadedCandidates": "visual-reaudit-2022-b01.candidates.json",
+    "method": "各bundleページの画像を目視し、候補JSONのquestion/questionParts/choices/choicesParts、ルビ情報、図版参照と照合。PDFテキスト抽出・自動照合による判定は行っていない。",
+    "answerPolicy": "answerNumberOfficialは候補レコードの値を記録しただけで、正答PDFは直接確認していない。",
+    "answerPDFChecked": false
+  },
+  "summary": {
+    "total": 10,
+    "pass": 9,
+    "fail": 0,
+    "hold": 1
+  },
+  "results": [
+    {
+      "id": "KSAI-2022-003",
+      "questionNo": 3,
+      "bundlePdfPage": 1,
+      "officialPdfPage": 3,
+      "status": "PASS",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "checked": [
+        "問題文",
+        "a〜d全文",
+        "正誤組合せ5行・4列",
+        "ルビ（罹／り）"
+      ],
+      "differences": [],
+      "notes": "画像上の問題文・選択肢・表の内容および「罹」の読み「り」は候補レコードと一致。"
+    },
+    {
+      "id": "KSAI-2022-005",
+      "questionNo": 5,
+      "bundlePdfPage": 2,
+      "officialPdfPage": 4,
+      "status": "PASS",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "checked": [
+        "公式PDF切り出し画像の内容",
+        "問題文",
+        "a〜d全文",
+        "正誤組合せ5行・4列",
+        "ルビ（蕁麻疹／じんましん、湿疹／しっしん）"
+      ],
+      "differences": [],
+      "notes": "候補レコードは本文をプレースホルダー表示とし、公式PDFからの切り出し画像を使用。リポジトリの参照画像KSAI-2022-005-p4-1.pngを取得して目視し、添付PDFの問5と問題文・全選択肢・表・ルビが一致することを確認。"
+    },
+    {
+      "id": "KSAI-2022-008",
+      "questionNo": 8,
+      "bundlePdfPage": 3,
+      "officialPdfPage": 6,
+      "status": "PASS",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "checked": [
+        "問題文",
+        "a〜d全文",
+        "正誤組合せ5行・4列",
+        "ルビ（排泄／せつ）"
+      ],
+      "differences": [],
+      "notes": "画像上の全文・表・「排泄」のルビ読みは候補レコードと一致。"
+    },
+    {
+      "id": "KSAI-2022-010",
+      "questionNo": 10,
+      "bundlePdfPage": 4,
+      "officialPdfPage": 7,
+      "status": "PASS",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "checked": [
+        "問題文",
+        "a〜d全文",
+        "正誤組合せ5行・4列",
+        "ルビ（排泄／せつ）"
+      ],
+      "differences": [],
+      "notes": "画像上の全文・表・「排泄」のルビ読みは候補レコードと一致。"
+    },
+    {
+      "id": "KSAI-2022-011",
+      "questionNo": 11,
+      "bundlePdfPage": 5,
+      "officialPdfPage": 8,
+      "status": "PASS",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "checked": [
+        "問題文",
+        "a〜d全文",
+        "正誤組合せ5行・4列",
+        "ルビ（誤嚥／えん）"
+      ],
+      "differences": [],
+      "notes": "画像上の全文・表・「誤嚥」のルビ読みは候補レコードと一致。"
+    },
+    {
+      "id": "KSAI-2022-019",
+      "questionNo": 19,
+      "bundlePdfPage": 6,
+      "officialPdfPage": 13,
+      "status": "PASS",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "checked": [
+        "問題文",
+        "a〜d全文",
+        "正誤組合せ5行・4列",
+        "ルビ（罹／り、痺／しび）"
+      ],
+      "differences": [],
+      "notes": "画像上の全文・表および2か所のルビ読みは候補レコードと一致。"
+    },
+    {
+      "id": "KSAI-2022-021",
+      "questionNo": 21,
+      "bundlePdfPage": 7,
+      "officialPdfPage": 14,
+      "status": "HOLD",
+      "answerNumberOfficial": 5,
+      "answerPDFChecked": false,
+      "checked": [
+        "問題文",
+        "a〜cの説明文",
+        "表の見出しと各セルの原典画像"
+      ],
+      "differences": [],
+      "notes": "原典画像の表はa・b・cの3列×5行で確認できる。一方、候補JSONのchoicesはセル内容が空白・改行を含む文字列に平坦化され、各選択肢内で列の対応関係を一意に復元できない。誤記と断定できる差分は確認できないが、全5選択肢の列対応をレコード上で保証できないため合格にしない。原典表の行別内容はsourceObservedTableRowsに記録。",
+      "sourceObservedTableRows": [
+        [
+          "グアイフェネシン",
+          "イソプロピルアンチピリン",
+          "エテンザミド"
+        ],
+        [
+          "グアイフェネシン",
+          "ノスカピン",
+          "エテンザミド"
+        ],
+        [
+          "メチルエフェドリン塩酸塩",
+          "イソプロピルアンチピリン",
+          "エテンザミド"
+        ],
+        [
+          "メチルエフェドリン塩酸塩",
+          "イソプロピルアンチピリン",
+          "ヨウ化イソプロパミド"
+        ],
+        [
+          "メチルエフェドリン塩酸塩",
+          "ノスカピン",
+          "ヨウ化イソプロパミド"
+        ]
+      ]
+    },
+    {
+      "id": "KSAI-2022-022",
+      "questionNo": 22,
+      "bundlePdfPage": 8,
+      "officialPdfPage": 15,
+      "status": "PASS",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "checked": [
+        "問題文",
+        "a〜d全文",
+        "正誤組合せ5行・4列"
+      ],
+      "differences": [],
+      "notes": "画像上の問題文・全選択肢・表の全セルが候補レコードと一致。"
+    },
+    {
+      "id": "KSAI-2022-023",
+      "questionNo": 23,
+      "bundlePdfPage": 8,
+      "officialPdfPage": 15,
+      "status": "PASS",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "checked": [
+        "問題文",
+        "a〜dの処方名",
+        "正誤組合せ5行・4列",
+        "ルビ4件の出現順と読み"
+      ],
+      "differences": [],
+      "notes": "画像上の処方名・表は候補レコードと一致。原典のルビ出現順（かっこんとう、まおうとう、こうそさん、しょうさいことう）はoriginalRubyReadingsの4件と一致。候補のrubyDisplayModeはSOURCE_ORDER_UNATTACHEDであり、漢字への対応付けを行わない表示方式として記録されている。"
+    },
+    {
+      "id": "KSAI-2022-024",
+      "questionNo": 24,
+      "bundlePdfPage": 9,
+      "officialPdfPage": 16,
+      "status": "PASS",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "checked": [
+        "問題文",
+        "a〜d全文",
+        "正誤組合せ5行・4列",
+        "ルビ5件の出現順と読み"
+      ],
+      "differences": [],
+      "notes": "画像上の本文・表は候補レコードと一致。原典のルビ出現順（しゃくやくかんぞうとう、おう、そけいかっけつとう、まきょうよくかんとう、ちょうとうさん）はoriginalRubyReadingsの5件と一致。"
+    }
+  ]
+}
