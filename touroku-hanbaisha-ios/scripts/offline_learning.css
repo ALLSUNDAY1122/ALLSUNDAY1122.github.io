@@ -21,3 +21,12 @@ html.font-large{font-size:18px}html.font-xlarge{font-size:20px}
 #quiz .source-figure a{width:100%;max-width:100%;overflow:visible}
 #quiz .source-figure img{width:100%;max-width:100%;height:auto;border-radius:0;border-left:0;border-right:0}
 #quiz .choice{font-variant-numeric:tabular-nums}
+
+/* Match the FP2 compact four-tab footer and avoid excess space below it. */
+.app{padding-bottom:calc(60px + env(safe-area-inset-bottom))}
+.localnav{bottom:0;padding:6px 5px max(6px,env(safe-area-inset-bottom));min-height:50px}
+.file-restore{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px}
+.file-picker{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:9px 13px;background:var(--study-navy);color:#fff;border-color:var(--study-navy);border-radius:10px;font-size:.82rem;font-weight:700}
+.file-input{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+.file-input:focus-visible+.file-name{outline:2px solid var(--study-navy);outline-offset:3px}
+.file-name{font-size:.75rem;color:var(--study-muted);overflow-wrap:anywhere}
