@@ -1,95 +1,16 @@
 {
   "task_id": "APP2-009",
   "workflow": "Kangoshi App Store Screenshots",
-  "run_id": 45619698037,
+  "run_id": 45629028826,
   "conclusion": "failure",
-  "head_sha": "edb26e6199aef303f875ac430be20b6696d100a9",
+  "head_sha": "85dfcb6bd1e2102c060715db0b00e06f0ff919a0",
   "jobs": [
     {
-      "id": 139224246502,
+      "id": 139256910979,
       "name": "screenshots",
       "status": "completed",
-      "conclusion": "failure",
-      "steps": [
-        {
-          "name": "Set up job",
-          "status": "completed",
-          "conclusion": "success",
-          "number": 1
-        },
-        {
-          "name": "Run actions/checkout@v4",
-          "status": "completed",
-          "conclusion": "success",
-          "number": 2
-        },
-        {
-          "name": "Install tools and prepare canonical native payload",
-          "status": "completed",
-          "conclusion": "success",
-          "number": 3
-        },
-        {
-          "name": "Generate Xcode project with StoreKit review configuration",
-          "status": "completed",
-          "conclusion": "success",
-          "number": 4
-        },
-        {
-          "name": "Pick current large iPhone simulator",
-          "status": "completed",
-          "conclusion": "success",
-          "number": 5
-        },
-        {
-          "name": "Capture five review screens including priced paywall",
-          "status": "completed",
-          "conclusion": "failure",
-          "number": 6
-        },
-        {
-          "name": "Write screenshot manifest",
-          "status": "completed",
-          "conclusion": "skipped",
-          "number": 7
-        },
-        {
-          "name": "Prepare App Store metadata and review assets",
-          "status": "completed",
-          "conclusion": "skipped",
-          "number": 8
-        },
-        {
-          "name": "Persist sanitized App Store preparation result",
-          "status": "completed",
-          "conclusion": "skipped",
-          "number": 9
-        },
-        {
-          "name": "Run actions/upload-artifact@v4",
-          "status": "completed",
-          "conclusion": "skipped",
-          "number": 10
-        },
-        {
-          "name": "Report issue result",
-          "status": "completed",
-          "conclusion": "skipped",
-          "number": 11
-        },
-        {
-          "name": "Post Run actions/checkout@v4",
-          "status": "completed",
-          "conclusion": "success",
-          "number": 22
-        },
-        {
-          "name": "Complete job",
-          "status": "completed",
-          "conclusion": "success",
-          "number": 23
-        }
-      ]
+      "conclusion": "cancelled",
+      "steps": []
     }
   ]
 }
