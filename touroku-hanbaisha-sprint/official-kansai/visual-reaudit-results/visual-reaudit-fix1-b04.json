@@ -1,0 +1,196 @@
+{
+  "batch": "visual-reaudit-fix1-b04",
+  "repository": "ALLSUNDAY1122/ALLSUNDAY1122.github.io",
+  "branch": "main",
+  "targetFile": "touroku-hanbaisha-sprint/official-kansai/visual-reaudit-results/visual-reaudit-fix1-b04.json",
+  "auditMethod": "ATTACHED_OFFICIAL_PDF_PAGE_IMAGES_MANUAL_VISUAL_REVIEW",
+  "sourceFiles": {
+    "pdf": "visual-reaudit-fix1-b04.pdf",
+    "candidates": "visual-reaudit-fix1-b04.candidates.json"
+  },
+  "scope": {
+    "questionCount": 8,
+    "ids": [
+      "KSAI-2024-116",
+      "KSAI-2025-002",
+      "KSAI-2025-026",
+      "KSAI-2025-028",
+      "KSAI-2025-041",
+      "KSAI-2025-049",
+      "KSAI-2025-080",
+      "KSAI-2025-100"
+    ],
+    "bundlePdfPages": "各recordのbundlePdfPagesは添付PDFの1-basedページ番号。"
+  },
+  "summary": {
+    "pass": 5,
+    "fail": 3,
+    "hold": 0
+  },
+  "answerPolicy": "answerNumberOfficialのみを記録。添付資料に正答PDFは含まれず、正答PDFの直接確認は行っていないため全件answerPDFChecked=false。",
+  "records": [
+    {
+      "id": "KSAI-2024-116",
+      "year": 2024,
+      "questionNo": 116,
+      "bundlePdfPages": [
+        1
+      ],
+      "officialPdf": "2024-second_half",
+      "sourcePdfPages": [
+        38
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "findings": [],
+      "visualNotes": "添付PDF1ページ目下段の問116を確認。設問本文、基礎疾患等・医薬品成分等の4行2列の表、芍薬甘草湯（しゃくやくかんぞうとう）のルビ、正誤組合せ表の5選択肢がレコードと一致。"
+    },
+    {
+      "id": "KSAI-2025-002",
+      "year": 2025,
+      "questionNo": 2,
+      "bundlePdfPages": [
+        2
+      ],
+      "officialPdf": "2025-first_half",
+      "sourcePdfPages": [
+        3
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 1,
+      "answerPDFChecked": false,
+      "findings": [],
+      "visualNotes": "添付PDF2ページ目の問2を確認。本文の空欄a〜c、5行×3列の選択肢表、GLP・GCP・GPSP・GVPの略語説明が一致。"
+    },
+    {
+      "id": "KSAI-2025-026",
+      "year": 2025,
+      "questionNo": 26,
+      "bundlePdfPages": [
+        3
+      ],
+      "officialPdf": "2025-first_half",
+      "sourcePdfPages": [
+        22
+      ],
+      "status": "FAIL",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "findings": [
+        {
+          "field": "question",
+          "issue": "原典では設問文は「…高血圧の傾向のあるものに適すとされる。」で終わり、その後の「ごしゅゆとう」は第1選択肢「呉茱萸湯」に付されたルビである。現行レコードのquestion末尾には「ご しゅ ゆ とう」が設問本文の一部のように混入している。一方、choicesParts[0]には同じルビが正しく設定されている。",
+          "expected": "question末尾の「ご しゅ ゆ とう」を削除し、第1選択肢のchoicesPartsにあるrubyBase「呉茱萸湯」・rubyText「ごしゅゆとう」のみを維持する。"
+        }
+      ],
+      "visualNotes": "添付PDF3ページ目の問26を確認。設問本文・5選択肢・各選択肢のルビは画像で確認できた。FAILは第1選択肢のルビ文字列がquestionにも重複混入している点。"
+    },
+    {
+      "id": "KSAI-2025-028",
+      "year": 2025,
+      "questionNo": 28,
+      "bundlePdfPages": [
+        4
+      ],
+      "officialPdf": "2025-first_half",
+      "sourcePdfPages": [
+        23
+      ],
+      "status": "FAIL",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "findings": [
+        {
+          "field": "questionParts.rubyBase",
+          "issue": "原典画像では「疲労倦怠」の「倦」に「けん」のルビが付されている。現行レコードは直前のtextに「倦」を含めたうえでrubyBaseを「怠」、rubyTextを「けん」としており、ルビの対象文字が一字ずれている。",
+          "expected": "「疲労」の後にrubyBase「倦」、rubyText「けん」を配置し、その後の「怠、慢性胃腸炎…」を通常textとして続ける。"
+        }
+      ],
+      "visualNotes": "添付PDF4ページ目の問28を確認。a〜dの記述、酸棗仁湯・加味帰脾湯・柴胡加竜骨牡蛎湯・小建中湯等のルビ、5行×4列の正誤組合せ表は一致。FAIL理由は「倦怠」のルビ対象文字のずれ。"
+    },
+    {
+      "id": "KSAI-2025-041",
+      "year": 2025,
+      "questionNo": 41,
+      "bundlePdfPages": [
+        5
+      ],
+      "officialPdf": "2025-first_half",
+      "sourcePdfPages": [
+        32
+      ],
+      "status": "FAIL",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "findings": [
+        {
+          "field": "questionParts/originalRubyReadings/rubyDisplayMode",
+          "issue": "原典画像では設問中の「痒み」の「痒」に「かゆ」のルビが付されている。現行レコードではoriginalRubyReadingsに「かゆ」があるもののrubyDisplayModeがSOURCE_ORDER_UNATTACHEDで、questionPartsに痒を基底文字とするルビ要素がなく、原典の位置関係が保持されていない。",
+          "expected": "設問本文の「痒み」をrubyBase「痒」・rubyText「かゆ」としてquestionPartsに位置付ける。"
+        },
+        {
+          "field": "question",
+          "issue": "原典では設問文の後に選択肢1「芎帰膠艾湯」があり、そのルビ「きゅうききょうがいとう」は選択肢1に付されている。現行レコードのquestion末尾に「きゅう き きょう がい とう」が設問文の一部のように混入している一方、choicesParts[0]にも同じルビが正しく設定されている。",
+          "expected": "question末尾の「きゅう き きょう がい とう」を削除し、選択肢1のchoicesPartsにあるrubyBase「芎帰膠艾湯」・rubyText「きゅうききょうがいとう」のみを維持する。"
+        }
+      ],
+      "visualNotes": "添付PDF5ページ目の問41を確認。設問本文・5選択肢・各漢方処方名のルビは視認できた。設問中の痒（かゆ）のルビ配置と、選択肢1のルビ文字列のquestionへの混入が不一致。"
+    },
+    {
+      "id": "KSAI-2025-049",
+      "year": 2025,
+      "questionNo": 49,
+      "bundlePdfPages": [
+        6
+      ],
+      "officialPdf": "2025-first_half",
+      "sourcePdfPages": [
+        37
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 3,
+      "answerPDFChecked": false,
+      "findings": [],
+      "visualNotes": "添付PDF6ページ目上段の問49を確認。a〜dの全記述と、選択肢1〜5の組合せ（a,b／a,c／b,c／b,d／c,d）が一致。"
+    },
+    {
+      "id": "KSAI-2025-080",
+      "year": 2025,
+      "questionNo": 80,
+      "bundlePdfPages": [
+        7,
+        8
+      ],
+      "officialPdf": "2025-second_half",
+      "sourcePdfPages": [
+        14,
+        15
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 2,
+      "answerPDFChecked": false,
+      "findings": [],
+      "visualNotes": "添付PDF7ページ目下段の問80を確認。a〜dの全記述、発疹・薬疹の「疹（しん）」2箇所のルビ、5行×4列の正誤組合せ表が一致。添付PDF8ページ目は問81であり問80の続きではないため、bundlePdfPages/sourcePdfPagesの余分な参照として記録する。"
+    },
+    {
+      "id": "KSAI-2025-100",
+      "year": 2025,
+      "questionNo": 100,
+      "bundlePdfPages": [
+        9,
+        10
+      ],
+      "officialPdf": "2025-second_half",
+      "sourcePdfPages": [
+        30,
+        31
+      ],
+      "status": "PASS",
+      "answerNumberOfficial": 4,
+      "answerPDFChecked": false,
+      "findings": [],
+      "visualNotes": "添付PDF9ページ目の問100を確認。a〜dの全記述、5行×4列の正誤組合せ表が一致。添付PDF10ページ目は問101であり問100の続きではないため、bundlePdfPages/sourcePdfPagesの余分な参照として記録する。"
+    }
+  ]
+}
