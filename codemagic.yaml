@@ -1016,7 +1016,10 @@ workflows:
           test "$IAP_LIFETIME_PRODUCT_ID" = "jp.allsunday1122.kangoshi.lifetime"
           grep -q 'jp.allsunday1122.kangoshi.monthly' kangoshi-sprint/ios/Sources/KangoshiSprintApp.swift
           grep -q 'TARGETED_DEVICE_FAMILY: "1"' kangoshi-sprint/ios/project.yml
-          grep -q 'INFOPLIST_KEY_UIRequiresFullScreen: YES' kangoshi-sprint/ios/project.yml
+          grep -q 'GENERATE_INFOPLIST_FILE: NO' kangoshi-sprint/ios/project.yml
+          grep -q 'INFOPLIST_FILE: Info.plist' kangoshi-sprint/ios/project.yml
+          grep -q 'UIRequiresFullScreen: true' kangoshi-sprint/ios/project.yml
+          grep -q 'CFBundleIconName: AppIcon' kangoshi-sprint/ios/project.yml
           node kangoshi-sprint/audit-official-exam-difficulty.mjs
           node kangoshi-sprint/audit-official-difficulty.mjs
           python3 kangoshi-sprint/ios/tools/normalize_swift_numeric_literals.py
