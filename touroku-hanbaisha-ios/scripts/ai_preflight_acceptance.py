@@ -129,9 +129,10 @@ def main():
     q6file=IOS/"IOS_SIMULATOR_Q6_20261125.json"
     q6=json.loads(q6file.read_text()) if q6file.is_file() else {}
     q6ok=(q6.get("status")=="PASS" and q6.get("build")=="success" and q6.get("installAndLaunch")=="success"
-        and q6.get("learningPersistence")=="PASS" and q6.get("offlineBundleVerified") is True)
+        and q6.get("learningPersistence")=="PASS"
+        and q6.get("headSHA")==os.getenv("GITHUB_SHA"))
     gate("Q6_IOS_BUILD_AND_LAUNCH","PASS" if q6ok else "NOT_VERIFIED",
-        f"current-head Xcode build/install/launch + progress persistence + offline bundle={q6ok}; run={q6.get('githubRunId','MISSING')}",
+        f"Xcode build/install/launch + progress persistence on this exact workflow HEAD={q6ok}; evidenceHead={q6.get('headSHA','MISSING')}; workflowHead={os.getenv('GITHUB_SHA','UNAVAILABLE')}; offline bundle is evaluated separately by Q4; run={q6.get('githubRunId','MISSING')}",
         ["touroku-hanbaisha-ios/IOS_SIMULATOR_Q6_20261125.json"])
     q7file=IOS/"Q7_TESTFLIGHT_READBACK_20261125.json"
     q7=json.loads(q7file.read_text()) if q7file.is_file() else {}

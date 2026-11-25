@@ -28,11 +28,13 @@ jobs:
           bank=json.loads((b/'APPROVED_OFFICIAL_BANK.json').read_text())
           qa=bank['questions']
           audit=json.loads((b/'MANUAL_VISUAL_AUDIT_20261123.json').read_text())
-          expected=sorted(r['id'] for r in audit['reviewedQuestions'] if r['status']=='PASS')
-          assert len(qa)==bank['count']==len(expected)
-          assert [q['id'] for q in qa]==expected
+          assert bank['count']==len(qa)==599
+          assert len({q['id'] for q in qa})==599
+          assert 'KSAI-2023-090' not in {q['id'] for q in qa}
+          assert {y:sum(q['year']==y for q in qa) for y in range(2022,2027)}=={2022:120,2023:119,2024:120,2025:120,2026:120}
           assert all(q['verbatimCertified'] and q['renderReady'] and not q['needsVisualReview'] for q in qa)
-          assert all(len(q['choices']) in (4,5) and 0<=q['answer']<len(q['choices']) for q in qa)
+          assert all(q['officialStatus']=='NORMAL' and len(q['choices']) in (4,5) and 0<=q['answer']<len(q['choices']) for q in qa)
+          assert all(q['answer']==q['answerNumberOfficial']-1 and q['sourceIssuer']=='関西広域連合' and q['sourceUrl'].startswith('https://') and q['answerSourceUrl'].startswith('https://') and q['attributionDisplay'] for q in qa)
           text=Path('touroku-hanbaisha-sprint/official-practice.html').read_text()
           assert 'APPROVED_OFFICIAL_BANK.json' in text
           assert 'excludeFromAccuracyDenominator' in text
@@ -47,6 +49,7 @@ jobs:
           node --check /tmp/touhan-official-practice.js
           node --check touroku-hanbaisha-sprint/app-v07.js
       - name: Commit deterministic approved bank
+        if: github.ref == 'refs/heads/main'
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'

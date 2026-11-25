@@ -234,8 +234,17 @@ if crop_audit_path.exists() and crop_mobile_path.exists():
             raise RuntimeError("real browser QA has missing or duplicate viewport cases")
         for rec in records:
             id=rec["id"];year=int(id.split("-")[1]);no=int(id.split("-")[2])
-            if id in accepted or not rec.get("promoted") or rec.get("result")!="PASS":
-                raise RuntimeError("crop approval duplicate or missing evidence: "+id)
+            # Some crop QA rows were included in the historical 44-row batch even
+            # though the manifest already marks them as approved by an earlier
+            # independent route. Preserve that prior approval; never replace its
+            # text/ruby record with the image-only fallback generated below.
+            if id in accepted:
+                prior=accepted[id]
+                if prior.get("audit",{}).get("status")!="PASS":
+                    raise RuntimeError("existing approval lacks PASS audit: "+id)
+                continue
+            if not rec.get("promoted") or rec.get("result")!="PASS":
+                raise RuntimeError("crop approval evidence missing: "+id)
             if (id,375) not in passes or (id,430) not in passes:
                 raise RuntimeError("crop viewport not passed: "+id)
             if rec.get("mobile375")!="PASS_REAL_CHROMIUM" or rec.get("mobile430")!="PASS_REAL_CHROMIUM":
@@ -246,8 +255,10 @@ if crop_audit_path.exists() and crop_mobile_path.exists():
                 raise RuntimeError("crop third-party rights not cleared: "+id)
             manifest=json.loads((B/f"LAYOUT_CROPS_{year}.json").read_text())
             meta=next((x for x in manifest["records"] if x["id"]==id),None)
-            if not meta or meta["alreadyApproved"]:
+            if not meta:
                 raise RuntimeError("missing crop source manifest: "+id)
+            if meta.get("alreadyApproved"):
+                raise RuntimeError("manifest says already approved but builder did not accept prior record: "+id)
             assets=meta.get("displayAssets") or meta["assets"]
             if len(assets)!=1 or rec.get("effectiveCropAssets")!=[assets[0]["webPath"]]:
                 raise RuntimeError("crop display source drift: "+id)

@@ -1,5 +1,9 @@
 # 登録販売者｜学びスプリント RELEASE_STATUS
 
+更新：2026-11-25 JST（PR #5741 HEAD `1964f5daadbd0e77adefff16683ffece54438328`）
+
+**最新判定：BLOCKED。App Review未提出。** 以下の過去記録は当時の履歴として保持し、現在の判定は末尾の最新追補を優先する。
+
 更新：2026-11-23 JST
 
 **本番申請判定: BLOCKED**（App Review未提出）
@@ -1590,3 +1594,17 @@ Apple固定識別子: Bundle `com.allsunday1122.tourokuhanbaisha`、ASC `6802119
 - 固定無料50問（2026年各章先頭10問）、有料549問。StoreKit 2月額200円・初回対象者7日無料、非消費型980円、購入復元、verified取引・失効チェック、学習ロック。商品IDはASC照合前の候補。未監査解説は公開せず、全無料50問の解説完成をリリース条件とする。実装未検証、ASC設定未実施、本審査送信なし。
 
 - ASC商品下書き作成・読戻し要求 touhan-iap-draft-20261124。価格確定・契約・審査送信は除外。
+
+
+## 2026-11-25｜PR #5741 現HEAD確認・Q2〜Q6証拠整理
+
+- GitHub PR #5741 のHEAD `1964f5daadbd0e77adefff16683ffece54438328` を確認。PRはOpen。HEADのGitHub Check Runsは0件。直前コミットはCodemagic診断JSONの更新のみ。
+- **Q2：静的統合PASS。** SwiftUIネイティブ入口はWKWebViewでアプリ内 `OfflineWeb/official-practice.html` を `loadFileURL` する。XcodeGenはOfflineWebをリソース同梱し、`prepare-ios.sh` が問題・解説・図版を含むオフライン資産を生成する。ただし現HEADの署名済みIPAや実機起動を証明するものではない。
+- **Q3：App Store Connect読戻しPASS。** App ID・Bundle ID・599問・2023年度問90の除外・オフライン説明・公式出典リンク・プロモーション文を確認。App Review未提出。
+- **Q4：ブラウザオフラインPASS／ネイティブ現HEAD未確認。** 既存Run 45313106222・45313106230ではChromium 599問、WebKit 599問、図版104件、外部通信0、ページエラー0。テストHEADは `eb0e2f666c331b8dd3930bd9a5f303e47b74d116`。現HEADでのネイティブWKWebView同梱オフライン実行とは区別する。
+- **Q5：ソース・ブラウザ監査PASS／ASC質問票未確認。** Run 45554307291、検証HEAD `62079d9da82aa1f0c13915b0fb19e8b9dba5eec8`。観測外部ホスト0、プライバシーURL一致。ASC App Privacy質問票、ホスティング事業者のログ保持・利用目的、実機通信取得は未確認。
+- **Q6：過去HEADのSimulator PASS／現HEAD未確認。** Run 45334990399、HEAD `c930d1273a6cab481bbdd0b13047bfe836f66e5d`、Artifact 14893742623。ビルド・インストール・起動・学習記録の書込／読戻しはPASS。PR #5741のHEADとは異なる。実機iPhoneの受入は未実施。
+- Q7 Codemagicビルド・署名・TestFlight操作は別セッションに委任し、本作業では実行・変更しない。
+- 証拠JSON：`Q2_Q6_EVIDENCE_20261125.json`、`OFFLINE_Q4_20261125.json`、`IOS_SIMULATOR_Q6_20261125.json`。詳細は `release-status.json` の `q2_q6_evidence_20261125`。
+
+**結論：Q2静的確認とQ3 ASC読戻しはPASS。Q4はブラウザ範囲のみPASS、Q5 ASC質問票とQ6現HEADネイティブ検証が未完了。リリースゲートBLOCKEDを維持。**
