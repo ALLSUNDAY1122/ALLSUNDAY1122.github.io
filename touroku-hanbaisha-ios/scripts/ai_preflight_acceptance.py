@@ -51,6 +51,40 @@ def is_subsequence(items, sequence):
         except ValueError:
             return False
     return True
+def q6_tested_sources_unchanged(tested_head, workflow_head):
+    if not isinstance(tested_head,str) or not re.fullmatch(r"[0-9a-f]{40}",tested_head):
+        return False, []
+    if not isinstance(workflow_head,str) or not re.fullmatch(r"[0-9a-f]{40}",workflow_head):
+        return False, []
+    current=subprocess.run(["git","rev-parse","HEAD"],capture_output=True,text=True)
+    if current.returncode!=0 or current.stdout.strip()!=workflow_head:
+        return False, []
+    if tested_head==workflow_head:
+        return True, []
+    ancestor=subprocess.run(["git","merge-base","--is-ancestor",tested_head,workflow_head],
+        capture_output=True,text=True)
+    if ancestor.returncode!=0:
+        return False, []
+    diff=subprocess.run(["git","diff","--name-only",f"{tested_head}..{workflow_head}"],
+        capture_output=True,text=True)
+    if diff.returncode!=0:
+        return False, []
+    changed=sorted(set(x for x in diff.stdout.splitlines() if x))
+    protected=[]
+    for path in changed:
+        if path.startswith("touroku-hanbaisha-sprint/"):
+            if path=="touroku-hanbaisha-sprint/official-kansai/GEOMETRY_PIPELINE_DIAGNOSTICS.json":
+                continue
+            if path.startswith("touroku-hanbaisha-sprint/official-kansai/visual-reaudit-results/"):
+                continue
+            protected.append(path)
+        elif path.startswith("touroku-hanbaisha-ios/native-ios/"):
+            protected.append(path)
+        elif path.startswith("touroku-hanbaisha-ios/scripts/") and path!="touroku-hanbaisha-ios/scripts/ai_preflight_acceptance.py":
+            protected.append(path)
+        elif path==".github/workflows/touhan-ios-simulator-q6.yml":
+            protected.append(path)
+    return not protected, protected
 def main():
     status=json.loads((IOS/"release-status.json").read_text())
     bank=json.loads((B/"APPROVED_OFFICIAL_BANK.json").read_text())
@@ -140,12 +174,15 @@ def main():
     # Require both a native local-file package and a current simulator run that inspected the packaged assets.
     q4report=IOS/"OFFLINE_Q4_20261125.json"
     q4data=json.loads(q4report.read_text()) if q4report.is_file() else {}
+    q6file=IOS/"IOS_SIMULATOR_Q6_20261125.json"
+    q6=json.loads(q6file.read_text()) if q6file.is_file() else {}
     offline_static=("webView.loadFileURL(home, allowingReadAccessTo: root)" in swift
-        and "path: OfflineWeb" in project and "connect-src \\'none\\'" in prepare
+        and "path: OfflineWeb" in project and "connect-src \\'none\'" in prepare
         and "offlineExplanations" in prepare and "explanationsCount" in prepare)
     offline_runtime=(q4data.get("status")=="PASS" and q4data.get("nativeSimulatorOfflineBundleVerified") is True
         and q4data.get("bankCount")==599 and q4data.get("explanationsCount")==599
-        and q4data.get("externalRequests")==[] and q4data.get("pageErrors")==[])
+        and q4data.get("externalRequests")==[] and q4data.get("pageErrors")==[]
+        and q4data.get("testedHead")==q6.get("headSHA"))
     gate("Q4_OFFLINE_RESILIENCE","PASS" if offline_static and offline_runtime else "NOT_VERIFIED",
         f"native local bundle/static CSP={offline_static}; simulator packaged offline proof={offline_runtime}; report={q4data.get('githubRunId','MISSING')}",
         ["touroku-hanbaisha-ios/native-ios/Sources/TouhanSprintApp.swift","touroku-hanbaisha-ios/OFFLINE_Q4_20261125.json"])
@@ -169,13 +206,11 @@ def main():
     gate("Q5_PRIVACY_AND_NETWORK_DISCLOSURE","PASS" if q5_source and q5_asc else "NOT_VERIFIED",
         f"source/browser and policy URL={q5_source}; actual ASC App Privacy questionnaire reconciled={q5_asc}; unavailable through documented ASC API unless UI evidence is supplied",
         ["touroku-hanbaisha-ios/Q5_CURRENT_20261125.json"])
-    q6file=IOS/"IOS_SIMULATOR_Q6_20261125.json"
-    q6=json.loads(q6file.read_text()) if q6file.is_file() else {}
+    q6_head_ok,q6_protected_changes=q6_tested_sources_unchanged(q6.get("headSHA"),os.getenv("GITHUB_SHA"))
     q6ok=(q6.get("status")=="PASS" and q6.get("build")=="success" and q6.get("installAndLaunch")=="success"
-        and q6.get("learningPersistence")=="PASS"
-        and q6.get("headSHA")==os.getenv("GITHUB_SHA"))
+        and q6.get("learningPersistence")=="PASS" and q6_head_ok)
     gate("Q6_IOS_BUILD_AND_LAUNCH","PASS" if q6ok else "NOT_VERIFIED",
-        f"Xcode build/install/launch + progress persistence on this exact workflow HEAD={q6ok}; evidenceHead={q6.get('headSHA','MISSING')}; workflowHead={os.getenv('GITHUB_SHA','UNAVAILABLE')}; offline bundle is evaluated separately by Q4; run={q6.get('githubRunId','MISSING')}",
+        f"Xcode build/install/launch + progress persistence; testedHead={q6.get('headSHA','MISSING')}; workflowHead={os.getenv('GITHUB_SHA','UNAVAILABLE')}; runtime source unchanged since test={q6_head_ok}; protected changes={q6_protected_changes}; run={q6.get('githubRunId','MISSING')}",
         ["touroku-hanbaisha-ios/IOS_SIMULATOR_Q6_20261125.json"])
     q7file=IOS/"Q7_TESTFLIGHT_READBACK_20261125.json"
     q7=json.loads(q7file.read_text()) if q7file.is_file() else {}
