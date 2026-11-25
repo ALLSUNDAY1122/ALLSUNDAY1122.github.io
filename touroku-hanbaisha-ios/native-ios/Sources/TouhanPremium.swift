@@ -7,7 +7,7 @@ final class TouhanPremium: ObservableObject {
     static let lifetime = "com.allsunday1122.tourokuhanbaisha.premium.lifetime"
     @Published private(set) var unlocked = false
     @Published private(set) var products: [Product] = []
-    @Published private(set) var trialEligible = false
+    @Published private(set) var oneWeekFreeTrialAvailable = false
     @Published var message = ""
     @Published var busy = false
     private var updates: Task<Void, Never>?
@@ -30,11 +30,11 @@ final class TouhanPremium: ObservableObject {
     func load() async {
         do {
             products = try await Product.products(for: [Self.monthly, Self.lifetime])
-            trialEligible = false
+            oneWeekFreeTrialAvailable = false
             if let p = products.first(where: {$0.id == Self.monthly}), let s = p.subscription,
                let offer = s.introductoryOffer, offer.paymentMode == .freeTrial,
                offer.period.unit == .week, offer.period.value == 1, offer.periodCount == 1 {
-                trialEligible = await s.isEligibleForIntroOffer
+                oneWeekFreeTrialAvailable = true
             }
             if products.count != 2 { message = "一部の商品を取得できません。通信環境を確認してください。" }
         } catch { message = "商品を取得できません。通信環境を確認してください。" }
@@ -99,7 +99,7 @@ struct TouhanPaywall: View {
                             Text(p.id == TouhanPremium.monthly ? "月額プラン" : "買い切りプラン").font(.headline)
                             Text(p.displayPrice + (p.id == TouhanPremium.monthly ? " / 月" : "（一度のみ）"))
                             if p.id == TouhanPremium.monthly {
-                                if premium.trialEligible { Text("対象者は初回1週間無料。その後は月額料金で自動更新。") }
+                                if premium.oneWeekFreeTrialAvailable { Text("初回1週間無料（対象者のみ）。以降は月額料金で自動更新。") }
                                 Text("自動更新。解約はAppleアカウントのサブスクリプション設定から。")
                             }
                             Button("購入する") { Task { await premium.purchase(p) } }.buttonStyle(.borderedProminent).disabled(premium.busy || premium.unlocked)
