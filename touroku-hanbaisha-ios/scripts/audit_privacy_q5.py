@@ -24,6 +24,7 @@ try:
         browser=pw.chromium.launch(headless=True)
         ctx=browser.new_context(viewport={"width":375,"height":812},device_scale_factor=1,is_mobile=True)
         page=ctx.new_page()
+        page.add_init_script("window.__savedStudy=null;window.webkit={messageHandlers:{studyRecord:{postMessage:s=>{window.__savedStudy=JSON.parse(s)}}}};")
         page.on("request",lambda r:observations.append({"url":r.url,"method":r.method,"resourceType":r.resource_type}))
         page.on("pageerror",lambda err:errors.append(str(err)))
         page.goto("http://127.0.0.1:8766/official-practice.html",wait_until="networkidle")
@@ -38,12 +39,13 @@ try:
           sessionStorageKeys:Object.keys(sessionStorage),
           cookie:document.cookie,
           indexedDBSupported:!!window.indexedDB,
-          privacyLink:document.querySelector('a[href="./privacy.html"]')?.getAttribute('href')||null
+          privacyLink:document.querySelector('a[href="./privacy.html"]')?.getAttribute('href')||null,
+          nativeBridgeSaved:!!window.__savedStudy
         })""")
         urls=[v["url"] for v in observations]
         local_paths=[urlsplit(x).path for x in urls]
         local_only=all(urlsplit(u).hostname in ("127.0.0.1","localhost") for u in urls)
-        data_ok=not browser_store["localStorageKeys"] and not browser_store["sessionStorageKeys"] and not browser_store["cookie"]
+        data_ok=(not browser_store["localStorageKeys"] and not browser_store["sessionStorageKeys"] and not browser_store["cookie"] and browser_store["nativeBridgeSaved"])
         page.locator("#navSettings").click()
         link=page.locator('a[href="./privacy.html"]')
         link_visible=link.count()==1
