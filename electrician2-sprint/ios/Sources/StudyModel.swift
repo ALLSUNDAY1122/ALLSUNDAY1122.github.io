@@ -115,10 +115,10 @@ final class StudyModel: ObservableObject {
               let saved=try? JSONDecoder().decode(LearningSnapshot.self,from:data) else { return }
         goal=saved.goal; done=saved.done; completed=saved.completed; correct=saved.correct
         weakStreak=saved.weakStreak; weakIDs=saved.weakIDs; graduatedIDs=saved.graduatedIDs
-        fontScale=saved.fontScale; answeredIDs=saved.answeredIDs; studyDays=saved.studyDays
+        fontScale=saved.fontScale; answeredIDs=saved.answeredIDs; studyDays=saved.studyDays; lastStudyDate=saved.lastStudyDate
     }
     private func persist() {
-        let snapshot=LearningSnapshot(goal:goal,done:done,completed:completed,correct:correct,weakStreak:weakStreak,weakIDs:weakIDs,graduatedIDs:graduatedIDs,fontScale:fontScale,answeredIDs:answeredIDs,studyDays:studyDays)
+        let snapshot=LearningSnapshot(goal:goal,done:done,completed:completed,correct:correct,weakStreak:weakStreak,weakIDs:weakIDs,graduatedIDs:graduatedIDs,fontScale:fontScale,answeredIDs:answeredIDs,studyDays:studyDays,lastStudyDate:lastStudyDate)
         if let data=try? JSONEncoder.pretty.encode(snapshot) { defaults.set(data,forKey:storageKey) }
     }
     private static func dayKey(_ date:Date)->String {
