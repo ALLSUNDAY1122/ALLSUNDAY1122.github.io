@@ -6,9 +6,9 @@
 - アプリが読む統合バンク：\`electrician2-sprint/ios/Resources/QUESTION_BANK.json\`
 - スキーマ定義・検証コード：\`electrician2-sprint/ios/Sources/QuestionBank.swift\`
 
-6回分（2026上期・下期、2025上期・下期、2024上期・下期）を各50問、合計300問とする。各回の転記JSONは原典転記単位で保持し、統合バンクへマージする。転記ファイルを直接アプリに同梱しない。
+6回分（2026上期・下期、2025上期・下期、2024上期・下期）を各50問、合計300問とする。各回の転記JSONは原典転記単位で保持し、統合バンクへマージする。転記ファイルを直接アプリに同梱しない。現在、2026上期・2025上下期・2024上下期の5ファイルがブランチに存在し、2026下期は受け入れ待ち。
 
-## 正式スキーマ（既存 E2-2026-U-001-050.json と同一）
+## 正式スキーマ（統合前の転記JSONは既存 E2-2026-U-001-050.json 形式へ正規化）
 
 トップレベル：
 - \`schemaVersion\`: \`"1.0"\`
@@ -38,3 +38,4 @@
 ## 受入条件
 
 各回50問、ID重複なし、問番号1〜50、選択肢4つ・順序イロハニ、正答ラベル整合、出典PDF URLとページあり、図版参照保持、監査状態あり。6回合計300問を確認後にQUESTION_BANK.jsonへ統合する。
+\n## 形式差の正規化\n\n並列セッションの転記JSONには、配列形式・`choices`のラベル辞書・`options`配列・`official_answer`／`correct_answer`等の差がある。原文データを直接手修正せず、`electrician2-sprint/scripts/build_question_bank.py`で統合形式へ正規化する。正規化スクリプトは各回50問、問番号1〜50、選択肢イロハニ、公式正答、ID重複を検査し、6回すべて揃わない限り通常実行ではQUESTION_BANKを出力しない。\n\n実行例：\n\n```bash\npython3 electrician2-sprint/scripts/build_question_bank.py electrician2-sprint/data/E2-2026-U-001-050.json electrician2-sprint/data/E2-2026-L-001-050.json electrician2-sprint/data/E2-2025-U-001-050.json electrician2-sprint/data/E2-2025-L-001-050.json electrician2-sprint/data/E2-2024-U-001-050.json electrician2-sprint/data/E2-2024-L-001-050.json\n```\n\n正規化は形式変換のみであり、原典照合・独立監査・図版権利監査のPASSを意味しない。
