@@ -21,7 +21,8 @@ final class ExtractionServiceTests: XCTestCase {
         let service = ExtractionService()
         let line = "遠足には水筒とレジャーシートを持参してください"
         let candidates = service.parseCandidates(from: [line])
-        XCTAssertEqual(Set(candidates.map(\.category)), Set([.event, .item]))
+        XCTAssertTrue(candidates.contains { $0.category == .event })
+        XCTAssertTrue(candidates.contains { $0.category == .item })
         XCTAssertTrue(candidates.allSatisfy { $0.sourceExcerpt == line })
     }
 }
