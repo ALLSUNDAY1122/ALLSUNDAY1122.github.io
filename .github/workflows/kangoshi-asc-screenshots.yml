@@ -87,19 +87,16 @@ jobs:
             --cellularBars 4 \
             --batteryState charged \
             --batteryLevel 100
-          storekit="$PWD/kangoshi-sprint/ios/Review.storekit"
-          test -f "$storekit"
           rm -rf "$RUNNER_TEMP/KangoshiScreens.xcresult"
-          set -o pipefail
-          # -storeKitConfigurationPath injects Review.storekit into the app process.
-          # Run 45729899684 used SKTestSession only; prices stayed at 価格を取得中.
+          # Options verified against Xcode 16.4 xcodebuild usage in run #2 (45731842654).
+          # StoreKit uses TestAction Review.storekit + SKTestSession, with
+          # -ASCScreenshotMode in KangoshiScreenshotUITests as display fallback.
           xcodebuild test \
             -project kangoshi-sprint/ios/KangoshiSprint.xcodeproj \
             -scheme KangoshiSprint \
             -configuration Debug \
             -destination "platform=iOS Simulator,id=$udid" \
             -only-testing:KangoshiSprintUITests/KangoshiScreenshotUITests/testCaptureAppStoreScreens \
-            -storeKitConfigurationPath "$storekit" \
             -resultBundlePath "$RUNNER_TEMP/KangoshiScreens.xcresult" \
             CODE_SIGNING_ALLOWED=NO | tee "$RUNNER_TEMP/xcodebuild-screenshots.log"
           xcrun simctl io "$udid" screenshot "$RUNNER_TEMP/simctl-booted-final.png" || true
