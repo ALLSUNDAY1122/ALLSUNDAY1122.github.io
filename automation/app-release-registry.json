@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-27T08:03:00+09:00",
+  "updated_at": "2026-11-27T08:20:00+09:00",
   "policy": {
     "final_approval": "Explicit user approval is required for the exact App ID / Version / Build immediately read back before App Review submission.",
     "submission_complete": "Only App Store Connect read-back at WAITING_FOR_REVIEW or a later review state counts as App Review submission complete.",
@@ -319,7 +319,7 @@
       "readback": false,
       "ios_project": "enprint-guard/ios/project.yml",
       "native_source_branch": "feature/enprint-guard-native-20261127",
-      "build_validation": "PENDING_CI",
+      "build_validation": "SIMULATOR_BUILD_AND_TEST_PASS",
       "app_store_upload": "NOT_STARTED",
       "submission_state": "NOT_SUBMITTED",
       "final_approval": "NOT_REQUESTED",
@@ -330,7 +330,7 @@
         "SUBSCRIPTION_PRODUCTS_CONFIGURATION",
         "REAL_DEVICE_IOS_ACCEPTANCE"
       ],
-      "note": "Owner confirmed App Store Connect App record: App ID 6839814394, name 園プリント見落としガード, Bundle ID jp.allsunday1122.enprintguard, SKU enprintguard-ios-20261127-01. API read-back remains pending. Internal TestFlight only; App Store submission prohibited. Cloud AI extraction and two-parent sync remain unimplemented pending backend cost approval.",
+      "note": "Owner confirmed App Store Connect App record: App ID 6839814394, name 園プリント見落としガード, Bundle ID jp.allsunday1122.enprintguard, SKU enprintguard-ios-20261127-01. App Store Connect API read-back is queued for verification. Native iOS source passed Simulator build and unit tests on commit 4251e377; the later release-config commit passed build and Codemagic contract checks, with a redundant test rerun still running. Internal TestFlight only; App Store submission prohibited. Cloud AI extraction and two-parent sync remain pending backend cost approval.",
       "sku": "enprintguard-ios-20261127-01",
       "apple_record_user_confirmed": true
     }
