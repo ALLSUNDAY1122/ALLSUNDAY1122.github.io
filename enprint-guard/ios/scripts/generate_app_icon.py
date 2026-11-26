@@ -57,6 +57,6 @@ for y in range(SIZE):
         raw.extend(v//(SCALE*SCALE) for v in sums)
 def chunk(k,d): return struct.pack(">I",len(d))+k+d+struct.pack(">I",zlib.crc32(k+d)&0xffffffff)
 png=b"\x89PNG\r\n\x1a\n"+chunk(b"IHDR",struct.pack(">IIBBBBB",SIZE,SIZE,8,2,0,0,0))+chunk(b"IDAT",zlib.compress(bytes(raw),9))+chunk(b"IEND",b"")
-out=Path(__file__).parent/"EnprintGuard"/"Assets.xcassets"/"AppIcon.appiconset"/"AppIcon.png"
+out=Path(__file__).parent.parent/"EnprintGuard"/"Assets.xcassets"/"AppIcon.appiconset"/"AppIcon.png"
 out.parent.mkdir(parents=True,exist_ok=True); out.write_bytes(png)
 print(f"PASS: {out} (1024x1024 opaque RGB)")
