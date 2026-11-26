@@ -56,8 +56,11 @@ jobs:
           assert signing['bundle_identifier'] == 'jp.allsunday1122.enprintguard'
           assert publishing['submit_to_testflight'] is True
           assert publishing['submit_to_app_store'] is False
+          assert publishing['beta_groups'] == ['sun']
           scripts = '\\n'.join(step.get('script', '') for step in workflow['scripts'])
           assert 'app_id' in scripts and 'readback' in scripts
+          assert 'CM_BUILD_NUMBER' in scripts
+          assert 'testFlightInternalTestingOnly' in scripts
           assert 'xcode-project build-ipa' in scripts
           registry = json.loads(Path('automation/app-release-registry.json').read_text(encoding='utf-8'))
           app = registry['apps']['enprintguard']
