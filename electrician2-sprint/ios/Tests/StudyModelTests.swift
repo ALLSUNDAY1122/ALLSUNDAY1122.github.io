@@ -24,8 +24,8 @@ final class StudyModelTests: XCTestCase {
 
     func testWrongAnswerResetsStreakAndRemovesGraduation() {
         let model = StudyModel(defaults: makeDefaults())
-        model.start(1); model.answer(1)
-        model.start(1, weakOnly: true); model.answer(0)
+        model.start(1); model.answer((model.current!.answer + 1) % 4)
+        model.start(1, weakOnly: true); model.answer(model.current!.answer)
         model.start(1, weakOnly: true); model.answer(0)
         XCTAssertEqual(model.weakStreak[1], 2)
         model.start(1, weakOnly: true); model.answer((model.current!.answer + 1) % 4)
@@ -39,7 +39,7 @@ final class StudyModelTests: XCTestCase {
         let first = StudyModel(defaults: defaults)
         first.goal = 16
         first.fontScale = 2
-        first.start(1); first.answer(1)
+        first.start(1); first.answer((first.current!.answer + 1) % 4)
         let restored = StudyModel(defaults: defaults)
         XCTAssertEqual(restored.goal, 16)
         XCTAssertEqual(restored.fontScale, 2)
