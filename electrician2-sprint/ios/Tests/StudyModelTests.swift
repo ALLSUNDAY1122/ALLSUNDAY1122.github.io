@@ -26,7 +26,7 @@ final class StudyModelTests: XCTestCase {
         let model = StudyModel(defaults: makeDefaults())
         model.start(1); model.answer((model.current!.answer + 1) % 4)
         model.start(1, weakOnly: true); model.answer(model.current!.answer)
-        model.start(1, weakOnly: true); model.answer(0)
+        model.start(1, weakOnly: true); model.answer(model.current!.answer)
         XCTAssertEqual(model.weakStreak[1], 2)
         model.start(1, weakOnly: true); model.answer((model.current!.answer + 1) % 4)
         XCTAssertEqual(model.weakStreak[1], 0)
@@ -62,7 +62,7 @@ final class StudyModelTests: XCTestCase {
         first.goal = 16
         first.fontScale = 2
         first.start(1)
-        first.answer(1)
+        first.answer((first.current!.answer + 1) % 4)
         let backup = try first.backupData()
 
         let restored = StudyModel(defaults: makeDefaults())
