@@ -30,6 +30,13 @@ jobs:
       - name: Generate Xcode project
         working-directory: electrician2-sprint/ios
         run: xcodegen generate
+      - name: Install iOS simulator runtime
+        run: |
+          set -euo pipefail
+          if ! xcrun simctl list devices available | grep -q 'iPhone 16'; then
+            xcodebuild -downloadPlatform iOS
+          fi
+          xcrun simctl list devices available | grep -m 1 'iPhone 16'
       - name: Debug simulator compile
         working-directory: electrician2-sprint/ios
         run: |
