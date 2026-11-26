@@ -5,12 +5,14 @@ struct QuestionBankFile: Codable {
     let exam: ExamDescriptor
     let sittings: [SittingDescriptor]
     let questions: [BankQuestion]
+    enum CodingKeys: String, CodingKey { case schemaVersion = "schema_version", exam, sittings, questions }
 }
 struct ExamDescriptor: Codable {
     let code: String
     let name: String
     let choiceCount: Int
     let officialSource: String
+    enum CodingKeys: String, CodingKey { case code, name, choiceCount = "choice_count", officialSource = "official_source" }
 }
 struct SittingDescriptor: Codable {
     let sittingID: String
@@ -19,6 +21,7 @@ struct SittingDescriptor: Codable {
     let questionPDF: String
     let answerPDF: String
     let expectedQuestionCount: Int
+    enum CodingKeys: String, CodingKey { case sittingID = "sitting_id", year, term, questionPDF = "question_pdf", answerPDF = "answer_pdf", expectedQuestionCount = "expected_question_count" }
 }
 struct BankQuestion: Codable, Identifiable {
     let id: String
