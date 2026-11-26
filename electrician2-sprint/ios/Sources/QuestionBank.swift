@@ -3,7 +3,7 @@ import Foundation
 struct QuestionBankFile: Codable {
     let schemaVersion: String
     let dataSet: String
-    let sourceFiles: [String: QuestionBankSourceFiles]
+    let sourceFiles: QuestionBankSourceFiles
     let questionCount: Int
     let questions: [BankQuestion]
 }
