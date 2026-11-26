@@ -15,11 +15,15 @@ struct PaperGrid: View {
     var body: some View {
         GeometryReader { geo in
             Path { p in
-                stride(from:0.0,through:geo.size.width,by:28).forEach { x in p.move(to:CGPoint(x:x,y:0)); p.addLine(to:CGPoint(x:x,y:420)) }
-                stride(from:0.0,through:420.0,by:28).forEach { y in p.move(to:CGPoint(x:0,y:y)); p.addLine(to:CGPoint(x:geo.size.width,y:y)) }
+                stride(from:0.0,through:geo.size.width,by:28).forEach { x in
+                    p.move(to:CGPoint(x:x,y:0)); p.addLine(to:CGPoint(x:x,y:geo.size.height))
+                }
+                stride(from:0.0,through:geo.size.height,by:28).forEach { y in
+                    p.move(to:CGPoint(x:0,y:y)); p.addLine(to:CGPoint(x:geo.size.width,y:y))
+                }
             }.stroke(ETheme.paperLine.opacity(0.55),lineWidth:0.55)
                 .mask(LinearGradient(colors:[.black,.black.opacity(0)],startPoint:.top,endPoint:.bottom))
-        }.frame(height:420).allowsHitTesting(false)
+        }.frame(maxWidth:.infinity,maxHeight:.infinity).allowsHitTesting(false)
     }
 }
 struct RootView: View {
@@ -101,7 +105,7 @@ struct RecordView: View {
         PageTitle(title:"積み上げ",subtitle:"短い反復が、そのまま形になります。")
         Panel { HStack { metric("のべ回答","\(model.completed)"); Spacer(); metric("正解数","\(model.correct)"); Spacer(); metric("連続日数","\(model.streakDays)") } }
         Panel { HStack(spacing:16) { ZStack { Circle().stroke(Color(hex:0xEFE8DA),lineWidth:10); Circle().trim(from:0,to:Double(model.accuracy)/100).stroke(ETheme.blue,style:StrokeStyle(lineWidth:10,lineCap:.round)).rotationEffect(.degrees(-90)); Text(model.completed == 0 ? "—" : "\(model.accuracy)%").font(.system(size:17,weight:.bold,design:.rounded)) }.frame(width:96,height:96); VStack(alignment:.leading,spacing:4) { Text("全体の正答率").font(.system(size:14,weight:.bold)); Text("正解 \(model.correct) / 回答 \(model.completed)").font(.system(size:11)).foregroundStyle(ETheme.muted) } } }
-        Panel { VStack(alignment:.leading,spacing:10) { Text("5週間の学習").font(.system(size:16,weight:.bold,design:.serif)); Heatmap(days:model.studyDays) } }
+        Panel { VStack(alignment:.leading,spacing:10) { Text("直近35日の学習").font(.system(size:16,weight:.bold,design:.serif)); Heatmap(days:model.studyDays) } }
         Panel { VStack(alignment:.leading,spacing:9) { Text("苦手問題").font(.system(size:16,weight:.bold)); if model.weakQuestions.isEmpty { Text("現在、苦手問題はありません").font(.system(size:12)).foregroundStyle(ETheme.muted) }; ForEach(model.weakQuestions) { q in HStack { Text(q.prompt).font(.system(size:11)).lineLimit(2); Spacer(); Text("\(model.weakStreak[q.id] ?? 0)/3").font(.system(size:11,weight:.bold)).foregroundStyle(ETheme.red) } } } }
         Panel { VStack(alignment:.leading,spacing:9) { Text("卒業した問題").font(.system(size:16,weight:.bold)); if model.graduatedQuestions.isEmpty { Text("卒業した問題はまだありません").font(.system(size:12)).foregroundStyle(ETheme.muted) }; ForEach(model.graduatedQuestions) { q in Text(q.prompt).font(.system(size:11)).lineLimit(2) } } }
     }.padding(.horizontal,16).padding(.bottom,24).frame(maxWidth:520).frame(maxWidth:.infinity) } } }.navigationBarHidden(true) }
@@ -109,11 +113,45 @@ struct RecordView: View {
 }
 struct Heatmap: View {
     let days:Set<String>
-    private func key(_ offset:Int)->String { let f=DateFormatter(); f.dateFormat="yyyy-MM-dd"; f.timeZone=TimeZone.current; return f.string(from:Calendar.current.date(byAdding:.day,value:offset,to:Date()) ?? Date()) }
+    private var dates:[Date] {
+        let calendar=Calendar.current
+        let today=calendar.startOfDay(for:Date())
+        return (0..<35).compactMap { calendar.date(byAdding:.day,value:$0-34,to:today) }
+    }
+    private func key(_ date:Date)->String {
+        let formatter=DateFormatter()
+        formatter.calendar=Calendar.current
+        formatter.locale=Locale(identifier:"en_US_POSIX")
+        formatter.timeZone=TimeZone.current
+        formatter.dateFormat="yyyy-MM-dd"
+        return formatter.string(from:date)
+    }
     var body: some View {
-        VStack(alignment:.leading,spacing:5) { HStack { ForEach(["日","月","火","水","木","金","土"],id:\.self) { Text($0).frame(maxWidth:.infinity).font(.system(size:9)).foregroundStyle(ETheme.muted) } }
-            ForEach(0..<5,id:\.self) { week in HStack(spacing:5) { ForEach(0..<7,id:\.self) { day in let offset = -34 + week*7 + day; let active=days.contains(key(offset)); RoundedRectangle(cornerRadius:3).fill(active ? ETheme.red.opacity(0.35 + 0.13*Double((week+day)%4)) : Color(hex:0xEFE8DA)).frame(maxWidth:.infinity).frame(height:25).overlay(RoundedRectangle(cornerRadius:3).stroke(offset == 0 ? ETheme.blue : .clear,lineWidth:1.5)) } } }
+        let calendar=Calendar.current
+        let firstWeekday=dates.first.map { calendar.component(.weekday,from:$0) } ?? 1
+        let symbols=calendar.veryShortStandaloneWeekdaySymbols
+        let columns=Array(repeating:GridItem(.flexible(),spacing:5),count:7)
+        VStack(alignment:.leading,spacing:6) {
+            LazyVGrid(columns:columns,spacing:5) {
+                ForEach(0..<7,id:\.self) { column in
+                    Text(symbols[(firstWeekday-1+column)%7])
+                        .frame(maxWidth:.infinity)
+                        .font(.system(size:9,weight:.semibold))
+                        .foregroundStyle(ETheme.muted)
+                }
+                ForEach(Array(dates.enumerated()),id:\.offset) { index,date in
+                    let active=days.contains(key(date))
+                    let today=calendar.isDateInToday(date)
+                    RoundedRectangle(cornerRadius:3)
+                        .fill(active ? ETheme.red.opacity(0.45 + 0.11*Double(index%4)) : Color(hex:0xEFE8DA))
+                        .aspectRatio(1,contentMode:.fit)
+                        .overlay(RoundedRectangle(cornerRadius:3).stroke(today ? ETheme.blue : .clear,lineWidth:1.5))
+                        .accessibilityLabel("\(key(date))、\(active ? "学習あり" : "学習なし")")
+                }
+            }
         }
+        .accessibilityElement(children:.contain)
+        .accessibilityLabel("直近35日の学習ヒートマップ")
     }
 }
 struct SettingsView: View {
@@ -135,7 +173,7 @@ struct SettingsView: View {
     }.navigationTitle("設定").scrollContentBackground(.hidden).background(ETheme.paper)
     .environment(\.dynamicTypeSize,model.fontScale == 0 ? .large : (model.fontScale == 1 ? .xLarge : .xxxLarge))
     .fileExporter(isPresented:$showExporter,document:backupDocument,contentType:.json,defaultFilename:"electrician2-learning-backup") { result in if case .failure(let error)=result { status=error.localizedDescription } else { status="JSONを書き出しました。" } }
-    .fileImporter(isPresented:$showImporter,allowedContentTypes:[.json]) { result in do { let url=try result.get(); let access=url.startAccessingSecurityScopedResource(); defer { if access { url.stopAccessingSecurityScopedResource() } }; try model.restoreBackup(Data(contentsOf:url)); status="学習データを読み込みました。" } catch { status=error.localizedDescription } }
+    .fileImporter(isPresented:$showImporter,allowedContentTypes:[.json],allowsMultipleSelection:false) { result in do { let url=try result.get(); let access=url.startAccessingSecurityScopedResource(); defer { if access { url.stopAccessingSecurityScopedResource() } }; try model.restoreBackup(Data(contentsOf:url)); status="学習データを読み込みました。" } catch { status=error.localizedDescription } }
     } }
 }
 struct BackupDocument: FileDocument {
