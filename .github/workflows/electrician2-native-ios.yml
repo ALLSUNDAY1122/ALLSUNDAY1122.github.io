@@ -2,7 +2,9 @@ name: Electrician2 Native iOS
 on:
   pull_request:
     paths:
+      - 'electrician2-sprint/data/**'
       - 'electrician2-sprint/ios/**'
+      - 'electrician2-sprint/scripts/**'
       - '.github/workflows/electrician2-native-ios.yml'
   workflow_dispatch:
 permissions:
@@ -13,12 +15,13 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
-      - name: Normalize and validate available sitting JSON files
+      - name: Normalize and validate all twelve sittings
         run: |
           set -euo pipefail
           files=(electrician2-sprint/data/E2-*-001-050.json)
-          python3 electrician2-sprint/scripts/build_question_bank.py "${files[@]}" --allow-partial --output "$RUNNER_TEMP/QUESTION_BANK.preflight.json"
-          python3 -c 'import json,sys; d=json.load(open(sys.argv[1],encoding="utf-8")); assert d["questionCount"] == len(d["questions"]); print("Validated",d["questionCount"],"normalized questions")' "$RUNNER_TEMP/QUESTION_BANK.preflight.json"
+          test "${#files[@]}" -eq 12
+          python3 electrician2-sprint/scripts/build_question_bank.py "${files[@]}" --output electrician2-sprint/ios/Resources/QUESTION_BANK.json
+          python3 -c 'import json,sys; d=json.load(open(sys.argv[1],encoding="utf-8")); assert d["questionCount"] == 600 == len(d["questions"]); assert len({q["id"] for q in d["questions"]}) == 600; assert all(q.get("audit_status") == "PENDING" for q in d["questions"]); print("Validated",d["questionCount"],"questions across 12 sittings; audit_status remains PENDING")' electrician2-sprint/ios/Resources/QUESTION_BANK.json
       - name: Toolchain
         run: |
           xcodebuild -version
