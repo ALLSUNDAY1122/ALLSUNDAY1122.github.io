@@ -77,9 +77,9 @@ final class StudyModel: ObservableObject {
         }
         return count
     }
-    init(defaults: UserDefaults = .standard) {
+    init(defaults: UserDefaults = .standard, bank suppliedBank: QuestionBankFile? = nil) {
         self.defaults = defaults
-        if let bank = try? QuestionBankLoader.load() {
+        if let bank = suppliedBank ?? (try? QuestionBankLoader.load()) {
             self.demos = bank.questions.enumerated().map { index, q in
                 let labels = ["イ", "ロ", "ハ", "ニ"]
                 let answerIndex = labels.firstIndex(of: q.answerOfficial) ?? 0
