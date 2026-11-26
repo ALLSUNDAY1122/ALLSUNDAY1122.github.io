@@ -213,9 +213,6 @@ struct TaskReviewView: View {
                     if let rawDate = task.rawDateText {
                         LabeledContent("原文の日付", value: rawDate)
                     }
-                    if task.state == .review {
-                        LabeledContent("抽出確信度", value: "\(Int(task.confidence * 100))%")
-                    }
                 }
                 if !task.sourceExcerpt.isEmpty {
                     Section("原文の根拠") {

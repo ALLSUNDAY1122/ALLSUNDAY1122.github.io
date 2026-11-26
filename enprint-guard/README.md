@@ -15,7 +15,7 @@ App Store icon: a deterministic 1024x1024 opaque RGB icon is generated from the 
 
 This branch is a first implementation slice, not a TestFlight-ready release.
 
-1. Cloud AI extraction is not connected. Current extraction is local OCR plus conservative keyword rules and is labelled as provisional.
+1. Cloud AI extraction is not connected. Current extraction is local OCR plus conservative keyword rules and is labelled as provisional; no synthetic confidence score is shown.
 2. Household account / two-parent sync is not connected. Local assignee text is not cross-device sharing.
 3. Supabase backend project and security policies are not provisioned.
 4. App Store Connect app record is not created. Numeric App ID is intentionally unset.

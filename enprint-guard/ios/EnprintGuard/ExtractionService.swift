@@ -76,7 +76,6 @@ struct ExtractionService {
                     dueDate: rawDate.flatMap(parseExplicitYearDate),
                     rawDateText: rawDate,
                     sourceExcerpt: line,
-                    confidence: 0.65
                 )
             }
         }

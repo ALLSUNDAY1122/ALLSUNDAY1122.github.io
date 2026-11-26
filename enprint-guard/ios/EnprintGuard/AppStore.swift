@@ -65,7 +65,6 @@ final class AppStore: ObservableObject {
                     sourceDocumentID: documentID,
                     sourceExcerpt: candidate.sourceExcerpt,
                     state: .review,
-                    confidence: candidate.confidence
                 ),
                 at: 0
             )

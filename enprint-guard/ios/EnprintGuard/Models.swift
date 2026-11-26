@@ -64,7 +64,6 @@ struct HouseholdTask: Identifiable, Codable {
     var state: TaskState = .review
     var assignee: String?
     var childID: UUID?
-    var confidence: Double
 }
 
 struct ExtractionCandidate: Identifiable {
@@ -74,5 +73,4 @@ struct ExtractionCandidate: Identifiable {
     var dueDate: Date?
     var rawDateText: String?
     var sourceExcerpt: String
-    var confidence: Double
 }
