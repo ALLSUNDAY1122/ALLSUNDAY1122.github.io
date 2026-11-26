@@ -1,15 +1,15 @@
 {
   "task_id": "APP2-009",
   "workflow": "Kangoshi App Store Screenshots",
-  "run_id": 45735269847,
-  "conclusion": "cancelled",
-  "head_sha": "664aa6f5509dce77bc9e8f3c8926039549538e34",
+  "run_id": 45735305189,
+  "conclusion": "failure",
+  "head_sha": "f0df6457b4e90872e22429712bcfa3162b0b65d2",
   "jobs": [
     {
-      "id": 139626877619,
+      "id": 139627012225,
       "name": "screenshots",
       "status": "completed",
-      "conclusion": "cancelled",
+      "conclusion": "failure",
       "steps": [
         {
           "name": "Set up job",
@@ -20,31 +20,31 @@
         {
           "name": "Run actions/checkout@v4",
           "status": "completed",
-          "conclusion": "cancelled",
+          "conclusion": "success",
           "number": 2
         },
         {
           "name": "Install tools and prepare canonical native payload",
           "status": "completed",
-          "conclusion": "skipped",
+          "conclusion": "success",
           "number": 3
         },
         {
           "name": "Generate Xcode project with StoreKit review configuration",
           "status": "completed",
-          "conclusion": "skipped",
+          "conclusion": "success",
           "number": 4
         },
         {
           "name": "Pick current large iPhone simulator",
           "status": "completed",
-          "conclusion": "skipped",
+          "conclusion": "success",
           "number": 5
         },
         {
           "name": "Capture five review screens including priced paywall",
           "status": "completed",
-          "conclusion": "skipped",
+          "conclusion": "failure",
           "number": 6
         },
         {
