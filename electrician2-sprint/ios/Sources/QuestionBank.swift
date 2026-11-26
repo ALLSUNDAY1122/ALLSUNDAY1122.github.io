@@ -1,45 +1,47 @@
 import Foundation
 
 struct QuestionBankFile: Codable {
-    let schemaVersion: Int
-    let exam: ExamDescriptor
-    let sittings: [SittingDescriptor]
+    let schemaVersion: String
+    let dataSet: String
+    let sourceFiles: [String: QuestionBankSourceFiles]
+    let questionCount: Int
     let questions: [BankQuestion]
-    enum CodingKeys: String, CodingKey { case schemaVersion = "schema_version", exam, sittings, questions }
 }
-struct ExamDescriptor: Codable {
-    let code: String
-    let name: String
-    let choiceCount: Int
-    let officialSource: String
-    enum CodingKeys: String, CodingKey { case code, name, choiceCount = "choice_count", officialSource = "official_source" }
+struct QuestionBankSourceFiles: Codable {
+    let questionPdf: String
+    let answerPdf: String
 }
-struct SittingDescriptor: Codable {
-    let sittingID: String
-    let year: Int
-    let term: String
-    let questionPDF: String
-    let answerPDF: String
-    let expectedQuestionCount: Int
-    enum CodingKeys: String, CodingKey { case sittingID = "sitting_id", year, term, questionPDF = "question_pdf", answerPDF = "answer_pdf", expectedQuestionCount = "expected_question_count" }
+struct BankChoice: Codable {
+    let label: String
+    let text: String
+}
+struct BankQuestionSource: Codable {
+    let title: String
+    let url: String
+    let page: Int
+    let figure: String?
+    let figureRefs: [String]?
+}
+struct BankQuestionAudit: Codable {
+    let transcription: String
+    let answer: String
+    let figureStatus: String
+    let independentReview: String
+    let releaseStatus: String
 }
 struct BankQuestion: Codable, Identifiable {
     let id: String
-    let sittingID: String
-    let number: Int
-    let prompt: String
-    let choices: [String]
-    let officialAnswer: Int
-    let diagramRefs: [String]
-    let auditStatus: String
-    let sourcePage: Int?
-    let memory: String?
+    let exam: String
+    let examDate: String
+    let section: String
+    let questionNumber: Int
+    let question: String
+    let choices: [BankChoice]
+    let answerOfficial: String
+    let hereToRemember: String?
     let explanation: String?
-    enum CodingKeys: String, CodingKey {
-        case id, sittingID = "sitting_id", number, prompt, choices
-        case officialAnswer = "official_answer", diagramRefs = "diagram_refs"
-        case auditStatus = "audit_status", sourcePage = "source_page", memory, explanation
-    }
+    let source: BankQuestionSource
+    let audit: BankQuestionAudit
 }
 enum QuestionBankLoader {
     static func load() throws -> QuestionBankFile {
@@ -51,17 +53,21 @@ enum QuestionBankLoader {
         return bank
     }
     static func validate(_ bank:QuestionBankFile)throws {
-        guard bank.schemaVersion == 1, bank.exam.code == "E2", bank.exam.choiceCount == 4 else {
-            throw NSError(domain:"QuestionBank",code:1,userInfo:[NSLocalizedDescriptionKey:"問題バンクのschema_versionまたは試験定義が不正です。"])
+        guard bank.schemaVersion == "1.0", bank.dataSet == "E2-ALL-2024-2026",
+              bank.questionCount == bank.questions.count else {
+            throw NSError(domain:"QuestionBank",code:1,userInfo:[NSLocalizedDescriptionKey:"schemaVersion、dataSet、questionCountが不正です。"])
         }
         let ids=bank.questions.map(\.id)
-        guard Set(ids).count == ids.count else { throw NSError(domain:"QuestionBank",code:2,userInfo:[NSLocalizedDescriptionKey:"問題IDが重複しています。"]) }
-        let sittingIDs=Set(bank.sittings.map(\.sittingID))
+        guard Set(ids).count == ids.count else {
+            throw NSError(domain:"QuestionBank",code:2,userInfo:[NSLocalizedDescriptionKey:"問題IDが重複しています。"])
+        }
+        let labels=["イ","ロ","ハ","ニ"]
         for q in bank.questions {
-            guard sittingIDs.contains(q.sittingID), q.number >= 1, q.choices.count == 4,
-                  (1...4).contains(q.officialAnswer),
-                  ["PENDING","PASS","FAIL","HOLD"].contains(q.auditStatus) else {
-                throw NSError(domain:"QuestionBank",code:3,userInfo:[NSLocalizedDescriptionKey:"問題 \(q.id) の必須項目または値が不正です。"])
+            guard q.id.hasPrefix("E2-"), q.questionNumber >= 1, !q.question.isEmpty,
+                  q.choices.map(\.label) == labels, q.choices.allSatisfy({ !$0.text.isEmpty }),
+                  labels.contains(q.answerOfficial), q.source.page >= 1,
+                  !q.source.url.isEmpty, !q.audit.releaseStatus.isEmpty else {
+                throw NSError(domain:"QuestionBank",code:3,userInfo:[NSLocalizedDescriptionKey:"問題 \(q.id) の必須項目または選択肢・正答・出典が不正です。"])
             }
         }
     }
