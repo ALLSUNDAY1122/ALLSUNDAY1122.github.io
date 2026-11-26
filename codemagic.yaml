@@ -2174,14 +2174,29 @@ workflows:
           assert app.get('status') == 'active', 'App registry is not active'
           print('PASS: Enprint Guard Apple app record identity verified')
           PY
-      - name: Generate Xcode project
+      - name: Set unique build number and generate Xcode project
         script: |
+          set -euo pipefail
           cd "$CM_BUILD_DIR/enprint-guard/ios"
+          python3 - <<'PY'
+          import os
+          from pathlib import Path
+          build = os.environ.get('CM_BUILD_NUMBER')
+          if not build or not build.isdigit():
+              raise RuntimeError('Codemagic CM_BUILD_NUMBER missing or invalid')
+          path = Path('project.yml')
+          text = path.read_text(encoding='utf-8')
+          marker = 'CURRENT_PROJECT_VERSION: "1"'
+          if marker not in text:
+              raise RuntimeError('Expected project build-number marker not found')
+          path.write_text(text.replace(marker, 'CURRENT_PROJECT_VERSION: "' + build + '"', 1), encoding='utf-8')
+          print('PASS: build number injected')
+          PY
           xcodegen generate
-      - name: Apply App Store signing profiles
+      - name: Apply App Store signing profiles for Internal TestFlight only
         script: |
           cd "$CM_BUILD_DIR/enprint-guard/ios"
-          xcode-project use-profiles
+          xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
       - name: Build signed IPA
         script: |
           xcode-project build-ipa \
@@ -2218,4 +2233,6 @@ workflows:
       app_store_connect:
         auth: integration
         submit_to_testflight: true
+        beta_groups:
+          - sun
         submit_to_app_store: false
