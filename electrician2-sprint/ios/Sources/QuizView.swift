@@ -2,7 +2,6 @@ import SwiftUI
 
 struct QuizView: View {
     @EnvironmentObject var model:StudyModel
-    @Environment(\.dismiss) private var dismiss
     var body: some View {
         NavigationStack {
             if let q=model.current {
