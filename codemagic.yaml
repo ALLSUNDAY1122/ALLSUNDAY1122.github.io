@@ -2212,12 +2212,12 @@ workflows:
           APP_DIR="$(find "$VERIFY_DIR/Payload" -maxdepth 1 -type d -name '*.app' -print -quit)"
           python3 - "$APP_DIR" <<'PY'
           from pathlib import Path
-          import plistlib, sys
+          import os, plistlib, sys
           app = Path(sys.argv[1])
           info = plistlib.loads((app / 'Info.plist').read_bytes())
           assert info.get('CFBundleIdentifier') == 'jp.allsunday1122.enprintguard'
           assert info.get('CFBundleShortVersionString') == '1.0.0'
-          assert info.get('CFBundleVersion') == '1'
+          assert info.get('CFBundleVersion') == os.environ.get('CM_BUILD_NUMBER')
           privacy = plistlib.loads((app / 'PrivacyInfo.xcprivacy').read_bytes())
           assert privacy.get('NSPrivacyTracking') is False
           assert (app / 'embedded.mobileprovision').is_file()
