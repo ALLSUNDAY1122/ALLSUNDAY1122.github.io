@@ -56,7 +56,7 @@ def normalize(path):
         if figure is None: figure=q.get("figure_ref") or q.get("option_figure_ref") or q.get("choice_figure_ref")
         out.append({
           "id":qid,"exam":q.get("exam",exam_title),"examDate":q.get("examDate",DATES[prefix]),
-          "section":q.get("section",q.get("category","区分未設定")),"questionNumber":number,
+          "section":q.get("section",q.get("category","一般問題" if number <= 30 else "配線図")),"questionNumber":number,
           "question":q.get("question",q.get("question_text","")),"choices":choices,"answerOfficial":answer,
           "hereToRemember":q.get("hereToRemember",q.get("key_point")),"explanation":q.get("explanation"),
           "source":{"title":raw_source.get("title",exam_title),"url":raw_source.get("url") or qpdf,
