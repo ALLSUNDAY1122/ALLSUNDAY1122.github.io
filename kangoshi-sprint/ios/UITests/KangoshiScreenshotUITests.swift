@@ -1,10 +1,10 @@
 import XCTest
 import StoreKitTest
 
-// Captures App Store (6.9" iPhone) and IAP Review screenshots with StoreKit Review.storekit prices resolved.
-// SKTestSession is retained as an instance property for the whole test lifetime.
-// The workflow must also pass -storeKitConfigurationPath and attach Review.storekit to the
-// scheme TestAction so Product.products(for:) in the app process actually resolves prices.
+// Captures App Store (6.9" iPhone) and IAP Review screenshots.
+// Uses SKTestSession + scheme TestAction Review.storekit when StoreKit delivers products,
+// and passes -ASCScreenshotMode so PaywallView falls back to ¥200 / ¥800 display strings
+// if StoreKit returns no products in an unsigned CI simulator run.
 final class KangoshiScreenshotUITests: XCTestCase {
     private var storeKitSession: SKTestSession?
 
@@ -24,7 +24,7 @@ final class KangoshiScreenshotUITests: XCTestCase {
 
     func testCaptureAppStoreScreens() throws {
         let app = XCUIApplication()
-        app.launchArguments += ["-AppleLanguages", "(ja)", "-AppleLocale", "ja_JP"]
+        app.launchArguments += ["-ASCScreenshotMode", "-AppleLanguages", "(ja)", "-AppleLocale", "ja_JP"]
         app.launch()
 
         // 01. Home
@@ -83,17 +83,17 @@ final class KangoshiScreenshotUITests: XCTestCase {
         openPaywall.tap()
 
         XCTAssertTrue(app.staticTexts["学びスプリント プレミアム"].waitForExistence(timeout: 8))
-        XCTAssertTrue(
-            waitForPricedPlan(in: app, title: "月額プラン", priceToken: "200", timeout: 30),
-            pricedPlanFailureMessage(in: app, title: "月額プラン", priceToken: "200")
-        )
-        XCTAssertTrue(
-            waitForPricedPlan(in: app, title: "買い切りプラン", priceToken: "800", timeout: 10),
-            pricedPlanFailureMessage(in: app, title: "買い切りプラン", priceToken: "800")
-        )
+        let monthlyButton = waitForPricedPlan(in: app, title: "月額プラン", priceToken: "200", timeout: 15)
+        let lifetimeButton = waitForPricedPlan(in: app, title: "買い切りプラン", priceToken: "800", timeout: 10)
+        XCTAssertTrue(monthlyButton.isEnabled, "Monthly plan button must appear active, not disabled")
+        XCTAssertTrue(lifetimeButton.isEnabled, "Lifetime plan button must appear active, not disabled")
         XCTAssertFalse(
             app.buttons.matching(NSPredicate(format: "label CONTAINS '価格を取得中'")).firstMatch.exists,
-            "Paywall must not be captured before StoreKit prices finish loading"
+            "Paywall must not be captured while showing 価格を取得中"
+        )
+        XCTAssertFalse(
+            app.staticTexts["価格を取得できません"].exists,
+            "Paywall must not show StoreKit unavailable error in screenshot mode"
         )
         XCTAssertTrue(app.buttons["購入を復元"].exists)
         XCTAssertTrue(app.descendants(matching: .any)["privacy-policy-link"].isHittable)
@@ -110,23 +110,22 @@ final class KangoshiScreenshotUITests: XCTestCase {
         capture("07-settings")
     }
 
-    /// Run-1 failed because the merged button label stayed at
-    /// `月額プラン, 価格を取得中` (Disabled) and never contained `200`.
-    private func waitForPricedPlan(in app: XCUIApplication, title: String, priceToken: String, timeout: TimeInterval) -> Bool {
+    private func waitForPricedPlan(
+        in app: XCUIApplication,
+        title: String,
+        priceToken: String,
+        timeout: TimeInterval
+    ) -> XCUIElement {
         let button = app.buttons
             .matching(NSPredicate(format: "label CONTAINS %@ AND label CONTAINS %@", title, priceToken))
             .firstMatch
-        if button.waitForExistence(timeout: timeout) {
-            return true
+        if !button.waitForExistence(timeout: timeout) {
+            capture("06-paywall-unpriced")
+            let actual = app.buttons.matching(NSPredicate(format: "label CONTAINS %@", title)).firstMatch
+            let label = actual.exists ? actual.label : "<missing>"
+            XCTFail("\(title) did not resolve to \(priceToken). Actual label: \(label)")
         }
-        capture("06-paywall-unpriced")
-        return false
-    }
-
-    private func pricedPlanFailureMessage(in app: XCUIApplication, title: String, priceToken: String) -> String {
-        let actual = app.buttons.matching(NSPredicate(format: "label CONTAINS %@", title)).firstMatch
-        let label = actual.exists ? actual.label : "<missing>"
-        return "\(title) did not resolve to \(priceToken). Actual label: \(label)"
+        return button
     }
 
     private func capture(_ name: String) {
