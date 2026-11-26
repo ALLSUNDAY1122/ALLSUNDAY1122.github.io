@@ -2084,6 +2084,16 @@ workflows:
           p.write_text(s.replace('CURRENT_PROJECT_VERSION: 1', 'CURRENT_PROJECT_VERSION: ' + number, 1))
           PY
           xcodegen generate
+          python3 - <<'PY'
+          import pathlib, re
+          p = pathlib.Path('ITPassportStudy.xcodeproj/project.pbxproj')
+          s = p.read_text()
+          found = re.findall(r'TARGETED_DEVICE_FAMILY = [^;]+;', s)
+          assert found, 'FAIL: TARGETED_DEVICE_FAMILY not found in generated project.pbxproj'
+          p.write_text(re.sub(r'TARGETED_DEVICE_FAMILY = [^;]+;', 'TARGETED_DEVICE_FAMILY = 1;', s))
+          print('PASS: forced TARGETED_DEVICE_FAMILY=1 (' + str(len(found)) + ' occurrences)')
+          PY
+          grep -q 'TARGETED_DEVICE_FAMILY = 1;' ITPassportStudy.xcodeproj/project.pbxproj
       - name: Apply App Store signing profiles
         script: |
           set -euo pipefail
