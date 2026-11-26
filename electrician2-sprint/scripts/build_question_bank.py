@@ -111,7 +111,7 @@ def main():
             raise ValueError(f"Duplicate sitting input: {ds}")
         datasets.add(ds)
         year, term, date, title, official_qpdf, official_apdf = SITTINGS[ds]
-        source_files = doc.get("sourceFiles") or {}
+        source_files = (doc.get("sourceFiles") or {}) if isinstance(doc, dict) else {}
         if isinstance(source_files, dict) and "questionPdf" in source_files:
             qpdf, apdf = source_files.get("questionPdf", ""), source_files.get("answerPdf", "")
         else:
