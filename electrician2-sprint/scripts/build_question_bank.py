@@ -24,10 +24,11 @@ def normalize(path):
     year,term=prefix.split("-")[1],prefix.split("-")[2]
     half="上期" if term.startswith("U") else "下期"
     session="午前" if term.endswith("A") else "午後" if term.endswith("P") else ""
-    exam_title=doc.get("exam_name") or doc.get("exam") or f"令和{int(year)-2018}年度第二種電気工事士{half}学科試験"+(f"（{session}）" if session else "")
-    meta=doc.get("source") or doc.get("sources") or {}
-    qpdf=(doc.get("sourceFiles") or {}).get("questionPdf") or meta.get("question_pdf") or meta.get("questionPdf")
-    apdf=(doc.get("sourceFiles") or {}).get("answerPdf") or meta.get("answer_pdf") or meta.get("answerPdf")
+    doc_meta=doc if isinstance(doc,dict) else {}
+    exam_title=doc_meta.get("exam_name") or doc_meta.get("exam") or f"令和{int(year)-2018}年度第二種電気工事士{half}学科試験"+(f"（{session}）" if session else "")
+    meta=doc_meta.get("source") or doc_meta.get("sources") or {}
+    qpdf=(doc_meta.get("sourceFiles") or {}).get("questionPdf") or meta.get("question_pdf") or meta.get("questionPdf")
+    apdf=(doc_meta.get("sourceFiles") or {}).get("answerPdf") or meta.get("answer_pdf") or meta.get("answerPdf")
     if not qpdf:
         date=DATES[prefix].replace("-","")
         qpdf=f"https://www.shiken.or.jp/construction/upload/{date}_co_second_{'q02' if session=='午後' else 'q01'}.pdf"
