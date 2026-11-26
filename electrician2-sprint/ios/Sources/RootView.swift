@@ -1,55 +1,143 @@
 import SwiftUI
+import UniformTypeIdentifiers
 
 enum ETheme {
-    static let paper = Color(red:0.97,green:0.95,blue:0.91)
-    static let card = Color.white
-    static let ink = Color(red:0.12,green:0.16,blue:0.22)
-    static let blue = Color(red:0.18,green:0.30,blue:0.45)
-    static let red = Color(red:0.82,green:0.27,blue:0.18)
-    static let line = Color(red:0.89,green:0.86,blue:0.80)
+    static let paper=Color(hex:0xF7F3EA), paperLine=Color(hex:0xE3DCCD), card=Color(hex:0xFFFDF9)
+    static let ink=Color(hex:0x1C2331), ink2=Color(hex:0x4A5468), muted=Color(hex:0x8B8577)
+    static let blue=Color(hex:0x2F4A6D), blueSoft=Color(hex:0xEAEFF6), red=Color(hex:0xD8452C)
+    static let redSoft=Color(hex:0xFDEEEA), green=Color(hex:0x2F7D5C), greenSoft=Color(hex:0xEAF6F0)
+    static let gold=Color(hex:0xB5872B), line=Color(hex:0xECE4D6)
+}
+extension Color {
+    init(hex:Int) { self.init(.sRGB,red:Double((hex>>16)&255)/255,green:Double((hex>>8)&255)/255,blue:Double(hex&255)/255,opacity:1) }
+}
+struct PaperGrid: View {
+    var body: some View {
+        GeometryReader { geo in
+            Path { p in
+                stride(from:0.0,through:geo.size.width,by:28).forEach { x in p.move(to:CGPoint(x:x,y:0)); p.addLine(to:CGPoint(x:x,y:420)) }
+                stride(from:0.0,through:420.0,by:28).forEach { y in p.move(to:CGPoint(x:0,y:y)); p.addLine(to:CGPoint(x:geo.size.width,y:y)) }
+            }.stroke(ETheme.paperLine.opacity(0.55),lineWidth:0.55)
+                .mask(LinearGradient(colors:[.black,.black.opacity(0)],startPoint:.top,endPoint:.bottom))
+        }.frame(height:420).allowsHitTesting(false)
+    }
 }
 struct RootView: View {
-    @EnvironmentObject var model: StudyModel
+    @EnvironmentObject var model:StudyModel
     var body: some View {
         TabView(selection:$model.tab) {
             HomeView().tabItem { Label("ホーム",systemImage:"house.fill") }.tag(0)
             MockView().tabItem { Label("模試",systemImage:"doc.text") }.tag(1)
             RecordView().tabItem { Label("記録",systemImage:"chart.bar") }.tag(2)
             SettingsView().tabItem { Label("設定",systemImage:"gearshape") }.tag(3)
-        }.tint(ETheme.blue).fullScreenCover(isPresented:$model.showQuestion) { QuizView().environmentObject(model) }
+        }.tint(ETheme.blue).toolbarBackground(ETheme.card,for:.tabBar).toolbarBackground(.visible,for:.tabBar)
+        .fullScreenCover(isPresented:$model.showQuestion) { QuizView().environmentObject(model) }
+        .preferredColorScheme(.light)
     }
 }
 struct PageTitle: View {
     let title:String; let subtitle:String
-    var body: some View { VStack(alignment:.leading,spacing:5) { Text("学びスプリント").font(.caption.bold()).tracking(2).foregroundStyle(.secondary); Text(title).font(.system(size:27,weight:.bold,design:.serif)); Text(subtitle).font(.subheadline).foregroundStyle(.secondary) }.frame(maxWidth:.infinity,alignment:.leading).padding(.horizontal,18).padding(.top,20) }
+    var body: some View { VStack(alignment:.leading,spacing:6) {
+        HStack(spacing:8) { RoundedRectangle(cornerRadius:1).fill(ETheme.red).frame(width:16,height:2); Text("学びスプリント").font(.system(size:11,weight:.heavy,design:.rounded)).tracking(2.2).foregroundStyle(ETheme.muted) }
+        Text(title).font(.system(size:29,weight:.bold,design:.serif)).foregroundStyle(ETheme.ink)
+        Text(subtitle).font(.system(size:13)).foregroundStyle(ETheme.ink2)
+    }.frame(maxWidth:.infinity,alignment:.leading).padding(.horizontal,18).padding(.top,22) }
 }
 struct Panel<Content:View>: View {
     @ViewBuilder var content:Content
-    var body: some View { content.padding(16).frame(maxWidth:.infinity,alignment:.leading).background(ETheme.card).clipShape(RoundedRectangle(cornerRadius:18)).overlay(RoundedRectangle(cornerRadius:18).stroke(ETheme.line)) }
+    var body: some View { content.padding(16).frame(maxWidth:.infinity,alignment:.leading).background(ETheme.card).clipShape(RoundedRectangle(cornerRadius:16)).overlay(RoundedRectangle(cornerRadius:16).stroke(ETheme.line)).shadow(color:.black.opacity(0.035),radius:8,y:3) }
+}
+struct ProgressRing: View {
+    let value:Double; let label:String
+    var body: some View {
+        ZStack {
+            Circle().stroke(Color(hex:0xEFE8DA),lineWidth:8)
+            Circle().trim(from:0,to:min(1,max(0,value))).stroke(ETheme.red,style:StrokeStyle(lineWidth:8,lineCap:.round)).rotationEffect(.degrees(-90))
+            VStack(spacing:1) { Text(label).font(.system(size:16,weight:.bold,design:.rounded)).foregroundStyle(ETheme.ink); Text("今日").font(.system(size:9,weight:.bold)).foregroundStyle(ETheme.muted) }
+        }.frame(width:82,height:82).accessibilityElement(children:.ignore).accessibilityLabel("今日の進捗 \(label)")
+    }
 }
 struct HomeView: View {
     @EnvironmentObject var model:StudyModel
+    private var today:Int { model.done % max(1,model.goal) }
     var body: some View {
-        NavigationStack { ScrollView { VStack(spacing:16) {
-            PageTitle(title:"第二種電気工事士",subtitle:"今日も8問、着実に。")
-            Panel { HStack(spacing:18) { ZStack { Circle().stroke(ETheme.line,lineWidth:9); Circle().trim(from:0,to:min(1,CGFloat(model.done % max(1,model.goal))/CGFloat(model.goal))).stroke(ETheme.red,style:StrokeStyle(lineWidth:9,lineCap:.round)).rotationEffect(.degrees(-90)); VStack { Text("\(model.done % max(1,model.goal))/\(model.goal)").font(.headline); Text("今日の目標").font(.caption2).foregroundStyle(.secondary) }.frame(width:88,height:88) }; VStack(alignment:.leading,spacing:5) { Text("今日の学習").font(.headline); Text("目標まであと \(max(0,model.goal-(model.done % max(1,model.goal)))) 問").font(.subheadline).foregroundStyle(.secondary); Text("累計 \(model.completed)問").font(.caption).foregroundStyle(.secondary) } } }
-            Button { model.start(8) } label: { HStack { VStack(alignment:.leading) { Text("8問スプリント").font(.headline); Text("短く集中して理解を積み上げる").font(.caption).opacity(0.85) }; Spacer(); Image(systemName:"arrow.right") }.foregroundStyle(.white).padding(18).background(ETheme.blue).clipShape(RoundedRectangle(cornerRadius:16)) }.buttonStyle(.plain)
-            Button { model.start(8,weakOnly:true) } label: { Panel { HStack { Image(systemName:"repeat").font(.title2).foregroundStyle(ETheme.red); VStack(alignment:.leading) { Text("苦手をつぶす").font(.headline); Text("3回連続正解で卒業").font(.caption).foregroundStyle(.secondary) }; Spacer(); Text("\(model.weakQuestions.count)問").font(.caption.bold()) } } }.buttonStyle(.plain)
-            Button { model.tab=1 } label: { Panel { Label("模擬試験",systemImage:"doc.text").font(.headline); Text("年度別・50問の模試").font(.caption).foregroundStyle(.secondary).padding(.top,4) } }.buttonStyle(.plain)
-            VStack(alignment:.leading,spacing:10) { Text("分野から解く").font(.headline); ForEach(model.subjects,id:\.self) { s in Button { model.start(8) } label: { HStack { Text(s).foregroundStyle(ETheme.ink); Spacer(); Image(systemName:"chevron.right").foregroundStyle(.secondary) }.padding(14).background(.white).clipShape(RoundedRectangle(cornerRadius:12)) }.buttonStyle(.plain) } }
-        }.padding(.horizontal,16).padding(.bottom,24) }.background(ETheme.paper.ignoresSafeArea()) }
+        NavigationStack { ZStack(alignment:.top) { ETheme.paper.ignoresSafeArea(); PaperGrid().ignoresSafeArea()
+            ScrollView { VStack(spacing:16) {
+                PageTitle(title:"第二種電気工事士",subtitle:"今日も1問、力に変える。")
+                Panel { HStack(spacing:16) {
+                    ProgressRing(value:Double(today)/Double(max(1,model.goal)),label:"\(today)/\(model.goal)")
+                    VStack(alignment:.leading,spacing:5) {
+                        Text("今日の学習").font(.system(size:16,weight:.bold))
+                        Text(today >= model.goal ? "今日の目標は達成しました。" : "あと\(model.goal-today)問で今日の目標に届きます。").font(.system(size:12)).foregroundStyle(ETheme.ink2)
+                        Text("累計 \(model.completed)問　・　連続 \(model.streakDays)日").font(.system(size:11,weight:.semibold)).foregroundStyle(ETheme.muted)
+                    }
+                } }
+                Button { model.start(model.goal) } label: { HStack { VStack(alignment:.leading,spacing:4) { Text("今日のスプリント").font(.system(size:16,weight:.heavy)); Text("\(model.goal)問・短く集中して理解を積み上げる").font(.system(size:11)) }; Spacer(); Image(systemName:"arrow.right").font(.title3.bold()) }.foregroundStyle(.white).padding(18).background(LinearGradient(colors:[Color(hex:0x35527A),Color(hex:0x233A58)],startPoint:.topLeading,endPoint:.bottomTrailing)).clipShape(RoundedRectangle(cornerRadius:16)).shadow(color:ETheme.blue.opacity(0.18),radius:10,y:5) }.buttonStyle(.plain)
+                Button { model.start(8,weakOnly:true) } label: { Panel { HStack(spacing:12) { Image(systemName:"repeat").font(.title2).foregroundStyle(ETheme.red).frame(width:42,height:42).background(ETheme.redSoft).clipShape(RoundedRectangle(cornerRadius:12)); VStack(alignment:.leading,spacing:3) { Text("苦手をつぶす").font(.system(size:15,weight:.bold)); Text("3回連続正解で卒業").font(.system(size:11)).foregroundStyle(ETheme.muted) }; Spacer(); Text("\(model.weakQuestions.count)問").font(.system(size:12,weight:.bold)).foregroundStyle(ETheme.red).padding(.horizontal,10).padding(.vertical,6).background(ETheme.redSoft).clipShape(Capsule()) } } }.buttonStyle(.plain)
+                Button { model.tab=1 } label: { Panel { Label("模擬試験",systemImage:"doc.text").font(.system(size:15,weight:.bold)); Text("年度別・公式問題50問単位").font(.system(size:11)).foregroundStyle(ETheme.muted).padding(.top,4) } }.buttonStyle(.plain)
+                VStack(alignment:.leading,spacing:10) { Text("分野から解く").font(.system(size:17,weight:.bold,design:.serif)); ForEach(model.subjects,id:\.self) { s in Button { model.start(8) } label: { HStack { Text(s).font(.system(size:13,weight:.semibold)).foregroundStyle(ETheme.ink); Spacer(); Image(systemName:"chevron.right").foregroundStyle(ETheme.muted) }.padding(14).background(ETheme.card).clipShape(RoundedRectangle(cornerRadius:12)).overlay(RoundedRectangle(cornerRadius:12).stroke(ETheme.line)) }.buttonStyle(.plain) } }
+                Panel { HStack { smallStat("のべ回答","\(model.completed)"); Spacer(); smallStat("正答率",model.completed == 0 ? "—" : "\(model.accuracy)%"); Spacer(); smallStat("学習日数","\(model.studyDays.count)日") } }
+            }.padding(.horizontal,16).padding(.bottom,22).frame(maxWidth:520).frame(maxWidth:.infinity) }
+        }.navigationBarHidden(true) }
     }
+    func smallStat(_ title:String,_ value:String)->some View { VStack(alignment:.leading,spacing:3) { Text(value).font(.system(size:19,weight:.heavy,design:.rounded)).foregroundStyle(ETheme.blue); Text(title).font(.system(size:10,weight:.medium)).foregroundStyle(ETheme.muted) } }
 }
 struct MockView: View {
     @EnvironmentObject var model:StudyModel
-    var body: some View { NavigationStack { ScrollView { VStack(spacing:14) { PageTitle(title:"模擬試験",subtitle:"年度・試験回を選択") ; ForEach(["2026年度 上期（ダミー）","2026年度 下期（ダミー）","2025年度 上期（ダミー）","2025年度 下期（ダミー）"],id:\.self) { name in Button { model.start(8) } label: { Panel { HStack { VStack(alignment:.leading) { Text(name).font(.headline); Text("50問・120分（表示仕様の仮値）").font(.caption).foregroundStyle(.secondary) }; Spacer(); Image(systemName:"play.circle.fill").font(.title2) } } }.buttonStyle(.plain) } }.padding() }.background(ETheme.paper.ignoresSafeArea()) }.navigationTitle("模試") }
+    var body: some View { NavigationStack { ZStack { ETheme.paper.ignoresSafeArea(); ScrollView { VStack(spacing:14) {
+        PageTitle(title:"本番形式",subtitle:"試験回ごとに、科目別のセットを準備します。")
+        ForEach(["2026年度 上期","2026年度 下期","2025年度 上期","2025年度 下期","2024年度 上期","2024年度 下期"],id:\.self) { name in
+            Panel { VStack(alignment:.leading,spacing:10) { Text(name).font(.system(size:17,weight:.bold,design:.serif)); Text("50問・公式問題データの取り込み待ち").font(.system(size:11)).foregroundStyle(ETheme.muted); Button { model.start(8) } label: { Label("サンプルで操作確認",systemImage:"play.circle").font(.system(size:12,weight:.bold)).foregroundStyle(ETheme.blue) } } }
+        }
+    }.padding(.horizontal,16).padding(.bottom,24).frame(maxWidth:520).frame(maxWidth:.infinity) } } }.navigationBarHidden(true) }
 }
 struct RecordView: View {
     @EnvironmentObject var model:StudyModel
-    var body: some View { NavigationStack { ScrollView { VStack(spacing:14) { PageTitle(title:"学習記録",subtitle:"積み上げを確認") ; Panel { HStack { metric("解答数","\(model.completed)"); Spacer(); metric("正解数","\(model.correct)"); Spacer(); metric("正答率",model.completed == 0 ? "—" : "\(Int(Double(model.correct)/Double(model.completed)*100))%") } }; Panel { VStack(alignment:.leading,spacing:9) { Text("苦手問題").font(.headline); if model.weakQuestions.isEmpty { Text("現在、苦手問題はありません").font(.caption).foregroundStyle(.secondary) }; ForEach(model.weakQuestions) { q in HStack { Text(q.prompt).font(.caption).lineLimit(2); Spacer(); Text("\(model.weakStreak[q.id] ?? 0)/3").font(.caption.bold()) } } } }; Panel { VStack(alignment:.leading,spacing:9) { Text("卒業した問題").font(.headline); if model.graduatedQuestions.isEmpty { Text("卒業した問題はまだありません").font(.caption).foregroundStyle(.secondary) }; ForEach(model.graduatedQuestions) { q in Text(q.prompt).font(.caption).lineLimit(2) } } } }.padding() }.background(ETheme.paper.ignoresSafeArea()) }.navigationTitle("記録") }
-    func metric(_ title:String,_ value:String)->some View { VStack { Text(value).font(.title2.bold()); Text(title).font(.caption).foregroundStyle(.secondary) } }
+    var body: some View { NavigationStack { ZStack { ETheme.paper.ignoresSafeArea(); ScrollView { VStack(spacing:14) {
+        PageTitle(title:"積み上げ",subtitle:"短い反復が、そのまま形になります。")
+        Panel { HStack { metric("のべ回答","\(model.completed)"); Spacer(); metric("正解数","\(model.correct)"); Spacer(); metric("連続日数","\(model.streakDays)") } }
+        Panel { HStack(spacing:16) { ZStack { Circle().stroke(Color(hex:0xEFE8DA),lineWidth:10); Circle().trim(from:0,to:Double(model.accuracy)/100).stroke(ETheme.blue,style:StrokeStyle(lineWidth:10,lineCap:.round)).rotationEffect(.degrees(-90)); Text(model.completed == 0 ? "—" : "\(model.accuracy)%").font(.system(size:17,weight:.bold,design:.rounded)) }.frame(width:96,height:96); VStack(alignment:.leading,spacing:4) { Text("全体の正答率").font(.system(size:14,weight:.bold)); Text("正解 \(model.correct) / 回答 \(model.completed)").font(.system(size:11)).foregroundStyle(ETheme.muted) } } }
+        Panel { VStack(alignment:.leading,spacing:10) { Text("5週間の学習").font(.system(size:16,weight:.bold,design:.serif)); Heatmap(days:model.studyDays) } }
+        Panel { VStack(alignment:.leading,spacing:9) { Text("苦手問題").font(.system(size:16,weight:.bold)); if model.weakQuestions.isEmpty { Text("現在、苦手問題はありません").font(.system(size:12)).foregroundStyle(ETheme.muted) }; ForEach(model.weakQuestions) { q in HStack { Text(q.prompt).font(.system(size:11)).lineLimit(2); Spacer(); Text("\(model.weakStreak[q.id] ?? 0)/3").font(.system(size:11,weight:.bold)).foregroundStyle(ETheme.red) } } } }
+        Panel { VStack(alignment:.leading,spacing:9) { Text("卒業した問題").font(.system(size:16,weight:.bold)); if model.graduatedQuestions.isEmpty { Text("卒業した問題はまだありません").font(.system(size:12)).foregroundStyle(ETheme.muted) }; ForEach(model.graduatedQuestions) { q in Text(q.prompt).font(.system(size:11)).lineLimit(2) } } }
+    }.padding(.horizontal,16).padding(.bottom,24).frame(maxWidth:520).frame(maxWidth:.infinity) } } }.navigationBarHidden(true) }
+    func metric(_ title:String,_ value:String)->some View { VStack { Text(value).font(.system(size:21,weight:.heavy,design:.rounded)); Text(title).font(.system(size:10)).foregroundStyle(ETheme.muted) } }
+}
+struct Heatmap: View {
+    let days:Set<String>
+    private func key(_ offset:Int)->String { let f=DateFormatter(); f.dateFormat="yyyy-MM-dd"; f.timeZone=TimeZone.current; return f.string(from:Calendar.current.date(byAdding:.day,value:offset,to:Date()) ?? Date()) }
+    var body: some View {
+        VStack(alignment:.leading,spacing:5) { HStack { ForEach(["日","月","火","水","木","金","土"],id:\.self) { Text($0).frame(maxWidth:.infinity).font(.system(size:9)).foregroundStyle(ETheme.muted) } }
+            ForEach(0..<5,id:\.self) { week in HStack(spacing:5) { ForEach(0..<7,id:\.self) { day in let offset = -34 + week*7 + day; let active=days.contains(key(offset)); RoundedRectangle(cornerRadius:3).fill(active ? ETheme.red.opacity(0.35 + 0.13*Double((week+day)%4)) : Color(hex:0xEFE8DA)).frame(maxWidth:.infinity).frame(height:25).overlay(RoundedRectangle(cornerRadius:3).stroke(offset == 0 ? ETheme.blue : .clear,lineWidth:1.5)) } } }
+        }
+    }
 }
 struct SettingsView: View {
     @EnvironmentObject var model:StudyModel
-    var body: some View { NavigationStack { Form { Section("1日の目標") { Picker("問題数",selection:$model.goal) { Text("4問").tag(4); Text("8問").tag(8); Text("16問").tag(16) }.pickerStyle(.segmented) }; Section("文字サイズ") { Picker("表示サイズ",selection:$model.fontScale) { Text("標準").tag(0); Text("大").tag(1); Text("特大").tag(2) }.pickerStyle(.segmented) }; Section("教材情報") { Text("現在はUI確認用のダミー問題のみです。公式問題・図版は未収録です。"); Text("Q0：利用条件の照会回答待ち") } }.navigationTitle("設定") }.environment(\.dynamicTypeSize,model.fontScale == 0 ? .large : (model.fontScale == 1 ? .xLarge : .xxxLarge)) }
+    @State private var backupDocument: BackupDocument?
+    @State private var showExporter=false
+    @State private var showImporter=false
+    @State private var status=""
+    var body: some View { NavigationStack { Form {
+        Section("文字サイズ") { Picker("表示サイズ",selection:$model.fontScale) { Text("標準").tag(0); Text("大").tag(1); Text("特大").tag(2) }.pickerStyle(.segmented) }
+        Section("1日の目標") { Picker("問題数",selection:$model.goal) { Text("4問").tag(4); Text("8問").tag(8); Text("16問").tag(16) }.pickerStyle(.segmented) }
+        Section("学習データ") {
+            Button { do { backupDocument=BackupDocument(data:try model.backupData()); showExporter=true } catch { status=error.localizedDescription } } label: { Label("学習データをJSONで書き出す",systemImage:"square.and.arrow.up") }
+            Button { showImporter=true } label: { Label("JSONから学習データを読み込む",systemImage:"square.and.arrow.down") }
+            if !status.isEmpty { Text(status).font(.caption).foregroundStyle(ETheme.muted) }
+        }
+        Section("覚えかたのルール") { Text("苦手問題は3回連続で正解すると卒業します。途中で誤答すると連続正解数は0に戻ります。").font(.subheadline) }
+        Section("この教材について") { Text("公式問題データの収録準備中です。現時点の問題は操作確認用のサンプルです。"); Text("収録時は出典・改変表示を行います。") }
+    }.navigationTitle("設定").scrollContentBackground(.hidden).background(ETheme.paper)
+    .environment(\.dynamicTypeSize,model.fontScale == 0 ? .large : (model.fontScale == 1 ? .xLarge : .xxxLarge))
+    .fileExporter(isPresented:$showExporter,document:backupDocument,contentType:.json,defaultFilename:"electrician2-learning-backup") { result in if case .failure(let error)=result { status=error.localizedDescription } else { status="JSONを書き出しました。" } }
+    .fileImporter(isPresented:$showImporter,allowedContentTypes:[.json]) { result in do { let url=try result.get(); let access=url.startAccessingSecurityScopedResource(); defer { if access { url.stopAccessingSecurityScopedResource() } }; try model.restoreBackup(Data(contentsOf:url)); status="学習データを読み込みました。" } catch { status=error.localizedDescription } }
+    } }
+}
+struct BackupDocument: FileDocument {
+    static var readableContentTypes:[UTType] { [.json] }
+    var data:Data
+    init(data:Data=Data()) { self.data=data }
+    init(configuration:ReadConfiguration)throws { data=configuration.file.regularFileContents ?? Data() }
+    func fileWrapper(configuration:WriteConfiguration)throws->FileWrapper { FileWrapper(regularFileWithContents:data) }
 }
