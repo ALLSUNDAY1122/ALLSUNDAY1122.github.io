@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-27T05:24:00+09:00",
+  "updated_at": "2026-11-27T08:03:00+09:00",
   "policy": {
     "final_approval": "Explicit user approval is required for the exact App ID / Version / Build immediately read back before App Review submission.",
     "submission_complete": "Only App Store Connect read-back at WAITING_FOR_REVIEW or a later review state counts as App Review submission complete.",
@@ -306,7 +306,7 @@
     },
     "enprintguard": {
       "name": "園プリント見落としガード",
-      "app_id": null,
+      "app_id": "6839814394",
       "bundle_id": "jp.allsunday1122.enprintguard",
       "version": "1.0.0",
       "build": "1",
@@ -315,7 +315,7 @@
         "jp.allsunday1122.enprintguard.premium.monthly",
         "jp.allsunday1122.enprintguard.premium.annual"
       ],
-      "status": "apple_id_pending",
+      "status": "user_created_pending_api_readback",
       "readback": false,
       "ios_project": "enprint-guard/ios/project.yml",
       "native_source_branch": "feature/enprint-guard-native-20261127",
@@ -323,15 +323,16 @@
       "app_store_upload": "NOT_STARTED",
       "submission_state": "NOT_SUBMITTED",
       "final_approval": "NOT_REQUESTED",
-      "preflight_classification": "APPLE_APP_RECORD_AND_BACKEND_PENDING",
+      "preflight_classification": "APPLE_APP_RECORD_USER_CONFIRMED_API_READBACK_PENDING",
       "human_required": [
         "SUPABASE_ORGANIZATION_AND_PROJECT_COST_CONFIRMATION",
         "AI_PROVIDER_CREDENTIAL_SETUP",
-        "APP_STORE_CONNECT_APP_RECORD_CREATION",
         "SUBSCRIPTION_PRODUCTS_CONFIGURATION",
         "REAL_DEVICE_IOS_ACCEPTANCE"
       ],
-      "note": "App Store Connect App record is not created; numeric App ID intentionally null. Internal TestFlight only. submit_to_app_store must remain false. Initial implementation currently uses local Vision OCR and keyword candidate extraction; AI cloud extraction and two-parent household sync are not implemented."
+      "note": "Owner confirmed App Store Connect App record created: App ID 6839814394, name 園プリント見落としガード, Bundle ID jp.allsunday1122.enprintguard, SKU enprintguard-ios-20261127-01. API read-back remains pending; do not claim verified until ASC API workflow passes. Internal TestFlight only; App Store submission prohibited. Current native implementation remains incomplete for cloud AI extraction and two-parent sync pending Supabase cost approval.",
+      "sku": "enprintguard-ios-20261127-01",
+      "apple_record_user_confirmed": true
     }
   }
 }

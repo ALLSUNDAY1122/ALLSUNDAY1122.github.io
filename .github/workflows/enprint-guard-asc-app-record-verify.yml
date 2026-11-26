@@ -1,0 +1,73 @@
+name: Enprint Guard App Store Connect Record Verification
+
+on:
+  push:
+    branches:
+      - feature/enprint-guard-native-20261127
+    paths:
+      - "automation/app-release-registry.json"
+      - "enprint-guard/ios/EnprintGuard/Info.plist"
+      - ".github/workflows/enprint-guard-asc-app-record-verify.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  verify-app-record:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify exact App Store Connect App record
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          import os
+          import sys
+          from pathlib import Path
+          sys.path.insert(0, 'scripts')
+          from app_store_connect_api import api_get, load_private_key, make_token
+
+          registry = json.loads(Path('automation/app-release-registry.json').read_text(encoding='utf-8'))
+          app = registry['apps']['enprintguard']
+          expected = {
+              'id': '6839814394',
+              'name': '園プリント見落としガード',
+              'bundleId': 'jp.allsunday1122.enprintguard',
+              'sku': 'enprintguard-ios-20261127-01',
+          }
+          assert app.get('app_id') == expected['id'], 'Registry App ID mismatch'
+          assert app.get('name') == expected['name'], 'Registry name mismatch'
+          assert app.get('bundle_id') == expected['bundleId'], 'Registry Bundle ID mismatch'
+          assert app.get('sku') == expected['sku'], 'Registry SKU mismatch'
+          assert app.get('apple_record_user_confirmed') is True, 'Owner confirmation missing'
+
+          issuer = os.environ.get('ASC_ISSUER_ID', '').strip()
+          key_id = os.environ.get('ASC_KEY_ID', '').strip()
+          if not issuer or not key_id:
+              raise SystemExit('Missing ASC API credentials in GitHub Actions secrets')
+
+          key_path, cleanup = load_private_key()
+          try:
+              token = make_token(issuer, key_id, key_path)
+              status, payload = api_get(token, '/v1/apps/' + expected['id'])
+          finally:
+              if cleanup:
+                  cleanup.unlink(missing_ok=True)
+
+          item = payload.get('data') if isinstance(payload, dict) else None
+          if not isinstance(item, dict) or item.get('id') != expected['id'] or item.get('type') != 'apps':
+              raise SystemExit('ASC returned a different or missing App record')
+          attrs = item.get('attributes') or {}
+          actual = {key: attrs.get(key) for key in ('name', 'bundleId', 'sku')}
+          if actual != {key: expected[key] for key in ('name', 'bundleId', 'sku')}:
+              raise SystemExit('ASC App record mismatch: ' + json.dumps(actual, ensure_ascii=False))
+          print('PASS: App Store Connect App record verified')
+          print(json.dumps({'app_id': item['id'], **actual}, ensure_ascii=False))
+          PY
