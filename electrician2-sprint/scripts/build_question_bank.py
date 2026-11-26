@@ -79,7 +79,7 @@ def normalize_question(q, dataset, source_files):
         "explanation": q.get("explanation"),
         "source": {
             "title": raw_source.get("title", f"{year}年度 {term}期 第二種電気工事士 学科試験問題"),
-            "url": raw_source.get("url", source_files["questionPdf"]),
+            "url": raw_source.get("url") or source_files.get("questionPdf") or official_qpdf,
             "page": raw_source.get("page"),
             "figure": figure,
             **({"figureRefs": refs} if refs else {}),
