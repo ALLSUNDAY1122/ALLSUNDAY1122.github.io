@@ -58,23 +58,27 @@ struct ExtractionService {
         ]
 
         var seen = Set<String>()
-        return lines.compactMap { rawLine in
+        return lines.flatMap { rawLine -> [ExtractionCandidate] in
             let line = rawLine.trimmingCharacters(in: .whitespacesAndNewlines)
-            guard !line.isEmpty else { return nil }
-            guard let match = rules.first(where: { _, words in words.contains(where: line.contains) }) else {
-                return nil
+            guard !line.isEmpty else { return [] }
+
+            let matchedCategories = rules.compactMap { category, words in
+                words.contains(where: line.contains) ? category : nil
             }
-            let key = "\(match.0.rawValue)|\(line)"
-            guard seen.insert(key).inserted else { return nil }
             let rawDate = firstDateExpression(in: line)
-            return ExtractionCandidate(
-                title: line,
-                category: match.0,
-                dueDate: rawDate.flatMap(parseExplicitYearDate),
-                rawDateText: rawDate,
-                sourceExcerpt: line,
-                confidence: 0.65
-            )
+
+            return matchedCategories.compactMap { category in
+                let key = "\(category.rawValue)|\(line)"
+                guard seen.insert(key).inserted else { return nil }
+                return ExtractionCandidate(
+                    title: line,
+                    category: category,
+                    dueDate: rawDate.flatMap(parseExplicitYearDate),
+                    rawDateText: rawDate,
+                    sourceExcerpt: line,
+                    confidence: 0.65
+                )
+            }
         }
     }
 

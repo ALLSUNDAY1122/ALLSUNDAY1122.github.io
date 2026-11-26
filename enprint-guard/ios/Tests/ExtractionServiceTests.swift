@@ -17,11 +17,11 @@ final class ExtractionServiceTests: XCTestCase {
         XCTAssertNil(candidates.first?.dueDate)
     }
 
-    func testItemCandidateKeepsOriginalExcerpt() {
+    func testOneLineCanProduceEventAndItemCandidates() {
         let service = ExtractionService()
         let line = "遠足には水筒とレジャーシートを持参してください"
         let candidates = service.parseCandidates(from: [line])
-        XCTAssertEqual(candidates.first?.category, .event)
-        XCTAssertEqual(candidates.first?.sourceExcerpt, line)
+        XCTAssertEqual(Set(candidates.map(\.category)), Set([.event, .item]))
+        XCTAssertTrue(candidates.allSatisfy { $0.sourceExcerpt == line })
     }
 }
