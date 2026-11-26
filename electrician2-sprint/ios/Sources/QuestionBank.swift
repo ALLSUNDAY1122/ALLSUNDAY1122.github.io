@@ -56,7 +56,7 @@ enum QuestionBankLoader {
     }
     static func validate(_ bank:QuestionBankFile)throws {
         guard bank.schemaVersion == "1.0", bank.dataSet == "E2-ALL-2022-2026",
-              bank.questionCount == 600, bank.questionCount == bank.questions.count else {
+              bank.questionCount == bank.questions.count else {
             throw NSError(domain:"QuestionBank",code:1,userInfo:[NSLocalizedDescriptionKey:"schemaVersion、dataSet、questionCountが不正です。"])
         }
         let ids=bank.questions.map(\.id)
