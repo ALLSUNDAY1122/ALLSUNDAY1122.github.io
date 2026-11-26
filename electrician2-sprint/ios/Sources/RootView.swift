@@ -159,19 +159,24 @@ struct SettingsView: View {
     @State private var backupDocument: BackupDocument?
     @State private var showExporter=false
     @State private var showImporter=false
+    @State private var confirmImport=false
     @State private var status=""
     var body: some View { NavigationStack { Form {
         Section("文字サイズ") { Picker("表示サイズ",selection:$model.fontScale) { Text("標準").tag(0); Text("大").tag(1); Text("特大").tag(2) }.pickerStyle(.segmented) }
         Section("1日の目標") { Picker("問題数",selection:$model.goal) { Text("4問").tag(4); Text("8問").tag(8); Text("16問").tag(16) }.pickerStyle(.segmented) }
         Section("学習データ") {
             Button { do { backupDocument=BackupDocument(data:try model.backupData()); showExporter=true } catch { status=error.localizedDescription } } label: { Label("学習データをJSONで書き出す",systemImage:"square.and.arrow.up") }
-            Button { showImporter=true } label: { Label("JSONから学習データを読み込む",systemImage:"square.and.arrow.down") }
+            Button { confirmImport=true } label: { Label("JSONから学習データを読み込む",systemImage:"square.and.arrow.down") }
             if !status.isEmpty { Text(status).font(.caption).foregroundStyle(ETheme.muted) }
         }
         Section("覚えかたのルール") { Text("苦手問題は3回連続で正解すると卒業します。途中で誤答すると連続正解数は0に戻ります。").font(.subheadline) }
         Section("この教材について") { Text("公式過去問600問を収録しています。転記内容・正答・図版は独立監査前のため、監査完了までは学習参考用として扱ってください。"); Text("収録時は出典・改変表示を行います。") }
     }.navigationTitle("設定").scrollContentBackground(.hidden).background(ETheme.paper)
     .environment(\.dynamicTypeSize,model.fontScale == 0 ? .large : (model.fontScale == 1 ? .xLarge : .xxxLarge))
+    .confirmationDialog("学習データを読み込みますか？",isPresented:$confirmImport,titleVisibility:.visible) {
+        Button("読み込んで置き換える",role:.destructive) { showImporter=true }
+        Button("キャンセル",role:.cancel) {}
+    } message: { Text("現在の学習記録を選択したJSONの内容で置き換えます。") }
     .fileExporter(isPresented:$showExporter,document:backupDocument,contentType:.json,defaultFilename:"electrician2-learning-backup") { result in if case .failure(let error)=result { status=error.localizedDescription } else { status="JSONを書き出しました。" } }
     .fileImporter(isPresented:$showImporter,allowedContentTypes:[.json]) { result in do { let url=try result.get(); let access=url.startAccessingSecurityScopedResource(); defer { if access { url.stopAccessingSecurityScopedResource() } }; try model.restoreBackup(Data(contentsOf:url)); status="学習データを読み込みました。" } catch { status=error.localizedDescription } }
     } }
