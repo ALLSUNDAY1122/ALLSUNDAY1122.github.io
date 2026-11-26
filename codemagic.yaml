@@ -2148,6 +2148,13 @@ workflows:
     name: Enprint Guard - Internal TestFlight
     max_build_duration: 60
     instance_type: mac_mini_m2
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: 'release/enprint-guard-testflight-20261127'
+          include: true
+      cancel_previous_builds: true
     integrations:
       app_store_connect: "Codemagic Shiwake Swipe"
     environment:
@@ -2156,6 +2163,7 @@ workflows:
         bundle_identifier: jp.allsunday1122.enprintguard
       vars:
         BUNDLE_ID: jp.allsunday1122.enprintguard
+        APP_STORE_APPLE_ID: "6839814394"
         XCODE_PROJECT: enprint-guard/ios/EnprintGuard.xcodeproj
         XCODE_SCHEME: EnprintGuard
       xcode: latest
@@ -2234,6 +2242,4 @@ workflows:
       app_store_connect:
         auth: integration
         submit_to_testflight: true
-        beta_groups:
-          - sun
         submit_to_app_store: false

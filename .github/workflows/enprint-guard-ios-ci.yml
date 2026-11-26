@@ -73,7 +73,10 @@ jobs:
           assert signing['bundle_identifier'] == 'jp.allsunday1122.enprintguard'
           assert publishing['submit_to_testflight'] is True
           assert publishing['submit_to_app_store'] is False
-          assert publishing['beta_groups'] == ['sun']
+          assert 'beta_groups' not in publishing
+          triggering = workflow['triggering']
+          assert triggering['events'] == ['push']
+          assert triggering['branch_patterns'][0]['pattern'] == 'release/enprint-guard-testflight-20261127'
           scripts = '\\n'.join(step.get('script', '') for step in workflow['scripts'])
           assert 'app_id' in scripts and 'readback' in scripts
           assert 'CM_BUILD_NUMBER' in scripts
