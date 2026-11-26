@@ -2109,6 +2109,7 @@ workflows:
           app = pathlib.Path(sys.argv[1])
           info = plistlib.loads((app / 'Info.plist').read_bytes())
           assert info['CFBundleIdentifier'] == os.environ['BUNDLE_ID']
+          assert info.get('UIDeviceFamily') == [1], f"FAIL: UIDeviceFamily must be [1] (iPhone only): {info.get('UIDeviceFamily')!r}"
           expected_orientations = {'UIInterfaceOrientationPortrait', 'UIInterfaceOrientationPortraitUpsideDown', 'UIInterfaceOrientationLandscapeLeft', 'UIInterfaceOrientationLandscapeRight'}
           for key in ('UISupportedInterfaceOrientations', 'UISupportedInterfaceOrientations~ipad'):
               values = info.get(key)
@@ -2132,3 +2133,4 @@ workflows:
         auth: integration
         submit_to_testflight: false
         submit_to_app_store: false
+
