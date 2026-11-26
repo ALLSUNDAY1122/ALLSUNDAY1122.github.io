@@ -30,7 +30,9 @@ struct QuizView: View {
                                 Button("次の問題へ") { model.next() }.font(.system(size:15,weight:.heavy)).foregroundStyle(.white).frame(maxWidth:.infinity,minHeight:54).background(ETheme.blue).clipShape(RoundedRectangle(cornerRadius:14))
                             }.padding(16).background(ETheme.card).clipShape(RoundedRectangle(cornerRadius:14)).overlay(RoundedRectangle(cornerRadius:14).stroke(ETheme.line))
                         }
-                        Text("出典：\(q.exam) 問\(q.questionNumber)").font(.system(size:10,weight:.semibold)).foregroundStyle(ETheme.muted)\n                        Text(q.sourceURL).font(.system(size:9)).foregroundStyle(ETheme.muted).textSelection(.enabled)\n                        Text("監査状態：\(q.auditStatus)").font(.system(size:9)).foregroundStyle(ETheme.muted)
+                        Text("出典：\(q.exam) 問\(q.questionNumber)").font(.system(size:10,weight:.semibold)).foregroundStyle(ETheme.muted)
+                        Text(q.sourceURL).font(.system(size:9)).foregroundStyle(ETheme.muted).textSelection(.enabled)
+                        Text("監査状態：\(q.auditStatus)").font(.system(size:9)).foregroundStyle(ETheme.muted)
                     }.padding(18).frame(maxWidth:520).frame(maxWidth:.infinity) }
                 }.navigationTitle("学習").navigationBarTitleDisplayMode(.inline)
                 .toolbar { ToolbarItem(placement:.topBarLeading) { Button("閉じる") { model.showQuestion=false } } }
