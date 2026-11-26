@@ -42,6 +42,30 @@ jobs:
           print("PASS: plist, privacy manifest and placeholder bundle identity")
           PY
 
+      - name: Validate Codemagic Internal TestFlight contract
+        run: |
+          python3 -m pip install --disable-pip-version-check PyYAML
+          python3 - <<'PY'
+          import json
+          import yaml
+          from pathlib import Path
+          config = yaml.safe_load(Path('codemagic.yaml').read_text(encoding='utf-8'))
+          workflow = config['workflows']['enprint-guard-ios-testflight']
+          signing = workflow['environment']['ios_signing']
+          publishing = workflow['publishing']['app_store_connect']
+          assert signing['bundle_identifier'] == 'jp.allsunday1122.enprintguard'
+          assert publishing['submit_to_testflight'] is True
+          assert publishing['submit_to_app_store'] is False
+          scripts = '\\n'.join(step.get('script', '') for step in workflow['scripts'])
+          assert 'app_id' in scripts and 'readback' in scripts
+          assert 'xcode-project build-ipa' in scripts
+          registry = json.loads(Path('automation/app-release-registry.json').read_text(encoding='utf-8'))
+          app = registry['apps']['enprintguard']
+          assert app['bundle_id'] == signing['bundle_identifier']
+          assert app['app_id'] is None and app['readback'] is False
+          print('PASS: Codemagic TestFlight-only contract and pending App Store record gate')
+          PY
+
       - name: Generate Xcode project
         run: |
           cd enprint-guard/ios
