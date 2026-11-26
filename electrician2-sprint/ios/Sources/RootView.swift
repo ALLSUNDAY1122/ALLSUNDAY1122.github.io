@@ -59,7 +59,7 @@ struct ProgressRing: View {
 }
 struct HomeView: View {
     @EnvironmentObject var model:StudyModel
-    private var today:Int { model.done % max(1,model.goal) }
+    private var today:Int { min(model.done,model.goal) }
     var body: some View {
         NavigationStack { ZStack(alignment:.top) { ETheme.paper.ignoresSafeArea(); PaperGrid().ignoresSafeArea()
             ScrollView { VStack(spacing:16) {

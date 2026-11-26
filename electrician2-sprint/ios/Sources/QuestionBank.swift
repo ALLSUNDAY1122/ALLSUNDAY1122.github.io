@@ -67,7 +67,7 @@ enum QuestionBankLoader {
         for q in bank.questions {
             guard q.id.hasPrefix("E2-"), q.questionNumber >= 1, !q.question.isEmpty,
                   q.choices.map(\.label) == labels, q.choices.allSatisfy({ !$0.text.isEmpty }),
-                  labels.contains(q.answerOfficial), q.source.page >= 1,
+                  labels.contains(q.answerOfficial), (q.source.page == nil || q.source.page! >= 1),
                   !q.source.url.isEmpty, !q.audit.releaseStatus.isEmpty else {
                 throw NSError(domain:"QuestionBank",code:3,userInfo:[NSLocalizedDescriptionKey:"問題 \(q.id) の必須項目または選択肢・正答・出典が不正です。"])
             }

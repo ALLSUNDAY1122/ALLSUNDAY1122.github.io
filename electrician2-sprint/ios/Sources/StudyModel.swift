@@ -23,6 +23,7 @@ struct LearningSnapshot: Codable {
     var fontScale = 0
     var answeredIDs: [Int] = []
     var studyDays: Set<String> = []
+    var lastStudyDate: String? = nil
 }
 final class StudyModel: ObservableObject {
     private let storageKey = "electrician2.learning.snapshot.v1"
@@ -42,6 +43,7 @@ final class StudyModel: ObservableObject {
     @Published var fontScale = 0 { didSet { persist() } }
     @Published var answeredIDs: [Int] = [] { didSet { persist() } }
     @Published var studyDays: Set<String> = [] { didSet { persist() } }
+    @Published var lastStudyDate: String? = nil { didSet { persist() } }
     @Published var showQuestion = false
     let subjects = ["電気に関する基礎理論","配電理論・配線設計","電気機器・材料・工具","電気工事の施工方法","一般用電気工作物の検査","配線図","法令"]
     let demos = [
@@ -73,8 +75,11 @@ final class StudyModel: ObservableObject {
     }
     func answer(_ value:Int) {
         guard !graded, let q=current else{return}
-        selected=value; graded=true; completed += 1; done += 1; answeredIDs.append(q.id)
-        studyDays.insert(Self.dayKey(Date()))
+        selected=value; graded=true; completed += 1; answeredIDs.append(q.id)
+        let today = Self.dayKey(Date())
+        if lastStudyDate != today { done = 0; lastStudyDate = today }
+        done += 1
+        studyDays.insert(today)
         if q.answer == value {
             correct += 1
             if weakIDs.contains(q.id) && !graduatedIDs.contains(q.id) {
@@ -93,7 +98,7 @@ final class StudyModel: ObservableObject {
         else { showQuestion=false; session=[] }
     }
     func backupData() throws -> Data {
-        let snapshot = LearningSnapshot(goal:goal,done:done,completed:completed,correct:correct,weakStreak:weakStreak,weakIDs:weakIDs,graduatedIDs:graduatedIDs,fontScale:fontScale,answeredIDs:answeredIDs,studyDays:studyDays)
+        let snapshot = LearningSnapshot(goal:goal,done:done,completed:completed,correct:correct,weakStreak:weakStreak,weakIDs:weakIDs,graduatedIDs:graduatedIDs,fontScale:fontScale,answeredIDs:answeredIDs,studyDays:studyDays,lastStudyDate:lastStudyDate)
         return try JSONEncoder.pretty.encode(snapshot)
     }
     func restoreBackup(_ data:Data) throws {
@@ -103,7 +108,7 @@ final class StudyModel: ObservableObject {
         }
         goal=saved.goal; done=saved.done; completed=saved.completed; correct=saved.correct
         weakStreak=saved.weakStreak; weakIDs=saved.weakIDs; graduatedIDs=saved.graduatedIDs
-        fontScale=saved.fontScale; answeredIDs=saved.answeredIDs; studyDays=saved.studyDays
+        fontScale=saved.fontScale; answeredIDs=saved.answeredIDs; studyDays=saved.studyDays; lastStudyDate=saved.lastStudyDate
     }
     private func restore() {
         guard let data=defaults.data(forKey:storageKey),
