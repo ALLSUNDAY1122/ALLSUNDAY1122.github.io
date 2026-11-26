@@ -6,20 +6,21 @@ import re
 from pathlib import Path
 
 SITTINGS = {
-    "E2-2026-U": ("2026", "U", "2026-05-24", "令和8年度第二種電気工事士上期学科試験"),
-    "E2-2026-L": ("2026", "L", "2026-10-25", "令和8年度第二種電気工事士下期学科試験"),
-    "E2-2025-U": ("2025", "U", "2025-05-25", "令和7年度第二種電気工事士上期学科試験"),
-    "E2-2025-L": ("2025", "L", "2025-10-26", "令和7年度第二種電気工事士下期学科試験"),
-    "E2-2024-U": ("2024", "U", "2024-05-26", "令和6年度第二種電気工事士上期学科試験"),
-    "E2-2024-L": ("2024", "L", "2024-10-27", "令和6年度第二種電気工事士下期学科試験"),
+    "E2-2026-U": ("2026", "U", "2026-05-24", "令和8年度第二種電気工事士上期学科試験", "https://www.shiken.or.jp/construction/upload/20260524_co_second_q01.pdf", "https://www.shiken.or.jp/construction/upload/20260524_co_second_a01.pdf"),
+    "E2-2026-L": ("2026", "L", "2026-10-25", "令和8年度第二種電気工事士下期学科試験", "https://www.shiken.or.jp/construction/upload/20261025_co_second_q01.pdf", "https://www.shiken.or.jp/construction/upload/20261025_co_second_a01.pdf"),
+    "E2-2025-U": ("2025", "U", "2025-05-25", "令和7年度第二種電気工事士上期学科試験", "https://www.shiken.or.jp/construction/upload/20250525_co_second_q01.pdf", "https://www.shiken.or.jp/construction/upload/20250525_co_second_a01.pdf"),
+    "E2-2025-L": ("2025", "L", "2025-10-26", "令和7年度第二種電気工事士下期学科試験", "https://www.shiken.or.jp/construction/upload/20251026_co_second_q01.pdf", "https://www.shiken.or.jp/construction/upload/20251026_co_second_a01.pdf"),
+    "E2-2024-U": ("2024", "U", "2024-05-26", "令和6年度第二種電気工事士上期学科試験", "https://www.shiken.or.jp/construction/upload/20240526_co_second_q01.pdf", "https://www.shiken.or.jp/construction/upload/20240526_co_second_a01.pdf"),
+    "E2-2024-L": ("2024", "L", "2024-10-27", "令和6年度第二種電気工事士下期学科試験", "https://www.shiken.or.jp/construction/upload/20241027_co_second_q01.pdf", "https://www.shiken.or.jp/construction/upload/20241027_co_second_a01.pdf"),
 }
 LABELS = ["イ", "ロ", "ハ", "ニ"]
 
 def get_dataset(doc, path):
-    ds = doc.get("dataSet")
+    ds = doc.get("dataSet") if isinstance(doc, dict) else None
     if ds in SITTINGS:
         return ds
-    for q in doc.get("questions", doc if isinstance(doc, list) else []):
+    items = doc if isinstance(doc, list) else doc.get("questions", [])
+    for q in items:
         qid = q.get("id", "")
         m = re.match(r"^(E2-\d{4}-[UL])-\d{3}$", qid)
         if m:
@@ -41,7 +42,7 @@ def choices_as_list(raw):
     return result
 
 def normalize_question(q, dataset, source_files):
-    year, term, exam_date, exam_title = SITTINGS[dataset]
+    year, term, exam_date, exam_title, official_qpdf, official_apdf = SITTINGS[dataset]
     qid = q["id"]
     number = q.get("questionNumber", q.get("question_number"))
     if number is None:
@@ -109,14 +110,16 @@ def main():
         if ds in datasets:
             raise ValueError(f"Duplicate sitting input: {ds}")
         datasets.add(ds)
-        year, term, date, title = SITTINGS[ds]
+        year, term, date, title, official_qpdf, official_apdf = SITTINGS[ds]
         source_files = doc.get("sourceFiles") or {}
         if isinstance(source_files, dict) and "questionPdf" in source_files:
             qpdf, apdf = source_files.get("questionPdf", ""), source_files.get("answerPdf", "")
         else:
             qpdf, apdf = "", ""
         if not qpdf:
-            qpdf = next((q.get("source", {}).get("url") for q in doc.get("questions", doc if isinstance(doc, list) else []) if q.get("source", {}).get("url")), "")
+            qpdf = next((q.get("source", {}).get("url") for q in (doc if isinstance(doc, list) else doc.get("questions", [])) if q.get("source", {}).get("url")), official_qpdf)
+        if not apdf:
+            apdf = official_apdf
         sources[ds] = {"questionPdf": qpdf, "answerPdf": apdf}
         questions = doc if isinstance(doc, list) else doc.get("questions", [])
         if len(questions) != 50:

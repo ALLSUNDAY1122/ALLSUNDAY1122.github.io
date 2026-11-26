@@ -18,7 +18,7 @@ struct BankChoice: Codable {
 struct BankQuestionSource: Codable {
     let title: String
     let url: String
-    let page: Int
+    let page: Int?
     let figure: String?
     let figureRefs: [String]?
 }
@@ -42,6 +42,8 @@ struct BankQuestion: Codable, Identifiable {
     let explanation: String?
     let source: BankQuestionSource
     let audit: BankQuestionAudit
+    let auditStatus: String?
+    enum CodingKeys: String, CodingKey { case id, exam, examDate, section, questionNumber, question, choices, answerOfficial, hereToRemember, explanation, source, audit, auditStatus = "audit_status" }
 }
 enum QuestionBankLoader {
     static func load() throws -> QuestionBankFile {

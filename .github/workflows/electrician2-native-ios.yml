@@ -13,6 +13,12 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
+      - name: Normalize and validate available sitting JSON files
+        run: |
+          set -euo pipefail
+          files=(electrician2-sprint/data/E2-*-001-050.json)
+          python3 electrician2-sprint/scripts/build_question_bank.py "${files[@]}" --allow-partial --output "$RUNNER_TEMP/QUESTION_BANK.preflight.json"
+          python3 -c 'import json,sys; d=json.load(open(sys.argv[1],encoding="utf-8")); assert d["questionCount"] == len(d["questions"]); print("Validated",d["questionCount"],"normalized questions")' "$RUNNER_TEMP/QUESTION_BANK.preflight.json"
       - name: Toolchain
         run: |
           xcodebuild -version
