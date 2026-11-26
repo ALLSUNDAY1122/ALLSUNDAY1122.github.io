@@ -1,6 +1,6 @@
 import Foundation
 
-struct QuestionBankFile: Codable {
+private final class QuestionBankBundleToken {}\n\nstruct QuestionBankFile: Codable {
     let schemaVersion: String
     let dataSet: String
     let sourceFiles: QuestionBankSourceFiles
@@ -47,7 +47,7 @@ struct BankQuestion: Codable, Identifiable {
 }
 enum QuestionBankLoader {
     static func load() throws -> QuestionBankFile {
-        guard let url=Bundle.main.url(forResource:"QUESTION_BANK",withExtension:"json") else {
+        guard let url=Bundle.main.url(forResource:"QUESTION_BANK",withExtension:"json") ?? Bundle(for: QuestionBankBundleToken.self).url(forResource:"QUESTION_BANK",withExtension:"json") else {
             throw NSError(domain:"QuestionBank",code:404,userInfo:[NSLocalizedDescriptionKey:"QUESTION_BANK.jsonが未配置です。"])
         }
         let bank=try JSONDecoder().decode(QuestionBankFile.self,from:Data(contentsOf:url))
