@@ -1,0 +1,116 @@
+name: Enprint Guard Apple Bundle ID Ensure
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'automation/app-store-connect-requests/enprint-guard-bundle-id-20261127.json'
+
+permissions:
+  contents: write
+
+jobs:
+  ensure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Ensure exact Bundle ID through Apple API
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import re
+          import sys
+          from pathlib import Path
+          from urllib.parse import quote
+
+          request = json.loads(Path('automation/app-store-connect-requests/enprint-guard-bundle-id-20261127.json').read_text(encoding='utf-8'))
+          request_id = request.get('request_id')
+          identifier = request.get('identifier')
+          name = request.get('name')
+          platform = request.get('platform')
+          if request_id != 'enprint-guard-bundle-id-20261127':
+              raise SystemExit('request_id mismatch')
+          if identifier != 'jp.allsunday1122.enprintguard':
+              raise SystemExit('Bundle ID mismatch')
+          if name != '園プリント見落としガード' or platform != 'IOS':
+              raise SystemExit('App identity mismatch')
+          if not re.fullmatch(r'[A-Za-z0-9.-]{3,200}', identifier):
+              raise SystemExit('Invalid Bundle ID')
+
+          sys.path.insert(0, 'scripts')
+          from app_store_connect_api import api_get, api_request, load_private_key, make_token
+
+          issuer_id = os.environ.get('ASC_ISSUER_ID', '').strip()
+          key_id = os.environ.get('ASC_KEY_ID', '').strip()
+          if not issuer_id or not key_id:
+              raise SystemExit('Missing App Store Connect API credentials')
+
+          query = f'/v1/bundleIds?filter[identifier]={quote(identifier, safe="")}&limit=10'
+          key_path, cleanup = load_private_key()
+          try:
+              token = make_token(issuer_id, key_id, key_path)
+              _, before = api_get(token, query)
+              items = before.get('data', []) if isinstance(before, dict) else []
+              changed = False
+              create_http_status = None
+              if not items:
+                  payload = {'data': {'type': 'bundleIds', 'attributes': {
+                      'identifier': identifier, 'name': name, 'platform': platform
+                  }}}
+                  create_http_status, _ = api_request(token, '/v1/bundleIds', method='POST', payload=payload)
+                  changed = True
+
+              _, after = api_get(token, query)
+              found = after.get('data', []) if isinstance(after, dict) else []
+              exact = [item for item in found if isinstance(item, dict) and
+                       (item.get('attributes') or {}).get('identifier') == identifier]
+              if len(exact) != 1:
+                  raise RuntimeError(f'Bundle ID read-back expected exactly one match, got {len(exact)}')
+              resource = exact[0]
+              attrs = resource.get('attributes') or {}
+              if attrs.get('platform') not in {'IOS', 'UNIVERSAL'}:
+                  raise RuntimeError(f'Bundle ID platform mismatch: {attrs.get("platform")!r}')
+              result = {
+                  'request_id': request_id, 'ok': True,
+                  'status': 'created' if changed else 'already_exists',
+                  'changed': changed, 'bundle_id_resource_id': resource.get('id'),
+                  'identifier': attrs.get('identifier'), 'name': attrs.get('name'),
+                  'platform': attrs.get('platform'), 'create_http_status': create_http_status
+              }
+              Path('/tmp/enprint-guard-bundle-result.json').write_text(
+                  json.dumps(result, ensure_ascii=False, indent=2) + '\\n', encoding='utf-8')
+              print('PASS: exact Bundle ID registered and read back')
+          finally:
+              if cleanup:
+                  cleanup.unlink(missing_ok=True)
+          PY
+
+      - name: Persist sanitized result on main
+        if: always()
+        run: |
+          set -euo pipefail
+          test -f /tmp/enprint-guard-bundle-result.json || exit 0
+          RESULT_PATH='automation/app-store-connect-results/enprint-guard-bundle-id-20261127.json'
+          cp /tmp/enprint-guard-bundle-result.json /tmp/enprint-guard-bundle-result.saved.json
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git reset --hard origin/main
+            mkdir -p "$(dirname "$RESULT_PATH")"
+            cp /tmp/enprint-guard-bundle-result.saved.json "$RESULT_PATH"
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add -- "$RESULT_PATH"
+            if git diff --cached --quiet; then exit 0; fi
+            git commit -m 'release: persist Enprint Guard Apple Bundle ID result'
+            if git push origin HEAD:main; then exit 0; fi
+            sleep 2
+          done
+          exit 1
