@@ -7,7 +7,7 @@ struct QuizView: View {
             if let q=model.current {
                 ZStack { ETheme.paper.ignoresSafeArea()
                     ScrollView { VStack(alignment:.leading,spacing:16) {
-                        HStack { Text("\(model.index+1)/\(model.session.count)").font(.system(size:12,weight:.heavy)); Spacer(); Text("サンプルデータ").font(.system(size:11,weight:.bold)).foregroundStyle(ETheme.red) }
+                        HStack { Text("\(model.index+1)/\(model.session.count)").font(.system(size:12,weight:.heavy)); Spacer(); Text("公式過去問・監査前").font(.system(size:11,weight:.bold)).foregroundStyle(ETheme.red) }
                         ProgressView(value:Double(model.index+1),total:Double(max(1,model.session.count))).tint(ETheme.blue)
                         Text(q.subject).font(.system(size:12,weight:.heavy)).foregroundStyle(ETheme.blue).padding(.horizontal,10).padding(.vertical,5).background(ETheme.blueSoft).clipShape(Capsule())
                         Text(q.prompt).font(.system(size:19,weight:.bold,design:.serif)).lineSpacing(7).foregroundStyle(ETheme.ink)
@@ -30,7 +30,7 @@ struct QuizView: View {
                                 Button("次の問題へ") { model.next() }.font(.system(size:15,weight:.heavy)).foregroundStyle(.white).frame(maxWidth:.infinity,minHeight:54).background(ETheme.blue).clipShape(RoundedRectangle(cornerRadius:14))
                             }.padding(16).background(ETheme.card).clipShape(RoundedRectangle(cornerRadius:14)).overlay(RoundedRectangle(cornerRadius:14).stroke(ETheme.line))
                         }
-                        Text("※画面・操作確認用の架空データです。試験問題ではありません。").font(.system(size:10)).foregroundStyle(ETheme.muted)
+                        Text("出典：\\(q.exam) 問\\(q.questionNumber)").font(.system(size:10,weight:.semibold)).foregroundStyle(ETheme.muted)\n                        Text(q.sourceURL).font(.system(size:9)).foregroundStyle(ETheme.muted).textSelection(.enabled)\n                        Text("監査状態：\\(q.auditStatus)").font(.system(size:9)).foregroundStyle(ETheme.muted)
                     }.padding(18).frame(maxWidth:520).frame(maxWidth:.infinity) }
                 }.navigationTitle("学習").navigationBarTitleDisplayMode(.inline)
                 .toolbar { ToolbarItem(placement:.topBarLeading) { Button("閉じる") { model.showQuestion=false } } }
@@ -61,10 +61,10 @@ struct DiagramPlaceholder: View {
     @State private var lastOffset:CGSize = .zero
     var body: some View {
         VStack(alignment:.leading,spacing:8) {
-            HStack { Text("共通配線図（ダミー）").font(.caption.bold()); Spacer(); Text(reference).font(.caption2).foregroundStyle(.secondary) }
+            HStack { Text("図版参照（画像未収録）").font(.caption.bold()); Spacer(); Text(reference).font(.caption2).foregroundStyle(.secondary) }
             GeometryReader { geo in ZStack {
                 RoundedRectangle(cornerRadius:12).fill(Color.white)
-                VStack(spacing:12) { Image(systemName:"point.3.connected.trianglepath.dotted").font(.system(size:54)); Text("図版未搭載").font(.headline); Text("権利確認後に原典図版を登録").font(.caption) }.foregroundStyle(ETheme.blue)
+                VStack(spacing:12) { Image(systemName:"point.3.connected.trianglepath.dotted").font(.system(size:54)); Text("図版未搭載").font(.headline); Text("図版は権利・目視監査後に登録").font(.caption) }.foregroundStyle(ETheme.blue)
             }.frame(width:geo.size.width,height:220).scaleEffect(scale).offset(offset)
                 .gesture(MagnificationGesture().onChanged { v in scale=max(1,min(4,lastScale*v)) }.onEnded { _ in lastScale=scale })
                 .simultaneousGesture(DragGesture().onChanged { v in offset=CGSize(width:lastOffset.width+v.translation.width,height:lastOffset.height+v.translation.height) }.onEnded { _ in lastOffset=offset }).clipped()
