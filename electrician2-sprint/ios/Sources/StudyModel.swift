@@ -3,6 +3,12 @@ import Foundation
 
 struct DemoQuestion: Identifiable, Codable {
     let id: Int
+    let officialID: String
+    let exam: String
+    let examDate: String
+    let questionNumber: Int
+    let sourceURL: String
+    let auditStatus: String
     let subject: String
     let prompt: String
     let choices: [String]
@@ -10,6 +16,11 @@ struct DemoQuestion: Identifiable, Codable {
     let memory: String
     let explanation: String
     let diagramID: String?
+}
+struct ExamSet: Identifiable {
+    let id: String
+    let title: String
+    let questionCount: Int
 }
 struct LearningSnapshot: Codable {
     var version = 1
@@ -45,11 +56,10 @@ final class StudyModel: ObservableObject {
     @Published var studyDays: Set<String> = [] { didSet { persist() } }
     @Published var lastStudyDate: String? = nil { didSet { persist() } }
     @Published var showQuestion = false
-    let subjects = ["電気に関する基礎理論","配電理論・配線設計","電気機器・材料・工具","電気工事の施工方法","一般用電気工作物の検査","配線図","法令"]
-    let demos = [
-        DemoQuestion(id:1,subject:"電気に関する基礎理論",prompt:"【サンプル問題】抵抗値と電流の関係を確認しましょう。",choices:["オームの法則","フレミングの左手の法則","レンツの法則","クーロンの法則"],answer:0,memory:"電圧・電流・抵抗の関係を整理する",explanation:"この設問はUI確認用の架空サンプルです。公式過去問ではありません。",diagramID:nil),
-        DemoQuestion(id:2,subject:"配線図",prompt:"【サンプル問題】共通配線図の表示領域（ダミー）を確認しましょう。",choices:["イ","ロ","ハ","ニ"],answer:1,memory:"図面の記号と接続関係を対応させる",explanation:"配線図は未搭載です。",diagramID:"DEMO-COMMON-01")
-    ]
+    let demos: [DemoQuestion]
+    let examSets: [ExamSet]
+    let subjects: [String]
+    let bankLoadError: String?
     var current: DemoQuestion? { session.indices.contains(index) ? session[index] : nil }
     var weakQuestions: [DemoQuestion] { demos.filter { weakIDs.contains($0.id) && !graduatedIDs.contains($0.id) } }
     var graduatedQuestions: [DemoQuestion] { demos.filter { graduatedIDs.contains($0.id) } }
@@ -66,14 +76,44 @@ final class StudyModel: ObservableObject {
         }
         return count
     }
-    init(defaults: UserDefaults = .standard) { self.defaults = defaults; restore() }
+    init(defaults: UserDefaults = .standard) {
+        self.defaults = defaults
+        if let bank = try? QuestionBankLoader.load() {
+            self.demos = bank.questions.enumerated().map { index, q in
+                let labels = ["イ", "ロ", "ハ", "ニ"]
+                let answerIndex = labels.firstIndex(of: q.answerOfficial) ?? 0
+                let refs = q.source.figureRefs ?? []
+                let figure = q.source.figure
+                let diagram = refs.first ?? (figure?.hasPrefix("E2-") == true ? figure : nil)
+                return DemoQuestion(
+                    id: index + 1, officialID: q.id, exam: q.exam, examDate: q.examDate,
+                    questionNumber: q.questionNumber, sourceURL: q.source.url,
+                    auditStatus: q.auditStatus ?? q.audit.releaseStatus, subject: q.section,
+                    prompt: q.question, choices: q.choices.map(\\.text), answer: answerIndex,
+                    memory: q.hereToRemember ?? "要点解説は準備中です。",
+                    explanation: q.explanation ?? "解説は準備中です。", diagramID: diagram
+                )
+            }
+            self.examSets = Dictionary(grouping: self.demos, by: { String($0.officialID.dropLast(4)) })
+                .map { key, questions in ExamSet(id: key, title: questions.first?.exam ?? key, questionCount: questions.count) }
+                .sorted { $0.id < $1.id }
+            self.subjects = Array(Set(self.demos.map(\\.subject))).sorted()
+            self.bankLoadError = nil
+        } else {
+            self.demos = []
+            self.examSets = []
+            self.subjects = []
+            self.bankLoadError = "QUESTION_BANK.jsonを読み込めません。"
+        }
+        restore()
+    }
     func start(_ count:Int = 8, weakOnly:Bool = false) {
         let source = weakOnly ? weakQuestions : demos
         guard !source.isEmpty else { session = []; showQuestion = false; return }
         session = (0..<count).map { source[$0 % source.count] }
         index=0; selected=nil; graded=false; showQuestion=true
     }
-    func answer(_ value:Int) {
+    func start(examPrefix:String) {\n        let source = demos.filter { $0.officialID.hasPrefix(examPrefix + "-") }\n        guard !source.isEmpty else { session=[]; showQuestion=false; return }\n        session=source; index=0; selected=nil; graded=false; showQuestion=true\n    }\n    func answer(_ value:Int) {
         guard !graded, let q=current else{return}
         selected=value; graded=true; completed += 1; answeredIDs.append(q.id)
         let today = Self.dayKey(Date())
