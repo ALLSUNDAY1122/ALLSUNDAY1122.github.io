@@ -89,7 +89,7 @@ struct MockView: View {
         ForEach(model.examSets) { examSet in
             Panel { VStack(alignment:.leading,spacing:10) {
                 Text(examSet.title).font(.system(size:17,weight:.bold,design:.serif))
-                Text("\\(examSet.questionCount)問・転記済み／独立監査未完了").font(.system(size:11)).foregroundStyle(ETheme.muted)
+                Text("\(examSet.questionCount)問・転記済み／独立監査未完了").font(.system(size:11)).foregroundStyle(ETheme.muted)
                 Button { model.start(examPrefix:examSet.id) } label: { Label("この試験回を解く",systemImage:"play.circle").font(.system(size:12,weight:.bold)).foregroundStyle(ETheme.blue) }
             } }
         }
