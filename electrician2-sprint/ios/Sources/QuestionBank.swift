@@ -1,6 +1,8 @@
 import Foundation
 
-private final class QuestionBankBundleToken {}\n\nstruct QuestionBankFile: Codable {
+private final class QuestionBankBundleToken {}
+
+struct QuestionBankFile: Codable {
     let schemaVersion: String
     let dataSet: String
     let sourceFiles: QuestionBankSourceFiles
