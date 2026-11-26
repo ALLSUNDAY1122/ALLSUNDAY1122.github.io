@@ -195,12 +195,13 @@ struct TaskReviewView: View {
     let task: HouseholdTask
     @State private var hasDate: Bool
     @State private var date: Date
-    @State private var assignee = ""
+    @State private var assignee: String
 
     init(task: HouseholdTask) {
         self.task = task
         _hasDate = State(initialValue: task.dueDate != nil || task.rawDateText != nil)
         _date = State(initialValue: task.dueDate ?? Date())
+        _assignee = State(initialValue: task.assignee ?? "")
     }
 
     var body: some View {
@@ -212,11 +213,14 @@ struct TaskReviewView: View {
                     if let rawDate = task.rawDateText {
                         LabeledContent("原文の日付", value: rawDate)
                     }
-                    LabeledContent("抽出確信度", value: "\(Int(task.confidence * 100))%")
+                    if task.state == .review {
+                        LabeledContent("抽出確信度", value: "\(Int(task.confidence * 100))%")
+                    }
                 }
-                Section("原文の根拠") {
-                    Text(task.sourceExcerpt)
-                        .font(.body)
+                if !task.sourceExcerpt.isEmpty {
+                    Section("原文の根拠") {
+                        Text(task.sourceExcerpt).font(.body)
+                    }
                 }
                 Section("期限・実施日") {
                     Toggle("日付を設定する", isOn: $hasDate)
@@ -232,19 +236,44 @@ struct TaskReviewView: View {
                 Section("担当者") {
                     TextField("例：父・母", text: $assignee)
                 }
+                if task.state != .review {
+                    Section("タスク操作") {
+                        Button("対応中にする") {
+                            store.setState(.inProgress, for: task)
+                            dismiss()
+                        }
+                        Button("完了にする") {
+                            store.setState(.completed, for: task)
+                            dismiss()
+                        }
+                        Button("確認済みにする") {
+                            store.setState(.confirmed, for: task)
+                            dismiss()
+                        }
+                        Button("タスクを削除", role: .destructive) {
+                            store.deleteTask(task)
+                            dismiss()
+                        }
+                    }
+                }
             }
-            .navigationTitle("読み取り確認")
+            .navigationTitle(task.state == .review ? "読み取り確認" : "タスク詳細")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("戻る") { dismiss() }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("承認") {
-                        store.approve(task, dueDate: hasDate ? date : nil, assignee: assignee.isEmpty ? nil : assignee)
+                    Button(task.state == .review ? "承認" : "保存") {
+                        let assigned = assignee.isEmpty ? nil : assignee
+                        if task.state == .review {
+                            store.approve(task, dueDate: hasDate ? date : nil, assignee: assigned)
+                        } else {
+                            store.update(task, dueDate: hasDate ? date : nil, assignee: assigned)
+                        }
                         dismiss()
                     }
-                    .disabled(task.rawDateText != nil && !hasDate)
+                    .disabled(task.state == .review && task.rawDateText != nil && !hasDate)
                 }
             }
         }

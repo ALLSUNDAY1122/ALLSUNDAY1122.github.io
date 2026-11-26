@@ -83,6 +83,16 @@ final class AppStore: ObservableObject {
         persist()
     }
 
+    func update(_ task: HouseholdTask, dueDate: Date?, assignee: String?) {
+        guard let index = tasks.firstIndex(where: { $0.id == task.id }) else { return }
+        tasks[index].dueDate = dueDate
+        tasks[index].assignee = assignee
+        if tasks[index].state == .todo || tasks[index].state == .inProgress {
+            NotificationScheduler.shared.schedule(for: tasks[index])
+        }
+        persist()
+    }
+
     func setState(_ state: TaskState, for task: HouseholdTask) {
         guard let index = tasks.firstIndex(where: { $0.id == task.id }) else { return }
         tasks[index].state = state
