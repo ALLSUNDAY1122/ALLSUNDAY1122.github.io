@@ -1,5 +1,6 @@
 import Foundation
 import StoreKit
+import SwiftUI
 
 @MainActor
 final class SubscriptionStore: ObservableObject {
@@ -42,7 +43,7 @@ final class SubscriptionStore: ObservableObject {
 
     func restore() async {
         do {
-            try await AppStore.sync()
+            try await StoreKit.AppStore.sync()
             await refreshEntitlements()
             message = isPremium ? "購入を復元しました。" : "復元できる購入が見つかりませんでした。"
         } catch {

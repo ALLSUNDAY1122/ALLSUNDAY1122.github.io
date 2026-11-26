@@ -20,7 +20,13 @@ targets:
     platform: iOS
     deploymentTarget: "17.0"
     sources:
-      - path: EnprintGuard
+      - path: EnprintGuard/EnprintGuardApp.swift
+      - path: EnprintGuard/Models.swift
+      - path: EnprintGuard/ExtractionService.swift
+      - path: EnprintGuard/NotificationScheduler.swift
+      - path: EnprintGuard/AppStore.swift
+      - path: EnprintGuard/SubscriptionStore.swift
+      - path: EnprintGuard/ContentView.swift
       - path: EnprintGuard/PrivacyInfo.xcprivacy
         buildPhase: resources
     settings:

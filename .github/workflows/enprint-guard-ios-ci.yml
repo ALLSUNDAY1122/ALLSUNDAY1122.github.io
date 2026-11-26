@@ -1,0 +1,87 @@
+name: Enprint Guard native iOS CI
+
+on:
+  push:
+    branches:
+      - feature/enprint-guard-native-20261127
+      - main
+    paths:
+      - "enprint-guard/**"
+      - ".github/workflows/enprint-guard-ios-ci.yml"
+  pull_request:
+    paths:
+      - "enprint-guard/**"
+      - ".github/workflows/enprint-guard-ios-ci.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  simulator:
+    runs-on: macos-15
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Validate privacy manifest and app identity
+        run: |
+          python3 - <<'PY'
+          import plistlib
+          from pathlib import Path
+          root = Path("enprint-guard/ios")
+          info = plistlib.loads((root / "EnprintGuard/Info.plist").read_bytes())
+          privacy = plistlib.loads((root / "EnprintGuard/PrivacyInfo.xcprivacy").read_bytes())
+          assert info["CFBundleIdentifier"] == "$(PRODUCT_BUNDLE_IDENTIFIER)"
+          assert info["CFBundleShortVersionString"] == "$(MARKETING_VERSION)"
+          assert privacy["NSPrivacyTracking"] is False
+          assert privacy["NSPrivacyCollectedDataTypes"] == []
+          print("PASS: plist, privacy manifest and placeholder bundle identity")
+          PY
+
+      - name: Generate Xcode project
+        run: |
+          cd enprint-guard/ios
+          xcodegen generate
+
+      - name: Build unsigned iOS Simulator app
+        run: |
+          cd enprint-guard/ios
+          xcodebuild -project EnprintGuard.xcodeproj -scheme EnprintGuard \
+            -configuration Debug -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath "$RUNNER_TEMP/enprint-derived" \
+            CODE_SIGNING_ALLOWED=NO build
+
+      - name: Run unit tests on an available iPhone simulator
+        run: |
+          cd enprint-guard/ios
+          UDID="$(xcrun simctl list devices available --json | python3 -c '
+          import json,sys
+          data=json.load(sys.stdin)
+          devices=[d for runtime in data["devices"].values() for d in runtime
+                   if d.get("isAvailable") and d.get("name","").startswith("iPhone")]
+          if not devices: raise SystemExit("No available iPhone simulator")
+          print(devices[0]["udid"])
+          ')"
+          xcodebuild test -project EnprintGuard.xcodeproj -scheme EnprintGuard \
+            -destination "platform=iOS Simulator,id=$UDID" \
+            -derivedDataPath "$RUNNER_TEMP/enprint-test-derived" \
+            CODE_SIGNING_ALLOWED=NO
+
+      - name: Read back compiled app identity
+        run: |
+          python3 - <<'PY'
+          import os, plistlib
+          from pathlib import Path
+          app = Path(os.environ["RUNNER_TEMP"]) / "enprint-derived/Build/Products/Debug-iphonesimulator/EnprintGuard.app"
+          info = plistlib.loads((app / "Info.plist").read_bytes())
+          assert info["CFBundleIdentifier"] == "jp.allsunday1122.enprintguard", info
+          assert info["CFBundleShortVersionString"] == "1.0.0", info
+          assert info["CFBundleVersion"] == "1", info
+          assert (app / "PrivacyInfo.xcprivacy").is_file()
+          print("PASS: compiled app identity and privacy manifest")
+          PY
