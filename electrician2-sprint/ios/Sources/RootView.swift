@@ -173,7 +173,7 @@ struct SettingsView: View {
     }.navigationTitle("設定").scrollContentBackground(.hidden).background(ETheme.paper)
     .environment(\.dynamicTypeSize,model.fontScale == 0 ? .large : (model.fontScale == 1 ? .xLarge : .xxxLarge))
     .fileExporter(isPresented:$showExporter,document:backupDocument,contentType:.json,defaultFilename:"electrician2-learning-backup") { result in if case .failure(let error)=result { status=error.localizedDescription } else { status="JSONを書き出しました。" } }
-    .fileImporter(isPresented:$showImporter,allowedContentTypes:[.json],allowsMultipleSelection:false) { result in do { let url=try result.get(); let access=url.startAccessingSecurityScopedResource(); defer { if access { url.stopAccessingSecurityScopedResource() } }; try model.restoreBackup(Data(contentsOf:url)); status="学習データを読み込みました。" } catch { status=error.localizedDescription } }
+    .fileImporter(isPresented:$showImporter,allowedContentTypes:[.json]) { result in do { let url=try result.get(); let access=url.startAccessingSecurityScopedResource(); defer { if access { url.stopAccessingSecurityScopedResource() } }; try model.restoreBackup(Data(contentsOf:url)); status="学習データを読み込みました。" } catch { status=error.localizedDescription } }
     } }
 }
 struct BackupDocument: FileDocument {
