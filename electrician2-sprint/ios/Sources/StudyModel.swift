@@ -23,6 +23,7 @@ private struct LearningSnapshot: Codable {
 }
 final class StudyModel: ObservableObject {
     private let storageKey = "electrician2.learning.snapshot.v1"
+    private let defaults: UserDefaults
     @Published var tab = 0
     @Published var goal = 8 { didSet { persist() } }
     @Published var done = 0 { didSet { persist() } }
@@ -46,11 +47,11 @@ final class StudyModel: ObservableObject {
     var current: DemoQuestion? { session.indices.contains(index) ? session[index] : nil }
     var weakQuestions: [DemoQuestion] { demos.filter { weakIDs.contains($0.id) && !graduatedIDs.contains($0.id) } }
     var graduatedQuestions: [DemoQuestion] { demos.filter { graduatedIDs.contains($0.id) } }
-    init() { restore() }
+    init(defaults: UserDefaults = .standard) { self.defaults = defaults; restore() }
     func start(_ count:Int = 8, weakOnly:Bool = false) {
         let source = weakOnly ? weakQuestions : demos
-        let safe = source.isEmpty ? demos : source
-        session = (0..<count).map { safe[$0 % safe.count] }
+        guard !source.isEmpty else { session = []; showQuestion = false; return }
+        session = (0..<count).map { source[$0 % source.count] }
         index=0; selected=nil; graded=false; showQuestion=true
     }
     func answer(_ value:Int) {
@@ -74,7 +75,7 @@ final class StudyModel: ObservableObject {
         else { showQuestion=false; session=[] }
     }
     private func restore() {
-        guard let data=UserDefaults.standard.data(forKey:storageKey),
+        guard let data=defaults.data(forKey:storageKey),
               let saved=try? JSONDecoder().decode(LearningSnapshot.self,from:data) else { return }
         goal=saved.goal; done=saved.done; completed=saved.completed; correct=saved.correct
         weakStreak=saved.weakStreak; weakIDs=saved.weakIDs; graduatedIDs=saved.graduatedIDs
@@ -82,6 +83,6 @@ final class StudyModel: ObservableObject {
     }
     private func persist() {
         let snapshot=LearningSnapshot(goal:goal,done:done,completed:completed,correct:correct,weakStreak:weakStreak,weakIDs:weakIDs,graduatedIDs:graduatedIDs,fontScale:fontScale,answeredIDs:answeredIDs)
-        if let data=try? JSONEncoder().encode(snapshot) { UserDefaults.standard.set(data,forKey:storageKey) }
+        if let data=try? JSONEncoder().encode(snapshot) { defaults.set(data,forKey:storageKey) }
     }
 }

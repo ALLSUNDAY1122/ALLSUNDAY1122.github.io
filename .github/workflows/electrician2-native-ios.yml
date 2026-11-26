@@ -26,6 +26,11 @@ jobs:
         run: |
           set -o pipefail
           xcodebuild -project Electrician2Sprint.xcodeproj -scheme Electrician2Sprint -configuration Debug -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build | tee "$RUNNER_TEMP/electrician2-debug-build.log"
+      - name: Run learning-state regression tests
+        working-directory: electrician2-sprint/ios
+        run: |
+          set -o pipefail
+          xcodebuild -project Electrician2Sprint.xcodeproj -scheme Electrician2Sprint -configuration Debug -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 16' CODE_SIGNING_ALLOWED=NO test | tee "$RUNNER_TEMP/electrician2-learning-tests.log"
       - name: Release simulator compile
         working-directory: electrician2-sprint/ios
         run: |
