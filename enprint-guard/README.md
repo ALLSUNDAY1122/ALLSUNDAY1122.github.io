@@ -11,7 +11,7 @@ iOS native app source. Bundle ID: `jp.allsunday1122.enprintguard`.
 - Local persistence and local notification scheduling
 - StoreKit 2 monthly / annual product wiring
 
-## Explicitly incomplete release gates
+App Store icon: a deterministic 1024x1024 opaque RGB icon is generated from the checked-in standard-library Python script before XcodeGen runs.\n\n## Explicitly incomplete release gates
 
 This branch is a first implementation slice, not a TestFlight-ready release.
 

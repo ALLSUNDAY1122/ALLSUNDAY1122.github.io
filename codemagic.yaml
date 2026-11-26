@@ -2177,6 +2177,7 @@ workflows:
       - name: Set unique build number and generate Xcode project
         script: |
           set -euo pipefail
+          python3 "$CM_BUILD_DIR/enprint-guard/ios/scripts/generate_app_icon.py"
           cd "$CM_BUILD_DIR/enprint-guard/ios"
           python3 - <<'PY'
           import os

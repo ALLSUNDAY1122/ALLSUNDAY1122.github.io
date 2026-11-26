@@ -10,6 +10,7 @@ settings:
     MARKETING_VERSION: "1.0.0"
     CURRENT_PROJECT_VERSION: "1"
     GENERATE_INFOPLIST_FILE: NO
+    ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
     TARGETED_DEVICE_FAMILY: "1"
     SUPPORTS_MACCATALYST: NO
     CODE_SIGN_STYLE: Automatic
@@ -28,6 +29,8 @@ targets:
       - path: EnprintGuard/SubscriptionStore.swift
       - path: EnprintGuard/ContentView.swift
       - path: EnprintGuard/PrivacyInfo.xcprivacy
+        buildPhase: resources
+      - path: EnprintGuard/Assets.xcassets
         buildPhase: resources
     settings:
       base:

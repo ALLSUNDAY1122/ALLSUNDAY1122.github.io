@@ -42,6 +42,20 @@ jobs:
           print("PASS: plist, privacy manifest and placeholder bundle identity")
           PY
 
+      - name: Generate and verify opaque App Store icon
+        run: |
+          python3 enprint-guard/ios/scripts/generate_app_icon.py
+          python3 - <<'PY'
+          import struct
+          from pathlib import Path
+          raw = Path('enprint-guard/ios/EnprintGuard/Assets.xcassets/AppIcon.appiconset/AppIcon.png').read_bytes()
+          assert raw[:8] == b'\x89PNG\r\n\x1a\n'
+          width, height, depth, color_type, compression, filtering, interlace = struct.unpack('>IIBBBBB', raw[16:29])
+          assert (width, height, depth, color_type) == (1024, 1024, 8, 2)
+          assert compression == 0 and filtering == 0 and interlace == 0
+          print('PASS: 1024x1024 opaque RGB AppIcon')
+          PY
+
       - name: Validate Codemagic Internal TestFlight contract
         run: |
           python3 -m venv "$RUNNER_TEMP/enprint-yaml-venv"
