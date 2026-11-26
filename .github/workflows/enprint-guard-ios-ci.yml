@@ -37,6 +37,7 @@ jobs:
           privacy = plistlib.loads((root / "EnprintGuard/PrivacyInfo.xcprivacy").read_bytes())
           assert info["CFBundleIdentifier"] == "$(PRODUCT_BUNDLE_IDENTIFIER)"
           assert info["CFBundleShortVersionString"] == "$(MARKETING_VERSION)"
+          assert info["CFBundleExecutable"] == "$(EXECUTABLE_NAME)"
           assert privacy["NSPrivacyTracking"] is False
           assert privacy["NSPrivacyCollectedDataTypes"] == []
           print("PASS: plist, privacy manifest and placeholder bundle identity")
@@ -80,8 +81,11 @@ jobs:
           registry = json.loads(Path('automation/app-release-registry.json').read_text(encoding='utf-8'))
           app = registry['apps']['enprintguard']
           assert app['bundle_id'] == signing['bundle_identifier']
-          assert app['app_id'] is None and app['readback'] is False
-          print('PASS: Codemagic TestFlight-only contract and pending App Store record gate')
+          assert app['app_id'] == '6839814394'
+          assert app['sku'] == 'enprintguard-ios-20261127-01'
+          assert app['apple_record_user_confirmed'] is True
+          assert app['readback'] is False
+          print('PASS: TestFlight-only contract and owner-confirmed ASC identity; API read-back pending')
           PY
 
       - name: Generate Xcode project
@@ -124,6 +128,8 @@ jobs:
           assert info["CFBundleIdentifier"] == "jp.allsunday1122.enprintguard", info
           assert info["CFBundleShortVersionString"] == "1.0.0", info
           assert info["CFBundleVersion"] == "1", info
+          executable = app / info["CFBundleExecutable"]
+          assert executable.is_file(), f"Missing executable: {executable}"
           assert (app / "PrivacyInfo.xcprivacy").is_file()
           print("PASS: compiled app identity and privacy manifest")
           PY
