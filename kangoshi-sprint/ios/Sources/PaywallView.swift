@@ -1,3 +1,4 @@
+import Foundation
 import SwiftUI
 import LearningSprintCore
 
@@ -13,11 +14,31 @@ struct PaywallView: View {
     static let privacyPolicyURL = URL(string: "https://allsunday1122.github.io/kangoshi-sprint/privacy.html")!
     static let termsOfUseURL = URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!
 
+    // Active only when launched by KangoshiScreenshotUITests with -ASCScreenshotMode.
+    // Never active in normal or release launches.
+    private var isASCScreenshotMode: Bool {
+        ProcessInfo.processInfo.arguments.contains("-ASCScreenshotMode")
+    }
+
+    private func screenshotFallbackPrice(for id: String) -> String? {
+        guard isASCScreenshotMode else { return nil }
+        switch id {
+        case monthlyID: return "\u{00A5}200"
+        case lifetimeID: return "\u{00A5}800"
+        default: return nil
+        }
+    }
+
+    private func resolvedDisplayPrice(for id: String) -> String? {
+        purchase.displayPrice(for: id) ?? screenshotFallbackPrice(for: id)
+    }
+
     private var stateMessage: String? {
         switch purchase.state {
         case .pending: return "購入承認を待っています。"
         case .cancelled: return "購入はキャンセルされました。"
-        case .unavailable(let text), .failed(let text): return text
+        case .unavailable(let text): return isASCScreenshotMode ? nil : text
+        case .failed(let text): return text
         default: return nil
         }
     }
@@ -54,24 +75,24 @@ struct PaywallView: View {
                                 } label: {
                                     VStack(spacing:3) {
                                         Text(purchase.state == .purchasing ? "購入処理中…" : "月額プラン").font(.headline)
-                                        Text(purchase.displayPrice(for: monthlyID).map { "月額 \($0)" } ?? "価格を取得中").font(.caption)
+                                        Text(resolvedDisplayPrice(for: monthlyID).map { "月額 \($0)" } ?? "価格を取得中").font(.caption)
                                     }.frame(maxWidth:.infinity).padding(.vertical,13)
                                 }
                                 .buttonStyle(.borderedProminent)
                                 .tint(KSTheme.ai)
-                                .disabled(purchase.product(for: monthlyID) == nil || purchase.state == .purchasing)
+                                .disabled((purchase.product(for: monthlyID) == nil && !isASCScreenshotMode) || purchase.state == .purchasing)
 
                                 Button {
                                     Task { await purchase.purchase(productID: lifetimeID) }
                                 } label: {
                                     VStack(spacing:3) {
                                         Text(purchase.state == .purchasing ? "購入処理中…" : "買い切りプラン").font(.headline)
-                                        Text(purchase.displayPrice(for: lifetimeID).map { "買い切り \($0)" } ?? "価格を取得中").font(.caption)
+                                        Text(resolvedDisplayPrice(for: lifetimeID).map { "買い切り \($0)" } ?? "価格を取得中").font(.caption)
                                     }.frame(maxWidth:.infinity).padding(.vertical,13)
                                 }
                                 .buttonStyle(.bordered)
                                 .tint(KSTheme.ai)
-                                .disabled(purchase.product(for: lifetimeID) == nil || purchase.state == .purchasing)
+                                .disabled((purchase.product(for: lifetimeID) == nil && !isASCScreenshotMode) || purchase.state == .purchasing)
                             }
                         }
 
