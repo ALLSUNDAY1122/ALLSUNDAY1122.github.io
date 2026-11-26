@@ -44,8 +44,9 @@ jobs:
 
       - name: Validate Codemagic Internal TestFlight contract
         run: |
-          python3 -m pip install --disable-pip-version-check PyYAML
-          python3 - <<'PY'
+          python3 -m venv "$RUNNER_TEMP/enprint-yaml-venv"
+          "$RUNNER_TEMP/enprint-yaml-venv/bin/python" -m pip install --disable-pip-version-check PyYAML
+          "$RUNNER_TEMP/enprint-yaml-venv/bin/python" - <<'PY'
           import json
           import yaml
           from pathlib import Path
