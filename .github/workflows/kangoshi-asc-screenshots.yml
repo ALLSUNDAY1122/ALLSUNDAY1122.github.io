@@ -20,7 +20,7 @@ jobs:
           python3 kangoshi-sprint/ios/tools/normalize_swift_numeric_literals.py
           python3 kangoshi-sprint/ios/tools/prepare_native_content.py
 
-      - name: Ensure Review.storekit is bundled in UITests and generate Xcode project
+      - name: Ensure Review.storekit is in UITests + TestAction, then generate Xcode project
         working-directory: kangoshi-sprint/ios
         run: |
           python3 - <<'PY'
@@ -39,6 +39,7 @@ jobs:
               p.write_text(text, encoding='utf-8')
           PY
           xcodegen generate
+          python3 tools/attach_storekit_test_action.py
           grep -q 'Review.storekit' KangoshiSprint.xcodeproj/xcshareddata/xcschemes/KangoshiSprint.xcscheme
 
       - name: Select iPhone 16 Pro Max (6.9-inch) simulator
@@ -86,14 +87,19 @@ jobs:
             --cellularBars 4 \
             --batteryState charged \
             --batteryLevel 100
+          storekit="$PWD/kangoshi-sprint/ios/Review.storekit"
+          test -f "$storekit"
           rm -rf "$RUNNER_TEMP/KangoshiScreens.xcresult"
           set -o pipefail
+          # -storeKitConfigurationPath injects Review.storekit into the app process.
+          # Run 45729899684 used SKTestSession only; prices stayed at 価格を取得中.
           xcodebuild test \
             -project kangoshi-sprint/ios/KangoshiSprint.xcodeproj \
             -scheme KangoshiSprint \
             -configuration Debug \
             -destination "platform=iOS Simulator,id=$udid" \
             -only-testing:KangoshiSprintUITests/KangoshiScreenshotUITests/testCaptureAppStoreScreens \
+            -storeKitConfigurationPath "$storekit" \
             -resultBundlePath "$RUNNER_TEMP/KangoshiScreens.xcresult" \
             CODE_SIGNING_ALLOWED=NO | tee "$RUNNER_TEMP/xcodebuild-screenshots.log"
           xcrun simctl io "$udid" screenshot "$RUNNER_TEMP/simctl-booted-final.png" || true
