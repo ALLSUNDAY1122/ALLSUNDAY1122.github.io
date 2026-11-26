@@ -60,6 +60,7 @@ final class StudyModel: ObservableObject {
     let examSets: [ExamSet]
     let subjects: [String]
     let bankLoadError: String?
+
     var current: DemoQuestion? { session.indices.contains(index) ? session[index] : nil }
     var weakQuestions: [DemoQuestion] { demos.filter { weakIDs.contains($0.id) && !graduatedIDs.contains($0.id) } }
     var graduatedQuestions: [DemoQuestion] { demos.filter { graduatedIDs.contains($0.id) } }
@@ -89,7 +90,7 @@ final class StudyModel: ObservableObject {
                     id: index + 1, officialID: q.id, exam: q.exam, examDate: q.examDate,
                     questionNumber: q.questionNumber, sourceURL: q.source.url,
                     auditStatus: q.auditStatus ?? q.audit.releaseStatus, subject: q.section,
-                    prompt: q.question, choices: q.choices.map(\\.text), answer: answerIndex,
+                    prompt: q.question, choices: q.choices.map(\.text), answer: answerIndex,
                     memory: q.hereToRemember ?? "要点解説は準備中です。",
                     explanation: q.explanation ?? "解説は準備中です。", diagramID: diagram
                 )
@@ -97,7 +98,7 @@ final class StudyModel: ObservableObject {
             self.examSets = Dictionary(grouping: self.demos, by: { String($0.officialID.dropLast(4)) })
                 .map { key, questions in ExamSet(id: key, title: questions.first?.exam ?? key, questionCount: questions.count) }
                 .sorted { $0.id < $1.id }
-            self.subjects = Array(Set(self.demos.map(\\.subject))).sorted()
+            self.subjects = Array(Set(self.demos.map(\.subject))).sorted()
             self.bankLoadError = nil
         } else {
             self.demos = []
@@ -107,13 +108,19 @@ final class StudyModel: ObservableObject {
         }
         restore()
     }
-    func start(_ count:Int = 8, weakOnly:Bool = false) {
-        let source = weakOnly ? weakQuestions : demos
+    func start(_ count:Int = 8, weakOnly:Bool = false, subject:String? = nil) {
+        var source = weakOnly ? weakQuestions : demos
+        if let subject { source = source.filter { $0.subject == subject } }
         guard !source.isEmpty else { session = []; showQuestion = false; return }
         session = (0..<count).map { source[$0 % source.count] }
         index=0; selected=nil; graded=false; showQuestion=true
     }
-    func start(examPrefix:String) {\n        let source = demos.filter { $0.officialID.hasPrefix(examPrefix + "-") }\n        guard !source.isEmpty else { session=[]; showQuestion=false; return }\n        session=source; index=0; selected=nil; graded=false; showQuestion=true\n    }\n    func answer(_ value:Int) {
+    func start(examPrefix:String) {
+        let source = demos.filter { $0.officialID.hasPrefix(examPrefix + "-") }
+        guard !source.isEmpty else { session=[]; showQuestion=false; return }
+        session=source; index=0; selected=nil; graded=false; showQuestion=true
+    }
+    func answer(_ value:Int) {
         guard !graded, let q=current else{return}
         selected=value; graded=true; completed += 1; answeredIDs.append(q.id)
         let today = Self.dayKey(Date())
