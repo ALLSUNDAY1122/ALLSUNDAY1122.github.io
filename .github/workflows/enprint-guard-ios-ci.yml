@@ -38,6 +38,7 @@ jobs:
           assert info["CFBundleIdentifier"] == "$(PRODUCT_BUNDLE_IDENTIFIER)"
           assert info["CFBundleShortVersionString"] == "$(MARKETING_VERSION)"
           assert info["CFBundleExecutable"] == "$(EXECUTABLE_NAME)"
+          assert info["CFBundleExecutable"] == "$(EXECUTABLE_NAME)"
           assert privacy["NSPrivacyTracking"] is False
           assert privacy["NSPrivacyCollectedDataTypes"] == []
           print("PASS: plist, privacy manifest and placeholder bundle identity")
