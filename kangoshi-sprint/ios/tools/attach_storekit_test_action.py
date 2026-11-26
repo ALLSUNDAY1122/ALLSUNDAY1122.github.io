@@ -1,25 +1,24 @@
 #!/usr/bin/env python3
 """Attach Review.storekit to the scheme TestAction after xcodegen generate.
 
-XcodeGen's scheme.storeKitConfiguration is written only on LaunchAction (Run).
-UI tests launch the app through TestAction, so Product.products(for:) in the
-app process never sees the configuration unless TestAction also references it.
-
-Evidence: GitHub Actions run 45729899684 copied Review.storekit into the UITest
-bundle and constructed SKTestSession, but the paywall buttons stayed at
-'月額プラン, 価格を取得中' / '買い切りプラン, 価格を取得中' until timeout.
+Reuses the exact <StoreKitConfigurationFileReference ...> block emitted on
+LaunchAction (when present) so path formatting always matches XcodeGen output.
 """
 from __future__ import annotations
 
+import re
 import sys
 from pathlib import Path
 
 SCHEME = Path("KangoshiSprint.xcodeproj/xcshareddata/xcschemes/KangoshiSprint.xcscheme")
-IDENTIFIER = "../../Review.storekit"
-REFERENCE = (
+DEFAULT_REFERENCE = (
     "      <StoreKitConfigurationFileReference\n"
-    f'         identifier = "{IDENTIFIER}">\n'
+    '         identifier = "../../Review.storekit">\n'
     "      </StoreKitConfigurationFileReference>\n"
+)
+REF_RE = re.compile(
+    r"[ \t]*<StoreKitConfigurationFileReference\b[^>]*Review\.storekit[^>]*>\s*</StoreKitConfigurationFileReference>\s*",
+    re.S,
 )
 
 
@@ -33,22 +32,29 @@ def action_has_storekit(block: str) -> bool:
     return "StoreKitConfigurationFileReference" in block and "Review.storekit" in block
 
 
-def patch_action(src: str, name: str) -> str:
+def patch_action(src: str, name: str, ref_xml: str) -> str:
     start, end, block = action_slice(src, name)
     if action_has_storekit(block):
         return src
-    patched = block[: -len(f"</{name}>")] + REFERENCE + f"   </{name}>"
+    patched = block[: -len(f"</{name}>")] + ref_xml + f"   </{name}>"
     return src[:start] + patched + src[end:]
 
 
 def main() -> None:
     scheme = Path(sys.argv[1]) if len(sys.argv) > 1 else SCHEME
     text = scheme.read_text(encoding="utf-8")
+    _, _, launch_block = action_slice(text, "LaunchAction")
+    match = REF_RE.search(launch_block)
+    ref_xml = match.group(0) if match else DEFAULT_REFERENCE
+    if not ref_xml.endswith("\n"):
+        ref_xml += "\n"
+
     if "Review.storekit" not in text:
         for name in ("LaunchAction", "TestAction"):
-            text = patch_action(text, name)
+            text = patch_action(text, name, ref_xml)
     else:
-        text = patch_action(text, "TestAction")
+        text = patch_action(text, "TestAction", ref_xml)
+
     scheme.write_text(text, encoding="utf-8")
     _, _, test_block = action_slice(text, "TestAction")
     if not action_has_storekit(test_block):
