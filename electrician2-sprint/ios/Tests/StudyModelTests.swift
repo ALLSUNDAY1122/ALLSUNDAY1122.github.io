@@ -9,8 +9,31 @@ final class StudyModelTests: XCTestCase {
         return defaults
     }
 
+    private func makeModel(defaults: UserDefaults? = nil) -> StudyModel {
+        let question = BankQuestion(
+            id: "E2-TEST-001", exam: "テスト試験", examDate: "2026-01-01",
+            section: "一般問題", questionNumber: 1, question: "テスト問題",
+            choices: [
+                BankChoice(label: "イ", text: "選択肢1"),
+                BankChoice(label: "ロ", text: "選択肢2"),
+                BankChoice(label: "ハ", text: "選択肢3"),
+                BankChoice(label: "ニ", text: "選択肢4")
+            ],
+            answerOfficial: "イ", hereToRemember: nil, explanation: nil,
+            source: BankQuestionSource(title: "テスト出典", url: "https://example.com/question.pdf", page: 1, figure: nil, figureRefs: nil),
+            audit: BankQuestionAudit(transcription: "転記", answer: "照合", figureStatus: "確認済み", independentReview: "テスト", releaseStatus: "PENDING"),
+            auditStatus: "PENDING"
+        )
+        let bank = QuestionBankFile(
+            schemaVersion: "1.0", dataSet: "E2-ALL-2022-2026",
+            sourceFiles: QuestionBankSourceFiles(questionPdf: "test", answerPdf: "test"),
+            questionCount: 1, questions: [question]
+        )
+        return StudyModel(defaults: defaults ?? makeDefaults(), bank: bank)
+    }
+
     func testThreeConsecutiveCorrectAnswersGraduateWeakQuestion() {
-        let model = StudyModel(defaults: makeDefaults())
+        let model = makeModel()
         model.start(1); model.answer((model.current!.answer + 1) % 4)
         XCTAssertTrue(model.weakIDs.contains(1))
         for _ in 0..<3 {
@@ -36,11 +59,11 @@ final class StudyModelTests: XCTestCase {
 
     func testLearningStatePersistsAcrossModelRecreation() {
         let defaults = makeDefaults()
-        let first = StudyModel(defaults: defaults)
+        let first = makeModel(defaults: defaults)
         first.goal = 16
         first.fontScale = 2
         first.start(1); first.answer((first.current!.answer + 1) % 4)
-        let restored = StudyModel(defaults: defaults)
+        let restored = makeModel(defaults: defaults)
         XCTAssertEqual(restored.goal, 16)
         XCTAssertEqual(restored.fontScale, 2)
         XCTAssertEqual(restored.completed, 1)
@@ -65,7 +88,7 @@ final class StudyModelTests: XCTestCase {
         first.answer((first.current!.answer + 1) % 4)
         let backup = try first.backupData()
 
-        let restored = StudyModel(defaults: makeDefaults())
+        let restored = makeModel()
         try restored.restoreBackup(backup)
         XCTAssertEqual(restored.goal, 16)
         XCTAssertEqual(restored.fontScale, 2)
