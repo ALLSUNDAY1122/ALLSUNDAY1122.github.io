@@ -46,7 +46,7 @@ final class StudyModelTests: XCTestCase {
     }
 
     func testWrongAnswerResetsStreakAndRemovesGraduation() {
-        let model = StudyModel(defaults: makeDefaults())
+        let model = makeModel()
         model.start(1); model.answer((model.current!.answer + 1) % 4)
         model.start(1, weakOnly: true); model.answer(model.current!.answer)
         model.start(1, weakOnly: true); model.answer(model.current!.answer)
@@ -73,7 +73,7 @@ final class StudyModelTests: XCTestCase {
     }
 
     func testWeakOnlySessionDoesNotFallbackWhenEmpty() {
-        let model = StudyModel(defaults: makeDefaults())
+        let model = makeModel()
         model.start(8, weakOnly: true)
         XCTAssertTrue(model.session.isEmpty)
         XCTAssertFalse(model.showQuestion)
@@ -81,7 +81,7 @@ final class StudyModelTests: XCTestCase {
 
     func testBackupJSONRoundTripsLearningData() throws {
         let defaults = makeDefaults()
-        let first = StudyModel(defaults: defaults)
+        let first = makeModel(defaults: defaults)
         first.goal = 16
         first.fontScale = 2
         first.start(1)
