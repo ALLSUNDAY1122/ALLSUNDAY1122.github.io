@@ -11,11 +11,11 @@ final class StudyModelTests: XCTestCase {
 
     func testThreeConsecutiveCorrectAnswersGraduateWeakQuestion() {
         let model = StudyModel(defaults: makeDefaults())
-        model.start(1); model.answer(1)
+        model.start(1); model.answer((model.current!.answer + 1) % 4)
         XCTAssertTrue(model.weakIDs.contains(1))
         for _ in 0..<3 {
             model.start(1, weakOnly: true)
-            model.answer(0)
+            model.answer(model.current!.answer)
         }
         XCTAssertFalse(model.weakIDs.contains(1))
         XCTAssertTrue(model.graduatedIDs.contains(1))
@@ -28,7 +28,7 @@ final class StudyModelTests: XCTestCase {
         model.start(1, weakOnly: true); model.answer(0)
         model.start(1, weakOnly: true); model.answer(0)
         XCTAssertEqual(model.weakStreak[1], 2)
-        model.start(1, weakOnly: true); model.answer(1)
+        model.start(1, weakOnly: true); model.answer((model.current!.answer + 1) % 4)
         XCTAssertEqual(model.weakStreak[1], 0)
         XCTAssertTrue(model.weakIDs.contains(1))
         XCTAssertFalse(model.graduatedIDs.contains(1))
@@ -77,7 +77,7 @@ final class StudyModelTests: XCTestCase {
         let json = """
         {
           "schemaVersion":"1.0",
-          "dataSet":"E2-ALL-2024-2026",
+          "dataSet":"E2-ALL-2022-2026",
           "sourceFiles":{"questionPdf":"multiple","answerPdf":"multiple"},
           "questionCount":1,
           "questions":[{
