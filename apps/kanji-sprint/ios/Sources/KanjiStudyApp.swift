@@ -6,7 +6,6 @@ import GoogleMobileAds
 struct KanjiStudyApp: App {
     @StateObject private var premium = PremiumStore()
     @StateObject private var records = StudyRecordStore()
-    @StateObject private var bgm = BGMPlayer.shared
     @Environment(\.scenePhase) private var scenePhase
 
     init() {
@@ -25,19 +24,11 @@ struct KanjiStudyApp: App {
                 .preferredColorScheme(.light)
                 .environmentObject(premium)
                 .environmentObject(records)
-                .environmentObject(bgm)
                 .task {
                     await premium.refresh()
-                    bgm.startIfEnabled()
                 }
                 .onChange(of: scenePhase) { phase in
-                    if phase == .active {
-                        Task { await premium.refreshEntitlements() }
-                        bgm.resumeIfEnabled()
-                    }
-                    if phase == .background {
-                        bgm.pause()
-                    }
+                    if phase == .active { Task { await premium.refreshEntitlements() } }
                 }
         }
     }
