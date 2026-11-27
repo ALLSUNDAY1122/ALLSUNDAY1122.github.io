@@ -6,6 +6,7 @@ enum TaskCategory: String, CaseIterable, Codable, Identifiable {
     case item
     case purchase
     case response
+    case other
 
     var id: String { rawValue }
 
@@ -16,6 +17,7 @@ enum TaskCategory: String, CaseIterable, Codable, Identifiable {
         case .item: return "持ち物"
         case .purchase: return "購入・準備"
         case .response: return "回答・申込"
+        case .other: return "その他"
         }
     }
 }
