@@ -45,7 +45,9 @@ struct BankQuestion: Codable, Identifiable {
     let source: BankQuestionSource
     let audit: BankQuestionAudit
     let auditStatus: String?
-    enum CodingKeys: String, CodingKey { case id, exam, examDate, section, questionNumber, question, choices, answerOfficial, hereToRemember, explanation, source, audit, auditStatus = "audit_status" }
+    let excludedFromQuiz: Bool?
+    var isEligibleForQuiz: Bool { excludedFromQuiz != true }
+    enum CodingKeys: String, CodingKey { case id, exam, examDate, section, questionNumber, question, choices, answerOfficial, hereToRemember, explanation, source, audit, auditStatus = "audit_status", excludedFromQuiz }
 }
 enum QuestionBankLoader {
     static func load() throws -> QuestionBankFile {

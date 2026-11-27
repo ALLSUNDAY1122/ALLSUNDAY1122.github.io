@@ -77,7 +77,12 @@ def main():
     p=argparse.ArgumentParser()
     p.add_argument("files",nargs="+")
     p.add_argument("-o","--output",default="electrician2-sprint/ios/Resources/QUESTION_BANK.json")
+    p.add_argument("--rights-ledger",default="electrician2-sprint/IMAGE_RIGHTS_LEDGER.json")
     a=p.parse_args()
+    ledger=json.loads(Path(a.rights_ledger).read_text(encoding="utf-8"))
+    hold_ids={item["question_id"] for item in ledger.get("items",[]) if item.get("rights_class")=="HOLD"}
+    if len(hold_ids)!=67 or ledger.get("rights_counts",{}).get("HOLD")!=67:
+        raise ValueError(f"Expected exactly 67 HOLD questions in rights ledger, got {len(hold_ids)}")
     if len(a.files)!=12: raise ValueError(f"Expected exactly 12 source files, got {len(a.files)}")
     combined=[]; seen=set(); sources={}
     for f in a.files:
@@ -94,6 +99,9 @@ def main():
         if not q["question"] or [c["label"] for c in q["choices"]]!=LABELS or any(not c["text"] for c in q["choices"]) or q["answerOfficial"] not in LABELS or not q["source"]["url"]:
             raise ValueError(f"Invalid normalized record: {q['id']}")
         if q["audit_status"]!="PENDING": raise ValueError(f"Unexpected audit status: {q['id']}")
+    bank_ids={q["id"] for q in combined}
+    if not hold_ids.issubset(bank_ids): raise ValueError(f"HOLD IDs missing from question bank: {sorted(hold_ids-bank_ids)}")
+    for q in combined: q["excludedFromQuiz"] = q["id"] in hold_ids
     bank={"schemaVersion":"1.0","dataSet":"E2-ALL-2022-2026","sourceFiles":{"questionPdf":"複数回分（各問題source.urlに原典URLを保持）","answerPdf":"複数回分（各問題audit.answerに照合記録を保持）"},"questionCount":600,"questions":combined}
     out=Path(a.output); out.parent.mkdir(parents=True,exist_ok=True)
     out.write_text(json.dumps(bank,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")

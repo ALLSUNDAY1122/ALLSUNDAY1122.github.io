@@ -97,7 +97,7 @@ final class StudyModel: ObservableObject {
             return Dictionary(uniqueKeysWithValues: file.items.map { ($0.questionID, $0) })
         }()
         if let bank = suppliedBank ?? (try? QuestionBankLoader.load()) {
-            self.demos = bank.questions.enumerated().map { index, q in
+            self.demos = bank.questions.enumerated().filter { $0.element.isEligibleForQuiz }.map { index, q in
                 let labels = ["イ", "ロ", "ハ", "ニ"]
                 let answerIndex = labels.firstIndex(of: q.answerOfficial) ?? 0
                 let refs = q.source.figureRefs ?? []
