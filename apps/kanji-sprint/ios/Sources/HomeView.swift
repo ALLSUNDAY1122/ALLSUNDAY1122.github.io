@@ -37,7 +37,7 @@ struct HomeView: View {
                         studyStatusCard
                         weakReviewCard
                         Text("学年から選ぶ")
-                            .font(.headline)
+                            .font(.maru(17))
                             .foregroundStyle(Palette.sub)
                         gradeGrid
                         sourceNotice
@@ -87,7 +87,7 @@ struct HomeView: View {
                 .font(.caption.bold())
                 .foregroundStyle(Palette.sub)
             Text("小学生漢字")
-                .font(.system(size: 31, weight: .bold, design: .serif))
+                .font(.maru(31))
                 .foregroundStyle(Palette.ink)
                 .minimumScaleFactor(0.72)
                 .lineLimit(1)
@@ -95,6 +95,14 @@ struct HomeView: View {
             Text("読みと書きを、学年ごとに。")
                 .font(.subheadline)
                 .foregroundStyle(Palette.sub)
+            HStack(spacing: 6) {
+                ForEach(1...3, id: \.self) { grade in
+                    Circle()
+                        .fill(Palette.gradeColor(grade))
+                        .frame(width: 10, height: 10)
+                }
+            }
+            .padding(.top, 4)
         }
         .padding(.top, 10)
     }
@@ -103,14 +111,14 @@ struct HomeView: View {
         let daily = KanjiStore.shared.daily(limit: dailyGoal, weakIDs: records.weakIDs)
         return VStack(alignment: .leading, spacing: 10) {
             Text("今日の学習")
-                .font(.system(size: 21, weight: .bold, design: .serif))
+                .font(.maru(21))
                 .foregroundStyle(Palette.ink)
             Text("苦手な字を優先して10字出します。字をタップすると書き練習もできます。")
                 .font(.subheadline)
                 .foregroundStyle(Palette.sub)
             if !daily.isEmpty {
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 44), spacing: 8)], alignment: .leading, spacing: 8) {
-                    ForEach(daily) { entry in
+                    ForEach(Array(daily.enumerated()), id: \.element.id) { index, entry in
                         Button {
                             path.append(KanjiRoute.detail(entry.kanji))
                         } label: {
@@ -118,8 +126,8 @@ struct HomeView: View {
                                 .font(.system(size: 22, weight: .bold, design: .serif))
                                 .foregroundStyle(records.isWeak(entry.kanji) ? Palette.bad : Palette.ink)
                                 .frame(width: 44, height: 44)
-                                .background(Palette.paper, in: RoundedRectangle(cornerRadius: 10))
-                                .overlay(RoundedRectangle(cornerRadius: 10).stroke(Palette.line))
+                                .background(Palette.gradeSoft(index % 6 + 1), in: RoundedRectangle(cornerRadius: 12))
+                                .overlay(RoundedRectangle(cornerRadius: 12).stroke(Palette.line))
                         }
                         .buttonStyle(.plain)
                     }
@@ -128,18 +136,19 @@ struct HomeView: View {
             NavigationLink(value: KanjiRoute.quiz(title: "今日の学習", kanjiIDs: daily.map(\.kanji), mode: .mixed)) {
                 Text(verbatim: "読みクイズをはじめる　\(daily.count)字")
             }
-            .buttonStyle(PrimaryButtonStyle(background: Palette.navy))
+            .buttonStyle(PrimaryButtonStyle(background: Palette.primary))
             .disabled(daily.isEmpty)
         }
         .padding(18)
-        .background(Palette.card, in: RoundedRectangle(cornerRadius: 18))
-        .overlay(RoundedRectangle(cornerRadius: 18).stroke(Palette.line))
+        .background(Palette.card, in: RoundedRectangle(cornerRadius: 20))
+        .overlay(RoundedRectangle(cornerRadius: 20).stroke(Palette.line))
+        .shadow(color: .black.opacity(0.05), radius: 6, x: 0, y: 2)
     }
 
     private var studyStatusCard: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("学習状況")
-                .font(.system(size: 21, weight: .bold, design: .serif))
+                .font(.maru(21))
                 .foregroundStyle(Palette.ink)
             HStack(spacing: 0) {
                 statCell(value: "\(records.totalAnswered)", label: "総回答数")
@@ -188,8 +197,9 @@ struct HomeView: View {
             }
         }
         .padding(18)
-        .background(Palette.card, in: RoundedRectangle(cornerRadius: 18))
-        .overlay(RoundedRectangle(cornerRadius: 18).stroke(Palette.line))
+        .background(Palette.card, in: RoundedRectangle(cornerRadius: 20))
+        .overlay(RoundedRectangle(cornerRadius: 20).stroke(Palette.line))
+        .shadow(color: .black.opacity(0.05), radius: 6, x: 0, y: 2)
     }
 
     private func statCell(value: String, label: String) -> some View {
@@ -209,7 +219,7 @@ struct HomeView: View {
         return VStack(alignment: .leading, spacing: 10) {
             HStack {
                 Text("苦手復習")
-                    .font(.system(size: 21, weight: .bold, design: .serif))
+                    .font(.maru(21))
                     .foregroundStyle(Palette.ink)
                 Spacer()
                 Text(verbatim: "現在の苦手 \(records.weakCount)字")
@@ -222,12 +232,13 @@ struct HomeView: View {
             NavigationLink(value: KanjiRoute.quiz(title: "苦手復習", kanjiIDs: weak.map(\.kanji), mode: .mixed)) {
                 Text(verbatim: "苦手だけ復習する　\(weak.count)字")
             }
-            .buttonStyle(PrimaryButtonStyle(background: Palette.navy))
+            .buttonStyle(PrimaryButtonStyle(background: Palette.primary))
             .disabled(weak.isEmpty)
         }
         .padding(18)
-        .background(Palette.card, in: RoundedRectangle(cornerRadius: 18))
-        .overlay(RoundedRectangle(cornerRadius: 18).stroke(Palette.line))
+        .background(Palette.card, in: RoundedRectangle(cornerRadius: 20))
+        .overlay(RoundedRectangle(cornerRadius: 20).stroke(Palette.line))
+        .shadow(color: .black.opacity(0.05), radius: 6, x: 0, y: 2)
     }
 
     private var gradeGrid: some View {
@@ -236,9 +247,24 @@ struct HomeView: View {
                 let stats = records.gradeStats(grade)
                 NavigationLink(value: KanjiRoute.grade(grade)) {
                     VStack(alignment: .leading, spacing: 6) {
-                        Text(verbatim: "\(grade)年生")
-                            .font(.system(size: 20, weight: .bold, design: .serif))
-                            .foregroundStyle(Palette.ink)
+                        HStack(spacing: 8) {
+                            ZStack {
+                                Circle()
+                                    .fill(Palette.gradeColor(grade))
+                                    .frame(width: 34, height: 34)
+                                Text(verbatim: "\(grade)")
+                                    .font(.maru(18))
+                                    .foregroundStyle(.white)
+                            }
+                            Text(verbatim: "\(grade)年生")
+                                .font(.maru(20))
+                                .foregroundStyle(Palette.ink)
+                            if stats.studied >= 1 {
+                                Image(systemName: "star.fill")
+                                    .foregroundStyle(Palette.accent)
+                            }
+                            Spacer()
+                        }
                         Text(verbatim: "全\(stats.total)字")
                             .font(.caption)
                             .foregroundStyle(Palette.sub)
@@ -257,8 +283,9 @@ struct HomeView: View {
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(14)
-                    .background(Palette.card, in: RoundedRectangle(cornerRadius: 16))
-                    .overlay(RoundedRectangle(cornerRadius: 16).stroke(Palette.line))
+                    .background(Palette.card, in: RoundedRectangle(cornerRadius: 20))
+                    .overlay(RoundedRectangle(cornerRadius: 20).stroke(Palette.line))
+                    .shadow(color: .black.opacity(0.05), radius: 6, x: 0, y: 2)
                 }
                 .buttonStyle(.plain)
             }

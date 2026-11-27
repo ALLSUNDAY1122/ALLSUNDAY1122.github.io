@@ -14,6 +14,7 @@ struct WritingPracticeView: View {
     @State private var finished = false
     @State private var showModel = false
     @State private var pulse = false
+    @State private var showStars = false
 
     private let tolerance: CGFloat = 28
 
@@ -162,19 +163,34 @@ struct WritingPracticeView: View {
 
     private var finishedView: some View {
         VStack(spacing: 12) {
+            HStack(spacing: 6) {
+                Image(systemName: "star.fill")
+                    .font(.system(size: 20))
+                    .foregroundStyle(Palette.accent)
+                Image(systemName: "star.fill")
+                    .font(.system(size: 32))
+                    .foregroundStyle(Palette.accent)
+                Image(systemName: "star.fill")
+                    .font(.system(size: 20))
+                    .foregroundStyle(Palette.accent)
+            }
+            .scaleEffect(showStars ? 1 : 0.2)
+            .animation(.spring(response: 0.45, dampingFraction: 0.55), value: showStars)
+            .onAppear { showStars = true }
             Text("書けた！")
-                .font(.system(size: 28, weight: .bold, design: .serif))
+                .font(.maru(28))
                 .foregroundStyle(Palette.good)
             Text(verbatim: "「\(entry.kanji)」を \(entry.strokeCount)画で書けました。")
                 .font(.subheadline)
                 .foregroundStyle(Palette.sub)
             Button("もう一度書く") { reset() }
-                .buttonStyle(PrimaryButtonStyle(background: Palette.navy))
+                .buttonStyle(PrimaryButtonStyle(background: Palette.primary))
         }
         .frame(maxWidth: .infinity)
         .padding(18)
-        .background(Palette.card, in: RoundedRectangle(cornerRadius: 18))
-        .overlay(RoundedRectangle(cornerRadius: 18).stroke(Palette.line))
+        .background(Palette.card, in: RoundedRectangle(cornerRadius: 20))
+        .overlay(RoundedRectangle(cornerRadius: 20).stroke(Palette.line))
+        .shadow(color: .black.opacity(0.05), radius: 6, x: 0, y: 2)
     }
 
     private func polyline(_ points: [CGPoint]) -> Path {
@@ -224,5 +240,6 @@ struct WritingPracticeView: View {
         acceptedPaths = []
         hint = nil
         finished = false
+        showStars = false
     }
 }

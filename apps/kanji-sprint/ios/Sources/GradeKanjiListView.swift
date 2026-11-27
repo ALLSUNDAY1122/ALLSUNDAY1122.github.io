@@ -31,7 +31,7 @@ struct GradeKanjiListView: View {
         let stats = records.gradeStats(grade)
         return VStack(alignment: .leading, spacing: 6) {
             Text(verbatim: "\(grade)年生で習う漢字　全\(stats.total)字")
-                .font(.system(size: 21, weight: .bold, design: .serif))
+                .font(.maru(21))
                 .foregroundStyle(Palette.ink)
             HStack(spacing: 12) {
                 Text(verbatim: "学習済み \(stats.studied)字")
@@ -60,7 +60,7 @@ struct GradeKanjiListView: View {
             NavigationLink(value: KanjiRoute.quiz(title: "\(grade)年生 読みクイズ", kanjiIDs: sample.map(\.kanji), mode: .kanjiToReading)) {
                 Text("漢字を見て 読みを選ぶ（10問）")
             }
-            .buttonStyle(PrimaryButtonStyle(background: Palette.navy))
+            .buttonStyle(PrimaryButtonStyle(background: Palette.primary))
             .disabled(sample.isEmpty)
             NavigationLink(value: KanjiRoute.quiz(title: "\(grade)年生 読みクイズ", kanjiIDs: sample.map(\.kanji), mode: .readingToKanji)) {
                 Text("読みを見て 漢字を選ぶ（10問）")
@@ -88,8 +88,8 @@ struct GradeKanjiListView: View {
                     }
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 10)
-                    .background(Palette.card, in: RoundedRectangle(cornerRadius: 12))
-                    .overlay(RoundedRectangle(cornerRadius: 12).stroke(Palette.line))
+                    .background(Palette.card, in: RoundedRectangle(cornerRadius: 16))
+                    .overlay(RoundedRectangle(cornerRadius: 16).stroke(Palette.line))
                 }
                 .buttonStyle(.plain)
             }

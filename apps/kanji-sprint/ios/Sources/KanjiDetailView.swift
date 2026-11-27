@@ -41,8 +41,9 @@ struct KanjiDetailView: View {
                 .font(.system(size: 96, weight: .bold, design: .serif))
                 .foregroundStyle(Palette.ink)
                 .frame(width: 130, height: 130)
-                .background(Palette.card, in: RoundedRectangle(cornerRadius: 18))
-                .overlay(RoundedRectangle(cornerRadius: 18).stroke(Palette.line))
+                .background(Palette.card, in: RoundedRectangle(cornerRadius: 20))
+                .overlay(RoundedRectangle(cornerRadius: 20).stroke(Palette.line))
+                .shadow(color: .black.opacity(0.05), radius: 6, x: 0, y: 2)
             VStack(alignment: .leading, spacing: 8) {
                 Text(verbatim: "\(entry.grade)年生で習う漢字")
                     .font(.subheadline.bold())
@@ -69,7 +70,7 @@ struct KanjiDetailView: View {
     private func readingsCard(_ entry: KanjiEntry) -> some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("読み")
-                .font(.system(size: 21, weight: .bold, design: .serif))
+                .font(.maru(21))
                 .foregroundStyle(Palette.ink)
             if !entry.onReadings.isEmpty {
                 VStack(alignment: .leading, spacing: 4) {
@@ -111,7 +112,7 @@ struct KanjiDetailView: View {
     private func strokeCard(_ entry: KanjiEntry) -> some View {
         VStack(alignment: .leading, spacing: 10) {
             Text("筆順")
-                .font(.system(size: 21, weight: .bold, design: .serif))
+                .font(.maru(21))
                 .foregroundStyle(Palette.ink)
             StrokeOrderView(entry: entry)
         }
@@ -125,7 +126,7 @@ struct KanjiDetailView: View {
         let record = records.state.records[entry.kanji]
         return VStack(alignment: .leading, spacing: 6) {
             Text("この字の記録")
-                .font(.headline)
+                .font(.maru(17))
                 .foregroundStyle(Palette.ink)
             if let record, record.attempts > 0 {
                 Text(verbatim: "読みクイズ \(record.attempts)回中 \(record.correct)回正解")
@@ -153,7 +154,7 @@ struct KanjiDetailView: View {
             NavigationLink(value: KanjiRoute.quiz(title: "読みクイズ", kanjiIDs: set.map(\.kanji), mode: .mixed)) {
                 Text("読みクイズ（この字から10問）")
             }
-            .buttonStyle(PrimaryButtonStyle(background: Palette.navy))
+            .buttonStyle(PrimaryButtonStyle(background: Palette.primary))
             NavigationLink(value: KanjiRoute.writing(entry.kanji)) {
                 Text("書き練習をする")
             }

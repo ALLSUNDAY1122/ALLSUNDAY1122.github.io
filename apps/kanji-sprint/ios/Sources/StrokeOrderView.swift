@@ -93,7 +93,7 @@ struct StrokeOrderView: View {
                 Label(isPlaying ? "とめる" : "筆順を再生", systemImage: isPlaying ? "stop.fill" : "play.fill")
                     .frame(maxWidth: .infinity)
             }
-            .buttonStyle(PrimaryButtonStyle(background: Palette.navy))
+            .buttonStyle(PrimaryButtonStyle(background: Palette.primary))
         }
     }
 

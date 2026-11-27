@@ -6,6 +6,7 @@ import GoogleMobileAds
 struct KanjiStudyApp: App {
     @StateObject private var premium = PremiumStore()
     @StateObject private var records = StudyRecordStore()
+    @StateObject private var bgm = BGMPlayer.shared
     @Environment(\.scenePhase) private var scenePhase
 
     init() {
@@ -24,9 +25,19 @@ struct KanjiStudyApp: App {
                 .preferredColorScheme(.light)
                 .environmentObject(premium)
                 .environmentObject(records)
-                .task { await premium.refresh() }
+                .environmentObject(bgm)
+                .task {
+                    await premium.refresh()
+                    bgm.startIfEnabled()
+                }
                 .onChange(of: scenePhase) { phase in
-                    if phase == .active { Task { await premium.refreshEntitlements() } }
+                    if phase == .active {
+                        Task { await premium.refreshEntitlements() }
+                        bgm.resumeIfEnabled()
+                    }
+                    if phase == .background {
+                        bgm.pause()
+                    }
                 }
         }
     }
@@ -44,16 +55,43 @@ enum Palette {
     static let accent = Color(red: 217 / 255, green: 119 / 255, blue: 6 / 255)
     static let good = Color(red: 22 / 255, green: 128 / 255, blue: 57 / 255)
     static let bad = Color(red: 185 / 255, green: 28 / 255, blue: 28 / 255)
+    /// 主要ボタンの明るい青。
+    static let primary = Color(red: 0.16, green: 0.52, blue: 0.85)
+
+    /// 学年ごとのテーマカラー。範囲外は navy。
+    static func gradeColor(_ grade: Int) -> Color {
+        switch grade {
+        case 1: return Color(red: 0.93, green: 0.36, blue: 0.24)
+        case 2: return Color(red: 0.96, green: 0.62, blue: 0.14)
+        case 3: return Color(red: 0.55, green: 0.76, blue: 0.29)
+        case 4: return Color(red: 0.20, green: 0.70, blue: 0.45)
+        case 5: return Color(red: 0.20, green: 0.60, blue: 0.90)
+        case 6: return Color(red: 0.56, green: 0.45, blue: 0.85)
+        default: return navy
+        }
+    }
+
+    /// 学年カラーの淡い版（背景用）。
+    static func gradeSoft(_ grade: Int) -> Color {
+        gradeColor(grade).opacity(0.13)
+    }
+}
+
+extension Font {
+    /// 子ども向けの見出し用フォント（ヒラギノ丸ゴ）。
+    static func maru(_ size: CGFloat, weight: Font.Weight = .bold) -> Font {
+        .custom("Hiragino Maru Gothic ProN", size: size).weight(weight)
+    }
 }
 
 struct PrimaryButtonStyle: ButtonStyle {
     let background: Color
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .font(.headline)
+            .font(.maru(17))
             .foregroundStyle(.white)
             .frame(maxWidth: .infinity)
             .padding(.vertical, 14)
-            .background(background.opacity(configuration.isPressed ? 0.82 : 1), in: RoundedRectangle(cornerRadius: 14))
+            .background(background.opacity(configuration.isPressed ? 0.82 : 1), in: RoundedRectangle(cornerRadius: 16))
     }
 }

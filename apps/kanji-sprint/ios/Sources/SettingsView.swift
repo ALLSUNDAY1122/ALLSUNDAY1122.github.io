@@ -4,12 +4,23 @@ import SwiftUI
 struct SettingsView: View {
     @EnvironmentObject private var premium: PremiumStore
     @EnvironmentObject private var records: StudyRecordStore
+    @EnvironmentObject private var bgm: BGMPlayer
     @Environment(\.dismiss) private var dismiss
     @State private var showResetConfirm = false
 
     var body: some View {
         NavigationStack {
             Form {
+                Section("BGM") {
+                    Toggle("BGMを再生", isOn: Binding(
+                        get: { bgm.enabled },
+                        set: { bgm.setEnabled($0) }
+                    ))
+                    .tint(Palette.primary)
+                    Text("やさしい音楽が小さな音で流れます。")
+                        .font(.footnote)
+                        .foregroundStyle(Palette.sub)
+                }
                 Section("広告について") {
                     Text(premium.isNoAds
                         ? "広告なしを利用中です。ありがとうございます。"

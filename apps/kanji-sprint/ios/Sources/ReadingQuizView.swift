@@ -131,7 +131,7 @@ struct ReadingQuizView: View {
             } else {
                 feedbackView(item)
                 Button(index + 1 < items.count ? "次の問題へ" : "結果を見る") { next() }
-                    .buttonStyle(PrimaryButtonStyle(background: Palette.navy))
+                    .buttonStyle(PrimaryButtonStyle(background: Palette.primary))
             }
         }
         .padding(.top, 8)
@@ -141,14 +141,14 @@ struct ReadingQuizView: View {
         VStack(spacing: 8) {
             if item.isReadingToKanji {
                 Text(item.promptReading)
-                    .font(.system(size: 44, weight: .bold, design: .serif))
+                    .font(.maru(44))
                     .foregroundStyle(Palette.ink)
                 Text(verbatim: "\(item.entry.grade)年生の漢字")
                     .font(.caption)
                     .foregroundStyle(Palette.sub)
             } else {
                 Text(item.entry.kanji)
-                    .font(.system(size: 84, weight: .bold, design: .serif))
+                    .font(.maru(84))
                     .foregroundStyle(Palette.ink)
                 Text(verbatim: "\(item.entry.grade)年生・\(item.entry.strokeCount)画")
                     .font(.caption)
@@ -157,8 +157,9 @@ struct ReadingQuizView: View {
         }
         .frame(maxWidth: .infinity)
         .padding(20)
-        .background(Palette.card, in: RoundedRectangle(cornerRadius: 18))
-        .overlay(RoundedRectangle(cornerRadius: 18).stroke(Palette.line))
+        .background(Palette.card, in: RoundedRectangle(cornerRadius: 20))
+        .overlay(RoundedRectangle(cornerRadius: 20).stroke(Palette.line))
+        .shadow(color: .black.opacity(0.05), radius: 6, x: 0, y: 2)
     }
 
     private func choicesView(_ item: QuizItem) -> some View {
@@ -170,7 +171,7 @@ struct ReadingQuizView: View {
                     HStack {
                         Text(item.choices[i])
                             .font(item.isReadingToKanji
-                                ? .system(size: 30, weight: .bold, design: .serif)
+                                ? .maru(30)
                                 : .title3.bold())
                             .foregroundStyle(Palette.ink)
                         Spacer()
@@ -186,8 +187,8 @@ struct ReadingQuizView: View {
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(16)
-                    .background(choiceBackground(item: item, choice: i), in: RoundedRectangle(cornerRadius: 14))
-                    .overlay(RoundedRectangle(cornerRadius: 14).stroke(Palette.line))
+                    .background(choiceBackground(item: item, choice: i), in: RoundedRectangle(cornerRadius: 18))
+                    .overlay(RoundedRectangle(cornerRadius: 18).stroke(Palette.line))
                 }
                 .buttonStyle(.plain)
                 .disabled(selected != nil)
@@ -205,9 +206,15 @@ struct ReadingQuizView: View {
     private func feedbackView(_ item: QuizItem) -> some View {
         let isCorrect = selected == item.correctIndex
         return VStack(alignment: .leading, spacing: 8) {
-            Text(isCorrect ? "正解！" : (selected == -1 ? "答えを見てみよう" : "ざんねん…"))
-                .font(.headline)
-                .foregroundStyle(isCorrect ? Palette.good : Palette.bad)
+            HStack(spacing: 6) {
+                Text(isCorrect ? "やったね！" : (selected == -1 ? "答えを見てみよう" : "おしい！"))
+                    .font(.maru(17))
+                    .foregroundStyle(isCorrect ? Palette.good : Palette.bad)
+                if isCorrect {
+                    Image(systemName: "star.fill")
+                        .foregroundStyle(Palette.good)
+                }
+            }
             VStack(alignment: .leading, spacing: 4) {
                 if !item.entry.onReadings.isEmpty {
                     Text(verbatim: "音読み：\(item.entry.onReadings.joined(separator: "・"))")
@@ -228,15 +235,16 @@ struct ReadingQuizView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(16)
-        .background(Palette.card, in: RoundedRectangle(cornerRadius: 14))
-        .overlay(RoundedRectangle(cornerRadius: 14).stroke(Palette.line))
+        .background(Palette.card, in: RoundedRectangle(cornerRadius: 20))
+        .overlay(RoundedRectangle(cornerRadius: 20).stroke(Palette.line))
+        .shadow(color: .black.opacity(0.05), radius: 6, x: 0, y: 2)
     }
 
     private var resultView: some View {
         VStack(alignment: .leading, spacing: 16) {
             VStack(spacing: 8) {
                 Text("結果")
-                    .font(.system(size: 21, weight: .bold, design: .serif))
+                    .font(.maru(21))
                     .foregroundStyle(Palette.ink)
                 Text(verbatim: "\(items.count)問中 \(correctCount)問正解")
                     .font(.title2.bold())
@@ -247,15 +255,16 @@ struct ReadingQuizView: View {
             }
             .frame(maxWidth: .infinity)
             .padding(20)
-            .background(Palette.card, in: RoundedRectangle(cornerRadius: 18))
-            .overlay(RoundedRectangle(cornerRadius: 18).stroke(Palette.line))
+            .background(Palette.card, in: RoundedRectangle(cornerRadius: 20))
+            .overlay(RoundedRectangle(cornerRadius: 20).stroke(Palette.line))
+            .shadow(color: .black.opacity(0.05), radius: 6, x: 0, y: 2)
             if !wrongKanji.isEmpty {
                 Button {
                     restart(with: wrongKanji)
                 } label: {
                     Text(verbatim: "苦手だけ復習する　\(wrongKanji.count)字")
                 }
-                .buttonStyle(PrimaryButtonStyle(background: Palette.navy))
+                .buttonStyle(PrimaryButtonStyle(background: Palette.primary))
             }
             Button("ホームへ戻る") { path = NavigationPath() }
                 .buttonStyle(PrimaryButtonStyle(background: Palette.sub))
