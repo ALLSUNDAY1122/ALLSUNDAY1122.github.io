@@ -2195,18 +2195,23 @@ workflows:
           python3 "$CM_BUILD_DIR/enprint-guard/ios/scripts/generate_app_icon.py"
           cd "$CM_BUILD_DIR/enprint-guard/ios"
           python3 - <<'PY'
-          import os
+          import os, time
           from pathlib import Path
-          build = os.environ.get('CM_BUILD_NUMBER')
-          if not build or not build.isdigit():
-              raise RuntimeError('Codemagic CM_BUILD_NUMBER missing or invalid')
+          build = os.environ.get('BUILD_NUMBER') or os.environ.get('CM_BUILD_NUMBER')
+          source = 'BUILD_NUMBER' if os.environ.get('BUILD_NUMBER') else 'CM_BUILD_NUMBER'
+          if not build or not build.isascii() or not build.isdecimal() or int(build) < 1:
+              build = str(int(time.time() * 1000))
+              source = 'UTC epoch milliseconds fallback'
+          if len(build) > 18:
+              raise RuntimeError('Build number exceeds Apple CFBundleVersion length limit')
           path = Path('project.yml')
           text = path.read_text(encoding='utf-8')
           marker = 'CURRENT_PROJECT_VERSION: "1"'
-          if marker not in text:
-              raise RuntimeError('Expected project build-number marker not found')
+          if text.count(marker) != 1:
+              raise RuntimeError('Expected exactly one CURRENT_PROJECT_VERSION marker')
           path.write_text(text.replace(marker, 'CURRENT_PROJECT_VERSION: "' + build + '"', 1), encoding='utf-8')
-          print('PASS: build number injected')
+          Path('.enprint-build-number').write_text(build + '\\n', encoding='ascii')
+          print('PASS: build number=' + build + ' source=' + source)
           PY
           xcodegen generate
       - name: Fetch or create App Store signing assets
@@ -2239,12 +2244,14 @@ workflows:
           info = plistlib.loads((app / 'Info.plist').read_bytes())
           assert info.get('CFBundleIdentifier') == 'jp.allsunday1122.enprintguard'
           assert info.get('CFBundleShortVersionString') == '1.0.0'
-          assert info.get('CFBundleVersion') == os.environ.get('CM_BUILD_NUMBER')
+          expected_build = Path('enprint-guard/ios/.enprint-build-number').read_text(encoding='ascii').strip()
+          assert expected_build.isascii() and expected_build.isdecimal() and len(expected_build) <= 18
+          assert info.get('CFBundleVersion') == expected_build, (info.get('CFBundleVersion'), expected_build)
           privacy = plistlib.loads((app / 'PrivacyInfo.xcprivacy').read_bytes())
           assert privacy.get('NSPrivacyTracking') is False
           assert (app / 'embedded.mobileprovision').is_file()
           assert (app / '_CodeSignature').is_dir()
-          print('PASS: signed IPA identity, privacy manifest and signature')
+          print('PASS: signed IPA identity, privacy manifest, signature and build=' + expected_build)
           PY
     artifacts:
       - build/ios/ipa/*.ipa
