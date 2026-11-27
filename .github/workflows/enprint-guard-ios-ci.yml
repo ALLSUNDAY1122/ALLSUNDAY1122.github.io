@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - feature/enprint-guard-native-20261127
+      - feature/enprint-guard-cloud-sync-20261127
       - main
     paths:
       - "enprint-guard/**"
@@ -38,9 +39,16 @@ jobs:
           assert info["CFBundleIdentifier"] == "$(PRODUCT_BUNDLE_IDENTIFIER)"
           assert info["CFBundleShortVersionString"] == "$(MARKETING_VERSION)"
           assert info["CFBundleExecutable"] == "$(EXECUTABLE_NAME)"
-          assert info["CFBundleExecutable"] == "$(EXECUTABLE_NAME)"
           assert privacy["NSPrivacyTracking"] is False
-          assert privacy["NSPrivacyCollectedDataTypes"] == []
+          types = {item["NSPrivacyCollectedDataType"] for item in privacy["NSPrivacyCollectedDataTypes"]}
+          assert types == {
+              "NSPrivacyCollectedDataTypeEmailAddress",
+              "NSPrivacyCollectedDataTypePhotosorVideos",
+              "NSPrivacyCollectedDataTypeOtherUserContent",
+              "NSPrivacyCollectedDataTypeUserID",
+          }
+          assert all(item["NSPrivacyCollectedDataTypeLinked"] is True for item in privacy["NSPrivacyCollectedDataTypes"])
+          assert all(item["NSPrivacyCollectedDataTypeTracking"] is False for item in privacy["NSPrivacyCollectedDataTypes"])
           print("PASS: plist, privacy manifest and placeholder bundle identity")
           PY
 
@@ -68,12 +76,12 @@ jobs:
           from pathlib import Path
           config = yaml.safe_load(Path('codemagic.yaml').read_text(encoding='utf-8'))
           workflow = config['workflows']['enprint-guard-ios-testflight']
-          signing = workflow['environment']['ios_signing']
+          signing_groups = workflow['environment']['groups']
           publishing = workflow['publishing']['app_store_connect']
-          assert signing['bundle_identifier'] == 'jp.allsunday1122.enprintguard'
+          assert signing_groups == ['app2_010_touhan_signing']
           assert publishing['submit_to_testflight'] is True
           assert publishing['submit_to_app_store'] is False
-          assert 'beta_groups' not in publishing
+          assert publishing['beta_groups'] == ['sun']
           triggering = workflow['triggering']
           assert triggering['events'] == ['push']
           assert triggering['branch_patterns'][0]['pattern'] == 'release/enprint-guard-testflight-20261127'
@@ -81,15 +89,18 @@ jobs:
           assert 'app_id' in scripts and 'readback' in scripts
           assert 'CM_BUILD_NUMBER' in scripts
           assert 'testFlightInternalTestingOnly' in scripts
+          assert 'app-store-connect fetch-signing-files "$BUNDLE_ID" --type IOS_APP_STORE --create' in scripts
+          assert 'keychain initialize' in scripts and 'keychain add-certificates' in scripts
           assert 'xcode-project build-ipa' in scripts
           registry = json.loads(Path('automation/app-release-registry.json').read_text(encoding='utf-8'))
           app = registry['apps']['enprintguard']
-          assert app['bundle_id'] == signing['bundle_identifier']
+          assert app['bundle_id'] == 'jp.allsunday1122.enprintguard'
           assert app['app_id'] == '6839814394'
           assert app['sku'] == 'enprintguard-ios-20261127-01'
           assert app['apple_record_user_confirmed'] is True
-          assert app['readback'] is False
-          print('PASS: TestFlight-only contract and owner-confirmed ASC identity; API read-back pending')
+          assert app['readback'] is True
+          assert app['status'] == 'active'
+          print('PASS: TestFlight-only contract and ASC identity read-back')
           PY
 
       - name: Generate Xcode project

@@ -43,6 +43,10 @@ final class NotificationScheduler {
                     ("3d", calendar.date(byAdding: .day, value: -3, to: dueDate) ?? dueDate, 8),
                     ("1d", calendar.date(byAdding: .day, value: -1, to: dueDate) ?? dueDate, 8)
                 ]
+            case .other:
+                return [
+                    ("1d", calendar.date(byAdding: .day, value: -1, to: dueDate) ?? dueDate, 8)
+                ]
             }
         }()
 

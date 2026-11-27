@@ -185,6 +185,7 @@ struct TaskRow: View {
         case .item: return "bag"
         case .purchase: return "cart"
         case .response: return "checkmark.message"
+        case .other: return "questionmark.circle"
         }
     }
 }
@@ -476,7 +477,11 @@ struct CameraPicker: UIViewControllerRepresentable {
 
 struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject private var store: AppStore
     @StateObject private var subscriptions = SubscriptionStore()
+    @StateObject private var cloud = CloudSyncService.shared
+    @State private var email = ""
+    @State private var householdName = "わが家"
 
     var body: some View {
         NavigationStack {
@@ -496,13 +501,50 @@ struct SettingsView: View {
                     }
                     Button("購入を復元") { Task { await subscriptions.restore() } }
                 }
+                Section("家族共有") {
+                    if let userEmail = cloud.userEmail {
+                        LabeledContent("ログイン中", value: userEmail)
+                        if let householdID = cloud.householdID {
+                            LabeledContent("家族グループ", value: String(householdID.uuidString.prefix(8)))
+                            Button("家族を招待する") { Task { await cloud.createInvite() } }
+                            if let inviteURL = cloud.inviteURL {
+                                ShareLink(item: inviteURL) {
+                                    Label("招待リンクを共有", systemImage: "square.and.arrow.up")
+                                }
+                            }
+                            Button("今すぐ同期") { Task { await store.syncNow() } }
+                        } else {
+                            TextField("グループ名", text: $householdName)
+                            Button("家族グループを作成") {
+                                Task {
+                                    await cloud.createHousehold(name: householdName)
+                                    await store.syncNow()
+                                }
+                            }
+                        }
+                        Button("ログアウト", role: .destructive) { Task { await cloud.signOut() } }
+                    } else {
+                        TextField("メールアドレス", text: $email)
+                            .textInputAutocapitalization(.never)
+                            .keyboardType(.emailAddress)
+                            .autocorrectionDisabled()
+                        Button("ログイン用メールを送信") {
+                            Task { await cloud.sendMagicLink(email: email) }
+                        }
+                    }
+                    if !cloud.statusMessage.isEmpty {
+                        Text(cloud.statusMessage).font(.footnote).foregroundStyle(.secondary)
+                    }
+                    Text("認証メールのリンクをアプリで開くには、Supabase Authの許可リダイレクトURLに enprintguard://login-callback を追加してください。")
+                        .font(.footnote).foregroundStyle(.secondary)
+                }
                 Section("通知") {
                     Button("通知を許可する") {
                         Task { _ = await NotificationScheduler.shared.requestAuthorization() }
                     }
                 }
                 Section("データ・プライバシー") {
-                    Text("プリント画像と読み取り結果は、この端末内に保存されます。AIクラウド処理・家族同期は接続前です。")
+                    Text("プリント画像と読み取り結果は端末内に保存し、ログインして家族グループを作成すると暗号化通信でSupabaseへ同期します。AI解析はOpenAI APIの利用承認とSupabase Secret設定後に有効になります。")
                         .font(.footnote).foregroundStyle(.secondary)
                 }
                 if let message = subscriptions.message {

@@ -2158,16 +2158,23 @@ workflows:
     integrations:
       app_store_connect: "Codemagic Shiwake Swipe"
     environment:
-      ios_signing:
-        distribution_type: app_store
-        bundle_identifier: jp.allsunday1122.enprintguard
+      groups:
+        - app2_010_touhan_signing
       vars:
         BUNDLE_ID: jp.allsunday1122.enprintguard
         APP_STORE_APPLE_ID: "6839814394"
+        APP_STORE_CONNECT_APP_ID: "6839814394"
         XCODE_PROJECT: enprint-guard/ios/EnprintGuard.xcodeproj
         XCODE_SCHEME: EnprintGuard
       xcode: latest
     scripts:
+      - name: Validate signing credentials without exposing them
+        script: |
+          set -euo pipefail
+          test -n "${CERTIFICATE_PRIVATE_KEY:-}" || { echo "HUMAN_GATE: CERTIFICATE_PRIVATE_KEY missing"; exit 2; }
+          test -n "${APP_STORE_CONNECT_PRIVATE_KEY:-}" || { echo "HUMAN_GATE: APP_STORE_CONNECT_PRIVATE_KEY missing"; exit 2; }
+          test -n "${APP_STORE_CONNECT_KEY_IDENTIFIER:-}" || { echo "HUMAN_GATE: APP_STORE_CONNECT_KEY_IDENTIFIER missing"; exit 2; }
+          test -n "${APP_STORE_CONNECT_ISSUER_ID:-}" || { echo "HUMAN_GATE: APP_STORE_CONNECT_ISSUER_ID missing"; exit 2; }
       - name: Install XcodeGen
         script: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
       - name: Verify App Store Connect record gate
@@ -2202,6 +2209,12 @@ workflows:
           print('PASS: build number injected')
           PY
           xcodegen generate
+      - name: Fetch or create App Store signing assets
+        script: |
+          set -euo pipefail
+          keychain initialize
+          app-store-connect fetch-signing-files "$BUNDLE_ID" --type IOS_APP_STORE --create
+          keychain add-certificates
       - name: Apply App Store signing profiles for Internal TestFlight only
         script: |
           cd "$CM_BUILD_DIR/enprint-guard/ios"
@@ -2242,4 +2255,6 @@ workflows:
       app_store_connect:
         auth: integration
         submit_to_testflight: true
+        beta_groups:
+          - sun
         submit_to_app_store: false
