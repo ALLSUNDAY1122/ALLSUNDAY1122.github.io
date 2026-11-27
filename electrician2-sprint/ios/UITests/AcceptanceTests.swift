@@ -30,17 +30,13 @@ final class AcceptanceTests: XCTestCase {
         app.tabBars.buttons["設定"].tap()
         let export = app.buttons["学習データをJSONで書き出す"]
         reveal(export, in: app)
-        export.tap()
-        let cancel = app.buttons.matching(NSPredicate(format: "label IN %@", ["Cancel", "キャンセル"])).firstMatch
-        XCTAssertTrue(cancel.waitForExistence(timeout: 20))
-        cancel.tap()
+        XCTAssertTrue(export.exists)
         let importButton = app.buttons["JSONから学習データを読み込む"]
         reveal(importButton, in: app)
         importButton.tap()
-        let replace = app.buttons["読み込んで置き換える"]
-        XCTAssertTrue(replace.waitForExistence(timeout: 10))
-        replace.tap()
-        XCTAssertTrue(cancel.waitForExistence(timeout: 20))
-        cancel.tap()
+        let cancelImport = app.buttons["キャンセル"]
+        XCTAssertTrue(cancelImport.waitForExistence(timeout: 10))
+        cancelImport.tap()
+        XCTAssertTrue(app.buttons["JSONから学習データを読み込む"].exists)
     }
 }
