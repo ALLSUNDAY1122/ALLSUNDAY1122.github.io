@@ -2210,7 +2210,7 @@ workflows:
           if text.count(marker) != 1:
               raise RuntimeError('Expected exactly one CURRENT_PROJECT_VERSION marker')
           path.write_text(text.replace(marker, 'CURRENT_PROJECT_VERSION: "' + build + '"', 1), encoding='utf-8')
-          Path('.enprint-build-number').write_text(build + '\\n', encoding='ascii')
+          Path('.enprint-build-number').write_text(build, encoding='ascii')
           print('PASS: build number=' + build + ' source=' + source)
           PY
           xcodegen generate
