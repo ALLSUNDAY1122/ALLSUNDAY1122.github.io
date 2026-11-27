@@ -16,6 +16,17 @@ struct DemoQuestion: Identifiable, Codable {
     let memory: String
     let explanation: String
     let diagramID: String?
+    let diagramPath: String?
+    let diagramSymbol: String?
+}
+struct FigureMappingFile: Codable {
+    let items: [FigureMappingEntry]
+}
+struct FigureMappingEntry: Codable {
+    let questionID: String
+    let svgPath: String?
+    let svgSymbol: String?
+    let status: String
 }
 struct ExamSet: Identifiable {
     let id: String
@@ -79,6 +90,12 @@ final class StudyModel: ObservableObject {
     }
     init(defaults: UserDefaults = .standard, bank suppliedBank: QuestionBankFile? = nil) {
         self.defaults = defaults
+        let figureMapping: [String: FigureMappingEntry] = {
+            guard let url = Bundle.main.url(forResource: "FIGURE_MAPPING", withExtension: "json"),
+                  let data = try? Data(contentsOf: url),
+                  let file = try? JSONDecoder().decode(FigureMappingFile.self, from: data) else { return [:] }
+            return Dictionary(uniqueKeysWithValues: file.items.map { ($0.questionID, $0) })
+        }()
         if let bank = suppliedBank ?? (try? QuestionBankLoader.load()) {
             self.demos = bank.questions.enumerated().map { index, q in
                 let labels = ["イ", "ロ", "ハ", "ニ"]
@@ -86,13 +103,16 @@ final class StudyModel: ObservableObject {
                 let refs = q.source.figureRefs ?? []
                 let figure = q.source.figure
                 let diagram = refs.first ?? (figure?.hasPrefix("E2-") == true ? figure : nil)
+                let mappedFigure = figureMapping[q.id]
                 return DemoQuestion(
                     id: index + 1, officialID: q.id, exam: q.exam, examDate: q.examDate,
                     questionNumber: q.questionNumber, sourceURL: q.source.url,
                     auditStatus: q.auditStatus ?? q.audit.releaseStatus, subject: q.section,
                     prompt: q.question, choices: q.choices.map(\.text), answer: answerIndex,
                     memory: q.hereToRemember ?? "要点解説は準備中です。",
-                    explanation: q.explanation ?? "解説は準備中です。", diagramID: diagram
+                    explanation: q.explanation ?? "解説は準備中です。", diagramID: diagram,
+                    diagramPath: mappedFigure?.status == "matched" ? mappedFigure?.svgPath : nil,
+                    diagramSymbol: mappedFigure?.svgSymbol
                 )
             }
             self.examSets = Dictionary(grouping: self.demos, by: { String($0.officialID.dropLast(4)) })
