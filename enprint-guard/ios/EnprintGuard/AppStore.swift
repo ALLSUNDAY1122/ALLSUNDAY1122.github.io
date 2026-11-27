@@ -70,6 +70,7 @@ final class AppStore: ObservableObject {
             )
         }
         persist()
+        scheduleCloudSync()
     }
 
     func approve(_ task: HouseholdTask, dueDate: Date?, assignee: String?) {
@@ -80,6 +81,7 @@ final class AppStore: ObservableObject {
         tasks[index].state = .todo
         NotificationScheduler.shared.schedule(for: tasks[index])
         persist()
+        scheduleCloudSync()
     }
 
     func update(_ task: HouseholdTask, dueDate: Date?, assignee: String?) {
@@ -90,6 +92,7 @@ final class AppStore: ObservableObject {
             NotificationScheduler.shared.schedule(for: tasks[index])
         }
         persist()
+        scheduleCloudSync()
     }
 
     func setState(_ state: TaskState, for task: HouseholdTask) {
@@ -101,16 +104,46 @@ final class AppStore: ObservableObject {
             NotificationScheduler.shared.schedule(for: tasks[index])
         }
         persist()
+        scheduleCloudSync()
     }
 
     func deleteTask(_ task: HouseholdTask) {
         tasks.removeAll { $0.id == task.id }
         NotificationScheduler.shared.cancel(taskID: task.id)
         persist()
+        scheduleCloudSync()
     }
 
     func imageURL(for document: SourceDocument) -> URL {
         folderURL.appendingPathComponent(document.imageFilename)
+    }
+
+    func syncNow() async {
+        await syncWithCloud()
+    }
+
+    private func scheduleCloudSync() {
+        Task { await syncWithCloud() }
+    }
+
+    private func syncWithCloud() async {
+        guard CloudSyncService.shared.isSignedIn,
+              CloudSyncService.shared.householdID != nil else { return }
+        do {
+            let snapshot = try await CloudSyncService.shared.syncSnapshot(
+                documents: documents,
+                tasks: tasks,
+                children: children,
+                localFolder: folderURL,
+                allowAIAnalysis: UserDefaults.standard.bool(forKey: "openAIAnalysisConsent")
+            )
+            documents = snapshot.documents
+            tasks = snapshot.tasks
+            if !snapshot.children.isEmpty { children = snapshot.children }
+            persist()
+        } catch {
+            // Keep local data available; cloud sync can be retried from Settings.
+        }
     }
 
     private func load() {
