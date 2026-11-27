@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 """Materialize the audited FP3 question bank from the canonical HTML source.
 
-Fails closed unless the extracted bank is exactly 180 questions and the compact
-UTF-8 JSON payload matches the canonical SHA-256 locked by SOURCE_LOCK.md.
+Fails closed unless the bank is exactly 300 questions and the compact
+UTF-8 JSON payload matches the SHA-256 locked by SOURCE_LOCK.md / question_bank_300.json.
 """
 from __future__ import annotations
 import argparse, hashlib, json, pathlib, tempfile, os
 
 # This file is a monitored trigger path for the canonical materialization workflow.
-EXPECTED_QUESTIONS = 180
-EXPECTED_PAYLOAD_SHA256 = "bf2a24b354cc5b1714e1c0ef10fb529220b474c8d0b48b2f135ae42b061bda33"
+EXPECTED_QUESTIONS = 300
+EXPECTED_PAYLOAD_SHA256 = "deceb3943286559cc9e087af4cbc4c2845caa6fc09b00c477a5468146c9e1690"
 PREFIX = "const BANK = "
 
 
@@ -32,11 +32,14 @@ def main() -> int:
 
     raw = args.source_html.read_bytes()
     try:
-        html = raw.decode("utf-8")
+        text = raw.decode("utf-8")
     except UnicodeDecodeError as exc:
         raise SystemExit(f"source is not UTF-8: {exc}")
 
-    bank = extract_bank(html)
+    if args.source_html.suffix.lower() == ".json" or text.lstrip().startswith("{"):
+        bank = json.loads(text)
+    else:
+        bank = extract_bank(text)
     questions = bank.get("questions")
     if not isinstance(questions, list) or len(questions) != EXPECTED_QUESTIONS:
         raise SystemExit(f"question count gate failed: {len(questions) if isinstance(questions, list) else 'invalid'}")

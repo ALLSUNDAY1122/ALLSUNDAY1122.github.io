@@ -210,7 +210,7 @@ struct WebAppView: UIViewRepresentable {
         if (el.closest && el.closest('#domains')) return true;
         if (el.closest && el.closest('#years')) {
           const t = (el.textContent || '').replace(/\s/g,'');
-          return t.includes('2024') || t.includes('2025');
+          return t.includes('2023') || t.includes('2024') || t.includes('2025');
         }
         return false;
       };
@@ -224,7 +224,7 @@ struct WebAppView: UIViewRepresentable {
         ensureStyle();
         let b=document.getElementById('fp3-native-paywall'); if(b) return b;
         b=document.createElement('div'); b.id='fp3-native-paywall'; b.className='fp3-paywall-backdrop'; b.hidden=true;
-        b.innerHTML=`<div class="fp3-paywall" role="dialog" aria-modal="true" aria-label="Premium"><h2>Premiumで学習範囲を広げる</h2><p>無料版は2026年度60問を中心に学習できます。Premiumは買い切りで、現行基準へ補正した全178問を活用できます。</p><ul><li>2024・2025年度を含む全178問</li><li>6分野から選ぶ分野別演習</li><li>苦手復習と3連続正解での卒業</li></ul><button class="fp3-buy" data-native-purchase disabled>価格を取得中…</button><button class="fp3-restore" data-native-restore>購入を復元</button><button class="fp3-close">今はしない</button><div class="fp3-store-status" data-native-price></div></div>`;
+        b.innerHTML=`<div class="fp3-paywall" role="dialog" aria-modal="true" aria-label="Premium"><h2>Premiumで学習範囲を広げる</h2><p>無料版は2026年度60問を中心に学習できます。Premiumは買い切りで、現行基準へ補正した全295問を活用できます。</p><ul><li>2023・2024・2025年度を含む全295問</li><li>6分野から選ぶ分野別演習</li><li>苦手復習と3連続正解での卒業</li></ul><button class="fp3-buy" data-native-purchase disabled>価格を取得中…</button><button class="fp3-restore" data-native-restore>購入を復元</button><button class="fp3-close">今はしない</button><div class="fp3-store-status" data-native-price></div></div>`;
         document.body.appendChild(b);
         b.querySelector('[data-native-purchase]').addEventListener('click',()=>post('purchase'));
         b.querySelector('[data-native-restore]').addEventListener('click',()=>post('restore'));
