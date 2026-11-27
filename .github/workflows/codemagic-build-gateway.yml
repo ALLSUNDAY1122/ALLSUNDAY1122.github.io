@@ -82,6 +82,18 @@ jobs:
                   payload['legacy_build_detail'] = json.loads(response.read().decode('utf-8'))
           except Exception as exc:
               payload['legacy_build_detail_error'] = str(exc)[:1000]
+          command = json.loads(Path('automation/codemagic-build-command.json').read_text(encoding='utf-8'))
+          task_id = command.get('task_id')
+          if task_id:
+              task_req = urllib.request.Request(f'https://api.codemagic.io/builds/{build_id}/step/{task_id}',headers={'x-auth-token': token, 'Accept': 'text/plain,*/*'},method='GET')
+              try:
+                  with urllib.request.urlopen(task_req, timeout=45) as response:
+                      task_log = response.read().decode('utf-8', errors='replace')
+                      payload['requested_task_log'] = {'task_id': task_id, 'http_status': response.status, 'log_tail': task_log[-30000:]}
+              except urllib.error.HTTPError as exc:
+                  payload['requested_task_log'] = {'task_id': task_id, 'http_status': exc.code, 'error': exc.read().decode('utf-8', errors='replace')[:5000]}
+              except Exception as exc:
+                  payload['requested_task_log'] = {'task_id': task_id, 'error': str(exc)[:2000]}
           action_rows = payload.get('data', []) if isinstance(payload, dict) else []
           failed_logs = []
           for action in action_rows:
