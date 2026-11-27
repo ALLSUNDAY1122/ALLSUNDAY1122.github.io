@@ -96,6 +96,19 @@ final class StudyModelTests: XCTestCase {
         XCTAssertTrue(restored.weakIDs.contains(1))
     }
 
+    func testActualBundledQuestionBankLoadsAll600Questions() throws {
+        let bank = try QuestionBankLoader.load()
+        XCTAssertEqual(bank.questionCount, 600)
+        XCTAssertEqual(bank.questions.count, 600)
+        let model = StudyModel(defaults: makeDefaults())
+        XCTAssertNil(model.bankLoadError)
+        XCTAssertEqual(model.demos.count, 600)
+        model.start(8)
+        XCTAssertTrue(model.showQuestion)
+        XCTAssertEqual(model.session.count, 8)
+        XCTAssertNotNil(model.current)
+    }
+
     func testQuestionBankSchemaDecodesAndValidates() throws {
         let json = """
         {
