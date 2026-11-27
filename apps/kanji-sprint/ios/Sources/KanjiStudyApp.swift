@@ -14,7 +14,7 @@ struct KanjiStudyApp: App {
         // リクエスト側でも npa=1 を付ける）。
         let config = GADMobileAds.sharedInstance().requestConfiguration
         config.tagForChildDirectedTreatment = true
-        config.maxAdContentRating = GADAdContentRating.general
+        config.maxAdContentRating = GADMaxAdContentRating.general
         GADMobileAds.sharedInstance().start(completionHandler: nil)
     }
 
