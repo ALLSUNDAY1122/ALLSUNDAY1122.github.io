@@ -20,7 +20,7 @@ struct QuizView: View {
                                     if model.graded && i==q.answer { HandMark(correct:true) }
                                     else if model.graded && i==model.selected { HandMark(correct:false) }
                                 }.padding(13).frame(minHeight:58).background(choiceColor(i,q)).clipShape(RoundedRectangle(cornerRadius:12)).overlay(RoundedRectangle(cornerRadius:12).stroke(choiceBorder(i,q),lineWidth:1.5))
-                            }.buttonStyle(.plain).disabled(model.graded)
+                            }.buttonStyle(.plain).disabled(model.graded).accessibilityIdentifier("quiz-choice-\(i)")
                         }
                         if model.graded {
                             VStack(alignment:.leading,spacing:12) {
