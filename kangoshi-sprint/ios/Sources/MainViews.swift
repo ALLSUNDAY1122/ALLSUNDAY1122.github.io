@@ -147,6 +147,11 @@ struct SettingsView: View {
             settingCard("文字サイズ") { Picker("文字",selection:Binding(get:{model.learning.fontScale},set:{model.setFontScale($0)})) { Text("標準").tag("normal");Text("大").tag("large");Text("特大").tag("xlarge") }.pickerStyle(.segmented) }
             settingCard("プレミアム") { VStack(alignment:.leading,spacing:10){HStack{Text(purchase.isPremium ? "利用中" : "無料プラン").font(.subheadline.bold());Spacer();if purchase.isPremium {Image(systemName:"checkmark.seal.fill").foregroundStyle(KSTheme.green)}};Button(purchase.isPremium ? "購入情報を確認" : "プレミアムを見る"){showPaywall=true}.buttonStyle(.bordered).tint(KSTheme.ai);Button("購入を復元"){Task{await purchase.restore()}}.font(.subheadline.bold()).foregroundStyle(KSTheme.ai)} }
             settingCard("この教材について") { Text("看護師国家試験｜学びスプリント。第115・114・113回から、厚生労働省の公式PDFと照合できた\(model.allQuestions.count)問を収録（11科目分類・公式特殊採点に対応）。照合できない問題は収録していません。").font(.caption).foregroundStyle(KSTheme.secondary) }
+            settingCard("出典・参考資料") { VStack(alignment:.leading,spacing:6){
+                Text("問題の原典（厚生労働省）と、解説の確認に使える公的資料・免責事項をまとめています。").font(.caption).foregroundStyle(KSTheme.secondary)
+                NavigationLink { ReferencesView() } label: { HStack{Label("出典・参考資料",systemImage:"books.vertical").font(.subheadline.bold());Spacer();Image(systemName:"chevron.right").foregroundStyle(KSTheme.tertiary)}.foregroundStyle(KSTheme.ai).frame(minHeight:44).contentShape(Rectangle()) }.accessibilityIdentifier("settings-references-link")
+                NavigationLink { DisclaimerView() } label: { HStack{Label("ご利用上の注意（免責事項）",systemImage:"exclamationmark.shield").font(.subheadline.bold());Spacer();Image(systemName:"chevron.right").foregroundStyle(KSTheme.tertiary)}.foregroundStyle(KSTheme.ai).frame(minHeight:44).contentShape(Rectangle()) }.accessibilityIdentifier("settings-disclaimer-link")
+            } }
             settingCard("学習記録リセット") { Button("すべての学習記録を削除",role:.destructive){showReset=true}.font(.subheadline.bold()) }
         }.padding(.bottom,24) }.background(KSTheme.paper.ignoresSafeArea()).toolbar(.hidden,for:.navigationBar).alert("学習記録を削除しますか？",isPresented:$showReset){Button("削除",role:.destructive){model.resetLearning()};Button("キャンセル",role:.cancel){}} }
     }
