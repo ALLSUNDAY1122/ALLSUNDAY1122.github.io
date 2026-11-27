@@ -163,20 +163,10 @@ struct WritingPracticeView: View {
 
     private var finishedView: some View {
         VStack(spacing: 12) {
-            HStack(spacing: 6) {
-                Image(systemName: "star.fill")
-                    .font(.system(size: 20))
-                    .foregroundStyle(Palette.accent)
-                Image(systemName: "star.fill")
-                    .font(.system(size: 32))
-                    .foregroundStyle(Palette.accent)
-                Image(systemName: "star.fill")
-                    .font(.system(size: 20))
-                    .foregroundStyle(Palette.accent)
-            }
-            .scaleEffect(showStars ? 1 : 0.2)
-            .animation(.spring(response: 0.45, dampingFraction: 0.55), value: showStars)
-            .onAppear { showStars = true }
+            MascotView(expression: .celebrate, size: 84)
+                .scaleEffect(showStars ? 1 : 0.2)
+                .animation(.spring(response: 0.45, dampingFraction: 0.55), value: showStars)
+                .onAppear { showStars = true }
             Text("書けた！")
                 .font(.maru(28))
                 .foregroundStyle(Palette.good)
@@ -220,11 +210,11 @@ struct WritingPracticeView: View {
                 records.recordWriting(kanji: entry.kanji)
             }
         } else if !startOK && !endOK {
-            hint = "書き始めと書き終わりの位置がちがうよ"
+            hint = "書き始めと書き終わりの場所を確認してみよう"
         } else if !startOK {
-            hint = "書き始めの位置がちがうよ"
+            hint = "書き始めの場所を確認してみよう"
         } else {
-            hint = "書き終わりの位置がちがうよ"
+            hint = "書き終わりの場所を確認してみよう"
         }
     }
 

@@ -52,7 +52,7 @@ struct KanjiDetailView: View {
                     .font(.subheadline)
                     .foregroundStyle(Palette.sub)
                 if records.isWeak(entry.kanji) {
-                    Text("苦手に登録中")
+                    Text("復習中")
                         .font(.caption.bold())
                         .foregroundStyle(Palette.bad)
                 }

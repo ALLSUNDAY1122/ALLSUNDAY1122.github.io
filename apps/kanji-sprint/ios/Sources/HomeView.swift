@@ -82,27 +82,37 @@ struct HomeView: View {
     }
 
     private var header: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text("学びスプリント")
-                .font(.caption.bold())
-                .foregroundStyle(Palette.sub)
-            Text("小学生漢字")
-                .font(.maru(31))
-                .foregroundStyle(Palette.ink)
-                .minimumScaleFactor(0.72)
-                .lineLimit(1)
-                .frame(maxWidth: .infinity, alignment: .leading)
-            Text("読みと書きを、学年ごとに。")
-                .font(.subheadline)
-                .foregroundStyle(Palette.sub)
-            HStack(spacing: 6) {
-                ForEach(1...3, id: \.self) { grade in
-                    Circle()
-                        .fill(Palette.gradeColor(grade))
-                        .frame(width: 10, height: 10)
+        HStack(alignment: .center, spacing: 12) {
+            MascotView(expression: .happy, size: 64)
+            VStack(alignment: .leading, spacing: 4) {
+                Text("いっしょに がんばろう！")
+                    .font(.caption.bold())
+                    .foregroundStyle(Palette.ink)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 6)
+                    .background(Palette.card, in: RoundedRectangle(cornerRadius: 12))
+                    .overlay(RoundedRectangle(cornerRadius: 12).stroke(Palette.line))
+                Text("学びスプリント")
+                    .font(.caption.bold())
+                    .foregroundStyle(Palette.sub)
+                Text("小学生漢字")
+                    .font(.maru(31))
+                    .foregroundStyle(Palette.ink)
+                    .minimumScaleFactor(0.72)
+                    .lineLimit(1)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                Text("読みと書きを、学年ごとに。")
+                    .font(.subheadline)
+                    .foregroundStyle(Palette.sub)
+                HStack(spacing: 6) {
+                    ForEach(1...3, id: \.self) { grade in
+                        Circle()
+                            .fill(Palette.gradeColor(grade))
+                            .frame(width: 10, height: 10)
+                    }
                 }
+                .padding(.top, 4)
             }
-            .padding(.top, 4)
         }
         .padding(.top, 10)
     }
@@ -113,7 +123,7 @@ struct HomeView: View {
             Text("今日の学習")
                 .font(.maru(21))
                 .foregroundStyle(Palette.ink)
-            Text("苦手な字を優先して10字出します。字をタップすると書き練習もできます。")
+            Text("復習中の字を優先して10字出します。字をタップすると書き練習もできます。")
                 .font(.subheadline)
                 .foregroundStyle(Palette.sub)
             if !daily.isEmpty {
@@ -155,7 +165,7 @@ struct HomeView: View {
                 Divider()
                 statCell(value: "\(records.accuracy)%", label: "正答率")
                 Divider()
-                statCell(value: "\(records.weakCount)", label: "苦手")
+                statCell(value: "\(records.weakCount)", label: "復習中")
                 Divider()
                 statCell(value: "\(records.writingDoneCount)", label: "書き完了")
             }
@@ -218,19 +228,19 @@ struct HomeView: View {
         let weak = records.weakKanji()
         return VStack(alignment: .leading, spacing: 10) {
             HStack {
-                Text("苦手復習")
+                Text("復習チャレンジ")
                     .font(.maru(21))
                     .foregroundStyle(Palette.ink)
                 Spacer()
-                Text(verbatim: "現在の苦手 \(records.weakCount)字")
+                Text(verbatim: "復習中の字 \(records.weakCount)字")
                     .font(.caption.bold())
                     .foregroundStyle(Palette.navy)
             }
-            Text("読みクイズで間違えた字を集めて復習できます。3回連続で正解すると苦手から外れます。")
+            Text("読みクイズで出会った字を集めて、もう一度チャレンジできます。3回連続で正解すると卒業です。")
                 .font(.subheadline)
                 .foregroundStyle(Palette.sub)
-            NavigationLink(value: KanjiRoute.quiz(title: "苦手復習", kanjiIDs: weak.map(\.kanji), mode: .mixed)) {
-                Text(verbatim: "苦手だけ復習する　\(weak.count)字")
+            NavigationLink(value: KanjiRoute.quiz(title: "復習チャレンジ", kanjiIDs: weak.map(\.kanji), mode: .mixed)) {
+                Text(verbatim: "もう一度チャレンジ　\(weak.count)字")
             }
             .buttonStyle(PrimaryButtonStyle(background: Palette.primary))
             .disabled(weak.isEmpty)
@@ -272,7 +282,7 @@ struct HomeView: View {
                             .font(.caption.bold())
                             .foregroundStyle(Palette.navy)
                         if stats.attempts > 0 {
-                            Text(verbatim: "正答率 \(stats.accuracy)%・苦手 \(stats.weak)字")
+                            Text(verbatim: "正答率 \(stats.accuracy)%・復習中 \(stats.weak)字")
                                 .font(.caption)
                                 .foregroundStyle(Palette.sub)
                         } else {

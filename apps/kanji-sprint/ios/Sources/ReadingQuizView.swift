@@ -205,33 +205,37 @@ struct ReadingQuizView: View {
 
     private func feedbackView(_ item: QuizItem) -> some View {
         let isCorrect = selected == item.correctIndex
-        return VStack(alignment: .leading, spacing: 8) {
-            HStack(spacing: 6) {
-                Text(isCorrect ? "やったね！" : (selected == -1 ? "答えを見てみよう" : "おしい！"))
-                    .font(.maru(17))
-                    .foregroundStyle(isCorrect ? Palette.good : Palette.bad)
-                if isCorrect {
-                    Image(systemName: "star.fill")
-                        .foregroundStyle(Palette.good)
+        let mascotExpression: MascotExpression = isCorrect ? .happy : (selected == -1 ? .normal : .frustrated)
+        return HStack(alignment: .top, spacing: 10) {
+            MascotView(expression: mascotExpression, size: 52)
+            VStack(alignment: .leading, spacing: 8) {
+                HStack(spacing: 6) {
+                    Text(isCorrect ? "やったね！" : (selected == -1 ? "答えを見てみよう" : "ナイスチャレンジ！"))
+                        .font(.maru(17))
+                        .foregroundStyle(isCorrect ? Palette.good : Palette.accent)
+                    if isCorrect {
+                        Image(systemName: "star.fill")
+                            .foregroundStyle(Palette.good)
+                    }
                 }
-            }
-            VStack(alignment: .leading, spacing: 4) {
-                if !item.entry.onReadings.isEmpty {
-                    Text(verbatim: "音読み：\(item.entry.onReadings.joined(separator: "・"))")
-                        .font(.subheadline)
-                        .foregroundStyle(Palette.ink)
+                VStack(alignment: .leading, spacing: 4) {
+                    if !item.entry.onReadings.isEmpty {
+                        Text(verbatim: "音読み：\(item.entry.onReadings.joined(separator: "・"))")
+                            .font(.subheadline)
+                            .foregroundStyle(Palette.ink)
+                    }
+                    if !item.entry.kunReadings.isEmpty {
+                        Text(verbatim: "訓読み：\(item.entry.kunReadings.map(\.plain).joined(separator: "・"))")
+                            .font(.subheadline)
+                            .foregroundStyle(Palette.ink)
+                    }
                 }
-                if !item.entry.kunReadings.isEmpty {
-                    Text(verbatim: "訓読み：\(item.entry.kunReadings.map(\.plain).joined(separator: "・"))")
-                        .font(.subheadline)
-                        .foregroundStyle(Palette.ink)
+                Button("この字を見る") {
+                    path.append(KanjiRoute.detail(item.entry.kanji))
                 }
+                .font(.subheadline.bold())
+                .tint(Palette.navy)
             }
-            Button("この字を見る") {
-                path.append(KanjiRoute.detail(item.entry.kanji))
-            }
-            .font(.subheadline.bold())
-            .tint(Palette.navy)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(16)
@@ -240,9 +244,21 @@ struct ReadingQuizView: View {
         .shadow(color: .black.opacity(0.05), radius: 6, x: 0, y: 2)
     }
 
+    private var resultMascotExpression: MascotExpression {
+        (!items.isEmpty && correctCount == items.count) ? .celebrate : .happy
+    }
+
+    private var encouragementText: String {
+        guard !items.isEmpty else { return "チャレンジできたね！" }
+        if correctCount == items.count { return "かんぺき！すごい！" }
+        if correctCount * 2 >= items.count { return "よくがんばったね！" }
+        return "チャレンジできたね！"
+    }
+
     private var resultView: some View {
         VStack(alignment: .leading, spacing: 16) {
             VStack(spacing: 8) {
+                MascotView(expression: resultMascotExpression, size: 80)
                 Text("結果")
                     .font(.maru(21))
                     .foregroundStyle(Palette.ink)
@@ -251,6 +267,9 @@ struct ReadingQuizView: View {
                     .foregroundStyle(Palette.ink)
                 Text(verbatim: "正答率 \(items.isEmpty ? 0 : Int(Double(correctCount) / Double(items.count) * 100))%")
                     .font(.subheadline)
+                    .foregroundStyle(Palette.sub)
+                Text(encouragementText)
+                    .font(.subheadline.bold())
                     .foregroundStyle(Palette.sub)
             }
             .frame(maxWidth: .infinity)
@@ -262,7 +281,7 @@ struct ReadingQuizView: View {
                 Button {
                     restart(with: wrongKanji)
                 } label: {
-                    Text(verbatim: "苦手だけ復習する　\(wrongKanji.count)字")
+                    Text(verbatim: "もう一度チャレンジ　\(wrongKanji.count)字")
                 }
                 .buttonStyle(PrimaryButtonStyle(background: Palette.primary))
             }

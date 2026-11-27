@@ -58,7 +58,7 @@ struct SettingsView: View {
                     Button("学習記録をリセット", role: .destructive) {
                         showResetConfirm = true
                     }
-                    Text("読みクイズの記録・苦手・書き完了をすべて消します。")
+                    Text("読みクイズの記録・復習中の字・書き完了をすべて消します。")
                         .font(.footnote)
                         .foregroundStyle(Palette.sub)
                 }
@@ -97,7 +97,7 @@ struct SettingsView: View {
                 }
                 Button("キャンセル", role: .cancel) {}
             } message: {
-                Text("読みクイズの記録・苦手・書き完了がすべて消えます。")
+                Text("読みクイズの記録・復習中の字・書き完了がすべて消えます。")
             }
         }
     }

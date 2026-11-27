@@ -41,7 +41,7 @@ struct GradeKanjiListView: View {
                         .foregroundStyle(Palette.sub)
                 }
                 if stats.weak > 0 {
-                    Text(verbatim: "苦手 \(stats.weak)字")
+                    Text(verbatim: "復習中 \(stats.weak)字")
                         .foregroundStyle(Palette.bad)
                 }
                 if stats.writingDone > 0 {
@@ -104,7 +104,7 @@ struct GradeKanjiListView: View {
     @ViewBuilder
     private func statusMark(_ entry: KanjiEntry) -> some View {
         if records.isWeak(entry.kanji) {
-            Text("苦手")
+            Text("復習中")
                 .font(.caption2.bold())
                 .foregroundStyle(Palette.bad)
         } else if records.writingCompletions(entry.kanji) > 0 {
