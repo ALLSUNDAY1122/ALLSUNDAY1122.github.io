@@ -46,7 +46,12 @@ jobs:
         working-directory: electrician2-sprint/ios
         run: |
           set -o pipefail
-          xcodebuild -project Electrician2Sprint.xcodeproj -scheme Electrician2Sprint -configuration Debug -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 16' CODE_SIGNING_ALLOWED=NO test | tee "$RUNNER_TEMP/electrician2-learning-tests.log"
+          xcodebuild -project Electrician2Sprint.xcodeproj -scheme Electrician2Sprint -configuration Debug -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 16' CODE_SIGNING_ALLOWED=NO -only-testing:Electrician2SprintTests test | tee "$RUNNER_TEMP/electrician2-learning-tests.log"
+      - name: Run XCUITest acceptance
+        working-directory: electrician2-sprint/ios
+        run: |
+          set -o pipefail
+          xcodebuild -project Electrician2Sprint.xcodeproj -scheme Electrician2Sprint -configuration Debug -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 16' CODE_SIGNING_ALLOWED=NO -only-testing:Electrician2SprintUITests -parallel-testing-enabled NO -resultBundlePath "$RUNNER_TEMP/electrician2-ui-acceptance.xcresult" test | tee "$RUNNER_TEMP/electrician2-ui-acceptance.log"
       - name: Release simulator compile
         working-directory: electrician2-sprint/ios
         run: |
@@ -56,6 +61,8 @@ jobs:
         if: always()
         with:
           name: electrician2-native-build-logs
-          path: ${{ runner.temp }}/electrician2-*-build.log
+          path: |
+            ${{ runner.temp }}/electrician2-*.log
+            ${{ runner.temp }}/electrician2-ui-acceptance.xcresult
           if-no-files-found: warn
           retention-days: 7
