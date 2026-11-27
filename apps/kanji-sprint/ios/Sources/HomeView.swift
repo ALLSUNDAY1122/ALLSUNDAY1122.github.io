@@ -1,0 +1,274 @@
+import SwiftUI
+
+enum QuizMode: Hashable {
+    case kanjiToReading
+    case readingToKanji
+    case mixed
+}
+
+enum KanjiRoute: Hashable {
+    case grade(Int)
+    case detail(String)
+    case quiz(title: String, kanjiIDs: [String], mode: QuizMode)
+    case writing(String)
+}
+
+struct HomeView: View {
+    @State private var path = NavigationPath()
+    @State private var showSettings = false
+    @EnvironmentObject private var premium: PremiumStore
+    @EnvironmentObject private var records: StudyRecordStore
+
+    private let dailyGoal = 10
+
+    var body: some View {
+        NavigationStack(path: $path) {
+            VStack(spacing: 0) {
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 16) {
+                        header
+                        Button { showSettings = true } label: {
+                            Label(premium.isNoAds ? "設定・広告なし利用中" : "設定・広告なし（買い切り）", systemImage: "gearshape")
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                        .buttonStyle(.bordered)
+                        .tint(Palette.navy)
+                        todayCard
+                        studyStatusCard
+                        weakReviewCard
+                        Text("学年から選ぶ")
+                            .font(.headline)
+                            .foregroundStyle(Palette.sub)
+                        gradeGrid
+                        sourceNotice
+                    }
+                    .padding(.horizontal, 18)
+                    .padding(.bottom, 32)
+                }
+                if !premium.isNoAds {
+                    Divider()
+                    AdsBannerView()
+                        .frame(height: 50)
+                        .background(Palette.paper)
+                }
+            }
+            .background(Palette.paper.ignoresSafeArea())
+            .navigationTitle("小学生漢字")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbarBackground(Palette.paper, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .navigationDestination(for: KanjiRoute.self) { route in
+                switch route {
+                case .grade(let grade):
+                    GradeKanjiListView(grade: grade, path: $path)
+                case .detail(let kanji):
+                    KanjiDetailView(kanji: kanji, path: $path)
+                case .quiz(let title, let kanjiIDs, let mode):
+                    ReadingQuizView(
+                        title: title,
+                        entries: kanjiIDs.compactMap { KanjiStore.shared.entry($0) },
+                        mode: mode,
+                        path: $path
+                    )
+                case .writing(let kanji):
+                    if let entry = KanjiStore.shared.entry(kanji) {
+                        WritingPracticeView(entry: entry)
+                    }
+                }
+            }
+        }
+        .tint(Palette.navy)
+        .sheet(isPresented: $showSettings) { SettingsView() }
+    }
+
+    private var header: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text("学びスプリント")
+                .font(.caption.bold())
+                .foregroundStyle(Palette.sub)
+            Text("小学生漢字")
+                .font(.system(size: 31, weight: .bold, design: .serif))
+                .foregroundStyle(Palette.ink)
+                .minimumScaleFactor(0.72)
+                .lineLimit(1)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            Text("読みと書きを、学年ごとに。")
+                .font(.subheadline)
+                .foregroundStyle(Palette.sub)
+        }
+        .padding(.top, 10)
+    }
+
+    private var todayCard: some View {
+        let daily = KanjiStore.shared.daily(limit: dailyGoal, weakIDs: records.weakIDs)
+        return VStack(alignment: .leading, spacing: 10) {
+            Text("今日の学習")
+                .font(.system(size: 21, weight: .bold, design: .serif))
+                .foregroundStyle(Palette.ink)
+            Text("苦手な字を優先して10字出します。字をタップすると書き練習もできます。")
+                .font(.subheadline)
+                .foregroundStyle(Palette.sub)
+            if !daily.isEmpty {
+                LazyVGrid(columns: [GridItem(.adaptive(minimum: 44), spacing: 8)], alignment: .leading, spacing: 8) {
+                    ForEach(daily) { entry in
+                        Button {
+                            path.append(KanjiRoute.detail(entry.kanji))
+                        } label: {
+                            Text(entry.kanji)
+                                .font(.system(size: 22, weight: .bold, design: .serif))
+                                .foregroundStyle(records.isWeak(entry.kanji) ? Palette.bad : Palette.ink)
+                                .frame(width: 44, height: 44)
+                                .background(Palette.paper, in: RoundedRectangle(cornerRadius: 10))
+                                .overlay(RoundedRectangle(cornerRadius: 10).stroke(Palette.line))
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+            }
+            NavigationLink(value: KanjiRoute.quiz(title: "今日の学習", kanjiIDs: daily.map(\.kanji), mode: .mixed)) {
+                Text(verbatim: "読みクイズをはじめる　\(daily.count)字")
+            }
+            .buttonStyle(PrimaryButtonStyle(background: Palette.navy))
+            .disabled(daily.isEmpty)
+        }
+        .padding(18)
+        .background(Palette.card, in: RoundedRectangle(cornerRadius: 18))
+        .overlay(RoundedRectangle(cornerRadius: 18).stroke(Palette.line))
+    }
+
+    private var studyStatusCard: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("学習状況")
+                .font(.system(size: 21, weight: .bold, design: .serif))
+                .foregroundStyle(Palette.ink)
+            HStack(spacing: 0) {
+                statCell(value: "\(records.totalAnswered)", label: "総回答数")
+                Divider()
+                statCell(value: "\(records.accuracy)%", label: "正答率")
+                Divider()
+                statCell(value: "\(records.weakCount)", label: "苦手")
+                Divider()
+                statCell(value: "\(records.writingDoneCount)", label: "書き完了")
+            }
+            .frame(maxWidth: .infinity)
+            VStack(alignment: .leading, spacing: 6) {
+                HStack {
+                    Text("今日の進捗")
+                        .font(.subheadline.bold())
+                        .foregroundStyle(Palette.ink)
+                    Spacer()
+                    Text(verbatim: "今日 \(records.todayAnswered)問 / 目標\(dailyGoal)問")
+                        .font(.caption)
+                        .foregroundStyle(Palette.sub)
+                }
+                ProgressView(value: Double(min(records.todayAnswered, dailyGoal)), total: Double(dailyGoal))
+                    .tint(Palette.navy)
+            }
+            if !records.state.history.isEmpty {
+                Divider()
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("最近の学習")
+                        .font(.caption.bold())
+                        .foregroundStyle(Palette.sub)
+                    ForEach(records.state.history.prefix(3)) { session in
+                        HStack {
+                            Text(session.title)
+                                .font(.caption)
+                                .foregroundStyle(Palette.ink)
+                            Spacer()
+                            Text(verbatim: "\(session.score)/\(session.total)問")
+                                .font(.caption)
+                                .foregroundStyle(Palette.sub)
+                            Text(session.date, format: .dateTime.month().day())
+                                .font(.caption)
+                                .foregroundStyle(Palette.sub)
+                        }
+                    }
+                }
+            }
+        }
+        .padding(18)
+        .background(Palette.card, in: RoundedRectangle(cornerRadius: 18))
+        .overlay(RoundedRectangle(cornerRadius: 18).stroke(Palette.line))
+    }
+
+    private func statCell(value: String, label: String) -> some View {
+        VStack(spacing: 2) {
+            Text(value)
+                .font(.system(size: 22, weight: .bold, design: .serif))
+                .foregroundStyle(Palette.ink)
+            Text(label)
+                .font(.caption)
+                .foregroundStyle(Palette.sub)
+        }
+        .frame(maxWidth: .infinity)
+    }
+
+    private var weakReviewCard: some View {
+        let weak = records.weakKanji()
+        return VStack(alignment: .leading, spacing: 10) {
+            HStack {
+                Text("苦手復習")
+                    .font(.system(size: 21, weight: .bold, design: .serif))
+                    .foregroundStyle(Palette.ink)
+                Spacer()
+                Text(verbatim: "現在の苦手 \(records.weakCount)字")
+                    .font(.caption.bold())
+                    .foregroundStyle(Palette.navy)
+            }
+            Text("読みクイズで間違えた字を集めて復習できます。3回連続で正解すると苦手から外れます。")
+                .font(.subheadline)
+                .foregroundStyle(Palette.sub)
+            NavigationLink(value: KanjiRoute.quiz(title: "苦手復習", kanjiIDs: weak.map(\.kanji), mode: .mixed)) {
+                Text(verbatim: "苦手だけ復習する　\(weak.count)字")
+            }
+            .buttonStyle(PrimaryButtonStyle(background: Palette.navy))
+            .disabled(weak.isEmpty)
+        }
+        .padding(18)
+        .background(Palette.card, in: RoundedRectangle(cornerRadius: 18))
+        .overlay(RoundedRectangle(cornerRadius: 18).stroke(Palette.line))
+    }
+
+    private var gradeGrid: some View {
+        LazyVGrid(columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)], spacing: 12) {
+            ForEach(1...6, id: \.self) { grade in
+                let stats = records.gradeStats(grade)
+                NavigationLink(value: KanjiRoute.grade(grade)) {
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text(verbatim: "\(grade)年生")
+                            .font(.system(size: 20, weight: .bold, design: .serif))
+                            .foregroundStyle(Palette.ink)
+                        Text(verbatim: "全\(stats.total)字")
+                            .font(.caption)
+                            .foregroundStyle(Palette.sub)
+                        Text(verbatim: "学習済み \(stats.studied)字")
+                            .font(.caption.bold())
+                            .foregroundStyle(Palette.navy)
+                        if stats.attempts > 0 {
+                            Text(verbatim: "正答率 \(stats.accuracy)%・苦手 \(stats.weak)字")
+                                .font(.caption)
+                                .foregroundStyle(Palette.sub)
+                        } else {
+                            Text("未回答")
+                                .font(.caption)
+                                .foregroundStyle(Palette.sub)
+                        }
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(14)
+                    .background(Palette.card, in: RoundedRectangle(cornerRadius: 16))
+                    .overlay(RoundedRectangle(cornerRadius: 16).stroke(Palette.line))
+                }
+                .buttonStyle(.plain)
+            }
+        }
+    }
+
+    private var sourceNotice: some View {
+        Text("漢字の学年・読み・画数は KANJIDIC2（© EDRDG）、筆順は KanjiVG（© Ulrich Apel and contributors）のデータを使っています。学年は文部科学省の学年別漢字配当表に基づきます。")
+            .font(.caption)
+            .foregroundStyle(Palette.sub)
+            .padding(.top, 4)
+    }
+}
