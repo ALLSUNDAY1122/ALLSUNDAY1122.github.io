@@ -80,4 +80,47 @@ final class KangoshiSprintUITests: XCTestCase {
         XCTAssertTrue(privacy.isHittable)
         XCTAssertTrue(terms.isHittable)
     }
+
+    // Guideline 1.4.1: sources must be reachable from Settings and from the explanation screen.
+    func testReferencesReachableFromSettingsAndExplanation() throws {
+        let app = launchApp()
+
+        app.tabBars.buttons["設定"].tap()
+        XCTAssertTrue(app.staticTexts["学びかた"].waitForExistence(timeout: 5))
+        let settingsLink = app.buttons["settings-references-link"]
+        XCTAssertTrue(settingsLink.waitForExistence(timeout: 5), "Settings must contain 出典・参考資料")
+        var swipes = 0
+        while !settingsLink.isHittable && swipes < 6 { app.swipeUp(); swipes += 1 }
+        settingsLink.tap()
+        XCTAssertTrue(app.staticTexts["国家試験の原典（問題・正答）"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.descendants(matching: .any)["references-exam-115"].waitForExistence(timeout: 5))
+        app.navigationBars.buttons.firstMatch.tap()
+        XCTAssertTrue(app.buttons["settings-disclaimer-link"].waitForExistence(timeout: 5), "Settings must contain the disclaimer")
+
+        app.tabBars.buttons["ホーム"].tap()
+        XCTAssertTrue(app.buttons["今日のスプリント"].waitForExistence(timeout: 5))
+        app.buttons["今日のスプリント"].tap()
+        let close = app.buttons["閉じる"]
+        XCTAssertTrue(close.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.descendants(matching: .any)["question-source-link"].waitForExistence(timeout: 5), "Each question must link to the official MHLW source")
+
+        let unknown = app.buttons["わからない（答えを見る）"]
+        XCTAssertTrue(unknown.waitForExistence(timeout: 5))
+        swipes = 0
+        while !unknown.isHittable && swipes < 6 { app.swipeUp(); swipes += 1 }
+        unknown.tap()
+        let unknownHeading = app.staticTexts["わからない（答えを確認）"]
+        let excludedHeading = app.staticTexts["採点対象外"]
+        XCTAssertTrue(unknownHeading.waitForExistence(timeout: 5) || excludedHeading.exists, "Unknown answers must not be labelled 惜しい")
+        XCTAssertFalse(app.staticTexts["惜しい"].exists)
+
+        let refsButton = app.buttons["explanation-references-button"]
+        XCTAssertTrue(refsButton.waitForExistence(timeout: 5), "Explanation must offer the references list")
+        swipes = 0
+        while !refsButton.isHittable && swipes < 8 { app.swipeUp(); swipes += 1 }
+        refsButton.tap()
+        XCTAssertTrue(app.staticTexts["国家試験の原典（問題・正答）"].waitForExistence(timeout: 5))
+        app.buttons["references-close"].tap()
+        XCTAssertTrue(refsButton.waitForExistence(timeout: 5))
+    }
 }

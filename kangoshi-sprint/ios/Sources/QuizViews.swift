@@ -25,6 +25,7 @@ struct QuizQuestionView: View {
     @State private var selected: Set<Int> = []
     @State private var numericText = ""
     @State private var showDetail = false
+    @State private var showReferences = false
 
     private var result: AnswerResult? { session.answered ? session.results.last : nil }
     private var choices: [String] { question.choices.isEmpty && !question.isNumeric ? ["①","②","③","④"] : question.choices }
@@ -42,6 +43,7 @@ struct QuizQuestionView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 14) {
                     HStack(spacing: 6) { tag(question.category); tag(question.subject) }
+                    QuestionSourceBadge(question: question)
                     if !question.scenario.isEmpty {
                         VStack(alignment: .leading, spacing: 6) {
                             Text("状況設定 \(question.scenarioIndex + 1)/\(max(1, question.scenarioTotal))").font(.caption.bold()).foregroundStyle(KSTheme.green)
@@ -57,7 +59,8 @@ struct QuizQuestionView: View {
                 .padding(16)
             }
         }
-        .onChange(of: question.id) { _ in selected = []; numericText = ""; showDetail = false }
+        .onChange(of: question.id) { _ in selected = []; numericText = ""; showDetail = false; showReferences = false }
+        .sheet(isPresented: $showReferences) { ReferencesSheet() }
     }
 
     private var header: some View {
@@ -149,9 +152,9 @@ struct QuizQuestionView: View {
 
     private func feedback(_ r: AnswerResult) -> some View {
         VStack(spacing: 0) {
-            Text(question.scoringMode == "excluded" ? "採点対象外" : (r.correct ? "正解" : "惜しい"))
+            Text(feedbackTitle(r))
                 .font(.subheadline.bold()).foregroundStyle(.white).frame(maxWidth: .infinity, alignment: .leading).padding(12)
-                .background(question.scoringMode == "excluded" ? KSTheme.ai : (r.correct ? KSTheme.green : KSTheme.shu))
+                .background(feedbackColor(r))
             VStack(alignment: .leading, spacing: 10) {
                 Text("ここだけ覚える").font(.caption2.bold()).tracking(1.5).foregroundStyle(KSTheme.gold)
                 Text(question.point).font(.system(size: 16, weight: .semibold, design: .serif)).lineSpacing(5).padding(12).frame(maxWidth: .infinity, alignment: .leading)
@@ -159,11 +162,27 @@ struct QuizQuestionView: View {
                 if question.scoringMode == "include_if_correct_exclude_if_wrong" { Text("公式採点：正解時のみ得点に算入し、不正解時は採点対象から除外します。").font(.caption).foregroundStyle(KSTheme.secondary) }
                 if question.scoringMode == "excluded" { Text("公式に採点対象外とされた問題です。独自の正解を追加せず、学習解説のみ表示します。").font(.caption).foregroundStyle(KSTheme.secondary) }
                 DisclosureGroup("もう少し詳しく", isExpanded: $showDetail) { Text(question.detail).font(.caption).lineSpacing(4).foregroundStyle(KSTheme.secondary).padding(.top, 6) }.tint(KSTheme.ai)
+                ExplanationReferencesSection(question: question) { showReferences = true }
                 Button(session.index + 1 == session.questionIds.count ? "結果を見る" : "次の問題へ") { model.advance() }.buttonStyle(PrimaryButtonStyle())
             }
             .padding(14).background(.white)
         }
         .overlay(RoundedRectangle(cornerRadius: 12).stroke(KSTheme.line)).clipShape(RoundedRectangle(cornerRadius: 12))
+    }
+
+    // 1.0.1: 「わからない」で答えを見たときは「惜しい」と分けて表示する
+    private func feedbackTitle(_ r: AnswerResult) -> String {
+        if question.scoringMode == "excluded" { return "採点対象外" }
+        if r.correct { return "正解" }
+        if r.unknown { return "わからない（答えを確認）" }
+        return "惜しい"
+    }
+
+    private func feedbackColor(_ r: AnswerResult) -> Color {
+        if question.scoringMode == "excluded" { return KSTheme.ai }
+        if r.correct { return KSTheme.green }
+        if r.unknown { return KSTheme.gold }
+        return KSTheme.shu
     }
 
     private func tag(_ text: String) -> some View {
