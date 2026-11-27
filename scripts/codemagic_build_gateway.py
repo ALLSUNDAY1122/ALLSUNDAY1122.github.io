@@ -83,7 +83,7 @@ def load_command(path: Path) -> dict:
     if not isinstance(request_id, str) or not REQUEST_ID_RE.fullmatch(request_id):
         raise ValueError("Invalid request_id.")
     action = data.get("action")
-    if action not in {"inspect", "inspect_workflow_status", "inspect_build", "build"}:
+    if action not in {"inspect", "inspect_workflow_status", "inspect_build", "inspect_latest_build", "build"}:
         raise ValueError("action must be inspect, inspect_workflow_status, inspect_build, or build.")
     return data
 
@@ -226,6 +226,25 @@ def main() -> int:
                            "note": "Exact read-only build-list match. Apple-side availability still requires fresh ASC/TestFlight readback."})
             output_path.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
             print(f"PASS: exact Codemagic build readback id={build_id} status={match.get('status')}")
+            return 0
+
+        if command["action"] == "inspect_latest_build":
+            branch = command.get("branch", "main")
+            if branch != "main" and not (repository == "ALLSUNDAY1122/ALLSUNDAY1122.github.io" and branch in PINNED_RELEASE_BRANCHES):
+                raise ValueError("Branch is not allowed by the Codemagic gateway.")
+            validate_workflow(repository, branch, workflow_id)
+            url = f"https://api.codemagic.io/builds?appId={urllib.parse.quote(str(requested_app_id))}"
+            list_status, payload = api_json(url, token)
+            if list_status < 200 or list_status >= 300:
+                raise RuntimeError(f"Codemagic build list failed with HTTP {list_status}: {sanitize(payload)}")
+            rows = [b for b in build_rows(payload) if str(b.get("fileWorkflowId") or b.get("workflowId") or "") == workflow_id and str(b.get("branch") or "") == branch]
+            rows.sort(key=lambda b: str(b.get("createdAt") or b.get("startedAt") or ""), reverse=True)
+            if not rows:
+                raise RuntimeError(f"No Codemagic builds found for workflow={workflow_id} branch={branch}.")
+            latest = rows[0]
+            result.update({"ok": True, "app_id": requested_app_id, "workflow_id": workflow_id, "branch": branch, "build_id": latest.get("_id") or latest.get("id"), "build": build_summary(latest), "note": "Latest exact workflow and branch match; inspect_build can be used for a subsequent exact readback."})
+            output_path.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
+            print(f"PASS: latest Codemagic build readback id={result['build_id']} status={latest.get('status')}")
             return 0
 
         if command["action"] == "inspect_workflow_status":
