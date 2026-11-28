@@ -97,7 +97,7 @@ workflows:
           assert "自動更新されます" in paywall_source
           assert "購入を復元" in paywall_source
           assert "プライバシーポリシー" in paywall_source and "利用規約" in paywall_source
-          assert "CURRENT_PROJECT_VERSION: 6" in project_source
+          assert "CURRENT_PROJECT_VERSION: 7" in project_source
           free_lessons = [
               lesson for lesson in lessons
               if int(re.search(r"(\d+)$", lesson["id"]).group(1)) <= 6
@@ -161,7 +161,7 @@ workflows:
       - name: Apply App Store signing profiles
         script: |
           cd "$CM_BUILD_DIR/english-listening-sprint/ios"
-          xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
+          xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": false}'
       - name: Build signed IPA
         script: |
           xcode-project build-ipa \
