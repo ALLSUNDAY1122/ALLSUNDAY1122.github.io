@@ -1,5 +1,205 @@
 # Codemagic configuration refreshed for the health-manager-2-ios release workflow.
 workflows:
+  english-listening-sprint-testflight:
+    name: English Listening Sprint - Internal TestFlight
+    max_build_duration: 120
+    instance_type: mac_mini_m2
+    integrations:
+      app_store_connect: "Codemagic Shiwake Swipe"
+    environment:
+      groups:
+        - azure_speech
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: jp.allsunday1122.englishlistening
+      vars:
+        BUNDLE_ID: jp.allsunday1122.englishlistening
+        XCODE_PROJECT: english-listening-sprint/ios/EnglishListeningSprint.xcodeproj
+        XCODE_SCHEME: EnglishListeningSprint
+      xcode: latest
+    scripts:
+      - name: Install XcodeGen
+        script: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+      - name: Generate missing Azure Speech audio
+        script: |
+          set -euo pipefail
+          cd "$CM_BUILD_DIR/english-listening-sprint"
+          python3 - <<'PY'
+          from pathlib import Path
+          import json, re
+          root = Path(".")
+          html = (root / "index.html").read_text(encoding="utf-8")
+          match = re.search(r"window\.LESSONS\s*=\s*(\[.*?\]);</script>", html, re.S)
+          if not match:
+              raise SystemExit("window.LESSONS not found in index.html")
+          lessons = json.loads(match.group(1))
+          if len(lessons) != 100:
+              raise SystemExit(f"Expected 150 lessons, found {len(lessons)}")
+          target = root / "data" / "lessons.json"
+          target.parent.mkdir(parents=True, exist_ok=True)
+          target.write_text(json.dumps(lessons, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+          print(f"Wrote {len(lessons)} lessons to {target}")
+          PY
+          python3 -m pip install --disable-pip-version-check requests
+          : "${AZURE_SPEECH_KEY:?AZURE_SPEECH_KEY is missing from azure_speech group}"
+          : "${AZURE_SPEECH_REGION:?AZURE_SPEECH_REGION is missing from azure_speech group}"
+          pids=()
+          for region in Canada Australia "United Kingdom" "United States" India; do
+            (REGION_FILTER="$region" SLOT_FILTER="07,08,09,10,11,12,13,14,15,16,17,18,19,20" python3 scripts/generate_audio_azure.py) &
+            pids+=("$!")
+          done
+          status=0
+          for pid in "${pids[@]}"; do
+            wait "$pid" || status=1
+          done
+          exit "$status"
+      - name: Audit release content
+        script: |
+          python3 - "$CM_BUILD_DIR/english-listening-sprint" <<'PY'
+          from pathlib import Path
+          import json, plistlib, re, sys
+
+          root = Path(sys.argv[1])
+          html = (root / "index.html").read_text(encoding="utf-8")
+          match = re.search(r"window\.LESSONS\s*=\s*(\[.*?\]);</script>", html, re.S)
+          assert match, "embedded lesson data not found"
+          lessons = json.loads(match.group(1))
+          assert len(lessons) == 100, len(lessons)
+          assert len({lesson["id"] for lesson in lessons}) == 100
+          assert sum(len(lesson["questions"]) for lesson in lessons) == 300
+
+          # StoreKit product IDs and free tier: themes 01-06 in all five regions.
+          app = root / "ios/EnglishListeningSprint"
+          store_source = (app / "LearningStore.swift").read_text(encoding="utf-8")
+          paywall_source = (app / "PaywallView.swift").read_text(encoding="utf-8")
+          project_source = (root / "ios/project.yml").read_text(encoding="utf-8")
+          home_source = (app / "HomeView.swift").read_text(encoding="utf-8")
+          library_source = (app / "LibraryView.swift").read_text(encoding="utf-8")
+          app_source = (app / "EnglishListeningSprintApp.swift").read_text(encoding="utf-8")
+          monthly_id = "jp.allsunday1122.englishlistening.premium.monthly"
+          lifetime_id = "jp.allsunday1122.englishlistening.premium.lifetime"
+          assert monthly_id in store_source and lifetime_id in store_source
+          assert "Product.products(for:" in store_source
+          assert "monthlyPeriod?.unit == .month" in store_source
+          assert "lifetime?.type == .nonConsumable" in store_source
+          assert "hasOneWeekFreeTrial" in store_source
+          assert "Transaction.currentEntitlements" in store_source
+          assert "Transaction.updates" in store_source
+          assert "AppStore.sync()" in store_source
+          assert "await refreshEntitlements(retries: 6)" in store_source
+          assert "await refreshEntitlements(retries: 4)" in store_source
+          assert "guard canAccess(lesson)" in store_source
+          assert "store.requestAccess(to: lesson)" in home_source
+          assert "store.requestAccess(to: lesson)" in library_source
+          assert "PREMIUM" in home_source and "PREMIUM" in library_source
+          assert "onChange(of: scenePhase)" in app_source
+          assert "初回1週間無料トライアル" in paywall_source
+          assert "自動更新されます" in paywall_source
+          assert "購入を復元" in paywall_source
+          assert "プライバシーポリシー" in paywall_source and "利用規約" in paywall_source
+          assert "CURRENT_PROJECT_VERSION: 7" in project_source
+          free_lessons = [
+              lesson for lesson in lessons
+              if int(re.search(r"(\d+)$", lesson["id"]).group(1)) <= 6
+          ]
+          assert len(free_lessons) == 30, len(free_lessons)
+          regions = {lesson["region"] for lesson in lessons}
+          assert len(regions) == 5, regions
+          for region in regions:
+              region_lessons = [lesson for lesson in lessons if lesson["region"] == region]
+              free_numbers = {
+                  int(re.search(r"(\d+)$", lesson["id"]).group(1))
+                  for lesson in region_lessons
+                  if int(re.search(r"(\d+)$", lesson["id"]).group(1)) <= 6
+              }
+              assert free_numbers == set(range(1, 7)), (region, free_numbers)
+              assert len(region_lessons) == 20, (region, len(region_lessons))
+          print("PASS: StoreKit product IDs and 30 free lessons (themes 01-06 across 5 regions)")
+
+          audio_paths = []
+          native_audio_paths = []
+          native_lessons = []
+          for part in ("part1", "part2", "part3"):
+              payload = json.loads((root / f"ios/Resources/lessons-{part}.json").read_text(encoding="utf-8"))
+              native_lessons.extend(payload)
+          assert len(native_lessons) == 100, len(native_lessons)
+          assert {item["id"] for item in native_lessons} == {item["id"] for item in lessons}
+          for lesson in lessons:
+              audio_paths.extend(item["path"] for item in lesson["audio"].values())
+              audio_paths.extend(item["path"] for item in lesson["short"]["audio"].values())
+          for lesson in native_lessons:
+              assert lesson.get("voices"), f"{lesson['id']}: voices missing"
+              assert len(lesson["voices"]) == (2 if lesson["region"] == "Canada" else 6), lesson["id"]
+              native_audio_paths.extend(item["path"] for item in lesson["audio"].values())
+              native_audio_paths.extend(item["path"] for item in lesson["short"]["audio"].values())
+          assert len(audio_paths) == 1040, len(audio_paths)
+          assert len(set(audio_paths)) == 1040
+          assert len(native_audio_paths) == 1040, len(native_audio_paths)
+          assert len(set(native_audio_paths)) == 1040, "duplicate iOS audio references"
+          assert set(native_audio_paths) == set(audio_paths), "iOS audio references differ from window.LESSONS"
+          missing = [path for path in native_audio_paths if not (root / path).is_file()]
+          assert not missing, f"missing audio files: {missing[:10]}"
+
+          icon = root / "ios/EnglishListeningSprint/Assets.xcassets/AppIcon.appiconset/EnglishListeningSprint-1024.png"
+          assert icon.is_file() and icon.stat().st_size > 0
+          with (root / "ios/EnglishListeningSprint/PrivacyInfo.xcprivacy").open("rb") as handle:
+              privacy = plistlib.load(handle)
+          assert privacy.get("NSPrivacyTracking") is False
+          assert privacy.get("NSPrivacyCollectedDataTypes") == []
+          reasons = privacy.get("NSPrivacyAccessedAPITypes", [])
+          assert any(
+              item.get("NSPrivacyAccessedAPIType") == "NSPrivacyAccessedAPICategoryUserDefaults"
+              and "CA92.1" in item.get("NSPrivacyAccessedAPITypeReasons", [])
+              for item in reasons
+          )
+          print("PASS: 100 lessons / 300 questions / 1,040 unique iOS audio references and files")
+          PY
+      - name: Generate Xcode project
+        script: |
+          cd "$CM_BUILD_DIR/english-listening-sprint/ios"
+          xcodegen generate
+      - name: Apply App Store signing profiles
+        script: |
+          cd "$CM_BUILD_DIR/english-listening-sprint/ios"
+          xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": false}'
+      - name: Build signed IPA
+        script: |
+          xcode-project build-ipa \
+            --project "$CM_BUILD_DIR/$XCODE_PROJECT" \
+            --scheme "$XCODE_SCHEME"
+      - name: Verify signed IPA
+        script: |
+          IPA_PATH="$(find build/ios/ipa -type f -name '*.ipa' -print -quit)"
+          test -n "$IPA_PATH"
+          VERIFY_DIR="$(mktemp -d)"
+          unzip -q "$IPA_PATH" -d "$VERIFY_DIR"
+          APP_DIR="$(find "$VERIFY_DIR/Payload" -maxdepth 1 -type d -name '*.app' -print -quit)"
+          python3 - "$APP_DIR" <<'PY'
+          from pathlib import Path
+          import plistlib, sys
+
+          app = Path(sys.argv[1])
+          info = plistlib.loads((app / "Info.plist").read_bytes())
+          assert info.get("CFBundleIdentifier") == "jp.allsunday1122.englishlistening"
+          assert info.get("CFBundleShortVersionString") == "1.0.0"
+          assert str(info.get("CFBundleVersion", "")).isdigit()
+          assert (app / "PrivacyInfo.xcprivacy").is_file()
+          assert (app / "Assets.car").is_file()
+          assert (app / "embedded.mobileprovision").is_file()
+          assert (app / "_CodeSignature").is_dir()
+          assert len(list(app.rglob("*.mp3"))) == 1040
+          assert len(list(app.glob("lessons-part*.json"))) == 3
+          print("PASS: signed IPA contains the release content and signing assets")
+          PY
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+        submit_to_app_store: false
+
   sprint-study-ios:
     name: Sprint Study - iOS TestFlight
     max_build_duration: 60
