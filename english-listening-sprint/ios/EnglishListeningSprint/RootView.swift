@@ -19,6 +19,10 @@ struct RootView: View {
             }
         }
         .background(SprintTheme.background.ignoresSafeArea())
+        .sheet(isPresented: $store.showPaywall) {
+            PaywallView()
+                .environmentObject(store)
+        }
     }
 }
 
