@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct SettingsView: View {
+    @EnvironmentObject private var store: LearningStore
+
     var body: some View {
         NavigationStack {
             List {
