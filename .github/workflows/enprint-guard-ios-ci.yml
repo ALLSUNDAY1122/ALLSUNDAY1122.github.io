@@ -1,0 +1,139 @@
+name: Enprint Guard native iOS CI
+
+on:
+  push:
+    branches:
+      - feature/enprint-guard-native-20261127
+      - main
+    paths:
+      - "enprint-guard/**"
+      - ".github/workflows/enprint-guard-ios-ci.yml"
+  pull_request:
+    paths:
+      - "enprint-guard/**"
+      - ".github/workflows/enprint-guard-ios-ci.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  simulator:
+    runs-on: macos-15
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Validate privacy manifest and app identity
+        run: |
+          python3 - <<'PY'
+          import plistlib
+          from pathlib import Path
+          root = Path("enprint-guard/ios")
+          info = plistlib.loads((root / "EnprintGuard/Info.plist").read_bytes())
+          privacy = plistlib.loads((root / "EnprintGuard/PrivacyInfo.xcprivacy").read_bytes())
+          assert info["CFBundleIdentifier"] == "$(PRODUCT_BUNDLE_IDENTIFIER)"
+          assert info["CFBundleShortVersionString"] == "$(MARKETING_VERSION)"
+          assert info["CFBundleExecutable"] == "$(EXECUTABLE_NAME)"
+          assert info["CFBundleExecutable"] == "$(EXECUTABLE_NAME)"
+          assert privacy["NSPrivacyTracking"] is False
+          assert privacy["NSPrivacyCollectedDataTypes"] == []
+          print("PASS: plist, privacy manifest and placeholder bundle identity")
+          PY
+
+      - name: Generate and verify opaque App Store icon
+        run: |
+          python3 enprint-guard/ios/scripts/generate_app_icon.py
+          python3 - <<'PY'
+          import struct
+          from pathlib import Path
+          raw = Path('enprint-guard/ios/EnprintGuard/Assets.xcassets/AppIcon.appiconset/AppIcon.png').read_bytes()
+          assert raw[:8] == b'\x89PNG\r\n\x1a\n'
+          width, height, depth, color_type, compression, filtering, interlace = struct.unpack('>IIBBBBB', raw[16:29])
+          assert (width, height, depth, color_type) == (1024, 1024, 8, 2)
+          assert compression == 0 and filtering == 0 and interlace == 0
+          print('PASS: 1024x1024 opaque RGB AppIcon')
+          PY
+
+      - name: Validate Codemagic Internal TestFlight contract
+        run: |
+          python3 -m venv "$RUNNER_TEMP/enprint-yaml-venv"
+          "$RUNNER_TEMP/enprint-yaml-venv/bin/python" -m pip install --disable-pip-version-check PyYAML
+          "$RUNNER_TEMP/enprint-yaml-venv/bin/python" - <<'PY'
+          import json
+          import yaml
+          from pathlib import Path
+          config = yaml.safe_load(Path('codemagic.yaml').read_text(encoding='utf-8'))
+          workflow = config['workflows']['enprint-guard-ios-testflight']
+          signing = workflow['environment']['ios_signing']
+          publishing = workflow['publishing']['app_store_connect']
+          assert signing['bundle_identifier'] == 'jp.allsunday1122.enprintguard'
+          assert publishing['submit_to_testflight'] is True
+          assert publishing['submit_to_app_store'] is False
+          assert 'beta_groups' not in publishing
+          triggering = workflow['triggering']
+          assert triggering['events'] == ['push']
+          assert triggering['branch_patterns'][0]['pattern'] == 'release/enprint-guard-testflight-20261127'
+          scripts = '\\n'.join(step.get('script', '') for step in workflow['scripts'])
+          assert 'app_id' in scripts and 'readback' in scripts
+          assert 'CM_BUILD_NUMBER' in scripts
+          assert 'testFlightInternalTestingOnly' in scripts
+          assert 'xcode-project build-ipa' in scripts
+          registry = json.loads(Path('automation/app-release-registry.json').read_text(encoding='utf-8'))
+          app = registry['apps']['enprintguard']
+          assert app['bundle_id'] == signing['bundle_identifier']
+          assert app['app_id'] == '6839814394'
+          assert app['sku'] == 'enprintguard-ios-20261127-01'
+          assert app['apple_record_user_confirmed'] is True
+          assert app['readback'] is False
+          print('PASS: TestFlight-only contract and owner-confirmed ASC identity; API read-back pending')
+          PY
+
+      - name: Generate Xcode project
+        run: |
+          cd enprint-guard/ios
+          xcodegen generate
+
+      - name: Build unsigned iOS Simulator app
+        run: |
+          cd enprint-guard/ios
+          xcodebuild -project EnprintGuard.xcodeproj -scheme EnprintGuard \
+            -configuration Debug -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath "$RUNNER_TEMP/enprint-derived" \
+            CODE_SIGNING_ALLOWED=NO build
+
+      - name: Run unit tests on an available iPhone simulator
+        run: |
+          cd enprint-guard/ios
+          UDID="$(xcrun simctl list devices available --json | python3 -c '
+          import json,sys
+          data=json.load(sys.stdin)
+          devices=[d for runtime in data["devices"].values() for d in runtime
+                   if d.get("isAvailable") and d.get("name","").startswith("iPhone")]
+          if not devices: raise SystemExit("No available iPhone simulator")
+          print(devices[0]["udid"])
+          ')"
+          xcodebuild test -project EnprintGuard.xcodeproj -scheme EnprintGuard \
+            -destination "platform=iOS Simulator,id=$UDID" \
+            -derivedDataPath "$RUNNER_TEMP/enprint-test-derived" \
+            CODE_SIGNING_ALLOWED=NO
+
+      - name: Read back compiled app identity
+        run: |
+          python3 - <<'PY'
+          import os, plistlib
+          from pathlib import Path
+          app = Path(os.environ["RUNNER_TEMP"]) / "enprint-derived/Build/Products/Debug-iphonesimulator/EnprintGuard.app"
+          info = plistlib.loads((app / "Info.plist").read_bytes())
+          assert info["CFBundleIdentifier"] == "jp.allsunday1122.enprintguard", info
+          assert info["CFBundleShortVersionString"] == "1.0.0", info
+          assert info["CFBundleVersion"] == "1", info
+          executable = app / info["CFBundleExecutable"]
+          assert executable.is_file(), f"Missing executable: {executable}"
+          assert (app / "PrivacyInfo.xcprivacy").is_file()
+          print("PASS: compiled app identity and privacy manifest")
+          PY

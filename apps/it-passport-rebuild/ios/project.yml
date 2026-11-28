@@ -17,7 +17,6 @@ targets:
   ITPassportStudy:
     type: application
     platform: iOS
-    supportedDestinations: [iPhone]
     deploymentTarget: "16.0"
     sources:
       - path: Sources
@@ -34,6 +33,7 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: jp.allsunday1122.itpassportstudy
         PRODUCT_NAME: ITPassportStudy
+        TARGETED_DEVICE_FAMILY: "1"
         INFOPLIST_KEY_CFBundleDisplayName: ITパスポート 学びスプリント
         INFOPLIST_KEY_ITSAppUsesNonExemptEncryption: NO
         INFOPLIST_KEY_LSRequiresIPhoneOS: YES

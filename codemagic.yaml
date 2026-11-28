@@ -2084,6 +2084,16 @@ workflows:
           p.write_text(s.replace('CURRENT_PROJECT_VERSION: 1', 'CURRENT_PROJECT_VERSION: ' + number, 1))
           PY
           xcodegen generate
+          python3 - <<'PY'
+          import pathlib, re
+          p = pathlib.Path('ITPassportStudy.xcodeproj/project.pbxproj')
+          s = p.read_text()
+          found = re.findall(r'TARGETED_DEVICE_FAMILY = [^;]+;', s)
+          assert found, 'FAIL: TARGETED_DEVICE_FAMILY not found in generated project.pbxproj'
+          p.write_text(re.sub(r'TARGETED_DEVICE_FAMILY = [^;]+;', 'TARGETED_DEVICE_FAMILY = 1;', s))
+          print('PASS: forced TARGETED_DEVICE_FAMILY=1 (' + str(len(found)) + ' occurrences)')
+          PY
+          grep -q 'TARGETED_DEVICE_FAMILY = 1;' ITPassportStudy.xcodeproj/project.pbxproj
       - name: Apply App Store signing profiles
         script: |
           set -euo pipefail
@@ -2138,6 +2148,23 @@ workflows:
     name: Electrician2 Sprint - Internal TestFlight
     max_build_duration: 60
     instance_type: mac_mini_m2
+     integrations:
+       app_store_connect: "Codemagic Shiwake Swipe"
+    environment:
+    ios_signing:
+    distribution_type: app_store
+     
+  enprint-guard-ios-testflight:
+    name: Enprint Guard - Internal TestFlight
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: 'release/enprint-guard-testflight-20261127'
+          include: true
+      cancel_previous_builds: true
     integrations:
       app_store_connect: "Codemagic Shiwake Swipe"
     environment:
@@ -2148,6 +2175,16 @@ workflows:
         BUNDLE_ID: jp.allsunday1122.electrician2sprint
         XCODE_PROJECT: electrician2-sprint/ios/Electrician2Sprint.xcodeproj
         XCODE_SCHEME: Electrician2Sprint
+       xcode: latest
+       scripts:
+       - name: Install XcodeGen
+         script: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+        bundle_identifier: jp.allsunday1122.enprintguard
+      vars:
+        BUNDLE_ID: jp.allsunday1122.enprintguard
+        APP_STORE_APPLE_ID: "6839814394"
+        XCODE_PROJECT: enprint-guard/ios/EnprintGuard.xcodeproj
+        XCODE_SCHEME: EnprintGuard
       xcode: latest
     scripts:
       - name: Install XcodeGen
@@ -2224,8 +2261,298 @@ workflows:
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
+      - name: Verify App Store Connect record gate
+        script: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          app = json.loads(Path('automation/app-release-registry.json').read_text(encoding='utf-8'))['apps']['enprintguard']
+          assert app['bundle_id'] == 'jp.allsunday1122.enprintguard'
+          assert app.get('app_id'), 'App Store Connect App record is not created/read back'
+          assert app.get('readback') is True, 'App Store Connect App ID has not been verified'
+          assert app.get('status') == 'active', 'App registry is not active'
+          print('PASS: Enprint Guard Apple app record identity verified')
+          PY
+      - name: Set unique build number and generate Xcode project
+        script: |
+          set -euo pipefail
+          python3 "$CM_BUILD_DIR/enprint-guard/ios/scripts/generate_app_icon.py"
+          cd "$CM_BUILD_DIR/enprint-guard/ios"
+          python3 - <<'PY'
+          import os
+          from pathlib import Path
+          build = os.environ.get('CM_BUILD_NUMBER')
+          if not build or not build.isdigit():
+              raise RuntimeError('Codemagic CM_BUILD_NUMBER missing or invalid')
+          path = Path('project.yml')
+          text = path.read_text(encoding='utf-8')
+          marker = 'CURRENT_PROJECT_VERSION: "1"'
+          if marker not in text:
+              raise RuntimeError('Expected project build-number marker not found')
+          path.write_text(text.replace(marker, 'CURRENT_PROJECT_VERSION: "' + build + '"', 1), encoding='utf-8')
+          print('PASS: build number injected')
+          PY
+          xcodegen generate
+      - name: Apply App Store signing profiles for Internal TestFlight only
+        script: |
+          cd "$CM_BUILD_DIR/enprint-guard/ios"
+          xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
+      - name: Build signed IPA
+        script: |
+          xcode-project build-ipa \
+            --project "$CM_BUILD_DIR/$XCODE_PROJECT" \
+            --scheme "$XCODE_SCHEME"
+      - name: Verify signed IPA identity and privacy manifest
+        script: |
+          set -euo pipefail
+          IPA_PATH="$(find build/ios/ipa -type f -name '*.ipa' -print -quit)"
+          test -n "$IPA_PATH"
+          VERIFY_DIR="$(mktemp -d)"
+          unzip -q "$IPA_PATH" -d "$VERIFY_DIR"
+          APP_DIR="$(find "$VERIFY_DIR/Payload" -maxdepth 1 -type d -name '*.app' -print -quit)"
+          python3 - "$APP_DIR" <<'PY'
+          from pathlib import Path
+          import os, plistlib, sys
+          app = Path(sys.argv[1])
+          info = plistlib.loads((app / 'Info.plist').read_bytes())
+          assert info.get('CFBundleIdentifier') == 'jp.allsunday1122.enprintguard'
+          assert info.get('CFBundleShortVersionString') == '1.0.0'
+          assert info.get('CFBundleVersion') == os.environ.get('CM_BUILD_NUMBER')
+          privacy = plistlib.loads((app / 'PrivacyInfo.xcprivacy').read_bytes())
+          assert privacy.get('NSPrivacyTracking') is False
+          assert (app / 'embedded.mobileprovision').is_file()
+          assert (app / '_CodeSignature').is_dir()
+          print('PASS: signed IPA identity, privacy manifest and signature')
+          PY
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.app
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
     publishing:
       app_store_connect:
         auth: integration
         submit_to_testflight: true
+        submit_to_app_store: false
+
+  kanji-sprint-ios:
+    name: 小学生漢字 - SwiftUI Internal TestFlight
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    integrations:
+      app_store_connect: "Codemagic Shiwake Swipe"
+    environment:
+      ios_signing:
+        provisioning_profiles:
+          - kanjisprint_appstore
+      vars:
+        BUNDLE_ID: jp.allsunday1122.kanjisprint
+        XCODE_PROJECT: apps/kanji-sprint/ios/KanjiStudy.xcodeproj
+        XCODE_SCHEME: KanjiStudy
+      xcode: latest
+    scripts:
+      - name: Prepare and validate kanji resources
+        script: |
+          set -euo pipefail
+          cd "$CM_BUILD_DIR/apps/kanji-sprint/ios"
+          bash -n prepare-ios.sh
+          bash prepare-ios.sh
+          test -s Resources/kanji-1026.json
+      - name: Install XcodeGen and generate project
+        script: |
+          set -euo pipefail
+          HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+          cd "$CM_BUILD_DIR/apps/kanji-sprint/ios"
+          python3 - <<'PY'
+          import os, pathlib
+          p = pathlib.Path('project.yml')
+          s = p.read_text()
+          number = os.environ.get('BUILD_NUMBER', '')
+          if not number.isascii() or not number.isdecimal() or int(number) < 1:
+              raise SystemExit('FAIL: Codemagic BUILD_NUMBER missing or invalid')
+          print('PASS: Codemagic BUILD_NUMBER=' + number)
+          assert s.count('CURRENT_PROJECT_VERSION: 1') == 1
+          p.write_text(s.replace('CURRENT_PROJECT_VERSION: 1', 'CURRENT_PROJECT_VERSION: ' + number, 1))
+          PY
+          xcodegen generate
+          python3 - <<'PY'
+          import pathlib, re
+          p = pathlib.Path('KanjiStudy.xcodeproj/project.pbxproj')
+          s = p.read_text()
+          found = re.findall(r'TARGETED_DEVICE_FAMILY = [^;]+;', s)
+          assert found, 'FAIL: TARGETED_DEVICE_FAMILY not found in generated project.pbxproj'
+          p.write_text(re.sub(r'TARGETED_DEVICE_FAMILY = [^;]+;', 'TARGETED_DEVICE_FAMILY = 1;', s))
+          print('PASS: forced TARGETED_DEVICE_FAMILY=1 (' + str(len(found)) + ' occurrences)')
+          PY
+          grep -q 'TARGETED_DEVICE_FAMILY = 1;' KanjiStudy.xcodeproj/project.pbxproj
+      - name: Apply App Store signing profiles
+        script: |
+          set -euo pipefail
+          cd "$CM_BUILD_DIR/apps/kanji-sprint/ios"
+          xcode-project use-profiles
+      - name: Build signed IPA
+        script: |
+          set -euo pipefail
+          xcode-project build-ipa --project "$CM_BUILD_DIR/$XCODE_PROJECT" --scheme "$XCODE_SCHEME"
+      - name: Verify signed IPA and bundled kanji data
+        script: |
+          set -euo pipefail
+          cd "$CM_BUILD_DIR"
+          ipa=(build/ios/ipa/*.ipa)
+          test "${#ipa[@]}" -eq 1
+          test -f "${ipa[0]}"
+          expanded="$(mktemp -d)"
+          ditto -x -k "${ipa[0]}" "$expanded"
+          app="$expanded/Payload/KanjiStudy.app"
+          codesign --verify --deep --strict "$app"
+          python3 - "$app" <<'PY'
+          import json, os, pathlib, plistlib, sys
+          from collections import Counter
+          app = pathlib.Path(sys.argv[1])
+          info = plistlib.loads((app / 'Info.plist').read_bytes())
+          assert info['CFBundleIdentifier'] == os.environ['BUNDLE_ID']
+          assert info.get('UIDeviceFamily') == [1], f"FAIL: UIDeviceFamily must be [1] (iPhone only): {info.get('UIDeviceFamily')!r}"
+          expected_orientations = {'UIInterfaceOrientationPortrait', 'UIInterfaceOrientationPortraitUpsideDown', 'UIInterfaceOrientationLandscapeLeft', 'UIInterfaceOrientationLandscapeRight'}
+          for key in ('UISupportedInterfaceOrientations', 'UISupportedInterfaceOrientations~ipad'):
+              values = info.get(key)
+              if key.endswith('~ipad') and values is None:
+                  values = info.get('UISupportedInterfaceOrientations')
+              if not isinstance(values, list) or len(values) != 4 or set(values) != expected_orientations:
+                  raise SystemExit(f'FAIL: {key} must contain all four orientations: {values!r}')
+          print('PASS: IPA Info.plist supports all four orientations')
+          assert info['ITSAppUsesNonExemptEncryption'] is False
+          # AdMob 設定（本番アプリID）
+          assert info.get('GADApplicationIdentifier') == 'ca-app-pub-3070038454022343~6309068999', f"FAIL: GADApplicationIdentifier: {info.get('GADApplicationIdentifier')!r}"
+          skad = {item.get('SKAdNetworkIdentifier') for item in info.get('SKAdNetworkItems', [])}
+          assert 'cktu78qm5g.skadnetwork' in skad, f'FAIL: SKAdNetworkItems missing cktu78qm5g: {skad!r}'
+          print('PASS: AdMob app id and SKAdNetworkItems present')
+          expected = pathlib.Path('apps/kanji-sprint/ios/Resources/kanji-1026.json').read_bytes()
+          actual = (app / 'kanji-1026.json').read_bytes()
+          assert actual == expected
+          items = json.loads(actual)['kanji']
+          assert len(items) == len({i['kanji'] for i in items}) == 1026
+          counts = Counter(i['grade'] for i in items)
+          assert [counts[g] for g in range(1, 7)] == [80, 160, 200, 202, 193, 191]
+          assert all(i['strokes'] and len(i['strokes']) == i['strokeCount'] for i in items)
+          print('PASS: signed IPA and 1026 bundled kanji')
+          PY
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: false
+        submit_to_app_store: false
+  hokenshi-sprint-ios:
+    name: 保健師 - SwiftUI Internal TestFlight
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    integrations:
+      app_store_connect: "Codemagic Shiwake Swipe"
+    environment:
+      ios_signing:
+        provisioning_profiles:
+          - hokenshisprint_appstore
+      vars:
+        BUNDLE_ID: jp.allsunday1122.hokenshisprint
+        XCODE_PROJECT: apps/hokenshi-sprint/ios/HokenshiStudy.xcodeproj
+        XCODE_SCHEME: HokenshiStudy
+      xcode: latest
+    scripts:
+      - name: Prepare and validate hokenshi resources
+        script: |
+          set -euo pipefail
+          cd "$CM_BUILD_DIR/apps/hokenshi-sprint/ios"
+          bash -n prepare-ios.sh
+          bash prepare-ios.sh
+          test -s GeneratedResources/questions.generated.json
+          test -s GeneratedResources/figures-1.json
+          test -s GeneratedResources/figures-2.json
+      - name: Install XcodeGen and generate project
+        script: |
+          set -euo pipefail
+          HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+          cd "$CM_BUILD_DIR/apps/hokenshi-sprint/ios"
+          python3 - <<'PY'
+          import os, pathlib
+          p = pathlib.Path('project.yml')
+          s = p.read_text()
+          number = os.environ.get('BUILD_NUMBER', '')
+          if not number.isascii() or not number.isdecimal() or int(number) < 1:
+              raise SystemExit('FAIL: Codemagic BUILD_NUMBER missing or invalid')
+          print('PASS: Codemagic BUILD_NUMBER=' + number)
+          assert s.count('CURRENT_PROJECT_VERSION: 1') == 1
+          p.write_text(s.replace('CURRENT_PROJECT_VERSION: 1', 'CURRENT_PROJECT_VERSION: ' + number, 1))
+          PY
+          xcodegen generate
+          python3 - <<'PY'
+          import pathlib, re
+          p = pathlib.Path('HokenshiStudy.xcodeproj/project.pbxproj')
+          s = p.read_text()
+          found = re.findall(r'TARGETED_DEVICE_FAMILY = [^;]+;', s)
+          assert found, 'FAIL: TARGETED_DEVICE_FAMILY not found in generated project.pbxproj'
+          p.write_text(re.sub(r'TARGETED_DEVICE_FAMILY = [^;]+;', 'TARGETED_DEVICE_FAMILY = 1;', s))
+          print('PASS: forced TARGETED_DEVICE_FAMILY=1 (' + str(len(found)) + ' occurrences)')
+          PY
+          grep -q 'TARGETED_DEVICE_FAMILY = 1;' HokenshiStudy.xcodeproj/project.pbxproj
+      - name: Apply App Store signing profiles
+        script: |
+          set -euo pipefail
+          cd "$CM_BUILD_DIR/apps/hokenshi-sprint/ios"
+          xcode-project use-profiles
+      - name: Build signed IPA
+        script: |
+          set -euo pipefail
+          xcode-project build-ipa --project "$CM_BUILD_DIR/$XCODE_PROJECT" --scheme "$XCODE_SCHEME"
+      - name: Verify signed IPA and bundled hokenshi data
+        script: |
+          set -euo pipefail
+          cd "$CM_BUILD_DIR"
+          ipa=(build/ios/ipa/*.ipa)
+          test "${#ipa[@]}" -eq 1
+          test -f "${ipa[0]}"
+          expanded="$(mktemp -d)"
+          ditto -x -k "${ipa[0]}" "$expanded"
+          app="$expanded/Payload/HokenshiStudy.app"
+          codesign --verify --deep --strict "$app"
+          python3 - "$app" <<'PY'
+          import json, os, pathlib, plistlib, sys
+          from collections import Counter
+          app = pathlib.Path(sys.argv[1])
+          info = plistlib.loads((app / 'Info.plist').read_bytes())
+          assert info['CFBundleIdentifier'] == os.environ['BUNDLE_ID']
+          assert info.get('UIDeviceFamily') == [1], f"FAIL: UIDeviceFamily must be [1] (iPhone only): {info.get('UIDeviceFamily')!r}"
+          expected_orientations = {'UIInterfaceOrientationPortrait', 'UIInterfaceOrientationPortraitUpsideDown', 'UIInterfaceOrientationLandscapeLeft', 'UIInterfaceOrientationLandscapeRight'}
+          for key in ('UISupportedInterfaceOrientations', 'UISupportedInterfaceOrientations~ipad'):
+              values = info.get(key)
+              if key.endswith('~ipad') and values is None:
+                  values = info.get('UISupportedInterfaceOrientations')
+              if not isinstance(values, list) or len(values) != 4 or set(values) != expected_orientations:
+                  raise SystemExit(f'FAIL: {key} must contain all four orientations: {values!r}')
+          print('PASS: IPA Info.plist supports all four orientations')
+          assert info['ITSAppUsesNonExemptEncryption'] is False
+          expected = pathlib.Path('apps/hokenshi-sprint/ios/GeneratedResources/questions.generated.json').read_bytes()
+          actual = (app / 'questions.generated.json').read_bytes()
+          assert actual == expected
+          bundle = json.loads(actual)
+          items = bundle['questions']
+          assert bundle['totalQuestions'] == 546
+          assert len(items) == len({i['id'] for i in items}) == 546
+          assert len(bundle['freeSampleQuestionIds']) == 30
+          counts = Counter(i['sourceExam'] for i in items)
+          assert [counts[s] for s in (108, 109, 110, 111, 112)] == [108, 109, 109, 110, 110]
+          figures = {}
+          for name in ('figures-1.json', 'figures-2.json'):
+              figures.update(json.loads((app / name).read_bytes()))
+          assert len(figures) == 36
+          print('PASS: signed IPA and 546 bundled questions + 36 figures')
+          PY
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: false
         submit_to_app_store: false
