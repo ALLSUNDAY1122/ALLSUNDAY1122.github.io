@@ -26,6 +26,9 @@ struct PaywallView: View {
                         Text(store.monthlyProduct?.displayPrice ?? "200円")
                             .font(.subheadline)
                             .foregroundStyle(SprintTheme.muted)
+                        Text("トライアル終了後は月額プランとして自動更新されます。更新を希望しない場合は、次回更新日の24時間以上前までにApple Accountのサブスクリプション設定から解約してください。")
+                            .font(.caption)
+                            .foregroundStyle(SprintTheme.muted)
                         Button {
                             Task { await store.purchase(store.monthlyProduct) }
                         } label: {
