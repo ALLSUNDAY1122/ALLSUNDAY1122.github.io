@@ -22,7 +22,7 @@ final class StudyModelTests: XCTestCase {
             answerOfficial: "イ", hereToRemember: nil, explanation: nil,
             source: BankQuestionSource(title: "テスト出典", url: "https://example.com/question.pdf", page: 1, figure: nil, figureRefs: nil),
             audit: BankQuestionAudit(transcription: "転記", answer: "照合", figureStatus: "確認済み", independentReview: "テスト", releaseStatus: "PENDING"),
-            auditStatus: "PENDING"
+            auditStatus: "PENDING", excludedFromQuiz: false
         )
         let bank = QuestionBankFile(
             schemaVersion: "1.0", dataSet: "E2-ALL-2022-2026",
