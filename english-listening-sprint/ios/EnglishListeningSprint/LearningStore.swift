@@ -94,6 +94,11 @@ final class LearningStore: ObservableObject {
         return (1...6).contains(themeNumber)
     }
 
+    var hasOneWeekFreeTrial: Bool {
+        guard let offer = monthlyProduct?.subscription?.introductoryOffer else { return false }
+        return offer.paymentMode == .freeTrial && offer.period.unit == .day && offer.period.value == 7
+    }
+
     func canAccess(_ lesson: Lesson) -> Bool { isPremium || isFree(lesson) }
 
     func requestAccess(to lesson: Lesson) {
@@ -114,10 +119,12 @@ final class LearningStore: ObservableObject {
     func loadProducts() async {
         do {
             let products = try await Product.products(for: [Self.monthlyProductID, Self.lifetimeProductID])
-            monthlyProduct = products.first { $0.id == Self.monthlyProductID }
-            lifetimeProduct = products.first { $0.id == Self.lifetimeProductID }
+            let monthly = products.first { $0.id == Self.monthlyProductID }
+            let lifetime = products.first { $0.id == Self.lifetimeProductID }
+            monthlyProduct = monthly?.type == .autoRenewable ? monthly : nil
+            lifetimeProduct = lifetime?.type == .nonConsumable ? lifetime : nil
             if monthlyProduct == nil || lifetimeProduct == nil {
-                purchaseMessage = "一部の購入商品を取得できません。App Store Connectの製品設定をご確認ください。"
+                purchaseMessage = "商品IDまたは商品種別を確認できません。App Store Connectの製品設定をご確認ください。"
             }
         } catch { purchaseMessage = "商品情報を取得できませんでした。通信環境を確認してください。" }
     }
