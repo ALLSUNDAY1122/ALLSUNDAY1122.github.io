@@ -121,7 +121,10 @@ final class LearningStore: ObservableObject {
             let products = try await Product.products(for: [Self.monthlyProductID, Self.lifetimeProductID])
             let monthly = products.first { $0.id == Self.monthlyProductID }
             let lifetime = products.first { $0.id == Self.lifetimeProductID }
-            monthlyProduct = monthly?.type == .autoRenewable ? monthly : nil
+            let monthlyPeriod = monthly?.subscription?.subscriptionPeriod
+            let isMonthly = monthly?.type == .autoRenewable &&
+                monthlyPeriod?.unit == .month && monthlyPeriod?.value == 1
+            monthlyProduct = isMonthly ? monthly : nil
             lifetimeProduct = lifetime?.type == .nonConsumable ? lifetime : nil
             if monthlyProduct == nil || lifetimeProduct == nil {
                 purchaseMessage = "商品IDまたは商品種別を確認できません。App Store Connectの製品設定をご確認ください。"
