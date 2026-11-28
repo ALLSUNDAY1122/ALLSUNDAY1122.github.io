@@ -97,8 +97,18 @@ final class LearningStore: ObservableObject {
     func canAccess(_ lesson: Lesson) -> Bool { isPremium || isFree(lesson) }
 
     func requestAccess(to lesson: Lesson) {
-        guard canAccess(lesson) else { showPaywall = true; return }
-        open(lesson)
+        if canAccess(lesson) {
+            open(lesson)
+            return
+        }
+        Task {
+            await refreshEntitlements(retries: 4)
+            if canAccess(lesson) {
+                open(lesson)
+            } else {
+                showPaywall = true
+            }
+        }
     }
 
     func loadProducts() async {
