@@ -94,6 +94,7 @@ workflows:
           assert "PREMIUM" in home_source and "PREMIUM" in library_source
           assert "onChange(of: scenePhase)" in app_source
           assert "初回1週間無料トライアル" in paywall_source
+          assert "自動更新されます" in paywall_source
           assert "購入を復元" in paywall_source
           assert "プライバシーポリシー" in paywall_source and "利用規約" in paywall_source
           assert "CURRENT_PROJECT_VERSION: 6" in project_source
