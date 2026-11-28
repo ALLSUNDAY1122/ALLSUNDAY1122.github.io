@@ -33,8 +33,8 @@
         }
       ],
       "answerOfficial": "ニ",
-      "hereToRemember": null,
-      "explanation": null,
+      "hereToRemember": "スイッチを閉じた後の回路で合成抵抗と分圧を計算する",
+      "explanation": "スイッチ S を閉じると回路の接続状態が変わり、ab 端子間には抵抗による分圧が現れる。閉じた状態の回路について合成抵抗から回路電流を求め、ab 間の抵抗にかかる電圧を分圧の式で計算すると 60 V となる。開いた状態のまま計算したり、電源電圧をそのまま答えたりすると誤りになる。",
       "source": {
         "title": "令和8年度下期 第二種電気工事士 学科試験問題",
         "url": "https://www.shiken.or.jp/construction/upload/20261025_co_second_q01.pdf",
@@ -75,8 +75,8 @@
         }
       ],
       "answerOfficial": "ハ",
-      "hereToRemember": null,
-      "explanation": null,
+      "hereToRemember": "抵抗 R＝ρL/A。長さに比例、断面積と導電率に反比例",
+      "explanation": "電線の抵抗は R＝ρL/A で表され、長さ L に比例し、断面積 A に反比例する。断面積は直径の2乗に比例するので、抵抗は直径の2乗に反比例する（ロは正しい）。また ρ は固有抵抗で導電率の逆数であるから、抵抗は導電率に反比例し、比例するというハが誤りである。金属は温度が上がると抵抗が大きくなるのでニも正しい。",
       "source": {
         "title": "令和8年度下期 第二種電気工事士 学科試験問題",
         "url": "https://www.shiken.or.jp/construction/upload/20261025_co_second_q01.pdf",
@@ -117,8 +117,8 @@
         }
       ],
       "answerOfficial": "ハ",
-      "hereToRemember": null,
-      "explanation": null,
+      "hereToRemember": "熱量［J］＝V×I×t［秒］。電力×時間で求める",
+      "explanation": "抵抗器の消費電力は P＝VI＝100×5＝500 W である。時間は1時間30分＝5,400秒であるから、発生する熱量は Q＝Pt＝500×5,400＝2,700,000 J＝2,700 kJ となる。時間を秒に換算し忘れると大きくずれるので注意する。",
       "source": {
         "title": "令和8年度下期 第二種電気工事士 学科試験問題",
         "url": "https://www.shiken.or.jp/construction/upload/20261025_co_second_q01.pdf",
@@ -159,8 +159,8 @@
         }
       ],
       "answerOfficial": "ニ",
-      "hereToRemember": null,
-      "explanation": null,
+      "hereToRemember": "単相の電流 I＝P/(V×力率)。力率で割るのを忘れない",
+      "explanation": "消費電力 P＝VIcosθ であるから、電流は I＝P/(Vcosθ)＝2,000/(200×0.8)＝12.5 A となる。力率を無視して計算した 10.0 A（ハ）は誤りであり、力率が低いほど同じ電力でも電流は大きくなる。",
       "source": {
         "title": "令和8年度下期 第二種電気工事士 学科試験問題",
         "url": "https://www.shiken.or.jp/construction/upload/20261025_co_second_q01.pdf",
@@ -201,8 +201,8 @@
         }
       ],
       "answerOfficial": "ロ",
-      "hereToRemember": null,
-      "explanation": null,
+      "hereToRemember": "三相3線式は P＝√3×V×I×力率 で線電流を求める",
+      "explanation": "三相3線式回路の電力は P＝√3 V I cosθ（Vは線間電圧）で表される。線電流は I＝P/(√3 V cosθ) であり、図に示された負荷容量、線間電圧および力率を代入すると約 12.1 A となる。√3 を掛け忘れたり、相電圧と線間電圧を取り違えたりすると誤りになる。",
       "source": {
         "title": "令和8年度下期 第二種電気工事士 学科試験問題",
         "url": "https://www.shiken.or.jp/construction/upload/20261025_co_second_q01.pdf",
@@ -243,8 +243,8 @@
         }
       ],
       "answerOfficial": "ロ",
-      "hereToRemember": null,
-      "explanation": null,
+      "hereToRemember": "配線損失＝往復の電圧降下×電流。降下から電流を逆算する",
+      "explanation": "電線による電圧降下は往復分で 105－100＝5 V であり、1線当たりでは 2.5 V である。回路電流は I＝2.5/0.25＝10 A となる。電力損失は降下×電流、すなわち 5×10＝50 W（1線当たり I²r＝25 W の2線分）である。",
       "source": {
         "title": "令和8年度下期 第二種電気工事士 学科試験問題",
         "url": "https://www.shiken.or.jp/construction/upload/20261025_co_second_q01.pdf",
@@ -285,8 +285,8 @@
         }
       ],
       "answerOfficial": "ハ",
-      "hereToRemember": null,
-      "explanation": null,
+      "hereToRemember": "中性線断線では負荷が直列になり、抵抗の大きい側の電圧が上がる",
+      "explanation": "各負荷の抵抗は、100 W負荷が R＝100²/100＝100 Ω、500 W負荷が R＝100²/500＝20 Ω である。中性線が断線すると両負荷は200 Vに対して直列接続となり、電圧は抵抗に比例して配分される。ab 間（100 W負荷側）の電圧は 200×100/(100＋20)＝約167 V となり、定格を超える電圧が加わることが中性線断線の危険である。",
       "source": {
         "title": "令和8年度下期 第二種電気工事士 学科試験問題",
         "url": "https://www.shiken.or.jp/construction/upload/20261025_co_second_q01.pdf",
@@ -327,8 +327,8 @@
         }
       ],
       "answerOfficial": "ハ",
-      "hereToRemember": null,
-      "explanation": null,
+      "hereToRemember": "許容電流＝基底許容電流×電流減少係数。2.0 mmは35 A",
+      "explanation": "直径2.0 mmのビニル絶縁電線の許容電流は 35 A である。管内に5本収めた場合の電流減少係数 0.56 を掛けると 35×0.56＝19.6 A となり、許容電流は小数点以下を切り捨てて 19 A とする。減少係数を掛け忘れた 27 A や、基底値そのものは誤りである。",
       "source": {
         "title": "令和8年度下期 第二種電気工事士 学科試験問題",
         "url": "https://www.shiken.or.jp/construction/upload/20261025_co_second_q01.pdf",
@@ -369,8 +369,8 @@
         }
       ],
       "answerOfficial": "ニ",
-      "hereToRemember": null,
-      "explanation": null,
+      "hereToRemember": "幹線のIWは負荷電流の合計、IBは電動機の始動を考慮した2.5倍ルール",
+      "explanation": "幹線の太さの根拠電流 IW は、需要率100％として電熱器と電動機の定格電流を合計したものであり、図の負荷では 30 A となる。過電流遮断器の根拠電流 IB は、電動機の始動電流で誤動作しないよう、電動機電流の2.5倍に他の負荷電流を加えた値以下とする規定から求められ、65 A が適切な組合せとなる。",
       "source": {
         "title": "令和8年度下期 第二種電気工事士 学科試験問題",
         "url": "https://www.shiken.or.jp/construction/upload/20261025_co_second_q01.pdf",
@@ -411,8 +411,8 @@
         }
       ],
       "answerOfficial": "ロ",
-      "hereToRemember": null,
-      "explanation": null,
+      "hereToRemember": "30 A分岐回路のコンセントは20 A以上30 A以下に限る",
+      "explanation": "分岐回路のコンセントの定格は遮断器の定格に応じて決められ、30 A回路では定格20 A以上30 A以下のコンセントを用いなければならない。したがって30 A遮断器に15 Aコンセントを組み合わせたロは不適切である。20 A回路では15 Aまたは20 Aのコンセントが使用できるのでハ・ニは適切である。",
       "source": {
         "title": "令和8年度下期 第二種電気工事士 学科試験問題",
         "url": "https://www.shiken.or.jp/construction/upload/20261025_co_second_q01.pdf",
@@ -456,8 +456,8 @@
         }
       ],
       "answerOfficial": "イ",
-      "hereToRemember": null,
-      "explanation": null,
+      "hereToRemember": "絶縁ブッシングの目的は管端の角から電線被覆を守ること",
+      "explanation": "金属管の管端は切断面が鋭利であり、そのまま電線を引き込むと被覆が傷ついて絶縁不良や短絡の原因になる。絶縁ブッシングは管端に取り付けて電線の被覆を損傷から保護するためのものである。管の固定にはサドル、管相互の接続にはカップリングを用いるのでハ・ニは誤りである。",
       "source": {
         "title": "令和8年度下期 第二種電気工事士 学科試験問題",
         "url": "https://www.shiken.or.jp/construction/upload/20261025_co_second_q01.pdf",
@@ -498,8 +498,8 @@
         }
       ],
       "answerOfficial": "ハ",
-      "hereToRemember": null,
-      "explanation": null,
+      "hereToRemember": "耐熱性はMIケーブルが最高。無機絶縁は燃えず高温に耐える",
+      "explanation": "MIケーブルは銅シースの中に酸化マグネシウムなどの無機絶縁物を充填したケーブルであり、有機物を使わないため耐熱性が最も優れている。ビニル絶縁の電線やケーブルは絶縁体の耐熱温度に限界があり、二種ビニル絶縁電線がやや優れるものの、MIケーブルには及ばない。",
       "source": {
         "title": "令和8年度下期 第二種電気工事士 学科試験問題",
         "url": "https://www.shiken.or.jp/construction/upload/20261025_co_second_q01.pdf",
@@ -540,8 +540,8 @@
         }
       ],
       "answerOfficial": "ロ",
-      "hereToRemember": null,
-      "explanation": null,
+      "hereToRemember": "コンクリートへの管固定は振動ドリル＋カールプラグ＋サドル＋木ねじ",
+      "explanation": "コンクリート壁に金属管を取り付けるには、振動ドリルで下穴を開け、カールプラグを打ち込み、サドルを木ねじで締め付けて固定する。したがってロの組合せが適切である。ステープルはケーブルを木材に固定する材料、ホルソは金属板などに穴を開ける工具であり、この作業には使わない。",
       "source": {
         "title": "令和8年度下期 第二種電気工事士 学科試験問題",
         "url": "https://www.shiken.or.jp/construction/upload/20261025_co_second_q01.pdf",
@@ -582,8 +582,8 @@
         }
       ],
       "answerOfficial": "イ",
-      "hereToRemember": null,
-      "explanation": null,
+      "hereToRemember": "スターデルタ始動は三相かご形誘導電動機の始動法",
+      "explanation": "スターデルタ始動は、始動時に固定子巻線をスター結線にして電圧を下げて始動電流を抑え、回転が上がってからデルタ結線に切り替える方法であり、一般用三相かご形誘導電動機に用いられる。巻線形は二次抵抗始動、直流分巻電動機や単相誘導電動機には結線の切替え自体が適用できない。",
       "source": {
         "title": "令和8年度下期 第二種電気工事士 学科試験問題",
         "url": "https://www.shiken.or.jp/construction/upload/20261025_co_second_q01.pdf",
@@ -624,8 +624,8 @@
         }
       ],
       "answerOfficial": "ロ",
-      "hereToRemember": null,
-      "explanation": null,
+      "hereToRemember": "定格30 A以下の遮断器は2倍の電流で2分以内に動作",
+      "explanation": "配線用遮断器の動作時間は定格電流によって決められ、定格30 A以下のものは定格の2倍の電流で2分以内、定格30 Aを超え50 A以下のものは4分以内に自動動作しなければならない。本問は定格30 Aに60 A（2倍）が流れているので、限度は2分である。",
       "source": {
         "title": "令和8年度下期 第二種電気工事士 学科試験問題",
         "url": "https://www.shiken.or.jp/construction/upload/20261025_co_second_q01.pdf",
@@ -666,8 +666,8 @@
         }
       ],
       "answerOfficial": "ニ",
-      "hereToRemember": null,
-      "explanation": null,
+      "hereToRemember": "EM-EEFはポリエチレン絶縁・耐燃性ポリエチレンシースの平形ケーブル",
+      "explanation": "写真のケーブルは、絶縁体にポリエチレン、シースに耐燃性ポリエチレンを用いた平形ケーブルであり、600Vポリエチレン絶縁耐燃性ポリエチレンシースケーブル平形（EM-EEF）である。架橋ポリエチレン絶縁のもの（ハ）や丸形のものとは、絶縁材料と形状で区別する。",
       "source": {
         "title": "令和8年度下期 第二種電気工事士 学科試験問題",
         "url": "https://www.shiken.or.jp/construction/upload/20261025_co_second_q01.pdf",
@@ -711,8 +711,8 @@
         }
       ],
       "answerOfficial": "ロ",
-      "hereToRemember": null,
-      "explanation": null,
+      "hereToRemember": "リモコンリレーは小信号で負荷回路を開閉する継電器",
+      "explanation": "写真の器具はリモコンリレーであり、離れた場所の操作スイッチからの小勢力信号を受けて、照明などの負荷回路を開閉する継電器として用いる。操作電源を供給するのはリモコントランス、操作の切替えを行うのはセレクタスイッチであり、用途が異なる。",
       "source": {
         "title": "令和8年度下期 第二種電気工事士 学科試験問題",
         "url": "https://www.shiken.or.jp/construction/upload/20261025_co_second_q01.pdf",
@@ -756,8 +756,8 @@
         }
       ],
       "answerOfficial": "ニ",
-      "hereToRemember": null,
-      "explanation": null,
+      "hereToRemember": "写真の器具は検電器。作業前に電圧の有無を確認する",
+      "explanation": "写真の測定器は検電器であり、低圧の電気回路に電圧が印加されているかどうかを確かめるのに用いる。停電作業の前には検電器で無電圧を確認することが感電防止の基本である。照度計や墨出し器具とは形状も用途も異なる。",
       "source": {
         "title": "令和8年度下期 第二種電気工事士 学科試験問題",
         "url": "https://www.shiken.or.jp/construction/upload/20261025_co_second_q01.pdf",
@@ -801,8 +801,8 @@
         }
       ],
       "answerOfficial": "イ",
-      "hereToRemember": null,
-      "explanation": null,
+      "hereToRemember": "1.6 mm＋2.0 mmの接続は小スリーブで刻印は「小」",
+      "explanation": "リングスリーブの選定は接続する電線の太さと本数で決まる。直径1.6 mm 1本と2.0 mm 1本の接続には小スリーブを用い、圧着マークは「小」とするのが正しく、イが適切である。刻印「○」は1.6 mm 2本だけの接続専用であるからロは誤りであり、ニの組合せに中スリーブは適合しない。",
       "source": {
         "title": "令和8年度下期 第二種電気工事士 学科試験問題",
         "url": "https://www.shiken.or.jp/construction/upload/20261025_co_second_q01.pdf",
@@ -843,8 +843,8 @@
         }
       ],
       "answerOfficial": "ニ",
-      "hereToRemember": null,
-      "explanation": null,
+      "hereToRemember": "キャブタイヤケーブルは移動用。造営材に固定して配線できない",
+      "explanation": "キャブタイヤケーブルは移動して使用する電気機器への給電用であり、造営材の側面に沿って固定する恒久的な配線には使用できない。したがってニが不適切である。メタルラス壁の貫通部を合成樹脂管で絶縁するイ、MIケーブルをコンクリート床へ直接埋め込むロ、ガス管と直接触れないようにするハはいずれも適切な施工である。",
       "source": {
         "title": "令和8年度下期 第二種電気工事士 学科試験問題",
         "url": "https://www.shiken.or.jp/construction/upload/20261025_co_second_q01.pdf",
@@ -885,8 +885,8 @@
         }
       ],
       "answerOfficial": "ロ",
-      "hereToRemember": null,
-      "explanation": null,
+      "hereToRemember": "パイロットランプは負荷と並列に入れると負荷と同時点滅になる",
+      "explanation": "スイッチボックス部分では、非接地側電線（黒）をスイッチに通し、パイロットランプは負荷と並列に接続するのが正しい回路である。この結線ではスイッチを入れると負荷とランプが同時に点灯し、切ると消灯するので、負荷の動作状態を表示できる。ランプをスイッチと並列にすると負荷が消えているときに点灯する異時点滅となり、目的が異なる。",
       "source": {
         "title": "令和8年度下期 第二種電気工事士 学科試験問題",
         "url": "https://www.shiken.or.jp/construction/upload/20261025_co_second_q01.pdf",
@@ -930,8 +930,8 @@
         }
       ],
       "answerOfficial": "ハ",
-      "hereToRemember": null,
-      "explanation": null,
+      "hereToRemember": "接地省略が認められる漏電遮断器は15 mA以下・0.1秒以内",
+      "explanation": "D種接地工事を省略できるのは、定格感度電流15 mA以下、動作時間0.1秒以内の漏電遮断器を取り付けた場合などに限られる。ハは感度電流が30 mAであるため省略の条件を満たさず、不適切である。0.5秒以内に遮断する装置がある場合に接地抵抗を500 Ωまで緩和できる規定によりロは適切であり、イの移動用器具の接地線、ニの1.6 mm軟銅線も適切である。",
       "source": {
         "title": "令和8年度下期 第二種電気工事士 学科試験問題",
         "url": "https://www.shiken.or.jp/construction/upload/20261025_co_second_q01.pdf",
@@ -972,8 +972,8 @@
         }
       ],
       "answerOfficial": "ハ",
-      "hereToRemember": null,
-      "explanation": null,
+      "hereToRemember": "管とボックスはロックナットとブッシングで締め付け接続する",
+      "explanation": "金属管とアウトレットボックスの接続は、管端にねじを切り、ボックスのノックアウトに通して内側と外側からロックナットで締め付け、管端にはブッシングを取り付ける方法が最も適切である。これにより機械的な固定と電気的な接続（接地の連続性）が同時に確保される。",
       "source": {
         "title": "令和8年度下期 第二種電気工事士 学科試験問題",
         "url": "https://www.shiken.or.jp/construction/upload/20261025_co_second_q01.pdf",
@@ -1017,8 +1017,8 @@
         }
       ],
       "answerOfficial": "ニ",
-      "hereToRemember": null,
-      "explanation": null,
+      "hereToRemember": "アナログテスタの抵抗値は指示値×倍率。割るのは誤り",
+      "explanation": "回路計で抵抗を測定する場合、測定値は目盛の指示値にレンジの倍率を掛けて求める。ニは「倍率で割って」と述べており誤りである。測定前にリードを短絡して0 Ω調整を行うハ、レンジを適正な倍率に選ぶロはいずれも正しい手順である。",
       "source": {
         "title": "令和8年度下期 第二種電気工事士 学科試験問題",
         "url": "https://www.shiken.or.jp/construction/upload/20261025_co_second_q01.pdf",
@@ -1059,8 +1059,8 @@
         }
       ],
       "answerOfficial": "ロ",
-      "hereToRemember": null,
-      "explanation": null,
+      "hereToRemember": "絶縁抵抗計は測定前に導通（0 Ω）と開放（∞）の両チェック",
+      "explanation": "絶縁抵抗計の測定手順では、被測定回路の無充電確認とバッテリーチェックの後、測定リードを短絡して指針が0 Ωを示す導通チェックを行い、次にリードを開放して∞を示すチェックを行う。したがって空欄には導通（0 Ω）が入る。測定後は被測定回路にたまった電荷を放電させる。",
       "source": {
         "title": "令和8年度下期 第二種電気工事士 学科試験問題",
         "url": "https://www.shiken.or.jp/construction/upload/20261025_co_second_q01.pdf",
@@ -1101,8 +1101,8 @@
         }
       ],
       "answerOfficial": "ロ",
-      "hereToRemember": null,
-      "explanation": null,
+      "hereToRemember": "接地抵抗測定はE・P・Cを一直線に約10 m間隔で配置する",
+      "explanation": "直読式接地抵抗計による測定では、被測定接地極 E に対して、電圧用補助極 S（P）と電流用補助極 H（C）を一直線上に、Eからそれぞれ約10 m離して配置するのが適切である。補助極が近すぎたり一直線でなかったりすると、正確な接地抵抗が測定できない。",
       "source": {
         "title": "令和8年度下期 第二種電気工事士 学科試験問題",
         "url": "https://www.shiken.or.jp/construction/upload/20261025_co_second_q01.pdf",
@@ -1146,8 +1146,8 @@
         }
       ],
       "answerOfficial": "ニ",
-      "hereToRemember": null,
-      "explanation": null,
+      "hereToRemember": "電圧計は並列、電流計は直列、電力計は電圧並列・電流直列",
+      "explanation": "電圧計は負荷と並列に、電流計は回路に直列に接続する。電力計は電流コイルを負荷に直列に、電圧コイルを負荷と並列に接続するのが正しい結線であり、二がこれに当たる。電圧計を直列に入れたり電力計の両コイルを同じ接続にしたりすると、正しく測定できないばかりか計器を損傷するおそれがある。",
       "source": {
         "title": "令和8年度下期 第二種電気工事士 学科試験問題",
         "url": "https://www.shiken.or.jp/construction/upload/20261025_co_second_q01.pdf",
@@ -1191,8 +1191,8 @@
         }
       ],
       "answerOfficial": "イ",
-      "hereToRemember": null,
-      "explanation": null,
+      "hereToRemember": "第二種は自家用電気工作物の電線相互の接続ができない",
+      "explanation": "第二種電気工事士が従事できるのは一般用電気工作物の工事と、自家用電気工作物（最大電力500 kW未満）の低圧部分における一部の軽微な作業に限られる。電線相互を接続する作業はその軽微な作業に含まれないため、イは従事できない。管を設置する作業は軽微な作業として認められ、一般用電気工作物の接地工事やネオン工事は第二種の範囲内である。",
       "source": {
         "title": "令和8年度下期 第二種電気工事士 学科試験問題",
         "url": "https://www.shiken.or.jp/construction/upload/20261025_co_second_q01.pdf",
@@ -1233,8 +1233,8 @@
         }
       ],
       "answerOfficial": "ハ",
-      "hereToRemember": null,
-      "explanation": null,
+      "hereToRemember": "PSEは菱形が特定電気用品、丸形が特定以外。（PS）Eは輸入品専用ではない",
+      "explanation": "電気用品安全法の表示では、菱形のPSEマークが特定電気用品、丸形のPSEマークが特定電気用品以外の電気用品を示す。（PS）Eの記号は電気用品に付される表示の一部であり、輸入した特定電気用品だけを示すものではないため、ハが誤りである。表示のない電気用品を工事に使用してはならない点はイのとおりである。",
       "source": {
         "title": "令和8年度下期 第二種電気工事士 学科試験問題",
         "url": "https://www.shiken.or.jp/construction/upload/20261025_co_second_q01.pdf",
@@ -1275,8 +1275,8 @@
         }
       ],
       "answerOfficial": "イ",
-      "hereToRemember": null,
-      "explanation": null,
+      "hereToRemember": "接地は電流を安全に大地へ流すためのもの。「流れないように」は誤り",
+      "explanation": "接地は、漏電などの事故時に電流を大地へ安全に流し、感電や火災を防ぐために施すものである。したがって「電流が大地に通ずることがないようにしなければならない」とするイが誤りである。電圧の種別、安全な施設の原則、使用場所の低圧電路の絶縁抵抗値はいずれも同省令で規定されている。",
       "source": {
         "title": "令和8年度下期 第二種電気工事士 学科試験問題",
         "url": "https://www.shiken.or.jp/construction/upload/20261025_co_second_q01.pdf",
@@ -1317,8 +1317,8 @@
         }
       ],
       "answerOfficial": "ロ",
-      "hereToRemember": null,
-      "explanation": null,
+      "hereToRemember": "角形の取付枠を持つ引掛シーリングの図記号を覚える",
+      "explanation": "①で示す図記号は、角形の引掛シーリングを表す。引掛シーリングはペンダントなどの照明器具を引っ掛けて取り付け、同時に電源を接続するための器具である。天井直付のシーリングや埋込器具とは図記号の形状が異なるため、記号の形で区別する。",
       "source": {
         "title": "令和8年度下期 第二種電気工事士 学科試験問題",
         "url": "https://www.shiken.or.jp/construction/upload/20261025_co_second_q01.pdf",
@@ -1362,8 +1362,8 @@
         }
       ],
       "answerOfficial": "イ",
-      "hereToRemember": null,
-      "explanation": null,
+      "hereToRemember": "絶縁抵抗の最小値：対地電圧150 V以下は0.1 MΩ",
+      "explanation": "使用場所における低圧電路の絶縁抵抗の最小値は、対地電圧150 V以下で0.1 MΩ、150 Vを超え300 V以下で0.2 MΩ、300 Vを超える場合で0.4 MΩと定められている。②の部分は100 V級の電路であるから、許容される最小値は0.1 MΩである。",
       "source": {
         "title": "令和8年度下期 第二種電気工事士 学科試験問題",
         "url": "https://www.shiken.or.jp/construction/upload/20261025_co_second_q01.pdf",
@@ -1407,8 +1407,8 @@
         }
       ],
       "answerOfficial": "ニ",
-      "hereToRemember": null,
-      "explanation": null,
+      "hereToRemember": "コンセントは接地側（W）の刃受が左側・長めになる極配置",
+      "explanation": "コンセントの極配置は、接地側電線を接続する刃受が決められた位置に来るように定められており、正しい極配置はニである。接地側と非接地側を取り違えると、機器のスイッチが接地側を切る形になって感電の危険が増すため、刃受の形状と位置で判別する。",
       "source": {
         "title": "令和8年度下期 第二種電気工事士 学科試験問題",
         "url": "https://www.shiken.or.jp/construction/upload/20261025_co_second_q01.pdf",
@@ -1452,8 +1452,8 @@
         }
       ],
       "answerOfficial": "イ",
-      "hereToRemember": null,
-      "explanation": null,
+      "hereToRemember": "漏電遮断器（配線用遮断器兼用）は過電流と地絡の両方を遮断する",
+      "explanation": "④で示す図記号の器具は漏電遮断器であり、過負荷・短絡による過電流と、地絡電流の両方を検出して電路を遮断する目的で用いる。地絡のみを検出するのは漏電リレーなどの役割であり、短絡電流のみを遮断するという説明も誤りである。",
       "source": {
         "title": "令和8年度下期 第二種電気工事士 学科試験問題",
         "url": "https://www.shiken.or.jp/construction/upload/20261025_co_second_q01.pdf",
@@ -1497,8 +1497,8 @@
         }
       ],
       "answerOfficial": "イ",
-      "hereToRemember": null,
-      "explanation": null,
+      "hereToRemember": "ペンダントは吊り下げ形の図記号。CLは天井直付、CHはシャンデリア",
+      "explanation": "ペンダントは天井からコードやパイプで器具を吊り下げる照明であり、その図記号はイである。CLは天井面に直接取り付けるシーリングライト、CHはシャンデリアを表す記号であり、取り付け形態ごとに記号が使い分けられている。",
       "source": {
         "title": "令和8年度下期 第二種電気工事士 学科試験問題",
         "url": "https://www.shiken.or.jp/construction/upload/20261025_co_second_q01.pdf",
@@ -1542,8 +1542,8 @@
         }
       ],
       "answerOfficial": "ニ",
-      "hereToRemember": null,
-      "explanation": null,
+      "hereToRemember": "0.5秒以内遮断の装置があればD種接地は500 Ωまで緩和される",
+      "explanation": "⑥の部分は、地絡を0.5秒以内に自動遮断する漏電遮断器などが施設された電路に接続されるD種接地工事である。この場合、接地抵抗値は通常の100 Ω以下から500 Ω以下まで緩和されるため、許容される最大値は500 Ωである。",
       "source": {
         "title": "令和8年度下期 第二種電気工事士 学科試験問題",
         "url": "https://www.shiken.or.jp/construction/upload/20261025_co_second_q01.pdf",
@@ -1587,8 +1587,8 @@
         }
       ],
       "answerOfficial": "イ",
-      "hereToRemember": null,
-      "explanation": null,
+      "hereToRemember": "最少電線本数は電源線と送り線を図上で1本ずつ数える",
+      "explanation": "⑦の部分を通る電線は、配線図上でその区間に必要な心線を数えて求める。電源からの非接地側・接地側と、負荷やスイッチへの送りに必要な線を数えると最少で3本となる。接続先ごとに往路だけを数えて復路を落としたり、不要な予備線を加えたりすると誤りになる。",
       "source": {
         "title": "令和8年度下期 第二種電気工事士 学科試験問題",
         "url": "https://www.shiken.or.jp/construction/upload/20261025_co_second_q01.pdf",
@@ -1632,8 +1632,8 @@
         }
       ],
       "answerOfficial": "ニ",
-      "hereToRemember": null,
-      "explanation": null,
+      "hereToRemember": "EM-EEF：ポリエチレン絶縁・耐燃性ポリエチレンシースの平形",
+      "explanation": "⑧の図記号が示すのは、600Vポリエチレン絶縁耐燃性ポリエチレンシースケーブル平形（EM-EEF）である。架橋ポリエチレン絶縁を用いるものはEM-CEなど丸形ケーブルであり、単心の絶縁電線を示す記号とも異なるため、絶縁材料・シース・形状の組合せで判別する。",
       "source": {
         "title": "令和8年度下期 第二種電気工事士 学科試験問題",
         "url": "https://www.shiken.or.jp/construction/upload/20261025_co_second_q01.pdf",
@@ -1677,8 +1677,8 @@
         }
       ],
       "answerOfficial": "イ",
-      "hereToRemember": null,
-      "explanation": null,
+      "hereToRemember": "小勢力回路の電線は直径0.8 mm以上の軟銅線が最小",
+      "explanation": "小勢力回路に使用する電線は、軟銅線では直径0.8 mm以上、より線では断面積0.5 mm²以上と定められている。したがって⑨の部分で使用できる導体の最小直径は0.8 mmである。一般の屋内配線の最小である1.6 mmと混同しないこと。",
       "source": {
         "title": "令和8年度下期 第二種電気工事士 学科試験問題",
         "url": "https://www.shiken.or.jp/construction/upload/20261025_co_second_q01.pdf",
@@ -1722,8 +1722,8 @@
         }
       ],
       "answerOfficial": "ハ",
-      "hereToRemember": null,
-      "explanation": null,
+      "hereToRemember": "配線図の線種：露出は実線、天井隠ぺいは破線、床隠ぺいは一点鎖線",
+      "explanation": "配線図では配線方法を線の種類で表し、露出配線は実線、天井隠ぺい配線は破線、床隠ぺい配線は一点鎖線、地中配線は二点鎖線で示す。⑩の記号は一点鎖線であるから、床隠ぺい配線を表している。",
       "source": {
         "title": "令和8年度下期 第二種電気工事士 学科試験問題",
         "url": "https://www.shiken.or.jp/construction/upload/20261025_co_second_q01.pdf",
@@ -1767,8 +1767,8 @@
         }
       ],
       "answerOfficial": "ロ",
-      "hereToRemember": null,
-      "explanation": null,
+      "hereToRemember": "図記号の形と付記文字から器具の種類を判別する",
+      "explanation": "⑪で示す図記号の器具はロである。配線図の器具記号は、器具の外形や機能を図案化し、必要に応じて文字記号を添えて表されるため、円や四角などの基本図形と付記された文字の組合せから器具を特定する。天井に取り付ける器具か壁に取り付ける器具かといった設置形態も判別の手がかりになる。",
       "source": {
         "title": "令和8年度下期 第二種電気工事士 学科試験問題",
         "url": "https://www.shiken.or.jp/construction/upload/20261025_co_second_q01.pdf",
@@ -1812,8 +1812,8 @@
         }
       ],
       "answerOfficial": "イ",
-      "hereToRemember": null,
-      "explanation": null,
+      "hereToRemember": "機器の図記号は盤内機器か単体機器かを文字記号で区別する",
+      "explanation": "⑫で示す図記号の機器はイである。配線図では遮断器や開閉器などの機器も図記号で表され、同じ機能でも用途や定格によって記号が異なるため、記号の形状と添えられた文字・数字から機器名を読み取る。名称が似た機器どうしを取り違えないことが大切である。",
       "source": {
         "title": "令和8年度下期 第二種電気工事士 学科試験問題",
         "url": "https://www.shiken.or.jp/construction/upload/20261025_co_second_q01.pdf",
@@ -1857,8 +1857,8 @@
         }
       ],
       "answerOfficial": "ハ",
-      "hereToRemember": null,
-      "explanation": null,
+      "hereToRemember": "1.6 mmは2〜3本が小スリーブ、4本集まると中スリーブ",
+      "explanation": "⑬のボックス内の各接続について集まる心線数を数えると、スリーブの選定は、1.6 mmの電線では本数の少ない接続が小スリーブ、4本集まる接続が中スリーブとなる。その結果、使用するリングスリーブは小3個・中1個の組合せが正しい。接続ごとに本数を数え直すことが数え違いを防ぐ要点である。",
       "source": {
         "title": "令和8年度下期 第二種電気工事士 学科試験問題",
         "url": "https://www.shiken.or.jp/construction/upload/20261025_co_second_q01.pdf",
@@ -1902,8 +1902,8 @@
         }
       ],
       "answerOfficial": "ニ",
-      "hereToRemember": null,
-      "explanation": null,
+      "hereToRemember": "木造部分の穴あけには木工用ビット付きの電気ドリルを使う",
+      "explanation": "⑭の木造部分に配線用の穴をあけるには、木工用のビットを取り付けた電気ドリルが正しい工具である。コンクリート用の振動ドリルや金属用のビットでは木材をきれいに切削できず、材を割ったり穴が荒れたりする原因になるため、被削材に合った工具を選ぶ。",
       "source": {
         "title": "令和8年度下期 第二種電気工事士 学科試験問題",
         "url": "https://www.shiken.or.jp/construction/upload/20261025_co_second_q01.pdf",
@@ -1947,8 +1947,8 @@
         }
       ],
       "answerOfficial": "ニ",
-      "hereToRemember": null,
-      "explanation": null,
+      "hereToRemember": "刻印は電線の組合せで決まる：1.6×2は○、3本級は小、太い組合せは中",
+      "explanation": "⑮のボックス内の接続を圧着した場合のスリーブの種類・個数と刻印の組合せはニが正しい。リングスリーブの刻印は、1.6 mm 2本の接続では「○」、それより太い、または本数の多い組合せでは「小」「中」と、接続する電線の太さと本数に応じて決まるため、各接続ごとに組合せを確認して選定する。",
       "source": {
         "title": "令和8年度下期 第二種電気工事士 学科試験問題",
         "url": "https://www.shiken.or.jp/construction/upload/20261025_co_second_q01.pdf",
@@ -1992,8 +1992,8 @@
         }
       ],
       "answerOfficial": "ハ",
-      "hereToRemember": null,
-      "explanation": null,
+      "hereToRemember": "必要心線数を数え、最少心数のケーブルを選ぶ",
+      "explanation": "⑯の部分に必要なケーブルはハである。その区間を通る心線の数、すなわち電源線とスイッチ・負荷への送り線の合計を数え、その本数を満たす最少心数のケーブルを選定する。心線数が不足するケーブルでは回路が構成できず、過剰な心数のものは最少とする条件に合わない。",
       "source": {
         "title": "令和8年度下期 第二種電気工事士 学科試験問題",
         "url": "https://www.shiken.or.jp/construction/upload/20261025_co_second_q01.pdf",
@@ -2037,8 +2037,8 @@
         }
       ],
       "answerOfficial": "ハ",
-      "hereToRemember": null,
-      "explanation": null,
+      "hereToRemember": "接点構成図から器具を判別する：接点の数と動作形態が手がかり",
+      "explanation": "⑰の器具は、写真下に示された接点の構成から判別でき、ハが該当する器具である。スイッチ類やリレー類は外観が似ていても接点の数や切替の仕方が異なるため、接点構成図で常時開・常時閉・切替の別を確認することが判別の要点である。",
       "source": {
         "title": "令和8年度下期 第二種電気工事士 学科試験問題",
         "url": "https://www.shiken.or.jp/construction/upload/20261025_co_second_q01.pdf",
@@ -2082,8 +2082,8 @@
         }
       ],
       "answerOfficial": "イ",
-      "hereToRemember": null,
-      "explanation": null,
+      "hereToRemember": "差込形コネクタは接続本数ごとに2本用・3本用などを使い分ける",
+      "explanation": "⑱のボックス内の各接続について集まる心線数を数えると、差込形コネクタは接続本数に応じた種類を最少個数だけ使う組合せとなり、イが正しい。差込形コネクタは差し込む電線の本数ごとに種類が決まっているため、1つの接続に必要な本数に合ったコネクタを選ぶ。",
       "source": {
         "title": "令和8年度下期 第二種電気工事士 学科試験問題",
         "url": "https://www.shiken.or.jp/construction/upload/20261025_co_second_q01.pdf",
@@ -2127,8 +2127,8 @@
         }
       ],
       "answerOfficial": "ロ",
-      "hereToRemember": null,
-      "explanation": null,
+      "hereToRemember": "FEPの切断は管を潰さず切れる専用カッタ類を使う",
+      "explanation": "⑲の防護管（FEP：波付硬質合成樹脂管）を切断するには、管を潰したりひびを入れたりせずに切断できるロの工具が適切である。合成樹脂管は金属管と性質が異なるため、金属管用の工具や不適切な刃物では断面が荒れ、地中配線の防護性能を損なうおそれがある。",
       "source": {
         "title": "令和8年度下期 第二種電気工事士 学科試験問題",
         "url": "https://www.shiken.or.jp/construction/upload/20261025_co_second_q01.pdf",
@@ -2172,8 +2172,8 @@
         }
       ],
       "answerOfficial": "ロ",
-      "hereToRemember": null,
-      "explanation": null,
+      "hereToRemember": "配線図に現れない器具・材料はその施工では使用されない",
+      "explanation": "この配線図の施工で使用される器具や材料は、図面に記号として現れるものに限られる。ロの器具は配線図のどこにも示されていないため、使用されることのないものである。各選択肢を図面全体の記号と照合して確認することが、この種の問題を解く手順である。",
       "source": {
         "title": "令和8年度下期 第二種電気工事士 学科試験問題",
         "url": "https://www.shiken.or.jp/construction/upload/20261025_co_second_q01.pdf",

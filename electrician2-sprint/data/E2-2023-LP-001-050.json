@@ -10,7 +10,9 @@
     },
     "correct_answer": "ロ",
     "figure_ref": "E2-2023-LP-FIG-P05-Q01",
-    "audit_status": "PENDING"
+    "audit_status": "PENDING",
+    "explanation": "図の回路では、8 Ωの抵抗に流れる電流は10 Aである。消費電力は P＝I²R＝10²×8＝800 W となる。抵抗で消費される電力は電流の2乗と抵抗値の積で求められる。",
+    "hereToRemember": "消費電力は P＝I²R＝V²/R で求める。"
   },
   {
     "id": "E2-2023-LP-002",
@@ -23,7 +25,9 @@
     },
     "correct_answer": "イ",
     "figure_ref": null,
-    "audit_status": "PENDING"
+    "audit_status": "PENDING",
+    "explanation": "導線の抵抗は R＝ρL/A で表され、断面積 A は直径 D［mm］を用いると A＝πD²/4［mm²］である。これを Ω の単位に換算すると R＝(4ρL)/(πD²)×10⁶ となり、イが正しい。長さに比例し、断面積に反比例する点が要点である。",
+    "hereToRemember": "抵抗 R＝ρL/A、断面積は直径から A＝πD²/4。"
   },
   {
     "id": "E2-2023-LP-003",
@@ -36,7 +40,9 @@
     },
     "correct_answer": "イ",
     "figure_ref": null,
-    "audit_status": "PENDING"
+    "audit_status": "PENDING",
+    "explanation": "接続点で発生する熱量は H＝I²Rt＝10²×0.2×3 600＝72 000 J＝72 kJ である。接触抵抗による発熱は電流の2乗に比例するため、接続不良は発熱・火災の原因となる。",
+    "hereToRemember": "熱量 H＝I²Rt、1時間は3 600秒で計算する。"
   },
   {
     "id": "E2-2023-LP-004",
@@ -49,7 +55,9 @@
     },
     "correct_answer": "ロ",
     "figure_ref": "E2-2023-LP-FIG-P05-Q04",
-    "audit_status": "PENDING"
+    "audit_status": "PENDING",
+    "explanation": "リアクタンスは電力を消費せず、消費電力は抵抗分だけで決まる。図の値から回路電流を求め、P＝I²R（または P＝VIcosθ）に当てはめると800 Wとなる。皮相電力に力率を掛けたものが消費電力である。",
+    "hereToRemember": "RL直列回路の消費電力は抵抗分のみ、P＝I²R。"
   },
   {
     "id": "E2-2023-LP-005",
@@ -62,7 +70,9 @@
     },
     "correct_answer": "ハ",
     "figure_ref": "E2-2023-LP-FIG-P05-Q05",
-    "audit_status": "PENDING"
+    "audit_status": "PENDING",
+    "explanation": "図の三相負荷は星形結線で、各相の電圧（相電圧）は120 Vである。線間電圧は相電圧の√3倍となるので、E＝√3×120≒208 Vである。線電流と相電流が等しくなるのは星形結線の特徴である。",
+    "hereToRemember": "線間電圧は相電圧の√3倍である。"
   },
   {
     "id": "E2-2023-LP-006",
@@ -75,7 +85,9 @@
     },
     "correct_answer": "ニ",
     "figure_ref": "E2-2023-LP-FIG-P06-Q06",
-    "audit_status": "PENDING"
+    "audit_status": "PENDING",
+    "explanation": "電線1線当たりの電力損失は I²r であり、三相3線式では3線分を合計する。よって損失は 3×10²×0.15＝45 W となる。2線分で計算した15 Wや、√3を用いるのは誤りである。",
+    "hereToRemember": "三相3線式の電力損失は 3I²r（3線分）。"
   },
   {
     "id": "E2-2023-LP-007",
@@ -88,7 +100,9 @@
     },
     "correct_answer": "ハ",
     "figure_ref": "E2-2023-LP-FIG-P06-Q07",
-    "audit_status": "PENDING"
+    "audit_status": "PENDING",
+    "explanation": "中性線が断線すると、負荷A（20 Ω）と負荷B（10 Ω）は210 Vの電路に直列接続された状態になる。電圧は抵抗値に比例して分担されるため、Aに加わる電圧は 210×20/(20＋10)＝140 V となる。抵抗の小さい負荷ほど過電圧を受けにくく、大きい負荷が過電圧になる点が危険である。",
+    "hereToRemember": "中性線断線時は負荷が直列になり、抵抗の大きい側の電圧が上がる。"
   },
   {
     "id": "E2-2023-LP-008",
@@ -101,7 +115,9 @@
     },
     "correct_answer": "ロ",
     "figure_ref": null,
-    "audit_status": "PENDING"
+    "audit_status": "PENDING",
+    "explanation": "断面積3.5 mm²の絶縁電線を金属管に収める場合の基準許容電流は37 Aである。管内に4本収めるため電流減少係数0.63を掛けると、37×0.63≒23.3 Aとなり、許容電流は23 Aである。同一管内の電線数が増えるほど放熱が悪くなり、減少係数は小さくなる。",
+    "hereToRemember": "許容電流は基準値に電流減少係数を掛ける。"
   },
   {
     "id": "E2-2023-LP-009",
@@ -114,7 +130,9 @@
     },
     "correct_answer": "ニ",
     "figure_ref": "E2-2023-LP-FIG-P06-Q09",
-    "audit_status": "PENDING"
+    "audit_status": "PENDING",
+    "explanation": "幹線から分岐する電路の長さ制限は、分岐電線の許容電流と幹線の過電流遮断器の定格電流との比で決まる。本問では42 A／50 A＝84％であり、55％以上であるため、分岐点から任意の長さの位置に分岐回路の遮断器を施設でき、長さに制限はない。55％未満35％以上では8 m以下、35％未満では3 m以下という区分と併せて覚える。",
+    "hereToRemember": "分岐電線の許容電流が幹線遮断器定格の55％以上なら長さ制限なし。"
   },
   {
     "id": "E2-2023-LP-010",
@@ -127,7 +145,9 @@
     },
     "correct_answer": "ロ",
     "figure_ref": "E2-2023-LP-FIG-P07-Q10",
-    "audit_status": "PENDING"
+    "audit_status": "PENDING",
+    "explanation": "分岐回路の配線用遮断器とコンセントの組合せには決まりがあり、30 Aの分岐回路に使用できるコンセントは定格電流20 A以上30 A以下のものである。したがって30 A遮断器に15 Aコンセントを組み合わせたロは不適切である。20 A回路に15 Aコンセントを使うニは許される。",
+    "hereToRemember": "30 A分岐回路のコンセントは20 A以上のものを使う。"
   },
   {
     "id": "E2-2023-LP-011",
@@ -140,7 +160,9 @@
     },
     "correct_answer": "イ",
     "figure_ref": null,
-    "audit_status": "PENDING"
+    "audit_status": "PENDING",
+    "explanation": "プルボックスは、多数の金属管が集合する場所や電線の引き入れが困難な場所に設け、電線の挿入・引き入れを容易にするためのものである。開閉器の集合設置には分電盤、器具の取付けにはアウトレットボックスを用いるので、ロ・ハ・ニは誤りである。",
+    "hereToRemember": "プルボックスは電線の引き入れを容易にするための箱である。"
   },
   {
     "id": "E2-2023-LP-012",
@@ -153,7 +175,9 @@
     },
     "correct_answer": "ロ",
     "figure_ref": null,
-    "audit_status": "PENDING"
+    "audit_status": "PENDING",
+    "explanation": "600Vポリエチレン絶縁耐燃性ポリエチレンシースケーブル（EM-EEF等）は、ポリエチレン系材料を用いるため燃焼時に有害なハロゲン系ガスを発生しない。よってロが誤りである。リサイクル性がよく難燃性があり、絶縁物の最高許容温度もビニル系より高い。",
+    "hereToRemember": "EMケーブルはハロゲンフリーで、焼却時に有害ガスが出ない。"
   },
   {
     "id": "E2-2023-LP-013",
@@ -166,7 +190,9 @@
     },
     "correct_answer": "イ",
     "figure_ref": null,
-    "audit_status": "PENDING"
+    "audit_status": "PENDING",
+    "explanation": "ノックアウトパンチャは、金属製のキャビネットやボックスに電線管接続用の穴を開けるための油圧式等の工具である。圧着には圧着工具、コンクリートの穴あけには振動ドリル等、管の曲げにはベンダを用いるので、他の選択肢は誤りである。",
+    "hereToRemember": "ノックアウトパンチャは金属製キャビネット等の穴あけ工具である。"
   },
   {
     "id": "E2-2023-LP-014",
@@ -179,7 +205,9 @@
     },
     "correct_answer": "ニ",
     "figure_ref": null,
-    "audit_status": "PENDING"
+    "audit_status": "PENDING",
+    "explanation": "三相誘導電動機の同期速度は Ns＝120f/p で表され、電源周波数 f に比例する。周波数が50 Hzから60 Hzに上がれば回転速度も増加するので、ニが正しい。極数が変わらない限り周波数比（60/50＝1.2倍）で速度が変わる。",
+    "hereToRemember": "誘導電動機の回転速度は電源周波数に比例する。"
   },
   {
     "id": "E2-2023-LP-015",
@@ -192,7 +220,9 @@
     },
     "correct_answer": "ニ",
     "figure_ref": null,
-    "audit_status": "PENDING"
+    "audit_status": "PENDING",
+    "explanation": "漏電遮断器は感度電流により分類され、高感度形は定格感度電流が30 mA以下のものである。1 000 mA以下というのは中感度形の範囲であり、ニは誤りである。高速形の動作時間が0.1秒以内であること、地絡電流を零相変流器で検出することは正しい記述である。",
+    "hereToRemember": "高感度形漏電遮断器の定格感度電流は30 mA以下である。"
   },
   {
     "id": "E2-2023-LP-016",
@@ -205,7 +235,9 @@
     },
     "correct_answer": "イ",
     "figure_ref": "E2-2023-LP-FIG-P08-Q16",
-    "audit_status": "PENDING"
+    "audit_status": "PENDING",
+    "explanation": "写真の材料は硬質ポリ塩化ビニル電線管（VE管）用のカップリングであり、VE管相互を接着接続するのに用いるものである。金属管との接続には専用のコンビネーションカップリング、可とう電線管にはその専用継手を用いるので、他の選択肢は誤りである。",
+    "hereToRemember": "VE管同士の接続にはTSカップリングを用いる。"
   },
   {
     "id": "E2-2023-LP-017",
@@ -218,7 +250,9 @@
     },
     "correct_answer": "ロ",
     "figure_ref": "E2-2023-LP-FIG-P08-Q17",
-    "audit_status": "PENDING"
+    "audit_status": "PENDING",
+    "explanation": "写真の器具はリモコンリレーであり、離れた場所の操作スイッチからの信号を受けて、照明等の負荷回路を開閉する継電器である。操作電源用の変圧器やセレクタスイッチとは外観・役割が異なるので、イ・ハ・ニは誤りである。",
+    "hereToRemember": "リモコンリレーは低圧信号で負荷回路を開閉する継電器である。"
   },
   {
     "id": "E2-2023-LP-018",
@@ -231,7 +265,9 @@
     },
     "correct_answer": "ハ",
     "figure_ref": "E2-2023-LP-FIG-P08-Q18",
-    "audit_status": "PENDING"
+    "audit_status": "PENDING",
+    "explanation": "写真の工具は硬質ポリ塩化ビニル電線管を切断するための工具であり、管をまっすぐに切り口よく切断できる。金属管の切断にはパイプカッタや弓のこ等を用いるが、本工具の用途はハの塩ビ管の切断である。",
+    "hereToRemember": "塩ビ管の切断には専用のパイプカッタ類を用いる。"
   },
   {
     "id": "E2-2023-LP-019",
@@ -244,7 +280,9 @@
     },
     "correct_answer": "ハ",
     "figure_ref": null,
-    "audit_status": "PENDING"
+    "audit_status": "PENDING",
+    "explanation": "接続部分の絶縁処理は、電線の絶縁物と同等以上の絶縁効力が必要である。ビニルテープ（厚さ約0.2 mm）の場合は半幅以上重ねて2回以上（4層以上）巻く必要があり、1回（2層）だけのハは不適切である。自己融着性テープ＋保護テープのイ、厚さ約0.5 mmのテープを2回巻いたロ、絶縁処理が不要な差込形コネクタのニは適切である。",
+    "hereToRemember": "ビニルテープは半幅以上重ねて2回（4層）以上巻くのが基準。"
   },
   {
     "id": "E2-2023-LP-020",
@@ -257,7 +295,9 @@
     },
     "correct_answer": "ロ",
     "figure_ref": null,
-    "audit_status": "PENDING"
+    "audit_status": "PENDING",
+    "explanation": "2種キャブタイヤケーブルを造営材に沿って施設するケーブル工事では、支持点間の距離は1 m以下としなければならない。したがって1.5 mとしたロは不適切である。合成樹脂管の支持点間距離1.5 m以下、ライティングダクトの2 m以下は適切な施工である。",
+    "hereToRemember": "キャブタイヤケーブルの支持点間距離は1 m以下である。"
   },
   {
     "id": "E2-2023-LP-021",
@@ -270,7 +310,9 @@
     },
     "correct_answer": "ロ",
     "figure_ref": null,
-    "audit_status": "PENDING"
+    "audit_status": "PENDING",
+    "explanation": "ルームエアコンに電気を供給する電路は専用回路とし、過負荷保護付の専用の漏電遮断器を施設して保護しなければならない。よってロが適切である。開閉器のみのニは保護装置がなく不適切であり、漏電遮断器によらないイ・ハもこの条件では適切でない。",
+    "hereToRemember": "ルームエアコンの電路は専用の漏電遮断器で保護する。"
   },
   {
     "id": "E2-2023-LP-022",
@@ -283,7 +325,9 @@
     },
     "correct_answer": "ハ",
     "figure_ref": null,
-    "audit_status": "PENDING"
+    "audit_status": "PENDING",
+    "explanation": "石油を貯蔵するような危険物の存在する場所では、金属線ぴ工事は施設することができない。よってハが不適切な組合せである。可燃性ガス・粉じんのある場所では、厚鋼電線管を用いた金属管工事やケーブル工事など、場所に応じた防爆・防護性能を持つ工事方法が求められる。",
+    "hereToRemember": "危険物の存在する場所では金属線ぴ工事はできない。"
   },
   {
     "id": "E2-2023-LP-023",
@@ -296,7 +340,9 @@
     },
     "correct_answer": "イ",
     "figure_ref": null,
-    "audit_status": "PENDING"
+    "audit_status": "PENDING",
+    "explanation": "硬質ポリ塩化ビニル電線管の支持点間の距離は1.5 m以下としなければならず、2 mとしたイは不適切である。管の差込み深さを管の外径の0.8倍以上とすること、防湿装置を施すこと、金属製プルボックスへのD種接地はいずれも適切な施工である。",
+    "hereToRemember": "合成樹脂管の支持点間距離は1.5 m以下である。"
   },
   {
     "id": "E2-2023-LP-024",
@@ -309,7 +355,9 @@
     },
     "correct_answer": "ニ",
     "figure_ref": null,
-    "audit_status": "PENDING"
+    "audit_status": "PENDING",
+    "explanation": "アナログ式回路計で抵抗を測定する場合、読み取った指示値に測定レンジの倍率を掛けたものが測定値となる。倍率で割るとしたニは誤りである。測定前の零点確認、テストリードを短絡しての0 Ω調整は正しい手順である。",
+    "hereToRemember": "テスタの抵抗値は指示値に倍率を掛けて求める。"
   },
   {
     "id": "E2-2023-LP-025",
@@ -322,7 +370,9 @@
     },
     "correct_answer": "ニ",
     "figure_ref": null,
-    "audit_status": "PENDING"
+    "audit_status": "PENDING",
+    "explanation": "絶縁抵抗測定は、被測定回路に電源電圧が加わっていない状態で行わなければならない。電圧が加わったまま測定すると測定器の破損や誤測定、感電のおそれがあり、ニは誤りである。電池の確認、端子短絡による零点確認、電子機器に適した定格測定電圧の選定は正しい記述である。",
+    "hereToRemember": "絶縁抵抗測定は必ず停電（無電圧）状態で行う。"
   },
   {
     "id": "E2-2023-LP-026",
@@ -335,7 +385,9 @@
     },
     "correct_answer": "イ",
     "figure_ref": null,
-    "audit_status": "PENDING"
+    "audit_status": "PENDING",
+    "explanation": "対地電圧200 Vの電路の絶縁抵抗は0.2 MΩ以上が必要であり、0.1 MΩのハ・ニは不適合である。電動機の鉄台の接地はD種接地工事で、0.1秒以内に動作する漏電遮断器が施設されている場合は接地抵抗値を500 Ω以下まで緩和できる。したがって0.2 MΩ・300 Ωのイが適合する組合せであり、接地抵抗600 Ωのロは緩和の上限を超える。",
+    "hereToRemember": "対地電圧150 V超300 V以下の電路の絶縁抵抗は0.2 MΩ以上。"
   },
   {
     "id": "E2-2023-LP-027",
@@ -348,7 +400,9 @@
     },
     "correct_answer": "ロ",
     "figure_ref": null,
-    "audit_status": "PENDING"
+    "audit_status": "PENDING",
+    "explanation": "クランプ形電流計には、変流器方式の交流専用のもののほか、ホール素子を用いて直流も測定できるものがある。したがって「直流を測定できるものはない」としたロは誤りである。通電状態のまま測定できる点、クランプ部の大きさで測定範囲に制限がある点は正しい。",
+    "hereToRemember": "クランプ形電流計には直流を測れるものもある。"
   },
   {
     "id": "E2-2023-LP-028",
@@ -361,7 +415,9 @@
     },
     "correct_answer": "ニ",
     "figure_ref": null,
-    "audit_status": "PENDING"
+    "audit_status": "PENDING",
+    "explanation": "配電盤を造営材に取り付ける作業は、電気工事士でなければ従事できない作業である。一方、電動機の端子へのキャブタイヤケーブルのねじ止めや、小型変圧器（二次電圧36 V以下）の二次側配線は軽微な作業として電気工事士でなくても行え、電線支持柱の設置は電気工事に当たらない。",
+    "hereToRemember": "配電盤の取付けは電気工事士でなければできない作業である。"
   },
   {
     "id": "E2-2023-LP-029",
@@ -374,7 +430,9 @@
     },
     "correct_answer": "ロ",
     "figure_ref": null,
-    "audit_status": "PENDING"
+    "audit_status": "PENDING",
+    "explanation": "特定電気用品に付される表示は菱形のPSEマークであり、（PS）Eという表示ではないため、ロは誤りである。特定電気用品以外の電気用品には円形のPSEマークが付される。表示のない電気用品の販売や工事への使用が禁止されていることは正しい記述である。",
+    "hereToRemember": "特定電気用品の表示は菱形のPSEマークである。"
   },
   {
     "id": "E2-2023-LP-030",
@@ -387,7 +445,9 @@
     },
     "correct_answer": "ハ",
     "figure_ref": null,
-    "audit_status": "PENDING"
+    "audit_status": "PENDING",
+    "explanation": "電気設備技術基準では、電圧は低圧・高圧・特別高圧に区分され、低圧とは直流にあっては750 V以下、交流にあっては600 V以下のものをいう。よって（A）750 V以下・（B）600 V以下のハが正しい組合せである。",
+    "hereToRemember": "低圧は直流750 V以下、交流600 V以下である。"
   },
   {
     "id": "E2-2023-LP-031",
@@ -400,7 +460,9 @@
     },
     "correct_answer": "イ",
     "figure_ref": "E2-2023-LP-FIG-P15-MARK-01",
-    "audit_status": "PENDING"
+    "audit_status": "PENDING",
+    "explanation": "①の図記号は、電線相互の接続を行うために設けるジョイントボックスを表す。プルボックスは電線の引き入れを容易にするためのより大きな箱であり、本記号とは区別される。",
+    "hereToRemember": "配線図で電線の接続箇所を示す箱の記号はジョイントボックスである。"
   },
   {
     "id": "E2-2023-LP-032",
@@ -413,7 +475,9 @@
     },
     "correct_answer": "ハ",
     "figure_ref": "E2-2023-LP-FIG-P15-MARK-02",
-    "audit_status": "PENDING"
+    "audit_status": "PENDING",
+    "explanation": "ルームエアコンの屋内ユニットの図記号には、室内機を示す傍記表示「I」（Indoor）が付される。屋外ユニットは「O」（Outdoor）と表示されるので、②の傍記として正しいのはハの I である。",
+    "hereToRemember": "エアコン屋内ユニットの傍記は I、屋外ユニットは O である。"
   },
   {
     "id": "E2-2023-LP-033",
@@ -426,7 +490,9 @@
     },
     "correct_answer": "イ",
     "figure_ref": "E2-2023-LP-FIG-P15-MARK-03",
-    "audit_status": "PENDING"
+    "audit_status": "PENDING",
+    "explanation": "③の部分は、電源から負荷へ至る往路と復路の2本の心線で構成される区間である。したがって最少電線本数は2本となり、イが正しい。このような区間ごとの心線数の数え方が配線図問題の基本である。",
+    "hereToRemember": "電線本数は、その区間を通る回路の往復分を数える。"
   },
   {
     "id": "E2-2023-LP-034",
@@ -439,7 +505,9 @@
     },
     "correct_answer": "ニ",
     "figure_ref": "E2-2023-LP-FIG-P15-MARK-04",
-    "audit_status": "PENDING"
+    "audit_status": "PENDING",
+    "explanation": "④に示されたケーブルは、図の表示から600V架橋ポリエチレン絶縁ビニルシースケーブル（単心3本のより線）、すなわちCVケーブルである。CVは絶縁物の最高許容温度が90℃と高く、VVF（平形）やVVR（丸形）のビニル絶縁ケーブルとは区別される。",
+    "hereToRemember": "CVは架橋ポリエチレン絶縁ビニルシースケーブルの略号である。"
   },
   {
     "id": "E2-2023-LP-035",
@@ -452,7 +520,9 @@
     },
     "correct_answer": "ロ",
     "figure_ref": "E2-2023-LP-FIG-P15-MARK-05",
-    "audit_status": "PENDING"
+    "audit_status": "PENDING",
+    "explanation": "⑤の部分は200 Vの電路であり、対地電圧が150 Vを超え300 V以下の区分に当たるため、電路と大地間の絶縁抵抗は0.2 MΩ以上でなければならない。対地電圧150 V以下では0.1 MΩ以上、使用電圧300 Vを超えるものでは0.4 MΩ以上という区分と併せて覚える。",
+    "hereToRemember": "使用電圧200 V級の電路の絶縁抵抗の許容最小値は0.2 MΩである。"
   },
   {
     "id": "E2-2023-LP-036",
@@ -465,7 +535,9 @@
     },
     "correct_answer": "ニ",
     "figure_ref": "E2-2023-LP-FIG-P15-MARK-06",
-    "audit_status": "PENDING"
+    "audit_status": "PENDING",
+    "explanation": "⑥の部分は使用電圧300 V以下の低圧機器等に対する接地であり、D種接地工事を施す。漏電遮断器で保護された電路では接地抵抗の許容値が500 Ω以下に緩和されるため、正しい組合せはニの「D種接地工事・500 Ω」である。C種接地工事は300 Vを超える低圧機器が対象である。",
+    "hereToRemember": "300 V以下の機器の接地はD種、漏電遮断器付きなら500 Ω以下でよい。"
   },
   {
     "id": "E2-2023-LP-037",
@@ -478,7 +550,9 @@
     },
     "correct_answer": "ニ",
     "figure_ref": "E2-2023-LP-FIG-P15-MARK-07",
-    "audit_status": "PENDING"
+    "audit_status": "PENDING",
+    "explanation": "⑦の図記号は、漏電保護と過負荷・短絡保護の両方の機能を持つ漏電遮断器（過負荷保護付）を表す。単なる配線用遮断器の記号とは、地絡保護機能を示す表示の有無で区別される。",
+    "hereToRemember": "漏電遮断器（過負荷保護付）には専用の図記号がある。"
   },
   {
     "id": "E2-2023-LP-038",
@@ -491,7 +565,9 @@
     },
     "correct_answer": "ハ",
     "figure_ref": "E2-2023-LP-FIG-P15-MARK-08",
-    "audit_status": "PENDING"
+    "audit_status": "PENDING",
+    "explanation": "⑧の図記号はリモコンセレクタスイッチを表す。これはリモコン配線において、複数のリモコンリレーを選択して操作するためのスイッチである。表示スイッチや漏電警報器の記号とは区別して覚える。",
+    "hereToRemember": "リモコンセレクタスイッチは複数回路を切り替えて操作する器具である。"
   },
   {
     "id": "E2-2023-LP-039",
@@ -504,7 +580,9 @@
     },
     "correct_answer": "ニ",
     "figure_ref": "E2-2023-LP-FIG-P15-MARK-09",
-    "audit_status": "PENDING"
+    "audit_status": "PENDING",
+    "explanation": "⑨の図記号の器具は、図面上の表示から天井面に取り付けるものと判断できる。配線図では器具の取付場所が記号や傍記で示されるため、壁面・床面のものと区別して読み取る必要がある。",
+    "hereToRemember": "器具記号の傍記や図面上の表示で取付場所（天井・壁・床）を判断する。"
   },
   {
     "id": "E2-2023-LP-040",
@@ -517,7 +595,9 @@
     },
     "correct_answer": "ロ",
     "figure_ref": "E2-2023-LP-FIG-P15-MARK-10",
-    "audit_status": "PENDING"
+    "audit_status": "PENDING",
+    "explanation": "耐衝撃性硬質ポリ塩化ビニル電線管は HIVE と傍記表示される。通常の硬質ポリ塩化ビニル電線管は VE、波付硬質ポリエチレン管は FEP、CD管は CD と表示されるので、これらと区別して覚える。",
+    "hereToRemember": "耐衝撃性硬質ポリ塩化ビニル電線管の略号は HIVE である。"
   },
   {
     "id": "E2-2023-LP-041",
@@ -536,7 +616,9 @@
       "ハ": "E2-2023-LP-CHOICE-P12-Q41-HA",
       "ニ": "E2-2023-LP-CHOICE-P12-Q41-NI"
     },
-    "audit_status": "PENDING"
+    "audit_status": "PENDING",
+    "explanation": "リングスリーブによる圧着では、電線の太さと本数でスリーブの大きさと刻印が決まる。VVF1.6では、2本の接続は小形スリーブで〇刻印、3本・4本の接続は小形スリーブで小刻印となる。⑪のボックス内の接続を数えると小形スリーブ4個（〇刻印2個・小刻印2個）となり、ロが正しい。",
+    "hereToRemember": "VVF1.6の圧着は2本が〇刻印、3・4本が小刻印（小形スリーブ）。"
   },
   {
     "id": "E2-2023-LP-042",
@@ -555,7 +637,9 @@
       "ハ": "E2-2023-LP-CHOICE-P12-Q42-HA",
       "ニ": "E2-2023-LP-CHOICE-P12-Q42-NI"
     },
-    "audit_status": "PENDING"
+    "audit_status": "PENDING",
+    "explanation": "引込用ビニル絶縁電線（DV線）を支持物に引き留める場合は、引留めに適した碍子（玉がいし）を用いて確実に保持する。写真の選択肢のうち、DV線の引留めに使用するものはハである。引留めが不十分だと電線の張力で接続部や支持物が損傷するおそれがある。",
+    "hereToRemember": "DV線の引留めには引留用の碍子（玉がいし）を用いる。"
   },
   {
     "id": "E2-2023-LP-043",
@@ -574,7 +658,9 @@
       "ハ": "E2-2023-LP-CHOICE-P12-Q43-HA",
       "ニ": "E2-2023-LP-CHOICE-P12-Q43-NI"
     },
-    "audit_status": "PENDING"
+    "audit_status": "PENDING",
+    "explanation": "⑬のボックス内の電線の接続箇所を数えると4箇所であり、いずれもVVF1.6の接続本数が小形リングスリーブで圧着できる範囲である。したがって小形リングスリーブ4個が正しい組合せとなる。接続本数が多い箇所がある場合は中形が必要になる点に注意する。",
+    "hereToRemember": "ボックス内の接続ごとにスリーブを数え、VVF1.6は原則小形を使う。"
   },
   {
     "id": "E2-2023-LP-044",
@@ -593,7 +679,9 @@
       "ハ": "E2-2023-LP-CHOICE-P12-Q44-HA",
       "ニ": "E2-2023-LP-CHOICE-P12-Q44-NI"
     },
-    "audit_status": "PENDING"
+    "audit_status": "PENDING",
+    "explanation": "⑭の図記号が表す機器は、写真のうちニの機器である。配線図問題では、図記号と実物の機器を対応させて覚えることが求められる。記号の形状と機器の用途をセットで理解しておくとよい。",
+    "hereToRemember": "図記号が示す機器の実物を写真で識別できるようにする。"
   },
   {
     "id": "E2-2023-LP-045",
@@ -612,7 +700,9 @@
       "ハ": "E2-2023-LP-CHOICE-P12-Q45-HA",
       "ニ": "E2-2023-LP-CHOICE-P12-Q45-NI"
     },
-    "audit_status": "PENDING"
+    "audit_status": "PENDING",
+    "explanation": "屋外の接地工事では、接地極（接地棒等）、接地線、接地極埋設表示など専用の材料が一般的に使用される。写真のうちハのものは接地工事には一般的に使用されないものである。各材料の用途を写真とともに覚えておくことが大切である。",
+    "hereToRemember": "接地工事には接地棒・接地線・埋設表示などの専用材料を用いる。"
   },
   {
     "id": "E2-2023-LP-046",
@@ -631,7 +721,9 @@
       "ハ": "E2-2023-LP-CHOICE-P13-Q46-HA",
       "ニ": "E2-2023-LP-CHOICE-P13-Q46-NI"
     },
-    "audit_status": "PENDING"
+    "audit_status": "PENDING",
+    "explanation": "⑯の部分の配線には、その回路に必要な心線数を満たすケーブルが求められ、心線数は最少とする条件がある。写真の選択肢のうち、必要な心線数を持つケーブルはロである。スイッチ回路や電源回路など、区間ごとに必要な本数を数えることが基本である。",
+    "hereToRemember": "ケーブルは回路に必要な最少心線数で選定する。"
   },
   {
     "id": "E2-2023-LP-047",
@@ -650,7 +742,9 @@
       "ハ": "E2-2023-LP-CHOICE-P13-Q47-HA",
       "ニ": "E2-2023-LP-CHOICE-P13-Q47-NI"
     },
-    "audit_status": "PENDING"
+    "audit_status": "PENDING",
+    "explanation": "差込形コネクタは色によって差し込める電線の本数が決まっており、赤色は2本用、青色は3本用、黄色は4本用である。⑰のボックス内の接続本数ごとにコネクタを選ぶと、赤色3個・青色1個・黄色1個となり、ロが正しい。",
+    "hereToRemember": "差込形コネクタは色で本数が決まる。赤2本・青3本・黄4本用。"
   },
   {
     "id": "E2-2023-LP-048",
@@ -669,7 +763,9 @@
       "ハ": "E2-2023-LP-CHOICE-P13-Q48-HA",
       "ニ": "E2-2023-LP-CHOICE-P13-Q48-NI"
     },
-    "audit_status": "PENDING"
+    "audit_status": "PENDING",
+    "explanation": "⑱の図記号が示すものは、写真のうちロのものである。配線図に現れる器具や材料は、記号・名称・実物の3点をセットで覚えることが合格への近道である。",
+    "hereToRemember": "図記号と実物の器具・材料を対応させて覚える。"
   },
   {
     "id": "E2-2023-LP-049",
@@ -688,7 +784,9 @@
       "ハ": "E2-2023-LP-CHOICE-P13-Q49-HA",
       "ニ": "E2-2023-LP-CHOICE-P13-Q49-NI"
     },
-    "audit_status": "PENDING"
+    "audit_status": "PENDING",
+    "explanation": "この配線図の施工内容を器具ごとに照合すると、写真のうちニの器具は図面のどこにも使用されていない。接点の構成図も併せて確認し、スイッチ等の接点構成が図面で使われているかどうかを判断することが求められる。",
+    "hereToRemember": "配線図全体をたどり、実際に使われている器具だけを残して判断する。"
   },
   {
     "id": "E2-2023-LP-050",
@@ -707,6 +805,8 @@
       "ハ": "E2-2023-LP-CHOICE-P13-Q50-HA",
       "ニ": "E2-2023-LP-CHOICE-P13-Q50-NI"
     },
-    "audit_status": "PENDING"
+    "audit_status": "PENDING",
+    "explanation": "この配線図で使用されているコンセントは、写真のうちイのものである。コンセントは図記号によって、接地極付き、抜け止め形、接地端子付きなどの種類が区別されるため、記号と実物の形状を対応させて覚える必要がある。",
+    "hereToRemember": "コンセントは図記号（接地極付・抜止め等）で種類を見分ける。"
   }
 ]
