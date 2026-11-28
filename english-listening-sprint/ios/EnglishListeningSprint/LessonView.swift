@@ -35,6 +35,29 @@ struct LessonView: View {
                     HStack(spacing: 8) { ForEach([0.75, 1.0, 1.25], id: \.self) { speed in Button("\(speed, specifier: speed == 1 ? "%.0f" : "%.2f")x") { store.setRate(Float(speed)) }.buttonStyle(SprintPill(active: store.rate == Float(speed))) } }.frame(maxWidth: .infinity)
                     Picker("モード", selection: $store.mode) { ForEach(LearningMode.allCases) { Text($0.rawValue).tag($0) } }.pickerStyle(.segmented)
                     content(lesson).padding(18).background(SprintTheme.panel, in: RoundedRectangle(cornerRadius: 22))
+                    HStack(spacing: 10) {
+                        if store.hasPreviousLesson {
+                            Button {
+                                store.moveToPreviousLesson()
+                            } label: {
+                                Label("前のレッスンへ", systemImage: "chevron.left")
+                                    .frame(maxWidth: .infinity)
+                            }
+                            .buttonStyle(.bordered)
+                            .tint(SprintTheme.accent)
+                        }
+                        if store.hasNextLesson {
+                            Button {
+                                store.moveToNextLesson()
+                            } label: {
+                                Label("次のレッスンへ", systemImage: "chevron.right")
+                                    .frame(maxWidth: .infinity)
+                            }
+                            .buttonStyle(.borderedProminent)
+                            .tint(SprintTheme.accent)
+                            .foregroundStyle(SprintTheme.background)
+                        }
+                    }
                 }.padding(16)
             }.background(SprintTheme.background).navigationTitle("Listening").toolbar { ToolbarItem(placement: .topBarLeading) { Button { store.stop(); store.selectedLessonID = nil } label: { Image(systemName: "chevron.left") } } }
         })
