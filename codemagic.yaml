@@ -29,7 +29,7 @@ workflows:
           import json, re
           root = Path(".")
           html = (root / "index.html").read_text(encoding="utf-8")
-          match = re.search(r"window\\.LESSONS\\s*=\\s*(\\[.*?\\]);</script>", html, re.S)
+          match = re.search(r"window\.LESSONS\s*=\s*(\[.*?\]);</script>", html, re.S)
           if not match:
               raise SystemExit("window.LESSONS not found in index.html")
           lessons = json.loads(match.group(1))
@@ -37,7 +37,7 @@ workflows:
               raise SystemExit(f"Expected 150 lessons, found {len(lessons)}")
           target = root / "data" / "lessons.json"
           target.parent.mkdir(parents=True, exist_ok=True)
-          target.write_text(json.dumps(lessons, ensure_ascii=False, indent=2) + "\\n", encoding="utf-8")
+          target.write_text(json.dumps(lessons, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
           print(f"Wrote {len(lessons)} lessons to {target}")
           PY
           python3 -m pip install --disable-pip-version-check requests
