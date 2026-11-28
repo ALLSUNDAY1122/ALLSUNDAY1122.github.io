@@ -36,6 +36,7 @@ struct ExamSource: Identifiable {
     let pageURLString: String
     let answerPDFURLString: String
     var id: Int { exam }
+    /// The MHLW 「…問題および正答について」 page (HTML). Never the answer-key PDF.
     var pageURL: URL? { URL(string: pageURLString) }
     var answerPDFURL: URL? { URL(string: answerPDFURLString) }
     var title: String { "第\(exam)回 看護師国家試験" }
@@ -175,6 +176,7 @@ struct ReferenceLinkRow: View {
                 .contentShape(Rectangle())
             }
             .accessibilityIdentifier(identifier)
+            .accessibilityValue(url.absoluteString)
         }
     }
 }
@@ -186,11 +188,19 @@ struct QuestionSourceBadge: View {
         let source = ReferenceCatalog.source(for: question)
         VStack(alignment: .leading, spacing: 4) {
             Text("出典：\(source.citation)（厚生労働省）").font(.caption2).foregroundStyle(KSTheme.secondary)
-            if let url = source.exam?.pageURL {
+            if let exam = source.exam, let url = exam.pageURL {
+                // Opens the exam's MHLW 「問題および正答について」 HTML page (not the answer PDF).
                 Link(destination: url) {
-                    Label("公式の問題・正答を確認する", systemImage: "arrow.up.right.square").font(.caption2.bold()).foregroundStyle(KSTheme.ai)
+                    HStack(spacing: 6) {
+                        Image(systemName: "arrow.up.right.square")
+                        Text("公式の問題・正答を確認する（厚生労働省「\(exam.title)の問題および正答について」ページ）").multilineTextAlignment(.leading)
+                    }
+                    .font(.caption2.bold()).foregroundStyle(KSTheme.ai)
+                    .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
+                    .contentShape(Rectangle())
                 }
                 .accessibilityIdentifier("question-source-link")
+                .accessibilityValue(url.absoluteString)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
