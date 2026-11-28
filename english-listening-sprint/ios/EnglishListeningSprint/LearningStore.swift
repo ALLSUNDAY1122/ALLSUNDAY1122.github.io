@@ -163,7 +163,7 @@ final class LearningStore: ObservableObject {
         ["lessons-part1", "lessons-part2", "lessons-part3"].flatMap { name in
             guard let url = Bundle.main.url(forResource: name, withExtension: "json"),
                   let data = try? Data(contentsOf: url),
-                  let decoded = try? JSONDecoder().decode([Lesson].self, from: data) else { return [] }
+                  let decoded = try? JSONDecoder().decode([Lesson].self, from: data) else { return [Lesson]() }
             return decoded
         }
     }
