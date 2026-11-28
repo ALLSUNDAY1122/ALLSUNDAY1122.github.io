@@ -41,19 +41,24 @@ struct LibraryView: View {
 
                             Spacer()
 
-                            Image(
-                                systemName: store.completedLessonIDs.contains(lesson.id)
-                                    ? "checkmark.circle.fill"
-                                    : "play.circle.fill"
-                            )
-                            .foregroundStyle(SprintTheme.accent)
+                            VStack(alignment: .trailing, spacing: 5) {
+                                Image(
+                                    systemName: store.completedLessonIDs.contains(lesson.id)
+                                        ? "checkmark.circle.fill"
+                                        : "play.circle.fill"
+                                )
+                                .foregroundStyle(SprintTheme.accent)
+                                Text("\(store.completedLessonCounts[lesson.id, default: 0])回")
+                                    .font(.caption2)
+                                    .foregroundStyle(SprintTheme.muted)
+                            }
                         }
                     }
                 }
             }
             .scrollContentBackground(.hidden)
             .background(SprintTheme.background)
-            .navigationTitle("30 Lessons")
+            .navigationTitle("\(store.lessons.count) Lessons")
         }
     }
 }
