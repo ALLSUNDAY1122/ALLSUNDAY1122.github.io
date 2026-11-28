@@ -1,5 +1,6 @@
 import AVFoundation
 import Foundation
+import StoreKit
 
 struct Lesson: Codable, Identifiable, Hashable {
     struct Segment: Codable, Hashable { let en: String; let ja: String }
@@ -62,13 +63,113 @@ final class LearningStore: ObservableObject {
     @Published var answerHistory: [String: Bool] = [:]
     @Published var selectedVoiceID = ""
     @Published var useShortAudio = false
+    @Published var showPaywall = false
+    @Published private(set) var isPremium = false
+    @Published private(set) var monthlyProduct: Product?
+    @Published private(set) var lifetimeProduct: Product?
+    @Published var purchaseMessage: String?
+    @Published var isPurchasing = false
 
+    static let monthlyProductID = "jp.allsunday1122.englishlistening.premium.monthly"
+    static let lifetimeProductID = "jp.allsunday1122.englishlistening.premium.lifetime"
     private var player: AVAudioPlayer?
+    private var transactionListener: Task<Void, Never>?
 
     init() {
         lessons = Self.loadLessons()
         completedLessonIDs = Set(UserDefaults.standard.stringArray(forKey: "completedLessonIDs") ?? [])
         completedLessonCounts = UserDefaults.standard.dictionary(forKey: "completedLessonCounts") as? [String: Int] ?? [:]
+        transactionListener = listenForTransactions()
+        Task {
+            await loadProducts()
+            await refreshEntitlements()
+        }
+    }
+
+    deinit { transactionListener?.cancel() }
+
+    func isFree(_ lesson: Lesson) -> Bool {
+        let digits = lesson.id.filter(\\.isNumber)
+        guard let themeNumber = Int(digits) else { return false }
+        return (1...6).contains(themeNumber)
+    }
+
+    func canAccess(_ lesson: Lesson) -> Bool { isPremium || isFree(lesson) }
+
+    func requestAccess(to lesson: Lesson) {
+        guard canAccess(lesson) else { showPaywall = true; return }
+        open(lesson)
+    }
+
+    func loadProducts() async {
+        do {
+            let products = try await Product.products(for: [Self.monthlyProductID, Self.lifetimeProductID])
+            monthlyProduct = products.first { $0.id == Self.monthlyProductID }
+            lifetimeProduct = products.first { $0.id == Self.lifetimeProductID }
+            if monthlyProduct == nil || lifetimeProduct == nil {
+                purchaseMessage = "一部の購入商品を取得できません。App Store Connectの製品設定をご確認ください。"
+            }
+        } catch { purchaseMessage = "商品情報を取得できませんでした。通信環境を確認してください。" }
+    }
+
+    func purchase(_ product: Product?) async {
+        guard let product else { purchaseMessage = "購入商品を読み込めません。"; return }
+        guard !isPurchasing else { return }
+        isPurchasing = true
+        purchaseMessage = nil
+        defer { isPurchasing = false }
+        do {
+            switch try await product.purchase() {
+            case .success(let result):
+                switch result {
+                case .verified(let transaction):
+                    await transaction.finish()
+                    await refreshEntitlements(retries: 6)
+                    if isPremium { showPaywall = false }
+                    else { purchaseMessage = "購入を確認中です。数秒後に再確認してください。" }
+                case .unverified: purchaseMessage = "購入を検証できませんでした。"
+                }
+            case .pending: purchaseMessage = "購入承認待ちです。承認後に自動で反映されます。"
+            case .userCancelled: break
+            @unknown default: purchaseMessage = "購入結果を確認できませんでした。"
+            }
+        } catch { purchaseMessage = "購入に失敗しました: \\(error.localizedDescription)" }
+    }
+
+    func restorePurchases() async {
+        guard !isPurchasing else { return }
+        isPurchasing = true
+        purchaseMessage = nil
+        defer { isPurchasing = false }
+        do {
+            try await AppStore.sync()
+            await refreshEntitlements(retries: 6)
+            if isPremium { showPaywall = false }
+            else { purchaseMessage = "復元できる購入が見つかりませんでした。" }
+        } catch { purchaseMessage = "購入の復元に失敗しました: \\(error.localizedDescription)" }
+    }
+
+    func refreshEntitlements(retries: Int = 1) async {
+        for attempt in 0..<max(1, retries) {
+            var premium = false
+            for await result in Transaction.currentEntitlements {
+                guard case .verified(let transaction) = result, transaction.revocationDate == nil else { continue }
+                if transaction.productID == Self.monthlyProductID || transaction.productID == Self.lifetimeProductID { premium = true }
+            }
+            isPremium = premium
+            if premium || attempt == max(1, retries) - 1 { break }
+            try? await Task.sleep(for: .milliseconds(700))
+        }
+    }
+
+    private func listenForTransactions() -> Task<Void, Never> {
+        Task { [weak self] in
+            for await result in Transaction.updates {
+                guard let self else { return }
+                if case .verified(let transaction) = result { await transaction.finish() }
+                await self.refreshEntitlements(retries: 4)
+            }
+        }
     }
 
     var currentLesson: Lesson? {
@@ -127,6 +228,7 @@ final class LearningStore: ObservableObject {
     }
 
     func open(_ lesson: Lesson) {
+        guard canAccess(lesson) else { showPaywall = true; return }
         stop()
         selectedLessonID = lesson.id
         selectedQuestion = 0
