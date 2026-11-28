@@ -2375,9 +2375,9 @@ workflows:
           cd "$CM_BUILD_DIR/apps/hokenshi-sprint/ios"
           bash -n prepare-ios.sh
           bash prepare-ios.sh
-          test -s Resources/questions-546.json
-          test -s Resources/figures-1.json
-          test -s Resources/figures-2.json
+          test -s GeneratedResources/questions.generated.json
+          test -s GeneratedResources/figures-1.json
+          test -s GeneratedResources/figures-2.json
       - name: Install XcodeGen and generate project
         script: |
           set -euo pipefail
@@ -2441,12 +2441,15 @@ workflows:
                   raise SystemExit(f'FAIL: {key} must contain all four orientations: {values!r}')
           print('PASS: IPA Info.plist supports all four orientations')
           assert info['ITSAppUsesNonExemptEncryption'] is False
-          expected = pathlib.Path('apps/hokenshi-sprint/ios/Resources/questions-546.json').read_bytes()
-          actual = (app / 'questions-546.json').read_bytes()
+          expected = pathlib.Path('apps/hokenshi-sprint/ios/GeneratedResources/questions.generated.json').read_bytes()
+          actual = (app / 'questions.generated.json').read_bytes()
           assert actual == expected
-          items = json.loads(actual)
+          bundle = json.loads(actual)
+          items = bundle['questions']
+          assert bundle['totalQuestions'] == 546
           assert len(items) == len({i['id'] for i in items}) == 546
-          counts = Counter(i['session'] for i in items)
+          assert len(bundle['freeSampleQuestionIds']) == 30
+          counts = Counter(i['sourceExam'] for i in items)
           assert [counts[s] for s in (108, 109, 110, 111, 112)] == [108, 109, 109, 110, 110]
           figures = {}
           for name in ('figures-1.json', 'figures-2.json'):
