@@ -69,6 +69,9 @@ private struct QuizView: View {
         guard let question = store.question else { return AnyView(EmptyView()) }
         return AnyView(VStack(alignment: .leading, spacing: 14) {
             Text("LISTENING QUESTION").font(.caption.weight(.bold)).tracking(1).foregroundStyle(SprintTheme.accent)
+            Text("問題 \(store.selectedQuestion + 1) / \(store.currentLesson?.questions.count ?? 0)")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(SprintTheme.muted)
             Text(question.q).font(.headline).lineSpacing(4)
             ForEach(question.choices.indices, id: \.self) { index in
                 Button { store.answer(index) } label: {
