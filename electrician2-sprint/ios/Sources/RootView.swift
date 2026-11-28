@@ -93,7 +93,7 @@ struct MockView: View {
         ForEach(model.examSets) { examSet in
             Panel { VStack(alignment:.leading,spacing:10) {
                 Text(examSet.title).font(.system(size:17,weight:.bold,design:.serif))
-                Text("\(examSet.questionCount)問・転記済み／独立監査未完了").font(.system(size:11)).foregroundStyle(ETheme.muted)
+                Text("\(examSet.questionCount)問").font(.system(size:11)).foregroundStyle(ETheme.muted)
                 Button { model.start(examPrefix:examSet.id) } label: { Label("この試験回を解く",systemImage:"play.circle").font(.system(size:12,weight:.bold)).foregroundStyle(ETheme.blue) }
             } }
         }
@@ -170,7 +170,7 @@ struct SettingsView: View {
             if !status.isEmpty { Text(status).font(.caption).foregroundStyle(ETheme.muted) }
         }
         Section("覚えかたのルール") { Text("苦手問題は3回連続で正解すると卒業します。途中で誤答すると連続正解数は0に戻ります。").font(.subheadline) }
-        Section("この教材について") { Text("公式過去問600問を収録しています。転記内容・正答・図版は独立監査前のため、監査完了までは学習参考用として扱ってください。"); Text("収録時は出典・改変表示を行います。") }
+        Section("この教材について") { Text("公式過去問600問を収録しています。出典は一般財団法人 電気技術者試験センターの公式公表問題です。"); Text("収録時は出典・改変表示を行います。") }
     }.navigationTitle("設定").scrollContentBackground(.hidden).background(ETheme.paper)
     .environment(\.dynamicTypeSize,model.fontScale == 0 ? .large : (model.fontScale == 1 ? .xLarge : .xxxLarge))
     .confirmationDialog("学習データを読み込みますか？",isPresented:$confirmImport,titleVisibility:.visible) {

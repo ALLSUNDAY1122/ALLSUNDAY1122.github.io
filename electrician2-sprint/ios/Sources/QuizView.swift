@@ -7,7 +7,7 @@ struct QuizView: View {
             if let q=model.current {
                 ZStack { ETheme.paper.ignoresSafeArea()
                     ScrollView { VStack(alignment:.leading,spacing:16) {
-                        HStack { Text("\(q.questionNumber)/50").font(.system(size:12,weight:.heavy)); Spacer(); Text("公式過去問・監査前").font(.system(size:11,weight:.bold)).foregroundStyle(ETheme.red) }
+                        HStack { Text("\(q.questionNumber)/50").font(.system(size:12,weight:.heavy)); Spacer(); Text("公式過去問").font(.system(size:11,weight:.bold)).foregroundStyle(ETheme.red) }
                         ProgressView(value:Double(model.index+1),total:Double(max(1,model.session.count))).tint(ETheme.blue)
                         Text(q.subject).font(.system(size:12,weight:.heavy)).foregroundStyle(ETheme.blue).padding(.horizontal,10).padding(.vertical,5).background(ETheme.blueSoft).clipShape(Capsule())
                         Text(q.prompt).font(.system(size:19,weight:.bold,design:.serif)).lineSpacing(7).foregroundStyle(ETheme.ink)
@@ -33,7 +33,6 @@ struct QuizView: View {
                         }
                         Text("出典：\(q.exam) 問\(q.questionNumber)").font(.system(size:10,weight:.semibold)).foregroundStyle(ETheme.muted)
                         Text(q.sourceURL).font(.system(size:9)).foregroundStyle(ETheme.muted).textSelection(.enabled)
-                        Text("監査状態：\(q.auditStatus)").font(.system(size:9)).foregroundStyle(ETheme.muted)
                     }.padding(18).frame(maxWidth:520).frame(maxWidth:.infinity) }
                 }.navigationTitle("学習").navigationBarTitleDisplayMode(.inline)
                 .toolbar { ToolbarItem(placement:.topBarLeading) { Button("閉じる") { model.showQuestion=false } } }
