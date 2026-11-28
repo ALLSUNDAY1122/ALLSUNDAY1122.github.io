@@ -89,7 +89,7 @@ final class LearningStore: ObservableObject {
     deinit { transactionListener?.cancel() }
 
     func isFree(_ lesson: Lesson) -> Bool {
-        let digits = lesson.id.filter(\\.isNumber)
+        let digits = lesson.id.filter(\.isNumber)
         guard let themeNumber = Int(digits) else { return false }
         return (1...6).contains(themeNumber)
     }
@@ -133,7 +133,7 @@ final class LearningStore: ObservableObject {
             case .userCancelled: break
             @unknown default: purchaseMessage = "購入結果を確認できませんでした。"
             }
-        } catch { purchaseMessage = "購入に失敗しました: \\(error.localizedDescription)" }
+        } catch { purchaseMessage = "購入に失敗しました: \(error.localizedDescription)" }
     }
 
     func restorePurchases() async {
@@ -146,7 +146,7 @@ final class LearningStore: ObservableObject {
             await refreshEntitlements(retries: 6)
             if isPremium { showPaywall = false }
             else { purchaseMessage = "復元できる購入が見つかりませんでした。" }
-        } catch { purchaseMessage = "購入の復元に失敗しました: \\(error.localizedDescription)" }
+        } catch { purchaseMessage = "購入の復元に失敗しました: \(error.localizedDescription)" }
     }
 
     func refreshEntitlements(retries: Int = 1) async {
