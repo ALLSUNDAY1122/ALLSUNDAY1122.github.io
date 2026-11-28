@@ -2167,6 +2167,10 @@ workflows:
           assert not any(q.get('excludedFromQuiz') for q in bank['questions'])
           fm = json.load(open('electrician2-sprint/ios/Resources/FIGURE_MAPPING.json', encoding='utf-8'))
           assert fm['total'] == 380 and fm['missingCount'] == 0, fm['total']
+          import os
+          missing_files = [it['svgPath'] for it in fm['items'] if not os.path.isfile('electrician2-sprint/figures/' + it['svgPath'])]
+          assert not missing_files, missing_files[:5]
+          assert not any(it.get('svgSymbol') for it in fm['items']), 'symbol-based figures are not supported'
           assert all(q.get('explanation') for q in bank['questions']), 'missing explanations'
           assert all(q.get('hereToRemember') for q in bank['questions']), 'missing hereToRemember'
           print('PASS: 600 questions, HOLD 0, excluded 0, figures 380/380, explanations 600/600')
