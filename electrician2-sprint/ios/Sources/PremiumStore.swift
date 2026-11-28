@@ -88,6 +88,14 @@ final class PremiumStore: ObservableObject {
         }
     }
 
+    private func refreshUntilPremium(maxAttempts: Int = 6) async {
+        for _ in 0..<maxAttempts {
+            await refreshEntitlements()
+            if isPremium { return }
+            try? await Task.sleep(nanoseconds: 700_000_000)
+        }
+    }
+
     func purchase(_ id: String) async {
         guard !busy, Self.ids.contains(id) else { return }
         busy = true
@@ -106,8 +114,8 @@ final class PremiumStore: ObservableObject {
                 guard case .verified(let transaction) = result, transaction.productID == id else {
                     message = "購入を確認できませんでした。"; return
                 }
-                await refreshEntitlements()
                 await transaction.finish()
+                await refreshUntilPremium()
                 message = isPremium ? "購入が確認されました。" : "購入状態を確認できません。復元をお試しください。"
             case .pending: message = "購入の承認待ちです。"
             case .userCancelled: message = "購入をキャンセルしました。"
@@ -122,7 +130,7 @@ final class PremiumStore: ObservableObject {
         defer { busy = false }
         do {
             try await AppStore.sync()
-            await refreshEntitlements()
+            await refreshUntilPremium(maxAttempts: 4)
             message = isPremium ? "購入を復元しました。" : "有効な購入は見つかりませんでした。"
         } catch { message = "復元できませんでした。再試行してください。" }
     }

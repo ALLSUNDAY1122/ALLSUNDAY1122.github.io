@@ -29,6 +29,7 @@ struct PaperGrid: View {
 struct RootView: View {
     @EnvironmentObject var model:StudyModel
     @EnvironmentObject var premium:PremiumStore
+    @Environment(\.scenePhase) private var scenePhase
     var body: some View {
         TabView(selection:$model.tab) {
             HomeView().tabItem { Label("ホーム",systemImage:"house.fill") }.tag(0)
@@ -40,6 +41,7 @@ struct RootView: View {
         .sheet(isPresented:$model.showPaywall) { PaywallView().environmentObject(premium) }
         .task { await premium.refresh(); model.premiumUnlocked = premium.isPremium }
         .onChange(of:premium.isPremium) { model.premiumUnlocked = $0 }
+        .onChange(of:scenePhase) { phase in if phase == .active { Task { await premium.refreshEntitlements() } } }
         .preferredColorScheme(.light)
     }
 }
