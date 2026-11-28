@@ -58,6 +58,7 @@ final class LearningStore: ObservableObject {
     @Published var isPlaying = false
     @Published var showTranslation = true
     @Published var completedLessonIDs: Set<String> = []
+    @Published private(set) var completedLessonCounts: [String: Int] = [:]
     @Published var answerHistory: [String: Bool] = [:]
     @Published var selectedVoiceID = ""
     @Published var useShortAudio = false
@@ -67,6 +68,7 @@ final class LearningStore: ObservableObject {
     init() {
         lessons = Self.loadLessons()
         completedLessonIDs = Set(UserDefaults.standard.stringArray(forKey: "completedLessonIDs") ?? [])
+        completedLessonCounts = UserDefaults.standard.dictionary(forKey: "completedLessonCounts") as? [String: Int] ?? [:]
     }
 
     var currentLesson: Lesson? {
@@ -107,7 +109,9 @@ final class LearningStore: ObservableObject {
             selectedAnswer = nil
         } else {
             completedLessonIDs.insert(lesson.id)
+            completedLessonCounts[lesson.id, default: 0] += 1
             UserDefaults.standard.set(Array(completedLessonIDs), forKey: "completedLessonIDs")
+            UserDefaults.standard.set(completedLessonCounts, forKey: "completedLessonCounts")
             selectedQuestion = 0
             selectedAnswer = nil
         }
