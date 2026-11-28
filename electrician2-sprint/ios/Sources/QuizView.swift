@@ -11,7 +11,7 @@ struct QuizView: View {
                         ProgressView(value:Double(model.index+1),total:Double(max(1,model.session.count))).tint(ETheme.blue)
                         Text(q.subject).font(.system(size:12,weight:.heavy)).foregroundStyle(ETheme.blue).padding(.horizontal,10).padding(.vertical,5).background(ETheme.blueSoft).clipShape(Capsule())
                         Text(q.prompt).font(.system(size:19,weight:.bold,design:.serif)).lineSpacing(7).foregroundStyle(ETheme.ink)
-                        if let path=q.diagramPath { SVGDiagramView(relativePath:path, symbol:q.diagramSymbol).frame(height:240).clipShape(RoundedRectangle(cornerRadius:12)) }
+                        if let path=q.diagramPath { FigureView(relativePath:path, symbol:q.diagramSymbol).frame(height:(path.hasSuffix(".png") || path.hasSuffix(".jpg")) ? 320 : 240).clipShape(RoundedRectangle(cornerRadius:12)) }
                         else if let id=q.diagramID { DiagramPlaceholder(reference:id) }
                         ForEach(Array(q.choices.enumerated()),id:\.offset) { i,c in
                             Button { model.answer(i) } label: {

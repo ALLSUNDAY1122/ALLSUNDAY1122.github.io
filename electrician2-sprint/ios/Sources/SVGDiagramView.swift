@@ -31,3 +31,71 @@ struct SVGDiagramView: UIViewRepresentable {
     }
     final class Coordinator { var loadedKey: String? }
 }
+
+struct FigureView: View {
+    let relativePath: String
+    let symbol: String?
+    var body: some View {
+        if relativePath.lowercased().hasSuffix(".png") || relativePath.lowercased().hasSuffix(".jpg") {
+            PNGFigureView(relativePath: relativePath)
+        } else {
+            SVGDiagramView(relativePath: relativePath, symbol: symbol)
+        }
+    }
+}
+
+struct PNGFigureView: View {
+    let relativePath: String
+    @State private var showZoom = false
+    var body: some View {
+        if let image = Self.loadImage(relativePath: relativePath) {
+            Image(uiImage: image).resizable().scaledToFit()
+                .onTapGesture { showZoom = true }
+                .sheet(isPresented: $showZoom) {
+                    NavigationStack {
+                        ZoomableImageView(image: image).ignoresSafeArea(edges: .bottom)
+                            .toolbar { ToolbarItem(placement: .confirmationAction) { Button("閉じる") { showZoom = false } } }
+                    }
+                }
+        } else {
+            Text("図版を読み込めません。").font(.footnote).foregroundStyle(.secondary)
+        }
+    }
+    static func loadImage(relativePath: String) -> UIImage? {
+        let directory = (relativePath as NSString).deletingLastPathComponent
+        let filename = (relativePath as NSString).lastPathComponent
+        let stem = (filename as NSString).deletingPathExtension
+        let subdirectory = directory.isEmpty ? "figures" : "figures/\(directory)"
+        guard let url = Bundle.main.url(forResource: stem, withExtension: "png", subdirectory: subdirectory) else { return nil }
+        return UIImage(contentsOfFile: url.path)
+    }
+}
+
+struct ZoomableImageView: UIViewRepresentable {
+    let image: UIImage
+    func makeUIView(context: Context) -> UIScrollView {
+        let scroll = UIScrollView()
+        scroll.minimumZoomScale = 1.0
+        scroll.maximumZoomScale = 5.0
+        scroll.backgroundColor = .white
+        let iv = UIImageView(image: image)
+        iv.contentMode = .scaleAspectFit
+        iv.translatesAutoresizingMaskIntoConstraints = false
+        scroll.addSubview(iv)
+        NSLayoutConstraint.activate([
+            iv.leadingAnchor.constraint(equalTo: scroll.contentLayoutGuide.leadingAnchor),
+            iv.trailingAnchor.constraint(equalTo: scroll.contentLayoutGuide.trailingAnchor),
+            iv.topAnchor.constraint(equalTo: scroll.contentLayoutGuide.topAnchor),
+            iv.bottomAnchor.constraint(equalTo: scroll.contentLayoutGuide.bottomAnchor),
+            iv.widthAnchor.constraint(equalTo: scroll.frameLayoutGuide.widthAnchor),
+            iv.heightAnchor.constraint(equalTo: scroll.frameLayoutGuide.heightAnchor)
+        ])
+        scroll.delegate = context.coordinator
+        return scroll
+    }
+    func updateUIView(_ uiView: UIScrollView, context: Context) {}
+    func makeCoordinator() -> Coordinator { Coordinator() }
+    final class Coordinator: NSObject, UIScrollViewDelegate {
+        func viewForZooming(in scrollView: UIScrollView) -> UIView? { scrollView.subviews.first }
+    }
+}
