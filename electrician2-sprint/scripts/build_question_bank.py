@@ -81,8 +81,8 @@ def main():
     a=p.parse_args()
     ledger=json.loads(Path(a.rights_ledger).read_text(encoding="utf-8"))
     hold_ids={item["question_id"] for item in ledger.get("items",[]) if item.get("rights_class")=="HOLD"}
-    if len(hold_ids)!=9 or ledger.get("rights_counts",{}).get("HOLD")!=9:
-        raise ValueError(f"Expected exactly 9 unresolved HOLD questions in rights ledger, got {len(hold_ids)}")
+    if len(hold_ids)!=0 or ledger.get("rights_counts",{}).get("HOLD")!=0:
+        raise ValueError(f"Expected exactly 0 unresolved HOLD questions in rights ledger, got {len(hold_ids)}")
     if len(a.files)!=12: raise ValueError(f"Expected exactly 12 source files, got {len(a.files)}")
     combined=[]; seen=set(); sources={}
     for f in a.files:
