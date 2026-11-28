@@ -185,6 +185,7 @@ final class LearningStore: ObservableObject {
                 guard let self else { return }
                 if case .verified(let transaction) = result { await transaction.finish() }
                 await self.refreshEntitlements(retries: 4)
+                if self.isPremium { self.showPaywall = false }
             }
         }
     }
