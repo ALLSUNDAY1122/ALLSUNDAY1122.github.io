@@ -68,6 +68,40 @@ workflows:
           assert len({lesson["id"] for lesson in lessons}) == 100
           assert sum(len(lesson["questions"]) for lesson in lessons) == 300
 
+          # StoreKit product IDs and free tier: themes 01-06 in all five regions.
+          app = root / "ios/EnglishListeningSprint"
+          store_source = (app / "LearningStore.swift").read_text(encoding="utf-8")
+          paywall_source = (app / "PaywallView.swift").read_text(encoding="utf-8")
+          project_source = (root / "ios/project.yml").read_text(encoding="utf-8")
+          monthly_id = "jp.allsunday1122.englishlistening.premium.monthly"
+          lifetime_id = "jp.allsunday1122.englishlistening.premium.lifetime"
+          assert monthly_id in store_source and lifetime_id in store_source
+          assert "Product.products(for:" in store_source
+          assert "Transaction.currentEntitlements" in store_source
+          assert "Transaction.updates" in store_source
+          assert "AppStore.sync()" in store_source
+          assert "初回1週間無料トライアル" in paywall_source
+          assert "購入を復元" in paywall_source
+          assert "プライバシーポリシー" in paywall_source and "利用規約" in paywall_source
+          assert "CURRENT_PROJECT_VERSION: 6" in project_source
+          free_lessons = [
+              lesson for lesson in lessons
+              if int(re.search(r"(\d+)$", lesson["id"]).group(1)) <= 6
+          ]
+          assert len(free_lessons) == 30, len(free_lessons)
+          regions = {lesson["region"] for lesson in lessons}
+          assert len(regions) == 5, regions
+          for region in regions:
+              region_lessons = [lesson for lesson in lessons if lesson["region"] == region]
+              free_numbers = {
+                  int(re.search(r"(\d+)$", lesson["id"]).group(1))
+                  for lesson in region_lessons
+                  if int(re.search(r"(\d+)$", lesson["id"]).group(1)) <= 6
+              }
+              assert free_numbers == set(range(1, 7)), (region, free_numbers)
+              assert len(region_lessons) == 20, (region, len(region_lessons))
+          print("PASS: StoreKit product IDs and 30 free lessons (themes 01-06 across 5 regions)")
+
           audio_paths = []
           native_audio_paths = []
           native_lessons = []
