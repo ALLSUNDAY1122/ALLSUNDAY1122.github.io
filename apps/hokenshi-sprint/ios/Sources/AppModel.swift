@@ -28,6 +28,7 @@ final class HokenshiAppModel: ObservableObject {
         else { learning = PersistedLearningState() }
     }
 
+    var allQuestions: [NativeQuestion] { content.questions }
     var freeQuestions: [NativeQuestion] {
         content.freeSampleQuestionIds.compactMap { questionsById[$0] }
     }
