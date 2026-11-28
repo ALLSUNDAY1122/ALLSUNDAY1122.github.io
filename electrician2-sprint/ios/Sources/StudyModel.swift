@@ -28,6 +28,10 @@ struct FigureMappingEntry: Codable {
     let svgSymbol: String?
     let status: String
 }
+struct QuestionStat: Codable, Equatable {
+    var attempts = 0
+    var correct = 0
+}
 struct ExamSet: Identifiable {
     let id: String
     let title: String
@@ -44,6 +48,7 @@ struct LearningSnapshot: Codable {
     var graduatedIDs: Set<Int> = []
     var fontScale = 0
     var answeredIDs: [Int] = []
+    var questionStats: [Int: QuestionStat] = [:]
     var studyDays: Set<String> = []
     var lastStudyDate: String? = nil
 }
@@ -64,6 +69,7 @@ final class StudyModel: ObservableObject {
     @Published var correct = 0 { didSet { persist() } }
     @Published var fontScale = 0 { didSet { persist() } }
     @Published var answeredIDs: [Int] = [] { didSet { persist() } }
+    @Published var questionStats: [Int: QuestionStat] = [:] { didSet { persist() } }
     @Published var studyDays: Set<String> = [] { didSet { persist() } }
     @Published var lastStudyDate: String? = nil { didSet { persist() } }
     @Published var showQuestion = false
@@ -76,6 +82,8 @@ final class StudyModel: ObservableObject {
     var weakQuestions: [DemoQuestion] { demos.filter { weakIDs.contains($0.id) && !graduatedIDs.contains($0.id) } }
     var graduatedQuestions: [DemoQuestion] { demos.filter { graduatedIDs.contains($0.id) } }
     var accuracy: Int { completed == 0 ? 0 : Int(Double(correct)/Double(completed)*100) }
+    func attempts(forExam prefix:String) -> Int { demos.filter { $0.officialID.hasPrefix(prefix + "-") }.reduce(0) { $0 + (questionStats[$1.id]?.attempts ?? 0) } }
+    func correct(forExam prefix:String) -> Int { demos.filter { $0.officialID.hasPrefix(prefix + "-") }.reduce(0) { $0 + (questionStats[$1.id]?.correct ?? 0) } }
     var streakDays: Int {
         let cal = Calendar(identifier: .gregorian)
         var date = Date()
@@ -152,6 +160,10 @@ final class StudyModel: ObservableObject {
     func answer(_ value:Int) {
         guard !graded, let q=current else{return}
         selected=value; graded=true; completed += 1; answeredIDs.append(q.id)
+        var stat = questionStats[q.id] ?? QuestionStat()
+        stat.attempts += 1
+        if q.answer == value { stat.correct += 1 }
+        questionStats[q.id] = stat
         let today = Self.dayKey(Date())
         if lastStudyDate != today { done = 0; lastStudyDate = today }
         done += 1
@@ -174,7 +186,7 @@ final class StudyModel: ObservableObject {
         else { showQuestion=false; session=[] }
     }
     func backupData() throws -> Data {
-        let snapshot = LearningSnapshot(goal:goal,done:done,completed:completed,correct:correct,weakStreak:weakStreak,weakIDs:weakIDs,graduatedIDs:graduatedIDs,fontScale:fontScale,answeredIDs:answeredIDs,studyDays:studyDays,lastStudyDate:lastStudyDate)
+        let snapshot = LearningSnapshot(goal:goal,done:done,completed:completed,correct:correct,weakStreak:weakStreak,weakIDs:weakIDs,graduatedIDs:graduatedIDs,fontScale:fontScale,answeredIDs:answeredIDs,questionStats:questionStats,studyDays:studyDays,lastStudyDate:lastStudyDate)
         return try JSONEncoder.pretty.encode(snapshot)
     }
     func restoreBackup(_ data:Data) throws {
@@ -184,17 +196,19 @@ final class StudyModel: ObservableObject {
         }
         goal=saved.goal; done=saved.done; completed=saved.completed; correct=saved.correct
         weakStreak=saved.weakStreak; weakIDs=saved.weakIDs; graduatedIDs=saved.graduatedIDs
-        fontScale=saved.fontScale; answeredIDs=saved.answeredIDs; studyDays=saved.studyDays; lastStudyDate=saved.lastStudyDate
+        fontScale=saved.fontScale; answeredIDs=saved.answeredIDs; questionStats=saved.questionStats; studyDays=saved.studyDays; lastStudyDate=saved.lastStudyDate
+        if questionStats.isEmpty && !answeredIDs.isEmpty { var seeded:[Int:QuestionStat]=[:]; for id in answeredIDs { seeded[id, default: QuestionStat()].attempts += 1 }; questionStats=seeded }
     }
     private func restore() {
         guard let data=defaults.data(forKey:storageKey),
               let saved=try? JSONDecoder().decode(LearningSnapshot.self,from:data) else { return }
         goal=saved.goal; done=saved.done; completed=saved.completed; correct=saved.correct
         weakStreak=saved.weakStreak; weakIDs=saved.weakIDs; graduatedIDs=saved.graduatedIDs
-        fontScale=saved.fontScale; answeredIDs=saved.answeredIDs; studyDays=saved.studyDays; lastStudyDate=saved.lastStudyDate
+        fontScale=saved.fontScale; answeredIDs=saved.answeredIDs; questionStats=saved.questionStats; studyDays=saved.studyDays; lastStudyDate=saved.lastStudyDate
+        if questionStats.isEmpty && !answeredIDs.isEmpty { var seeded:[Int:QuestionStat]=[:]; for id in answeredIDs { seeded[id, default: QuestionStat()].attempts += 1 }; questionStats=seeded }
     }
     private func persist() {
-        let snapshot=LearningSnapshot(goal:goal,done:done,completed:completed,correct:correct,weakStreak:weakStreak,weakIDs:weakIDs,graduatedIDs:graduatedIDs,fontScale:fontScale,answeredIDs:answeredIDs,studyDays:studyDays,lastStudyDate:lastStudyDate)
+        let snapshot=LearningSnapshot(goal:goal,done:done,completed:completed,correct:correct,weakStreak:weakStreak,weakIDs:weakIDs,graduatedIDs:graduatedIDs,fontScale:fontScale,answeredIDs:answeredIDs,questionStats:questionStats,studyDays:studyDays,lastStudyDate:lastStudyDate)
         if let data=try? JSONEncoder.pretty.encode(snapshot) { defaults.set(data,forKey:storageKey) }
     }
     private static func dayKey(_ date:Date)->String {
@@ -203,4 +217,23 @@ final class StudyModel: ObservableObject {
 }
 private extension JSONEncoder {
     static var pretty: JSONEncoder { let e=JSONEncoder(); e.outputFormatting=[.prettyPrinted,.sortedKeys]; return e }
+}
+
+extension LearningSnapshot {
+    init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        version = try c.decodeIfPresent(Int.self, forKey: .version) ?? 1
+        goal = try c.decodeIfPresent(Int.self, forKey: .goal) ?? 8
+        done = try c.decodeIfPresent(Int.self, forKey: .done) ?? 0
+        completed = try c.decodeIfPresent(Int.self, forKey: .completed) ?? 0
+        correct = try c.decodeIfPresent(Int.self, forKey: .correct) ?? 0
+        weakStreak = try c.decodeIfPresent([Int:Int].self, forKey: .weakStreak) ?? [:]
+        weakIDs = try c.decodeIfPresent(Set<Int>.self, forKey: .weakIDs) ?? []
+        graduatedIDs = try c.decodeIfPresent(Set<Int>.self, forKey: .graduatedIDs) ?? []
+        fontScale = try c.decodeIfPresent(Int.self, forKey: .fontScale) ?? 0
+        answeredIDs = try c.decodeIfPresent([Int].self, forKey: .answeredIDs) ?? []
+        questionStats = try c.decodeIfPresent([Int: QuestionStat].self, forKey: .questionStats) ?? [:]
+        studyDays = try c.decodeIfPresent(Set<String>.self, forKey: .studyDays) ?? []
+        lastStudyDate = try c.decodeIfPresent(String.self, forKey: .lastStudyDate)
+    }
 }

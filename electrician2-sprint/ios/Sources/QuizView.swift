@@ -26,6 +26,7 @@ struct QuizView: View {
                         if model.graded {
                             VStack(alignment:.leading,spacing:12) {
                                 Text(model.selected == q.answer ? "正解" : "惜しい").font(.system(size:14,weight:.heavy)).foregroundStyle(model.selected == q.answer ? ETheme.green : ETheme.red)
+                                Text("この問題の記録：解答 \(model.questionStats[q.id]?.attempts ?? 0)回 ・ 正解 \(model.questionStats[q.id]?.correct ?? 0)回").font(.system(size:11,weight:.semibold)).foregroundStyle(ETheme.muted)
                                 VStack(alignment:.leading,spacing:5) { Text("ここだけ覚える").font(.system(size:10,weight:.heavy)).tracking(1.5).foregroundStyle(ETheme.gold); Text(q.memory).font(.system(size:16,weight:.bold,design:.serif)).foregroundStyle(ETheme.ink) }.padding(13).frame(maxWidth:.infinity,alignment:.leading).background(Color(hex:0xFFFBEA)).clipShape(RoundedRectangle(cornerRadius:10)).overlay(alignment:.leading) { Rectangle().fill(ETheme.gold).frame(width:4) }
                                 Text(q.explanation).font(.system(size:13)).foregroundStyle(ETheme.ink2)
                                 Button("次の問題へ") { model.next() }.font(.system(size:15,weight:.heavy)).foregroundStyle(.white).frame(maxWidth:.infinity,minHeight:54).background(ETheme.blue).clipShape(RoundedRectangle(cornerRadius:14))
