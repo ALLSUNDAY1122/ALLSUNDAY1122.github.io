@@ -73,6 +73,9 @@ workflows:
           store_source = (app / "LearningStore.swift").read_text(encoding="utf-8")
           paywall_source = (app / "PaywallView.swift").read_text(encoding="utf-8")
           project_source = (root / "ios/project.yml").read_text(encoding="utf-8")
+          home_source = (app / "HomeView.swift").read_text(encoding="utf-8")
+          library_source = (app / "LibraryView.swift").read_text(encoding="utf-8")
+          app_source = (app / "EnglishListeningSprintApp.swift").read_text(encoding="utf-8")
           monthly_id = "jp.allsunday1122.englishlistening.premium.monthly"
           lifetime_id = "jp.allsunday1122.englishlistening.premium.lifetime"
           assert monthly_id in store_source and lifetime_id in store_source
@@ -80,6 +83,13 @@ workflows:
           assert "Transaction.currentEntitlements" in store_source
           assert "Transaction.updates" in store_source
           assert "AppStore.sync()" in store_source
+          assert "await refreshEntitlements(retries: 6)" in store_source
+          assert "await refreshEntitlements(retries: 4)" in store_source
+          assert "guard canAccess(lesson)" in store_source
+          assert "store.requestAccess(to: lesson)" in home_source
+          assert "store.requestAccess(to: lesson)" in library_source
+          assert "PREMIUM" in home_source and "PREMIUM" in library_source
+          assert "onChange(of: scenePhase)" in app_source
           assert "初回1週間無料トライアル" in paywall_source
           assert "購入を復元" in paywall_source
           assert "プライバシーポリシー" in paywall_source and "利用規約" in paywall_source
