@@ -70,6 +70,28 @@ struct PersistedLearningState: Codable {
     var examDate: Date?
     var dailyAnswers: [String: Int] = [:]
     var dailyCorrect: [String: Int] = [:]
+    var attemptsByQuestion: [String: Int] = [:]
+    var correctByQuestion: [String: Int] = [:]
+}
+
+extension PersistedLearningState {
+    // Tolerant decoding so learning records saved by earlier builds (without
+    // the per-question counters) keep loading after the app is updated.
+    init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        totalAnswers = try c.decodeIfPresent(Int.self, forKey: .totalAnswers) ?? 0
+        totalCorrect = try c.decodeIfPresent(Int.self, forKey: .totalCorrect) ?? 0
+        seen = try c.decodeIfPresent(Set<String>.self, forKey: .seen) ?? []
+        weak = try c.decodeIfPresent([String: WeakProgress].self, forKey: .weak) ?? [:]
+        history = try c.decodeIfPresent([HistoryEntry].self, forKey: .history) ?? []
+        goal = try c.decodeIfPresent(Int.self, forKey: .goal) ?? 8
+        fontScale = try c.decodeIfPresent(String.self, forKey: .fontScale) ?? "normal"
+        examDate = try c.decodeIfPresent(Date.self, forKey: .examDate) ?? nil
+        dailyAnswers = try c.decodeIfPresent([String: Int].self, forKey: .dailyAnswers) ?? [:]
+        dailyCorrect = try c.decodeIfPresent([String: Int].self, forKey: .dailyCorrect) ?? [:]
+        attemptsByQuestion = try c.decodeIfPresent([String: Int].self, forKey: .attemptsByQuestion) ?? [:]
+        correctByQuestion = try c.decodeIfPresent([String: Int].self, forKey: .correctByQuestion) ?? [:]
+    }
 }
 
 struct AnswerResult: Codable {

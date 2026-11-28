@@ -93,6 +93,19 @@ final class HokenshiAppModel: ObservableObject {
     func setFontScale(_ scale: String) { learning.fontScale = scale; save() }
     func setExamDate(_ date: Date?) { learning.examDate = date; save() }
     func resetLearning() { learning = PersistedLearningState(); lastFinished = nil; session = nil; save() }
+    func attempts(for questionId: String) -> Int { learning.attemptsByQuestion[questionId] ?? 0 }
+    func correctCount(for questionId: String) -> Int { learning.correctByQuestion[questionId] ?? 0 }
+    func questions(exam: Int, category: String) -> [NativeQuestion] {
+        content.questions.filter { $0.sourceExam == exam && $0.category == category }.sorted { $0.questionNo < $1.questionNo }
+    }
+    func seenCount(exam: Int, category: String) -> Int {
+        content.questions.filter { $0.sourceExam == exam && $0.category == category && learning.seen.contains($0.id) }.count
+    }
+    func startFrom(_ question: NativeQuestion, in list: [NativeQuestion], title: String, sourceExam: Int?, category: String?, isMock: Bool) {
+        guard let idx = list.firstIndex(where: { $0.id == question.id }) else { return }
+        startError = nil
+        session = StudySession(questionIds: Array(list[idx...]).map(\.id), title: title, sourceExam: sourceExam, category: category, isMock: isMock)
+    }
     func questions(in major: String) -> Int { content.questions.filter { $0.majorSubject == major }.count }
     func seen(in major: String) -> Int { content.questions.filter { $0.majorSubject == major && learning.seen.contains($0.id) }.count }
     func weak(in major: String) -> Int { content.questions.filter { $0.majorSubject == major && learning.weak[$0.id] != nil }.count }
@@ -115,6 +128,8 @@ final class HokenshiAppModel: ObservableObject {
         learning.seen.insert(q.id)
         if !neutral {
             learning.totalAnswers += 1; if correct { learning.totalCorrect += 1 }
+            learning.attemptsByQuestion[q.id, default: 0] += 1
+            if correct { learning.correctByQuestion[q.id, default: 0] += 1 }
             if correct, var w = learning.weak[q.id] { w.streak += 1; if w.streak >= 3 { learning.weak.removeValue(forKey: q.id) } else { learning.weak[q.id] = w } }
             else if !correct { var w = learning.weak[q.id] ?? WeakProgress(); w.streak = 0; w.misses += 1; learning.weak[q.id] = w }
             let key = dayKey(); learning.dailyAnswers[key, default: 0] += 1; if correct { learning.dailyCorrect[key, default: 0] += 1 }

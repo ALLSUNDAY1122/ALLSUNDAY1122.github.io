@@ -44,6 +44,10 @@ struct QuizQuestionView: View {
                 VStack(alignment: .leading, spacing: 14) {
                     HStack(spacing: 6) { tag(question.category); tag(question.subject) }
                     QuestionSourceBadge(question: question)
+                    if !session.answered && model.attempts(for: question.id) > 0 {
+                        Text("この問題はこれまで \(model.attempts(for: question.id)) 回解いて、正解 \(model.correctCount(for: question.id)) 回")
+                            .font(.caption2).foregroundStyle(KSTheme.tertiary)
+                    }
                     if !question.scenario.isEmpty {
                         VStack(alignment: .leading, spacing: 6) {
                             Text("状況設定 \(question.scenarioIndex + 1)/\(max(1, question.scenarioTotal))").font(.caption.bold()).foregroundStyle(KSTheme.green)

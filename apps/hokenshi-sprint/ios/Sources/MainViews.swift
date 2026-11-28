@@ -120,7 +120,14 @@ struct HistoryView: View {
             PageHeader(eyebrow:"学習記録",title:"積み上げ",tagline:"短い反復を、そのまま弱点整理につなげます。")
             HStack(spacing:8) { miniStat("\(model.learning.totalAnswers)","回答"); miniStat("\(model.accuracy)%","正答率"); miniStat("\(model.weakQuestions.count)","苦手") }.padding(.horizontal,18)
             if purchase.isPremium {
-                KSCard(content:VStack(alignment:.leading,spacing:10){Text("苦手一覧").font(.headline); if model.weakQuestions.isEmpty { Text("苦手はまだありません。").font(.caption).foregroundStyle(KSTheme.tertiary) } else { ForEach(model.weakQuestions.prefix(8)) { q in HStack { Text(q.question).font(.caption).lineLimit(2); Spacer(); let s=model.learning.weak[q.id]?.streak ?? 0; Text("\(s)/3").font(.caption.bold()).foregroundStyle(KSTheme.shu) } } }}).padding(.horizontal,18)
+                KSCard(content:VStack(alignment:.leading,spacing:10){Text("苦手一覧").font(.headline); if model.weakQuestions.isEmpty { Text("苦手はまだありません。").font(.caption).foregroundStyle(KSTheme.tertiary) } else { ForEach(model.weakQuestions.prefix(8)) { q in VStack(alignment:.leading,spacing:3){ HStack { Text(q.question).font(.caption).lineLimit(2); Spacer(); let s=model.learning.weak[q.id]?.streak ?? 0; Text("\(s)/3").font(.caption.bold()).foregroundStyle(KSTheme.shu) }; Text("これまで \(model.attempts(for:q.id))回解いて 正解 \(model.correctCount(for:q.id))回").font(.caption2).foregroundStyle(KSTheme.tertiary) } } }}).padding(.horizontal,18)
+                NavigationLink { QuestionIndexView() } label: {
+                    KSCard(content:HStack(spacing:12) {
+                        Image(systemName:"list.bullet.rectangle").frame(width:42,height:42).background(KSTheme.aiSoft).foregroundStyle(KSTheme.ai).clipShape(RoundedRectangle(cornerRadius:12))
+                        VStack(alignment:.leading,spacing:3) { Text("問題ごとの記録").font(.headline).foregroundStyle(KSTheme.ink); Text("どの問題を何回解いて、何回正解したか").font(.caption).foregroundStyle(KSTheme.secondary) }
+                        Spacer(); Image(systemName:"chevron.right").foregroundStyle(KSTheme.tertiary)
+                    })
+                }.buttonStyle(.plain).padding(.horizontal,18).accessibilityIdentifier("question-records")
                 KSCard(content:VStack(alignment:.leading,spacing:10){Text("直近のスプリント").font(.headline); ForEach(model.learning.history.prefix(15)) { h in HStack { VStack(alignment:.leading){Text(h.title).font(.caption.bold());Text(h.date.formatted(date:.numeric,time:.shortened)).font(.caption2).foregroundStyle(KSTheme.tertiary)};Spacer();Text("\(h.correct)/\(h.scoredTotal)").font(.subheadline.bold()).foregroundStyle(KSTheme.ai) } }}).padding(.horizontal,18)
             } else {
                 KSCard(content:VStack(alignment:.leading,spacing:9){HStack{PremiumBadge();Text("詳細記録").font(.headline)};Text("苦手一覧・履歴・詳細分析はプレミアムで利用できます。").font(.caption).foregroundStyle(KSTheme.secondary);Button("プレミアムを見る"){showPaywall=true}.buttonStyle(.bordered).tint(KSTheme.ai)}).padding(.horizontal,18)
