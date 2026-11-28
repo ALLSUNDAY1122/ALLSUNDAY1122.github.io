@@ -2529,7 +2529,7 @@ workflows:
       - name: Apply App Store signing profiles for Internal TestFlight only
         script: |
           cd "$CM_BUILD_DIR/electrician2-sprint/ios"
-          xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
+          xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": false}'
       - name: Build signed IPA
         script: |
           xcode-project build-ipa --project "$CM_BUILD_DIR/$XCODE_PROJECT" --scheme "$XCODE_SCHEME"
