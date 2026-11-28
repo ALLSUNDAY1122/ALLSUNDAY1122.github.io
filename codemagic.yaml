@@ -2204,6 +2204,12 @@ workflows:
           APP_DIR="$(dirname "$PLIST")"
           test -f "$APP_DIR/PrivacyInfo.xcprivacy"
           test -f "$APP_DIR/Assets.car"
+          test -d "$APP_DIR/figures"
+          SVG_COUNT="$(find "$APP_DIR/figures" -name '*.svg' | wc -l | tr -d ' ')"
+          echo "figures SVGs in bundle: $SVG_COUNT"
+          test "$SVG_COUNT" -ge 300
+          test -f "$APP_DIR/figures/hold-lineart/E2-2024-L-041.svg"
+          test -f "$APP_DIR/figures/2022/2022-lower-session-figures.svg"
           echo "IPA OK: $(du -h "$IPA_PATH" | cut -f1)"
     artifacts:
       - build/ios/ipa/*.ipa
