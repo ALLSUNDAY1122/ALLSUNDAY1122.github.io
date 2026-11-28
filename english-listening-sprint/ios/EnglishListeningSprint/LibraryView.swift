@@ -32,7 +32,7 @@ struct LibraryView: View {
 
                 ForEach(filtered) { lesson in
                     Button {
-                        store.open(lesson)
+                        store.requestAccess(to: lesson)
                     } label: {
                         HStack {
                             VStack(alignment: .leading) {
@@ -46,6 +46,11 @@ struct LibraryView: View {
                             Spacer()
 
                             VStack(alignment: .trailing, spacing: 5) {
+                                if !store.canAccess(lesson) {
+                                    Label("PREMIUM", systemImage: "lock.fill")
+                                        .font(.caption2.weight(.bold))
+                                        .foregroundStyle(SprintTheme.accent)
+                                }
                                 Image(
                                     systemName: store.completedLessonIDs.contains(lesson.id)
                                         ? "checkmark.circle.fill"
