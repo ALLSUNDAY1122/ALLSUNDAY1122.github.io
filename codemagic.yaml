@@ -2169,6 +2169,10 @@ workflows:
           assert fm['total'] == 380 and fm['missingCount'] == 0, fm['total']
           print('PASS: 600 questions, HOLD 0, excluded 0, figures 380/380')
           PY
+          grep -q "jp.allsunday1122.electrician2sprint.premium.monthly" electrician2-sprint/ios/Sources/PremiumStore.swift
+          grep -q "jp.allsunday1122.electrician2sprint.premium.lifetime" electrician2-sprint/ios/Sources/PremiumStore.swift
+          grep -q "E2-2026-U" electrician2-sprint/ios/Sources/StudyModel.swift
+          echo "PASS: IAP product IDs and free-tier gate present"
       - name: Set CI build number and generate project
         script: |
           set -euo pipefail
