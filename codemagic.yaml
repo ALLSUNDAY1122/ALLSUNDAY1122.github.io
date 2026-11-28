@@ -80,6 +80,9 @@ workflows:
           lifetime_id = "jp.allsunday1122.englishlistening.premium.lifetime"
           assert monthly_id in store_source and lifetime_id in store_source
           assert "Product.products(for:" in store_source
+          assert "monthlyPeriod?.unit == .month" in store_source
+          assert "lifetime?.type == .nonConsumable" in store_source
+          assert "hasOneWeekFreeTrial" in store_source
           assert "Transaction.currentEntitlements" in store_source
           assert "Transaction.updates" in store_source
           assert "AppStore.sync()" in store_source
