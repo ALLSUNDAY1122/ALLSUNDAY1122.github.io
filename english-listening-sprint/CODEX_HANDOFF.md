@@ -19,14 +19,14 @@ TestFlight内部テストまで。App Store本審査提出は対象外。
 - App name: `English Listening Sprint`
 - Bundle ID: `jp.allsunday1122.englishlistening`
 - Team ID: `MN3D2ZM44N`
-- Version / Build: `1.0.0 (1)`
+- Version / Build: `1.0.0 (3)`
 - SKU: `ENGLISH-LISTENING-SPRINT-IOS-001`
 - App Store Connect App ID: `6840230101`
 - App Store provisioning profile: `English Listening Sprint App Store`（Active、2027-08-19まで）
 
 ## 実装とプライバシー
 
-SwiftUIネイティブ実装。30レッスン、90設問、312本のMP3を同梱する。完了レッスンIDをUserDefaultsへ保存する以外のデータ保存・送信はない。広告、分析、ログイン、課金、外部教材取得はない。
+SwiftUIネイティブ実装。150レッスン、450設問、1,560本のMP3を同梱する。完了レッスンIDをUserDefaultsへ保存する以外のデータ保存・送信はない。広告、分析、ログイン、課金、外部教材取得はない。
 
 ## 再開地点
 
