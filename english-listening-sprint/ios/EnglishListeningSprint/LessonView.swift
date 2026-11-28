@@ -10,6 +10,22 @@ struct LessonView: View {
                     HStack { Text(lesson.region.uppercased()).font(.caption.weight(.bold)).tracking(1).foregroundStyle(SprintTheme.accent); Spacer(); Text("\(lesson.level) ・ \(lesson.id.uppercased())").font(.caption).foregroundStyle(SprintTheme.muted) }
                     Text(lesson.title).font(.title2.weight(.bold))
                     Text(lesson.topic).foregroundStyle(SprintTheme.muted)
+                    VStack(alignment: .leading, spacing: 10) {
+                        Picker("音声の長さ", selection: $store.useShortAudio) {
+                            Text("標準").tag(false)
+                            Text("短縮").tag(true)
+                        }
+                        .pickerStyle(.segmented)
+                        Picker("話者", selection: $store.selectedVoiceID) {
+                            ForEach(lesson.voices) { voice in
+                                Text("\(voice.name) ・ \(voice.genderKey == "female" ? "女性" : "男性")").tag(voice.id)
+                            }
+                        }
+                        .pickerStyle(.menu)
+                        Text("\(lesson.voices.count)種類の音声").font(.caption).foregroundStyle(SprintTheme.muted)
+                    }
+                    .padding(12)
+                    .background(SprintTheme.panel2.opacity(0.7), in: RoundedRectangle(cornerRadius: 14))
                     Waveform(isPlaying: store.isPlaying)
                     HStack(spacing: 24) {
                         Button { store.stop() } label: { Image(systemName: "backward.fill") }
