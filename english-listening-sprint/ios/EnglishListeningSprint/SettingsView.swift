@@ -6,6 +6,14 @@ struct SettingsView: View {
     var body: some View {
         NavigationStack {
             List {
+                Section("プレミアム") {
+                    Button("プレミアムプランを見る") {
+                        store.showPaywall = true
+                    }
+                    Text(store.isPremium ? "プレミアム有効" : "無料プラン")
+                        .foregroundStyle(SprintTheme.muted)
+                }
+
                 Section("再生") {
                     Text("バックグラウンド再生：有効")
                     Text("再生速度はレッスン画面で変更できます")
