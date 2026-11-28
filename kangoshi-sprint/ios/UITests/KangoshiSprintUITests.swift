@@ -102,7 +102,11 @@ final class KangoshiSprintUITests: XCTestCase {
         app.buttons["今日のスプリント"].tap()
         let close = app.buttons["閉じる"]
         XCTAssertTrue(close.waitForExistence(timeout: 5))
-        XCTAssertTrue(app.descendants(matching: .any)["question-source-link"].waitForExistence(timeout: 5), "Each question must link to the official MHLW source")
+        let questionSource = app.descendants(matching: .any)["question-source-link"]
+        XCTAssertTrue(questionSource.waitForExistence(timeout: 5), "Each question must link to the official MHLW source")
+        let questionSourceURL = (questionSource.value as? String) ?? ""
+        XCTAssertTrue(questionSourceURL.hasPrefix("https://www.mhlw.go.jp/") && questionSourceURL.hasSuffix("-03_04_05.html"), "Question link must open the MHLW 問題および正答 page, got \(questionSourceURL)")
+        XCTAssertFalse(questionSourceURL.hasSuffix(".pdf"), "Question link must not open the answer PDF")
 
         let unknown = app.buttons["わからない（答えを見る）"]
         XCTAssertTrue(unknown.waitForExistence(timeout: 5))
@@ -113,6 +117,13 @@ final class KangoshiSprintUITests: XCTestCase {
         let excludedHeading = app.staticTexts["採点対象外"]
         XCTAssertTrue(unknownHeading.waitForExistence(timeout: 5) || excludedHeading.exists, "Unknown answers must not be labelled 惜しい")
         XCTAssertFalse(app.staticTexts["惜しい"].exists)
+
+        let examLink = app.descendants(matching: .any)["explanation-exam-link"]
+        let answerLink = app.descendants(matching: .any)["explanation-answer-link"]
+        XCTAssertTrue(examLink.waitForExistence(timeout: 5))
+        XCTAssertTrue(((examLink.value as? String) ?? "").hasSuffix("-03_04_05.html"), "Explanation exam link must open the MHLW page")
+        XCTAssertTrue(((answerLink.value as? String) ?? "").hasSuffix("-05seitou.pdf"), "Explanation answer link must open the answer-key PDF")
+        XCTAssertEqual(examLink.value as? String, questionSource.value as? String)
 
         let refsButton = app.buttons["explanation-references-button"]
         XCTAssertTrue(refsButton.waitForExistence(timeout: 5), "Explanation must offer the references list")
