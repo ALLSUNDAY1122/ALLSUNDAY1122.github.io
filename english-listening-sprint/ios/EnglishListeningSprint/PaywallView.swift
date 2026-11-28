@@ -22,7 +22,8 @@ struct PaywallView: View {
 
                     VStack(alignment: .leading, spacing: 12) {
                         Text("月額プレミアム").font(.headline)
-                        Text("初回1週間無料トライアル。その後は月額\(store.monthlyProduct?.displayPrice ?? "200円")")
+                        Text(store.hasOneWeekFreeTrial ? "初回1週間無料トライアル" : "月額プラン")
+                        Text(store.monthlyProduct?.displayPrice ?? "200円")
                             .font(.subheadline)
                             .foregroundStyle(SprintTheme.muted)
                         Button {
