@@ -4,6 +4,24 @@ import Foundation
 struct Lesson: Codable, Identifiable, Hashable {
     struct Segment: Codable, Hashable { let en: String; let ja: String }
     struct Question: Codable, Hashable { let q: String; let choices: [String]; let answer: Int; let explain: String }
+    struct Voice: Codable, Hashable, Identifiable {
+        let id: String
+        let name: String
+        let azureVoice: String
+        let gender: String?
+        let genderKey: String
+    }
+    struct AudioFile: Codable, Hashable {
+        let path: String
+        let azureVoice: String
+        let ssml: String
+    }
+    struct Short: Codable, Hashable {
+        let en: String
+        let ja: String
+        let audio: [String: AudioFile]
+    }
+
     let id: String
     let region: String
     let level: String
@@ -13,6 +31,13 @@ struct Lesson: Codable, Identifiable, Hashable {
     let ja: String
     let segments: [Segment]
     let questions: [Question]
+    let voices: [Voice]
+    let audio: [String: AudioFile]
+    let short: Short
+
+    func audioFile(voiceID: String, shortened: Bool) -> AudioFile? {
+        (shortened ? short.audio : audio)[voiceID]
+    }
 }
 
 enum LearningMode: String, CaseIterable, Identifiable {
@@ -34,6 +59,8 @@ final class LearningStore: ObservableObject {
     @Published var showTranslation = true
     @Published var completedLessonIDs: Set<String> = []
     @Published var answerHistory: [String: Bool] = [:]
+    @Published var selectedVoiceID = ""
+    @Published var useShortAudio = false
 
     private var player: AVAudioPlayer?
 
@@ -47,6 +74,11 @@ final class LearningStore: ObservableObject {
         return lessons.first { $0.id == selectedLessonID }
     }
 
+    var selectedVoice: Lesson.Voice? {
+        guard let lesson = currentLesson else { return nil }
+        return lesson.voices.first { $0.id == selectedVoiceID } ?? lesson.voices.first
+    }
+
     var question: Lesson.Question? {
         guard let lesson = currentLesson, lesson.questions.indices.contains(selectedQuestion) else { return nil }
         return lesson.questions[selectedQuestion]
@@ -58,6 +90,8 @@ final class LearningStore: ObservableObject {
         selectedQuestion = 0
         selectedAnswer = nil
         mode = .translated
+        useShortAudio = false
+        selectedVoiceID = lesson.voices.first(where: { $0.genderKey == "female" })?.id ?? lesson.voices.first?.id ?? ""
     }
 
     func answer(_ choice: Int) {
@@ -82,16 +116,36 @@ final class LearningStore: ObservableObject {
     func togglePlayback() {
         guard let lesson = currentLesson else { return }
         if isPlaying { stop(); return }
-        let gender = lesson.id.hasSuffix("1") || lesson.id.hasSuffix("3") || lesson.id.hasSuffix("5") ? "female" : "male"
-        let fileName = "\(lesson.id)_\(gender)"
-        guard let url = Bundle.main.url(forResource: fileName, withExtension: "mp3") else { return }
+        guard let voice = selectedVoice,
+              let audio = lesson.audioFile(voiceID: voice.id, shortened: useShortAudio),
+              let url = Self.audioURL(for: audio.path) else {
+            isPlaying = false
+            return
+        }
         do {
             player = try AVAudioPlayer(contentsOf: url)
             player?.enableRate = true
             player?.rate = rate
             player?.play()
             isPlaying = true
-        } catch { isPlaying = false }
+        } catch {
+            isPlaying = false
+        }
+    }
+
+    private static func audioURL(for path: String) -> URL? {
+        let normalized = path.replacingOccurrences(of: "\\", with: "/")
+        let components = normalized.split(separator: "/")
+        guard let file = components.last else { return nil }
+        let fileName = String(file)
+        let ext = URL(fileURLWithPath: fileName).pathExtension
+        let stem = URL(fileURLWithPath: fileName).deletingPathExtension().lastPathComponent
+        let directory = components.dropLast().joined(separator: "/")
+        if !directory.isEmpty,
+           let nested = Bundle.main.url(forResource: stem, withExtension: ext, subdirectory: directory) {
+            return nested
+        }
+        return Bundle.main.url(forResource: stem, withExtension: ext)
     }
 
     func setRate(_ newRate: Float) {
