@@ -2167,7 +2167,9 @@ workflows:
           assert not any(q.get('excludedFromQuiz') for q in bank['questions'])
           fm = json.load(open('electrician2-sprint/ios/Resources/FIGURE_MAPPING.json', encoding='utf-8'))
           assert fm['total'] == 380 and fm['missingCount'] == 0, fm['total']
-          print('PASS: 600 questions, HOLD 0, excluded 0, figures 380/380')
+          assert all(q.get('explanation') for q in bank['questions']), 'missing explanations'
+          assert all(q.get('hereToRemember') for q in bank['questions']), 'missing hereToRemember'
+          print('PASS: 600 questions, HOLD 0, excluded 0, figures 380/380, explanations 600/600')
           PY
           grep -q "jp.allsunday1122.electrician2sprint.premium.monthly" electrician2-sprint/ios/Sources/PremiumStore.swift
           grep -q "jp.allsunday1122.electrician2sprint.premium.lifetime" electrician2-sprint/ios/Sources/PremiumStore.swift
