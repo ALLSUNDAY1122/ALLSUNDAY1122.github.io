@@ -25,7 +25,7 @@ def normalize(path):
     half="上期" if term.startswith("U") else "下期"
     session="午前" if term.endswith("A") else "午後" if term.endswith("P") else ""
     doc_meta=doc if isinstance(doc,dict) else {}
-    exam_title=doc_meta.get("exam_name") or doc_meta.get("exam") or f"令和{int(year)-2018}年度第二種電気工事士{half}学科試験"+(f"（{session}）" if session else "")
+    exam_title=f"令和{int(year)-2018}年度第二種電気工事士{half}学科試験"+(f"（{session}）" if session else "")
     meta=doc_meta.get("source") or doc_meta.get("sources") or {}
     qpdf=(doc_meta.get("sourceFiles") or {}).get("questionPdf") or meta.get("question_pdf") or meta.get("questionPdf")
     apdf=(doc_meta.get("sourceFiles") or {}).get("answerPdf") or meta.get("answer_pdf") or meta.get("answerPdf")
@@ -58,8 +58,8 @@ def normalize(path):
         figure=raw_source.get("figure")
         if figure is None: figure=q.get("figure_ref") or q.get("option_figure_ref") or q.get("choice_figure_ref")
         out.append({
-          "id":qid,"exam":q.get("exam",exam_title),"examDate":q.get("examDate",DATES[prefix]),
-          "section":q.get("section",q.get("category","一般問題" if number <= 30 else "配線図")),"questionNumber":number,
+          "id":qid,"exam":exam_title,"examDate":q.get("examDate",DATES[prefix]),
+          "section":("一般問題" if number <= 30 else "配線図"),"questionNumber":number,
           "question":q.get("question",q.get("question_text","")),"choices":choices,"answerOfficial":answer,
           "hereToRemember":q.get("hereToRemember",q.get("key_point")),"explanation":q.get("explanation"),
           "source":{"title":raw_source.get("title",exam_title),"url":raw_source.get("url") or qpdf,
