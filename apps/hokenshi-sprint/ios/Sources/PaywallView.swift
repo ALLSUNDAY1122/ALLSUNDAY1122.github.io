@@ -6,6 +6,7 @@ struct PaywallView: View {
     @EnvironmentObject var purchase: PurchaseController
     @Environment(\.dismiss) private var dismiss
 
+    private let monthlyID = "jp.allsunday1122.hokenshisprint.premium.monthly"
     private let lifetimeID = "jp.allsunday1122.hokenshisprint.premium.lifetime"
     // Guideline 3.1.2: tappable Privacy Policy and Terms of Use (EULA) on the paywall.
     static let privacyPolicyURL = URL(string: "https://allsunday1122.github.io/hokenshi-sprint/privacy.html")!
@@ -42,17 +43,31 @@ struct PaywallView: View {
                         if purchase.isPremium {
                             Label("利用中です", systemImage: "checkmark.seal.fill").font(.headline).foregroundStyle(KSTheme.green)
                         } else {
-                            Button {
-                                Task { await purchase.purchase(productID: lifetimeID) }
-                            } label: {
-                                VStack(spacing: 3) {
-                                    Text(purchase.state == .purchasing ? "購入処理中…" : "買い切りプラン").font(.headline)
-                                    Text(purchase.displayPrice(for: lifetimeID).map { "買い切り \($0)" } ?? "価格を取得中").font(.caption)
-                                }.frame(maxWidth: .infinity).padding(.vertical, 13)
+                            VStack(spacing: 10) {
+                                Button {
+                                    Task { await purchase.purchase(productID: monthlyID) }
+                                } label: {
+                                    VStack(spacing: 3) {
+                                        Text(purchase.state == .purchasing ? "購入処理中…" : "月額プラン").font(.headline)
+                                        Text(purchase.displayPrice(for: monthlyID).map { "月額 \($0)" } ?? "価格を取得中").font(.caption)
+                                    }.frame(maxWidth: .infinity).padding(.vertical, 13)
+                                }
+                                .buttonStyle(.borderedProminent)
+                                .tint(KSTheme.ai)
+                                .disabled(purchase.product(for: monthlyID) == nil || purchase.state == .purchasing)
+
+                                Button {
+                                    Task { await purchase.purchase(productID: lifetimeID) }
+                                } label: {
+                                    VStack(spacing: 3) {
+                                        Text(purchase.state == .purchasing ? "購入処理中…" : "買い切りプラン").font(.headline)
+                                        Text(purchase.displayPrice(for: lifetimeID).map { "買い切り \($0)" } ?? "価格を取得中").font(.caption)
+                                    }.frame(maxWidth: .infinity).padding(.vertical, 13)
+                                }
+                                .buttonStyle(.bordered)
+                                .tint(KSTheme.ai)
+                                .disabled(purchase.product(for: lifetimeID) == nil || purchase.state == .purchasing)
                             }
-                            .buttonStyle(.borderedProminent)
-                            .tint(KSTheme.ai)
-                            .disabled(purchase.product(for: lifetimeID) == nil || purchase.state == .purchasing)
                         }
 
                         Button("購入を復元") { Task { await purchase.restore() } }
@@ -72,7 +87,7 @@ struct PaywallView: View {
 
     private var legalFooter: some View {
         VStack(spacing: 10) {
-            Text("買い切りプランは1回のみの購入で、自動更新はありません。価格はApp Storeから取得した表示を使用します。")
+            Text("月額プランは1か月ごとの自動更新です。更新の停止・解約はiOSの設定 > Apple ID > サブスクリプションから行えます。買い切りプランは1回の購入です。価格はApp Storeから取得した表示を使用します。")
                 .font(.caption2).foregroundStyle(KSTheme.tertiary).multilineTextAlignment(.center)
             HStack(spacing: 18) {
                 Link("プライバシーポリシー", destination: Self.privacyPolicyURL)

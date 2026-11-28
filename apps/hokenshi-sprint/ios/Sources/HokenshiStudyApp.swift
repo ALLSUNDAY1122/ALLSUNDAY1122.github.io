@@ -5,6 +5,7 @@ import LearningSprintCore
 struct HokenshiStudyApp: App {
     @StateObject private var model = HokenshiAppModel()
     @StateObject private var purchase = PurchaseController(productIDs: [
+        "jp.allsunday1122.hokenshisprint.premium.monthly",
         "jp.allsunday1122.hokenshisprint.premium.lifetime"
     ])
 
