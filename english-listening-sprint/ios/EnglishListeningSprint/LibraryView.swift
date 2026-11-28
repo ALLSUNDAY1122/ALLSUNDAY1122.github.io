@@ -10,6 +10,10 @@ struct LibraryView: View {
             : store.lessons.filter { $0.region == region }
     }
 
+    private var themeCount: Int {
+        Set(store.lessons.map { $0.id.filter(\.isNumber) }).count
+    }
+
     var body: some View {
         NavigationStack {
             List {
@@ -58,7 +62,7 @@ struct LibraryView: View {
             }
             .scrollContentBackground(.hidden)
             .background(SprintTheme.background)
-            .navigationTitle("\(store.lessons.count) Lessons")
+            .navigationTitle("\(themeCount) Lessons")
         }
     }
 }
