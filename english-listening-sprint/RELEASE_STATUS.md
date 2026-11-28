@@ -1,6 +1,6 @@
 # Release status — English Listening Sprint
 
-Updated: 2026-08-29 (JST)
+Updated: 2026-11-28 (JST)
 
 ## Canonical baseline
 
@@ -10,11 +10,13 @@ Updated: 2026-08-29 (JST)
 - Content: 30 lessons / 90 questions / 312 bundled MP3 files
 - Native route: SwiftUI; WebView is not the primary interface
 - Bundle ID: `jp.allsunday1122.englishlistening`
+- App Store Connect App ID: `6840230101`
+- App Store provisioning profile: `English Listening Sprint App Store` (Active; expires 2027-08-19)
 - Version / Build: `1.0.0 (1)`
 
 ## State
 
-`APPLE_LOGIN_REQUIRED`
+`APPLE_READY_CI_PENDING`
 
 Completed:
 
@@ -28,10 +30,9 @@ Completed:
 
 Open gates:
 
-1. Sign in to Apple Developer and App Store Connect, then create or verify the Explicit App ID and app record.
-2. Record the App Store Connect App ID.
-3. Push the release branch and run `english-listening-sprint-testflight` in Codemagic.
-4. Confirm Apple processing and assign Build 1 to the internal tester group.
-5. Complete device acceptance on an iPhone.
+1. Apple Developer / App Store Connect app record exists (App ID `6840230101`); distribution profile `English Listening Sprint App Store` is Active through 2027-08-19.
+2. Run `english-listening-sprint-testflight` from `codex/english-listening-testflight-v2` in Codemagic.
+3. Confirm Apple processing and verify the build appears in the internal TestFlight group.
+4. Complete device acceptance on an iPhone.
 
 Human-required actions are Apple login/2FA, legal or account agreements if Apple requests them, and iPhone TestFlight acceptance. App Store review submission remains unauthorized.
