@@ -40,4 +40,13 @@ for needle, text, where in [
 ]:
     if needle not in text:
         sys.exit(f'missing: {where}')
+badge = swift.split('struct QuestionSourceBadge', 1)[1].split('struct ExplanationReferencesSection', 1)[0]
+if 'exam.pageURL' not in badge or 'answerPDFURL' in badge:
+    sys.exit('question-screen link must open the MHLW 問題および正答 page, not the answer PDF')
+for m in re.finditer(r'pageURLString: "([^"]+)"', swift):
+    if not m.group(1).endswith('-03_04_05.html'):
+        sys.exit(f'exam page URL is not the 問題および正答 page: {m.group(1)}')
+for m in re.finditer(r'answerPDFURLString: "([^"]+)"', swift):
+    if not m.group(1).endswith('-05seitou.pdf'):
+        sys.exit(f'answer URL is not the 看護師 answer PDF: {m.group(1)}')
 print(f'PASS: {len(urls)} verified URLs, exams {sorted(exams)}')
