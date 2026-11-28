@@ -28,6 +28,7 @@ struct PaperGrid: View {
 }
 struct RootView: View {
     @EnvironmentObject var model:StudyModel
+    @EnvironmentObject var premium:PremiumStore
     var body: some View {
         TabView(selection:$model.tab) {
             HomeView().tabItem { Label("ホーム",systemImage:"house.fill") }.tag(0)
@@ -36,6 +37,9 @@ struct RootView: View {
             SettingsView().tabItem { Label("設定",systemImage:"gearshape") }.tag(3)
         }.tint(ETheme.blue).toolbarBackground(ETheme.card,for:.tabBar).toolbarBackground(.visible,for:.tabBar)
         .fullScreenCover(isPresented:$model.showQuestion) { QuizView().environmentObject(model) }
+        .sheet(isPresented:$model.showPaywall) { PaywallView().environmentObject(premium) }
+        .task { await premium.refresh(); model.premiumUnlocked = premium.isPremium }
+        .onChange(of:premium.isPremium) { model.premiumUnlocked = $0 }
         .preferredColorScheme(.light)
     }
 }
@@ -63,6 +67,7 @@ struct ProgressRing: View {
 }
 struct HomeView: View {
     @EnvironmentObject var model:StudyModel
+    @EnvironmentObject var premium:PremiumStore
     private var today:Int { min(model.done,model.goal) }
     var body: some View {
         NavigationStack { ZStack(alignment:.top) { ETheme.paper.ignoresSafeArea(); PaperGrid().ignoresSafeArea()
@@ -79,6 +84,7 @@ struct HomeView: View {
                 Button { model.start(model.goal) } label: { HStack { VStack(alignment:.leading,spacing:4) { Text("今日のスプリント").font(.system(size:16,weight:.heavy)); Text("\(model.goal)問・短く集中して理解を積み上げる").font(.system(size:11)) }; Spacer(); Image(systemName:"arrow.right").font(.title3.bold()) }.foregroundStyle(.white).padding(18).background(LinearGradient(colors:[Color(hex:0x35527A),Color(hex:0x233A58)],startPoint:.topLeading,endPoint:.bottomTrailing)).clipShape(RoundedRectangle(cornerRadius:16)).shadow(color:ETheme.blue.opacity(0.18),radius:10,y:5) }.buttonStyle(.plain)
                 Button { model.start(8,weakOnly:true) } label: { Panel { HStack(spacing:12) { Image(systemName:"repeat").font(.title2).foregroundStyle(ETheme.red).frame(width:42,height:42).background(ETheme.redSoft).clipShape(RoundedRectangle(cornerRadius:12)); VStack(alignment:.leading,spacing:3) { Text("苦手をつぶす").font(.system(size:15,weight:.bold)); Text("3回連続正解で卒業").font(.system(size:11)).foregroundStyle(ETheme.muted) }; Spacer(); Text("\(model.weakQuestions.count)問").font(.system(size:12,weight:.bold)).foregroundStyle(ETheme.red).padding(.horizontal,10).padding(.vertical,6).background(ETheme.redSoft).clipShape(Capsule()) } } }.buttonStyle(.plain)
                 Button { model.tab=1 } label: { Panel { Label("模擬試験",systemImage:"doc.text").font(.system(size:15,weight:.bold)); Text("年度別・公式問題50問単位").font(.system(size:11)).foregroundStyle(ETheme.muted).padding(.top,4) } }.buttonStyle(.plain)
+                if !premium.isPremium { Button { model.showPaywall=true } label: { Panel { HStack(spacing:12) { Image(systemName:"crown.fill").font(.title2).foregroundStyle(ETheme.gold).frame(width:42,height:42).background(Color(hex:0xFFFBEA)).clipShape(RoundedRectangle(cornerRadius:12)); VStack(alignment:.leading,spacing:3) { Text("プレミアムで全600問を解放").font(.system(size:15,weight:.bold)); Text("無料では令和8年度上期の50問が対象です").font(.system(size:11)).foregroundStyle(ETheme.muted) }; Spacer(); Image(systemName:"chevron.right").foregroundStyle(ETheme.muted) } } }.buttonStyle(.plain) }
                 VStack(alignment:.leading,spacing:10) { Text("分野から解く").font(.system(size:17,weight:.bold,design:.serif)); ForEach(model.subjects,id:\.self) { s in Button { model.start(8, subject:s) } label: { HStack { Text(s).font(.system(size:13,weight:.semibold)).foregroundStyle(ETheme.ink); Spacer(); Image(systemName:"chevron.right").foregroundStyle(ETheme.muted) }.padding(14).background(ETheme.card).clipShape(RoundedRectangle(cornerRadius:12)).overlay(RoundedRectangle(cornerRadius:12).stroke(ETheme.line)) }.buttonStyle(.plain) } }
                 Panel { HStack { smallStat("のべ回答","\(model.completed)"); Spacer(); smallStat("正答率",model.completed == 0 ? "—" : "\(model.accuracy)%"); Spacer(); smallStat("学習日数","\(model.studyDays.count)日") } }
             }.padding(.horizontal,16).padding(.bottom,22).frame(maxWidth:520).frame(maxWidth:.infinity) }
@@ -88,13 +94,18 @@ struct HomeView: View {
 }
 struct MockView: View {
     @EnvironmentObject var model:StudyModel
+    @EnvironmentObject var premium:PremiumStore
     var body: some View { NavigationStack { ZStack { ETheme.paper.ignoresSafeArea(); ScrollView { VStack(spacing:14) {
         PageTitle(title:"本番形式",subtitle:"試験回ごとに、科目別のセットを準備します。")
         ForEach(model.examSets) { examSet in
             Panel { VStack(alignment:.leading,spacing:10) {
-                Text(examSet.title).font(.system(size:17,weight:.bold,design:.serif))
+                HStack(spacing:8) { Text(examSet.title).font(.system(size:17,weight:.bold,design:.serif)); if examSet.id == StudyModel.freeExamPrefix { Text("無料").font(.system(size:10,weight:.bold)).foregroundStyle(ETheme.green).padding(.horizontal,8).padding(.vertical,3).background(ETheme.greenSoft).clipShape(Capsule()) } else if !premium.isPremium { Image(systemName:"lock.fill").font(.system(size:11)).foregroundStyle(ETheme.muted) } }
                 Text("\(examSet.questionCount)問").font(.system(size:11)).foregroundStyle(ETheme.muted)
-                Button { model.start(examPrefix:examSet.id) } label: { Label("この試験回を解く",systemImage:"play.circle").font(.system(size:12,weight:.bold)).foregroundStyle(ETheme.blue) }
+                if examSet.id == StudyModel.freeExamPrefix || premium.isPremium {
+                    Button { model.start(examPrefix:examSet.id) } label: { Label("この試験回を解く",systemImage:"play.circle").font(.system(size:12,weight:.bold)).foregroundStyle(ETheme.blue) }
+                } else {
+                    Button { model.showPaywall=true } label: { Label("プレミアムで解放",systemImage:"lock").font(.system(size:12,weight:.bold)).foregroundStyle(ETheme.gold) }
+                }
             } }
         }
     }.padding(.horizontal,16).padding(.bottom,24).frame(maxWidth:520).frame(maxWidth:.infinity) } } }.navigationBarHidden(true) }
@@ -156,6 +167,7 @@ struct Heatmap: View {
 }
 struct SettingsView: View {
     @EnvironmentObject var model:StudyModel
+    @EnvironmentObject var premium:PremiumStore
     @State private var backupDocument: BackupDocument?
     @State private var showExporter=false
     @State private var showImporter=false
@@ -164,6 +176,12 @@ struct SettingsView: View {
     var body: some View { NavigationStack { Form {
         Section("文字サイズ") { Picker("表示サイズ",selection:$model.fontScale) { Text("標準").tag(0); Text("大").tag(1); Text("特大").tag(2) }.pickerStyle(.segmented) }
         Section("1日の目標") { Picker("問題数",selection:$model.goal) { Text("4問").tag(4); Text("8問").tag(8); Text("16問").tag(16) }.pickerStyle(.segmented) }
+        Section("プレミアム") {
+            Text(premium.isPremium ? "プレミアム利用中（全600問）" : "無料プラン（令和8年度上期の50問）").font(.subheadline)
+            if !premium.isPremium { Button { model.showPaywall=true } label: { Label("プレミアムを見る",systemImage:"crown") } }
+            Button("購入を復元") { Task { await premium.restore() } }
+            if !premium.message.isEmpty { Text(premium.message).font(.caption).foregroundStyle(ETheme.muted) }
+        }
         Section("学習データ") {
             Button { do { backupDocument=BackupDocument(data:try model.backupData()); showExporter=true } catch { status=error.localizedDescription } } label: { Label("学習データをJSONで書き出す",systemImage:"square.and.arrow.up") }
             Button { confirmImport=true } label: { Label("JSONから学習データを読み込む",systemImage:"square.and.arrow.down") }

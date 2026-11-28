@@ -128,14 +128,23 @@ final class StudyModel: ObservableObject {
         }
         restore()
     }
+    static let freeExamPrefix = "E2-2026-U"
+    var premiumUnlocked = false
+    @Published var showPaywall = false
+    var freeQuestions: [DemoQuestion] { demos.filter { $0.officialID.hasPrefix(Self.freeExamPrefix + "-") } }
+    private func entitled(_ questions:[DemoQuestion]) -> [DemoQuestion] {
+        premiumUnlocked ? questions : questions.filter { $0.officialID.hasPrefix(Self.freeExamPrefix + "-") }
+    }
     func start(_ count:Int = 8, weakOnly:Bool = false, subject:String? = nil) {
         var source = weakOnly ? weakQuestions : demos
+        source = entitled(source)
         if let subject { source = source.filter { $0.subject == subject } }
         guard !source.isEmpty else { session = []; showQuestion = false; return }
         session = (0..<count).map { source[$0 % source.count] }
         index=0; selected=nil; graded=false; showQuestion=true
     }
     func start(examPrefix:String) {
+        guard premiumUnlocked || examPrefix == Self.freeExamPrefix else { showPaywall = true; return }
         let source = demos.filter { $0.officialID.hasPrefix(examPrefix + "-") }
         guard !source.isEmpty else { session=[]; showQuestion=false; return }
         session=source; index=0; selected=nil; graded=false; showQuestion=true
