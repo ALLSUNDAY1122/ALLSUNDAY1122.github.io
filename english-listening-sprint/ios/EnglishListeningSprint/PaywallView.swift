@@ -31,7 +31,7 @@ struct PaywallView: View {
                         } label: {
                             HStack {
                                 Spacer()
-                                Text(store.monthlyProduct == nil ? "商品情報を読み込み中…" : "1週間無料で始める")
+                                Text(store.monthlyProduct == nil ? "商品情報を読み込み中…" : (store.hasOneWeekFreeTrial ? "1週間無料で始める" : "月額プランを始める"))
                                 Spacer()
                             }
                         }
