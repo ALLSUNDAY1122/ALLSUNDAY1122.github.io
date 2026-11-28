@@ -59,7 +59,15 @@ struct QuizView: View {
             if finished {
                 resultView
             } else if questions.isEmpty {
-                ContentUnavailableView("問題がありません", systemImage: "tray")
+                VStack(spacing: 10) {
+                    Image(systemName: "tray")
+                        .font(.system(size: 36))
+                        .foregroundStyle(Palette.sub)
+                    Text("問題がありません")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundStyle(Palette.sub)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
                 quizBody
             }
