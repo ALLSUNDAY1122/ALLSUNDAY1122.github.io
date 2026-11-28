@@ -21,7 +21,7 @@ struct HomeView: View {
 
                     if let first = store.lessons.first {
                         Button {
-                            store.open(first)
+                            store.requestAccess(to: first)
                         } label: {
                             VStack(alignment: .leading, spacing: 9) {
                                 Text("TODAY'S SPRINT")
@@ -105,7 +105,7 @@ private struct RegionLessonsView: View {
         List {
             ForEach(lessons) { lesson in
                 Button {
-                    store.open(lesson)
+                    store.requestAccess(to: lesson)
                 } label: {
                     HStack {
                         VStack(alignment: .leading, spacing: 4) {
@@ -120,6 +120,11 @@ private struct RegionLessonsView: View {
                         Spacer()
 
                         VStack(alignment: .trailing, spacing: 5) {
+                            if !store.canAccess(lesson) {
+                                Label("PREMIUM", systemImage: "lock.fill")
+                                    .font(.caption2.weight(.bold))
+                                    .foregroundStyle(SprintTheme.accent)
+                            }
                             Image(
                                 systemName: store.completedLessonIDs.contains(lesson.id)
                                     ? "checkmark.circle.fill"
