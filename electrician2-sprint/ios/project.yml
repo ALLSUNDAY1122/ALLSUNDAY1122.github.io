@@ -1,0 +1,69 @@
+name: Electrician2Sprint
+options:
+  minimumXcodeGenVersion: 2.38.0
+  deploymentTarget:
+    iOS: "16.0"
+settings:
+  base:
+    SWIFT_VERSION: 5.0
+    TARGETED_DEVICE_FAMILY: "1"
+    GENERATE_INFOPLIST_FILE: YES
+targets:
+  Electrician2Sprint:
+    type: application
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      - path: Sources
+      - path: Assets.xcassets
+      - path: Resources
+        buildPhase: resources
+      - path: ../figures
+        type: folder
+        buildPhase: resources
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: jp.allsunday1122.electrician2sprint
+        PRODUCT_NAME: Electrician2Sprint
+        INFOPLIST_KEY_CFBundleDisplayName: 第二種電気工事士
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: 1
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UIUserInterfaceStyle: Light
+        TARGETED_DEVICE_FAMILY: "1"
+  Electrician2SprintTests:
+    type: bundle.unit-test
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      - path: Tests
+    dependencies:
+      - target: Electrician2Sprint
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: jp.allsunday1122.electrician2sprint.tests
+        GENERATE_INFOPLIST_FILE: YES
+
+  Electrician2SprintUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      - path: UITests
+    dependencies:
+      - target: Electrician2Sprint
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: jp.allsunday1122.electrician2sprint.uitests
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_TARGET_NAME: Electrician2Sprint
+schemes:
+  Electrician2Sprint:
+    build:
+      targets:
+        Electrician2Sprint: all
+    test:
+      targets:
+        - Electrician2SprintTests
+        - Electrician2SprintUITests

@@ -2144,6 +2144,16 @@ workflows:
         submit_to_testflight: false
         submit_to_app_store: false
 
+  electrician2-testflight:
+    name: Electrician2 Sprint - Internal TestFlight
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+     integrations:
+       app_store_connect: "Codemagic Shiwake Swipe"
+    environment:
+    ios_signing:
+    distribution_type: app_store
+     
   enprint-guard-ios-testflight:
     name: Enprint Guard - Internal TestFlight
     max_build_duration: 60
@@ -2160,6 +2170,15 @@ workflows:
     environment:
       ios_signing:
         distribution_type: app_store
+        bundle_identifier: jp.allsunday1122.electrician2sprint
+      vars:
+        BUNDLE_ID: jp.allsunday1122.electrician2sprint
+        XCODE_PROJECT: electrician2-sprint/ios/Electrician2Sprint.xcodeproj
+        XCODE_SCHEME: Electrician2Sprint
+       xcode: latest
+       scripts:
+       - name: Install XcodeGen
+         script: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
         bundle_identifier: jp.allsunday1122.enprintguard
       vars:
         BUNDLE_ID: jp.allsunday1122.enprintguard
@@ -2170,6 +2189,78 @@ workflows:
     scripts:
       - name: Install XcodeGen
         script: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+      - name: Audit release content
+        script: |
+          set -euo pipefail
+          cd "$CM_BUILD_DIR"
+          test -f electrician2-sprint/ios/Resources/PrivacyInfo.xcprivacy
+          test -f electrician2-sprint/ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png
+          python3 - <<'PY'
+          import json
+          led = json.load(open('electrician2-sprint/IMAGE_RIGHTS_LEDGER.json', encoding='utf-8'))
+          assert led['rights_counts'].get('HOLD') == 0, led['rights_counts']
+          bank = json.load(open('electrician2-sprint/ios/Resources/QUESTION_BANK.json', encoding='utf-8'))
+          assert bank['questionCount'] == 600 == len(bank['questions'])
+          assert not any(q.get('excludedFromQuiz') for q in bank['questions'])
+          fm = json.load(open('electrician2-sprint/ios/Resources/FIGURE_MAPPING.json', encoding='utf-8'))
+          assert fm['total'] == 380 and fm['missingCount'] == 0, fm['total']
+          import os
+          missing_files = [it['svgPath'] for it in fm['items'] if not os.path.isfile('electrician2-sprint/figures/' + it['svgPath'])]
+          assert not missing_files, missing_files[:5]
+          assert not any(it.get('svgSymbol') for it in fm['items']), 'symbol-based figures are not supported'
+          assert all(q.get('explanation') for q in bank['questions']), 'missing explanations'
+          assert all(q.get('hereToRemember') for q in bank['questions']), 'missing hereToRemember'
+          print('PASS: 600 questions, HOLD 0, excluded 0, figures 380/380, explanations 600/600')
+          PY
+          grep -q "jp.allsunday1122.electrician2sprint.premium.monthly" electrician2-sprint/ios/Sources/PremiumStore.swift
+          grep -q "jp.allsunday1122.electrician2sprint.premium.lifetime" electrician2-sprint/ios/Sources/PremiumStore.swift
+          grep -q "E2-2026-U" electrician2-sprint/ios/Sources/StudyModel.swift
+          echo "PASS: IAP product IDs and free-tier gate present"
+      - name: Set CI build number and generate project
+        script: |
+          set -euo pipefail
+          cd "$CM_BUILD_DIR/electrician2-sprint/ios"
+          BUILD_NUM="${BUILD_NUMBER:-${PROJECT_BUILD_NUMBER:-${CM_BUILD_NUMBER:-}}}"
+          test -n "$BUILD_NUM"
+          python3 - "$BUILD_NUM" <<'PYBUILD'
+          from pathlib import Path
+          import re, sys
+          p = Path('project.yml')
+          text = p.read_text(encoding='utf-8')
+          text, n = re.subn(r'CURRENT_PROJECT_VERSION:\s*\d+', 'CURRENT_PROJECT_VERSION: ' + sys.argv[1], text, count=1)
+          if n != 1: raise RuntimeError('CURRENT_PROJECT_VERSION replacement failed')
+          p.write_text(text, encoding='utf-8')
+          PYBUILD
+          xcodegen generate
+      - name: Apply App Store signing profiles for Internal TestFlight only
+        script: |
+          cd "$CM_BUILD_DIR/electrician2-sprint/ios"
+          xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
+      - name: Build signed IPA
+        script: |
+          xcode-project build-ipa --project "$CM_BUILD_DIR/$XCODE_PROJECT" --scheme "$XCODE_SCHEME"
+      - name: Verify signed IPA identity and privacy manifest
+        script: |
+          set -euo pipefail
+          IPA_PATH="$(find "$CM_BUILD_DIR/build/ios/ipa" -maxdepth 1 -type f -name '*.ipa' -print -quit)"
+          test -n "$IPA_PATH"
+          rm -rf /tmp/electrician2-ipa && mkdir -p /tmp/electrician2-ipa && unzip -q "$IPA_PATH" -d /tmp/electrician2-ipa
+          PLIST="$(find /tmp/electrician2-ipa/Payload -maxdepth 2 -name Info.plist -path '*.app/*' -print -quit)"
+          test -n "$PLIST"
+          /usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$PLIST" | grep -qx 'jp.allsunday1122.electrician2sprint'
+          APP_DIR="$(dirname "$PLIST")"
+          test -f "$APP_DIR/PrivacyInfo.xcprivacy"
+          test -f "$APP_DIR/Assets.car"
+          test -d "$APP_DIR/figures"
+          SVG_COUNT="$(find "$APP_DIR/figures" -name '*.svg' | wc -l | tr -d ' ')"
+          echo "figures SVGs in bundle: $SVG_COUNT"
+          test "$SVG_COUNT" -ge 300
+          test -f "$APP_DIR/figures/hold-lineart/E2-2024-L-041.svg"
+          test -f "$APP_DIR/figures/2022/2022-lower-session-figures.svg"
+          echo "IPA OK: $(du -h "$IPA_PATH" | cut -f1)"
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
       - name: Verify App Store Connect record gate
         script: |
           python3 - <<'PY'

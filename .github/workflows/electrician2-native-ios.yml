@@ -1,0 +1,68 @@
+name: Electrician2 Native iOS
+on:
+  pull_request:
+    paths:
+      - 'electrician2-sprint/data/**'
+      - 'electrician2-sprint/ios/**'
+      - 'electrician2-sprint/scripts/**'
+      - '.github/workflows/electrician2-native-ios.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  simulator-build:
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Normalize and validate all twelve sittings
+        run: |
+          set -euo pipefail
+          files=(electrician2-sprint/data/E2-*-001-050.json)
+          test "${#files[@]}" -eq 12
+          python3 electrician2-sprint/scripts/build_question_bank.py "${files[@]}" --output electrician2-sprint/ios/Resources/QUESTION_BANK.json
+          python3 -c 'import json,sys; d=json.load(open(sys.argv[1],encoding="utf-8")); assert d["questionCount"] == 600 == len(d["questions"]); assert len({q["id"] for q in d["questions"]}) == 600; assert all(q.get("audit_status") == "PENDING" for q in d["questions"]); print("Validated",d["questionCount"],"questions across 12 sittings; audit_status remains PENDING")' electrician2-sprint/ios/Resources/QUESTION_BANK.json
+      - name: Toolchain
+        run: |
+          xcodebuild -version
+          swift --version
+          brew install xcodegen
+      - name: Generate Xcode project
+        working-directory: electrician2-sprint/ios
+        run: xcodegen generate
+      - name: Install iOS simulator runtime
+        run: |
+          set -euo pipefail
+          if ! xcrun simctl list devices available | grep -q 'iPhone 16'; then
+            xcodebuild -downloadPlatform iOS
+          fi
+          xcrun simctl list devices available | grep -m 1 'iPhone 16'
+      - name: Debug simulator compile
+        working-directory: electrician2-sprint/ios
+        run: |
+          set -o pipefail
+          xcodebuild -project Electrician2Sprint.xcodeproj -scheme Electrician2Sprint -configuration Debug -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build | tee "$RUNNER_TEMP/electrician2-debug-build.log"
+      - name: Run learning-state regression tests
+        working-directory: electrician2-sprint/ios
+        run: |
+          set -o pipefail
+          xcodebuild -project Electrician2Sprint.xcodeproj -scheme Electrician2Sprint -configuration Debug -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 16' CODE_SIGNING_ALLOWED=NO -only-testing:Electrician2SprintTests test | tee "$RUNNER_TEMP/electrician2-learning-tests.log"
+      - name: Run XCUITest acceptance
+        working-directory: electrician2-sprint/ios
+        run: |
+          set -o pipefail
+          xcodebuild -project Electrician2Sprint.xcodeproj -scheme Electrician2Sprint -configuration Debug -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 16' CODE_SIGNING_ALLOWED=NO -only-testing:Electrician2SprintUITests -parallel-testing-enabled NO -resultBundlePath "$RUNNER_TEMP/electrician2-ui-acceptance.xcresult" test | tee "$RUNNER_TEMP/electrician2-ui-acceptance.log"
+      - name: Release simulator compile
+        working-directory: electrician2-sprint/ios
+        run: |
+          set -o pipefail
+          xcodebuild -project Electrician2Sprint.xcodeproj -scheme Electrician2Sprint -configuration Release -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build | tee "$RUNNER_TEMP/electrician2-release-build.log"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: electrician2-native-build-logs
+          path: |
+            ${{ runner.temp }}/electrician2-*.log
+            ${{ runner.temp }}/electrician2-ui-acceptance.xcresult
+          if-no-files-found: warn
+          retention-days: 7

@@ -1,0 +1,2250 @@
+{
+  "schemaVersion": "1.0",
+  "dataSet": "E2-2023-UA",
+  "sourceFiles": {
+    "questionPdf": "https://www.shiken.or.jp/construction/upload/20230528_co_second_q01.pdf",
+    "answerPdf": "https://www.shiken.or.jp/construction/upload/20230528_co_second_a01.pdf"
+  },
+  "questionCount": 50,
+  "questions": [
+    {
+      "id": "E2-2023-UA-001",
+      "exam": "令和5年度第二種電気工事士上期学科試験【午前】",
+      "examDate": "2023-05-28",
+      "section": "一般問題",
+      "questionNumber": 1,
+      "question": "図のような回路で，スイッチSを閉じたとき，a-b端子間の電圧［V］は。",
+      "choices": [
+        {
+          "label": "イ",
+          "text": "30"
+        },
+        {
+          "label": "ロ",
+          "text": "40"
+        },
+        {
+          "label": "ハ",
+          "text": "50"
+        },
+        {
+          "label": "ニ",
+          "text": "60"
+        }
+      ],
+      "answerOfficial": "ハ",
+      "hereToRemember": "端子間電圧は、閉じた回路の抵抗による分圧で決まる。",
+      "explanation": "スイッチSを閉じると回路に電流が流れ、各抵抗で電圧降下が生じる。a-b端子間の電圧は、その区間にかかる分圧であり、図の回路では電源電圧が抵抗の比に応じて分けられ、a-b間に50 Vが現れる。抵抗の直列回路では、電圧は抵抗値に比例して分圧されることが要点である。",
+      "source": {
+        "title": "令和5年度上期 第二種電気工事士 学科試験問題（午前）",
+        "url": "https://www.shiken.or.jp/construction/upload/20230528_co_second_q01.pdf",
+        "page": 5,
+        "figure": "図版参照",
+        "figureRefs": [
+          "E2-2023-UA-P05-Q01"
+        ]
+      },
+      "audit": {
+        "transcription": "会話上の転記内容を格納。原典との独立再照合は未実施",
+        "answer": "公式正答PDF照合済（転記時点）",
+        "figureStatus": "図版参照ID付与。画像切出し・個別目視監査未完了",
+        "independentReview": "未実施",
+        "releaseStatus": "PENDING_SOURCE_AND_VISUAL_AUDIT"
+      }
+    },
+    {
+      "id": "E2-2023-UA-002",
+      "exam": "令和5年度第二種電気工事士上期学科試験【午前】",
+      "examDate": "2023-05-28",
+      "section": "一般問題",
+      "questionNumber": 2,
+      "question": "抵抗率ρ［Ω・m］，直径D［mm］，長さL［m］の導線の電気抵抗［Ω］を表す式は。",
+      "choices": [
+        {
+          "label": "イ",
+          "text": "(4ρL／πD²)×10⁶"
+        },
+        {
+          "label": "ロ",
+          "text": "(ρL²／πD²)×10⁶"
+        },
+        {
+          "label": "ハ",
+          "text": "(4ρL／πD)×10⁶"
+        },
+        {
+          "label": "ニ",
+          "text": "(4ρL²／πD)×10⁶"
+        }
+      ],
+      "answerOfficial": "イ",
+      "hereToRemember": "抵抗 R＝ρL／A。断面積は直径から A＝πD²／4。",
+      "explanation": "導線の抵抗は R＝ρL／A で表される。直径D［mm］の円形断面の断面積は A＝πD²／4［mm²］であり、これを m² に換算すると10⁻⁶が付くため、R＝(4ρL／πD²)×10⁶ となる。ロは分子がL²、ハとニは分母がDの1乗であり、いずれも式の形が誤りである。",
+      "source": {
+        "title": "令和5年度上期 第二種電気工事士 学科試験問題（午前）",
+        "url": "https://www.shiken.or.jp/construction/upload/20230528_co_second_q01.pdf",
+        "page": 5,
+        "figure": null
+      },
+      "audit": {
+        "transcription": "会話上の転記内容を格納。原典との独立再照合は未実施",
+        "answer": "公式正答PDF照合済（転記時点）",
+        "figureStatus": "図版なし",
+        "independentReview": "未実施",
+        "releaseStatus": "PENDING_SOURCE_AND_VISUAL_AUDIT"
+      }
+    },
+    {
+      "id": "E2-2023-UA-003",
+      "exam": "令和5年度第二種電気工事士上期学科試験【午前】",
+      "examDate": "2023-05-28",
+      "section": "一般問題",
+      "questionNumber": 3,
+      "question": "抵抗に100 Vの電圧を2時間30分加えたとき，電力量が4 kW・hであった。抵抗に流れる電流［A］は。",
+      "choices": [
+        {
+          "label": "イ",
+          "text": "16"
+        },
+        {
+          "label": "ロ",
+          "text": "24"
+        },
+        {
+          "label": "ハ",
+          "text": "32"
+        },
+        {
+          "label": "ニ",
+          "text": "40"
+        }
+      ],
+      "answerOfficial": "イ",
+      "hereToRemember": "電力量 W＝Pt、電力 P＝VI。まず平均電力を出す。",
+      "explanation": "電力量4 kW・hを時間2.5 hで割ると、消費電力は P＝4／2.5＝1.6 kW である。抵抗負荷では P＝VI であるから、I＝1600／100＝16 A となる。電力量から電力を求め、オームの法則の関係で電流に換算する流れが要点である。",
+      "source": {
+        "title": "令和5年度上期 第二種電気工事士 学科試験問題（午前）",
+        "url": "https://www.shiken.or.jp/construction/upload/20230528_co_second_q01.pdf",
+        "page": 5,
+        "figure": null
+      },
+      "audit": {
+        "transcription": "会話上の転記内容を格納。原典との独立再照合は未実施",
+        "answer": "公式正答PDF照合済（転記時点）",
+        "figureStatus": "図版なし",
+        "independentReview": "未実施",
+        "releaseStatus": "PENDING_SOURCE_AND_VISUAL_AUDIT"
+      }
+    },
+    {
+      "id": "E2-2023-UA-004",
+      "exam": "令和5年度第二種電気工事士上期学科試験【午前】",
+      "examDate": "2023-05-28",
+      "section": "一般問題",
+      "questionNumber": 4,
+      "question": "図のような回路で，抵抗Rに流れる電流が4 A，リアクタンスXに流れる電流が3 Aであるとき，この回路の消費電力［W］は。",
+      "choices": [
+        {
+          "label": "イ",
+          "text": "300"
+        },
+        {
+          "label": "ロ",
+          "text": "400"
+        },
+        {
+          "label": "ハ",
+          "text": "500"
+        },
+        {
+          "label": "ニ",
+          "text": "700"
+        }
+      ],
+      "answerOfficial": "ロ",
+      "hereToRemember": "電力を消費するのは抵抗だけ。リアクタンスは無効電力。",
+      "explanation": "抵抗とリアクタンスの並列回路では、消費電力は抵抗で消費される電力のみであり、リアクタンス分は無効電力となって電力消費には寄与しない。図の電源電圧100 Vと抵抗に流れる電流4 Aから、P＝100×4＝400 W となる。リアクタンスの電流3 Aは力率や皮相電力には関係するが、消費電力の計算には用いない。",
+      "source": {
+        "title": "令和5年度上期 第二種電気工事士 学科試験問題（午前）",
+        "url": "https://www.shiken.or.jp/construction/upload/20230528_co_second_q01.pdf",
+        "page": 5,
+        "figure": "図版参照",
+        "figureRefs": [
+          "E2-2023-UA-P05-Q04"
+        ]
+      },
+      "audit": {
+        "transcription": "会話上の転記内容を格納。原典との独立再照合は未実施",
+        "answer": "公式正答PDF照合済（転記時点）",
+        "figureStatus": "図版参照ID付与。画像切出し・個別目視監査未完了",
+        "independentReview": "未実施",
+        "releaseStatus": "PENDING_SOURCE_AND_VISUAL_AUDIT"
+      }
+    },
+    {
+      "id": "E2-2023-UA-005",
+      "exam": "令和5年度第二種電気工事士上期学科試験【午前】",
+      "examDate": "2023-05-28",
+      "section": "一般問題",
+      "questionNumber": 5,
+      "question": "図のような三相3線式回路の全消費電力［kW］は。",
+      "choices": [
+        {
+          "label": "イ",
+          "text": "2.4"
+        },
+        {
+          "label": "ロ",
+          "text": "4.8"
+        },
+        {
+          "label": "ハ",
+          "text": "9.6"
+        },
+        {
+          "label": "ニ",
+          "text": "19.2"
+        }
+      ],
+      "answerOfficial": "ハ",
+      "hereToRemember": "三相電力 P＝√3×線間電圧×線電流×力率。",
+      "explanation": "三相3線式回路の全消費電力は、各相の消費電力の合計であり、平衡回路では P＝√3 V I cosθ で求められる。図の電圧・電流・力率の条件を代入すると9.6 kWとなる。単相の P＝VIcosθ をそのまま使うと過小になる点に注意する。",
+      "source": {
+        "title": "令和5年度上期 第二種電気工事士 学科試験問題（午前）",
+        "url": "https://www.shiken.or.jp/construction/upload/20230528_co_second_q01.pdf",
+        "page": 5,
+        "figure": "図版参照",
+        "figureRefs": [
+          "E2-2023-UA-P05-Q05"
+        ]
+      },
+      "audit": {
+        "transcription": "会話上の転記内容を格納。原典との独立再照合は未実施",
+        "answer": "公式正答PDF照合済（転記時点）",
+        "figureStatus": "図版参照ID付与。画像切出し・個別目視監査未完了",
+        "independentReview": "未実施",
+        "releaseStatus": "PENDING_SOURCE_AND_VISUAL_AUDIT"
+      }
+    },
+    {
+      "id": "E2-2023-UA-006",
+      "exam": "令和5年度第二種電気工事士上期学科試験【午前】",
+      "examDate": "2023-05-28",
+      "section": "一般問題",
+      "questionNumber": 6,
+      "question": "図のような三相3線式回路で，電線1線当たりの抵抗が0.15 Ω，線電流が10 Aのとき，この配線の電力損失［W］は。",
+      "choices": [
+        {
+          "label": "イ",
+          "text": "15"
+        },
+        {
+          "label": "ロ",
+          "text": "26"
+        },
+        {
+          "label": "ハ",
+          "text": "30"
+        },
+        {
+          "label": "ニ",
+          "text": "45"
+        }
+      ],
+      "answerOfficial": "ニ",
+      "hereToRemember": "三相3線式の電力損失は 3×I²×R（1線分×3線）。",
+      "explanation": "配線の電力損失は、電線1線当たり I²R であり、三相3線式では3線分を合計する。よって損失は 3×10²×0.15＝3×100×0.15＝45 W となる。1線分だけの15 W（イ）や、2線分として計算した値が誤りである。",
+      "source": {
+        "title": "令和5年度上期 第二種電気工事士 学科試験問題（午前）",
+        "url": "https://www.shiken.or.jp/construction/upload/20230528_co_second_q01.pdf",
+        "page": 6,
+        "figure": "図版参照",
+        "figureRefs": [
+          "E2-2023-UA-P06-Q06"
+        ]
+      },
+      "audit": {
+        "transcription": "会話上の転記内容を格納。原典との独立再照合は未実施",
+        "answer": "公式正答PDF照合済（転記時点）",
+        "figureStatus": "図版参照ID付与。画像切出し・個別目視監査未完了",
+        "independentReview": "未実施",
+        "releaseStatus": "PENDING_SOURCE_AND_VISUAL_AUDIT"
+      }
+    },
+    {
+      "id": "E2-2023-UA-007",
+      "exam": "令和5年度第二種電気工事士上期学科試験【午前】",
+      "examDate": "2023-05-28",
+      "section": "一般問題",
+      "questionNumber": 7,
+      "question": "図1のような単相2線式回路を，図2のような単相3線式回路に変更した場合，配線の電力損失はどうなるか。ただし，負荷電圧は100 V一定で，負荷A，負荷Bはともに消費電力1 kWの抵抗負荷で，電線の抵抗は1線当たり0.2 Ωとする。",
+      "choices": [
+        {
+          "label": "イ",
+          "text": "0になる。"
+        },
+        {
+          "label": "ロ",
+          "text": "小さくなる。"
+        },
+        {
+          "label": "ハ",
+          "text": "変わらない。"
+        },
+        {
+          "label": "ニ",
+          "text": "大きくなる。"
+        }
+      ],
+      "answerOfficial": "ロ",
+      "hereToRemember": "単相3線式は電流が半分になり、中性線電流も相殺される。",
+      "explanation": "単相2線式では2つの負荷に流れる電流がそのまま電線を流れるが、単相3線式に変更すると負荷Aと負荷Bが中性線の両側に分かれて接続され、各外線の電流は半分になり、平衡していれば中性線には電流が流れない。電力損失は電流の2乗に比例するため、全体の損失は小さくなる。",
+      "source": {
+        "title": "令和5年度上期 第二種電気工事士 学科試験問題（午前）",
+        "url": "https://www.shiken.or.jp/construction/upload/20230528_co_second_q01.pdf",
+        "page": 6,
+        "figure": "図版参照",
+        "figureRefs": [
+          "E2-2023-UA-P06-Q07"
+        ]
+      },
+      "audit": {
+        "transcription": "会話上の転記内容を格納。原典との独立再照合は未実施",
+        "answer": "公式正答PDF照合済（転記時点）",
+        "figureStatus": "図版参照ID付与。画像切出し・個別目視監査未完了",
+        "independentReview": "未実施",
+        "releaseStatus": "PENDING_SOURCE_AND_VISUAL_AUDIT"
+      }
+    },
+    {
+      "id": "E2-2023-UA-008",
+      "exam": "令和5年度第二種電気工事士上期学科試験【午前】",
+      "examDate": "2023-05-28",
+      "section": "一般問題",
+      "questionNumber": 8,
+      "question": "合成樹脂製可とう電線管（PF管）による低圧屋内配線工事で，管内に断面積5.5 mm²の600Vビニル絶縁電線（軟銅線）7本を収めて施設した場合，電線1本当たりの許容電流［A］は。ただし，周囲温度は30℃以下，電流減少係数は0.49とする。",
+      "choices": [
+        {
+          "label": "イ",
+          "text": "13"
+        },
+        {
+          "label": "ロ",
+          "text": "17"
+        },
+        {
+          "label": "ハ",
+          "text": "24"
+        },
+        {
+          "label": "ニ",
+          "text": "29"
+        }
+      ],
+      "answerOfficial": "ハ",
+      "hereToRemember": "許容電流は基準値に電流減少係数を掛ける。",
+      "explanation": "断面積5.5 mm²の600Vビニル絶縁電線の許容電流の基準値は49 Aである。管内に7本収める場合は電流減少係数0.49を適用し、49×0.49＝24.01 Aとなるため、1本当たりの許容電流は24 Aである。多数の電線を同一管内に収めると放熱が悪化し、許容電流が減少する。",
+      "source": {
+        "title": "令和5年度上期 第二種電気工事士 学科試験問題（午前）",
+        "url": "https://www.shiken.or.jp/construction/upload/20230528_co_second_q01.pdf",
+        "page": 6,
+        "figure": null
+      },
+      "audit": {
+        "transcription": "会話上の転記内容を格納。原典との独立再照合は未実施",
+        "answer": "公式正答PDF照合済（転記時点）",
+        "figureStatus": "図版なし",
+        "independentReview": "未実施",
+        "releaseStatus": "PENDING_SOURCE_AND_VISUAL_AUDIT"
+      }
+    },
+    {
+      "id": "E2-2023-UA-009",
+      "exam": "令和5年度第二種電気工事士上期学科試験【午前】",
+      "examDate": "2023-05-28",
+      "section": "一般問題",
+      "questionNumber": 9,
+      "question": "図のように定格電流60 Aの過電流遮断器で保護された低圧屋内幹線から分岐して，10 mの位置に過電流遮断器を施設するとき，a-b間の電線の許容電流の最小値［A］は。",
+      "choices": [
+        {
+          "label": "イ",
+          "text": "15"
+        },
+        {
+          "label": "ロ",
+          "text": "21"
+        },
+        {
+          "label": "ハ",
+          "text": "27"
+        },
+        {
+          "label": "ニ",
+          "text": "33"
+        }
+      ],
+      "answerOfficial": "ニ",
+      "hereToRemember": "分岐長8 m超では、分岐電線は幹線遮断器定格の55％以上。",
+      "explanation": "幹線の分岐点から過電流遮断器までの長さが8 mを超える場合、分岐電線の許容電流は幹線の過電流遮断器の定格電流の55％以上でなければならない。幹線の遮断器は60 Aであるから、60×0.55＝33 Aが最小値となる。3 m以下なら35％、8 m以下なら50％という区分と合わせて覚える。",
+      "source": {
+        "title": "令和5年度上期 第二種電気工事士 学科試験問題（午前）",
+        "url": "https://www.shiken.or.jp/construction/upload/20230528_co_second_q01.pdf",
+        "page": 6,
+        "figure": "図版参照",
+        "figureRefs": [
+          "E2-2023-UA-P06-Q09"
+        ]
+      },
+      "audit": {
+        "transcription": "会話上の転記内容を格納。原典との独立再照合は未実施",
+        "answer": "公式正答PDF照合済（転記時点）",
+        "figureStatus": "図版参照ID付与。画像切出し・個別目視監査未完了",
+        "independentReview": "未実施",
+        "releaseStatus": "PENDING_SOURCE_AND_VISUAL_AUDIT"
+      }
+    },
+    {
+      "id": "E2-2023-UA-010",
+      "exam": "令和5年度第二種電気工事士上期学科試験【午前】",
+      "examDate": "2023-05-28",
+      "section": "一般問題",
+      "questionNumber": 10,
+      "question": "低圧屋内配線の分岐回路の設計で，配線用遮断器，分岐回路の電線の太さ及びコンセントの組合せとして，適切なものは。ただし，分岐点から配線用遮断器までは3 m，配線用遮断器からコンセントまでは8 mとし，電線の数値は分岐回路の電線（軟銅線）の太さを示す。また，コンセントは兼用コンセントではないものとする。",
+      "choices": [
+        {
+          "label": "イ",
+          "text": "B 20 A・2.0 mm・定格電流30 Aのコンセント1個"
+        },
+        {
+          "label": "ロ",
+          "text": "B 30 A・2.0 mm・定格電流30 Aのコンセント1個"
+        },
+        {
+          "label": "ハ",
+          "text": "B 40 A・8 mm²・定格電流30 Aのコンセント1個"
+        },
+        {
+          "label": "ニ",
+          "text": "B 30 A・2.6 mm・定格電流15 Aのコンセント2個"
+        }
+      ],
+      "answerOfficial": "ハ",
+      "hereToRemember": "40 A分岐は電線8 mm²以上、コンセントは30〜40 A。",
+      "explanation": "分岐回路の組合せは遮断器の定格ごとに決まっている。40 Aの分岐回路では電線は8 mm²以上、コンセントは30 A以上40 A以下のものを使用しなければならず、ハが適合する。イは20 A分岐に30 Aのコンセントを用いており、ロは30 A分岐に2.0 mmの電線（2.6 mm以上が必要）、ニは30 A分岐に15 Aのコンセントを用いているため、いずれも不適切である。",
+      "source": {
+        "title": "令和5年度上期 第二種電気工事士 学科試験問題（午前）",
+        "url": "https://www.shiken.or.jp/construction/upload/20230528_co_second_q01.pdf",
+        "page": 7,
+        "figure": "図版参照",
+        "figureRefs": [
+          "E2-2023-UA-P07-Q10"
+        ]
+      },
+      "audit": {
+        "transcription": "会話上の転記内容を格納。原典との独立再照合は未実施",
+        "answer": "公式正答PDF照合済（転記時点）",
+        "figureStatus": "図版参照ID付与。画像切出し・個別目視監査未完了",
+        "independentReview": "未実施",
+        "releaseStatus": "PENDING_SOURCE_AND_VISUAL_AUDIT"
+      }
+    },
+    {
+      "id": "E2-2023-UA-011",
+      "exam": "令和5年度第二種電気工事士上期学科試験【午前】",
+      "examDate": "2023-05-28",
+      "section": "一般問題",
+      "questionNumber": 11,
+      "question": "多数の金属管が集合する場所等で，通線を容易にするために用いられるものは。",
+      "choices": [
+        {
+          "label": "イ",
+          "text": "分電盤"
+        },
+        {
+          "label": "ロ",
+          "text": "プルボックス"
+        },
+        {
+          "label": "ハ",
+          "text": "フィクスチュアスタッド"
+        },
+        {
+          "label": "ニ",
+          "text": "スイッチボックス"
+        }
+      ],
+      "answerOfficial": "ロ",
+      "hereToRemember": "通線を容易にする大きな箱はプルボックス。",
+      "explanation": "プルボックスは、多数の金属管が集合する場所や配線が長く曲がりの多い箇所に設け、電線の引き入れや引き抜き（通線）を容易にするための箱である。分電盤は回路の分岐・保護のための盤であり、スイッチボックスは点滅器などの取付用であるため、用途が異なる。",
+      "source": {
+        "title": "令和5年度上期 第二種電気工事士 学科試験問題（午前）",
+        "url": "https://www.shiken.or.jp/construction/upload/20230528_co_second_q01.pdf",
+        "page": 7,
+        "figure": null
+      },
+      "audit": {
+        "transcription": "会話上の転記内容を格納。原典との独立再照合は未実施",
+        "answer": "公式正答PDF照合済（転記時点）",
+        "figureStatus": "図版なし",
+        "independentReview": "未実施",
+        "releaseStatus": "PENDING_SOURCE_AND_VISUAL_AUDIT"
+      }
+    },
+    {
+      "id": "E2-2023-UA-012",
+      "exam": "令和5年度第二種電気工事士上期学科試験【午前】",
+      "examDate": "2023-05-28",
+      "section": "一般問題",
+      "questionNumber": 12,
+      "question": "絶縁物の最高許容温度が最も高いものは。",
+      "choices": [
+        {
+          "label": "イ",
+          "text": "600V 架橋ポリエチレン絶縁ビニルシースケーブル（CV）"
+        },
+        {
+          "label": "ロ",
+          "text": "600V 二種ビニル絶縁電線（HIV）"
+        },
+        {
+          "label": "ハ",
+          "text": "600V ビニル絶縁ビニルシースケーブル丸形（VVR）"
+        },
+        {
+          "label": "ニ",
+          "text": "600V ビニル絶縁電線（IV）"
+        }
+      ],
+      "answerOfficial": "イ",
+      "hereToRemember": "最高許容温度は CV 90℃、HIV 75℃、IV・VVF 60℃。",
+      "explanation": "絶縁物の最高許容温度は、架橋ポリエチレン絶縁のCVが90℃で最も高く、二種ビニル絶縁電線（HIV）が75℃、ビニル絶縁のVVRやIVが60℃である。したがって最も高いのはイのCVである。絶縁材料の耐熱性の違いが許容電流の大きさにも関係する。",
+      "source": {
+        "title": "令和5年度上期 第二種電気工事士 学科試験問題（午前）",
+        "url": "https://www.shiken.or.jp/construction/upload/20230528_co_second_q01.pdf",
+        "page": 7,
+        "figure": null
+      },
+      "audit": {
+        "transcription": "会話上の転記内容を格納。原典との独立再照合は未実施",
+        "answer": "公式正答PDF照合済（転記時点）",
+        "figureStatus": "図版なし",
+        "independentReview": "未実施",
+        "releaseStatus": "PENDING_SOURCE_AND_VISUAL_AUDIT"
+      }
+    },
+    {
+      "id": "E2-2023-UA-013",
+      "exam": "令和5年度第二種電気工事士上期学科試験【午前】",
+      "examDate": "2023-05-28",
+      "section": "一般問題",
+      "questionNumber": 13,
+      "question": "コンクリート壁に金属管を取り付けるときに用いる材料及び工具の組合せとして，適切なものは。",
+      "choices": [
+        {
+          "label": "イ",
+          "text": "カールプラグ・ステープル・ホルソ・ハンマ"
+        },
+        {
+          "label": "ロ",
+          "text": "サドル・振動ドリル・カールプラグ・木ねじ"
+        },
+        {
+          "label": "ハ",
+          "text": "たがね・コンクリート釘・ハンマ・ステープル"
+        },
+        {
+          "label": "ニ",
+          "text": "ボルト・ホルソ・振動ドリル・サドル"
+        }
+      ],
+      "answerOfficial": "ロ",
+      "hereToRemember": "コンクリートへの管固定はサドル＋カールプラグ＋木ねじ。",
+      "explanation": "コンクリート壁に金属管を取り付けるには、振動ドリルで下穴を開け、カールプラグを打ち込み、サドルを木ねじで締め付けて管を固定する。したがってロの組合せが適切である。ステープルはケーブル工事用であり、ホルソは穴あけ用であって、この固定作業の組合せにはならない。",
+      "source": {
+        "title": "令和5年度上期 第二種電気工事士 学科試験問題（午前）",
+        "url": "https://www.shiken.or.jp/construction/upload/20230528_co_second_q01.pdf",
+        "page": 7,
+        "figure": null
+      },
+      "audit": {
+        "transcription": "会話上の転記内容を格納。原典との独立再照合は未実施",
+        "answer": "公式正答PDF照合済（転記時点）",
+        "figureStatus": "図版なし",
+        "independentReview": "未実施",
+        "releaseStatus": "PENDING_SOURCE_AND_VISUAL_AUDIT"
+      }
+    },
+    {
+      "id": "E2-2023-UA-014",
+      "exam": "令和5年度第二種電気工事士上期学科試験【午前】",
+      "examDate": "2023-05-28",
+      "section": "一般問題",
+      "questionNumber": 14,
+      "question": "定格周波数60 Hz，極数4の低圧三相かご形誘導電動機の同期速度［min⁻¹］は。",
+      "choices": [
+        {
+          "label": "イ",
+          "text": "1 200"
+        },
+        {
+          "label": "ロ",
+          "text": "1 500"
+        },
+        {
+          "label": "ハ",
+          "text": "1 800"
+        },
+        {
+          "label": "ニ",
+          "text": "3 000"
+        }
+      ],
+      "answerOfficial": "ハ",
+      "hereToRemember": "同期速度 Ns＝120f／P。",
+      "explanation": "誘導電動機の同期速度は Ns＝120f／P で求められる。周波数60 Hz、極数4であるから、Ns＝120×60／4＝1800 min⁻¹ となる。実際の回転速度はすべりの分だけこれよりわずかに遅くなる。",
+      "source": {
+        "title": "令和5年度上期 第二種電気工事士 学科試験問題（午前）",
+        "url": "https://www.shiken.or.jp/construction/upload/20230528_co_second_q01.pdf",
+        "page": 7,
+        "figure": null
+      },
+      "audit": {
+        "transcription": "会話上の転記内容を格納。原典との独立再照合は未実施",
+        "answer": "公式正答PDF照合済（転記時点）",
+        "figureStatus": "図版なし",
+        "independentReview": "未実施",
+        "releaseStatus": "PENDING_SOURCE_AND_VISUAL_AUDIT"
+      }
+    },
+    {
+      "id": "E2-2023-UA-015",
+      "exam": "令和5年度第二種電気工事士上期学科試験【午前】",
+      "examDate": "2023-05-28",
+      "section": "一般問題",
+      "questionNumber": 15,
+      "question": "組み合わせて使用する機器で，その組合せが明らかに誤っているものは。",
+      "choices": [
+        {
+          "label": "イ",
+          "text": "ネオン変圧器と高圧水銀灯"
+        },
+        {
+          "label": "ロ",
+          "text": "光電式自動点滅器と庭園灯"
+        },
+        {
+          "label": "ハ",
+          "text": "零相変流器と漏電警報器"
+        },
+        {
+          "label": "ニ",
+          "text": "スターデルタ始動装置と一般用低圧三相かご形誘導電動機"
+        }
+      ],
+      "answerOfficial": "イ",
+      "hereToRemember": "ネオン変圧器はネオン灯専用。水銀灯には安定器が要る。",
+      "explanation": "ネオン変圧器はネオン放電灯を点灯させるための昇圧用変圧器であり、高圧水銀灯の点灯には専用の安定器が必要であるため、イの組合せは誤りである。他の組合せは、庭園灯の自動点滅、漏電警報器の地絡検出、三相かご形電動機の始動法として、いずれも正しい組合せである。",
+      "source": {
+        "title": "令和5年度上期 第二種電気工事士 学科試験問題（午前）",
+        "url": "https://www.shiken.or.jp/construction/upload/20230528_co_second_q01.pdf",
+        "page": 7,
+        "figure": null
+      },
+      "audit": {
+        "transcription": "会話上の転記内容を格納。原典との独立再照合は未実施",
+        "answer": "公式正答PDF照合済（転記時点）",
+        "figureStatus": "図版なし",
+        "independentReview": "未実施",
+        "releaseStatus": "PENDING_SOURCE_AND_VISUAL_AUDIT"
+      }
+    },
+    {
+      "id": "E2-2023-UA-016",
+      "exam": "令和5年度第二種電気工事士上期学科試験【午前】",
+      "examDate": "2023-05-28",
+      "section": "一般問題",
+      "questionNumber": 16,
+      "question": "写真に示す材料の特徴として，誤っているものは。なお，材料の表面には「タイシガイセン EM600V EEF/F 1.6mm JIS JET＜PS＞E OO社 タイネン2014」が記されている。",
+      "choices": [
+        {
+          "label": "イ",
+          "text": "分別が容易でリサイクル性がよい。"
+        },
+        {
+          "label": "ロ",
+          "text": "焼却時に有害なハロゲン系ガスが発生する。"
+        },
+        {
+          "label": "ハ",
+          "text": "ビニル絶縁ビニルシースケーブルと比べ絶縁物の最高許容温度が高い。"
+        },
+        {
+          "label": "ニ",
+          "text": "難燃性がある。"
+        }
+      ],
+      "answerOfficial": "ロ",
+      "hereToRemember": "EMケーブルはハロゲンフリーで、燃えても有害ガスが出ない。",
+      "explanation": "材料表示のEMはエコマテリアルを表し、絶縁体にハロゲンを含まない材料を用いたケーブルである。したがって焼却しても有害なハロゲン系ガスは発生せず、ロの記述が誤りである。分別・リサイクルが容易で難燃性があり、最高許容温度もビニル系より高いという他の記述は正しい。",
+      "source": {
+        "title": "令和5年度上期 第二種電気工事士 学科試験問題（午前）",
+        "url": "https://www.shiken.or.jp/construction/upload/20230528_co_second_q01.pdf",
+        "page": 8,
+        "figure": "図版参照",
+        "figureRefs": [
+          "E2-2023-UA-P08-Q16"
+        ]
+      },
+      "audit": {
+        "transcription": "会話上の転記内容を格納。原典との独立再照合は未実施",
+        "answer": "公式正答PDF照合済（転記時点）",
+        "figureStatus": "図版参照ID付与。画像切出し・個別目視監査未完了",
+        "independentReview": "未実施",
+        "releaseStatus": "PENDING_SOURCE_AND_VISUAL_AUDIT"
+      }
+    },
+    {
+      "id": "E2-2023-UA-017",
+      "exam": "令和5年度第二種電気工事士上期学科試験【午前】",
+      "examDate": "2023-05-28",
+      "section": "一般問題",
+      "questionNumber": 17,
+      "question": "写真に示す器具の用途は。",
+      "choices": [
+        {
+          "label": "イ",
+          "text": "LED電球の明るさを調節するのに用いる。"
+        },
+        {
+          "label": "ロ",
+          "text": "人の接近による自動点滅に用いる。"
+        },
+        {
+          "label": "ハ",
+          "text": "蛍光灯の力率改善に用いる。"
+        },
+        {
+          "label": "ニ",
+          "text": "周囲の明るさに応じて屋外灯などを自動点滅させるのに用いる。"
+        }
+      ],
+      "answerOfficial": "ニ",
+      "hereToRemember": "写真の器具は光電式自動点滅器（フォトスイッチ）。",
+      "explanation": "写真に示す器具は、受光部で周囲の明るさを検知する光電式自動点滅器である。暗くなると自動で点灯し、明るくなると消灯するため、屋外灯などの自動点滅に用いられる（ニ）。人の接近を検知するものは熱線式自動スイッチであり、用途が異なる。",
+      "source": {
+        "title": "令和5年度上期 第二種電気工事士 学科試験問題（午前）",
+        "url": "https://www.shiken.or.jp/construction/upload/20230528_co_second_q01.pdf",
+        "page": 8,
+        "figure": "図版参照",
+        "figureRefs": [
+          "E2-2023-UA-P08-Q17"
+        ]
+      },
+      "audit": {
+        "transcription": "会話上の転記内容を格納。原典との独立再照合は未実施",
+        "answer": "公式正答PDF照合済（転記時点）",
+        "figureStatus": "図版参照ID付与。画像切出し・個別目視監査未完了",
+        "independentReview": "未実施",
+        "releaseStatus": "PENDING_SOURCE_AND_VISUAL_AUDIT"
+      }
+    },
+    {
+      "id": "E2-2023-UA-018",
+      "exam": "令和5年度第二種電気工事士上期学科試験【午前】",
+      "examDate": "2023-05-28",
+      "section": "一般問題",
+      "questionNumber": 18,
+      "question": "写真に示す工具の用途は。",
+      "choices": [
+        {
+          "label": "イ",
+          "text": "VVFケーブルの外装や絶縁被覆をはぎ取るのに用いる。"
+        },
+        {
+          "label": "ロ",
+          "text": "CVケーブル（低圧用）の外装や絶縁被覆をはぎ取るのに用いる。"
+        },
+        {
+          "label": "ハ",
+          "text": "VVRケーブルの外装や絶縁被覆をはぎ取るのに用いる。"
+        },
+        {
+          "label": "ニ",
+          "text": "VFFコード（ビニル平形コード）の絶縁被覆をはぎ取るのに用いる。"
+        }
+      ],
+      "answerOfficial": "イ",
+      "hereToRemember": "写真の工具はVVFケーブル専用のストリッパ。",
+      "explanation": "写真に示す工具は、VVFケーブルの外装と心線の絶縁被覆を、芯線を傷付けずに一度にはぎ取るためのVVFストリッパである（イ）。太いCVケーブルや丸形のVVRには形状が適合せず、それぞれ専用の皮はぎ器やナイフを用いる。",
+      "source": {
+        "title": "令和5年度上期 第二種電気工事士 学科試験問題（午前）",
+        "url": "https://www.shiken.or.jp/construction/upload/20230528_co_second_q01.pdf",
+        "page": 8,
+        "figure": "図版参照",
+        "figureRefs": [
+          "E2-2023-UA-P08-Q18"
+        ]
+      },
+      "audit": {
+        "transcription": "会話上の転記内容を格納。原典との独立再照合は未実施",
+        "answer": "公式正答PDF照合済（転記時点）",
+        "figureStatus": "図版参照ID付与。画像切出し・個別目視監査未完了",
+        "independentReview": "未実施",
+        "releaseStatus": "PENDING_SOURCE_AND_VISUAL_AUDIT"
+      }
+    },
+    {
+      "id": "E2-2023-UA-019",
+      "exam": "令和5年度第二種電気工事士上期学科試験【午前】",
+      "examDate": "2023-05-28",
+      "section": "一般問題",
+      "questionNumber": 19,
+      "question": "単相100 Vの屋内配線工事における絶縁電線相互の接続で，不適切なものは。",
+      "choices": [
+        {
+          "label": "イ",
+          "text": "絶縁電線の絶縁物と同等以上の絶縁効力のあるもので十分被覆した。"
+        },
+        {
+          "label": "ロ",
+          "text": "電線の引張強さが15％減少した。"
+        },
+        {
+          "label": "ハ",
+          "text": "差込形コネクタによる終端接続で，ビニルテープによる絶縁は行わなかった。"
+        },
+        {
+          "label": "ニ",
+          "text": "電線の電気抵抗が5％増加した。"
+        }
+      ],
+      "answerOfficial": "ニ",
+      "hereToRemember": "電線接続で電気抵抗を増加させてはならない。",
+      "explanation": "電線相互の接続は、電気抵抗を増加させず、引張強さを20％以上減少させず、絶縁物と同等以上の絶縁効力のあるもので被覆しなければならない。抵抗が5％増加したニはこの条件に反し、不適切である。引張強さの減少が15％のロは許容範囲内であり、差込形コネクタによる終端接続でテープ巻きを省略したハも認められる。",
+      "source": {
+        "title": "令和5年度上期 第二種電気工事士 学科試験問題（午前）",
+        "url": "https://www.shiken.or.jp/construction/upload/20230528_co_second_q01.pdf",
+        "page": 8,
+        "figure": null
+      },
+      "audit": {
+        "transcription": "会話上の転記内容を格納。原典との独立再照合は未実施",
+        "answer": "公式正答PDF照合済（転記時点）",
+        "figureStatus": "図版なし",
+        "independentReview": "未実施",
+        "releaseStatus": "PENDING_SOURCE_AND_VISUAL_AUDIT"
+      }
+    },
+    {
+      "id": "E2-2023-UA-020",
+      "exam": "令和5年度第二種電気工事士上期学科試験【午前】",
+      "examDate": "2023-05-28",
+      "section": "一般問題",
+      "questionNumber": 20,
+      "question": "低圧屋内配線工事（臨時配線工事の場合を除く）で，600Vビニル絶縁ビニルシースケーブルを用いたケーブル工事の施工方法として，適切なものは。",
+      "choices": [
+        {
+          "label": "イ",
+          "text": "接触防護措置を施した場所で，造営材の側面に沿って垂直に取り付け，その支持点間の距離を8 mとした。"
+        },
+        {
+          "label": "ロ",
+          "text": "金属製遮へい層のない電話用弱電流電線と共に同一の合成樹脂管に収めた。"
+        },
+        {
+          "label": "ハ",
+          "text": "建物のコンクリート壁の中に直接埋設した。"
+        },
+        {
+          "label": "ニ",
+          "text": "丸形ケーブルを，屈曲部の内側の半径をケーブル外径の8倍にして曲げた。"
+        }
+      ],
+      "answerOfficial": "ニ",
+      "hereToRemember": "ケーブルの屈曲半径は外径の6倍以上が基準。",
+      "explanation": "ケーブル工事でケーブルを曲げる場合、屈曲部の内側の半径はケーブル外径の6倍以上（金属遮へい層のあるものは別途大きな値）としなければならない。外径の8倍としたニはこの基準を満たし、適切である。イの支持点間距離は造営材の側面では2 m以下が基準であり、ロの弱電流電線との同一管収納、ハのコンクリートへの直接埋設はいずれも認められない。",
+      "source": {
+        "title": "令和5年度上期 第二種電気工事士 学科試験問題（午前）",
+        "url": "https://www.shiken.or.jp/construction/upload/20230528_co_second_q01.pdf",
+        "page": 8,
+        "figure": null
+      },
+      "audit": {
+        "transcription": "会話上の転記内容を格納。原典との独立再照合は未実施",
+        "answer": "公式正答PDF照合済（転記時点）",
+        "figureStatus": "図版なし",
+        "independentReview": "未実施",
+        "releaseStatus": "PENDING_SOURCE_AND_VISUAL_AUDIT"
+      }
+    },
+    {
+      "id": "E2-2023-UA-021",
+      "exam": "令和5年度第二種電気工事士上期学科試験【午前】",
+      "examDate": "2023-05-28",
+      "section": "一般問題",
+      "questionNumber": 21,
+      "question": "住宅（一般用電気工作物）に系統連系型の発電設備（出力5.5 kW）を，図のように，太陽電池，パワーコンディショナ，漏電遮断器（分電盤内），商用電源側の順に接続する場合，取り付ける漏電遮断器の種類として，最も適切なものは。",
+      "choices": [
+        {
+          "label": "イ",
+          "text": "漏電遮断器（過負荷保護なし）"
+        },
+        {
+          "label": "ロ",
+          "text": "漏電遮断器（過負荷保護付）"
+        },
+        {
+          "label": "ハ",
+          "text": "漏電遮断器（過負荷保護付，高感度形）"
+        },
+        {
+          "label": "ニ",
+          "text": "漏電遮断器（過負荷保護付，逆接続可能型）"
+        }
+      ],
+      "answerOfficial": "ニ",
+      "hereToRemember": "系統連系の漏電遮断器は逆接続可能型を選ぶ。",
+      "explanation": "系統連系型の太陽光発電では、パワーコンディショナ側から分電盤へ逆潮流するため、漏電遮断器には電源側と負荷側を逆に接続しても漏電保護機能が働く逆接続可能型が必要である。あわせて過負荷保護付のものが求められるため、ニが最も適切である。通常の漏電遮断器を逆接続すると、漏電時に正しく動作しないおそれがある。",
+      "source": {
+        "title": "令和5年度上期 第二種電気工事士 学科試験問題（午前）",
+        "url": "https://www.shiken.or.jp/construction/upload/20230528_co_second_q01.pdf",
+        "page": 9,
+        "figure": "図版参照",
+        "figureRefs": [
+          "E2-2023-UA-P09-Q21"
+        ]
+      },
+      "audit": {
+        "transcription": "会話上の転記内容を格納。原典との独立再照合は未実施",
+        "answer": "公式正答PDF照合済（転記時点）",
+        "figureStatus": "図版参照ID付与。画像切出し・個別目視監査未完了",
+        "independentReview": "未実施",
+        "releaseStatus": "PENDING_SOURCE_AND_VISUAL_AUDIT"
+      }
+    },
+    {
+      "id": "E2-2023-UA-022",
+      "exam": "令和5年度第二種電気工事士上期学科試験【午前】",
+      "examDate": "2023-05-28",
+      "section": "一般問題",
+      "questionNumber": 22,
+      "question": "床に固定した定格電圧200 V，定格出力1.5 kWの三相誘導電動機の鉄台に接地工事をする場合，接地線（軟銅線）の太さと接地抵抗値の組合せで，不適切なものは。ただし，漏電遮断器を設置しないものとする。",
+      "choices": [
+        {
+          "label": "イ",
+          "text": "直径1.6 mm，10 Ω"
+        },
+        {
+          "label": "ロ",
+          "text": "直径2.0 mm，50 Ω"
+        },
+        {
+          "label": "ハ",
+          "text": "公称断面積0.75 mm²，5 Ω"
+        },
+        {
+          "label": "ニ",
+          "text": "直径2.6 mm，75 Ω"
+        }
+      ],
+      "answerOfficial": "ハ",
+      "hereToRemember": "D種接地の接地線は直径1.6 mm以上の軟銅線。",
+      "explanation": "使用電圧200 Vの機器の金属製外箱等にはD種接地工事を施し、接地抵抗は100 Ω以下（漏電遮断器を設置しない条件）、接地線は直径1.6 mm以上の軟銅線を用いなければならない。ハの公称断面積0.75 mm²の電線は太さが不足しており、不適切である。他の選択肢は太さと抵抗値の両方が基準を満たす。",
+      "source": {
+        "title": "令和5年度上期 第二種電気工事士 学科試験問題（午前）",
+        "url": "https://www.shiken.or.jp/construction/upload/20230528_co_second_q01.pdf",
+        "page": 9,
+        "figure": null
+      },
+      "audit": {
+        "transcription": "会話上の転記内容を格納。原典との独立再照合は未実施",
+        "answer": "公式正答PDF照合済（転記時点）",
+        "figureStatus": "図版なし",
+        "independentReview": "未実施",
+        "releaseStatus": "PENDING_SOURCE_AND_VISUAL_AUDIT"
+      }
+    },
+    {
+      "id": "E2-2023-UA-023",
+      "exam": "令和5年度第二種電気工事士上期学科試験【午前】",
+      "examDate": "2023-05-28",
+      "section": "一般問題",
+      "questionNumber": 23,
+      "question": "低圧屋内配線の金属可とう電線管（使用する電線管は2種金属製可とう電線管とする）工事で，不適切なものは。",
+      "choices": [
+        {
+          "label": "イ",
+          "text": "管の内側の曲げ半径を管の内径の6倍以上とした。"
+        },
+        {
+          "label": "ロ",
+          "text": "管内に600Vビニル絶縁電線を収めた。"
+        },
+        {
+          "label": "ハ",
+          "text": "管とボックスとの接続にストレートボックスコネクタを使用した。"
+        },
+        {
+          "label": "ニ",
+          "text": "管と金属管（鋼製電線管）との接続にTSカップリングを使用した。"
+        }
+      ],
+      "answerOfficial": "ニ",
+      "hereToRemember": "TSカップリングは合成樹脂管用。金属管には使えない。",
+      "explanation": "TSカップリングは硬質塩化ビニル電線管同士を接続するための接着式継手であり、金属管との接続には使用できないため、ニが不適切である。2種金属製可とう電線管の曲げ半径を内径の6倍以上とすること、管内に絶縁電線を収めること、ボックスとの接続にストレートボックスコネクタを用いることは、いずれも適切な施工である。",
+      "source": {
+        "title": "令和5年度上期 第二種電気工事士 学科試験問題（午前）",
+        "url": "https://www.shiken.or.jp/construction/upload/20230528_co_second_q01.pdf",
+        "page": 9,
+        "figure": null
+      },
+      "audit": {
+        "transcription": "会話上の転記内容を格納。原典との独立再照合は未実施",
+        "answer": "公式正答PDF照合済（転記時点）",
+        "figureStatus": "図版なし",
+        "independentReview": "未実施",
+        "releaseStatus": "PENDING_SOURCE_AND_VISUAL_AUDIT"
+      }
+    },
+    {
+      "id": "E2-2023-UA-024",
+      "exam": "令和5年度第二種電気工事士上期学科試験【午前】",
+      "examDate": "2023-05-28",
+      "section": "一般問題",
+      "questionNumber": 24,
+      "question": "回路計（テスタ）に関する記述として，正しいものは。",
+      "choices": [
+        {
+          "label": "イ",
+          "text": "ディジタル式は電池を内蔵しているが，アナログ式は電池を必要としない。"
+        },
+        {
+          "label": "ロ",
+          "text": "電路と大地間の抵抗測定を行った。その測定値は電路の絶縁抵抗値として使用してよい。"
+        },
+        {
+          "label": "ハ",
+          "text": "交流又は直流電圧を測定する場合は，あらかじめ想定される値の直近上位のレンジを選定して使用する。"
+        },
+        {
+          "label": "ニ",
+          "text": "抵抗を測定する場合の回路計の端子における出力電圧は，交流電圧である。"
+        }
+      ],
+      "answerOfficial": "ハ",
+      "hereToRemember": "テスタのレンジは想定値の直近上位を選ぶ。",
+      "explanation": "電圧測定では、想定される値より少し大きい直近上位のレンジを選ぶことで、指針の振れ過ぎや過入力を防ぎ、精度よく測定できるため、ハが正しい。アナログ式も抵抗測定には電池を必要とし（イは誤り）、回路計による抵抗測定は印加電圧が低く絶縁抵抗の測定の代用にはならない（ロは誤り）。抵抗測定時の端子出力は直流である（ニは誤り）。",
+      "source": {
+        "title": "令和5年度上期 第二種電気工事士 学科試験問題（午前）",
+        "url": "https://www.shiken.or.jp/construction/upload/20230528_co_second_q01.pdf",
+        "page": 9,
+        "figure": null
+      },
+      "audit": {
+        "transcription": "会話上の転記内容を格納。原典との独立再照合は未実施",
+        "answer": "公式正答PDF照合済（転記時点）",
+        "figureStatus": "図版なし",
+        "independentReview": "未実施",
+        "releaseStatus": "PENDING_SOURCE_AND_VISUAL_AUDIT"
+      }
+    },
+    {
+      "id": "E2-2023-UA-025",
+      "exam": "令和5年度第二種電気工事士上期学科試験【午前】",
+      "examDate": "2023-05-28",
+      "section": "一般問題",
+      "questionNumber": 25,
+      "question": "低圧屋内配線の電路と大地間の絶縁抵抗を測定した。「電気設備に関する技術基準を定める省令」に適合していないものは。",
+      "choices": [
+        {
+          "label": "イ",
+          "text": "単相3線式100/200 Vの使用電圧200 V空調回路の絶縁抵抗を測定したところ0.16 MΩであった。"
+        },
+        {
+          "label": "ロ",
+          "text": "三相3線式の使用電圧200 V（対地電圧200 V）電動機回路の絶縁抵抗を測定したところ0.18 MΩであった。"
+        },
+        {
+          "label": "ハ",
+          "text": "単相2線式の使用電圧100 V屋外庭園灯回路の絶縁抵抗を測定したところ0.12 MΩであった。"
+        },
+        {
+          "label": "ニ",
+          "text": "単相2線式の使用電圧100 V屋内配線の絶縁抵抗を，分電盤で各回路を一括して測定したところ，1.5 MΩであったので個別分岐回路の測定を省略した。"
+        }
+      ],
+      "answerOfficial": "ロ",
+      "hereToRemember": "絶縁抵抗は対地電圧150 V超で0.2 MΩ以上が基準。",
+      "explanation": "電路の絶縁抵抗は、使用電圧300 V以下で対地電圧が150 Vを超える回路では0.2 MΩ以上、150 V以下では0.1 MΩ以上でなければならない。三相3線式200 V回路は対地電圧200 Vであるため0.2 MΩ以上が必要であり、0.18 MΩのロは適合しない。他の選択肢は、それぞれの対地電圧に対する基準値を満たしている。",
+      "source": {
+        "title": "令和5年度上期 第二種電気工事士 学科試験問題（午前）",
+        "url": "https://www.shiken.or.jp/construction/upload/20230528_co_second_q01.pdf",
+        "page": 9,
+        "figure": null
+      },
+      "audit": {
+        "transcription": "会話上の転記内容を格納。原典との独立再照合は未実施",
+        "answer": "公式正答PDF照合済（転記時点）",
+        "figureStatus": "図版なし",
+        "independentReview": "未実施",
+        "releaseStatus": "PENDING_SOURCE_AND_VISUAL_AUDIT"
+      }
+    },
+    {
+      "id": "E2-2023-UA-026",
+      "exam": "令和5年度第二種電気工事士上期学科試験【午前】",
+      "examDate": "2023-05-28",
+      "section": "一般問題",
+      "questionNumber": 26,
+      "question": "使用電圧100 Vの低圧電路に，地絡が生じた場合0.1秒で自動的に電路を遮断する装置が施してある。この電路の屋外にD種接地工事が必要な自動販売機がある。その接地抵抗値a［Ω］と電路の絶縁抵抗値b［MΩ］の組合せとして，「電気設備に関する技術基準を定める省令」及び「電気設備の技術基準の解釈」に適合していないものは。",
+      "choices": [
+        {
+          "label": "イ",
+          "text": "a：600 Ω、b：2.0 MΩ"
+        },
+        {
+          "label": "ロ",
+          "text": "a：500 Ω、b：1.0 MΩ"
+        },
+        {
+          "label": "ハ",
+          "text": "a：100 Ω、b：0.2 MΩ"
+        },
+        {
+          "label": "ニ",
+          "text": "a：10 Ω、b：0.1 MΩ"
+        }
+      ],
+      "answerOfficial": "イ",
+      "hereToRemember": "0.5秒以内遮断ならD種接地は500 Ωまで許容される。",
+      "explanation": "地絡時に0.5秒以内に自動遮断する装置がある低圧電路では、D種接地工事の接地抵抗は500 Ω以下まで許容される。本問は0.1秒で遮断するためこの緩和が適用されるが、イの600 Ωは上限を超えており適合しない。絶縁抵抗については使用電圧100 Vの電路で0.1 MΩ以上が必要であり、ロ・ハ・ニの組合せは両方とも基準を満たす。",
+      "source": {
+        "title": "令和5年度上期 第二種電気工事士 学科試験問題（午前）",
+        "url": "https://www.shiken.or.jp/construction/upload/20230528_co_second_q01.pdf",
+        "page": 9,
+        "figure": null
+      },
+      "audit": {
+        "transcription": "会話上の転記内容を格納。原典との独立再照合は未実施",
+        "answer": "公式正答PDF照合済（転記時点）",
+        "figureStatus": "図版なし",
+        "independentReview": "未実施",
+        "releaseStatus": "PENDING_SOURCE_AND_VISUAL_AUDIT"
+      }
+    },
+    {
+      "id": "E2-2023-UA-027",
+      "exam": "令和5年度第二種電気工事士上期学科試験【午前】",
+      "examDate": "2023-05-28",
+      "section": "一般問題",
+      "questionNumber": 27,
+      "question": "単相交流電源から負荷に至る回路において，電圧計，電流計，電力計の結線方法として，正しいものは。",
+      "choices": [
+        {
+          "label": "イ",
+          "text": "図版参照（選択肢イ）"
+        },
+        {
+          "label": "ロ",
+          "text": "図版参照（選択肢ロ）"
+        },
+        {
+          "label": "ハ",
+          "text": "図版参照（選択肢ハ）"
+        },
+        {
+          "label": "ニ",
+          "text": "図版参照（選択肢ニ）"
+        }
+      ],
+      "answerOfficial": "ニ",
+      "hereToRemember": "電圧計は並列、電流計は直列、電力計は両方の結線。",
+      "explanation": "電圧計は負荷と並列に、電流計は負荷と直列に接続する。電力計は、電流コイルを負荷と直列に、電圧コイルを負荷と並列に接続しなければ正しく測定できない。これらの結線をすべて満たしているのがニである。他の選択肢は、いずれかの計器の接続方法が誤っている。",
+      "source": {
+        "title": "令和5年度上期 第二種電気工事士 学科試験問題（午前）",
+        "url": "https://www.shiken.or.jp/construction/upload/20230528_co_second_q01.pdf",
+        "page": 10,
+        "figure": "図版参照",
+        "figureRefs": [
+          "E2-2023-UA-P10-Q27-イ",
+          "E2-2023-UA-P10-Q27-ロ",
+          "E2-2023-UA-P10-Q27-ハ",
+          "E2-2023-UA-P10-Q27-ニ"
+        ]
+      },
+      "audit": {
+        "transcription": "会話上の転記内容を格納。原典との独立再照合は未実施",
+        "answer": "公式正答PDF照合済（転記時点）",
+        "figureStatus": "図版参照ID付与。画像切出し・個別目視監査未完了",
+        "independentReview": "未実施",
+        "releaseStatus": "PENDING_SOURCE_AND_VISUAL_AUDIT"
+      }
+    },
+    {
+      "id": "E2-2023-UA-028",
+      "exam": "令和5年度第二種電気工事士上期学科試験【午前】",
+      "examDate": "2023-05-28",
+      "section": "一般問題",
+      "questionNumber": 28,
+      "question": "「電気工事士法」において，第二種電気工事士であっても従事できない作業は。",
+      "choices": [
+        {
+          "label": "イ",
+          "text": "一般用電気工作物の配線器具に電線を接続する作業"
+        },
+        {
+          "label": "ロ",
+          "text": "一般用電気工作物に接地線を取り付ける作業"
+        },
+        {
+          "label": "ハ",
+          "text": "自家用電気工作物（最大電力500 kW未満の需要設備）の地中電線用の管を設置する作業"
+        },
+        {
+          "label": "ニ",
+          "text": "自家用電気工作物（最大電力500 kW未満の需要設備）の低圧部分の電線相互を接続する作業"
+        }
+      ],
+      "answerOfficial": "ニ",
+      "hereToRemember": "第二種電気工事士が扱えるのは一般用電気工作物のみ。",
+      "explanation": "第二種電気工事士は一般用電気工作物の電気工事に従事できるが、自家用電気工作物の電気工事には従事できない。したがって、自家用電気工作物の低圧部分で電線相互を接続するニの作業はできない。一方、地中電線用の管を設置する作業は、電線を扱わないため電気工事士の資格を要しない作業であり、ハは従事できる。",
+      "source": {
+        "title": "令和5年度上期 第二種電気工事士 学科試験問題（午前）",
+        "url": "https://www.shiken.or.jp/construction/upload/20230528_co_second_q01.pdf",
+        "page": 10,
+        "figure": null
+      },
+      "audit": {
+        "transcription": "会話上の転記内容を格納。原典との独立再照合は未実施",
+        "answer": "公式正答PDF照合済（転記時点）",
+        "figureStatus": "図版なし",
+        "independentReview": "未実施",
+        "releaseStatus": "PENDING_SOURCE_AND_VISUAL_AUDIT"
+      }
+    },
+    {
+      "id": "E2-2023-UA-029",
+      "exam": "令和5年度第二種電気工事士上期学科試験【午前】",
+      "examDate": "2023-05-28",
+      "section": "一般問題",
+      "questionNumber": 29,
+      "question": "「電気用品安全法」の適用を受ける電気用品に関する記述として，誤っているものは。",
+      "choices": [
+        {
+          "label": "イ",
+          "text": "PSEの記号は，電気用品のうち「特定電気用品以外の電気用品」を示す。"
+        },
+        {
+          "label": "ロ",
+          "text": "PSEの記号は，電気用品のうち「特定電気用品」を示す。"
+        },
+        {
+          "label": "ハ",
+          "text": "＜PS＞Eの記号は，電気用品のうち輸入した「特定電気用品以外の電気用品」を示す。"
+        },
+        {
+          "label": "ニ",
+          "text": "電気工事士は，「電気用品安全法」に定められた所定の表示が付されているものでなければ，電気用品を電気工作物の設置又は変更の工事に使用してはならない。"
+        }
+      ],
+      "answerOfficial": "ハ",
+      "hereToRemember": "＜PS＞Eは輸入品専用の記号ではない。",
+      "explanation": "PSE表示のうち、ひし形の記号は特定電気用品を、丸形の記号は特定電気用品以外の電気用品を示す。＜PS＞Eの記号は特定電気用品以外の電気用品に用いられる表示であり、輸入したものに限って付される記号ではないため、「輸入した」と限定したハの記述が誤りである。なお、所定の表示のない電気用品を工事に使用してはならないとするニの記述は正しい。",
+      "source": {
+        "title": "令和5年度上期 第二種電気工事士 学科試験問題（午前）",
+        "url": "https://www.shiken.or.jp/construction/upload/20230528_co_second_q01.pdf",
+        "page": 10,
+        "figure": null
+      },
+      "audit": {
+        "transcription": "会話上の転記内容を格納。原典との独立再照合は未実施",
+        "answer": "公式正答PDF照合済（転記時点）",
+        "figureStatus": "図版なし",
+        "independentReview": "未実施",
+        "releaseStatus": "PENDING_SOURCE_AND_VISUAL_AUDIT"
+      }
+    },
+    {
+      "id": "E2-2023-UA-030",
+      "exam": "令和5年度第二種電気工事士上期学科試験【午前】",
+      "examDate": "2023-05-28",
+      "section": "一般問題",
+      "questionNumber": 30,
+      "question": "「電気設備に関する技術基準を定める省令」における電路の保護対策について記述したものである。次の空欄A及びBの組合せとして，正しいものは。電路のAには，過電流による過熱焼損から電線及び電気機械器具を保護し，かつ，火災の発生を防止できるよう，過電流遮断器を施設しなければならない。また，電路には，Bが生じた場合に，電線若しくは電気機械器具の損傷，感電又は火災のおそれがないよう，B遮断器の施設その他の適切な措置を講じなければならない。ただし，電気機械器具を乾燥した場所に施設する等Bによる危険のおそれがない場合は，この限りでない。",
+      "choices": [
+        {
+          "label": "イ",
+          "text": "A：必要な箇所／B：地絡"
+        },
+        {
+          "label": "ロ",
+          "text": "A：すべての分岐回路／B：過電流"
+        },
+        {
+          "label": "ハ",
+          "text": "A：必要な箇所／B：過電流"
+        },
+        {
+          "label": "ニ",
+          "text": "A：すべての分岐回路／B：地絡"
+        }
+      ],
+      "answerOfficial": "イ",
+      "hereToRemember": "過電流遮断器は「必要な箇所」、地絡対策も省令の柱。",
+      "explanation": "省令では、電路の必要な箇所（A）に過電流遮断器を施設して過熱焼損と火災を防ぎ、また電路に地絡（B）が生じた場合に損傷・感電・火災のおそれがないよう、地絡遮断器の施設等の措置を講じることが求められる。したがって組合せはイが正しい。過電流と地絡は、それぞれ別の保護対策として並列に規定されている点が要点である。",
+      "source": {
+        "title": "令和5年度上期 第二種電気工事士 学科試験問題（午前）",
+        "url": "https://www.shiken.or.jp/construction/upload/20230528_co_second_q01.pdf",
+        "page": 10,
+        "figure": null
+      },
+      "audit": {
+        "transcription": "会話上の転記内容を格納。原典との独立再照合は未実施",
+        "answer": "公式正答PDF照合済（転記時点）",
+        "figureStatus": "図版なし",
+        "independentReview": "未実施",
+        "releaseStatus": "PENDING_SOURCE_AND_VISUAL_AUDIT"
+      }
+    },
+    {
+      "id": "E2-2023-UA-031",
+      "exam": "令和5年度第二種電気工事士上期学科試験【午前】",
+      "examDate": "2023-05-28",
+      "section": "配線図問題",
+      "questionNumber": 31,
+      "question": "①で示す図記号の名称は。",
+      "choices": [
+        {
+          "label": "イ",
+          "text": "白熱灯"
+        },
+        {
+          "label": "ロ",
+          "text": "通路誘導灯"
+        },
+        {
+          "label": "ハ",
+          "text": "確認表示灯"
+        },
+        {
+          "label": "ニ",
+          "text": "位置表示灯"
+        }
+      ],
+      "answerOfficial": "ハ",
+      "hereToRemember": "確認表示灯は、負荷が動作中かどうかを示すランプ。",
+      "explanation": "①の図記号は確認表示灯を示す。確認表示灯は、離れた場所にある負荷（換気扇やポンプなど）が運転中であるかどうかを点滅器の場所で確認するための表示灯である。スイッチ自体の位置を光で示す位置表示灯（ほたるランプ）とは役割が異なり、白熱灯や通路誘導灯の記号とも区別される。",
+      "source": {
+        "title": "令和5年度上期 第二種電気工事士 学科試験問題（午前）",
+        "url": "https://www.shiken.or.jp/construction/upload/20230528_co_second_q01.pdf",
+        "page": 11,
+        "figure": "図版参照",
+        "figureRefs": [
+          "E2-2023-UA-P15-①"
+        ]
+      },
+      "audit": {
+        "transcription": "会話上の転記内容を格納。原典との独立再照合は未実施",
+        "answer": "公式正答PDF照合済（転記時点）",
+        "figureStatus": "図版参照ID付与。画像切出し・個別目視監査未完了",
+        "independentReview": "未実施",
+        "releaseStatus": "PENDING_SOURCE_AND_VISUAL_AUDIT"
+      }
+    },
+    {
+      "id": "E2-2023-UA-032",
+      "exam": "令和5年度第二種電気工事士上期学科試験【午前】",
+      "examDate": "2023-05-28",
+      "section": "配線図問題",
+      "questionNumber": 32,
+      "question": "②で示す図記号の名称は。",
+      "choices": [
+        {
+          "label": "イ",
+          "text": "一般形点滅器"
+        },
+        {
+          "label": "ロ",
+          "text": "一般形調光器"
+        },
+        {
+          "label": "ハ",
+          "text": "ワイド形調光器"
+        },
+        {
+          "label": "ニ",
+          "text": "ワイドハンドル形点滅器"
+        }
+      ],
+      "answerOfficial": "ニ",
+      "hereToRemember": "ハンドルが大きい点滅器はワイドハンドル形。",
+      "explanation": "②の図記号はワイドハンドル形点滅器を示す。操作ハンドルが大きく、押すだけの簡単な操作で入切できる点滅器であり、埋込形スイッチの代表的な形式である。調光器は明るさを調節する器具で記号が異なり、一般形点滅器はハンドルが小さい通常の形式である。",
+      "source": {
+        "title": "令和5年度上期 第二種電気工事士 学科試験問題（午前）",
+        "url": "https://www.shiken.or.jp/construction/upload/20230528_co_second_q01.pdf",
+        "page": 11,
+        "figure": "図版参照",
+        "figureRefs": [
+          "E2-2023-UA-P15-②"
+        ]
+      },
+      "audit": {
+        "transcription": "会話上の転記内容を格納。原典との独立再照合は未実施",
+        "answer": "公式正答PDF照合済（転記時点）",
+        "figureStatus": "図版参照ID付与。画像切出し・個別目視監査未完了",
+        "independentReview": "未実施",
+        "releaseStatus": "PENDING_SOURCE_AND_VISUAL_AUDIT"
+      }
+    },
+    {
+      "id": "E2-2023-UA-033",
+      "exam": "令和5年度第二種電気工事士上期学科試験【午前】",
+      "examDate": "2023-05-28",
+      "section": "配線図問題",
+      "questionNumber": 33,
+      "question": "③で示す器具の接地工事における接地抵抗の許容される最大値［Ω］は。",
+      "choices": [
+        {
+          "label": "イ",
+          "text": "10"
+        },
+        {
+          "label": "ロ",
+          "text": "100"
+        },
+        {
+          "label": "ハ",
+          "text": "300"
+        },
+        {
+          "label": "ニ",
+          "text": "500"
+        }
+      ],
+      "answerOfficial": "ニ",
+      "hereToRemember": "漏電遮断器付き回路のD種接地は500 Ωまで許容。",
+      "explanation": "③で示す器具の回路には漏電遮断器が施設されており、地絡が生じたときに短時間で自動的に電路を遮断できる。このような場合、D種接地工事の接地抵抗値は500 Ω以下まで許容されるため、最大値は500 Ωである。通常のD種接地の基準である100 Ω以下よりも緩和される点が要点である。",
+      "source": {
+        "title": "令和5年度上期 第二種電気工事士 学科試験問題（午前）",
+        "url": "https://www.shiken.or.jp/construction/upload/20230528_co_second_q01.pdf",
+        "page": 11,
+        "figure": "図版参照",
+        "figureRefs": [
+          "E2-2023-UA-P15-③"
+        ]
+      },
+      "audit": {
+        "transcription": "会話上の転記内容を格納。原典との独立再照合は未実施",
+        "answer": "公式正答PDF照合済（転記時点）",
+        "figureStatus": "図版参照ID付与。画像切出し・個別目視監査未完了",
+        "independentReview": "未実施",
+        "releaseStatus": "PENDING_SOURCE_AND_VISUAL_AUDIT"
+      }
+    },
+    {
+      "id": "E2-2023-UA-034",
+      "exam": "令和5年度第二種電気工事士上期学科試験【午前】",
+      "examDate": "2023-05-28",
+      "section": "配線図問題",
+      "questionNumber": 34,
+      "question": "④の部分の最少電線本数（心線数）は。",
+      "choices": [
+        {
+          "label": "イ",
+          "text": "2"
+        },
+        {
+          "label": "ロ",
+          "text": "3"
+        },
+        {
+          "label": "ハ",
+          "text": "4"
+        },
+        {
+          "label": "ニ",
+          "text": "5"
+        }
+      ],
+      "answerOfficial": "ハ",
+      "hereToRemember": "心線数は、電源2線にスイッチ経由の線を加えて数える。",
+      "explanation": "④の部分の電線本数は、その区間を通過する回路の構成から決まる。電源からの接地側・非接地側の2線に加えて、点滅器を経由する線や負荷への送り線が必要となる区間であり、最少の心線数は4本となる。配線図では、ジョイントボックス間の通過線を1本ずつ数え、接地側電線がスイッチを経由しないことを意識して数えるのが要点である。",
+      "source": {
+        "title": "令和5年度上期 第二種電気工事士 学科試験問題（午前）",
+        "url": "https://www.shiken.or.jp/construction/upload/20230528_co_second_q01.pdf",
+        "page": 11,
+        "figure": "図版参照",
+        "figureRefs": [
+          "E2-2023-UA-P15-④"
+        ]
+      },
+      "audit": {
+        "transcription": "会話上の転記内容を格納。原典との独立再照合は未実施",
+        "answer": "公式正答PDF照合済（転記時点）",
+        "figureStatus": "図版参照ID付与。画像切出し・個別目視監査未完了",
+        "independentReview": "未実施",
+        "releaseStatus": "PENDING_SOURCE_AND_VISUAL_AUDIT"
+      }
+    },
+    {
+      "id": "E2-2023-UA-035",
+      "exam": "令和5年度第二種電気工事士上期学科試験【午前】",
+      "examDate": "2023-05-28",
+      "section": "配線図問題",
+      "questionNumber": 35,
+      "question": "⑤で示す図記号の名称は。",
+      "choices": [
+        {
+          "label": "イ",
+          "text": "プルボックス"
+        },
+        {
+          "label": "ロ",
+          "text": "VVF用ジョイントボックス"
+        },
+        {
+          "label": "ハ",
+          "text": "ジャンクションボックス"
+        },
+        {
+          "label": "ニ",
+          "text": "ジョイントボックス"
+        }
+      ],
+      "answerOfficial": "ニ",
+      "hereToRemember": "電線を接続・分岐する箱はジョイントボックス。",
+      "explanation": "⑤の図記号はジョイントボックスを示す。ジョイントボックスは電線相互の接続や分岐を行うための箱であり、配線図上では接続点のある箇所に用いられる。プルボックスは通線を容易にするための大きな箱であり、用途も記号も異なる。",
+      "source": {
+        "title": "令和5年度上期 第二種電気工事士 学科試験問題（午前）",
+        "url": "https://www.shiken.or.jp/construction/upload/20230528_co_second_q01.pdf",
+        "page": 11,
+        "figure": "図版参照",
+        "figureRefs": [
+          "E2-2023-UA-P15-⑤"
+        ]
+      },
+      "audit": {
+        "transcription": "会話上の転記内容を格納。原典との独立再照合は未実施",
+        "answer": "公式正答PDF照合済（転記時点）",
+        "figureStatus": "図版参照ID付与。画像切出し・個別目視監査未完了",
+        "independentReview": "未実施",
+        "releaseStatus": "PENDING_SOURCE_AND_VISUAL_AUDIT"
+      }
+    },
+    {
+      "id": "E2-2023-UA-036",
+      "exam": "令和5年度第二種電気工事士上期学科試験【午前】",
+      "examDate": "2023-05-28",
+      "section": "配線図問題",
+      "questionNumber": 36,
+      "question": "⑥で示す部分の電路と大地間の絶縁抵抗として，許容される最小値［MΩ］は。",
+      "choices": [
+        {
+          "label": "イ",
+          "text": "0.1"
+        },
+        {
+          "label": "ロ",
+          "text": "0.2"
+        },
+        {
+          "label": "ハ",
+          "text": "0.3"
+        },
+        {
+          "label": "ニ",
+          "text": "0.4"
+        }
+      ],
+      "answerOfficial": "イ",
+      "hereToRemember": "100 V電路の絶縁抵抗の最小値は0.1 MΩ。",
+      "explanation": "⑥で示す部分は使用電圧100 Vの電路であり、対地電圧が150 V以下であるため、電路と大地間の絶縁抵抗は0.1 MΩ以上でなければならない。したがって許容される最小値は0.1 MΩである。対地電圧が150 Vを超える回路では0.2 MΩ以上が求められることと対比して覚える。",
+      "source": {
+        "title": "令和5年度上期 第二種電気工事士 学科試験問題（午前）",
+        "url": "https://www.shiken.or.jp/construction/upload/20230528_co_second_q01.pdf",
+        "page": 11,
+        "figure": "図版参照",
+        "figureRefs": [
+          "E2-2023-UA-P15-⑥"
+        ]
+      },
+      "audit": {
+        "transcription": "会話上の転記内容を格納。原典との独立再照合は未実施",
+        "answer": "公式正答PDF照合済（転記時点）",
+        "figureStatus": "図版参照ID付与。画像切出し・個別目視監査未完了",
+        "independentReview": "未実施",
+        "releaseStatus": "PENDING_SOURCE_AND_VISUAL_AUDIT"
+      }
+    },
+    {
+      "id": "E2-2023-UA-037",
+      "exam": "令和5年度第二種電気工事士上期学科試験【午前】",
+      "examDate": "2023-05-28",
+      "section": "配線図問題",
+      "questionNumber": 37,
+      "question": "⑦で示す図記号の名称は。",
+      "choices": [
+        {
+          "label": "イ",
+          "text": "タイマ付スイッチ"
+        },
+        {
+          "label": "ロ",
+          "text": "遅延スイッチ"
+        },
+        {
+          "label": "ハ",
+          "text": "自動点滅器"
+        },
+        {
+          "label": "ニ",
+          "text": "熱線式自動スイッチ"
+        }
+      ],
+      "answerOfficial": "ニ",
+      "hereToRemember": "熱線式自動スイッチは人感センサで自動点滅する。",
+      "explanation": "⑦の図記号は熱線式自動スイッチを示す。人体から放射される熱線（赤外線）の変化を検知して、人の接近で自動的に点灯し、一定時間後に消灯するスイッチである。周囲の明るさで点滅する自動点滅器や、設定時間で制御するタイマ付スイッチとは検知方式が異なる。",
+      "source": {
+        "title": "令和5年度上期 第二種電気工事士 学科試験問題（午前）",
+        "url": "https://www.shiken.or.jp/construction/upload/20230528_co_second_q01.pdf",
+        "page": 11,
+        "figure": "図版参照",
+        "figureRefs": [
+          "E2-2023-UA-P15-⑦"
+        ]
+      },
+      "audit": {
+        "transcription": "会話上の転記内容を格納。原典との独立再照合は未実施",
+        "answer": "公式正答PDF照合済（転記時点）",
+        "figureStatus": "図版参照ID付与。画像切出し・個別目視監査未完了",
+        "independentReview": "未実施",
+        "releaseStatus": "PENDING_SOURCE_AND_VISUAL_AUDIT"
+      }
+    },
+    {
+      "id": "E2-2023-UA-038",
+      "exam": "令和5年度第二種電気工事士上期学科試験【午前】",
+      "examDate": "2023-05-28",
+      "section": "配線図問題",
+      "questionNumber": 38,
+      "question": "⑧で示す部分の小勢力回路で使用できる電線（軟銅線）の最小太さの直径［mm］は。",
+      "choices": [
+        {
+          "label": "イ",
+          "text": "0.8"
+        },
+        {
+          "label": "ロ",
+          "text": "1.2"
+        },
+        {
+          "label": "ハ",
+          "text": "1.6"
+        },
+        {
+          "label": "ニ",
+          "text": "2.0"
+        }
+      ],
+      "answerOfficial": "イ",
+      "hereToRemember": "小勢力回路の電線は直径0.8 mm以上の軟銅線。",
+      "explanation": "小勢力回路（チャイムやリモコン回路など、電圧60 V以下の回路）に使用する電線は、直径0.8 mm以上の軟銅線、または同等以上の太さのものを用いなければならない。したがって最小太さは0.8 mmである。通常の低圧屋内配線の最小太さ1.6 mmとは別の基準である点に注意する。",
+      "source": {
+        "title": "令和5年度上期 第二種電気工事士 学科試験問題（午前）",
+        "url": "https://www.shiken.or.jp/construction/upload/20230528_co_second_q01.pdf",
+        "page": 11,
+        "figure": "図版参照",
+        "figureRefs": [
+          "E2-2023-UA-P15-⑧"
+        ]
+      },
+      "audit": {
+        "transcription": "会話上の転記内容を格納。原典との独立再照合は未実施",
+        "answer": "公式正答PDF照合済（転記時点）",
+        "figureStatus": "図版参照ID付与。画像切出し・個別目視監査未完了",
+        "independentReview": "未実施",
+        "releaseStatus": "PENDING_SOURCE_AND_VISUAL_AUDIT"
+      }
+    },
+    {
+      "id": "E2-2023-UA-039",
+      "exam": "令和5年度第二種電気工事士上期学科試験【午前】",
+      "examDate": "2023-05-28",
+      "section": "配線図問題",
+      "questionNumber": 39,
+      "question": "⑨で示す部分の配線工事で用いる管の種類は。",
+      "choices": [
+        {
+          "label": "イ",
+          "text": "硬質ポリ塩化ビニル電線管"
+        },
+        {
+          "label": "ロ",
+          "text": "波付硬質合成樹脂管"
+        },
+        {
+          "label": "ハ",
+          "text": "耐衝撃性硬質ポリ塩化ビニル電線管"
+        },
+        {
+          "label": "ニ",
+          "text": "耐衝撃性硬質ポリ塩化ビニル管"
+        }
+      ],
+      "answerOfficial": "ロ",
+      "hereToRemember": "地中埋設に使う管は波付硬質合成樹脂管（FEP）。",
+      "explanation": "⑨で示す部分は地中に埋設される配線部分であり、地中埋設用として波付硬質合成樹脂管（FEP）が用いられる。可とう性があり、地中での施工やケーブルの引き入れに適している。硬質ポリ塩化ビニル電線管は主に屋内や露出配線に用いるものであり、地中埋設の標準的な管とは区別される。",
+      "source": {
+        "title": "令和5年度上期 第二種電気工事士 学科試験問題（午前）",
+        "url": "https://www.shiken.or.jp/construction/upload/20230528_co_second_q01.pdf",
+        "page": 11,
+        "figure": "図版参照",
+        "figureRefs": [
+          "E2-2023-UA-P15-⑨"
+        ]
+      },
+      "audit": {
+        "transcription": "会話上の転記内容を格納。原典との独立再照合は未実施",
+        "answer": "公式正答PDF照合済（転記時点）",
+        "figureStatus": "図版参照ID付与。画像切出し・個別目視監査未完了",
+        "independentReview": "未実施",
+        "releaseStatus": "PENDING_SOURCE_AND_VISUAL_AUDIT"
+      }
+    },
+    {
+      "id": "E2-2023-UA-040",
+      "exam": "令和5年度第二種電気工事士上期学科試験【午前】",
+      "examDate": "2023-05-28",
+      "section": "配線図問題",
+      "questionNumber": 40,
+      "question": "⑩で示す部分の工事方法で施工できない工事方法は。",
+      "choices": [
+        {
+          "label": "イ",
+          "text": "金属管工事"
+        },
+        {
+          "label": "ロ",
+          "text": "合成樹脂管工事"
+        },
+        {
+          "label": "ハ",
+          "text": "がいし引き工事"
+        },
+        {
+          "label": "ニ",
+          "text": "ケーブル工事"
+        }
+      ],
+      "answerOfficial": "イ",
+      "hereToRemember": "施設場所の条件によって、施工できない工事方法がある。",
+      "explanation": "⑩で示す部分の施設条件では、金属管工事を施工することはできない。他の合成樹脂管工事、がいし引き工事、ケーブル工事は、その場所の条件のもとで施工が認められる。配線図問題では、図に示された場所（湿気・隠ぺい・地中など）の条件と、各工事方法の適用可否を結び付けて判断することが要点である。",
+      "source": {
+        "title": "令和5年度上期 第二種電気工事士 学科試験問題（午前）",
+        "url": "https://www.shiken.or.jp/construction/upload/20230528_co_second_q01.pdf",
+        "page": 11,
+        "figure": "図版参照",
+        "figureRefs": [
+          "E2-2023-UA-P15-⑩"
+        ]
+      },
+      "audit": {
+        "transcription": "会話上の転記内容を格納。原典との独立再照合は未実施",
+        "answer": "公式正答PDF照合済（転記時点）",
+        "figureStatus": "図版参照ID付与。画像切出し・個別目視監査未完了",
+        "independentReview": "未実施",
+        "releaseStatus": "PENDING_SOURCE_AND_VISUAL_AUDIT"
+      }
+    },
+    {
+      "id": "E2-2023-UA-041",
+      "exam": "令和5年度第二種電気工事士上期学科試験【午前】",
+      "examDate": "2023-05-28",
+      "section": "配線図問題",
+      "questionNumber": 41,
+      "question": "⑪で示すボックス内の接続をすべて差込形コネクタとする場合，使用する差込形コネクタの種類と最少個数の組合せで，正しいものは。ただし，使用する電線はすべてVVF1.6とする。",
+      "choices": [
+        {
+          "label": "イ",
+          "text": "図版参照（選択肢イ）"
+        },
+        {
+          "label": "ロ",
+          "text": "図版参照（選択肢ロ）"
+        },
+        {
+          "label": "ハ",
+          "text": "図版参照（選択肢ハ）"
+        },
+        {
+          "label": "ニ",
+          "text": "図版参照（選択肢ニ）"
+        }
+      ],
+      "answerOfficial": "ロ",
+      "hereToRemember": "差込形コネクタは、接続点ごとに電線本数に合う極数を選ぶ。",
+      "explanation": "差込形コネクタは、1つの接続点につき、そこに集まる電線の本数に応じた極数（2本用・3本用・4本用）のものを1個使用する。⑪のボックス内の接続点を数え、各接続点の電線本数に合う種類を選んで合計すると、ロの組合せが最少個数となる。極数が合わないコネクタでは接続できない点が要点である。",
+      "source": {
+        "title": "令和5年度上期 第二種電気工事士 学科試験問題（午前）",
+        "url": "https://www.shiken.or.jp/construction/upload/20230528_co_second_q01.pdf",
+        "page": 12,
+        "figure": "図版参照",
+        "figureRefs": [
+          "E2-2023-UA-P12-Q41-イ",
+          "E2-2023-UA-P12-Q41-ロ",
+          "E2-2023-UA-P12-Q41-ハ",
+          "E2-2023-UA-P12-Q41-ニ",
+          "E2-2023-UA-P15-⑪"
+        ]
+      },
+      "audit": {
+        "transcription": "会話上の転記内容を格納。原典との独立再照合は未実施",
+        "answer": "公式正答PDF照合済（転記時点）",
+        "figureStatus": "図版参照ID付与。画像切出し・個別目視監査未完了",
+        "independentReview": "未実施",
+        "releaseStatus": "PENDING_SOURCE_AND_VISUAL_AUDIT"
+      }
+    },
+    {
+      "id": "E2-2023-UA-042",
+      "exam": "令和5年度第二種電気工事士上期学科試験【午前】",
+      "examDate": "2023-05-28",
+      "section": "配線図問題",
+      "questionNumber": 42,
+      "question": "⑫で示すボックス内の接続をすべて圧着接続とする場合，使用するリングスリーブの種類と最少個数の組合せで，正しいものは。ただし，使用する電線はすべてVVF1.6とする。",
+      "choices": [
+        {
+          "label": "イ",
+          "text": "図版参照（選択肢イ）"
+        },
+        {
+          "label": "ロ",
+          "text": "図版参照（選択肢ロ）"
+        },
+        {
+          "label": "ハ",
+          "text": "図版参照（選択肢ハ）"
+        },
+        {
+          "label": "ニ",
+          "text": "図版参照（選択肢ニ）"
+        }
+      ],
+      "answerOfficial": "ロ",
+      "hereToRemember": "リングスリーブは、電線の太さと本数で小・中を選ぶ。",
+      "explanation": "圧着接続に用いるリングスリーブは、接続する電線の太さと合計断面積に応じて小と中を使い分ける。VVF1.6の接続では、⑫のボックス内の各接続点の電線本数を数え、それぞれに適合するスリーブを選ぶと、ロの組合せが最少個数となる。スリーブの選定を誤ると圧着不良の原因になる。",
+      "source": {
+        "title": "令和5年度上期 第二種電気工事士 学科試験問題（午前）",
+        "url": "https://www.shiken.or.jp/construction/upload/20230528_co_second_q01.pdf",
+        "page": 12,
+        "figure": "図版参照",
+        "figureRefs": [
+          "E2-2023-UA-P12-Q42-イ",
+          "E2-2023-UA-P12-Q42-ロ",
+          "E2-2023-UA-P12-Q42-ハ",
+          "E2-2023-UA-P12-Q42-ニ",
+          "E2-2023-UA-P15-⑫"
+        ]
+      },
+      "audit": {
+        "transcription": "会話上の転記内容を格納。原典との独立再照合は未実施",
+        "answer": "公式正答PDF照合済（転記時点）",
+        "figureStatus": "図版参照ID付与。画像切出し・個別目視監査未完了",
+        "independentReview": "未実施",
+        "releaseStatus": "PENDING_SOURCE_AND_VISUAL_AUDIT"
+      }
+    },
+    {
+      "id": "E2-2023-UA-043",
+      "exam": "令和5年度第二種電気工事士上期学科試験【午前】",
+      "examDate": "2023-05-28",
+      "section": "配線図問題",
+      "questionNumber": 43,
+      "question": "⑬で示す点滅器の取付け工事に使用する材料として，適切なものは。",
+      "choices": [
+        {
+          "label": "イ",
+          "text": "図版参照（選択肢イ）"
+        },
+        {
+          "label": "ロ",
+          "text": "図版参照（選択肢ロ）"
+        },
+        {
+          "label": "ハ",
+          "text": "図版参照（選択肢ハ）"
+        },
+        {
+          "label": "ニ",
+          "text": "図版参照（選択肢ニ）"
+        }
+      ],
+      "answerOfficial": "イ",
+      "hereToRemember": "点滅器の材料は、取付方法（埋込・露出）で決まる。",
+      "explanation": "⑬の点滅器の取付けには、図に示された取付方法に応じた材料が必要である。埋込形であればスイッチボックスや取付枠、プレートなどが、露出形であれば露出用のボックス等が要る。これらを正しく組み合わせたイが適切である。器具本体だけでなく、固定と仕上げに必要な材料まで含めて選ぶことが要点である。",
+      "source": {
+        "title": "令和5年度上期 第二種電気工事士 学科試験問題（午前）",
+        "url": "https://www.shiken.or.jp/construction/upload/20230528_co_second_q01.pdf",
+        "page": 12,
+        "figure": "図版参照",
+        "figureRefs": [
+          "E2-2023-UA-P12-Q43-イ",
+          "E2-2023-UA-P12-Q43-ロ",
+          "E2-2023-UA-P12-Q43-ハ",
+          "E2-2023-UA-P12-Q43-ニ",
+          "E2-2023-UA-P15-⑬"
+        ]
+      },
+      "audit": {
+        "transcription": "会話上の転記内容を格納。原典との独立再照合は未実施",
+        "answer": "公式正答PDF照合済（転記時点）",
+        "figureStatus": "図版参照ID付与。画像切出し・個別目視監査未完了",
+        "independentReview": "未実施",
+        "releaseStatus": "PENDING_SOURCE_AND_VISUAL_AUDIT"
+      }
+    },
+    {
+      "id": "E2-2023-UA-044",
+      "exam": "令和5年度第二種電気工事士上期学科試験【午前】",
+      "examDate": "2023-05-28",
+      "section": "配線図問題",
+      "questionNumber": 44,
+      "question": "⑭で示す図記号の機器は。",
+      "choices": [
+        {
+          "label": "イ",
+          "text": "図版参照（選択肢イ）"
+        },
+        {
+          "label": "ロ",
+          "text": "図版参照（選択肢ロ）"
+        },
+        {
+          "label": "ハ",
+          "text": "図版参照（選択肢ハ）"
+        },
+        {
+          "label": "ニ",
+          "text": "図版参照（選択肢ニ）"
+        }
+      ],
+      "answerOfficial": "ハ",
+      "hereToRemember": "図記号は配線図の凡例どおりに機器を特定する。",
+      "explanation": "⑭の図記号は、配線図の凡例においてハの機器を示す記号である。配線図では機器ごとに図記号が定められており、記号の形状と付記文字から機器を読み取る。似た記号との混同を避けるため、代表的な機器の記号は形で覚えておくことが要点である。",
+      "source": {
+        "title": "令和5年度上期 第二種電気工事士 学科試験問題（午前）",
+        "url": "https://www.shiken.or.jp/construction/upload/20230528_co_second_q01.pdf",
+        "page": 12,
+        "figure": "図版参照",
+        "figureRefs": [
+          "E2-2023-UA-P12-Q44-イ",
+          "E2-2023-UA-P12-Q44-ロ",
+          "E2-2023-UA-P12-Q44-ハ",
+          "E2-2023-UA-P12-Q44-ニ",
+          "E2-2023-UA-P15-⑭"
+        ]
+      },
+      "audit": {
+        "transcription": "会話上の転記内容を格納。原典との独立再照合は未実施",
+        "answer": "公式正答PDF照合済（転記時点）",
+        "figureStatus": "図版参照ID付与。画像切出し・個別目視監査未完了",
+        "independentReview": "未実施",
+        "releaseStatus": "PENDING_SOURCE_AND_VISUAL_AUDIT"
+      }
+    },
+    {
+      "id": "E2-2023-UA-045",
+      "exam": "令和5年度第二種電気工事士上期学科試験【午前】",
+      "examDate": "2023-05-28",
+      "section": "配線図問題",
+      "questionNumber": 45,
+      "question": "⑮で示す部分の配線を器具の裏面から見たものである。正しいものは。ただし，電線の色別は，白色は電源からの接地側電線，黒色は電源からの非接地側電線，赤色は負荷に結線する電線とする。",
+      "choices": [
+        {
+          "label": "イ",
+          "text": "図版参照（選択肢イ）"
+        },
+        {
+          "label": "ロ",
+          "text": "図版参照（選択肢ロ）"
+        },
+        {
+          "label": "ハ",
+          "text": "図版参照（選択肢ハ）"
+        },
+        {
+          "label": "ニ",
+          "text": "図版参照（選択肢ニ）"
+        }
+      ],
+      "answerOfficial": "ハ",
+      "hereToRemember": "白は接地側、黒は非接地側、赤は負荷への送り線。",
+      "explanation": "器具への結線では、電源からの接地側電線（白色）は器具の接地側端子に、非接地側電線（黒色）は点滅器を経由させ、点滅器から負荷へは赤色の電線で結線するのが原則である。⑮の部分を裏面から見た結線でこの色別と経路を満たすのがハである。接地側にスイッチを入れる結線は誤りである。",
+      "source": {
+        "title": "令和5年度上期 第二種電気工事士 学科試験問題（午前）",
+        "url": "https://www.shiken.or.jp/construction/upload/20230528_co_second_q01.pdf",
+        "page": 12,
+        "figure": "図版参照",
+        "figureRefs": [
+          "E2-2023-UA-P12-Q45-イ",
+          "E2-2023-UA-P12-Q45-ロ",
+          "E2-2023-UA-P12-Q45-ハ",
+          "E2-2023-UA-P12-Q45-ニ",
+          "E2-2023-UA-P15-⑮"
+        ]
+      },
+      "audit": {
+        "transcription": "会話上の転記内容を格納。原典との独立再照合は未実施",
+        "answer": "公式正答PDF照合済（転記時点）",
+        "figureStatus": "図版参照ID付与。画像切出し・個別目視監査未完了",
+        "independentReview": "未実施",
+        "releaseStatus": "PENDING_SOURCE_AND_VISUAL_AUDIT"
+      }
+    },
+    {
+      "id": "E2-2023-UA-046",
+      "exam": "令和5年度第二種電気工事士上期学科試験【午前】",
+      "examDate": "2023-05-28",
+      "section": "配線図問題",
+      "questionNumber": 46,
+      "question": "⑯で示す部分に使用するケーブルで，適切なものは。",
+      "choices": [
+        {
+          "label": "イ",
+          "text": "図版参照（選択肢イ）"
+        },
+        {
+          "label": "ロ",
+          "text": "図版参照（選択肢ロ）"
+        },
+        {
+          "label": "ハ",
+          "text": "図版参照（選択肢ハ）"
+        },
+        {
+          "label": "ニ",
+          "text": "図版参照（選択肢ニ）"
+        }
+      ],
+      "answerOfficial": "ニ",
+      "hereToRemember": "ケーブルは施設場所と用途に適合する種類を選ぶ。",
+      "explanation": "⑯で示す部分に使用するケーブルは、その部分の施設場所や使用条件（屋内・屋外、固定・可動など）に適合した種類でなければならない。条件に合うのはニのケーブルである。ケーブルの種類ごとに使用できる場所が定められているため、配線図では施設場所とケーブル記号を対応させて判断する。",
+      "source": {
+        "title": "令和5年度上期 第二種電気工事士 学科試験問題（午前）",
+        "url": "https://www.shiken.or.jp/construction/upload/20230528_co_second_q01.pdf",
+        "page": 13,
+        "figure": "図版参照",
+        "figureRefs": [
+          "E2-2023-UA-P13-Q46-イ",
+          "E2-2023-UA-P13-Q46-ロ",
+          "E2-2023-UA-P13-Q46-ハ",
+          "E2-2023-UA-P13-Q46-ニ",
+          "E2-2023-UA-P15-⑯"
+        ]
+      },
+      "audit": {
+        "transcription": "会話上の転記内容を格納。原典との独立再照合は未実施",
+        "answer": "公式正答PDF照合済（転記時点）",
+        "figureStatus": "図版参照ID付与。画像切出し・個別目視監査未完了",
+        "independentReview": "未実施",
+        "releaseStatus": "PENDING_SOURCE_AND_VISUAL_AUDIT"
+      }
+    },
+    {
+      "id": "E2-2023-UA-047",
+      "exam": "令和5年度第二種電気工事士上期学科試験【午前】",
+      "examDate": "2023-05-28",
+      "section": "配線図問題",
+      "questionNumber": 47,
+      "question": "⑰で示すボックス内の接続をリングスリーブで圧着接続した場合のリングスリーブの種類，個数及び圧着接続後の刻印との組合せで，正しいものは。ただし，使用する電線はすべてVVF1.6とする。また，写真に示すリングスリーブ中央の〇，小，中は刻印を表す。",
+      "choices": [
+        {
+          "label": "イ",
+          "text": "図版参照（選択肢イ）"
+        },
+        {
+          "label": "ロ",
+          "text": "図版参照（選択肢ロ）"
+        },
+        {
+          "label": "ハ",
+          "text": "図版参照（選択肢ハ）"
+        },
+        {
+          "label": "ニ",
+          "text": "図版参照（選択肢ニ）"
+        }
+      ],
+      "answerOfficial": "イ",
+      "hereToRemember": "VVF1.6×2本は小スリーブで刻印は〇。",
+      "explanation": "リングスリーブの圧着では、電線の太さと本数によってスリーブの種類と圧着ペンチの刻印が決まる。VVF1.6を2本圧着する場合は小スリーブで刻印は〇、3〜4本の場合は小スリーブで刻印は「小」となる。⑰のボックス内の各接続にこの基準を当てはめると、イの組合せが正しい。刻印は圧着が正しく行われたことの確認にもなる。",
+      "source": {
+        "title": "令和5年度上期 第二種電気工事士 学科試験問題（午前）",
+        "url": "https://www.shiken.or.jp/construction/upload/20230528_co_second_q01.pdf",
+        "page": 13,
+        "figure": "図版参照",
+        "figureRefs": [
+          "E2-2023-UA-P13-Q47-イ",
+          "E2-2023-UA-P13-Q47-ロ",
+          "E2-2023-UA-P13-Q47-ハ",
+          "E2-2023-UA-P13-Q47-ニ",
+          "E2-2023-UA-P15-⑰"
+        ]
+      },
+      "audit": {
+        "transcription": "会話上の転記内容を格納。原典との独立再照合は未実施",
+        "answer": "公式正答PDF照合済（転記時点）",
+        "figureStatus": "図版参照ID付与。画像切出し・個別目視監査未完了",
+        "independentReview": "未実施",
+        "releaseStatus": "PENDING_SOURCE_AND_VISUAL_AUDIT"
+      }
+    },
+    {
+      "id": "E2-2023-UA-048",
+      "exam": "令和5年度第二種電気工事士上期学科試験【午前】",
+      "examDate": "2023-05-28",
+      "section": "配線図問題",
+      "questionNumber": 48,
+      "question": "この配線図で，使用しているコンセントは。",
+      "choices": [
+        {
+          "label": "イ",
+          "text": "図版参照（選択肢イ）"
+        },
+        {
+          "label": "ロ",
+          "text": "図版参照（選択肢ロ）"
+        },
+        {
+          "label": "ハ",
+          "text": "図版参照（選択肢ハ）"
+        },
+        {
+          "label": "ニ",
+          "text": "図版参照（選択肢ニ）"
+        }
+      ],
+      "answerOfficial": "ニ",
+      "hereToRemember": "コンセントの種類は記号の付記で判別する。",
+      "explanation": "この配線図で使用しているコンセントは、図記号とその付記からニの種類であると読み取れる。コンセントには接地極付、接地端子付、抜け止め形などがあり、配線図では記号の形状や付記文字で区別される。設置場所（水回りなど）に応じて必要な種類が選ばれている点も読み取りの要点である。",
+      "source": {
+        "title": "令和5年度上期 第二種電気工事士 学科試験問題（午前）",
+        "url": "https://www.shiken.or.jp/construction/upload/20230528_co_second_q01.pdf",
+        "page": 13,
+        "figure": "図版参照",
+        "figureRefs": [
+          "E2-2023-UA-P13-Q48-イ",
+          "E2-2023-UA-P13-Q48-ロ",
+          "E2-2023-UA-P13-Q48-ハ",
+          "E2-2023-UA-P13-Q48-ニ",
+          "E2-2023-UA-P15-WIRING-PLAN"
+        ]
+      },
+      "audit": {
+        "transcription": "会話上の転記内容を格納。原典との独立再照合は未実施",
+        "answer": "公式正答PDF照合済（転記時点）",
+        "figureStatus": "図版参照ID付与。画像切出し・個別目視監査未完了",
+        "independentReview": "未実施",
+        "releaseStatus": "PENDING_SOURCE_AND_VISUAL_AUDIT"
+      }
+    },
+    {
+      "id": "E2-2023-UA-049",
+      "exam": "令和5年度第二種電気工事士上期学科試験【午前】",
+      "examDate": "2023-05-28",
+      "section": "配線図問題",
+      "questionNumber": 49,
+      "question": "この配線図で使用していないスイッチは。ただし，写真下の図は，接点の構成を示す。",
+      "choices": [
+        {
+          "label": "イ",
+          "text": "図版参照（選択肢イ）"
+        },
+        {
+          "label": "ロ",
+          "text": "図版参照（選択肢ロ）"
+        },
+        {
+          "label": "ハ",
+          "text": "図版参照（選択肢ハ）"
+        },
+        {
+          "label": "ニ",
+          "text": "図版参照（選択肢ニ）"
+        }
+      ],
+      "answerOfficial": "イ",
+      "hereToRemember": "接点構成図から、使われていないスイッチを見抜く。",
+      "explanation": "配線図では、片切スイッチのほか、2か所で点滅できる3路スイッチ、3か所以上で点滅できる4路スイッチなどが使い分けられる。この配線図で使用されているスイッチの接点構成と比較すると、イに示す接点構成のスイッチは使用されていない。階段や廊下の照明回路では3路・4路の組合せが使われることが判断の手がかりになる。",
+      "source": {
+        "title": "令和5年度上期 第二種電気工事士 学科試験問題（午前）",
+        "url": "https://www.shiken.or.jp/construction/upload/20230528_co_second_q01.pdf",
+        "page": 13,
+        "figure": "図版参照",
+        "figureRefs": [
+          "E2-2023-UA-P13-Q49-イ",
+          "E2-2023-UA-P13-Q49-ロ",
+          "E2-2023-UA-P13-Q49-ハ",
+          "E2-2023-UA-P13-Q49-ニ",
+          "E2-2023-UA-P15-WIRING-PLAN"
+        ]
+      },
+      "audit": {
+        "transcription": "会話上の転記内容を格納。原典との独立再照合は未実施",
+        "answer": "公式正答PDF照合済（転記時点）",
+        "figureStatus": "図版参照ID付与。画像切出し・個別目視監査未完了",
+        "independentReview": "未実施",
+        "releaseStatus": "PENDING_SOURCE_AND_VISUAL_AUDIT"
+      }
+    },
+    {
+      "id": "E2-2023-UA-050",
+      "exam": "令和5年度第二種電気工事士上期学科試験【午前】",
+      "examDate": "2023-05-28",
+      "section": "配線図問題",
+      "questionNumber": 50,
+      "question": "この配線図の施工に関して，一般的に使用するものの組合せで，不適切なものは。",
+      "choices": [
+        {
+          "label": "イ",
+          "text": "図版参照（選択肢イ）"
+        },
+        {
+          "label": "ロ",
+          "text": "図版参照（選択肢ロ）"
+        },
+        {
+          "label": "ハ",
+          "text": "図版参照（選択肢ハ）"
+        },
+        {
+          "label": "ニ",
+          "text": "図版参照（選択肢ニ）"
+        }
+      ],
+      "answerOfficial": "ハ",
+      "hereToRemember": "材料の組合せは、用途と規格の適合で判断する。",
+      "explanation": "この配線図の施工に一般的に使用する材料・工具の組合せのうち、ハの組合せは用途や規格が適合せず、不適切である。他の組合せは、それぞれの施工箇所に通常用いられる適切な組合せである。材料選定では、対象の工事方法に適合した種類・サイズであるかを一つずつ確認することが要点である。",
+      "source": {
+        "title": "令和5年度上期 第二種電気工事士 学科試験問題（午前）",
+        "url": "https://www.shiken.or.jp/construction/upload/20230528_co_second_q01.pdf",
+        "page": 13,
+        "figure": "図版参照",
+        "figureRefs": [
+          "E2-2023-UA-P13-Q50-イ",
+          "E2-2023-UA-P13-Q50-ロ",
+          "E2-2023-UA-P13-Q50-ハ",
+          "E2-2023-UA-P13-Q50-ニ",
+          "E2-2023-UA-P15-WIRING-PLAN"
+        ]
+      },
+      "audit": {
+        "transcription": "会話上の転記内容を格納。原典との独立再照合は未実施",
+        "answer": "公式正答PDF照合済（転記時点）",
+        "figureStatus": "図版参照ID付与。画像切出し・個別目視監査未完了",
+        "independentReview": "未実施",
+        "releaseStatus": "PENDING_SOURCE_AND_VISUAL_AUDIT"
+      }
+    }
+  ]
+}
