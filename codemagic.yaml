@@ -29,9 +29,9 @@ workflows:
           match = re.search(r"window\.LESSONS\s*=\s*(\[.*?\]);</script>", html, re.S)
           assert match, "embedded lesson data not found"
           lessons = json.loads(match.group(1))
-          assert len(lessons) == 30, len(lessons)
-          assert len({lesson["id"] for lesson in lessons}) == 30
-          assert sum(len(lesson["questions"]) for lesson in lessons) == 90
+          assert len(lessons) == 150, len(lessons)
+          assert len({lesson["id"] for lesson in lessons}) == 150
+          assert sum(len(lesson["questions"]) for lesson in lessons) == 450
 
           audio_paths = []
           native_audio_paths = []
@@ -39,7 +39,7 @@ workflows:
           for part in ("part1", "part2", "part3"):
               payload = json.loads((root / f"ios/Resources/lessons-{part}.json").read_text(encoding="utf-8"))
               native_lessons.extend(payload)
-          assert len(native_lessons) == 30, len(native_lessons)
+          assert len(native_lessons) == 150, len(native_lessons)
           assert {item["id"] for item in native_lessons} == {item["id"] for item in lessons}
           for lesson in lessons:
               audio_paths.extend(item["path"] for item in lesson["audio"].values())
@@ -49,10 +49,10 @@ workflows:
               assert len(lesson["voices"]) == (2 if lesson["region"] == "Canada" else 6), lesson["id"]
               native_audio_paths.extend(item["path"] for item in lesson["audio"].values())
               native_audio_paths.extend(item["path"] for item in lesson["short"]["audio"].values())
-          assert len(audio_paths) == 312, len(audio_paths)
-          assert len(set(audio_paths)) == 312
-          assert len(native_audio_paths) == 312, len(native_audio_paths)
-          assert len(set(native_audio_paths)) == 312, "duplicate iOS audio references"
+          assert len(audio_paths) == 1560, len(audio_paths)
+          assert len(set(audio_paths)) == 1560
+          assert len(native_audio_paths) == 1560, len(native_audio_paths)
+          assert len(set(native_audio_paths)) == 1560, "duplicate iOS audio references"
           assert set(native_audio_paths) == set(audio_paths), "iOS audio references differ from window.LESSONS"
           missing = [path for path in native_audio_paths if not (root / path).is_file()]
           assert not missing, f"missing audio files: {missing[:10]}"
@@ -69,7 +69,7 @@ workflows:
               and "CA92.1" in item.get("NSPrivacyAccessedAPITypeReasons", [])
               for item in reasons
           )
-          print("PASS: 30 lessons / 90 questions / 312 unique iOS audio references and files")
+          print("PASS: 150 lessons / 450 questions / 1,560 unique iOS audio references and files")
           PY
       - name: Generate Xcode project
         script: |
@@ -104,7 +104,7 @@ workflows:
           assert (app / "Assets.car").is_file()
           assert (app / "embedded.mobileprovision").is_file()
           assert (app / "_CodeSignature").is_dir()
-          assert len(list(app.rglob("*.mp3"))) == 312
+          assert len(list(app.rglob("*.mp3"))) == 1560
           assert len(list(app.glob("lessons-part*.json"))) == 3
           print("PASS: signed IPA contains the release content and signing assets")
           PY
