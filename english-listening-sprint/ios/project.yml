@@ -14,12 +14,15 @@ targets:
     platform: iOS
     sources:
       - path: EnglishListeningSprint
-    resources:
       - path: Resources/lessons-part1.json
+        buildPhase: resources
       - path: Resources/lessons-part2.json
+        buildPhase: resources
       - path: Resources/lessons-part3.json
+        buildPhase: resources
       - path: ../audio
         type: folder
+        buildPhase: resources
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: jp.allsunday1122.englishlistening
