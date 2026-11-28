@@ -2330,8 +2330,8 @@ workflows:
                   raise SystemExit(f'FAIL: {key} must contain all four orientations: {values!r}')
           print('PASS: IPA Info.plist supports all four orientations')
           assert info['ITSAppUsesNonExemptEncryption'] is False
-          # AdMob 設定（Build 1 はテスト用アプリID。本番IDに差し替えたらこの期待値も変える）
-          assert info.get('GADApplicationIdentifier') == 'ca-app-pub-3940256099942544~1458002511', f"FAIL: GADApplicationIdentifier: {info.get('GADApplicationIdentifier')!r}"
+          # AdMob 設定（本番アプリID）
+          assert info.get('GADApplicationIdentifier') == 'ca-app-pub-3070038454022343~6309068999', f"FAIL: GADApplicationIdentifier: {info.get('GADApplicationIdentifier')!r}"
           skad = {item.get('SKAdNetworkIdentifier') for item in info.get('SKAdNetworkItems', [])}
           assert 'cktu78qm5g.skadnetwork' in skad, f'FAIL: SKAdNetworkItems missing cktu78qm5g: {skad!r}'
           print('PASS: AdMob app id and SKAdNetworkItems present')
