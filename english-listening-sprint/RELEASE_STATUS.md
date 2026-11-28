@@ -7,7 +7,7 @@ Updated: 2026-11-28 (JST)
 - Repository: `ALLSUNDAY1122/ALLSUNDAY1122.github.io`
 - Release branch: `codex/english-listening-testflight-v2`
 - Product source: this directory
-- Content: 150 lessons / 450 questions / 1,560 bundled MP3 files
+- Content: 100 lessons / 300 questions / 1,040 bundled MP3 files
 - Native route: SwiftUI; WebView is not the primary interface
 - Bundle ID: `jp.allsunday1122.englishlistening`
 - App Store Connect App ID: `6840230101`
@@ -22,7 +22,7 @@ Completed:
 
 - Restored and verified the complete product assets.
 - Confirmed the delivered Web reference matches the supplied v8 archive.
-- Verified 150 unique lesson IDs, 450 valid questions, and 1,560 unique audio references with no missing MP3 files.
+- Verified 100 unique lesson IDs, 300 valid questions, and 1,040 unique audio references with no missing MP3 files.
 - Added SwiftUI source, app icon, Privacy Manifest, UserDefaults required-reason declaration, and export-compliance declaration.
 - Published the support and privacy pages.
 - Added the release metadata, checklist, and handoff record.
