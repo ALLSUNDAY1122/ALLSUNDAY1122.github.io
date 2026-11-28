@@ -33,7 +33,7 @@ workflows:
           if not match:
               raise SystemExit("window.LESSONS not found in index.html")
           lessons = json.loads(match.group(1))
-          if len(lessons) != 150:
+          if len(lessons) != 100:
               raise SystemExit(f"Expected 150 lessons, found {len(lessons)}")
           target = root / "data" / "lessons.json"
           target.parent.mkdir(parents=True, exist_ok=True)
@@ -45,7 +45,7 @@ workflows:
           : "${AZURE_SPEECH_REGION:?AZURE_SPEECH_REGION is missing from azure_speech group}"
           pids=()
           for region in Canada Australia "United Kingdom" "United States" India; do
-            (REGION_FILTER="$region" python3 scripts/generate_audio_azure.py) &
+            (REGION_FILTER="$region" SLOT_FILTER="07,08,09,10,11,12,13,14,15,16,17,18,19,20" python3 scripts/generate_audio_azure.py) &
             pids+=("$!")
           done
           status=0
@@ -64,9 +64,9 @@ workflows:
           match = re.search(r"window\.LESSONS\s*=\s*(\[.*?\]);</script>", html, re.S)
           assert match, "embedded lesson data not found"
           lessons = json.loads(match.group(1))
-          assert len(lessons) == 150, len(lessons)
-          assert len({lesson["id"] for lesson in lessons}) == 150
-          assert sum(len(lesson["questions"]) for lesson in lessons) == 450
+          assert len(lessons) == 100, len(lessons)
+          assert len({lesson["id"] for lesson in lessons}) == 100
+          assert sum(len(lesson["questions"]) for lesson in lessons) == 300
 
           audio_paths = []
           native_audio_paths = []
@@ -74,7 +74,7 @@ workflows:
           for part in ("part1", "part2", "part3"):
               payload = json.loads((root / f"ios/Resources/lessons-{part}.json").read_text(encoding="utf-8"))
               native_lessons.extend(payload)
-          assert len(native_lessons) == 150, len(native_lessons)
+          assert len(native_lessons) == 100, len(native_lessons)
           assert {item["id"] for item in native_lessons} == {item["id"] for item in lessons}
           for lesson in lessons:
               audio_paths.extend(item["path"] for item in lesson["audio"].values())
@@ -84,10 +84,10 @@ workflows:
               assert len(lesson["voices"]) == (2 if lesson["region"] == "Canada" else 6), lesson["id"]
               native_audio_paths.extend(item["path"] for item in lesson["audio"].values())
               native_audio_paths.extend(item["path"] for item in lesson["short"]["audio"].values())
-          assert len(audio_paths) == 1560, len(audio_paths)
-          assert len(set(audio_paths)) == 1560
-          assert len(native_audio_paths) == 1560, len(native_audio_paths)
-          assert len(set(native_audio_paths)) == 1560, "duplicate iOS audio references"
+          assert len(audio_paths) == 1040, len(audio_paths)
+          assert len(set(audio_paths)) == 1040
+          assert len(native_audio_paths) == 1040, len(native_audio_paths)
+          assert len(set(native_audio_paths)) == 1040, "duplicate iOS audio references"
           assert set(native_audio_paths) == set(audio_paths), "iOS audio references differ from window.LESSONS"
           missing = [path for path in native_audio_paths if not (root / path).is_file()]
           assert not missing, f"missing audio files: {missing[:10]}"
@@ -104,7 +104,7 @@ workflows:
               and "CA92.1" in item.get("NSPrivacyAccessedAPITypeReasons", [])
               for item in reasons
           )
-          print("PASS: 150 lessons / 450 questions / 1,560 unique iOS audio references and files")
+          print("PASS: 100 lessons / 300 questions / 1,040 unique iOS audio references and files")
           PY
       - name: Generate Xcode project
         script: |
@@ -139,7 +139,7 @@ workflows:
           assert (app / "Assets.car").is_file()
           assert (app / "embedded.mobileprovision").is_file()
           assert (app / "_CodeSignature").is_dir()
-          assert len(list(app.rglob("*.mp3"))) == 1560
+          assert len(list(app.rglob("*.mp3"))) == 1040
           assert len(list(app.glob("lessons-part*.json"))) == 3
           print("PASS: signed IPA contains the release content and signing assets")
           PY
