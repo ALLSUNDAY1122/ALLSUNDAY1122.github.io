@@ -86,6 +86,46 @@ final class LearningStore: ObservableObject {
         return lesson.questions[selectedQuestion]
     }
 
+    private var navigationLessons: [Lesson] {
+        var regionOrder: [String] = []
+        for lesson in lessons where !regionOrder.contains(lesson.region) {
+            regionOrder.append(lesson.region)
+        }
+        return regionOrder.flatMap { region in
+            lessons.filter { $0.region == region }
+        }
+    }
+
+    private var currentNavigationIndex: Int? {
+        guard let currentLesson else { return nil }
+        return navigationLessons.firstIndex { $0.id == currentLesson.id }
+    }
+
+    var hasPreviousLesson: Bool {
+        guard let index = currentNavigationIndex else { return false }
+        return index > 0
+    }
+
+    var hasNextLesson: Bool {
+        guard let index = currentNavigationIndex else { return false }
+        return index + 1 < navigationLessons.count
+    }
+
+    func moveToPreviousLesson() {
+        moveLesson(by: -1)
+    }
+
+    func moveToNextLesson() {
+        moveLesson(by: 1)
+    }
+
+    private func moveLesson(by offset: Int) {
+        guard let index = currentNavigationIndex else { return }
+        let destination = index + offset
+        guard navigationLessons.indices.contains(destination) else { return }
+        open(navigationLessons[destination])
+    }
+
     func open(_ lesson: Lesson) {
         stop()
         selectedLessonID = lesson.id
